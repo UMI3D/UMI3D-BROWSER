@@ -104,7 +104,7 @@ NavMeshSettings:
   serializedVersion: 2
   m_ObjectHideFlags: 0
   m_BuildSettings:
-    serializedVersion: 2
+    serializedVersion: 3
     agentTypeID: 0
     agentRadius: 0.5
     agentHeight: 2
@@ -117,7 +117,7 @@ NavMeshSettings:
     cellSize: 0.16666667
     manualTileSize: 0
     tileSize: 256
-    accuratePlacement: 0
+    buildHeightMesh: 0
     maxJobWorkers: 0
     preserveTilesOutsideBounds: 0
     debug:
@@ -159,13 +159,107 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 320294111}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 500, y: 500, z: 500}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &466622136
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 466622138}
+  - component: {fileID: 466622137}
+  m_Layer: 0
+  m_Name: InteractionModeManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &466622137
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 466622136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4617c4725b2577245a3fd522abb0eeab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  InputModuleGaze: {fileID: 0}
+  InputModuleController: {fileID: 0}
+  InputModuleHand: {fileID: 0}
+  m_EyeTracking: 0
+  m_Movable: 1
+  m_InputEvent: 0
+  m_TimerControl: 1
+  m_TimeToGaze: 2
+  m_ButtonControl: 1
+  m_ButtonControlDevices:
+    HMD: 1
+    DominantController: 1
+    NonDominantController: 1
+  m_ButtonControlKeys:
+    primary2DAxisClick: 1
+    triggerButton: 1
+    secondary2DAxisClick: 0
+  m_EnableEyeTracking: 1
+  m_LocationSpace: 1
+  m_BeamMode: 2
+  m_DominantEvent: 1
+  m_DominantRaycastMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_NonDominantEvent: 1
+  m_NonDominantRaycastMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ButtonToTrigger:
+    primary2DAxisClick: 1
+    triggerButton: 1
+    secondary2DAxisClick: 0
+  m_FixedBeamLength: 50
+  m_DominantController: {fileID: 0}
+  m_NonDominantController: {fileID: 0}
+  m_DominantElectronicHand: 0
+  m_NonDominantElectronicHand: 0
+  DominantElectronicHand: {fileID: 0}
+  NonDominantElectronicHand: {fileID: 0}
+  m_RightHandSelector: {fileID: 0}
+  m_LeftHandSelector: {fileID: 0}
+  m_UseDefaultPinch: 0
+  m_PinchOnThreshold: 0.7
+  m_PinchOffThreshold: 0.7
+  m_PinchTimeToDrag: 1
+  m_PriorTracker: 1
+  m_InitialStartNaturalHand: 0
+  m_InitialStartElectronicHand: 0
+  m_ElectronicHandModel: 2
+  m_ShowElectronicHandIfSupported: 0
+--- !u!4 &466622138
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 466622136}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1536569662
 GameObject:
@@ -204,13 +298,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1536569662}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 2.2759798, y: 0.70985246, z: -2.1533492}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1536569665
 MonoBehaviour:
@@ -270,11 +364,19 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2090853806}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -696.1108, y: 1.5110459, z: -4.5928216}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1660057539 &9223372036854775807
+SceneRoots:
+  m_ObjectHideFlags: 0
+  m_Roots:
+  - {fileID: 1536569664}
+  - {fileID: 320294113}
+  - {fileID: 2090853808}
+  - {fileID: 466622138}

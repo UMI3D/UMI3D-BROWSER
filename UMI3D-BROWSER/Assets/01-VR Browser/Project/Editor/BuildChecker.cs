@@ -17,7 +17,7 @@ public class BuildChecker : IPreprocessBuildWithReport
 
         bool found = false;
 
-
+#if UNITY_ANDROID
         for (int i = 0; i < guids.Length; i++)
         {
             string path = AssetDatabase.GUIDToAssetPath(guids[i]);
@@ -28,9 +28,12 @@ public class BuildChecker : IPreprocessBuildWithReport
 
             if (loadingParam.supportedformats.Contains(UMI3DAssetFormat.unity_android_urp))
                 found = true;
-        }
+
+    }
 
         if (!found)
             throw new BuildFailedException("Impossible to build with " + UMI3DAssetFormat.unity_android_urp + " format not added to supported format");
+#endif
     }
+
 }

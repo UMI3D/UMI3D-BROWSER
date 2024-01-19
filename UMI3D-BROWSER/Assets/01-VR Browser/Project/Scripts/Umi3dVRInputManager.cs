@@ -22,7 +22,7 @@ using UnityEngine.XR;
 
 namespace umi3d.picoBrowser
 {
-    public class Umi3dPicoInputManager : AbstractControllerInputManager
+    public class Umi3dVRInputManager : AbstractControllerInputManager
     {
         public struct PressState
         {

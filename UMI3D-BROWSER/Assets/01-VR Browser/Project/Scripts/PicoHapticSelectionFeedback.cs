@@ -12,7 +12,7 @@ namespace umi3d.picoBrowser
         /// <exception cref="System.NotImplementedException"></exception>
         public override void Trigger()
         {
-            Umi3dPicoInputManager.Instance.VibrateController(controller.type, settings.duration, settings.frequency, settings.amplitude);
+            Umi3dVRInputManager.Instance.VibrateController(controller.type, settings.duration, settings.frequency, settings.amplitude);
         }
     }
 }

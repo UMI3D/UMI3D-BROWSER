@@ -12,7 +12,7 @@ EditorBuildSettings:
     path: Assets/Dependencies/UMI3D VR Browsers Base/Scene/ConnectionScene (old).unity
     guid: dc7bb9a3b7242c74fb14c43e469383b3
   - enabled: 1
-    path: Assets/01-Pico-Browser/Project/Scenes/MainImmersive.unity
+    path: Assets/01-VR Browser/Project/Scenes/MainImmersive.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 53d6713daf7d40a449ca46466886f5c6,
@@ -26,4 +26,6 @@ EditorBuildSettings:
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 05613238e4967ee4eaf7ec16d6b74134,
       type: 2}
     com.unity.xr.openxr.settings4: {fileID: 11400000, guid: cacddd76b8745654ba3fc8d71f8b9116,
+      type: 2}
+    xr.sdk.mock-hmd.settings: {fileID: 11400000, guid: 1fa2aa15cefdd584a951e2c56dad67d6,
       type: 2}

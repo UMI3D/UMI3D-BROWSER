@@ -22,7 +22,6 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using BuildTool;
 using umi3d.cdk.collaboration;
-using Valve.VR;
 
 namespace BuildTool
 {

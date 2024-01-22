@@ -170,7 +170,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_playerCamera
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1131452855}
     - target: {fileID: 1402822454370657065, guid: 6d8cc188ac4cb49419e2616ed25f607d,
         type: 3}
       propertyPath: m_SizeDelta.x
@@ -395,7 +395,7 @@ PrefabInstance:
         type: 3}
       propertyPath: navigation
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 782628376}
     - target: {fileID: 5245316208483751605, guid: 6d8cc188ac4cb49419e2616ed25f607d,
         type: 3}
       propertyPath: parameters
@@ -441,7 +441,7 @@ PrefabInstance:
     - target: {fileID: 5988314907380347006, guid: 6d8cc188ac4cb49419e2616ed25f607d,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -0.0000056010585
+      value: -0.00000892173
       objectReference: {fileID: 0}
     - target: {fileID: 6093459749334264534, guid: 6d8cc188ac4cb49419e2616ed25f607d,
         type: 3}
@@ -600,50 +600,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6943e7b394a0d094a9229032b3c7ad1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &492682561
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 492682563}
-  - component: {fileID: 492682562}
-  m_Layer: 0
-  m_Name: InteractionModeManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &492682562
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 492682561}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4617c4725b2577245a3fd522abb0eeab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &492682563
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 492682561}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &498369415
 GameObject:
   m_ObjectHideFlags: 0
@@ -673,7 +629,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90575d2cf4a001148b72811551e10584, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Camera: {fileID: 0}
+  Camera: {fileID: 1131452855}
   ClapIcon: {fileID: 21300000, guid: 2e77b59e68e357d488ddc9f300d88b0d, type: 3}
   HelloIcon: {fileID: 21300000, guid: 3d35e3920c8a28044b9726ef0428512f, type: 3}
   NoIcon: {fileID: 21300000, guid: 02246496c7f66144c98a56626c015c49, type: 3}
@@ -693,6 +649,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &782628376 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4431763457759361986, guid: aa50e35a45eaaed43a950ae34ef532dc,
+    type: 3}
+  m_PrefabInstance: {fileID: 1131452852}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c26d0ce8e0d76a4cbe25756a5438d96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1131452852
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -778,11 +746,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2fe94ff0e1453e4689e30b2a6316e14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!20 &1131452855 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 8430962178111685224, guid: aa50e35a45eaaed43a950ae34ef532dc,
+    type: 3}
+  m_PrefabInstance: {fileID: 1131452852}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 343249369}
   - {fileID: 498369417}
-  - {fileID: 492682563}
   - {fileID: 1131452852}

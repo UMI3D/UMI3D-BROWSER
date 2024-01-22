@@ -441,7 +441,7 @@ PrefabInstance:
     - target: {fileID: 5988314907380347006, guid: 6d8cc188ac4cb49419e2616ed25f607d,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0.000282318
+      value: -0.000010702622
       objectReference: {fileID: 0}
     - target: {fileID: 6093459749334264534, guid: 6d8cc188ac4cb49419e2616ed25f607d,
         type: 3}
@@ -629,56 +629,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4617c4725b2577245a3fd522abb0eeab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  InputModuleGaze: {fileID: 0}
-  InputModuleController: {fileID: 0}
-  InputModuleHand: {fileID: 0}
-  m_EyeTracking: 0
-  m_Movable: 1
-  m_InputEvent: 0
-  m_TimerControl: 1
-  m_TimeToGaze: 2
-  m_ButtonControl: 1
-  m_ButtonControlDevices:
-    HMD: 1
-    DominantController: 1
-    NonDominantController: 1
-  m_ButtonControlKeys:
-    primary2DAxisClick: 1
-    triggerButton: 1
-    secondary2DAxisClick: 0
-  m_EnableEyeTracking: 1
-  m_LocationSpace: 1
-  m_BeamMode: 2
-  m_DominantEvent: 1
-  m_DominantRaycastMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_NonDominantEvent: 1
-  m_NonDominantRaycastMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ButtonToTrigger:
-    primary2DAxisClick: 1
-    triggerButton: 1
-    secondary2DAxisClick: 0
-  m_FixedBeamLength: 50
-  m_DominantController: {fileID: 0}
-  m_NonDominantController: {fileID: 0}
-  m_DominantElectronicHand: 0
-  m_NonDominantElectronicHand: 0
-  DominantElectronicHand: {fileID: 0}
-  NonDominantElectronicHand: {fileID: 0}
-  m_RightHandSelector: {fileID: 0}
-  m_LeftHandSelector: {fileID: 0}
-  m_UseDefaultPinch: 0
-  m_PinchOnThreshold: 0.7
-  m_PinchOffThreshold: 0.7
-  m_PinchTimeToDrag: 1
-  m_PriorTracker: 1
-  m_InitialStartNaturalHand: 0
-  m_InitialStartElectronicHand: 0
-  m_ElectronicHandModel: 2
-  m_ShowElectronicHandIfSupported: 0
 --- !u!4 &492682563
 Transform:
   m_ObjectHideFlags: 0
@@ -825,17 +775,23 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5161054918967749134, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: Viewpoint
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5161054918967749134, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: trackers.Array.data[2]
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5582060202346245420, guid: aa50e35a45eaaed43a950ae34ef532dc,
         type: 3}
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 8441811574959410240, guid: aa50e35a45eaaed43a950ae34ef532dc,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4592100359169221911, guid: aa50e35a45eaaed43a950ae34ef532dc, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

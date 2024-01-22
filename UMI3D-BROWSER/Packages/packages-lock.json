@@ -1,24 +1,5 @@
 {
   "dependencies": {
-    "com.htc.upm.wave.essence": {
-      "version": "https://github.com/ViveSoftware/VIVE-Wave.git?path=com.htc.upm.wave.essence",
-      "depth": 0,
-      "source": "git",
-      "dependencies": {
-        "com.htc.upm.wave.xrsdk": "5.6.0-r.10",
-        "com.htc.upm.wave.native": "5.6.0-r.10"
-      },
-      "hash": "d4ee04b367e6e9d185bf74859c45c8fe350a61a8"
-    },
-    "com.htc.upm.wave.native": {
-      "version": "https://github.com/ViveSoftware/VIVE-Wave.git?path=com.htc.upm.wave.native",
-      "depth": 0,
-      "source": "git",
-      "dependencies": {
-        "com.htc.upm.wave.xrsdk": "5.6.0-r.10"
-      },
-      "hash": "d4ee04b367e6e9d185bf74859c45c8fe350a61a8"
-    },
     "com.htc.upm.wave.openxr": {
       "version": "https://github.com/ViveSoftware/VIVE-OpenXR-AIO.git?path=com.htc.upm.wave.openxr",
       "depth": 0,
@@ -47,15 +28,6 @@
         "com.htc.upm.wave.openxr.toolkit": "1.0.5"
       },
       "hash": "2e4ecb200da4a4dfc9785040dfb9eaa372b8fa07"
-    },
-    "com.htc.upm.wave.xrsdk": {
-      "version": "https://github.com/ViveSoftware/VIVE-Wave.git?path=com.htc.upm.wave.xrsdk",
-      "depth": 0,
-      "source": "git",
-      "dependencies": {
-        "com.unity.xr.management": "3.2.4"
-      },
-      "hash": "d4ee04b367e6e9d185bf74859c45c8fe350a61a8"
     },
     "com.unity.addressables": {
       "version": "1.21.19",
@@ -291,15 +263,6 @@
       "source": "registry",
       "dependencies": {
         "com.unity.xr.management": "4.0.1"
-      },
-      "url": "https://packages.unity.com"
-    },
-    "com.unity.xr.oculus": {
-      "version": "4.1.2",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {
-        "com.unity.xr.management": "4.4.0"
       },
       "url": "https://packages.unity.com"
     },

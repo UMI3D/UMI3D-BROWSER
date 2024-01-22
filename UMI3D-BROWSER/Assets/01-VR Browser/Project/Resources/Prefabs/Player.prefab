@@ -2380,7 +2380,7 @@ MonoBehaviour:
   - {fileID: 0}
   Joint: {fileID: 7448163940164654355}
   Surface: {fileID: 853030869240671226}
-  Viewpoint: {fileID: 0}
+  Viewpoint: {fileID: 8399543590952299538}
   LeftWatch: {fileID: 8001398054328165899}
   RightWatch: {fileID: 6963745128094215118}
   OVRAnchor: {fileID: 8430962178111685220}
@@ -13913,6 +13913,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: XR Origin
       objectReference: {fileID: 0}
+    - target: {fileID: 5051064084671288345, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
+        type: 3}
+      propertyPath: m_RequestedTrackingOriginMode
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 5051064084671288346, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
         type: 3}
       propertyPath: m_RootOrder
@@ -13968,7 +13973,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 910392987944234023, guid: 3bacf1bc1e19629438bb4b12b4fd005b, type: 3}
     m_RemovedGameObjects:
     - {fileID: 6910296223892424240, guid: 3bacf1bc1e19629438bb4b12b4fd005b, type: 3}
     - {fileID: 3212295263725440832, guid: 3bacf1bc1e19629438bb4b12b4fd005b, type: 3}
@@ -13998,6 +14004,18 @@ PrefabInstance:
       addedObject: {fileID: 5267166352088235144}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3bacf1bc1e19629438bb4b12b4fd005b, type: 3}
+--- !u!114 &8399543590952299538 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5154681002614547746, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
+    type: 3}
+  m_PrefabInstance: {fileID: 3681753628165900592}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8430962178111685219}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0aa0e47305894f4ea13a82debadbd14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8430962178111685219 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5051064082787748691, guid: 3bacf1bc1e19629438bb4b12b4fd005b,

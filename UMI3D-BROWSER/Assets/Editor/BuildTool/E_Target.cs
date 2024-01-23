@@ -22,6 +22,6 @@ namespace BuildTool
 {
     public enum E_Target
     {
-        Quest, Vive, Focus, Pico
+        Quest, Focus, Pico, SteamXR
     }
 }

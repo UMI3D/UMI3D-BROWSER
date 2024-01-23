@@ -22,6 +22,11 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using BuildTool;
 using umi3d.cdk.collaboration;
+using UnityEngine.XR.OpenXR.Features;
+using UnityEngine.XR.OpenXR;
+using System.Linq;
+using System.Collections.Generic;
+using UnityEditor.XR.OpenXR.Features;
 
 namespace BuildTool
 {
@@ -84,7 +89,7 @@ namespace BuildTool
         {
             _uMI3DConfigurator.HandleTarget(selectedTarget);
             _targetAndPlugingSwitcher.HandleTarget(selectedTarget);
-            BuildPipeline.BuildPlayer(BuildToolHelper.GetPlayerBuildOptions());
+            //BuildPipeline.BuildPlayer(BuildToolHelper.GetPlayerBuildOptions());
         }
     }
 }

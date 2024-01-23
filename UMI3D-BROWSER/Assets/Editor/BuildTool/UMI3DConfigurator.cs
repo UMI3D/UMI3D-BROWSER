@@ -41,7 +41,7 @@ namespace BuildTool
                     loadingParameters.supportedformats.Remove(UMI3DAssetFormat.unity_android_urp);
                     loadingParameters.supportedformats.Add(UMI3DAssetFormat.unity_android_urp);
                     break;
-                case E_Target.Vive:
+                case E_Target.SteamXR:
                     loadingParameters.supportedformats.Remove(UMI3DAssetFormat.unity_standalone_urp);
                     loadingParameters.supportedformats.Remove(UMI3DAssetFormat.unity_android_urp);
                     loadingParameters.supportedformats.Add(UMI3DAssetFormat.unity_standalone_urp);

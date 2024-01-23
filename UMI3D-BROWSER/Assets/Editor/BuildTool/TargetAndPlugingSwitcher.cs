@@ -25,6 +25,7 @@ using UnityEngine;
 using UnityEngine.XR.OpenXR.Features;
 using UnityEditor.XR.OpenXR.Features;
 using UnityEngine.XR.OpenXR;
+using System.Runtime.CompilerServices;
 
 namespace BuildTool
 {
@@ -38,24 +39,33 @@ namespace BuildTool
                     ChangeBuildTarget(BuildTargetGroup.Android, BuildTarget.Android);
                     DisableAllPlugins(BuildTargetGroup.Android);
                     EnablePlugin(BuildTargetGroup.Android, E_Plugin.OpenXR);
-                    EnableOpenXRFeature(BuildTargetGroup.Android, BuildStaticNames.META_QUEST_FEATURE);
+                    DisableAllFeatures(BuildTargetGroup.Android);
+                    EnableOpenXRFeature(BuildTargetGroup.Android, BuildStaticNames.FEATURE_META_QUEST);
+                    EnableOpenXRFeature(BuildTargetGroup.Android, BuildStaticNames.INPUT_OCULUS_TOUCH);
+                    EnableOpenXRFeature(BuildTargetGroup.Android, BuildStaticNames.INPUT_METAQUEST_PRO);
                     break;
-                case E_Target.Vive:
+                case E_Target.SteamXR:
                     ChangeBuildTarget(BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows);
                     DisableAllPlugins(BuildTargetGroup.Standalone);
-                    EnablePlugin(BuildTargetGroup.Standalone, E_Plugin.WaveXr);
+                    EnablePlugin(BuildTargetGroup.Android, E_Plugin.OpenXR);
                     break;
                 case E_Target.Focus:
                     ChangeBuildTarget(BuildTargetGroup.Android, BuildTarget.Android);
                     DisableAllPlugins(BuildTargetGroup.Android);
-                    EnablePlugin(BuildTargetGroup.Android, E_Plugin.WaveXr);
+                    EnablePlugin(BuildTargetGroup.Android, E_Plugin.OpenXR);
+                    DisableAllFeatures(BuildTargetGroup.Android);
+                    EnableOpenXRFeature(BuildTargetGroup.Android, BuildStaticNames.FEATURE_VIVE_SUPPORT);
+                    EnableOpenXRFeature(BuildTargetGroup.Android, BuildStaticNames.INPUT_VIVEFocus3);
                     break;
                 case E_Target.Pico:
                     ChangeBuildTarget(BuildTargetGroup.Android, BuildTarget.Android);
                     DisableAllPlugins(BuildTargetGroup.Android);
-                    EnablePlugin(BuildTargetGroup.Android, E_Plugin.Pico);
                     EnablePlugin(BuildTargetGroup.Android, E_Plugin.OpenXR);
-                    DisableOpenXRFeature(BuildTargetGroup.Android, BuildStaticNames.META_QUEST_FEATURE);
+                    DisableAllFeatures(BuildTargetGroup.Android);
+                    EnableOpenXRFeature(BuildTargetGroup.Android, BuildStaticNames.FEATURE_PICO_OPENXR);
+                    EnableOpenXRFeature(BuildTargetGroup.Android, BuildStaticNames.FEATURE_PICO_SUPPORT);
+                    EnableOpenXRFeature(BuildTargetGroup.Android, BuildStaticNames.INPUT_PICO4_TOUCH);
+                    EnableOpenXRFeature(BuildTargetGroup.Android, BuildStaticNames.INPUT_PICONeo3_TOUCH);
                     break;
             }
         }
@@ -134,13 +144,33 @@ namespace BuildTool
             }
         }
 
+        private void DisableAllFeatures(BuildTargetGroup buildTargetGroup)
+        {
+            if (buildTargetGroup == BuildTargetGroup.Standalone)
+            {
+
+            }
+            else if (buildTargetGroup == BuildTargetGroup.Android)
+            {
+                DisableOpenXRFeature(BuildTargetGroup.Android, BuildStaticNames.FEATURE_META_QUEST);
+                DisableOpenXRFeature(BuildTargetGroup.Android, BuildStaticNames.INPUT_OCULUS_TOUCH);
+                DisableOpenXRFeature(BuildTargetGroup.Android, BuildStaticNames.INPUT_METAQUEST_PRO);
+                DisableOpenXRFeature(BuildTargetGroup.Android, BuildStaticNames.FEATURE_PICO_OPENXR);
+                DisableOpenXRFeature(BuildTargetGroup.Android, BuildStaticNames.FEATURE_PICO_SUPPORT);
+                DisableOpenXRFeature(BuildTargetGroup.Android, BuildStaticNames.INPUT_PICO4_TOUCH);
+                DisableOpenXRFeature(BuildTargetGroup.Android, BuildStaticNames.INPUT_PICONeo3_TOUCH);
+                DisableOpenXRFeature(BuildTargetGroup.Android, BuildStaticNames.FEATURE_VIVE_SUPPORT);
+                DisableOpenXRFeature(BuildTargetGroup.Android, BuildStaticNames.INPUT_VIVEFocus3);
+            }
+        }
+
         string GetLoaderName(E_Plugin plugin) => plugin switch
         {
-            E_Plugin.OpenXR => BuildStaticNames.OPEN_XR,
-            E_Plugin.Oculus => BuildStaticNames.OCULUS,
-            E_Plugin.OpenVR => BuildStaticNames.OPEN_VR,
-            E_Plugin.Pico => BuildStaticNames.PICO,
-            E_Plugin.WaveXr => BuildStaticNames.WAVE_XR,
+            E_Plugin.OpenXR => BuildStaticNames.LOADER_OPEN_XR,
+            E_Plugin.Oculus => BuildStaticNames.LOADER_OCULUS,
+            E_Plugin.OpenVR => BuildStaticNames.LOADER_OPEN_VR,
+            E_Plugin.Pico => BuildStaticNames.LOADER_PICO,
+            E_Plugin.WaveXr => BuildStaticNames.LOADER_WAVE_XR,
             _ => throw new NotImplementedException()
         };
     }

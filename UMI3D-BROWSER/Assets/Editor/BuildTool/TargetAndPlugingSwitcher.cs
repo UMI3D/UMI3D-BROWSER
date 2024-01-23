@@ -22,7 +22,6 @@ using UnityEditor.XR.Management;
 using UnityEditor;
 using UnityEngine;
 
-using Wave.XR.Loader;
 using UnityEngine.XR.OpenXR.Features;
 using UnityEditor.XR.OpenXR.Features;
 using UnityEngine.XR.OpenXR;

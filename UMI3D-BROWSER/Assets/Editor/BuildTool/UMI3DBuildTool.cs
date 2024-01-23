@@ -89,7 +89,7 @@ namespace BuildTool
         {
             _uMI3DConfigurator.HandleTarget(selectedTarget);
             _targetAndPlugingSwitcher.HandleTarget(selectedTarget);
-            //BuildPipeline.BuildPlayer(BuildToolHelper.GetPlayerBuildOptions());
+            BuildPipeline.BuildPlayer(BuildToolHelper.GetPlayerBuildOptions());
         }
     }
 }

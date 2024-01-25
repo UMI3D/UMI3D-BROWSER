@@ -49,7 +49,7 @@ namespace umi3dVRBrowsersBase.navigation
         /// <inheritdoc/>
         /// </summary>
         /// <param name="data"></param>
-        public override void Teleport(umi3d.common.TeleportDto data)
+        public override void Teleport(ulong environmentId, umi3d.common.TeleportDto data)
         {
             this.transform.position = data.position.Struct();
             if (cameraTransform != null)
@@ -72,12 +72,12 @@ namespace umi3dVRBrowsersBase.navigation
         /// <inheritdoc/>
         /// </summary>
         /// <param name="data"></param>
-        public override void Navigate(umi3d.common.NavigateDto data)
+        public override void Navigate(ulong environmentId, umi3d.common.NavigateDto data)
         {
-            Teleport(new umi3d.common.TeleportDto() { position = data.position, rotation = this.transform.rotation.Dto() });
+            Teleport(environmentId, new umi3d.common.TeleportDto() { position = data.position, rotation = this.transform.rotation.Dto() });
         }
 
-        public override void UpdateFrame(FrameRequestDto data)
+        public override void UpdateFrame(ulong environmentId, FrameRequestDto data)
         {
             //vehicleFreeHead = data.StopNavigation;
 
@@ -92,7 +92,7 @@ namespace umi3dVRBrowsersBase.navigation
             }
             else
             {
-                UMI3DNodeInstance Frame = UMI3DEnvironmentLoader.GetNode(data.FrameId);
+                UMI3DNodeInstance Frame = UMI3DEnvironmentLoader.GetNode(environmentId, data.FrameId);
                 if (Frame != null)
                 {
                     globalFrame = Frame;

@@ -84,13 +84,13 @@ namespace umi3dVRBrowsersBase.interactions
         /// <param name="hoveredObjectId"></param>
         /// <param name="reason"></param>
         /// <returns></returns>
-        public override bool SelectTool(ulong toolId, bool releasable, ulong hoveredObjectId, InteractionMappingReason reason = null)
+        public override bool SelectTool(ulong environmentId, ulong toolId, bool releasable, ulong hoveredObjectId, InteractionMappingReason reason = null)
         {
-            AbstractTool tool = GetTool(toolId);
+            AbstractTool tool = GetTool(environmentId, toolId);
             if (tool == null)
                 throw new Exception("tool does not exist");
 
-            if (toolIdToController.ContainsKey(tool.id))
+            if (toolIdToController.ContainsKey((environmentId, tool.id)))
             {
                 throw new Exception("Tool already projected");
             }
@@ -102,7 +102,7 @@ namespace umi3dVRBrowsersBase.interactions
                 {
                     if (ShouldForceProjection(controller, tool, reason) || ShouldForceProjection(controller, reason))
                     {
-                        ReleaseTool(controller.tool.id);
+                        ReleaseTool(environmentId, controller.tool.id);
                     }
                     else
                     {
@@ -115,7 +115,7 @@ namespace umi3dVRBrowsersBase.interactions
                 else
                     releasableTools.Add(tool.id, releasable);
 
-                bool res = SelectTool(tool.id, releasable, controller, hoveredObjectId, reason);
+                bool res = SelectTool(environmentId, tool.id, releasable, controller, hoveredObjectId, reason);
                 if (res)
                 {
                     lastReason = reason;
@@ -133,9 +133,9 @@ namespace umi3dVRBrowsersBase.interactions
         /// </summary>
         /// <param name="toolId"></param>
         /// <param name="reason"></param>
-        public override void ReleaseTool(ulong toolId, InteractionMappingReason reason = null)
+        public override void ReleaseTool(ulong environmentId, ulong toolId, InteractionMappingReason reason = null)
         {
-            base.ReleaseTool(toolId, reason);
+            base.ReleaseTool(environmentId, toolId, reason);
             lastReason = null;
         }
 
@@ -212,15 +212,15 @@ namespace umi3dVRBrowsersBase.interactions
         /// <param name="hoveredObjectId"></param>
         /// <param name="reason"></param>
         /// <returns></returns>
-        public override bool SwitchTools(ulong select, ulong release, bool releasable, ulong hoveredObjectId, InteractionMappingReason reason = null)
+        public override bool SwitchTools(ulong environmentId, ulong select, ulong release, bool releasable, ulong hoveredObjectId, InteractionMappingReason reason = null)
         {
-            if (toolIdToController.ContainsKey(release))
+            if (toolIdToController.ContainsKey((environmentId, release)))
             {
-                AbstractController controller = toolIdToController[release];
-                ReleaseTool(release);
-                if (!SelectTool(select, releasable, controller, hoveredObjectId, reason))
+                AbstractController controller = toolIdToController[((environmentId, release))];
+                ReleaseTool(environmentId, release);
+                if (!SelectTool(environmentId, select, releasable, controller, hoveredObjectId, reason))
                 {
-                    if (SelectTool(release, releasable, controller, hoveredObjectId))
+                    if (SelectTool(environmentId, release, releasable, controller, hoveredObjectId))
                     {
                         lastReason = reason;
                         return false;
@@ -239,7 +239,7 @@ namespace umi3dVRBrowsersBase.interactions
                 {
                     if ((c as VRController).type == lastControllerUsedToClick)
                     {
-                        if (SelectTool(select, releasable, hoveredObjectId, new RequestedUsingSelector { controller = c }))
+                        if (SelectTool(environmentId, select, releasable, hoveredObjectId, new RequestedUsingSelector { controller = c }))
                         {
                             PlayerMenuManager.Instance.Close();
                             lastReason = new RequestedFromMenu();
@@ -248,7 +248,7 @@ namespace umi3dVRBrowsersBase.interactions
                     }
                 }
 
-                if (!SelectTool(select, releasable, hoveredObjectId, reason))
+                if (!SelectTool(environmentId, select, releasable, hoveredObjectId, reason))
                 {
                     throw new Exception("Internal error");
                 }

@@ -171,6 +171,8 @@ namespace umi3dVRBrowsersBase.ui.keyboard
 
         #region Methods
 
+        TouchScreenKeyboard m_keyboard;
+
         private void Awake()
         {
             if (isSingleton) Instance = this;
@@ -178,6 +180,7 @@ namespace umi3dVRBrowsersBase.ui.keyboard
 
         private void Start()
         {
+            m_keyboard = TouchScreenKeyboard.Open("", TouchScreenKeyboardType.Default, false, false, false);
             foreach (KeyboardLetter letter in symbolsRoot.GetComponentsInChildren<KeyboardLetter>())
             {
                 letter.onPressed.AddListener(() =>
@@ -200,6 +203,11 @@ namespace umi3dVRBrowsersBase.ui.keyboard
             SwitchToLetters();
 
             SetPreviousInputField();
+        }
+
+        private void LateUpdate()
+        {
+            m_keyboard.active = false;
         }
 
         /// <summary>

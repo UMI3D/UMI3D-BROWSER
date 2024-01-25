@@ -213,18 +213,19 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
 
         protected async void StartAnim(ulong id)
         {
-            var anim = UMI3DAbstractAnimation.Get(id);
+            var anim = UMI3DAbstractAnimation.Get(UMI3DGlobalID.EnvironmentId, id);
             if (anim != null)
             {
                 await anim.SetUMI3DProperty(
                     new SetUMI3DPropertyData(
+                        UMI3DGlobalID.EnvironmentId,
                          new SetEntityPropertyDto()
                          {
                              entityId = id,
                              property = UMI3DPropertyKeys.AnimationPlaying,
                              value = true
                          },
-                        UMI3DEnvironmentLoader.GetEntity(id))
+                        UMI3DEnvironmentLoader.GetEntity(UMI3DGlobalID.EnvironmentId, id))
                     );
                 anim.Start();
             }

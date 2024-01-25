@@ -15,28 +15,21 @@ limitations under the License.
 */
 
 using System;
+using umi3d.cdk.collaboration;
 using UnityEditor;
-using UnityEditor.XR.Management.Metadata;
-using UnityEditor.XR.Management;
 using UnityEngine;
 using UnityEngine.UIElements;
-using BuildTool;
-using umi3d.cdk.collaboration;
-using UnityEngine.XR.OpenXR.Features;
-using UnityEngine.XR.OpenXR;
-using System.Linq;
-using System.Collections.Generic;
-using UnityEditor.XR.OpenXR.Features;
 
-namespace BuildTool
+namespace umi3d.browserEditor.BuildTool
 {
     public class UMI3DBuildTool : EditorWindow
     {
         [SerializeField] private VisualTreeAsset ui = default;
         [SerializeField] UMI3DCollabLoadingParameters loadingParameters;
-        
+        [SerializeField] UMI3DBuildTool_SO buildTool_SO;
+
         IBuilToolComponent _uMI3DConfigurator = null;
-        IBuilToolComponent _targetAndPlugingSwitcher = null;
+        IBuilToolComponent _targetAndPluginSwitcher = null;
 
         E_Target selectedTarget;
 
@@ -49,7 +42,7 @@ namespace BuildTool
 
         public void CreateGUI()
         {
-            _targetAndPlugingSwitcher = new TargetAndPlugingSwitcher();
+            _targetAndPluginSwitcher = new TargetAndPlugingSwitcher();
             _uMI3DConfigurator = new UMI3DConfigurator(loadingParameters);
 
             VisualElement root = rootVisualElement;
@@ -57,14 +50,23 @@ namespace BuildTool
 
             root.Add(ui_instance);
 
-            
             DropdownField DD_TargetSelection = root.Q<DropdownField>("DD_TargetSelection");
             DD_TargetSelection.choices.Clear();
             DD_TargetSelection.choices.AddRange(Enum.GetNames(typeof(E_Target)));
-            DD_TargetSelection.value = DD_TargetSelection.choices[0];
-            DD_TargetSelection.RegisterValueChangedCallback((value) =>
+            DD_TargetSelection.value = DD_TargetSelection.choices[(int)buildTool_SO.Target];
+            DD_TargetSelection.RegisterValueChangedCallback(value =>
             {
-                selectedTarget = (E_Target)Enum.Parse(typeof(E_Target), value.newValue);
+                buildTool_SO.Target = Enum.Parse<E_Target>(value.newValue);
+                selectedTarget = buildTool_SO.Target;
+            });
+
+            DropdownField DD_ReleaseCycle = root.Q<DropdownField>("DD_ReleaseCycle");
+            DD_ReleaseCycle.choices.Clear();
+            DD_ReleaseCycle.choices.AddRange(Enum.GetNames(typeof(E_ReleaseCycle)));
+            DD_ReleaseCycle.value = DD_ReleaseCycle.choices[(int)buildTool_SO.releaseCycle];
+            DD_ReleaseCycle.RegisterValueChangedCallback(value =>
+            {
+                buildTool_SO.releaseCycle = Enum.Parse<E_ReleaseCycle>(value.newValue);
             });
 
             TextField TF_BuildName = root.Q<TextField>("TF_BuildName");
@@ -74,12 +76,18 @@ namespace BuildTool
                 PlayerSettings.productName = value.newValue;
             });
 
-            TextField TF_BuildVersion = root.Q<TextField>("TF_BuildVersion");
-            TF_BuildVersion.value = PlayerSettings.bundleVersion;
-            TF_BuildVersion.RegisterValueChangedCallback((value) =>
+            TextField TF_BuildVersionNumber = root.Q<TextField>("TF_BuildVersionNumber");
+            TF_BuildVersionNumber.value = buildTool_SO.versionNumber;
+            TF_BuildVersionNumber.RegisterValueChangedCallback((value) =>
             {
-                PlayerSettings.bundleVersion = value.newValue;
+                buildTool_SO.versionNumber = value.newValue;
             });
+
+            Label L_Version = root.Q<Label>("L_Version");
+            buildTool_SO.updateVersion = () =>
+            {
+                L_Version.text = buildTool_SO.version;
+            };
 
             Button B_Build = root.Q<Button>("B_Build");
             B_Build.clicked += () => Build();
@@ -88,7 +96,7 @@ namespace BuildTool
         private void Build()
         {
             _uMI3DConfigurator.HandleTarget(selectedTarget);
-            _targetAndPlugingSwitcher.HandleTarget(selectedTarget);
+            _targetAndPluginSwitcher.HandleTarget(selectedTarget);
             BuildPipeline.BuildPlayer(BuildToolHelper.GetPlayerBuildOptions());
         }
     }

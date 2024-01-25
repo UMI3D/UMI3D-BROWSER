@@ -13,18 +13,26 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
-using UnityEditor;
-
 namespace umi3d.browserEditor.BuildTool
 {
-    public class BuildToolHelper
+    public enum E_ReleaseCycle
     {
-        public static BuildPlayerOptions GetPlayerBuildOptions()
+        Alpha,
+        Beta,
+        Production
+    }
+
+    public static class ReleaseCycleExt
+    {
+        public static string GetReleaseInitial(this E_ReleaseCycle releaseCycle)
         {
-            BuildPlayerOptions playerBuildOptions = BuildPlayerWindow.DefaultBuildMethods.GetBuildPlayerOptions(new BuildPlayerOptions());
-            return playerBuildOptions;
+            return releaseCycle switch
+            {
+                E_ReleaseCycle.Alpha => "a",
+                E_ReleaseCycle.Beta => "b",
+                E_ReleaseCycle.Production => "p",
+                _ => throw new System.NotImplementedException()
+            };
         }
     }
 }
-

@@ -14,14 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System.Collections;
-using System.Collections.Generic;
-using umi3d.cdk;
 using umi3d.cdk.collaboration;
 using umi3d.common;
-using UnityEngine;
 
-namespace BuildTool
+namespace umi3d.browserEditor.BuildTool
 {
     public class UMI3DConfigurator : IBuilToolComponent
     {

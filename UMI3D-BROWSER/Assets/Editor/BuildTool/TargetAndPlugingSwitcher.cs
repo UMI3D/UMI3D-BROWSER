@@ -15,19 +15,15 @@ limitations under the License.
 */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.XR.Management.Metadata;
-using UnityEditor.XR.Management;
 using UnityEditor;
-using UnityEngine;
-
-using UnityEngine.XR.OpenXR.Features;
+using UnityEditor.XR.Management;
+using UnityEditor.XR.Management.Metadata;
 using UnityEditor.XR.OpenXR.Features;
-using UnityEngine.XR.OpenXR;
-using System.Runtime.CompilerServices;
+using UnityEngine;
+using UnityEngine.XR.OpenXR.Features;
 
-namespace BuildTool
+namespace umi3d.browserEditor.BuildTool
 {
     public class TargetAndPlugingSwitcher : IBuilToolComponent
     {
@@ -72,7 +68,35 @@ namespace BuildTool
 
         private void ChangeBuildTarget(BuildTargetGroup buildTargetGroup, BuildTarget buildTarget)
         {
-            EditorUserBuildSettings.SwitchActiveBuildTarget(buildTargetGroup, buildTarget);
+            var oldTarget = EditorUserBuildSettings.activeBuildTarget;
+
+            var result = EditorUserBuildSettings.SwitchActiveBuildTarget(buildTargetGroup, buildTarget);
+
+            if (!result)
+            {
+                UnityEngine.Debug.LogError($"[UMI3D] Switching target failed");
+            }
+            else
+            {
+                UnityEngine.Debug.Log($"[UMI3D] target switch from {oldTarget} to {buildTarget}");
+            }
+        }
+
+        #region Plugins
+
+        private void DisablePlugin(BuildTargetGroup buildTargetGroup, E_Plugin plugin)
+        {
+            var buildTargetSettings = XRGeneralSettingsPerBuildTarget.XRGeneralSettingsForBuildTarget(buildTargetGroup);
+            var pluginsSettings = buildTargetSettings.AssignedSettings;
+            var success = XRPackageMetadataStore.RemoveLoader(pluginsSettings, GetLoaderName(plugin), buildTargetGroup);
+            if (success)
+            {
+                Debug.Log($"[UMI3D] XR Plug-in Management: Disabled {plugin} plugin on {buildTargetGroup}");
+            }
+            else
+            {
+                UnityEngine.Debug.LogError($"[UMI3D] Could not disabled {plugin} plugin on {buildTargetGroup}");
+            }
         }
 
         private void EnablePlugin(BuildTargetGroup buildTargetGroup, E_Plugin plugin)
@@ -82,22 +106,37 @@ namespace BuildTool
             var success = XRPackageMetadataStore.AssignLoader(pluginsSettings, GetLoaderName(plugin), buildTargetGroup);
             if (success)
             {
-                Debug.Log($"XR Plug-in Management: Enabled {plugin} plugin on {buildTargetGroup}");
-                Debug.Log("If it looks like the OpenXR plugin is not toggled on its because there is a" +
-                    " UI issue with OpenXR, But don't worry the plugin is activated");
+                Debug.Log($"[UMI3D] XR Plug-in Management: Enabled {plugin} plugin on {buildTargetGroup}");
+                // If it looks like the OpenXR plugin is not toggled on its because there is a UI issue with OpenXR, But don't worry the plugin is activated
+            }
+            else
+            {
+                UnityEngine.Debug.LogError($"[UMI3D] Could not enabled {plugin} plugin on {buildTargetGroup}");
             }
         }
 
-        private void DisablePlugin(BuildTargetGroup buildTargetGroup, E_Plugin plugin)
+
+        private void DisableAllPlugins(BuildTargetGroup buildTargetGroup)
         {
-            var buildTargetSettings = XRGeneralSettingsPerBuildTarget.XRGeneralSettingsForBuildTarget(buildTargetGroup);
-            var pluginsSettings = buildTargetSettings.AssignedSettings;
-            var success = XRPackageMetadataStore.RemoveLoader(pluginsSettings, GetLoaderName(plugin), buildTargetGroup);
-            if (success)
+            if (buildTargetGroup == BuildTargetGroup.Standalone)
             {
-                Debug.Log($"XR Plug-in Management: Disabled {plugin} plugin on {buildTargetGroup}");
+                DisablePlugin(BuildTargetGroup.Standalone, E_Plugin.OpenXR);
+                DisablePlugin(BuildTargetGroup.Standalone, E_Plugin.OpenVR);
+                DisablePlugin(BuildTargetGroup.Standalone, E_Plugin.WaveXR);
+            }
+            else if (buildTargetGroup == BuildTargetGroup.Android)
+            {
+                DisablePlugin(BuildTargetGroup.Android, E_Plugin.OpenXR);
+                DisablePlugin(BuildTargetGroup.Android, E_Plugin.Oculus);
+                DisablePlugin(BuildTargetGroup.Android, E_Plugin.OpenVR);
+                DisablePlugin(BuildTargetGroup.Android, E_Plugin.PicoXR);
+                DisablePlugin(BuildTargetGroup.Android, E_Plugin.WaveXR);
             }
         }
+
+        #endregion
+
+        #region Features
 
         private void DisableOpenXRFeature(BuildTargetGroup buildTargetGroup, string featureId)
         {
@@ -121,26 +160,8 @@ namespace BuildTool
             }
             catch (Exception ex)
             {
-                throw new Exception("Make sure you have installed the needed plugin to use the " + featureId);
-            }
-        }
-
-
-        private void DisableAllPlugins(BuildTargetGroup buildTargetGroup)
-        {
-            if (buildTargetGroup == BuildTargetGroup.Standalone)
-            {
-                DisablePlugin(BuildTargetGroup.Standalone, E_Plugin.OpenXR);
-                DisablePlugin(BuildTargetGroup.Standalone, E_Plugin.OpenVR);
-                DisablePlugin(BuildTargetGroup.Standalone, E_Plugin.WaveXr);
-            }
-            else if (buildTargetGroup == BuildTargetGroup.Android)
-            {
-                DisablePlugin(BuildTargetGroup.Android, E_Plugin.OpenXR);
-                DisablePlugin(BuildTargetGroup.Android, E_Plugin.Oculus);
-                DisablePlugin(BuildTargetGroup.Android, E_Plugin.OpenVR);
-                DisablePlugin(BuildTargetGroup.Android, E_Plugin.Pico);
-                DisablePlugin(BuildTargetGroup.Android, E_Plugin.WaveXr);
+                UnityEngine.Debug.LogException(ex);
+                throw new Exception("[UMI3D] Make sure you have installed the needed plugin to use the " + featureId);
             }
         }
 
@@ -164,13 +185,16 @@ namespace BuildTool
             }
         }
 
+
+        #endregion
+
         string GetLoaderName(E_Plugin plugin) => plugin switch
         {
             E_Plugin.OpenXR => BuildStaticNames.LOADER_OPEN_XR,
             E_Plugin.Oculus => BuildStaticNames.LOADER_OCULUS,
             E_Plugin.OpenVR => BuildStaticNames.LOADER_OPEN_VR,
-            E_Plugin.Pico => BuildStaticNames.LOADER_PICO,
-            E_Plugin.WaveXr => BuildStaticNames.LOADER_WAVE_XR,
+            E_Plugin.PicoXR => BuildStaticNames.LOADER_PICO,
+            E_Plugin.WaveXR => BuildStaticNames.LOADER_WAVE_XR,
             _ => throw new NotImplementedException()
         };
     }

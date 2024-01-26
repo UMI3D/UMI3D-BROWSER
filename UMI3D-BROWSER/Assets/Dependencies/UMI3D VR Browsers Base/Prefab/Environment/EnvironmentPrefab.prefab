@@ -100,7 +100,7 @@ GameObject:
   - component: {fileID: 120275459307515987}
   - component: {fileID: 2922126853558484743}
   - component: {fileID: 9035366892109336454}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -437,6 +437,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parameters: {fileID: 11400000, guid: 74c763950025fd24abcbf8641db1d8a2, type: 2}
+  navigation: {fileID: 0}
 --- !u!1 &5848355985887583377
 GameObject:
   m_ObjectHideFlags: 0
@@ -531,7 +532,7 @@ GameObject:
   - component: {fileID: 2447684733145723540}
   - component: {fileID: 6528671469033565278}
   - component: {fileID: 5220243159181313142}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -831,7 +832,7 @@ PrefabInstance:
     - target: {fileID: 801146751925500644, guid: ef00aa862b8b03444b612bbaaabaa689,
         type: 3}
       propertyPath: m_Size
-      value: 0.24691358
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 912898139609330696, guid: ef00aa862b8b03444b612bbaaabaa689,
         type: 3}
@@ -991,7 +992,7 @@ PrefabInstance:
     - target: {fileID: 4876867055538472026, guid: ef00aa862b8b03444b612bbaaabaa689,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 5.435886
+      value: 0.0007506267
       objectReference: {fileID: 0}
     - target: {fileID: 4910200445073554615, guid: ef00aa862b8b03444b612bbaaabaa689,
         type: 3}

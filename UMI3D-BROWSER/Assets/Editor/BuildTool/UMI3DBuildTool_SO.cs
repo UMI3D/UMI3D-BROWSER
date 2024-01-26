@@ -25,26 +25,100 @@ namespace umi3d.browserEditor.BuildTool
     {
         public E_Target Target = E_Target.Quest;
         public E_ReleaseCycle releaseCycle = E_ReleaseCycle.Alpha;
+        
         /// <summary>
-        /// Version number of the browser
+        /// New additional version.
         /// </summary>
-        public string versionNumber;
+        public string additionalVersion;
         /// <summary>
-        /// 
+        /// New major version.
         /// </summary>
-        public string bundleVersion;
+        public int majorVersion;
+        /// <summary>
+        /// New minor version.
+        /// </summary>
+        public int minorVersion;
+        /// <summary>
+        /// New build count version.
+        /// </summary>
+        public int buildCountVersion;
+        /// <summary>
+        /// Previous additional version.
+        /// </summary>
+        public string oldAdditionalVersion;
+        /// <summary>
+        /// Previous major version.
+        /// </summary>
+        public int oldMajorVersion;
+        /// <summary>
+        /// Previous minor version.
+        /// </summary>
+        public int oldMinorVersion;
+        /// <summary>
+        /// Previous build count version.
+        /// </summary>
+        public int oldBuildCountVersion;
+        /// <summary>
+        /// Previous date version.
+        /// </summary>
+        public string oldDateVersion;
 
         /// <summary>
         /// Version of the browser
         /// </summary>
-        public string version
+        public string Version
         {
             get
             {
-                return $"{releaseCycle.GetReleaseInitial()}.{versionNumber}.Date";
+                string result = $"{releaseCycle.GetReleaseInitial()}_";
+
+                if (!string.IsNullOrEmpty(additionalVersion))
+                {
+                    result += $"{additionalVersion}_";
+                }
+
+                result += $"{majorVersion}.{minorVersion}.{buildCountVersion}_{DateTime.Now.ToString("yy.MM.dd")}";
+
+                return result;
+            }
+        }
+        public string OldVersion
+        {
+            get
+            {
+                string result = $"";
+
+                if (!string.IsNullOrEmpty(oldAdditionalVersion))
+                {
+                    result += $"{oldAdditionalVersion}_";
+                }
+
+                result += $"{oldMajorVersion}.{oldMinorVersion}.{oldBuildCountVersion}_{oldDateVersion}";
+
+                return result;
+            }
+        }
+        /// <summary>
+        /// Bundle version for Android.
+        /// </summary>
+        public string BundleVersion
+        {
+            get
+            {
+                return $"{majorVersion * 1_000}.{minorVersion * 100}.{buildCountVersion}";
             }
         }
 
         public Action updateVersion;
+        public Action updateOldVersion;
+
+        public void UpdateOldVersionWithNewVersion()
+        {
+            oldMajorVersion = majorVersion;
+            oldMinorVersion = minorVersion;
+            oldBuildCountVersion = buildCountVersion;
+            oldAdditionalVersion = additionalVersion;
+            oldDateVersion = DateTime.Now.ToString("yy.MM.dd");
+        }
     }
 }

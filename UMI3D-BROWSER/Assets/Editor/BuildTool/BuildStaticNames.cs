@@ -21,7 +21,7 @@ namespace umi3d.browserEditor.BuildTool
     /// </summary>
     public static class BuildStaticNames
     {
-        public const string LOADER_OPEN_XR = "UnityEngine.XR.OpenXR.OpenXRLoader";
+        public const string LOADER_OPEN_XR = "Unity.XR.OpenXR.OpenXRLoader";
         public const string LOADER_OCULUS = "Unity.XR.Oculus.OculusLoader";
         public const string LOADER_OPEN_VR = "Unity.XR.OpenVR.OpenVRLoader";
         public const string LOADER_PICO = "Unity.XR.PXR.PXR_Loader";

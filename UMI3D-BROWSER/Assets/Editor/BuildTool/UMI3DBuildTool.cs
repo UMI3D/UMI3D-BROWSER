@@ -42,7 +42,7 @@ namespace umi3d.browserEditor.BuildTool
 
         public void CreateGUI()
         {
-            _targetAndPluginSwitcher = new TargetAndPlugingSwitcher();
+            _targetAndPluginSwitcher = new TargetAndPluginSwitcher();
             _uMI3DConfigurator = new UMI3DConfigurator(loadingParameters);
 
             VisualElement root = rootVisualElement;
@@ -155,6 +155,8 @@ namespace umi3d.browserEditor.BuildTool
             buildTool_SO.updateVersion = () =>
             {
                 L_Version.text = buildTool_SO.Version;
+                PlayerSettings.bundleVersion = buildTool_SO.Version;
+                PlayerSettings.Android.bundleVersionCode = buildTool_SO.BundleVersion;
             };
 
             Button B_Build = root.Q<Button>("B_Build");

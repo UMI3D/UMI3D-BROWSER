@@ -30,26 +30,20 @@ namespace umi3d.browserEditor.BuildTool
 
         public void HandleTarget(E_Target target)
         {
+            loadingParameters.supportedformats.Remove(UMI3DAssetFormat.unity_standalone_urp);
+            loadingParameters.supportedformats.Remove(UMI3DAssetFormat.unity_android_urp);
             switch (target)
             {
                 case E_Target.Quest:
-                    loadingParameters.supportedformats.Remove(UMI3DAssetFormat.unity_standalone_urp);
-                    loadingParameters.supportedformats.Remove(UMI3DAssetFormat.unity_android_urp);
                     loadingParameters.supportedformats.Add(UMI3DAssetFormat.unity_android_urp);
                     break;
                 case E_Target.SteamXR:
-                    loadingParameters.supportedformats.Remove(UMI3DAssetFormat.unity_standalone_urp);
-                    loadingParameters.supportedformats.Remove(UMI3DAssetFormat.unity_android_urp);
                     loadingParameters.supportedformats.Add(UMI3DAssetFormat.unity_standalone_urp);
                     break;
                 case E_Target.Focus:
-                    loadingParameters.supportedformats.Remove(UMI3DAssetFormat.unity_standalone_urp);
-                    loadingParameters.supportedformats.Remove(UMI3DAssetFormat.unity_android_urp);
                     loadingParameters.supportedformats.Add(UMI3DAssetFormat.unity_android_urp);
                     break;
                 case E_Target.Pico:
-                    loadingParameters.supportedformats.Remove(UMI3DAssetFormat.unity_standalone_urp);
-                    loadingParameters.supportedformats.Remove(UMI3DAssetFormat.unity_android_urp);
                     loadingParameters.supportedformats.Add(UMI3DAssetFormat.unity_android_urp);
                     break;
             }

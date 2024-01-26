@@ -101,11 +101,11 @@ namespace umi3d.browserEditor.BuildTool
         /// <summary>
         /// Bundle version for Android.
         /// </summary>
-        public string BundleVersion
+        public int BundleVersion
         {
             get
             {
-                return $"{majorVersion * 1_000}.{minorVersion * 100}.{buildCountVersion}";
+                return majorVersion * 10_000 + minorVersion * 100 + buildCountVersion;
             }
         }
 

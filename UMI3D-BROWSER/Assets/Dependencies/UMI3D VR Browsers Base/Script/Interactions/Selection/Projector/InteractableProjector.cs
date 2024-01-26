@@ -12,6 +12,7 @@ limitations under the License.
 */
 
 using umi3d.cdk.interaction;
+using umi3d.common;
 using umi3d.common.interaction;
 using umi3dVRBrowsersBase.ui.playerMenu;
 
@@ -29,7 +30,7 @@ namespace umi3dBrowsers.interaction.selection.projector
         /// <returns></returns>
         public bool IsProjected(InteractableContainer interactable, AbstractController controller)
         {
-            return InteractionMapper.Instance.IsToolSelected(interactable.Interactable.dto.id);
+            return InteractionMapper.Instance.IsToolSelected(UMI3DGlobalID.EnvironmentId, interactable.Interactable.dto.id);
         }
 
         /// <summary>
@@ -39,7 +40,7 @@ namespace umi3dBrowsers.interaction.selection.projector
         /// <param name="controller"></param>
         public void Project(InteractableContainer interactable, AbstractController controller)
         {
-            var interactionTool = AbstractInteractionMapper.Instance.GetTool(interactable.Interactable.dto.id);
+            var interactionTool = AbstractInteractionMapper.Instance.GetTool(UMI3DGlobalID.EnvironmentId, interactable.Interactable.dto.id);
             Project(interactionTool, interactable.Interactable.dto.nodeId, controller);
 
             // display the parameter gear if it is required to access the interactions
@@ -76,7 +77,7 @@ namespace umi3dBrowsers.interaction.selection.projector
         /// <inheritdoc/>
         public void Release(InteractableContainer interactable, AbstractController controller)
         {
-            controller.Release(AbstractInteractionMapper.Instance.GetTool(interactable.Interactable.dto.id), new RequestedUsingSelector<AbstractSelector>() { controller = controller });
+            controller.Release(AbstractInteractionMapper.Instance.GetTool(UMI3DGlobalID.EnvironmentId, interactable.Interactable.dto.id), new RequestedUsingSelector<AbstractSelector>() { controller = controller });
 
             PlayerMenuManager.Instance.parameterGear.HideWithDelay();
         }

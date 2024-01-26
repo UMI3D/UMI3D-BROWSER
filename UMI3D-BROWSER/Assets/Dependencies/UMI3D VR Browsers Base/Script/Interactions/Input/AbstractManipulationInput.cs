@@ -131,7 +131,7 @@ namespace umi3dVRBrowsersBase.interactions.input
         /// <param name="dofs"></param>
         /// <param name="toolId"></param>
         /// <param name="hoveredObjectId"></param>
-        public override void Associate(ManipulationDto manipulation, DofGroupEnum dofs, ulong toolId, ulong hoveredObjectId)
+        public override void Associate(ulong environmentId, ManipulationDto manipulation, DofGroupEnum dofs, ulong toolId, ulong hoveredObjectId)
         {
             if (associatedInteraction != null)
             {
@@ -141,9 +141,9 @@ namespace umi3dVRBrowsersBase.interactions.input
             if (IsCompatibleWith(dofs))
             {
                 associatedManipulationDof = dofs;
-                base.Associate(manipulation, dofs, toolId, hoveredObjectId);
+                base.Associate(environmentId, manipulation, dofs, toolId, hoveredObjectId);
 
-                GameObject frame = UMI3DEnvironmentLoader.GetNode(manipulation.frameOfReference).gameObject;
+                GameObject frame = UMI3DEnvironmentLoader.GetNode(environmentId, manipulation.frameOfReference).gameObject;
                 if (frame == null)
                     throw new System.Exception("No frame of reference found for this manipulation");
                 else
@@ -165,7 +165,7 @@ namespace umi3dVRBrowsersBase.interactions.input
         /// <param name="interaction"></param>
         /// <param name="toolId"></param>
         /// <param name="hoveredObjectId"></param>
-        public override void Associate(AbstractInteractionDto interaction, ulong toolId, ulong hoveredObjectId)
+        public override void Associate(ulong environmentId, AbstractInteractionDto interaction, ulong toolId, ulong hoveredObjectId)
         {
             if (associatedInteraction != null)
             {
@@ -180,7 +180,7 @@ namespace umi3dVRBrowsersBase.interactions.input
                     {
                         if (IsCompatibleWith(sep.dofs))
                         {
-                            Associate(interaction as ManipulationDto, sep.dofs, toolId, hoveredObjectId);
+                            Associate(environmentId, interaction as ManipulationDto, sep.dofs, toolId, hoveredObjectId);
                             return;
                         }
                     }

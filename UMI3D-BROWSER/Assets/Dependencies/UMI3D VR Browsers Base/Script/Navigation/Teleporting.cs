@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using umi3dVRBrowsersBase.connection;
 using UnityEngine;
 
 
@@ -39,12 +40,32 @@ namespace umi3dVRBrowsersBase.navigation
         /// </summary>
         public TeleportArc arc;
 
+        bool isLoadingScreenDisplayed = false;
+
+        protected virtual void Awake()
+        {
+            LoadingScreenDisplayer.OnLoadingScreenDislayed.AddListener(() =>
+            {
+                isLoadingScreenDisplayed = true;
+            });
+
+            LoadingScreenDisplayer.OnLoadingScreenHidden.AddListener(() =>
+            {
+                isLoadingScreenDisplayed = false;
+            });
+        }
+
         /// <summary>
         /// Teleports player.
         /// </summary>
         [ContextMenu("Teleport")]
         public void Teleport()
         {
+            if (isLoadingScreenDisplayed)
+            {
+                return;
+            }
+
             Vector3? position = arc.GetPointedPoint();
 
             if (position.HasValue)

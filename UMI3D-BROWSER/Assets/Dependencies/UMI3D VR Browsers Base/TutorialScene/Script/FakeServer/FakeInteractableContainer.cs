@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Linq;
 using umi3d.cdk;
 using umi3d.cdk.interaction;
+using umi3d.common;
 using umi3d.common.interaction;
 using UnityEngine;
 
@@ -50,11 +51,11 @@ namespace umi3dVRBrowsersBase.tutorial.fakeServer
                 interactions = interactions.Select(dto => dto.id).ToList()
             };
 
-            var interactable = new Interactable(dto);
+            var interactable = new Interactable(UMI3DGlobalID.EnvironmentId, dto);
             InteractableContainer container = gameObject.AddComponent<InteractableContainer>();
             container.Interactable = interactable;
 
-            UMI3DEnvironmentLoader.RegisterEntityInstance(dto.id, dto, interactable, interactable.Destroy).NotifyLoaded();
+            UMI3DEnvironmentLoader.RegisterEntityInstance(UMI3DGlobalID.EnvironmentId, dto.id, dto, interactable, interactable.Destroy).NotifyLoaded();
         }
     }
 }

@@ -109,7 +109,7 @@ namespace umi3dVRBrowsersBase.interactions.input
         /// <param name="interaction"></param>
         /// <param name="toolId"></param>
         /// <param name="hoveredObjectId"></param>
-        public override void Associate(AbstractInteractionDto interaction, ulong toolId, ulong hoveredObjectId)
+        public override void Associate(ulong environmentId, AbstractInteractionDto interaction, ulong toolId, ulong hoveredObjectId)
         {
             if (associatedInteraction != null)
             {
@@ -197,7 +197,7 @@ namespace umi3dVRBrowsersBase.interactions.input
                 onActionDown.AddListener(() => { action.Invoke(true); });
                 onActionUp.AddListener(() => { action.Invoke(false); });
 
-                base.Associate(interaction, toolId, hoveredObjectId);
+                base.Associate(environmentId, interaction, toolId, hoveredObjectId);
             }
             else
             {
@@ -207,18 +207,19 @@ namespace umi3dVRBrowsersBase.interactions.input
 
         protected async void StartAnim(ulong id)
         {
-            var anim = UMI3DAbstractAnimation.Get(id);
+            var anim = UMI3DAbstractAnimation.Get(UMI3DGlobalID.EnvironmentId, id);
             if (anim != null)
             {
                 await anim.SetUMI3DProperty(
                     new SetUMI3DPropertyData(
+                        UMI3DGlobalID.EnvironmentId,
                          new SetEntityPropertyDto()
                          {
                              entityId = id,
                              property = UMI3DPropertyKeys.AnimationPlaying,
                              value = true
                          },
-                        UMI3DEnvironmentLoader.GetEntity(id))
+                        UMI3DEnvironmentLoader.GetEntity(UMI3DGlobalID.EnvironmentId, id))
                     );
                 anim.Start();
             }
@@ -231,7 +232,7 @@ namespace umi3dVRBrowsersBase.interactions.input
         /// <param name="dofs"></param>
         /// <param name="toolId"></param>
         /// <param name="hoveredObjectId"></param>
-        public override void Associate(ManipulationDto manipulation, DofGroupEnum dofs, ulong toolId, ulong hoveredObjectId)
+        public override void Associate(ulong environmentId, ManipulationDto manipulation, DofGroupEnum dofs, ulong toolId, ulong hoveredObjectId)
         {
             throw new System.Exception("Boolean input is not compatible with manipulation");
         }

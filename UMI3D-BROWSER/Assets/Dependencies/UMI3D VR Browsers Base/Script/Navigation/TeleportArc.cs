@@ -16,6 +16,7 @@ limitations under the License.
 
 using System.Collections;
 using System.Collections.Generic;
+using umi3dVRBrowsersBase.connection;
 using UnityEngine;
 
 namespace umi3dVRBrowsersBase.navigation
@@ -83,7 +84,19 @@ namespace umi3dVRBrowsersBase.navigation
                 disp.SetActive(false);
                 displayers.Add(disp);
             }
+
+            LoadingScreenDisplayer.OnLoadingScreenDislayed.AddListener(() =>
+            {
+                isLoadingScreenDisplayed = true;
+            });
+
+            LoadingScreenDisplayer.OnLoadingScreenHidden.AddListener(() =>
+            {
+                isLoadingScreenDisplayed = false;
+            });
         }
+
+        bool isLoadingScreenDisplayed = false;
 
         /// <summary>
         /// Displays teleportation arc.
@@ -91,6 +104,11 @@ namespace umi3dVRBrowsersBase.navigation
         [ContextMenu("Display")]
         public void Display()
         {
+            if (isLoadingScreenDisplayed)
+            {
+                return;
+            }
+
             if (updateRoutine != null)
                 return;
 

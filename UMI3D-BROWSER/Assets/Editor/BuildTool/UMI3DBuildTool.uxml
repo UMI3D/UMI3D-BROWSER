@@ -43,7 +43,8 @@
             <ui:Label tabindex="-1" text="Label" parse-escape-sequences="true" display-tooltip-when-elided="true" name="L_BuildVersion" style="flex-shrink: 1; flex-grow: 1; flex-basis: 0; padding-top: 2px; padding-right: 2px; padding-bottom: 2px; padding-left: 2px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; -unity-text-align: middle-left;" />
         </ui:VisualElement>
     </ui:VisualElement>
-    <ui:VisualElement style="flex-grow: 1;">
-        <ui:Button text="BUILD" parse-escape-sequences="true" display-tooltip-when-elided="true" name="B_Build" />
+    <ui:VisualElement style="flex-grow: 1; flex-direction: row; justify-content: space-around;">
+        <ui:Button text="Apply changes" parse-escape-sequences="true" display-tooltip-when-elided="true" name="B_Apply" style="flex-grow: 1;" />
+        <ui:Button text="BUILD" parse-escape-sequences="true" display-tooltip-when-elided="true" name="B_Build" style="flex-grow: 1;" />
     </ui:VisualElement>
 </ui:UXML>

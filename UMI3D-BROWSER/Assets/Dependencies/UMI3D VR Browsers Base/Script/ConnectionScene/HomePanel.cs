@@ -17,6 +17,7 @@ limitations under the License.
 using umi3dVRBrowsersBase.ui.keyboard;
 using UnityEngine;
 using UnityEngine.UI;
+using static umi3dVRBrowsersBase.connection.PlayerPrefsManager;
 
 namespace umi3dVRBrowsersBase.connection
 {
@@ -90,7 +91,8 @@ namespace umi3dVRBrowsersBase.connection
             panel.SetActive(true);
             LoadingPanel.Instance.Hide();
 
-            bool displayFavoriteServers = PlayerPrefsManager.HasVirtualWorldsStored() && !forceDisplayAddNewServer;
+            var worlds = PlayerPrefsManager.GetVirtualWorlds() ?? new();
+            bool displayFavoriteServers = worlds.favoriteURLs.Count > 0 && !forceDisplayAddNewServer;
 
             newServerPanel.SetActive(!displayFavoriteServers);
             favoriteServerPanel.SetActive(displayFavoriteServers);
@@ -98,8 +100,10 @@ namespace umi3dVRBrowsersBase.connection
             if (displayFavoriteServers)
             {
                 favoriteServersSlider.Clear();
-                System.Collections.Generic.List<PlayerPrefsManager.VirtualWorldData> favoriteServers = PlayerPrefsManager.GetFavoriteVirtualWorlds();
-                foreach (PlayerPrefsManager.VirtualWorldData data in favoriteServers)
+                worlds.DebugFavoriteListCreation();
+                System.Collections.Generic.List<VirtualWorldData> favoriteServers = worlds.FavoriteWorlds;
+
+                foreach (VirtualWorldData data in favoriteServers)
                 {
                     GameObject go = Instantiate(favoriteServersSlider.baseElement, favoriteServersSlider.Container.transform);
                     FavoriteServerEntry entry = go.GetComponent<FavoriteServerEntry>();

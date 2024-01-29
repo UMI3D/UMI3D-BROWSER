@@ -123,7 +123,7 @@ namespace umi3dVRBrowsersBase.connection
             return url;
         }
 
-        public async Task<MediaDto> GetMedia(PlayerPrefsManager.VirtualWorldData connectionData)
+        public async Task<MediaDto> GetMedia(VirtualWorldData connectionData)
         {
             if (LoadingPanel.Exists)
                 LoadingPanel.Instance.Display("Connecting ...");

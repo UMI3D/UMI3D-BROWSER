@@ -14,14 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System.Collections;
-using System.Collections.Generic;
-using umi3d.cdk;
 using umi3d.cdk.collaboration;
 using umi3d.common;
-using UnityEngine;
 
-namespace BuildTool
+namespace umi3d.browserEditor.BuildTool
 {
     public class UMI3DConfigurator : IBuilToolComponent
     {
@@ -34,26 +30,20 @@ namespace BuildTool
 
         public void HandleTarget(E_Target target)
         {
+            loadingParameters.supportedformats.Remove(UMI3DAssetFormat.unity_standalone_urp);
+            loadingParameters.supportedformats.Remove(UMI3DAssetFormat.unity_android_urp);
             switch (target)
             {
                 case E_Target.Quest:
-                    loadingParameters.supportedformats.Remove(UMI3DAssetFormat.unity_standalone_urp);
-                    loadingParameters.supportedformats.Remove(UMI3DAssetFormat.unity_android_urp);
                     loadingParameters.supportedformats.Add(UMI3DAssetFormat.unity_android_urp);
                     break;
                 case E_Target.SteamXR:
-                    loadingParameters.supportedformats.Remove(UMI3DAssetFormat.unity_standalone_urp);
-                    loadingParameters.supportedformats.Remove(UMI3DAssetFormat.unity_android_urp);
                     loadingParameters.supportedformats.Add(UMI3DAssetFormat.unity_standalone_urp);
                     break;
                 case E_Target.Focus:
-                    loadingParameters.supportedformats.Remove(UMI3DAssetFormat.unity_standalone_urp);
-                    loadingParameters.supportedformats.Remove(UMI3DAssetFormat.unity_android_urp);
                     loadingParameters.supportedformats.Add(UMI3DAssetFormat.unity_android_urp);
                     break;
                 case E_Target.Pico:
-                    loadingParameters.supportedformats.Remove(UMI3DAssetFormat.unity_standalone_urp);
-                    loadingParameters.supportedformats.Remove(UMI3DAssetFormat.unity_android_urp);
                     loadingParameters.supportedformats.Add(UMI3DAssetFormat.unity_android_urp);
                     break;
             }

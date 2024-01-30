@@ -36,50 +36,54 @@ namespace umi3d.browserEditor.utils
             partialPath = path.Substring(0, path.Length - fileName.Length - 3);
         }
 
-        public static void CreateScriptFromTemplate(string templateName, string scriptName)
-        {
-            string templateFileName = templateName;
-            string templatePath = $"{partialPath}/{templateFileName}";
-            string templateContent = System.IO.File.ReadAllText(templatePath);
-            string scriptContent = templateContent.Replace("#CURRENT_YEAR#", System.DateTime.Now.Year.ToString());
-            string className = scriptName;
-
-            scriptContent = scriptContent.Replace("#SCRIPTNAME#", className);
-            scriptName = className + ".cs";
-            string scriptPath = $"{partialPath}/{scriptName}";
-            System.IO.File.WriteAllText(scriptPath, scriptContent);
-            AssetDatabase.ImportAsset(scriptPath);
-        }
-
         [MenuItem(itemName: "Assets/Create/Custom Script/UMI3D Class", isValidateFunction: false, priority: 51)]
         public static void CreateUmi3dClassTemplate()
         {
-            CreateScriptFromTemplate("Umi3dClassTemplate.txt", "Umi3dClass");
+            ProjectWindowUtil.CreateScriptAssetFromTemplateFile
+            (
+                $"{partialPath}/Umi3dClassTemplate.txt",
+                "Umi3dClass.cs"
+            );
         }
 
         [MenuItem(itemName: "Assets/Create/Custom Script/UMI3D Struct", isValidateFunction: false, priority: 51)]
         public static void CreateUmi3DStructTemplate()
         {
-            CreateScriptFromTemplate("Umi3dStructTemplate.txt", "Umi3dStruct");
+            ProjectWindowUtil.CreateScriptAssetFromTemplateFile
+            (
+                $"{partialPath}/Umi3dStructTemplate.txt",
+                "Umi3dStruct.cs"
+            );
         }
 
         [MenuItem(itemName: "Assets/Create/Custom Script/UMI3D Enum", isValidateFunction: false, priority: 51)]
         public static void CreateUmi3DEnumTemplate()
         {
-            CreateScriptFromTemplate("Umi3dEnumTemplate.txt", "Umi3dEnum");
+            ProjectWindowUtil.CreateScriptAssetFromTemplateFile
+            (
+                $"{partialPath}/Umi3dEnumTemplate.txt",
+                "Umi3dEnum.cs"
+            );
         }
 
         [MenuItem(itemName: "Assets/Create/Custom Script/UMI3D Interface", isValidateFunction: false, priority: 51)]
         public static void CreateUmi3DInterfaceTemplate()
         {
-            CreateScriptFromTemplate("Umi3dInterfaceTemplate.txt", "Umi3dInterface");
+            ProjectWindowUtil.CreateScriptAssetFromTemplateFile
+            (
+                $"{partialPath}/Umi3dInterfaceTemplate.txt",
+                "Umi3dInterface.cs"
+            );
         }
 
         [MenuItem(itemName: "Assets/Create/Custom Script/Monobehaviour", isValidateFunction: false, priority: 51)]
         public static void CreateMonobehaviourTemplate()
         {
-            CreateScriptFromTemplate("MonobehaviourTemplate.txt", "TestClass");
+            ProjectWindowUtil.CreateScriptAssetFromTemplateFile
+           (
+               $"{partialPath}/MonobehaviourTemplate.txt",
+               "NewBehaviourScript.cs"
+           );
         }
-
     }
 }

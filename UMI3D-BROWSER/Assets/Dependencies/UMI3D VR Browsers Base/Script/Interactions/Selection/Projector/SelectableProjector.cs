@@ -94,10 +94,6 @@ namespace umi3dBrowsers.interaction.selection.projector
                     slider.Click(controller.transform);
                     break;
 
-                case ToggleSwitch toggleSwitch:
-                    toggleSwitch.Click();
-                    break;
-
                 default:
                     SendDefaultSelectableEvent(selectable, controller, eventData, false);
                     break;

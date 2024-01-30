@@ -17,6 +17,7 @@ limitations under the License.
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using umi3dBrowsers.interaction;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -24,7 +25,7 @@ using UnityEngine.UI;
 
 namespace umi3dBrowsers.displayer
 {
-    public class ToggleSwitch : Selectable, IPointerClickHandler
+    public class ToggleSwitch : MonoBehaviour, IPointerClickHandler, IUMI3DBrowserUI
     {
         [Header("Slider setup")]
         [SerializeField, Range(0, 1f)] private float sliderValue;
@@ -42,14 +43,66 @@ namespace umi3dBrowsers.displayer
         [Header("Events")]
         [SerializeField] private UnityEvent onToggleOn;
         [SerializeField] private UnityEvent onToggleOff;
+        [SerializeField] private Action onTransitionEffet;
 
+        [Header("Elements to recolor")]
+        [SerializeField] private Image backgroundImage;
+        [SerializeField] private Image handleImage;
+        [Space]
+        [SerializeField] private bool recolorBackground;
+        [SerializeField] private bool recolorHandle;
+
+        [Header("Colors")]
+        [SerializeField] private Color backgroundColorOff = Color.white;
+        [SerializeField] private Color backgroundColorOn = Color.white;
+        [Space]
+        [SerializeField] private Color handleColorOff = Color.white;
+        [SerializeField] private Color handleColorOn = Color.white;
+
+        private bool _isBackGroundImageNotNull;
+        private bool _isHandleImageNotNull;
         private ToggleSwitchGroupManager _toggleSwitchGroupManager;
+
+        private void Awake()
+        {
+            SetupToggleComponents();
+
+            CheckForNull();
+            ChangeColors();
+        }
 
         private void OnValidate()
         {
             SetupToggleComponents();
 
-            _slider.value = sliderValue; 
+            _slider.value = sliderValue;
+
+            CheckForNull();
+            ChangeColors();
+        }
+
+        protected void OnEnable()
+        {
+            onTransitionEffet += ChangeColors;
+        }
+
+        protected void OnDisable()
+        {
+            onTransitionEffet -= ChangeColors;
+        }
+
+        private void CheckForNull()
+        {
+            _isBackGroundImageNotNull = backgroundImage != null;
+            _isHandleImageNotNull = handleImage != null;
+        }
+
+        private void ChangeColors()
+        {
+            if (recolorBackground && _isBackGroundImageNotNull)
+                backgroundImage.color = Color.Lerp(backgroundColorOff, backgroundColorOn, sliderValue);
+            if (recolorHandle && _isHandleImageNotNull)
+                handleImage.color = Color.Lerp(handleColorOff, handleColorOn, sliderValue);
         }
 
         private void SetupToggleComponents()
@@ -78,11 +131,6 @@ namespace umi3dBrowsers.displayer
         public void SetupForManager(ToggleSwitchGroupManager manager)
         {
             _toggleSwitchGroupManager = manager;
-        }
-
-        private void Awake()
-        {
-            SetupToggleComponents();
         }
 
         public void OnPointerClick(PointerEventData eventData)
@@ -152,6 +200,8 @@ namespace umi3dBrowsers.displayer
 
                     float lerpFactor = slideEase.Evaluate(time/animationDuration);
                     _slider.value = sliderValue = Mathf.Lerp(startValue, endValue, lerpFactor);
+
+                    onTransitionEffet?.Invoke();
 
                     yield return null;
                 }

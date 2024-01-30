@@ -73,5 +73,14 @@ namespace umi3d.browserEditor.utils
                 "Umi3dInterface.cs"
             );
         }
+        [MenuItem(itemName: "Assets/Create/Custom Script/Monobehaviour", isValidateFunction: false, priority: 51)]
+        public static void CreateMonobehaviourTemplate()
+        {
+            ProjectWindowUtil.CreateScriptAssetFromTemplateFile
+           (
+               $"{partialPath}/MonobehaviourTemplate.txt",
+               "NewBehaviourScript.cs"
+           );
+        }
     }
 }

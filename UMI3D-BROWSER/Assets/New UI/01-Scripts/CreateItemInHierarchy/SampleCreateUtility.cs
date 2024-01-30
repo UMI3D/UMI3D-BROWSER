@@ -5,8 +5,6 @@ using UnityEditor;
 
 public static class SampleCreateUtility
 {
-
-
     [MenuItem("GameObject/UMI3D_UI/Gameobject")]
     public static void CreateRandomGameobject(MenuCommand menuCommand)
     {

@@ -20,6 +20,7 @@ using UnityEngine;
 
 namespace umi3dBrowsers.displayer
 {
+    [AddComponentMenu("UMI3D_UI/Toggle Switch Group", 30)]
     public class ToggleSwitchGroupManager : MonoBehaviour
     {
         [Header("Start Value")]

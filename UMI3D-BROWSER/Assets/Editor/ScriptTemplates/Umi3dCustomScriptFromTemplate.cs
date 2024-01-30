@@ -75,7 +75,7 @@ namespace umi3d.browserEditor.utils
             CreateScriptFromTemplate("Umi3dInterfaceTemplate.txt", "Umi3dInterface");
         }
 
-        [MenuItem(itemName: "Assets/Create/Custom Script/UMI3D Mono", isValidateFunction: false, priority: 51)]
+        [MenuItem(itemName: "Assets/Create/Custom Script/Monobehaviour", isValidateFunction: false, priority: 51)]
         public static void CreateMonobehaviourTemplate()
         {
             CreateScriptFromTemplate("MonobehaviourTemplate.txt", "TestClass");

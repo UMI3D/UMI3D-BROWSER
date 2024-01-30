@@ -1,5 +1,5 @@
 /*
-Copyright 2019 - #CURRENT_YEAR# Inetum
+Copyright 2019 - 2024 Inetum
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@ limitations under the License.
 
 namespace umi3d
 {
-    public enum #SCRIPTNAME# 
+    public enum Umi3dEnum 
     {
     }
 }

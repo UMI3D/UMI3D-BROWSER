@@ -13,19 +13,15 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+using inetum.unityUtils.saveSystem;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace umi3d.browserEditor.BuildTool
 {
-    [CreateAssetMenu(fileName = "UMI3D Build Tool", menuName = "UMI3D/Tools/Build Tool")]
-    public class UMI3DBuildTool_SO : ScriptableObject
+    //[CreateAssetMenu(fileName = "UMI3D Build Tool Version", menuName = "UMI3D/Tools/Build Tool Version")]
+    public class UMI3DBuildToolVersion_SO : SerializableScriptableObject
     {
-        public E_Target Target = E_Target.Quest;
-        public E_ReleaseCycle releaseCycle = E_ReleaseCycle.Alpha;
-        
         /// <summary>
         /// New additional version.
         /// </summary>
@@ -42,9 +38,11 @@ namespace umi3d.browserEditor.BuildTool
         /// New build count version.
         /// </summary>
         public int buildCountVersion;
+
         /// <summary>
         /// Previous additional version.
         /// </summary>
+        [Space]
         public string oldAdditionalVersion;
         /// <summary>
         /// Previous major version.
@@ -70,7 +68,7 @@ namespace umi3d.browserEditor.BuildTool
         {
             get
             {
-                string result = $"{releaseCycle.GetReleaseInitial()}_";
+                string result = $"";
 
                 if (!string.IsNullOrEmpty(additionalVersion))
                 {
@@ -82,6 +80,9 @@ namespace umi3d.browserEditor.BuildTool
                 return result;
             }
         }
+        /// <summary>
+        /// Last version of the browser
+        /// </summary>
         public string OldVersion
         {
             get

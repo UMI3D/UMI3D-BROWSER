@@ -17,61 +17,85 @@ limitations under the License.
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace umi3dBrowsers.displayer
 {
-    public class VignetteDisplayer : MonoBehaviour
+    public class VignetteDisplayer : MonoBehaviour, IUMI3DButtonHandler
     {
-        [SerializeField] private Color transprent = Color.gray;
+        [SerializeField] private Color transprentColor = Color.gray;
         [Header("Vignette main Image")]
         [SerializeField] private Image vignetteImage;
 
         [Header("Like button")]
-        [SerializeField] private Color normalLikeColor = Color.white;
-        [SerializeField] private Color hoverLikeColor = Color.white;
-        [Space]
-        [SerializeField] private Image likeBackGround = null;
-        [SerializeField] private Image likeIcon = null;
-        [SerializeField] private Sprite normalHeart;
-        [SerializeField] private Sprite clickedHeart;
+        [SerializeField] ButtonDisplayer likeButton;
 
         [Header("trash button")]
-        [SerializeField] private Color normalTrashColor = Color.white;
-        [SerializeField] private Color hoverTrashColor = Color.white;
-        [Space]
-        [SerializeField] private Image trashBackGround = null;
-        [SerializeField] private Image trashIcon = null;
-        [SerializeField] private Sprite normalTrashIcon;
-        [SerializeField] private Sprite hoverTrashIcon;
+        [SerializeField] ButtonDisplayer trashButton;
 
         [Header("Input field backgroung")]
         [SerializeField] private Image IF_background;
         [SerializeField] private Image pen;
 
         [Header("Animation")]
+        [SerializeField] private float hoverExitDelay;
         [SerializeField, Range(0, 1f)] private float animationDuration = 0.5f;
         [SerializeField] private AnimationCurve slideEase = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
+        Coroutine cadeInOutCoroutine;
+
+        [SerializeField] private UnityEvent onVignetteClicked;
+        
+        enum VignetteState { notHovering, Hovering, HoveringSubElement}
+        VignetteState vignetteState;
+
         private void Awake()
         {
-            transprent.a = 0;
+            transprentColor.a = 0;
+            likeButton.gameObject.SetActive(false);
+            trashButton.gameObject.SetActive(false);
+
+            likeButton.OnHover += () => vignetteState = VignetteState.HoveringSubElement;
+            trashButton.OnHover += () => vignetteState = VignetteState.HoveringSubElement;
         }
 
         public void HoverEnter(PointerEventData eventData)
         {
-            Debug.Log("Enter");
+            vignetteState = VignetteState.Hovering;
+
+            likeButton.gameObject.SetActive(true);
+            trashButton.gameObject.SetActive(true);
         }
 
         public void HoverExit(PointerEventData eventData)
         {
-            Debug.Log("Exit");
+            vignetteState = VignetteState.notHovering;
+            StartCoroutine(HoverDelay());
         }
 
-        public void Click(PointerEventData eventData)
+        public void Click()
         {
-            Debug.Log("Click");
+            onVignetteClicked?.Invoke();
+            likeButton.gameObject.SetActive(false);
+            trashButton.gameObject.SetActive(false);
+        }
+
+        private IEnumerator FadeInOut()
+        {
+            yield return null;
+        }
+
+        private IEnumerator HoverDelay()
+        {
+            yield return new WaitForSeconds(hoverExitDelay);
+
+            if (vignetteState == VignetteState.notHovering)
+            {
+                likeButton.gameObject.SetActive(false);
+                trashButton.gameObject.SetActive(false);
+            }
         }
     }
 }

@@ -16,20 +16,21 @@ limitations under the License.
 
 using System.Collections;
 using System.Collections.Generic;
+using umi3d.common.interaction;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace umi3dBrowsers.displayer
 {
-    [RequireComponent(typeof(VignetteDisplayer))]
-    public class VignetteButton : Button
+    public class UMI3DUI_Button : Button
     {
-        private VignetteDisplayer _vignetteDisplayer;
+        private IUMI3DButtonHandler _vignetteDisplayer;
 
         protected override void Awake()
         {
-            _vignetteDisplayer = GetComponent<VignetteDisplayer>();
+            _vignetteDisplayer = GetComponent<IUMI3DButtonHandler>();
+            onClick.AddListener(() => _vignetteDisplayer.Click());
         }
 
         public override void OnPointerEnter(PointerEventData eventData)
@@ -40,11 +41,6 @@ namespace umi3dBrowsers.displayer
         public override void OnPointerExit(PointerEventData eventData)
         {
             _vignetteDisplayer.HoverExit(eventData);
-        }
-
-        public override void OnPointerClick(PointerEventData eventData)
-        {
-            _vignetteDisplayer.Click(eventData);
         }
     }
 }

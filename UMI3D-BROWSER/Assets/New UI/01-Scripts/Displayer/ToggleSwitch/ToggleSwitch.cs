@@ -25,6 +25,7 @@ using UnityEngine.UI;
 
 namespace umi3dBrowsers.displayer
 {
+    [AddComponentMenu("UMI3D_UI/Toggle Switch", 30)]
     public class ToggleSwitch : MonoBehaviour, IPointerClickHandler, IUMI3DBrowserUI
     {
         [Header("Slider setup")]

@@ -27,6 +27,7 @@ namespace umi3d.browserEditor.BuildTool
     {
         [SerializeField] private VisualTreeAsset ui = default;
         [SerializeField] private VisualTreeAsset target_VTA = default;
+        [SerializeField] private VisualTreeAsset path_VTA = default;
 
         [SerializeField] UMI3DCollabLoadingParameters loadingParameters;
 
@@ -78,7 +79,15 @@ namespace umi3d.browserEditor.BuildTool
             Button B_BuildCount = V_BuildCount.Q<Button>();
             TextField TF_AdditionalVersion = root.Q<TextField>("TF_AdditionalVersion");
             Button B_ResetVersion = root.Q<Button>("Reset");
+
+            TemplateContainer T_Installer = root.Q<TemplateContainer>("T_Installer");
+            TextField TF_Installer = T_Installer.Q<TextField>();
+            Button B_Installer = T_Installer.Q<Button>();
+            TemplateContainer T_License = root.Q<TemplateContainer>("T_License");
+            TextField TF_License = T_License.Q<TextField>();
+            Button B_License = T_License.Q<Button>();
             ListView LV_Targets = root.Q<ListView>("LV_Targets");
+
             Label L_OldVersion = root.Q<Label>("L_OldVersion");
             Label L_Version = root.Q<Label>("L_BuildVersion");
 
@@ -143,6 +152,14 @@ namespace umi3d.browserEditor.BuildTool
                 TF_AdditionalVersion.value = buildToolVersion_SO.oldAdditionalVersion;
             };
 
+            // Path
+            TF_Installer.label = "Installer";
+            B_Installer.clicked += () =>
+            {
+                UnityEngine.Debug.Log($"Todo");
+            };
+            TF_License.label = "License";
+
             // Targets.
             LV_Targets.reorderable = true;
             LV_Targets.virtualizationMethod = CollectionVirtualizationMethod.DynamicHeight;
@@ -158,71 +175,20 @@ namespace umi3d.browserEditor.BuildTool
             };
             LV_Targets.bindItem = (visual, index) =>
             {
-                DropdownField DD_TargetSelection = visual.Q<DropdownField>("DD_TargetSelection");
-                DropdownField DD_ReleaseCycle = visual.Q<DropdownField>("DD_ReleaseCycle");
-                Button B_Apply = visual.Q<Button>("B_Apply");
-                Button B_Build = visual.Q<Button>("B_Build");
-
-                void ApplyChange()
-                {
-                    B_Apply.SetEnabled(false);
-                    B_Build.SetEnabled(true);
-                }
-                void WaitChangeValidation()
-                {
-                    B_Apply.SetEnabled(true);
-                    B_Build.SetEnabled(false);
-                }
-
-                // Device target.
-                DD_TargetSelection.choices.Clear();
-                DD_TargetSelection.choices.AddRange(Enum.GetNames(typeof(E_Target)));
-                DD_TargetSelection.value = DD_TargetSelection.choices[(int)buildToolTarget_SO.targets[index].Target];
-                DD_TargetSelection.RegisterValueChangedCallback(value =>
-                {
-                    var target = buildToolTarget_SO.targets[index];
-                    target.Target = Enum.Parse<E_Target>(value.newValue);
-                    buildToolTarget_SO.targets[index] = target;
-                    WaitChangeValidation();
-                });
-
-                // Release cycle.
-                DD_ReleaseCycle.choices.Clear();
-                DD_ReleaseCycle.choices.AddRange(Enum.GetNames(typeof(E_ReleaseCycle)));
-                DD_ReleaseCycle.value = DD_ReleaseCycle.choices[(int)buildToolTarget_SO.targets[index].releaseCycle];
-                DD_ReleaseCycle.RegisterValueChangedCallback(value =>
-                {
-                    var target = buildToolTarget_SO.targets[index];
-                    target.releaseCycle = Enum.Parse<E_ReleaseCycle>(value.newValue);
-                    buildToolTarget_SO.targets[index] = target;
-                    buildToolVersion_SO.updateVersion?.Invoke();
-                    WaitChangeValidation();
-                });
-
-                if (buildToolTarget_SO.targets[index].isApplied)
-                {
-                    ApplyChange();
-                }
-                else
-                {
-                    WaitChangeValidation();
-                }
-
-                //B_Build.SetEnabled(false);
-                B_Apply.clicked += () =>
-                {
-                    var target = buildToolTarget_SO.targets[index];
-                    target.isApplied = true;
-                    buildToolTarget_SO.targets[index] = target;
-                    selectedTarget = target.Target;
-                    ApplyChange();
-                    this.ApplyChange();
-                };
-                B_Build.clicked += () =>
-                {
-                    buildToolVersion_SO.UpdateOldVersionWithNewVersion();
-                    Build();
-                };
+                UMI3DBuildToolTargetView targetView = new(
+                    root: visual,
+                    buildToolTarget_SO: buildToolTarget_SO,
+                    buildToolVersion_SO: buildToolVersion_SO,
+                    index: index,
+                    updateTarget: newTarget =>
+                    {
+                        selectedTarget = newTarget;
+                        ApplyChange();
+                    }, 
+                    build: Build
+                );
+                targetView.Bind();
+                targetView.Set();
             };
 
             L_OldVersion.text = buildToolVersion_SO.OldVersion;

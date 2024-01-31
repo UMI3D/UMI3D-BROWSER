@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using System;
+using UnityEngine;
 
 namespace umi3d.browserEditor.BuildTool
 {
@@ -25,7 +26,8 @@ namespace umi3d.browserEditor.BuildTool
         public E_Target Target;
         public E_ReleaseCycle releaseCycle;
 
-        [NonSerialized]
+        [Space]
+        [Header("View related")]
         public bool isApplied;
     }
 }

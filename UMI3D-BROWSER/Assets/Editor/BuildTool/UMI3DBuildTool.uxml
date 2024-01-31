@@ -1,4 +1,5 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:Template name="UMI3DBuildToolPath" src="project://database/Assets/Editor/BuildTool/UMI3DBuildToolPath.uxml?fileID=9197481963319205126&amp;guid=2a2426c927a341145822e1e97b4fab7e&amp;type=3#UMI3DBuildToolPath" />
     <ui:VisualElement style="flex-grow: 1;">
         <ui:TextField picking-mode="Ignore" label="Product Name" value="QuestBuild_UMI3DBrowser" name="TF_BuildName" />
     </ui:VisualElement>
@@ -25,7 +26,11 @@
         </ui:VisualElement>
     </ui:VisualElement>
     <ui:VisualElement name="Space" style="flex-grow: 1; min-height: 20px;" />
-    <ui:ListView focusable="true" name="LV_Targets" />
+    <ui:VisualElement style="flex-grow: 1;">
+        <ui:Instance template="UMI3DBuildToolPath" name="T_Installer" />
+        <ui:Instance template="UMI3DBuildToolPath" name="T_License" />
+        <ui:ListView focusable="true" name="LV_Targets" />
+    </ui:VisualElement>
     <ui:VisualElement name="Space" style="flex-grow: 1; min-height: 20px;" />
     <ui:VisualElement style="flex-grow: 1;">
         <ui:VisualElement style="flex-direction: row; flex-shrink: 0; margin-top: 2px; margin-right: 4px; margin-bottom: 2px; margin-left: 4px;">

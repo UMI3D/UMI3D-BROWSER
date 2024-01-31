@@ -65,22 +65,9 @@ namespace umi3dBrowsers.displayer
             _easeInOutCoroutine = StartCoroutine(EaseInOut(true));
         }
 
-        private void OnDisable()
-        {
-            button.enabled = false;
-            button_collider.enabled = false;
-
-            if (_easeInOutCoroutine != null)
-            {
-                StopCoroutine(_easeInOutCoroutine);
-                _easeInOutCoroutine = null;
-            }
-
-            _easeInOutCoroutine = StartCoroutine(EaseInOut(false));
-        }
-
         public event Action OnClick;
         public event Action OnHover;
+        public event Action OnDisabled;
 
         private bool _isClicked;
 
@@ -152,6 +139,22 @@ namespace umi3dBrowsers.displayer
                     yield return null;
                 }
             }
+
+            if (!isEnabeling) OnDisabled?.Invoke();
+        }
+
+        internal void Disable()
+        {
+            button.enabled = false;
+            button_collider.enabled = false;
+
+            if (_easeInOutCoroutine != null)
+            {
+                StopCoroutine(_easeInOutCoroutine);
+                _easeInOutCoroutine = null;
+            }
+
+            _easeInOutCoroutine = StartCoroutine(EaseInOut(false));
         }
     }
 }

@@ -57,6 +57,9 @@ namespace umi3dBrowsers.displayer
 
             likeButton.OnHover += () => vignetteState = VignetteState.HoveringSubElement;
             trashButton.OnHover += () => vignetteState = VignetteState.HoveringSubElement;
+
+            likeButton.OnDisabled += () => DisableSubComponents();
+            trashButton.OnDisabled += () => DisableSubComponents();
         }
 
         public void HoverEnter(PointerEventData eventData)
@@ -76,6 +79,12 @@ namespace umi3dBrowsers.displayer
         public void Click()
         {
             onVignetteClicked?.Invoke();
+            likeButton.Disable();
+            trashButton.Disable();
+        }
+
+        private void DisableSubComponents()
+        {
             likeButton.gameObject.SetActive(false);
             trashButton.gameObject.SetActive(false);
         }
@@ -86,8 +95,8 @@ namespace umi3dBrowsers.displayer
 
             if (vignetteState == VignetteState.notHovering)
             {
-                likeButton.gameObject.SetActive(false);
-                trashButton.gameObject.SetActive(false);
+                likeButton.Disable();
+                trashButton.Disable();
             }
         }
     }

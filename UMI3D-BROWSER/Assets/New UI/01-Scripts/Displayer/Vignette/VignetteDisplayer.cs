@@ -41,8 +41,6 @@ namespace umi3dBrowsers.displayer
 
         [Header("Animation")]
         [SerializeField] private float hoverExitDelay;
-        [SerializeField, Range(0, 1f)] private float animationDuration = 0.5f;
-        [SerializeField] private AnimationCurve slideEase = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
         Coroutine cadeInOutCoroutine;
 
@@ -80,11 +78,6 @@ namespace umi3dBrowsers.displayer
             onVignetteClicked?.Invoke();
             likeButton.gameObject.SetActive(false);
             trashButton.gameObject.SetActive(false);
-        }
-
-        private IEnumerator FadeInOut()
-        {
-            yield return null;
         }
 
         private IEnumerator HoverDelay()

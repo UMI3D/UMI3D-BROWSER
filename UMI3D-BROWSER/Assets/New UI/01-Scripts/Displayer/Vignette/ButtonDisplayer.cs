@@ -28,6 +28,7 @@ namespace umi3dBrowsers.displayer
     {
         [Header("trash button")]
         [SerializeField] private Color transprentColor = Color.gray;
+        [SerializeField] private Color backgroundNormalColor = Color.gray;
         [SerializeField] private Color normalColor = Color.white;
         [SerializeField] private Color hoverColor = Color.white;
         [SerializeField] private Color clickColor = Color.white;
@@ -48,18 +49,34 @@ namespace umi3dBrowsers.displayer
         [SerializeField] private bool stayClicked;
         [SerializeField] private bool canUnclick;
 
+
+
         private void OnEnable()
         {
             button.enabled = true;
             button_collider.enabled = true;
-            //Fade In
+
+            if (_easeInOutCoroutine != null )
+            {
+                StopCoroutine(_easeInOutCoroutine );
+                _easeInOutCoroutine = null;
+            }
+
+            _easeInOutCoroutine = StartCoroutine(EaseInOut(true));
         }
 
         private void OnDisable()
         {
             button.enabled = false;
             button_collider.enabled = false;
-            //Fade Out
+
+            if (_easeInOutCoroutine != null)
+            {
+                StopCoroutine(_easeInOutCoroutine);
+                _easeInOutCoroutine = null;
+            }
+
+            _easeInOutCoroutine = StartCoroutine(EaseInOut(false));
         }
 
         public event Action OnClick;
@@ -67,10 +84,12 @@ namespace umi3dBrowsers.displayer
 
         private bool _isClicked;
 
+        private float _animationValue;
+        private Coroutine _easeInOutCoroutine;
+
 
         public void Click()
         {
-            Debug.Log("CLICK");
             OnClick?.Invoke();
 
             if (canUnclick && _isClicked)
@@ -103,6 +122,36 @@ namespace umi3dBrowsers.displayer
 
             iconImage.sprite = normalIcon;
             iconImage.color = normalColor;
+        }
+
+        private IEnumerator EaseInOut(bool isEnabeling)
+        {
+            float startValue = _animationValue;
+            float endValue = isEnabeling ? 1 : 0;
+
+            float time = 0;
+            if (animationDuration > 0)
+            {
+                while (time < animationDuration)
+                {
+                    time += Time.deltaTime;
+
+                    float lerpFactor = slideEase.Evaluate(time / animationDuration);
+                    float currentValue = _animationValue = Mathf.Lerp(startValue, endValue, lerpFactor);
+
+                    if (backGround != null)
+                        backGround.color = Color.Lerp(transprentColor, backgroundNormalColor, currentValue);
+                    if (iconImage != null)
+                    {
+                        if (stayClicked && _isClicked) 
+                             iconImage.color = Color.Lerp(transprentColor, clickColor, currentValue);
+                        else
+                            iconImage.color = Color.Lerp(transprentColor, normalColor, currentValue);
+                    }
+
+                    yield return null;
+                }
+            }
         }
     }
 }

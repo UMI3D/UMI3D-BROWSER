@@ -14,9 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using Newtonsoft.Json.Bson;
 using System;
-using UnityEngine;
+using UnityEditor;
 using UnityEngine.UIElements;
 
 namespace umi3d.browserEditor.BuildTool
@@ -24,12 +23,13 @@ namespace umi3d.browserEditor.BuildTool
     public class UMI3DBuildToolTargetView 
     {
         public VisualElement root;
-        public UMI3DBuildToolTarget_SO buildToolTarget_SO;
+        public UMI3DBuildToolTargetViewModel viewModel;
         public UMI3DBuildToolVersion_SO buildToolVersion_SO;
         public int index;
-        public Action<E_Target> updateTarget;
+        public Action<TargetDto> updateTarget;
         public Action build;
 
+        public Toggle T_Select;
         public VisualElement V_Path;
         public TextField TF_Path;
         public Button B_Browse;
@@ -38,18 +38,19 @@ namespace umi3d.browserEditor.BuildTool
         public Button B_Apply;
         public Button B_Build;
 
-        public UMI3DBuildToolTargetView(VisualElement root, UMI3DBuildToolTarget_SO buildToolTarget_SO, UMI3DBuildToolVersion_SO buildToolVersion_SO, int index, Action<E_Target> updateTarget, Action build)
+        public UMI3DBuildToolTargetView(VisualElement root, UMI3DBuildToolTarget_SO buildToolTarget_SO, UMI3DBuildToolVersion_SO buildToolVersion_SO, int index, Action<TargetDto> updateTarget, Action build)
         {
             this.root = root;
-            this.buildToolTarget_SO = buildToolTarget_SO;
+            this.viewModel = new(buildToolTarget_SO);
             this.buildToolVersion_SO = buildToolVersion_SO;
             this.index = index;
             this.updateTarget = updateTarget;
-
+            this.build = build;
         }
 
         public void Bind()
         {
+            T_Select = root.Q<Toggle>("T_Select");
             V_Path = root.Q("V_Path");
             TF_Path = V_Path.Q<TextField>();
             B_Browse = V_Path.Q<Button>();
@@ -61,38 +62,46 @@ namespace umi3d.browserEditor.BuildTool
 
         public void Set()
         {
+            // Select
+            T_Select.RegisterValueChangedCallback(value =>
+            {
+                viewModel.Select(index, value.newValue);
+            });
+
             // Path
             TF_Path.label = "Build Folder";
             B_Browse.clicked += () =>
             {
-                UnityEngine.Debug.Log($"Todo");
+                viewModel.ApplyBuildFolder(
+                    index, 
+                    EditorUtility.OpenFolderPanel(
+                        title: "Build folder", 
+                        viewModel[index].BuildFolder, 
+                        defaultName: ""
+                    )
+                );
+                TF_Path.value = viewModel[index].BuildFolder;
             };
 
             // Device target.
             DD_TargetSelection.choices.Clear();
             DD_TargetSelection.choices.AddRange(Enum.GetNames(typeof(E_Target)));
-            DD_TargetSelection.value = DD_TargetSelection.choices[(int)buildToolTarget_SO.targets[index].Target];
+            DD_TargetSelection.value = DD_TargetSelection.choices[(int)viewModel[index].Target];
             DD_TargetSelection.RegisterValueChangedCallback(value =>
             {
-                var target = buildToolTarget_SO.targets[index];
-                target.Target = Enum.Parse<E_Target>(value.newValue);
-                buildToolTarget_SO.targets[index] = target;
+                viewModel.ApplyTarget(index, Enum.Parse<E_Target>(value.newValue));
                 ApplyChangeView(false);
             });
 
             // Release cycle.
             DD_ReleaseCycle.choices.Clear();
             DD_ReleaseCycle.choices.AddRange(Enum.GetNames(typeof(E_ReleaseCycle)));
-            DD_ReleaseCycle.value = DD_ReleaseCycle.choices[(int)buildToolTarget_SO.targets[index].releaseCycle];
+            DD_ReleaseCycle.value = DD_ReleaseCycle.choices[(int)viewModel[index].releaseCycle];
             DD_ReleaseCycle.RegisterValueChangedCallback(value =>
             {
-                var target = buildToolTarget_SO.targets[index];
-                target.releaseCycle = Enum.Parse<E_ReleaseCycle>(value.newValue);
-                buildToolTarget_SO.targets[index] = target;
+                viewModel.ApplyReleaseCycle(index, Enum.Parse<E_ReleaseCycle>(value.newValue));
                 ApplyChangeView(false);
             });
-
-            ApplyChangeView(buildToolTarget_SO.targets[index].isApplied);
 
             B_Apply.clicked += ApplyChange;
             B_Build.clicked += () =>
@@ -100,30 +109,30 @@ namespace umi3d.browserEditor.BuildTool
                 buildToolVersion_SO.UpdateOldVersionWithNewVersion();
                 build?.Invoke();
             };
+
+            T_Select.value = viewModel[index].IsTargetEnabled;
+            TF_Path.value = viewModel[index].BuildFolder;
+            ApplyChangeView(viewModel[index].isApplied);
         }
 
         public void ApplyChange()
         {
-            for (int i = 0; i < buildToolTarget_SO.targets.Count; i++)
+            for (int i = 0; i < viewModel.Count; i++)
             {
                 if (i != index)
                 {
-                    var target = buildToolTarget_SO.targets[i];
-                    target.isApplied = false;
-                    buildToolTarget_SO.targets[i] = target;
+                    viewModel.ApplyChange(i, false);
                 }
             }
             ApplyChangeView(true);
-            updateTarget?.Invoke(buildToolTarget_SO.targets[index].Target);
+            updateTarget?.Invoke(viewModel[index]);
         }
 
         void ApplyChangeView(bool isApplied)
         {
             B_Apply.SetEnabled(!isApplied);
             B_Build.SetEnabled(isApplied);
-            var target = buildToolTarget_SO.targets[index];
-            target.isApplied = isApplied;
-            buildToolTarget_SO.targets[index] = target;
+            viewModel.ApplyChange(index, isApplied);
         }
     }
 }

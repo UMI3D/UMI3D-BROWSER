@@ -23,11 +23,9 @@ namespace umi3d.browserEditor.BuildTool
     public struct TargetDto 
     {
         public bool IsTargetEnabled;
+        public string BuildFolder;
         public E_Target Target;
         public E_ReleaseCycle releaseCycle;
-
-        [Space]
-        [Header("View related")]
         public bool isApplied;
     }
 }

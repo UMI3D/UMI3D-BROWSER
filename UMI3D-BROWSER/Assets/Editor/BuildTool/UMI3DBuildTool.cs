@@ -182,7 +182,7 @@ namespace umi3d.browserEditor.BuildTool
                     index: index,
                     updateTarget: newTarget =>
                     {
-                        selectedTarget = newTarget;
+                        selectedTarget = newTarget.Target;
                         ApplyChange();
                     }, 
                     build: Build

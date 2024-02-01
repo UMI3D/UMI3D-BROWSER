@@ -23,12 +23,12 @@ namespace umi3d.browserEditor.BuildTool
     public class UMI3DBuildToolTargetView 
     {
         public VisualElement root;
-        public UMI3DBuildToolTargetViewModel viewModel;
         public UMI3DBuildToolVersion_SO buildToolVersion_SO;
         public int index;
         public Action<TargetDto> updateTarget;
         public Action build;
 
+        public UMI3DBuildToolTargetViewModel viewModel;
         public Toggle T_Select;
         public VisualElement V_Path;
         public TextField TF_Path;

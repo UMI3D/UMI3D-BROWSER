@@ -15,51 +15,14 @@ limitations under the License.
 */
 using inetum.unityUtils.saveSystem;
 using System;
-using UnityEngine;
 
 namespace umi3d.browserEditor.BuildTool
 {
     //[CreateAssetMenu(fileName = "UMI3D Build Tool Version", menuName = "UMI3D/Tools/Build Tool Version")]
     public class UMI3DBuildToolVersion_SO : SerializableScriptableObject
     {
-        /// <summary>
-        /// New additional version.
-        /// </summary>
-        public string additionalVersion;
-        /// <summary>
-        /// New major version.
-        /// </summary>
-        public int majorVersion;
-        /// <summary>
-        /// New minor version.
-        /// </summary>
-        public int minorVersion;
-        /// <summary>
-        /// New build count version.
-        /// </summary>
-        public int buildCountVersion;
-
-        /// <summary>
-        /// Previous additional version.
-        /// </summary>
-        [Space]
-        public string oldAdditionalVersion;
-        /// <summary>
-        /// Previous major version.
-        /// </summary>
-        public int oldMajorVersion;
-        /// <summary>
-        /// Previous minor version.
-        /// </summary>
-        public int oldMinorVersion;
-        /// <summary>
-        /// Previous build count version.
-        /// </summary>
-        public int oldBuildCountVersion;
-        /// <summary>
-        /// Previous date version.
-        /// </summary>
-        public string oldDateVersion;
+        public VersionDTO newVersion;
+        public VersionDTO oldVersion;
 
         /// <summary>
         /// Version of the browser
@@ -70,12 +33,12 @@ namespace umi3d.browserEditor.BuildTool
             {
                 string result = $"";
 
-                if (!string.IsNullOrEmpty(additionalVersion))
+                if (!string.IsNullOrEmpty(newVersion.additionalVersion))
                 {
-                    result += $"{additionalVersion}_";
+                    result += $"{newVersion.additionalVersion}_";
                 }
 
-                result += $"{majorVersion}.{minorVersion}.{buildCountVersion}_{DateTime.Now.ToString("yy.MM.dd")}";
+                result += $"{newVersion.majorVersion}.{newVersion.minorVersion}.{newVersion.buildCountVersion}_{DateTime.Now.ToString("yy.MM.dd")}";
 
                 return result;
             }
@@ -89,12 +52,12 @@ namespace umi3d.browserEditor.BuildTool
             {
                 string result = $"";
 
-                if (!string.IsNullOrEmpty(oldAdditionalVersion))
+                if (!string.IsNullOrEmpty(oldVersion.additionalVersion))
                 {
-                    result += $"{oldAdditionalVersion}_";
+                    result += $"{oldVersion.additionalVersion}_";
                 }
 
-                result += $"{oldMajorVersion}.{oldMinorVersion}.{oldBuildCountVersion}_{oldDateVersion}";
+                result += $"{oldVersion.majorVersion}.{oldVersion.minorVersion}.{oldVersion.buildCountVersion}_{oldVersion.date}";
 
                 return result;
             }
@@ -106,7 +69,7 @@ namespace umi3d.browserEditor.BuildTool
         {
             get
             {
-                return majorVersion * 10_000 + minorVersion * 100 + buildCountVersion;
+                return newVersion.majorVersion * 10_000 + newVersion.minorVersion * 100 + newVersion.buildCountVersion;
             }
         }
 
@@ -115,11 +78,8 @@ namespace umi3d.browserEditor.BuildTool
 
         public void UpdateOldVersionWithNewVersion()
         {
-            oldMajorVersion = majorVersion;
-            oldMinorVersion = minorVersion;
-            oldBuildCountVersion = buildCountVersion;
-            oldAdditionalVersion = additionalVersion;
-            oldDateVersion = DateTime.Now.ToString("yy.MM.dd");
+            oldVersion = newVersion;
+            oldVersion.date = DateTime.Now.ToString("yy.MM.dd");
         }
     }
 }

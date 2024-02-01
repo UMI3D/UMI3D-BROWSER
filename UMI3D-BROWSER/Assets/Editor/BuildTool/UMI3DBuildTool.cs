@@ -68,18 +68,7 @@ namespace umi3d.browserEditor.BuildTool
 
             root.Add(ui_instance);
             TextField TF_BuildName = root.Q<TextField>("TF_BuildName");
-            VisualElement V_Major = root.Q("V_Major");
-            IntegerField IF_Major = V_Major.Q<IntegerField>();
-            Button B_Major = V_Major.Q<Button>();
-            VisualElement V_Minor = root.Q("V_Minor");
-            IntegerField IF_Minor = V_Minor.Q<IntegerField>();
-            Button B_Minor = V_Minor.Q<Button>();
-            VisualElement V_BuildCount = root.Q("V_BuildCount");
-            IntegerField IF_BuildCount = V_BuildCount.Q<IntegerField>();
-            Button B_BuildCount = V_BuildCount.Q<Button>();
-            TextField TF_AdditionalVersion = root.Q<TextField>("TF_AdditionalVersion");
-            Button B_ResetVersion = root.Q<Button>("Reset");
-
+            
             TemplateContainer T_Installer = root.Q<TemplateContainer>("T_Installer");
             TextField TF_Installer = T_Installer.Q<TextField>();
             Button B_Installer = T_Installer.Q<Button>();
@@ -98,59 +87,9 @@ namespace umi3d.browserEditor.BuildTool
                 PlayerSettings.productName = value.newValue;
             });
 
-            // Major version.
-            IF_Major.value = buildToolVersion_SO.majorVersion;
-            B_Major.clicked += () =>
-            {
-                IF_Major.value = ++IF_Major.value;
-            };
-            IF_Major.RegisterValueChangedCallback(value =>
-            {
-                buildToolVersion_SO.majorVersion = IF_Major.value;
-                buildToolVersion_SO.updateVersion?.Invoke();
-            });
-
-            // Minor version
-            IF_Minor.value = buildToolVersion_SO.minorVersion;
-            B_Minor.clicked += () =>
-            {
-                IF_Minor.value = ++IF_Minor.value;
-            };
-            IF_Minor.RegisterValueChangedCallback(value =>
-            {
-                buildToolVersion_SO.minorVersion = IF_Minor.value;
-                buildToolVersion_SO.updateVersion?.Invoke();
-            });
-
-            // Build count.
-            IF_BuildCount.value = buildToolVersion_SO.buildCountVersion;
-            B_BuildCount.clicked += () =>
-            {
-                IF_BuildCount.value = ++IF_BuildCount.value;
-            };
-            IF_BuildCount.RegisterValueChangedCallback(value =>
-            {
-                buildToolVersion_SO.buildCountVersion = IF_BuildCount.value;
-                buildToolVersion_SO.updateVersion?.Invoke();
-            });
-
-            // Additional information.
-            // Like if you want to add unity editor version.
-            TF_AdditionalVersion.value = buildToolVersion_SO.additionalVersion;
-            TF_AdditionalVersion.RegisterValueChangedCallback((value) =>
-            {
-                buildToolVersion_SO.additionalVersion = value.newValue;
-                buildToolVersion_SO.updateVersion?.Invoke();
-            });
-
-            // Reset version.
-            B_ResetVersion.clicked += () =>
-            {
-                IF_Major.value = buildToolVersion_SO.oldMajorVersion;
-                IF_Minor.value = buildToolVersion_SO.oldMinorVersion;
-                IF_BuildCount.value = buildToolVersion_SO.oldBuildCountVersion;
-                TF_AdditionalVersion.value = buildToolVersion_SO.oldAdditionalVersion;
-            };
+            UMI3DBuildToolVersionView versionView = new(root, buildToolVersion_SO);
+            versionView.Bind();
+            versionView.Set();
 
             // Path
             TF_Installer.label = "Installer";

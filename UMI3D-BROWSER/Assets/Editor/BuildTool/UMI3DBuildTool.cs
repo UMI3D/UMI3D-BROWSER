@@ -31,7 +31,6 @@ namespace umi3d.browserEditor.BuildTool
 
         [SerializeField] UMI3DCollabLoadingParameters loadingParameters;
 
-        [SerializeField] UMI3DBuildToolSaveSystem buildToolSaveSystem;
         [SerializeField] UMI3DBuildToolVersion_SO buildToolVersion_SO;
         [SerializeField] UMI3DBuildToolTarget_SO buildToolTarget_SO;
 
@@ -49,24 +48,14 @@ namespace umi3d.browserEditor.BuildTool
 
         public void CreateGUI()
         {
-            //if (buildToolSaveSystem.LoadSaveDataFromDisk())
-            //{
-            //    UnityEngine.Debug.Log($"Save file");
-            //    for (int i = 0; i < buildToolSaveSystem.saveData.ssoStacks.Count; i++)
-            //    {
-            //        var guid = new GUID(buildToolSaveSystem.saveData.ssoStacks[i].guid);
-            //        string path = AssetDatabase.GUIDToAssetPath(guid);
-            //        buildTool_SO = AssetDatabase.LoadAssetAtPath<UMI3DBuildTool_SO>(path);
-            //    }
-            //}
-
             _targetAndPluginSwitcher = new TargetAndPluginSwitcher();
             _uMI3DConfigurator = new UMI3DConfigurator(loadingParameters);
 
             VisualElement root = rootVisualElement;
-            VisualElement ui_instance = ui.Instantiate();
 
+            VisualElement ui_instance = ui.Instantiate();
             root.Add(ui_instance);
+
             TextField TF_BuildName = root.Q<TextField>("TF_BuildName");
             
             TemplateContainer T_Installer = root.Q<TemplateContainer>("T_Installer");
@@ -148,7 +137,6 @@ namespace umi3d.browserEditor.BuildTool
         
         private void ApplyChange()
         {
-            buildToolSaveSystem.SaveDataToDisk(new[] { (buildToolTarget_SO, 1) });
             _uMI3DConfigurator.HandleTarget(selectedTarget);
             _targetAndPluginSwitcher.HandleTarget(selectedTarget);
         }

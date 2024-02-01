@@ -34,6 +34,7 @@ namespace umi3d.browserEditor.BuildTool
 
         [SerializeField] UMI3DBuildToolVersion_SO buildToolVersion_SO;
         [SerializeField] UMI3DBuildToolTarget_SO buildToolTarget_SO;
+        [SerializeField] UMI3DBuildToolScene_SO buildToolScene_SO;
 
         IBuilToolComponent _uMI3DConfigurator = null;
         IBuilToolComponent _targetAndPluginSwitcher = null;
@@ -51,8 +52,6 @@ namespace umi3d.browserEditor.BuildTool
 
         public void CreateGUI()
         {
-            UnityEngine.Debug.Log($"{SceneManager.sceneCountInBuildSettings}");
-
             _targetAndPluginSwitcher = new TargetAndPluginSwitcher();
             _uMI3DConfigurator = new UMI3DConfigurator(loadingParameters);
 
@@ -70,6 +69,7 @@ namespace umi3d.browserEditor.BuildTool
             TextField TF_License = T_License.Q<TextField>();
             Button B_License = T_License.Q<Button>();
             ListView LV_Targets = root.Q<ListView>("LV_Targets");
+            ListView LV_Scenes = root.Q<ListView>("LV_Scenes");
 
             // Build name.
             TF_BuildName.value = PlayerSettings.productName;
@@ -128,6 +128,38 @@ namespace umi3d.browserEditor.BuildTool
                 targetView.Bind();
                 targetView.Set();
             };
+
+            // Scenes.
+            buildToolScene_SO.UpdateScenes();
+            LV_Scenes.reorderable = true;
+            LV_Scenes.virtualizationMethod = CollectionVirtualizationMethod.DynamicHeight;
+            LV_Scenes.showFoldoutHeader = true;
+            LV_Scenes.headerTitle = "Scenes";
+            //LV_Scenes.showAddRemoveFooter = true;
+            LV_Scenes.reorderMode = ListViewReorderMode.Animated;
+            LV_Scenes.itemsSource = buildToolScene_SO.scenes;
+            //LV_Scenes.makeItem = () =>
+            //{
+            //    var visual = target_VTA.Instantiate();
+            //    return visual;
+            //};
+            //LV_Scenes.bindItem = (visual, index) =>
+            //{
+            //    UMI3DBuildToolTargetView targetView = new(
+            //        root: visual,
+            //        buildToolTarget_SO: buildToolTarget_SO,
+            //        buildToolVersion_SO: buildToolVersion_SO,
+            //        index: index,
+            //        updateTarget: newTarget =>
+            //        {
+            //            targetDTO = newTarget;
+            //            ApplyChange();
+            //        },
+            //        build: Build
+            //    );
+            //    targetView.Bind();
+            //    targetView.Set();
+            //};
         } 
         
         private void ApplyChange()

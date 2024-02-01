@@ -41,5 +41,46 @@ namespace umi3d.browserEditor.BuildTool
         /// Date of the version.
         /// </summary>
         public string date;
+
+        public string VersionFromNow
+        {
+            get
+            {
+                return GetFormattedVersion(DateTime.Now.ToString("yy.MM.dd"));
+            }
+        }
+
+        public string Version
+        {
+            get
+            {
+                return GetFormattedVersion(date);
+            }
+        }
+
+        string GetFormattedVersion(string date)
+        {
+            string result = $"";
+
+            if (!string.IsNullOrEmpty(additionalVersion))
+            {
+                result += $"{additionalVersion}_";
+            }
+
+            result += $"{majorVersion}.{minorVersion}.{buildCountVersion}_{date}";
+
+            return result;
+        }
+
+        /// <summary>
+        /// Bundle version for Android.
+        /// </summary>
+        public int BundleVersion
+        {
+            get
+            {
+                return majorVersion * 10_000 + minorVersion * 100 + buildCountVersion;
+            }
+        }
     }
 }

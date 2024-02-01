@@ -23,10 +23,12 @@ namespace umi3d.browserEditor.BuildTool
     public class UMI3DBuildToolVersionViewModel 
     {
         public UMI3DBuildToolVersion_SO buildToolVersion_SO;
+        public Action<VersionDTO> updateVersion;
 
-        public UMI3DBuildToolVersionViewModel(UMI3DBuildToolVersion_SO buildToolVersion_SO)
+        public UMI3DBuildToolVersionViewModel(UMI3DBuildToolVersion_SO buildToolVersion_SO, Action<VersionDTO> updateVersion)
         {
             this.buildToolVersion_SO = buildToolVersion_SO;
+            this.updateVersion = updateVersion;
         }
 
         public VersionDTO NewVersion
@@ -48,28 +50,28 @@ namespace umi3d.browserEditor.BuildTool
         public void ApplyMajorVersion(int value)
         {
             buildToolVersion_SO.newVersion.majorVersion = value;
-            buildToolVersion_SO.updateVersion?.Invoke();
+            updateVersion?.Invoke(NewVersion);
             Save();
         }
 
         public void ApplyMinorVersion(int value)
         {
             buildToolVersion_SO.newVersion.minorVersion = value;
-            buildToolVersion_SO.updateVersion?.Invoke();
+            updateVersion?.Invoke(NewVersion);
             Save();
         }
 
         public void ApplyBuildCountVersion(int value)
         {
             buildToolVersion_SO.newVersion.buildCountVersion = value;
-            buildToolVersion_SO.updateVersion?.Invoke();
+            updateVersion?.Invoke(NewVersion);
             Save();
         }
 
         public void ApplyAdditionalVersion(string value)
         {
             buildToolVersion_SO.newVersion.additionalVersion = value;
-            buildToolVersion_SO.updateVersion?.Invoke();
+            updateVersion?.Invoke(NewVersion);
             Save();
         }
 

@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using UnityEditor;
+using UnityEngine.SceneManagement;
 
 namespace umi3d.browserEditor.BuildTool
 {
@@ -24,6 +25,19 @@ namespace umi3d.browserEditor.BuildTool
         {
             BuildPlayerOptions playerBuildOptions = BuildPlayerWindow.DefaultBuildMethods.GetBuildPlayerOptions(new BuildPlayerOptions());
             return playerBuildOptions;
+        }
+
+        public static BuildPlayerOptions GetPlayerBuildOptions(VersionDTO version, TargetDto target)
+        {
+            BuildPlayerOptions pbo = new();
+            //pbo.scenes = new[] { SceneManager.sceneCountInBuildSettings };
+            pbo.locationPathName = $"{target.BuildFolder}/{version.buildCountVersion}.{version.date}";
+            pbo.target = target.Target.GetBuildTarget();
+            pbo.options = BuildOptions.None;
+
+            //BuildPlayerOptions playerBuildOptions = BuildPlayerWindow.DefaultBuildMethods.GetBuildPlayerOptions(pbo);
+
+            return pbo;
         }
     }
 }

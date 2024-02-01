@@ -14,6 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using UnityEditor;
+
 namespace umi3d.browserEditor.BuildTool
 {
     public enum E_Target
@@ -22,5 +24,20 @@ namespace umi3d.browserEditor.BuildTool
         Focus, 
         Pico, 
         SteamXR
+    }
+
+    public static class TargetExt
+    {
+        public static BuildTarget GetBuildTarget(this E_Target target)
+        {
+            return target switch
+            {
+                E_Target.Quest => BuildTarget.Android,
+                E_Target.Focus => BuildTarget.Android,
+                E_Target.Pico => BuildTarget.Android,
+                E_Target.SteamXR => BuildTarget.StandaloneWindows64,
+                _ => BuildTarget.StandaloneWindows
+            };
+        }
     }
 }

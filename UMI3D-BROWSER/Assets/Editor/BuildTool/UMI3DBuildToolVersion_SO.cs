@@ -24,58 +24,6 @@ namespace umi3d.browserEditor.BuildTool
         public VersionDTO newVersion;
         public VersionDTO oldVersion;
 
-        /// <summary>
-        /// Version of the browser
-        /// </summary>
-        public string Version
-        {
-            get
-            {
-                string result = $"";
-
-                if (!string.IsNullOrEmpty(newVersion.additionalVersion))
-                {
-                    result += $"{newVersion.additionalVersion}_";
-                }
-
-                result += $"{newVersion.majorVersion}.{newVersion.minorVersion}.{newVersion.buildCountVersion}_{DateTime.Now.ToString("yy.MM.dd")}";
-
-                return result;
-            }
-        }
-        /// <summary>
-        /// Last version of the browser
-        /// </summary>
-        public string OldVersion
-        {
-            get
-            {
-                string result = $"";
-
-                if (!string.IsNullOrEmpty(oldVersion.additionalVersion))
-                {
-                    result += $"{oldVersion.additionalVersion}_";
-                }
-
-                result += $"{oldVersion.majorVersion}.{oldVersion.minorVersion}.{oldVersion.buildCountVersion}_{oldVersion.date}";
-
-                return result;
-            }
-        }
-        /// <summary>
-        /// Bundle version for Android.
-        /// </summary>
-        public int BundleVersion
-        {
-            get
-            {
-                return newVersion.majorVersion * 10_000 + newVersion.minorVersion * 100 + newVersion.buildCountVersion;
-            }
-        }
-
-        public Action updateVersion;
-        public Action updateOldVersion;
-
         public void UpdateOldVersionWithNewVersion()
         {
             oldVersion = newVersion;

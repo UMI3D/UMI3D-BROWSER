@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using umi3d.cdk.collaboration;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
 namespace umi3d.browserEditor.BuildTool
@@ -37,7 +38,9 @@ namespace umi3d.browserEditor.BuildTool
         IBuilToolComponent _uMI3DConfigurator = null;
         IBuilToolComponent _targetAndPluginSwitcher = null;
 
-        E_Target selectedTarget;
+        TargetDto targetDTO;
+        VersionDTO oldVersionDTO;
+        VersionDTO versionDTO;
 
         [MenuItem("Tools/BuildTool")]
         public static void OpenWindow()
@@ -48,6 +51,8 @@ namespace umi3d.browserEditor.BuildTool
 
         public void CreateGUI()
         {
+            UnityEngine.Debug.Log($"{SceneManager.sceneCountInBuildSettings}");
+
             _targetAndPluginSwitcher = new TargetAndPluginSwitcher();
             _uMI3DConfigurator = new UMI3DConfigurator(loadingParameters);
 
@@ -66,9 +71,6 @@ namespace umi3d.browserEditor.BuildTool
             Button B_License = T_License.Q<Button>();
             ListView LV_Targets = root.Q<ListView>("LV_Targets");
 
-            Label L_OldVersion = root.Q<Label>("L_OldVersion");
-            Label L_Version = root.Q<Label>("L_BuildVersion");
-
             // Build name.
             TF_BuildName.value = PlayerSettings.productName;
             TF_BuildName.RegisterValueChangedCallback(value =>
@@ -76,7 +78,15 @@ namespace umi3d.browserEditor.BuildTool
                 PlayerSettings.productName = value.newValue;
             });
 
-            UMI3DBuildToolVersionView versionView = new(root, buildToolVersion_SO);
+            UMI3DBuildToolVersionView versionView = new(
+                root, 
+                buildToolVersion_SO, 
+                newVersion =>
+                {
+                    versionDTO = newVersion;
+                    UpdateVersion();
+                }
+            );
             versionView.Bind();
             versionView.Set();
 
@@ -110,7 +120,7 @@ namespace umi3d.browserEditor.BuildTool
                     index: index,
                     updateTarget: newTarget =>
                     {
-                        selectedTarget = newTarget.Target;
+                        targetDTO = newTarget;
                         ApplyChange();
                     }, 
                     build: Build
@@ -118,32 +128,23 @@ namespace umi3d.browserEditor.BuildTool
                 targetView.Bind();
                 targetView.Set();
             };
-
-            L_OldVersion.text = buildToolVersion_SO.OldVersion;
-            buildToolVersion_SO.updateOldVersion = () =>
-            {
-                L_OldVersion.text = buildToolVersion_SO.OldVersion;
-            };
-
-            buildToolVersion_SO.updateVersion = () =>
-            {
-                L_Version.text = buildToolVersion_SO.Version;
-                PlayerSettings.bundleVersion = buildToolVersion_SO.Version;
-                PlayerSettings.Android.bundleVersionCode = buildToolVersion_SO.BundleVersion;
-            };
-
-            buildToolVersion_SO.updateVersion?.Invoke();
         } 
         
         private void ApplyChange()
         {
-            _uMI3DConfigurator.HandleTarget(selectedTarget);
-            _targetAndPluginSwitcher.HandleTarget(selectedTarget);
+            _uMI3DConfigurator.HandleTarget(targetDTO.Target);
+            _targetAndPluginSwitcher.HandleTarget(targetDTO.Target);
+        }
+
+        void UpdateVersion()
+        {
+            PlayerSettings.bundleVersion = versionDTO.VersionFromNow;
+            PlayerSettings.Android.bundleVersionCode = versionDTO.BundleVersion;
         }
 
         private void Build()
         {
-            BuildPipeline.BuildPlayer(BuildToolHelper.GetPlayerBuildOptions());
+            BuildPipeline.BuildPlayer(BuildToolHelper.GetPlayerBuildOptions(versionDTO, targetDTO));
         }
     }
 }

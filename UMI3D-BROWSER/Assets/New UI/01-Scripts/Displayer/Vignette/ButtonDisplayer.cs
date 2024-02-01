@@ -154,7 +154,10 @@ namespace umi3dBrowsers.displayer
                 _easeInOutCoroutine = null;
             }
 
-            _easeInOutCoroutine = StartCoroutine(EaseInOut(false));
+            if (enabled)
+            {
+                _easeInOutCoroutine = StartCoroutine(EaseInOut(false));
+            }
         }
     }
 }

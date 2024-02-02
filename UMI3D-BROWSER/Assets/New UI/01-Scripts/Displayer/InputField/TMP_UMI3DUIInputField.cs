@@ -14,6 +14,7 @@ namespace umi3dBrowsers.displayer
         protected override void Awake()
         {
             keyboardMiddleware = GetComponent<InputFieldToVRKeyboardMiddleware>();
+
         }
         /// <summary>
         /// Setter for <see cref="keyboard"/>.
@@ -40,6 +41,16 @@ namespace umi3dBrowsers.displayer
             }
             else
                 Debug.Log($"<color=cyan>Please make sure you've got a key board middleware </color>", this);
+        }
+
+        public override void OnDeselect(BaseEventData eventData)
+        {
+            base.OnDeselect(eventData);
+
+            if (text.Trim().Length == 0) 
+            {
+                placeholder.gameObject.SetActive(true);
+            }
         }
 
         public override void OnUpdateSelected(BaseEventData eventData)

@@ -35,10 +35,7 @@ namespace umi3dBrowsers.displayer
             {
                 keyboardMiddleware.InputSelected(this, res =>
                 {
-
                     text = res;
-                    if (text.Trim() != "")
-                        placeholder.enabled = false;
                 });
             }
             else

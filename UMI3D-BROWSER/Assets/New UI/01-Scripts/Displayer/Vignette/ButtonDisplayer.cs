@@ -27,7 +27,6 @@ namespace umi3dBrowsers.displayer
     public class ButtonDisplayer : MonoBehaviour, IUMI3DButtonHandler
     {
         [Header("trash button")]
-        [SerializeField] private Color transprentColor = Color.gray;
         [SerializeField] private Color backgroundNormalColor = Color.gray;
         [SerializeField] private Color normalColor = Color.white;
         [SerializeField] private Color hoverColor = Color.white;
@@ -42,6 +41,7 @@ namespace umi3dBrowsers.displayer
         [SerializeField] private Sprite clickIcon;
 
         [Header("Animation")]
+        [SerializeField] private CanvasGroup canvasGroup;
         [SerializeField, Range(0, 1f)] private float animationDuration = 0.5f;
         [SerializeField] private AnimationCurve slideEase = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
@@ -49,12 +49,26 @@ namespace umi3dBrowsers.displayer
         [SerializeField] private bool stayClicked;
         [SerializeField] private bool canUnclick;
 
-
+        private void Awake()
+        {
+            backGround.color = backgroundNormalColor;
+            iconImage.color = normalColor;
+        }
 
         private void OnEnable()
         {
             button.enabled = true;
             button_collider.enabled = true;
+
+            if (backGround != null)
+                backGround.color = backgroundNormalColor;
+            if (iconImage != null)
+            {
+                if (stayClicked && _isClicked)
+                    iconImage.color = clickColor;
+                else
+                    iconImage.color = normalColor;
+            }
 
             if (_easeInOutCoroutine != null )
             {
@@ -73,7 +87,6 @@ namespace umi3dBrowsers.displayer
 
         private float _animationValue;
         private Coroutine _easeInOutCoroutine;
-
 
         public void Click()
         {
@@ -126,15 +139,7 @@ namespace umi3dBrowsers.displayer
                     float lerpFactor = slideEase.Evaluate(time / animationDuration);
                     float currentValue = _animationValue = Mathf.Lerp(startValue, endValue, lerpFactor);
 
-                    if (backGround != null)
-                        backGround.color = Color.Lerp(transprentColor, backgroundNormalColor, currentValue);
-                    if (iconImage != null)
-                    {
-                        if (stayClicked && _isClicked) 
-                             iconImage.color = Color.Lerp(transprentColor, clickColor, currentValue);
-                        else
-                            iconImage.color = Color.Lerp(transprentColor, normalColor, currentValue);
-                    }
+                    canvasGroup.alpha = currentValue;
 
                     yield return null;
                 }
@@ -143,7 +148,7 @@ namespace umi3dBrowsers.displayer
             if (!isEnabeling) OnDisabled?.Invoke();
         }
 
-        internal void Disable()
+        public void Disable()
         {
             button.enabled = false;
             button_collider.enabled = false;
@@ -154,7 +159,7 @@ namespace umi3dBrowsers.displayer
                 _easeInOutCoroutine = null;
             }
 
-            if (enabled)
+            if (gameObject.activeSelf)
             {
                 _easeInOutCoroutine = StartCoroutine(EaseInOut(false));
             }

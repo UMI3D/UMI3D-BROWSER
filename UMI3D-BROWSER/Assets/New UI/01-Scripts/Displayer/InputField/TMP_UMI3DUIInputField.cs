@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -9,38 +10,23 @@ namespace umi3dBrowsers.displayer
 {
     public class TMP_UMI3DUIInputField : TMP_InputField
     {
-        InputFieldToVRKeyboardMiddleware keyboardMiddleware;
+        [SerializeField] protected Keyboard keyboard;
 
         protected override void Awake()
         {
-            keyboardMiddleware = GetComponent<InputFieldToVRKeyboardMiddleware>();
-
+            keyboard = Keyboard.Instance;
         }
-        /// <summary>
-        /// Setter for <see cref="keyboard"/>.
-        /// </summary>
-        /// <param name="keyboard"></param>
-        public void SetKeyboard(Keyboard keyboard)
-        {
-            if (keyboardMiddleware != null) { keyboardMiddleware.SetKeyboard(keyboard); }
-            else
-                Debug.Log($"<color=cyan>Please make sure you've got a key board middleware </color>", this);
-        }
-
 
         public override void OnSelect(BaseEventData eventData)
         {
             base.OnSelect(eventData);
 
-            if (keyboardMiddleware != null)
+            if (keyboard != null)
             {
-                keyboardMiddleware.InputSelected(this, res =>
-                {
-                    text = res;
-                });
+                InputSelected();
             }
             else
-                Debug.Log($"<color=cyan>Please make sure you've got a key board middleware </color>", this);
+                Debug.Log($"<color=cyan>Please make sure you've got a key board</color>", this);
         }
 
         public override void OnDeselect(BaseEventData eventData)
@@ -58,7 +44,13 @@ namespace umi3dBrowsers.displayer
             base.OnUpdateSelected(eventData);
         }
 
-
+        private void InputSelected()
+        {
+            keyboard.OpenKeyboard(this, res =>
+            {
+                text = res;
+            });
+        }
     }
 }
 

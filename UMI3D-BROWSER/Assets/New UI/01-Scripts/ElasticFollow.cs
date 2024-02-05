@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using umi3d.browserRuntime.UX;
@@ -22,8 +23,15 @@ namespace umi3dBrowsers.utils
             set => followTranslationByDistanceAndRotation.TranslationTarget = value; }
         public Quaternion RotationTarget { get => Quaternion.Euler(followRotation.RotationTarget); set => followRotation.RotationTarget = value.eulerAngles; }
 
+        internal void SetTarget(Transform transform)
+        {
+            targetTransform = transform;
+        }
+
         private void LateUpdate()
         {        
+            if (targetTransform == null) return;
+
             (this as IFollowable).Translate(targetTransform.position);
             (this as IFollowable).Rotate(targetTransform.rotation, filter, sequence);
         }

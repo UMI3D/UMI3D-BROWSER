@@ -391,6 +391,7 @@ namespace umi3dBrowsers.keyboard
         /// <summary>
         /// Open the keyboard simply, just to listen to key inputs.
         /// </summary>
+        [ContextMenu("Open key board")]
         public void OpenKeyboard()
         {
             if (WasClosedLastFrame) return;

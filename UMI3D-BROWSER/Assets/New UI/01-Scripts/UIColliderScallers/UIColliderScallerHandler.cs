@@ -37,6 +37,12 @@ namespace umi3dBrowsers.utils
         public void ScaleColliders()
         {
             List<UIColliderScaller> uIColliderScallers = UIColliderScaller.uiColliderScalers;
+            if (uIColliderScallers == null ||uIColliderScallers.Count == 0)
+            {
+                ScaleColliders_Editor();
+                return;
+            }
+
             foreach (var scaller in uIColliderScallers)
             {
                 scaller.ScaleCollider();

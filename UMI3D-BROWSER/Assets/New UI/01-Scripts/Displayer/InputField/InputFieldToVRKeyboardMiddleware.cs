@@ -13,13 +13,9 @@ namespace umi3dBrowsers.keyboard
         /// </summary>
         [SerializeField] protected Keyboard keyboard;
 
-        /// <summary>
-        /// Setter for <see cref="keyboard"/>.
-        /// </summary>
-        /// <param name="keyboard"></param>
-        public void SetKeyboard(Keyboard keyboard)
+        private void Awake()
         {
-            this.keyboard = keyboard;
+            keyboard = Keyboard.Instance;
         }
 
         internal void InputSelected(TMP_UMI3DUIInputField inputField, Action<string> onEditFinished)

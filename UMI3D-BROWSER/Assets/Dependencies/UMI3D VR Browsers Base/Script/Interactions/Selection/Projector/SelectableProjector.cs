@@ -13,6 +13,7 @@ limitations under the License.
 
 using TMPro;
 using umi3d.cdk.interaction;
+using umi3dBrowsers.displayer;
 using umi3dBrowsers.interaction.selection.zoneselection;
 using umi3dVRBrowsersBase.interactions;
 using UnityEngine;
@@ -94,7 +95,6 @@ namespace umi3dBrowsers.interaction.selection.projector
                     break;
 
                 default:
-
                     SendDefaultSelectableEvent(selectable, controller, eventData, false);
                     break;
             }

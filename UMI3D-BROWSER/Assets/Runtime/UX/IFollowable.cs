@@ -1,0 +1,408 @@
+/*
+Copyright 2019 - 2023 Inetum
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+using System;
+using UnityEngine;
+
+namespace umi3d.browserRuntime.UX
+{
+    /// <summary>
+    /// This interface allows the classes that implement it to follow a target (translation and rotation).
+    /// 
+    /// <para>
+    /// <exemple>
+    /// Follow a target located at position with an offset.
+    /// <code>
+    ///     (this as IFollowable).Translate(position, offset);
+    /// </code>
+    /// </exemple>
+    /// <exemple>
+    /// Follow the rotation of a target but only in the Y axis.
+    /// <code>
+    ///     (this as IFollowable).Rotate(rotation, Vector3.up);
+    /// </code>
+    /// </exemple>
+    /// </para>
+    /// </summary>
+    public interface IFollowable
+    {
+        /// <summary>
+        /// Editor container for organizing purpose.
+        /// </summary>
+        [Serializable]
+        public struct FollowTranslationByPositionComponents
+        {
+            [Header("Required for initialisation")]
+            [SerializeField] public float SmoothTranslationSpeed;
+            [SerializeField] public Vector3 Offset;
+            [Space()]
+            [SerializeField] public Vector3 TranslationTarget;
+        }
+
+        /// <summary>
+        /// Editor container for organizing purpose.
+        /// </summary>
+        [Serializable]
+        public struct FollowTranslationByDistanceAndRotationComponents
+        {
+            [Header("Required for initialisation")]
+            [SerializeField] public float SmoothTranslationSpeed;
+            [SerializeField] public float OffsetDistance;
+            [SerializeField] public Vector3 OffsetRotation;
+            [Space()]
+            [SerializeField] public Vector3 TranslationTarget;
+
+            /// <summary>
+            /// Compute the offset position via <see cref="OffsetDistance"/> and <see cref="OffsetRotation"/>.
+            /// </summary>
+            public Vector3 Offset
+            {
+                get => Quaternion.Euler(OffsetRotation) * new Vector3(0f, 0f, OffsetDistance);
+                set
+                {
+                    OffsetDistance = value.magnitude;
+                    OffsetRotation = Quaternion
+                        .FromToRotation(new Vector3(0f, 0f, value.magnitude), value)
+                        .eulerAngles;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Editor container for organizing purpose.
+        /// </summary>
+        [Serializable]
+        public struct FollowRotationComponents
+        {
+            [Header("Required for initialisation")]
+            [SerializeField] public float SmoothRotationSpeed;
+            [Space()]
+            [SerializeField] public Vector3 RotationTarget;
+        }
+
+        /// <summary>
+        /// The speed of this to translate toward <see cref="TranslationTarget"/>.
+        /// </summary>
+        float SmoothTranslationSpeed { get; set; }
+        /// <summary>
+        /// The speed of this to rotate toward <see cref="RotationTarget"/>.
+        /// </summary>
+        float SmoothRotationSpeed { get; set; }
+
+        /// <summary>
+        /// The offset added to <see cref="TranslationTarget"/> when translating.
+        /// </summary>
+        Vector3 Offset { get; set; }
+        /// <summary>
+        /// The <see cref="Offset"/> as a distance and a rotation.
+        /// 
+        /// <para>
+        /// <code>
+        ///     ^
+        ///     |   x : Offset
+        ///     |  /                    
+        ///     |a/                     / = Distance
+        ///     |/                      a = rotation
+        ///     o -------------> 
+        /// Translation Target
+        /// </code>
+        /// </para>
+        /// </summary>
+        (float distance, Vector3 rotation) OffsetDistanceRotation
+        {
+            get =>
+                (
+                    Offset.magnitude,
+                    Quaternion
+                        .FromToRotation(new Vector3(0f, 0f, Offset.magnitude), Offset)
+                        .eulerAngles
+            );
+            set => Offset = Quaternion.Euler(value.rotation) * new Vector3(0f, 0f, value.distance);
+        }
+
+        /// <summary>
+        /// Translation target.
+        /// 
+        /// <para>
+        /// The actual position of the target will be <see cref="TranslationTarget"/> + <see cref="Offset"/>.
+        /// </para>
+        /// </summary>
+        Vector3 TranslationTarget { get; set; }
+        /// <summary>
+        /// Rotation target.
+        /// </summary>
+        Quaternion RotationTarget { get; set; }
+
+        /// <summary>
+        /// Current position of this.
+        /// </summary>
+        Vector3 CurrentPosition
+        {
+            get
+            {
+                if (this is not MonoBehaviour mono) return Vector3.zero;
+                return mono.transform.localPosition;
+            }
+        }
+
+        /// <summary>
+        /// Current rotation of this.
+        /// </summary>
+        Quaternion CurrentRotation
+        {
+            get
+            {
+                if (this is not MonoBehaviour mono) return Quaternion.identity;
+                return mono.transform.localRotation;
+            }
+        }
+
+        #region Translation
+
+        /// <summary>
+        /// Translate this toward <paramref name="translation"/> with an offset of <paramref name="offset"/> at <see cref="SmoothTranslationSpeed"/> speed.
+        /// 
+        /// <para>
+        /// Set <see cref="TranslationTarget"/> with <paramref name="translation"/> and <see cref="Offset"/> with <paramref name="offset"/>.
+        /// </para>
+        /// </summary>
+        /// <param name="translation"></param>
+        /// <param name="offset"></param>
+        void Translate(Vector3 translation, Vector3 offset)
+        {
+            if (this is not MonoBehaviour mono) return;
+
+            TranslationTarget = translation;
+            Offset = offset;
+            Translate();
+        }
+
+        /// <summary>
+        /// Translate this toward <paramref name="translation"/> with an offset of <see cref="Offset"/> at <see cref="SmoothTranslationSpeed"/> speed.
+        /// </summary>
+        /// <param name="translation"></param>
+        void Translate(Vector3 translation)
+        {
+            if (this is not MonoBehaviour mono) return;
+
+            TranslationTarget = translation;
+            Translate();
+        }
+
+        /// <summary>
+        /// Translate this toward <see cref="TranslationTarget"/> + <see cref="Offset"/> at <see cref="SmoothTranslationSpeed"/> speed.
+        /// <para>
+        /// This method should be used in a monobehaviour's LateUpdate method.
+        /// </para>
+        /// </summary>
+        void Translate()
+        {
+            if (this is not MonoBehaviour mono) return;
+
+            mono.transform.localPosition = Vector3.Lerp
+            (
+                CurrentPosition,
+                TranslationTarget + Offset,
+                SmoothTranslationSpeed * Time.deltaTime
+            );
+        }
+
+        /// <summary>
+        /// Translate this toward <see cref="TranslationTarget"/> without delay.
+        /// </summary>
+        void TranslateImmediately()
+        {
+            if (this is not MonoBehaviour mono) return;
+
+            mono.transform.localPosition = TranslationTarget + Offset;
+        }
+
+        #endregion
+
+        #region Rotation
+
+        /// <summary>
+        /// Rotate this by <paramref name="rotation"/> filtered with <paramref name="filter"/> if it matches the condition of the sequences.
+        /// 
+        /// <para>
+        /// Divide a circle in <paramref name="sequences"/> sequences. Rotate toward the corresponding sequence.
+        /// </para>
+        /// <example>
+        /// To rotate horizontally (Y axis) toward 4 positions, copy and past this piece of code.
+        /// <code>
+        ///     (this as IFollowable).Rotate(rotation, Vector3.up, 4);
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <param name="rotation"></param>
+        /// <param name="filter"></param>
+        /// <param name="sequences"></param>
+        void Rotate(Quaternion rotation, Vector3 filter, int sequences)
+        {
+            if (sequences <= 0) sequences = 1;
+            // Length of a sequence.
+            var sequence = 360f / (float)sequences;
+            // Half of the length of a sequence.
+            var halfSequence = sequence / 2f;
+
+            var _rotation = Quaternion.identity;
+            _rotation.eulerAngles = Vector3.Scale(filter, rotation.eulerAngles);
+
+            /// <summary>
+            ///       |<- sequence->|
+            /// ------|--]---0---]--|-------
+            ///         min     max
+            ///       |<->| = hysteresis
+            /// </summary>
+            void SetRotation(float angle, float current, Action<float> rotate, bool log)
+            {
+                // Delay compared with min and max of a sequence.
+                const float hysteresis = 20f;
+
+                var min = -halfSequence + hysteresis;
+                var max = halfSequence - hysteresis;
+                var middle = 0f;
+                for (int i = 0; i <= sequences; i++)
+                {
+                    if (log) UnityEngine.Debug.Log($"{i}: {min}, {max}, {angle}, {middle}");
+                    if
+                    (
+                        angle <= max
+                        && angle > min
+                    )
+                    {
+                        rotate(middle);
+                        return;
+                    }
+                    min += sequence;
+                    max += sequence;
+                    middle += sequence;
+                }
+                rotate(current);
+            }
+
+            SetRotation
+            (
+                _rotation.eulerAngles.x,
+                RotationTarget.eulerAngles.x,
+                middle =>
+                {
+                    _rotation.eulerAngles = new Vector3
+                    (
+                        middle,
+                        _rotation.eulerAngles.y,
+                        _rotation.eulerAngles.z
+                    );
+                }, false);
+
+            SetRotation
+            (
+                _rotation.eulerAngles.y,
+                RotationTarget.eulerAngles.y,
+                middle =>
+                {
+                    _rotation.eulerAngles = new Vector3
+                    (
+                        _rotation.eulerAngles.x,
+                        middle,
+                        _rotation.eulerAngles.z
+                    );
+                }, false);
+
+            SetRotation
+            (
+                _rotation.eulerAngles.z,
+                RotationTarget.eulerAngles.z,
+                middle =>
+                {
+                    _rotation.eulerAngles = new Vector3
+                    (
+                        _rotation.eulerAngles.x,
+                        _rotation.eulerAngles.y,
+                        middle
+                    );
+                }, false);
+
+            Rotate(_rotation);
+        }
+
+        /// <summary>
+        /// Rotate this toward <paramref name="rotation"/> filtered with <paramref name="filter"/> at <see cref="SmoothRotationSpeed"/> speed.
+        /// 
+        /// <para>
+        /// Set <see cref="RotationTarget"/> with <paramref name="rotation"/>. This method should be used in a monobehaviour's LateUpdate method.
+        /// </para>
+        /// <example>
+        /// To filtered the rotation on the Y axi copy and past the following piece of code:
+        /// <code>
+        ///     (this as IFollowable).Rotate(rotation, Vector3.up);
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <param name="rotation"></param>
+        /// <param name="filter"></param>
+        void Rotate(Quaternion rotation, Vector3 filter)
+        {
+            var _rotation = Quaternion.identity;
+            _rotation.eulerAngles = Vector3.Scale(filter, rotation.eulerAngles);
+
+            Rotate(_rotation);
+        }
+
+        /// <summary>
+        /// Rotate this toward <paramref name="rotation"/> at <see cref="SmoothRotationSpeed"/> speed.
+        /// 
+        /// <para>
+        /// Set <see cref="RotationTarget"/> with <paramref name="rotation"/>. This method should be used in a monobehaviour's LateUpdate method.
+        /// </para>
+        /// </summary>
+        /// <param name="rotation"></param>
+        void Rotate(Quaternion rotation)
+        {
+            if (this is not MonoBehaviour mono) return;
+
+            RotationTarget = rotation;
+            Rotate();
+        }
+
+        /// <summary>
+        /// Rotate this toward <see cref="RotationTarget"/> at <see cref="SmoothRotationSpeed"/> speed.
+        /// 
+        /// <para>
+        /// This method should be used in a monobehaviour's LateUpdate method.
+        /// </para>
+        /// </summary>
+        void Rotate()
+        {
+            if (this is not MonoBehaviour mono) return;
+
+            mono.transform.localRotation = Quaternion.Lerp(CurrentRotation, RotationTarget, SmoothRotationSpeed * Time.deltaTime);
+        }
+
+        /// <summary>
+        /// Rotate toward <see cref="RotationTarget"/> without delay.
+        /// </summary>
+        /// <param name="rotation"></param>
+        void RotateImmediately(Quaternion rotation)
+        {
+            if (this is not MonoBehaviour mono) return;
+
+            RotationTarget = rotation;
+            mono.transform.localRotation = RotationTarget;
+        }
+
+        #endregion
+    }
+}

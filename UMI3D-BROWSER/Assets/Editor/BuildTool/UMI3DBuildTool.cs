@@ -16,8 +16,10 @@ limitations under the License.
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using umi3d.cdk.collaboration;
 using UnityEditor;
+using UnityEditor.Build.Reporting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
@@ -29,6 +31,7 @@ namespace umi3d.browserEditor.BuildTool
         [SerializeField] private VisualTreeAsset ui = default;
         [SerializeField] private VisualTreeAsset target_VTA = default;
         [SerializeField] private VisualTreeAsset path_VTA = default;
+        [SerializeField] private VisualTreeAsset scene_VTA = default;
 
         [SerializeField] UMI3DCollabLoadingParameters loadingParameters;
 
@@ -89,6 +92,29 @@ namespace umi3d.browserEditor.BuildTool
             );
             versionView.Bind();
             versionView.Set();
+            
+            // Scenes.
+            LV_Scenes.reorderable = true;
+            LV_Scenes.virtualizationMethod = CollectionVirtualizationMethod.DynamicHeight;
+            LV_Scenes.showFoldoutHeader = true;
+            LV_Scenes.headerTitle = "Scenes";
+            LV_Scenes.showAddRemoveFooter = true;
+            LV_Scenes.reorderMode = ListViewReorderMode.Animated;
+            LV_Scenes.itemsSource = buildToolScene_SO.scenes;
+            LV_Scenes.makeItem = () =>
+            {
+                return scene_VTA.Instantiate(); ;
+            };
+            LV_Scenes.bindItem = (visual, index) =>
+            {
+                UMI3DBuildToolSceneView sceneView = new(
+                    root: visual,
+                    buildToolScene_SO: buildToolScene_SO,
+                    index: index
+                );
+                sceneView.Bind();
+                sceneView.Set();
+            };
 
             // Path
             TF_Installer.label = "Installer";
@@ -128,44 +154,16 @@ namespace umi3d.browserEditor.BuildTool
                 targetView.Bind();
                 targetView.Set();
             };
-
-            // Scenes.
-            buildToolScene_SO.UpdateScenes();
-            LV_Scenes.reorderable = true;
-            LV_Scenes.virtualizationMethod = CollectionVirtualizationMethod.DynamicHeight;
-            LV_Scenes.showFoldoutHeader = true;
-            LV_Scenes.headerTitle = "Scenes";
-            //LV_Scenes.showAddRemoveFooter = true;
-            LV_Scenes.reorderMode = ListViewReorderMode.Animated;
-            LV_Scenes.itemsSource = buildToolScene_SO.scenes;
-            //LV_Scenes.makeItem = () =>
-            //{
-            //    var visual = target_VTA.Instantiate();
-            //    return visual;
-            //};
-            //LV_Scenes.bindItem = (visual, index) =>
-            //{
-            //    UMI3DBuildToolTargetView targetView = new(
-            //        root: visual,
-            //        buildToolTarget_SO: buildToolTarget_SO,
-            //        buildToolVersion_SO: buildToolVersion_SO,
-            //        index: index,
-            //        updateTarget: newTarget =>
-            //        {
-            //            targetDTO = newTarget;
-            //            ApplyChange();
-            //        },
-            //        build: Build
-            //    );
-            //    targetView.Bind();
-            //    targetView.Set();
-            //};
         } 
         
         private void ApplyChange()
         {
             _uMI3DConfigurator.HandleTarget(targetDTO.Target);
             _targetAndPluginSwitcher.HandleTarget(targetDTO.Target);
+            EditorBuildSettings.scenes = buildToolScene_SO.GetScenesForTarget(targetDTO.Target).Select(scene =>
+            {
+                return new EditorBuildSettingsScene(scene.path, true);
+            }).ToArray();
         }
 
         void UpdateVersion()
@@ -176,7 +174,23 @@ namespace umi3d.browserEditor.BuildTool
 
         private void Build()
         {
-            BuildPipeline.BuildPlayer(BuildToolHelper.GetPlayerBuildOptions(versionDTO, targetDTO));
+            var report = BuildPipeline.BuildPlayer(
+                BuildToolHelper.GetPlayerBuildOptions(
+                    versionDTO, 
+                    targetDTO
+                )
+            );
+
+            BuildSummary summary = report.summary;
+
+            if (summary.result == BuildResult.Succeeded)
+            {
+                Debug.Log("Build succeeded: " + summary.totalSize + " bytes");
+            }
+            else if (summary.result == BuildResult.Failed)
+            {
+                Debug.Log($"Build failed: {summary.outputPath}");
+            }
         }
     }
 }

@@ -14,16 +14,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System;
 using UnityEditor;
 
 namespace umi3d.browserEditor.BuildTool
 {
+    [Flags]
     public enum E_Target
     {
-        Quest, 
-        Focus, 
-        Pico, 
-        SteamXR
+        Quest = 1, 
+        Focus = 2, 
+        Pico = 4, 
+        SteamXR = 8,
     }
 
     public static class TargetExt

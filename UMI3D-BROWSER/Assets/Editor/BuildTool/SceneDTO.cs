@@ -16,8 +16,6 @@ limitations under the License.
 
 using System;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace umi3d.browserEditor.BuildTool
 {
@@ -28,6 +26,6 @@ namespace umi3d.browserEditor.BuildTool
         public string path;
         public int index;
         public bool enabled;
-        public List<E_Target> targets;
+        public E_Target targets;
     }
 }

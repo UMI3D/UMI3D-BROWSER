@@ -8,10 +8,11 @@
         <ui:Instance template="UMI3DBuildToolVersion" name="UMI3DBuildToolVersion" />
         <ui:VisualElement name="Space" style="flex-grow: 1; min-height: 20px;" />
         <ui:VisualElement style="flex-grow: 1;">
+            <ui:ListView focusable="true" name="LV_Scenes" />
+            <ui:VisualElement name="Space" style="flex-grow: 1; min-height: 20px;" />
             <ui:Instance template="UMI3DBuildToolPath" name="T_Installer" />
             <ui:Instance template="UMI3DBuildToolPath" name="T_License" />
             <ui:ListView focusable="true" name="LV_Targets" />
-            <ui:ListView focusable="true" name="LV_Scenes" />
         </ui:VisualElement>
         <ui:VisualElement name="Space" style="flex-grow: 1; min-height: 20px;" />
     </ui:ScrollView>

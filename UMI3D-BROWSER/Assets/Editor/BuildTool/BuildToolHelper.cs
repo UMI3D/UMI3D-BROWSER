@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System.Linq;
 using UnityEditor;
 using UnityEngine.SceneManagement;
 
@@ -30,12 +31,17 @@ namespace umi3d.browserEditor.BuildTool
         public static BuildPlayerOptions GetPlayerBuildOptions(VersionDTO version, TargetDto target)
         {
             BuildPlayerOptions pbo = new();
-            //pbo.scenes = new[] { SceneManager.sceneCountInBuildSettings };
-            pbo.locationPathName = $"{target.BuildFolder}/{version.buildCountVersion}.{version.date}";
+
+            pbo.scenes = EditorBuildSettings.scenes.Select(scene =>
+            {
+                return scene.path;
+            }).ToArray();
+            pbo.locationPathName = 
+                $"{target.BuildFolder}/" +
+                $"{version.buildCountVersion}_{version.date}/" +
+                $"UMI3D_{target.Target}Browser_{version.VersionFromNow}";
             pbo.target = target.Target.GetBuildTarget();
             pbo.options = BuildOptions.None;
-
-            //BuildPlayerOptions playerBuildOptions = BuildPlayerWindow.DefaultBuildMethods.GetBuildPlayerOptions(pbo);
 
             return pbo;
         }

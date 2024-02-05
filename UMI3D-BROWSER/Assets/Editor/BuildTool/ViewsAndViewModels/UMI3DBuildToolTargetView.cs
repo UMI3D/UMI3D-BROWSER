@@ -16,6 +16,7 @@ limitations under the License.
 
 using System;
 using UnityEditor;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace umi3d.browserEditor.BuildTool
@@ -86,7 +87,7 @@ namespace umi3d.browserEditor.BuildTool
             // Device target.
             DD_TargetSelection.choices.Clear();
             DD_TargetSelection.choices.AddRange(Enum.GetNames(typeof(E_Target)));
-            DD_TargetSelection.value = DD_TargetSelection.choices[(int)viewModel[index].Target];
+            DD_TargetSelection.value = viewModel[index].Target.ToString();
             DD_TargetSelection.RegisterValueChangedCallback(value =>
             {
                 viewModel.ApplyTarget(index, Enum.Parse<E_Target>(value.newValue));
@@ -130,7 +131,7 @@ namespace umi3d.browserEditor.BuildTool
 
         void ApplyChangeView(bool isApplied)
         {
-            B_Apply.SetEnabled(!isApplied);
+            B_Apply.style.backgroundColor = isApplied ? new Color(0.5f, 1, 0) : StyleKeyword.Null;
             B_Build.SetEnabled(isApplied);
             viewModel.ApplyChange(index, isApplied);
         }

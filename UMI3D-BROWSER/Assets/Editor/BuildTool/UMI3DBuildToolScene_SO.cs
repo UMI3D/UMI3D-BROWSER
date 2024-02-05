@@ -16,6 +16,7 @@ limitations under the License.
 
 using inetum.unityUtils.saveSystem;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 
 namespace umi3d.browserEditor.BuildTool
@@ -25,27 +26,35 @@ namespace umi3d.browserEditor.BuildTool
     {
         public List<SceneDTO> scenes;
 
-        public void UpdateScenes()
+        public SceneDTO[] GetScenesForTarget(E_Target target)
         {
-            var _scenes = new List<SceneDTO>();
-            for (int i = 0; i < EditorBuildSettings.scenes.Length; i++)
+            return scenes.Where(scene =>
             {
-                var scene = new SceneDTO();
-                scene.path = EditorBuildSettings.scenes[i].path;
-                scene.name = System.IO.Path.GetFileNameWithoutExtension(scene.path);
-                scene.index = i;
-                scene.enabled = EditorBuildSettings.scenes[0].enabled;
+                return scene.targets.HasFlag(target);
+            }).ToArray();
+        }
 
-                var sceneFound = scenes.Find(_scene =>  _scene.path == scene.path);
-                if (!string.IsNullOrEmpty(sceneFound.path))
-                {
-                    scene.targets = sceneFound.targets;
-                }
+        //public void UpdateScenes()
+        //{
+        //    var _scenes = new List<SceneDTO>();
+        //    for (int i = 0; i < EditorBuildSettings.scenes.Length; i++)
+        //    {
+        //        var scene = new SceneDTO();
+        //        scene.path = EditorBuildSettings.scenes[i].path;
+        //        scene.name = System.IO.Path.GetFileNameWithoutExtension(scene.path);
+        //        scene.index = i;
+        //        scene.enabled = EditorBuildSettings.scenes[0].enabled;
 
-                _scenes.Add(scene);
-            }
+        //        var sceneFound = scenes.Find(_scene =>  _scene.path == scene.path);
+        //        if (!string.IsNullOrEmpty(sceneFound.path))
+        //        {
+        //            scene.targets = sceneFound.targets;
+        //        }
 
-            scenes = _scenes;
-        } 
+        //        _scenes.Add(scene);
+        //    }
+
+        //    scenes = _scenes;
+        //} 
     }
 }

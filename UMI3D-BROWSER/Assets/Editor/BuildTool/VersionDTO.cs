@@ -46,7 +46,7 @@ namespace umi3d.browserEditor.BuildTool
         {
             get
             {
-                return GetFormattedVersion(DateTime.Now.ToString("yy.MM.dd"));
+                return GetFormattedVersion(DateTime.Now.ToString("yyMMdd"));
             }
         }
 

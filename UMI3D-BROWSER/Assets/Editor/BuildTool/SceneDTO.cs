@@ -15,16 +15,13 @@ limitations under the License.
 */
 
 using System;
-using System.Collections.Generic;
 
 namespace umi3d.browserEditor.BuildTool
 {
     [Serializable]
     public struct SceneDTO 
     {
-        public string name;
         public string path;
-        public int index;
         public bool enabled;
         public E_Target targets;
     }

@@ -44,7 +44,7 @@ namespace umi3d.browserEditor.BuildTool
             this.root = root;
             this.viewModel = new(
                 buildToolVersion_SO, 
-                version =>
+                updateVersion: version =>
                 {
                     updateVersion?.Invoke(version);
                     UpdateVersionView();

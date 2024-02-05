@@ -27,7 +27,7 @@ namespace umi3d.browserEditor.BuildTool
         public void UpdateOldVersionWithNewVersion()
         {
             oldVersion = newVersion;
-            oldVersion.date = DateTime.Now.ToString("yy.MM.dd");
+            oldVersion.date = DateTime.Now.ToString("yyMMdd");
         }
     }
 }

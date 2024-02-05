@@ -33,28 +33,5 @@ namespace umi3d.browserEditor.BuildTool
                 return scene.targets.HasFlag(target);
             }).ToArray();
         }
-
-        //public void UpdateScenes()
-        //{
-        //    var _scenes = new List<SceneDTO>();
-        //    for (int i = 0; i < EditorBuildSettings.scenes.Length; i++)
-        //    {
-        //        var scene = new SceneDTO();
-        //        scene.path = EditorBuildSettings.scenes[i].path;
-        //        scene.name = System.IO.Path.GetFileNameWithoutExtension(scene.path);
-        //        scene.index = i;
-        //        scene.enabled = EditorBuildSettings.scenes[0].enabled;
-
-        //        var sceneFound = scenes.Find(_scene =>  _scene.path == scene.path);
-        //        if (!string.IsNullOrEmpty(sceneFound.path))
-        //        {
-        //            scene.targets = sceneFound.targets;
-        //        }
-
-        //        _scenes.Add(scene);
-        //    }
-
-        //    scenes = _scenes;
-        //} 
     }
 }

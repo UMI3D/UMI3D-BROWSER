@@ -50,6 +50,7 @@ namespace umi3d.browserEditor.BuildTool
         public void ApplyMajorVersion(int value)
         {
             buildToolVersion_SO.newVersion.majorVersion = value;
+            UpdateDate();
             updateVersion?.Invoke(NewVersion);
             Save();
         }
@@ -57,6 +58,7 @@ namespace umi3d.browserEditor.BuildTool
         public void ApplyMinorVersion(int value)
         {
             buildToolVersion_SO.newVersion.minorVersion = value;
+            UpdateDate();
             updateVersion?.Invoke(NewVersion);
             Save();
         }
@@ -64,6 +66,7 @@ namespace umi3d.browserEditor.BuildTool
         public void ApplyBuildCountVersion(int value)
         {
             buildToolVersion_SO.newVersion.buildCountVersion = value;
+            UpdateDate();
             updateVersion?.Invoke(NewVersion);
             Save();
         }
@@ -71,6 +74,7 @@ namespace umi3d.browserEditor.BuildTool
         public void ApplyAdditionalVersion(string value)
         {
             buildToolVersion_SO.newVersion.additionalVersion = value;
+            UpdateDate();
             updateVersion?.Invoke(NewVersion);
             Save();
         }
@@ -78,6 +82,11 @@ namespace umi3d.browserEditor.BuildTool
         public void Save()
         {
             EditorUtility.SetDirty(buildToolVersion_SO);
+        }
+
+        void UpdateDate()
+        {
+            buildToolVersion_SO.newVersion.date = DateTime.Now.ToString("yyMMdd");
         }
     }
 }

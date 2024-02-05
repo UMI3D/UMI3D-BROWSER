@@ -14,9 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System;
 using UnityEditor;
-using UnityEngine;
 
 namespace umi3d.browserEditor.BuildTool
 {

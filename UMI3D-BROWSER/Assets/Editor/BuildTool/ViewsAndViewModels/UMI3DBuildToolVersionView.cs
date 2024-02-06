@@ -46,8 +46,8 @@ namespace umi3d.browserEditor.BuildTool
                 buildToolVersion_SO, 
                 updateVersion: version =>
                 {
-                    updateVersion?.Invoke(version);
                     UpdateVersionView();
+                    updateVersion?.Invoke(version);
                 }
             );
         }

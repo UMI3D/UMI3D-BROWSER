@@ -47,10 +47,19 @@ namespace umi3d.browserEditor.BuildTool
             }
         }
 
+        public VersionDTO SDKVersion
+        {
+            get
+            {
+                return buildToolVersion_SO.sdkVersion;
+            }
+        }
+
         public void ApplyMajorVersion(int value)
         {
             buildToolVersion_SO.newVersion.majorVersion = value;
             UpdateDate();
+            UpdateSDKVersion();
             updateVersion?.Invoke(NewVersion);
             Save();
         }
@@ -59,6 +68,7 @@ namespace umi3d.browserEditor.BuildTool
         {
             buildToolVersion_SO.newVersion.minorVersion = value;
             UpdateDate();
+            UpdateSDKVersion();
             updateVersion?.Invoke(NewVersion);
             Save();
         }
@@ -67,6 +77,7 @@ namespace umi3d.browserEditor.BuildTool
         {
             buildToolVersion_SO.newVersion.buildCountVersion = value;
             UpdateDate();
+            UpdateSDKVersion();
             updateVersion?.Invoke(NewVersion);
             Save();
         }
@@ -75,6 +86,7 @@ namespace umi3d.browserEditor.BuildTool
         {
             buildToolVersion_SO.newVersion.additionalVersion = value;
             UpdateDate();
+            UpdateSDKVersion();
             updateVersion?.Invoke(NewVersion);
             Save();
         }
@@ -82,6 +94,14 @@ namespace umi3d.browserEditor.BuildTool
         public void Save()
         {
             EditorUtility.SetDirty(buildToolVersion_SO);
+        }
+
+        void UpdateSDKVersion()
+        {
+            buildToolVersion_SO.sdkVersion.majorVersion = int.Parse(UMI3DVersion.major);
+            buildToolVersion_SO.sdkVersion.minorVersion = int.Parse(UMI3DVersion.minor);
+            buildToolVersion_SO.sdkVersion.buildCountVersion = UMI3DVersion.status == "b" ? 0 : 1;
+            buildToolVersion_SO.sdkVersion.date = UMI3DVersion.date;
         }
 
         void UpdateDate()

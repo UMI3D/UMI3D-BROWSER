@@ -26,7 +26,6 @@ namespace umi3d.browserEditor.BuildTool
         public VisualElement root;
         public UMI3DBuildToolVersion_SO buildToolVersion_SO;
         public int index;
-        public Action<TargetDto> updateTarget;
         public Action build;
 
         public UMI3DBuildToolTargetViewModel viewModel;
@@ -42,10 +41,9 @@ namespace umi3d.browserEditor.BuildTool
         public UMI3DBuildToolTargetView(VisualElement root, UMI3DBuildToolTarget_SO buildToolTarget_SO, UMI3DBuildToolVersion_SO buildToolVersion_SO, int index, Action<TargetDto> updateTarget, Action build)
         {
             this.root = root;
-            this.viewModel = new(buildToolTarget_SO);
+            this.viewModel = new(buildToolTarget_SO, updateTarget);
             this.buildToolVersion_SO = buildToolVersion_SO;
             this.index = index;
-            this.updateTarget = updateTarget;
             this.build = build;
         }
 
@@ -91,7 +89,7 @@ namespace umi3d.browserEditor.BuildTool
             DD_TargetSelection.RegisterValueChangedCallback(value =>
             {
                 viewModel.ApplyTarget(index, Enum.Parse<E_Target>(value.newValue));
-                ApplyChangeView(false);
+                ApplyChange(false);
             });
 
             // Release cycle.
@@ -101,10 +99,13 @@ namespace umi3d.browserEditor.BuildTool
             DD_ReleaseCycle.RegisterValueChangedCallback(value =>
             {
                 viewModel.ApplyReleaseCycle(index, Enum.Parse<E_ReleaseCycle>(value.newValue));
-                ApplyChangeView(false);
+                ApplyChange(false);
             });
 
-            B_Apply.clicked += ApplyChange;
+            B_Apply.clicked += () =>
+            {
+                ApplyChange(true);
+            };
             B_Build.clicked += () =>
             {
                 buildToolVersion_SO.UpdateOldVersionWithNewVersion();
@@ -113,23 +114,10 @@ namespace umi3d.browserEditor.BuildTool
 
             T_Select.value = viewModel[index].IsTargetEnabled;
             TF_Path.value = viewModel[index].BuildFolder;
-            ApplyChangeView(viewModel[index].isApplied);
+            ApplyChange(viewModel[index].isApplied);
         }
 
-        public void ApplyChange()
-        {
-            for (int i = 0; i < viewModel.Count; i++)
-            {
-                if (i != index)
-                {
-                    viewModel.ApplyChange(i, false);
-                }
-            }
-            ApplyChangeView(true);
-            updateTarget?.Invoke(viewModel[index]);
-        }
-
-        void ApplyChangeView(bool isApplied)
+        void ApplyChange(bool isApplied)
         {
             B_Apply.style.backgroundColor = isApplied ? new Color(0.5f, 1, 0) : StyleKeyword.Null;
             B_Build.SetEnabled(isApplied);

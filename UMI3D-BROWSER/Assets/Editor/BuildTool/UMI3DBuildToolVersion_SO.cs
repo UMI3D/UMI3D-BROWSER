@@ -23,6 +23,7 @@ namespace umi3d.browserEditor.BuildTool
     {
         public VersionDTO newVersion;
         public VersionDTO oldVersion;
+        public VersionDTO sdkVersion;
 
         public void UpdateOldVersionWithNewVersion()
         {

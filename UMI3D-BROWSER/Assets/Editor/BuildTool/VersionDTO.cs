@@ -67,7 +67,7 @@ namespace umi3d.browserEditor.BuildTool
                 result += $"{additionalVersion}_";
             }
 
-            result += $"{majorVersion}.{minorVersion}.{buildCountVersion}_{date}";
+            result += $"{majorVersion}_{minorVersion}_{buildCountVersion}_{date}";
 
             return result;
         }

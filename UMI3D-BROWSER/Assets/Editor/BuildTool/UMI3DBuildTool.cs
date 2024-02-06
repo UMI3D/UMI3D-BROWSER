@@ -14,14 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using umi3d.cdk.collaboration;
 using UnityEditor;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
 namespace umi3d.browserEditor.BuildTool
@@ -43,7 +40,6 @@ namespace umi3d.browserEditor.BuildTool
         IBuilToolComponent _targetAndPluginSwitcher = null;
 
         TargetDto targetDTO;
-        VersionDTO oldVersionDTO;
         VersionDTO versionDTO;
 
         [MenuItem("Tools/BuildTool")]
@@ -84,7 +80,7 @@ namespace umi3d.browserEditor.BuildTool
             UMI3DBuildToolVersionView versionView = new(
                 root, 
                 buildToolVersion_SO, 
-                newVersion =>
+                updateVersion: newVersion =>
                 {
                     versionDTO = newVersion;
                     UpdateVersion();
@@ -174,23 +170,17 @@ namespace umi3d.browserEditor.BuildTool
 
         private void Build()
         {
+            BuildToolHelper.UpdateApplicationName(targetDTO);
+
             var report = BuildPipeline.BuildPlayer(
                 BuildToolHelper.GetPlayerBuildOptions(
-                    versionDTO, 
+                    versionDTO,
                     targetDTO
                 )
             );
 
-            BuildSummary summary = report.summary;
-
-            if (summary.result == BuildResult.Succeeded)
-            {
-                Debug.Log("Build succeeded: " + summary.totalSize + " bytes");
-            }
-            else if (summary.result == BuildResult.Failed)
-            {
-                Debug.Log($"Build failed: {summary.outputPath}");
-            }
+            BuildToolHelper.DeleteBurstDebugInformationFolder(report);
+            BuildToolHelper.Report(report);
         }
     }
 }

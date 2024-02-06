@@ -17,12 +17,14 @@ limitations under the License.
 using System;
 using UnityEditor;
 using UnityEngine;
+using static UnityEditor.Profiling.HierarchyFrameDataView;
 
 namespace umi3d.browserEditor.BuildTool
 {
     public class UMI3DBuildToolTargetViewModel 
     {
         public UMI3DBuildToolTarget_SO buildToolTarget_SO;
+        public Action<TargetDto> updateTarget;
 
         public TargetDto this[int index]
         {
@@ -40,16 +42,37 @@ namespace umi3d.browserEditor.BuildTool
             }
         }
 
-        public UMI3DBuildToolTargetViewModel(UMI3DBuildToolTarget_SO buildToolTarget_SO)
+        public UMI3DBuildToolTargetViewModel(UMI3DBuildToolTarget_SO buildToolTarget_SO, Action<TargetDto> updateTarget)
         {
             this.buildToolTarget_SO = buildToolTarget_SO;
+            this.updateTarget = updateTarget;
         }
 
         public void ApplyChange(int index, bool isApplied)
         {
-            var targetDTO = buildToolTarget_SO.targets[index];
-            targetDTO.isApplied = isApplied;
-            buildToolTarget_SO.targets[index] = targetDTO;
+            void InternalApplyChange(int index, bool isApplied)
+            {
+                var targetDTO = buildToolTarget_SO.targets[index];
+                targetDTO.isApplied = isApplied;
+                buildToolTarget_SO.targets[index] = targetDTO;
+                if (isApplied)
+                {
+                    updateTarget?.Invoke(this[index]);
+                }
+            }
+            
+            InternalApplyChange(index, isApplied);
+            if (isApplied)
+            {
+                for (int i = 0; i < Count; i++)
+                {
+                    if (i != index)
+                    {
+                        InternalApplyChange(i, false);
+                    }
+                }
+            }
+
             Save();
         }
 

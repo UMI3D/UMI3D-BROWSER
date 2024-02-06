@@ -24,7 +24,7 @@ using UnityEngine.UI;
 
 namespace umi3dBrowsers.displayer
 {
-    public class ButtonDisplayer : MonoBehaviour, IUMI3DButtonHandler
+    public class ButtonDisplayer : MonoBehaviour, ISubDisplayer
     {
         [Header("trash button")]
         [SerializeField] private Color backgroundNormalColor = Color.gray;
@@ -70,13 +70,22 @@ namespace umi3dBrowsers.displayer
                     iconImage.color = normalColor;
             }
 
-            if (_easeInOutCoroutine != null )
+            if (_easeInOutCoroutine != null)
             {
-                StopCoroutine(_easeInOutCoroutine );
+                StopCoroutine(_easeInOutCoroutine);
                 _easeInOutCoroutine = null;
             }
 
             _easeInOutCoroutine = StartCoroutine(EaseInOut(true));
+        }
+
+        private void OnDisable()
+        {          
+            //if (_easeInOutCoroutine != null)
+            //{
+            //    StopCoroutine(_easeInOutCoroutine);
+            //    _easeInOutCoroutine = null;
+            //}
         }
 
         public event Action OnClick;
@@ -111,7 +120,7 @@ namespace umi3dBrowsers.displayer
             OnHover?.Invoke();
 
             if (stayClicked && _isClicked) return;
-            
+
             iconImage.sprite = hoverIcon;
             iconImage.color = hoverColor;
         }

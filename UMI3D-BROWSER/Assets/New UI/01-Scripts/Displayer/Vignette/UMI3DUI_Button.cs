@@ -25,11 +25,11 @@ namespace umi3dBrowsers.displayer
 {
     public class UMI3DUI_Button : Button
     {
-        private IUMI3DButtonHandler _vignetteDisplayer;
+        private ISubDisplayer _vignetteDisplayer;
 
         protected override void Awake()
         {
-            _vignetteDisplayer = GetComponent<IUMI3DButtonHandler>();
+            _vignetteDisplayer = GetComponent<ISubDisplayer>();
             onClick.AddListener(() => _vignetteDisplayer.Click());
         }
 

@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -23,17 +24,18 @@ using UnityEngine.UI;
 
 namespace umi3dBrowsers.displayer
 {
-    public class VignetteDisplayer : MonoBehaviour, IUMI3DButtonHandler
+    public class VignetteDisplayer : MonoBehaviour, ISubDisplayer
     {
         [SerializeField] private Color transprentColor = Color.gray;
         [Header("Vignette main Image")]
         [SerializeField] private Image vignetteImage;
 
-        [Header("Like button")]
+        [Header("buttons")]
         [SerializeField] ButtonDisplayer likeButton;
-
-        [Header("trash button")]
         [SerializeField] ButtonDisplayer trashButton;
+        [Space]
+        [SerializeField] VignetteInputField inputFieldBackground;
+
 
         [Header("Input field backgroung")]
         [SerializeField] private Image IF_background;
@@ -49,17 +51,24 @@ namespace umi3dBrowsers.displayer
         enum VignetteState { notHovering, Hovering, HoveringSubElement}
         VignetteState vignetteState;
 
+        public event Action OnClick;
+        public event Action OnDisabled;
+        public event Action OnHover;
+
         private void Awake()
         {
             transprentColor.a = 0;
             likeButton.gameObject.SetActive(false);
             trashButton.gameObject.SetActive(false);
+            inputFieldBackground.gameObject.SetActive(false);
 
             likeButton.OnHover += () => vignetteState = VignetteState.HoveringSubElement;
             trashButton.OnHover += () => vignetteState = VignetteState.HoveringSubElement;
+            inputFieldBackground.OnHover += () => vignetteState = VignetteState.HoveringSubElement;
 
             likeButton.OnDisabled += () => DisableSubComponents();
             trashButton.OnDisabled += () => DisableSubComponents();
+            inputFieldBackground.OnDisabled += () => DisableSubComponents();
         }
 
         public void HoverEnter(PointerEventData eventData)
@@ -68,6 +77,7 @@ namespace umi3dBrowsers.displayer
 
             likeButton.gameObject.SetActive(true);
             trashButton.gameObject.SetActive(true);
+            inputFieldBackground.gameObject.SetActive(true);
         }
 
         public void HoverExit(PointerEventData eventData)
@@ -81,12 +91,14 @@ namespace umi3dBrowsers.displayer
             onVignetteClicked?.Invoke();
             likeButton.Disable();
             trashButton.Disable();
+            inputFieldBackground.Disable();
         }
 
         private void DisableSubComponents()
         {
             likeButton.gameObject.SetActive(false);
             trashButton.gameObject.SetActive(false);
+            inputFieldBackground.gameObject.SetActive(false);
         }
 
         private IEnumerator HoverDelay()
@@ -97,7 +109,13 @@ namespace umi3dBrowsers.displayer
             {
                 likeButton.Disable();
                 trashButton.Disable();
+                inputFieldBackground.Disable();
             }
+        }
+
+        public void Disable()
+        {
+            
         }
     }
 }

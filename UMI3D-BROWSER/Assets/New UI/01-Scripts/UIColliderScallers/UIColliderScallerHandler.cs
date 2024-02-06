@@ -16,7 +16,6 @@ limitations under the License.
 
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace umi3dBrowsers.utils
@@ -33,26 +32,10 @@ namespace umi3dBrowsers.utils
             }
         }
 
-
+        [ContextMenu("Scale colliders UI")]
         public void ScaleColliders()
         {
             List<UIColliderScaller> uIColliderScallers = UIColliderScaller.uiColliderScalers;
-            if (uIColliderScallers == null ||uIColliderScallers.Count == 0)
-            {
-                ScaleColliders_Editor();
-                return;
-            }
-
-            foreach (var scaller in uIColliderScallers)
-            {
-                scaller.ScaleCollider();
-            }
-        }
-
-        [ContextMenu("Scale colliders UI")]
-        public void ScaleColliders_Editor()
-        {
-            List<UIColliderScaller> uIColliderScallers = GetComponentsInChildren<UIColliderScaller>().ToList();
             foreach (var scaller in uIColliderScallers)
             {
                 scaller.ScaleCollider();

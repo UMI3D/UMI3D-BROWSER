@@ -28,26 +28,15 @@ namespace umi3dBrowsers.utils
 
         public static List<UIColliderScaller> uiColliderScalers = new();
 
-        private void OnEnable()
-        {
-            if (!uiColliderScalers.Contains(this))
-            {
-                uiColliderScalers.Add(this);
-            }
-        }
-
-        private void OnDisable()
-        {
-            if (uiColliderScalers.Contains(this))
-            {
-                uiColliderScalers.Remove(this);
-            }
-        }
-
         private void Awake()
         {
             _collider = GetComponent<BoxCollider>();
             _transform = GetComponent<RectTransform>();
+
+            if (!uiColliderScalers.Contains(this))
+            {
+                uiColliderScalers.Add(this);
+            }
         }
 
         [ContextMenu("ScaleCollider")]

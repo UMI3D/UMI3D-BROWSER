@@ -62,7 +62,7 @@ namespace umi3d.browserEditor.BuildTool
             PlayerSettings.productName = name;
         }
 
-        public static BuildPlayerOptions GetPlayerBuildOptions(VersionDTO version, TargetDto target)
+        public static BuildPlayerOptions GetPlayerBuildOptions(VersionDTO version, VersionDTO sdkVersion, TargetDto target)
         {
             BuildPlayerOptions pbo = new();
 
@@ -73,7 +73,7 @@ namespace umi3d.browserEditor.BuildTool
             pbo.locationPathName = 
                 $"{target.BuildFolder}/" +
                 $"{target.releaseCycle}/" +
-                $"{version.VersionFromNow}_SDK2_8_0_240208/" +
+                $"{version.VersionFromNow}_SDK{sdkVersion.Version}/" +
                 $"UMI3D {target.Target} Browser";
             switch (target.Target)
             {
@@ -90,8 +90,6 @@ namespace umi3d.browserEditor.BuildTool
             }
             pbo.target = target.Target.GetBuildTarget();
             pbo.options = BuildOptions.None;
-
-            UnityEngine.Debug.Log($"path = {pbo.locationPathName}");
 
             return pbo;
         }

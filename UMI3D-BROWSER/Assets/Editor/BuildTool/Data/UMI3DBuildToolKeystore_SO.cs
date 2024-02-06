@@ -15,13 +15,17 @@ limitations under the License.
 */
 
 using inetum.unityUtils.saveSystem;
-using System;
 using UnityEngine;
 
 namespace umi3d.browserEditor.BuildTool
 {
-    [CreateAssetMenu(fileName = "UMI3D Build Tool Keystore", menuName = "UMI3D/Tools/Build Tool Keystore")]
+    /// <summary>
+    /// [Warning] do not push this data in a public Git repository !!!<br/>
+    /// Create a [Build Tool Keystore] scriptable object in an EXCLUDED folder that is excluded from git.
+    /// </summary>
+    //[CreateAssetMenu(fileName = "UMI3D Build Tool Keystore", menuName = "UMI3D/Tools/Build Tool Keystore")]
     public class UMI3DBuildToolKeystore_SO : SerializableScriptableObject
     {
+        public string password;
     }
 }

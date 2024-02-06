@@ -19,6 +19,7 @@ using umi3d.cdk.collaboration;
 using UnityEditor;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.UIElements;
 
 namespace umi3d.browserEditor.BuildTool
@@ -29,13 +30,12 @@ namespace umi3d.browserEditor.BuildTool
         [SerializeField] private VisualTreeAsset target_VTA = default;
         [SerializeField] private VisualTreeAsset path_VTA = default;
         [SerializeField] private VisualTreeAsset scene_VTA = default;
-
-        [SerializeField] UMI3DCollabLoadingParameters loadingParameters;
-
+        [SerializeField] UMI3DBuildToolKeystore_SO buildToolKeystore_SO;
         [SerializeField] UMI3DBuildToolVersion_SO buildToolVersion_SO;
         [SerializeField] UMI3DBuildToolTarget_SO buildToolTarget_SO;
         [SerializeField] UMI3DBuildToolScene_SO buildToolScene_SO;
 
+        [SerializeField] UMI3DCollabLoadingParameters loadingParameters;
         IBuilToolComponent _uMI3DConfigurator = null;
         IBuilToolComponent _targetAndPluginSwitcher = null;
 
@@ -46,110 +46,75 @@ namespace umi3d.browserEditor.BuildTool
         public static void OpenWindow()
         {
             UMI3DBuildTool wnd = GetWindow<UMI3DBuildTool>();
-            wnd.titleContent = new GUIContent("UMI3DBuildTool");
+            wnd.titleContent = new GUIContent("UMI3D Build Tool");
         }
 
         public void CreateGUI()
         {
+            Assert.IsNotNull(
+                ui,
+                "[UMI3D] BuildTool: ui is null."
+            );
+            Assert.IsNotNull(
+                target_VTA,
+                "[UMI3D] BuildTool: target_VTA is null."
+            );
+            Assert.IsNotNull(
+                path_VTA,
+                "[UMI3D] BuildTool: path_VTA is null."
+            );
+            Assert.IsNotNull(
+                scene_VTA,
+                "[UMI3D] BuildTool: scene_VTA is null."
+            );
+
+            Assert.IsNotNull(
+                buildToolKeystore_SO, 
+                "[UMI3D] BuildTool: buildToolKeystore_SO is null.\n" +
+                "Create a [Build Tool Keystore] scriptable object in an EXCLUDED folder that is excluded from git."
+            );
+            Assert.IsNotNull(
+                buildToolVersion_SO,
+                "[UMI3D] BuildTool: buildToolVersion_SO is null."
+            );
+            Assert.IsNotNull(
+                buildToolTarget_SO,
+                "[UMI3D] BuildTool: buildToolTarget_SO is null."
+            );
+            Assert.IsNotNull(
+                buildToolScene_SO,
+                "[UMI3D] BuildTool: buildToolScene_SO is null."
+            );
             _targetAndPluginSwitcher = new TargetAndPluginSwitcher();
             _uMI3DConfigurator = new UMI3DConfigurator(loadingParameters);
 
-            VisualElement root = rootVisualElement;
-
-            VisualElement ui_instance = ui.Instantiate();
-            root.Add(ui_instance);
-
-            TextField TF_BuildName = root.Q<TextField>("TF_BuildName");
-            
-            TemplateContainer T_Installer = root.Q<TemplateContainer>("T_Installer");
-            TextField TF_Installer = T_Installer.Q<TextField>();
-            Button B_Installer = T_Installer.Q<Button>();
-            TemplateContainer T_License = root.Q<TemplateContainer>("T_License");
-            TextField TF_License = T_License.Q<TextField>();
-            Button B_License = T_License.Q<Button>();
-            ListView LV_Targets = root.Q<ListView>("LV_Targets");
-            ListView LV_Scenes = root.Q<ListView>("LV_Scenes");
-
-            // Build name.
-            TF_BuildName.value = PlayerSettings.productName;
-            TF_BuildName.RegisterValueChangedCallback(value =>
-            {
-                PlayerSettings.productName = value.newValue;
-            });
-
-            UMI3DBuildToolVersionView versionView = new(
-                root, 
-                buildToolVersion_SO, 
+            UMI3DBuildToolView buildView = new(
+                rootVisualElement,
+                ui, target_VTA, path_VTA, scene_VTA,
+                buildToolKeystore_SO, buildToolVersion_SO, buildToolTarget_SO, buildToolScene_SO,
                 updateVersion: newVersion =>
                 {
                     versionDTO = newVersion;
                     UpdateVersion();
-                }
+                },
+                updateTarget: newTarget =>
+                {
+                    targetDTO = newTarget;
+                    ApplyChange();
+                },
+                Build
             );
-            versionView.Bind();
-            versionView.Set();
-            
-            // Scenes.
-            LV_Scenes.reorderable = true;
-            LV_Scenes.virtualizationMethod = CollectionVirtualizationMethod.DynamicHeight;
-            LV_Scenes.showFoldoutHeader = true;
-            LV_Scenes.headerTitle = "Scenes";
-            LV_Scenes.showAddRemoveFooter = true;
-            LV_Scenes.reorderMode = ListViewReorderMode.Animated;
-            LV_Scenes.itemsSource = buildToolScene_SO.scenes;
-            LV_Scenes.makeItem = () =>
-            {
-                return scene_VTA.Instantiate(); ;
-            };
-            LV_Scenes.bindItem = (visual, index) =>
-            {
-                UMI3DBuildToolSceneView sceneView = new(
-                    root: visual,
-                    buildToolScene_SO: buildToolScene_SO,
-                    index: index
-                );
-                sceneView.Bind();
-                sceneView.Set();
-            };
+            buildView.Bind();
+            buildView.Set();
 
-            // Path
-            TF_Installer.label = "Installer";
-            B_Installer.clicked += () =>
-            {
-                UnityEngine.Debug.Log($"Todo");
-            };
-            TF_License.label = "License";
+            //TextField TF_BuildName = root.Q<TextField>("TF_BuildName");
 
-            // Targets.
-            LV_Targets.reorderable = true;
-            LV_Targets.virtualizationMethod = CollectionVirtualizationMethod.DynamicHeight;
-            LV_Targets.showFoldoutHeader = true;
-            LV_Targets.headerTitle = "Targets";
-            LV_Targets.showAddRemoveFooter = true;
-            LV_Targets.reorderMode = ListViewReorderMode.Animated;
-            LV_Targets.itemsSource = buildToolTarget_SO.targets;
-            LV_Targets.makeItem = () =>
-            {
-                var visual = target_VTA.Instantiate();
-                return visual;
-            };
-            LV_Targets.bindItem = (visual, index) =>
-            {
-                UMI3DBuildToolTargetView targetView = new(
-                    root: visual,
-                    buildToolTarget_SO: buildToolTarget_SO,
-                    buildToolVersion_SO: buildToolVersion_SO,
-                    index: index,
-                    updateTarget: newTarget =>
-                    {
-                        targetDTO = newTarget;
-                        ApplyChange();
-                    }, 
-                    build: Build
-                );
-                targetView.Bind();
-                targetView.Set();
-            };
+            //// Build name.
+            //TF_BuildName.value = PlayerSettings.productName;
+            //TF_BuildName.RegisterValueChangedCallback(value =>
+            //{
+            //    PlayerSettings.productName = value.newValue;
+            //});
         } 
         
         private void ApplyChange()
@@ -175,6 +140,7 @@ namespace umi3d.browserEditor.BuildTool
             var report = BuildPipeline.BuildPlayer(
                 BuildToolHelper.GetPlayerBuildOptions(
                     versionDTO,
+                    buildToolVersion_SO.sdkVersion,
                     targetDTO
                 )
             );

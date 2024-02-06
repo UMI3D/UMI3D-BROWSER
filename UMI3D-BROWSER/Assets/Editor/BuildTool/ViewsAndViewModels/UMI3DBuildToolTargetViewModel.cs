@@ -48,7 +48,7 @@ namespace umi3d.browserEditor.BuildTool
             this.updateTarget = updateTarget;
         }
 
-        public void ApplyChange(int index, bool isApplied)
+        public void ApplyChange(int index, bool isApplied, Action rebuildView)
         {
             void InternalApplyChange(int index, bool isApplied)
             {
@@ -71,6 +71,7 @@ namespace umi3d.browserEditor.BuildTool
                         InternalApplyChange(i, false);
                     }
                 }
+                //rebuildView?.Invoke();
             }
 
             Save();

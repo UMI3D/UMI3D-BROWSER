@@ -26,6 +26,7 @@ namespace umi3d.browserEditor.BuildTool
         public VisualElement root;
         public UMI3DBuildToolVersion_SO buildToolVersion_SO;
         public int index;
+        public Action<int> rebuildView;
         public Action build;
 
         public UMI3DBuildToolTargetViewModel viewModel;
@@ -38,12 +39,13 @@ namespace umi3d.browserEditor.BuildTool
         public Button B_Apply;
         public Button B_Build;
 
-        public UMI3DBuildToolTargetView(VisualElement root, UMI3DBuildToolTarget_SO buildToolTarget_SO, UMI3DBuildToolVersion_SO buildToolVersion_SO, int index, Action<TargetDto> updateTarget, Action build)
+        public UMI3DBuildToolTargetView(VisualElement root, UMI3DBuildToolTarget_SO buildToolTarget_SO, UMI3DBuildToolVersion_SO buildToolVersion_SO, int index, Action<TargetDto> updateTarget, Action<int> rebuildView, Action build)
         {
             this.root = root;
             this.viewModel = new(buildToolTarget_SO, updateTarget);
             this.buildToolVersion_SO = buildToolVersion_SO;
             this.index = index;
+            this.rebuildView = rebuildView;
             this.build = build;
         }
 
@@ -72,10 +74,10 @@ namespace umi3d.browserEditor.BuildTool
             B_Browse.clicked += () =>
             {
                 viewModel.ApplyBuildFolder(
-                    index, 
+                    index,
                     EditorUtility.OpenFolderPanel(
-                        title: "Build folder", 
-                        viewModel[index].BuildFolder, 
+                        title: "Build folder",
+                        viewModel[index].BuildFolder,
                         defaultName: ""
                     )
                 );
@@ -89,18 +91,14 @@ namespace umi3d.browserEditor.BuildTool
             DD_TargetSelection.RegisterValueChangedCallback(value =>
             {
                 viewModel.ApplyTarget(index, Enum.Parse<E_Target>(value.newValue));
-                ApplyChange(false);
+                //ApplyChange(false);
             });
 
             // Release cycle.
             DD_ReleaseCycle.choices.Clear();
             DD_ReleaseCycle.choices.AddRange(Enum.GetNames(typeof(E_ReleaseCycle)));
             DD_ReleaseCycle.value = DD_ReleaseCycle.choices[(int)viewModel[index].releaseCycle];
-            DD_ReleaseCycle.RegisterValueChangedCallback(value =>
-            {
-                viewModel.ApplyReleaseCycle(index, Enum.Parse<E_ReleaseCycle>(value.newValue));
-                ApplyChange(false);
-            });
+            DD_ReleaseCycle.RegisterValueChangedCallback(ReleaseCycleDDValueChanged);
 
             B_Apply.clicked += () =>
             {
@@ -114,14 +112,32 @@ namespace umi3d.browserEditor.BuildTool
 
             T_Select.value = viewModel[index].IsTargetEnabled;
             TF_Path.value = viewModel[index].BuildFolder;
-            ApplyChange(viewModel[index].isApplied);
+            ApplyChangeView(viewModel[index].isApplied);
+        }
+
+        public void Unbind()
+        {
+            DD_ReleaseCycle.UnregisterValueChangedCallback(ReleaseCycleDDValueChanged);
+        }
+
+        void ReleaseCycleDDValueChanged(ChangeEvent<string> value)
+        {
+            viewModel.ApplyReleaseCycle(index, Enum.Parse<E_ReleaseCycle>(value.newValue));
+            ApplyChange(false);
+        }
+
+        void ApplyChangeView(bool isApplied)
+        {
+            B_Apply.style.backgroundColor = isApplied ? new Color(0.5f, 1, 0) : StyleKeyword.Null;
+            B_Build.SetEnabled(isApplied);
         }
 
         void ApplyChange(bool isApplied)
         {
-            B_Apply.style.backgroundColor = isApplied ? new Color(0.5f, 1, 0) : StyleKeyword.Null;
-            B_Build.SetEnabled(isApplied);
-            viewModel.ApplyChange(index, isApplied);
+            UnityEngine.Debug.Log($"message {isApplied}, {index}");
+            ApplyChangeView(isApplied);
+
+            //viewModel.ApplyChange(index, isApplied, rebuildView);
         }
     }
 }

@@ -98,9 +98,10 @@ namespace umi3d.browserEditor.BuildTool
 
         void UpdateSDKVersion()
         {
+            buildToolVersion_SO.sdkVersion.additionalVersion = UMI3DVersion.status;
             buildToolVersion_SO.sdkVersion.majorVersion = int.Parse(UMI3DVersion.major);
             buildToolVersion_SO.sdkVersion.minorVersion = int.Parse(UMI3DVersion.minor);
-            buildToolVersion_SO.sdkVersion.buildCountVersion = UMI3DVersion.status == "b" ? 0 : 1;
+            buildToolVersion_SO.sdkVersion.buildCountVersion = 0;
             buildToolVersion_SO.sdkVersion.date = UMI3DVersion.date;
         }
 

@@ -17,7 +17,6 @@ limitations under the License.
 using inetum.unityUtils.saveSystem;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor;
 
 namespace umi3d.browserEditor.BuildTool
 {

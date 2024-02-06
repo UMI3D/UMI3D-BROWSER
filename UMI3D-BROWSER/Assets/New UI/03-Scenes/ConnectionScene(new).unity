@@ -404,7 +404,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 39296667}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0.000092208}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -414,7 +414,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 0.00001335144, y: 0.00000035762787}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &39847379
 GameObject:
@@ -1414,7 +1414,7 @@ PrefabInstance:
         type: 3}
       propertyPath: keyboard
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 4857492397505455115}
     - target: {fileID: 6644718343463634614, guid: 17c625999e5935348843c7ec1c90bfc1,
         type: 3}
       propertyPath: m_Size.x
@@ -2967,7 +2967,7 @@ PrefabInstance:
         type: 3}
       propertyPath: keyboard
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 4857492397505455115}
     - target: {fileID: 6644718343463634614, guid: 17c625999e5935348843c7ec1c90bfc1,
         type: 3}
       propertyPath: m_Size.x
@@ -4104,6 +4104,7 @@ MonoBehaviour:
   gridLayout: {fileID: 1118118591}
   largeVignetteRowAmount: 1
   smallVignetteRowAmount: 2
+  scrollbar: {fileID: 1061204048}
   vignetteMode: 2
 --- !u!114 &529233433
 MonoBehaviour:
@@ -4245,7 +4246,7 @@ PrefabInstance:
         type: 3}
       propertyPath: keyboard
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 4857492397505455115}
     - target: {fileID: 6644718343463634614, guid: 17c625999e5935348843c7ec1c90bfc1,
         type: 3}
       propertyPath: m_Size.x
@@ -4384,7 +4385,7 @@ GameObject:
   - component: {fileID: 555124719}
   - component: {fileID: 555124718}
   m_Layer: 5
-  m_Name: Slider
+  m_Name: ViewPort
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4846,7 +4847,7 @@ PrefabInstance:
         type: 3}
       propertyPath: keyboard
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 4857492397505455115}
     - target: {fileID: 6644718343463634614, guid: 17c625999e5935348843c7ec1c90bfc1,
         type: 3}
       propertyPath: m_Size.x
@@ -5172,8 +5173,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0.024993896, y: 0}
-  m_SizeDelta: {x: -0.05000305, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &620688824
 MonoBehaviour:
@@ -5244,7 +5245,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 278.34937, y: 16.199982, z: 0.01}
+  m_Size: {x: 110.44998, y: 16.2, z: 0.01}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &634347880
 GameObject:
@@ -5804,7 +5805,7 @@ PrefabInstance:
         type: 3}
       propertyPath: keyboard
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 4857492397505455115}
     - target: {fileID: 6644718343463634614, guid: 17c625999e5935348843c7ec1c90bfc1,
         type: 3}
       propertyPath: m_Size.x
@@ -5978,7 +5979,7 @@ PrefabInstance:
         type: 3}
       propertyPath: keyboard
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 4857492397505455115}
     - target: {fileID: 6644718343463634614, guid: 17c625999e5935348843c7ec1c90bfc1,
         type: 3}
       propertyPath: m_Size.x
@@ -7108,7 +7109,7 @@ PrefabInstance:
         type: 3}
       propertyPath: keyboard
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 4857492397505455115}
     - target: {fileID: 6644718343463634614, guid: 17c625999e5935348843c7ec1c90bfc1,
         type: 3}
       propertyPath: m_Size.x
@@ -7282,7 +7283,7 @@ PrefabInstance:
         type: 3}
       propertyPath: keyboard
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 4857492397505455115}
     - target: {fileID: 6644718343463634614, guid: 17c625999e5935348843c7ec1c90bfc1,
         type: 3}
       propertyPath: m_Size.x
@@ -7734,7 +7735,7 @@ PrefabInstance:
         type: 3}
       propertyPath: keyboard
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 4857492397505455115}
     - target: {fileID: 6644718343463634614, guid: 17c625999e5935348843c7ec1c90bfc1,
         type: 3}
       propertyPath: m_Size.x
@@ -8177,7 +8178,7 @@ PrefabInstance:
         type: 3}
       propertyPath: keyboard
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 4857492397505455115}
     - target: {fileID: 6644718343463634614, guid: 17c625999e5935348843c7ec1c90bfc1,
         type: 3}
       propertyPath: m_Size.x
@@ -8505,7 +8506,7 @@ PrefabInstance:
         type: 3}
       propertyPath: keyboard
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 4857492397505455115}
     - target: {fileID: 6644718343463634614, guid: 17c625999e5935348843c7ec1c90bfc1,
         type: 3}
       propertyPath: m_Size.x
@@ -8718,7 +8719,7 @@ PrefabInstance:
         type: 3}
       propertyPath: keyboard
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 4857492397505455115}
     - target: {fileID: 6644718343463634614, guid: 17c625999e5935348843c7ec1c90bfc1,
         type: 3}
       propertyPath: m_Size.x
@@ -9941,10 +9942,10 @@ RectTransform:
   - {fileID: 39296668}
   m_Father: {fileID: 529233428}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.4, y: -0.05}
-  m_AnchorMax: {x: 0.6, y: -0.025}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: 556.8033, y: -32.4}
+  m_SizeDelta: {x: -1113.6064, y: 16.2}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &1061204048
 MonoBehaviour:
@@ -9989,9 +9990,9 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 620688824}
   m_HandleRect: {fileID: 620688823}
   m_Direction: 0
-  m_Value: -0.85625
-  m_Size: 0.9999869
-  m_NumberOfSteps: 5
+  m_Value: 0.000007514091
+  m_Size: 0.39672878
+  m_NumberOfSteps: 7
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -10521,6 +10522,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1118118589}
   - component: {fileID: 1118118591}
+  - component: {fileID: 1118118592}
   m_Layer: 5
   m_Name: LayoutGroup
   m_TagString: Untagged
@@ -10536,7 +10538,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1118118588}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.020524729}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -10564,7 +10566,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.010009766, y: -0.00018310547}
+  m_AnchoredPosition: {x: 1031.5872, y: -0.00018310547}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1118118591
@@ -10591,6 +10593,20 @@ MonoBehaviour:
   m_Spacing: {x: 30, y: 25}
   m_Constraint: 2
   m_ConstraintCount: 2
+--- !u!114 &1118118592
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1118118588}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalFit: 1
+  m_VerticalFit: 0
 --- !u!1 &1123487198
 GameObject:
   m_ObjectHideFlags: 0
@@ -11008,7 +11024,7 @@ PrefabInstance:
         type: 3}
       propertyPath: keyboard
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 4857492397505455115}
     - target: {fileID: 6644718343463634614, guid: 17c625999e5935348843c7ec1c90bfc1,
         type: 3}
       propertyPath: m_Size.x
@@ -12458,7 +12474,7 @@ PrefabInstance:
         type: 3}
       propertyPath: keyboard
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 4857492397505455115}
     - target: {fileID: 6644718343463634614, guid: 17c625999e5935348843c7ec1c90bfc1,
         type: 3}
       propertyPath: m_Size.x
@@ -12735,7 +12751,7 @@ PrefabInstance:
         type: 3}
       propertyPath: keyboard
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 4857492397505455115}
     - target: {fileID: 6644718343463634614, guid: 17c625999e5935348843c7ec1c90bfc1,
         type: 3}
       propertyPath: m_Size.x
@@ -12909,7 +12925,7 @@ PrefabInstance:
         type: 3}
       propertyPath: keyboard
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 4857492397505455115}
     - target: {fileID: 6644718343463634614, guid: 17c625999e5935348843c7ec1c90bfc1,
         type: 3}
       propertyPath: m_Size.x
@@ -13761,7 +13777,7 @@ PrefabInstance:
         type: 3}
       propertyPath: keyboard
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 4857492397505455115}
     - target: {fileID: 6644718343463634614, guid: 17c625999e5935348843c7ec1c90bfc1,
         type: 3}
       propertyPath: m_Size.x
@@ -14676,7 +14692,7 @@ PrefabInstance:
         type: 3}
       propertyPath: keyboard
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 4857492397505455115}
     - target: {fileID: 6644718343463634614, guid: 17c625999e5935348843c7ec1c90bfc1,
         type: 3}
       propertyPath: m_Size.x
@@ -15160,7 +15176,6 @@ GameObject:
   - component: {fileID: 1560993515}
   - component: {fileID: 1560993514}
   - component: {fileID: 1560993517}
-  - component: {fileID: 1560993518}
   m_Layer: 5
   m_Name: Scrollbar Vertical
   m_TagString: Untagged
@@ -15296,18 +15311,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 20.232443, y: 711.3037, z: 1}
   m_Center: {x: -10.34666, y: -354.6156, z: 0}
---- !u!114 &1560993518
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1560993512}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 77373987302fa354e816d7f4ef2b5ab7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1562283588
 GameObject:
   m_ObjectHideFlags: 0
@@ -17916,7 +17919,7 @@ PrefabInstance:
         type: 3}
       propertyPath: keyboard
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 4857492397505455115}
     - target: {fileID: 6644718343463634614, guid: 17c625999e5935348843c7ec1c90bfc1,
         type: 3}
       propertyPath: m_Size.x
@@ -19917,7 +19920,7 @@ PrefabInstance:
         type: 3}
       propertyPath: keyboard
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 4857492397505455115}
     - target: {fileID: 6644718343463634614, guid: 17c625999e5935348843c7ec1c90bfc1,
         type: 3}
       propertyPath: m_Size.x
@@ -20520,6 +20523,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Vignette
       objectReference: {fileID: 0}
+    - target: {fileID: 6639806330582296214, guid: 17c625999e5935348843c7ec1c90bfc1,
+        type: 3}
+      propertyPath: keyboard
+      value: 
+      objectReference: {fileID: 4857492397505455115}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -20646,6 +20654,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 4857492397505455108}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4857492397505455115 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 963334185214115161, guid: cb66cc0c13c74c141ab28dd0bdd3f6c1,
+    type: 3}
+  m_PrefabInstance: {fileID: 4857492397505455108}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 114ee49c854b0c047bb5136db8c1fd1a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &5639467108702308308
 MonoBehaviour:
   m_ObjectHideFlags: 0

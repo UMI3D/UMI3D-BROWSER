@@ -31,6 +31,9 @@ namespace umi3dBrowsers.container
         [SerializeField] private int largeVignetteRowAmount;
         [SerializeField] private int smallVignetteRowAmount;
 
+        [Header("Scrolling")]
+        [SerializeField] private Scrollbar scrollbar;
+
         public enum VignetteMode
         {
             None = 0,
@@ -43,6 +46,7 @@ namespace umi3dBrowsers.container
         private void Awake()
         {
             vignetteDisplayers = GetComponentsInChildren<VignetteDisplayer>().ToList();
+            scrollbar.value = 0;
         }
 
         [ContextMenu("Toggle vignette mode")]
@@ -78,6 +82,7 @@ namespace umi3dBrowsers.container
             gridLayout.constraintCount = vignetteRowAmount;
             gridLayout.spacing = vignetteSpace;
 
+            scrollbar.value = 0;
             StartCoroutine(ScaleColliders());
         }
 
@@ -98,7 +103,7 @@ namespace umi3dBrowsers.container
 
         IEnumerator ScaleColliders()
         {
-            yield return new WaitForSeconds(0.2f);
+            yield return new WaitForSeconds(0.35f);
             scaller.ScaleColliders();
         }
     }

@@ -120,6 +120,7 @@ namespace umi3d.browserEditor.BuildTool
 
         void UpdateVersion()
         {
+            ApplyChange();
             PlayerSettings.bundleVersion = $"{targetDTO.releaseCycle.GetReleaseInitial()}_{versionDTO.VersionFromNow} Sdk: {buildToolVersion_SO.sdkVersion.Version}";
             PlayerSettings.Android.bundleVersionCode = versionDTO.BundleVersion;
         }

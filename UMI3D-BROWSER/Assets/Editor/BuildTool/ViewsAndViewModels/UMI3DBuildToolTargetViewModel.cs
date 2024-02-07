@@ -16,8 +16,6 @@ limitations under the License.
 
 using System;
 using UnityEditor;
-using UnityEngine;
-using static UnityEditor.Profiling.HierarchyFrameDataView;
 
 namespace umi3d.browserEditor.BuildTool
 {
@@ -25,6 +23,7 @@ namespace umi3d.browserEditor.BuildTool
     {
         public UMI3DBuildToolTarget_SO buildToolTarget_SO;
         public Action<TargetDto> updateTarget;
+        public Action<int> rebuildView;
 
         public TargetDto this[int index]
         {
@@ -42,26 +41,27 @@ namespace umi3d.browserEditor.BuildTool
             }
         }
 
-        public UMI3DBuildToolTargetViewModel(UMI3DBuildToolTarget_SO buildToolTarget_SO, Action<TargetDto> updateTarget)
+        public UMI3DBuildToolTargetViewModel(UMI3DBuildToolTarget_SO buildToolTarget_SO, Action<TargetDto> updateTarget, Action<int> rebuildView)
         {
             this.buildToolTarget_SO = buildToolTarget_SO;
             this.updateTarget = updateTarget;
+            this.rebuildView = rebuildView;
         }
 
-        public void ApplyChange(int index, bool isApplied, Action rebuildView)
+        public void ApplyChange(int index, bool isApplied)
         {
-            void InternalApplyChange(int index, bool isApplied)
+            void InternalApplyChange(int _index, bool isApplied)
             {
-                var targetDTO = buildToolTarget_SO.targets[index];
+                var targetDTO = buildToolTarget_SO.targets[_index];
                 targetDTO.isApplied = isApplied;
-                buildToolTarget_SO.targets[index] = targetDTO;
+                buildToolTarget_SO.targets[_index] = targetDTO;
                 if (isApplied)
                 {
-                    updateTarget?.Invoke(this[index]);
+                    updateTarget?.Invoke(this[_index]);
+                    rebuildView?.Invoke(_index);
                 }
             }
             
-            InternalApplyChange(index, isApplied);
             if (isApplied)
             {
                 for (int i = 0; i < Count; i++)
@@ -71,8 +71,8 @@ namespace umi3d.browserEditor.BuildTool
                         InternalApplyChange(i, false);
                     }
                 }
-                //rebuildView?.Invoke();
             }
+            InternalApplyChange(index, isApplied);
 
             Save();
         }

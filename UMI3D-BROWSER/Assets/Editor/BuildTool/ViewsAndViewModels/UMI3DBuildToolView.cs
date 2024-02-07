@@ -123,8 +123,7 @@ namespace umi3d.browserEditor.BuildTool
             LV_Targets.itemsSource = buildToolTarget_SO.targets;
             LV_Targets.makeItem = () =>
             {
-                var visual = target_VTA.Instantiate();
-                return visual;
+                return target_VTA.Instantiate();
             };
             LV_Targets.bindItem = (visual, index) =>
             {
@@ -136,8 +135,13 @@ namespace umi3d.browserEditor.BuildTool
                     updateTarget: updateTarget,
                     rebuildView: index =>
                     {
-                        UMI3DBuildToolTargetView targetView = LV_Targets[index].userData as UMI3DBuildToolTargetView;
-                        // TODO.
+                        for (int i = 0; i < buildToolTarget_SO.targets.Count; i++)
+                        {
+                            if (i != index)
+                            {
+                                LV_Targets.RefreshItem(i);
+                            }
+                        }
                     },
                     build: build
                 );

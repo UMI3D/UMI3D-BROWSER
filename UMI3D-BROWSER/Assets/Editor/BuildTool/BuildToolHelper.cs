@@ -14,14 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils.editor;
 using System;
 using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.Build.Reporting;
 using UnityEngine.Assertions;
-using UnityEngine.SceneManagement;
 
 namespace umi3d.browserEditor.BuildTool
 {

@@ -17,7 +17,6 @@ limitations under the License.
 using System.Linq;
 using umi3d.cdk.collaboration;
 using UnityEditor;
-using UnityEditor.Build.Reporting;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.UIElements;
@@ -95,7 +94,6 @@ namespace umi3d.browserEditor.BuildTool
                 updateVersion: newVersion =>
                 {
                     versionDTO = newVersion;
-                    UpdateVersion();
                 },
                 updateTarget: newTarget =>
                 {
@@ -106,19 +104,11 @@ namespace umi3d.browserEditor.BuildTool
             );
             buildView.Bind();
             buildView.Set();
-
-            //TextField TF_BuildName = root.Q<TextField>("TF_BuildName");
-
-            //// Build name.
-            //TF_BuildName.value = PlayerSettings.productName;
-            //TF_BuildName.RegisterValueChangedCallback(value =>
-            //{
-            //    PlayerSettings.productName = value.newValue;
-            //});
         } 
         
-        private void ApplyChange()
+        void ApplyChange()
         {
+            UpdateVersion();
             _uMI3DConfigurator.HandleTarget(targetDTO.Target);
             _targetAndPluginSwitcher.HandleTarget(targetDTO.Target);
             EditorBuildSettings.scenes = buildToolScene_SO.GetScenesForTarget(targetDTO.Target).Select(scene =>
@@ -130,7 +120,7 @@ namespace umi3d.browserEditor.BuildTool
 
         void UpdateVersion()
         {
-            PlayerSettings.bundleVersion = versionDTO.VersionFromNow;
+            PlayerSettings.bundleVersion = $"{targetDTO.releaseCycle.GetReleaseInitial()}_{versionDTO.VersionFromNow} Sdk: {buildToolVersion_SO.sdkVersion.Version}";
             PlayerSettings.Android.bundleVersionCode = versionDTO.BundleVersion;
         }
 

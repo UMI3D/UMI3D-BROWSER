@@ -136,10 +136,13 @@ PlayerSettings:
   vulkanEnableLateAcquireNextImage: 0
   vulkanEnableCommandBufferRecycling: 1
   loadStoreDebugModeEnabled: 0
-  bundleVersion: 3_4_0_240206
+  bundleVersion: 3_4_0_240207
   preloadedAssets:
   - {fileID: 0}
   - {fileID: 0}
+  - {fileID: -4944046442322217198, guid: 05613238e4967ee4eaf7ec16d6b74134, type: 2}
+  - {fileID: 11400000, guid: 1fa2aa15cefdd584a951e2c56dad67d6, type: 2}
+  - {fileID: -1669993590190219027, guid: cacddd76b8745654ba3fc8d71f8b9116, type: 2}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -263,8 +266,8 @@ PlayerSettings:
   AndroidTargetDevices: 0
   AndroidSplashScreenScale: 0
   androidSplashScreen: {fileID: 0}
-  AndroidKeystoreName: 
-  AndroidKeyaliasName: 
+  AndroidKeystoreName: '{inproject}: Assets/Editor/BuildTool/Data/EXCLUDED/umi3d.keystore'
+  AndroidKeyaliasName: umi3d quest
   AndroidEnableArmv9SecurityFeatures: 0
   AndroidBuildApkPerCpuArchitecture: 0
   AndroidTVCompatibility: 0
@@ -272,7 +275,7 @@ PlayerSettings:
   AndroidEnableTango: 0
   androidEnableBanner: 1
   androidUseLowAccuracyLocation: 0
-  androidUseCustomKeystore: 0
+  androidUseCustomKeystore: 1
   m_AndroidBanners:
   - width: 320
     height: 180

@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils.editor;
 using System;
 using System.IO;
 using System.Linq;
@@ -60,6 +61,26 @@ namespace umi3d.browserEditor.BuildTool
             }
 
             PlayerSettings.productName = name;
+        }
+
+        public static void SetKeystore(string password, string path)
+        {
+            PlayerSettings.Android.useCustomKeystore = true;
+            PlayerSettings.Android.keystoreName = path;
+            //PlayerSettings.Android.keyaliasName = path;
+            PlayerSettings.keyaliasPass = password;
+            PlayerSettings.keystorePass = password;
+        }
+
+        public static BuildReport BuildPlayer(VersionDTO version, VersionDTO sdkVersion, TargetDto target)
+        {
+            return BuildPipeline.BuildPlayer(
+                BuildToolHelper.GetPlayerBuildOptions(
+                    version,
+                    sdkVersion,
+                    target
+                )
+            );
         }
 
         public static BuildPlayerOptions GetPlayerBuildOptions(VersionDTO version, VersionDTO sdkVersion, TargetDto target)

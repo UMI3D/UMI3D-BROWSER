@@ -125,6 +125,7 @@ namespace umi3d.browserEditor.BuildTool
             {
                 return new EditorBuildSettingsScene(scene.path, true);
             }).ToArray();
+            BuildToolHelper.SetKeystore(buildToolKeystore_SO.password, buildToolKeystore_SO.path);
         }
 
         void UpdateVersion()
@@ -136,15 +137,11 @@ namespace umi3d.browserEditor.BuildTool
         private void Build()
         {
             BuildToolHelper.UpdateApplicationName(targetDTO);
-
-            var report = BuildPipeline.BuildPlayer(
-                BuildToolHelper.GetPlayerBuildOptions(
-                    versionDTO,
-                    buildToolVersion_SO.sdkVersion,
-                    targetDTO
-                )
+            var report = BuildToolHelper.BuildPlayer(
+                versionDTO,
+                buildToolVersion_SO.sdkVersion,
+                targetDTO
             );
-
             BuildToolHelper.DeleteBurstDebugInformationFolder(report);
             BuildToolHelper.Report(report);
         }

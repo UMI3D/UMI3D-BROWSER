@@ -27,5 +27,6 @@ namespace umi3d.browserEditor.BuildTool
     public class UMI3DBuildToolKeystore_SO : SerializableScriptableObject
     {
         public string password;
+        public string path;
     }
 }

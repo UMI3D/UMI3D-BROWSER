@@ -14,9 +14,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-namespace umi3d
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class #SCRIPTNAME# : MonoBehaviour
 {
-    public enum #SCRIPTNAME# 
+    
+    void Awake()
     {
+        
     }
+
 }
+       
+

@@ -90,7 +90,11 @@ namespace umi3dVRBrowsersBase.connection
             panel.SetActive(true);
             LoadingPanel.Instance.Hide();
 
-            var worlds = PlayerPrefsManager.GetVirtualWorlds();
+            var worlds = PlayerPrefsManager.GetVirtualWorlds() ?? new();
+            //if (worlds == null)
+            //{
+            //    worlds = new();
+            //}
             bool displayFavoriteServers = worlds.favoriteURLs.Count > 0 && !forceDisplayAddNewServer;
 
             newServerPanel.SetActive(!displayFavoriteServers);

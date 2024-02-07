@@ -74,7 +74,7 @@ namespace umi3d.cdk
             if (!UMI3DEnvironmentLoader.Instance.isEnvironmentLoaded)
                 videoPlayersToLoad.Enqueue((environmentId, videoPlayer));
             else
-                return new UMI3DVideoPlayer(environmentId, videoPlayer); 
+                return new UMI3DVideoPlayer(environmentId, videoPlayer);
             return null;
 #else
             return new UMI3DVideoPlayer(environmentId, videoPlayer);

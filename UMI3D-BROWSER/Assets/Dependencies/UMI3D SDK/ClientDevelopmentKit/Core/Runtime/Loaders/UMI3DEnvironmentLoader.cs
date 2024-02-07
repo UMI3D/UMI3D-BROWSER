@@ -128,6 +128,12 @@ namespace umi3d.cdk
             return entitiesCollection[environmentid].WaitUntilEntityLoaded(id, tokens);
         }
 
+        public virtual async Task<UMI3DNodeInstance> WaitUntilNodeInstanceLoaded(ulong environmentid, ulong id, List<CancellationToken> tokens)
+        {
+            UMI3DEntityInstance nodeInstance = await WaitUntilEntityLoaded(environmentid, id, tokens);
+            return nodeInstance == null ? null : (UMI3DNodeInstance)nodeInstance;
+        }
+
 
         /// <summary>
         /// Return a list of all registered entities in every environment.
@@ -389,7 +395,7 @@ namespace umi3d.cdk
             await UMI3DAsyncManager.Delay(200);
 
             endProgress.AddComplete();
-            if (UMI3DVideoPlayerLoader.HasVideoToLoad)
+            if (UMI3DVideoPlayerLoader.HasVideoToLoad && !Application.isBatchMode)
             {
                 endProgress.SetStatus("Loading videos");
 
@@ -398,7 +404,7 @@ namespace umi3d.cdk
             endProgress.AddComplete();
 
             endProgress.SetStatus("Rendering Probes");
-            if (QualitySettings.realtimeReflectionProbes)
+            if (QualitySettings.realtimeReflectionProbes && !Application.isBatchMode)
             {
                 await RenderProbes(UMI3DGlobalID.EnvironmentId);
             }
@@ -636,10 +642,15 @@ namespace umi3d.cdk
         /// <param name="performed"></param>
         public static async Task DeleteEntity(ulong environmentid, ulong entityId, List<CancellationToken> tokens)
         {
+            await Instance.DeleteEntityInstance(environmentid, entityId, tokens);
+        }
+
+        public async Task DeleteEntityInstance(ulong environmentId, ulong entityId, List<CancellationToken> tokens = null)
+        {
             if (UMI3DResourcesManager.isKnowedLibrary(entityId))
                 UMI3DResourcesManager.UnloadLibrary(entityId);
             else
-                await Instance.entitiesCollection[environmentid].DeleteEntity(entityId, tokens);
+                await entitiesCollection[environmentId].DeleteEntity(entityId, tokens);
         }
 
         /// <summary>
@@ -647,6 +658,8 @@ namespace umi3d.cdk
         /// </summary>
         public static void Clear(bool clearCache = true)
         {
+            Instance.entitiesCollection.ForEach(ec => ec.Value?.Clear());
+
             Instance.entitiesCollection.Clear();
 
             if (clearCache)

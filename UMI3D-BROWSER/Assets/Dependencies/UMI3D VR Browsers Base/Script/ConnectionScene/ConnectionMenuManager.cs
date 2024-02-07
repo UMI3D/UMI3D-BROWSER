@@ -333,7 +333,7 @@ namespace umi3dVRBrowsersBase.connection
 
             void SaveVirtualWorld()
             {
-                var worlds = PlayerPrefsManager.GetVirtualWorlds();
+                var worlds = PlayerPrefsManager.GetVirtualWorlds() ?? new();
                 if (worlds.Contains(currentVirtualWorld))
                 {
                     worlds.UpdateWorld(currentVirtualWorld);

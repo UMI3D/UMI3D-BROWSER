@@ -62,7 +62,7 @@ namespace umi3dVRBrowsersBase.connection
                     if (b)
                     {
                         slider.RemoveElement(this.gameObject);
-                        PlayerPrefsManager.GetVirtualWorlds().RemoveWorldFromFavoriteWorlds(url);
+                        PlayerPrefsManager.GetVirtualWorlds()?.RemoveWorldFromFavoriteWorlds(url);
 
                         if (slider.NbOfElements == 0)
                             ConnectionMenuManager.instance.DisplayHome();

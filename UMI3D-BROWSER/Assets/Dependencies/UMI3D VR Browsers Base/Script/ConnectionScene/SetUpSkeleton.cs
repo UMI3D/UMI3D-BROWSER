@@ -171,8 +171,8 @@ namespace umi3dVRBrowsersBase.connection
 
             foreach (GameObject obj in objectsToActivate)
                 obj.SetActive(true);
-
-            trackers.ForEach(x => trackedSkeleton.controllers.Add(x.distantController));
+            
+            trackers.ForEach(x => trackedSkeleton.ReplaceController(x.distantController));
             trackedSkeleton.bones.Add(BoneType.Viewpoint, Viewpoint);
 
             isSetup = true;

@@ -115,7 +115,7 @@ namespace umi3dVRBrowsersBase.interactions.input
 
                     UMI3DClientServer.SendData(new ParameterSettingRequestDto()
                     {
-                        boneType = bone.Bonetype,
+                        boneType = bone.BoneType,
                         bonePosition = bone.transform.position.Dto(),
                         boneRotation = bone.transform.rotation.Dto(),
                         toolId = toolId,

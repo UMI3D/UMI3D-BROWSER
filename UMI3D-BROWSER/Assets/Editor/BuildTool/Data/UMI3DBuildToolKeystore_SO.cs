@@ -14,13 +14,19 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils.saveSystem;
+using UnityEngine;
+
 namespace umi3d.browserEditor.BuildTool
 {
-    public enum E_Target
+    /// <summary>
+    /// [Warning] do not push this data in a public Git repository !!!<br/>
+    /// Create a [Build Tool Keystore] scriptable object in an EXCLUDED folder that is excluded from git.
+    /// </summary>
+    //[CreateAssetMenu(fileName = "UMI3D Build Tool Keystore", menuName = "UMI3D/Tools/Build Tool Keystore")]
+    public class UMI3DBuildToolKeystore_SO : SerializableScriptableObject
     {
-        Quest, 
-        Focus, 
-        Pico, 
-        SteamXR
+        public string password;
+        public string path;
     }
 }

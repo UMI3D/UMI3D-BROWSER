@@ -14,16 +14,151 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System;
+using System.IO;
+using System.Linq;
 using UnityEditor;
+using UnityEditor.Build.Reporting;
+using UnityEngine.Assertions;
 
 namespace umi3d.browserEditor.BuildTool
 {
     public class BuildToolHelper
     {
-        public static BuildPlayerOptions GetPlayerBuildOptions()
+        public static void UpdateApplicationName(TargetDto target)
         {
-            BuildPlayerOptions playerBuildOptions = BuildPlayerWindow.DefaultBuildMethods.GetBuildPlayerOptions(new BuildPlayerOptions());
-            return playerBuildOptions;
+            string name = $"UMI3D";
+
+            switch (target.Target)
+            {
+                case E_Target.Quest:
+                    break;
+                case E_Target.Focus:
+                    break;
+                case E_Target.Pico:
+                    break;
+                case E_Target.SteamXR:
+                    name = $" {target.Target}";
+                    break;
+                default:
+                    break;
+            }
+
+            switch (target.releaseCycle)
+            {
+                case E_ReleaseCycle.Alpha:
+                    name += $" {target.releaseCycle}";
+                    break;
+                case E_ReleaseCycle.Beta:
+                    name += $" {target.releaseCycle}";
+                    break;
+                case E_ReleaseCycle.Production:
+                    break;
+                default:
+                    break;
+            }
+
+            PlayerSettings.productName = name;
+        }
+
+        public static void SetKeystore(string password, string path)
+        {
+            PlayerSettings.Android.useCustomKeystore = true;
+            PlayerSettings.Android.keystoreName = path;
+            //PlayerSettings.Android.keyaliasName = path;
+            PlayerSettings.keyaliasPass = password;
+            PlayerSettings.keystorePass = password;
+        }
+
+        public static BuildReport BuildPlayer(VersionDTO version, VersionDTO sdkVersion, TargetDto target)
+        {
+            return BuildPipeline.BuildPlayer(
+                BuildToolHelper.GetPlayerBuildOptions(
+                    version,
+                    sdkVersion,
+                    target
+                )
+            );
+        }
+
+        public static BuildPlayerOptions GetPlayerBuildOptions(VersionDTO version, VersionDTO sdkVersion, TargetDto target)
+        {
+            BuildPlayerOptions pbo = new();
+
+            pbo.scenes = EditorBuildSettings.scenes.Select(scene =>
+            {
+                return scene.path;
+            }).ToArray();
+            pbo.locationPathName = 
+                $"{target.BuildFolder}/" +
+                $"{target.releaseCycle}/" +
+                $"{version.VersionFromNow}_SDK{sdkVersion.Version}/" +
+                $"UMI3D {target.Target} Browser";
+            switch (target.Target)
+            {
+                case E_Target.Quest:
+                case E_Target.Focus:
+                case E_Target.Pico:
+                    pbo.locationPathName += ".apk";
+                    break;
+                case E_Target.SteamXR:
+                    pbo.locationPathName += ".exe";
+                    break;
+                default:
+                    break;
+            }
+            pbo.target = target.Target.GetBuildTarget();
+            pbo.options = BuildOptions.None;
+
+            return pbo;
+        }
+
+        public static void DeleteBurstDebugInformationFolder(BuildReport buildReport)
+        {
+            try
+            {
+                string outputPath = buildReport.summary.outputPath;
+                string applicationName = Path.GetFileNameWithoutExtension(outputPath);
+                string outputFolder = Path.GetDirectoryName(outputPath);
+                Assert.IsNotNull(outputFolder);
+
+                outputFolder = Path.GetFullPath(outputFolder);
+
+                string burstDebugInformationDirectoryPath = Path.Combine(outputFolder, $"{applicationName}_BurstDebugInformation_DoNotShip");
+
+                if (Directory.Exists(burstDebugInformationDirectoryPath))
+                {
+                    UnityEngine.Debug.Log($"[UMI3D] BuildTool: Deleting Burst debug information folder");
+
+                    Directory.Delete(burstDebugInformationDirectoryPath, true);
+                }
+            }
+            catch (Exception e)
+            {
+                UnityEngine.Debug.LogError($"[UMI3D] BuildTool: An unexpected exception occurred while performing build cleanup: {e}");
+            }
+        }
+
+        public static void Report(BuildReport report)
+        {
+            BuildSummary summary = report.summary;
+
+            switch (summary.result)
+            {
+                case BuildResult.Unknown:
+                    break;
+                case BuildResult.Succeeded:
+                    UnityEngine.Debug.Log($"[UMI3D] BuildTool: Build succeeded: {summary.outputPath}");
+                    break;
+                case BuildResult.Failed:
+                    UnityEngine.Debug.Log($"[UMI3D] BuildTool: Build failed: {summary.outputPath}");
+                    break;
+                case BuildResult.Cancelled:
+                    UnityEngine.Debug.Log($"[UMI3D] BuildTool: Build Canceled: {summary.outputPath}");
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

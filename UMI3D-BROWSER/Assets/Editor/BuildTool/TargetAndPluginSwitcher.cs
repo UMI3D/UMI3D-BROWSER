@@ -15,15 +15,12 @@ limitations under the License.
 */
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using UnityEditor;
 using UnityEditor.XR.Management;
 using UnityEditor.XR.Management.Metadata;
 using UnityEditor.XR.OpenXR.Features;
 using UnityEngine;
-using UnityEngine.XR.OpenXR.Features;
 
 namespace umi3d.browserEditor.BuildTool
 {
@@ -42,7 +39,7 @@ namespace umi3d.browserEditor.BuildTool
                     break;
                 case E_Target.SteamXR:
                     ChangeBuildTarget(BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows);
-                    DisableAllPlugins(BuildTargetGroup.Android, except: E_Plugin.OpenXR);
+                    DisableAllPlugins(BuildTargetGroup.Standalone, except: E_Plugin.OpenXR);
                     EnablePlugin(BuildTargetGroup.Standalone, E_Plugin.OpenXR);
                     break;
                 case E_Target.Focus:
@@ -98,6 +95,7 @@ namespace umi3d.browserEditor.BuildTool
                 loader, 
                 buildTargetGroup
             );
+
 
             if (success)
             {

@@ -68,7 +68,7 @@ namespace umi3d.browserEditor.BuildTool
             );
 
             Assert.IsNotNull(
-                buildToolKeystore_SO, 
+                buildToolKeystore_SO,
                 "[UMI3D] BuildTool: buildToolKeystore_SO is null.\n" +
                 "Create a [Build Tool Keystore] scriptable object in an EXCLUDED folder that is excluded from git."
             );
@@ -104,8 +104,8 @@ namespace umi3d.browserEditor.BuildTool
             );
             buildView.Bind();
             buildView.Set();
-        } 
-        
+        }
+
         void ApplyChange()
         {
             UpdateVersion();
@@ -120,13 +120,13 @@ namespace umi3d.browserEditor.BuildTool
 
         void UpdateVersion()
         {
-            ApplyChange();
             PlayerSettings.bundleVersion = $"{targetDTO.releaseCycle.GetReleaseInitial()}_{versionDTO.VersionFromNow} Sdk: {buildToolVersion_SO.sdkVersion.Version}";
             PlayerSettings.Android.bundleVersionCode = versionDTO.BundleVersion;
         }
 
         private void Build()
         {
+            ApplyChange();
             BuildToolHelper.UpdateApplicationName(targetDTO);
             var report = BuildToolHelper.BuildPlayer(
                 versionDTO,

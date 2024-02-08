@@ -14,30 +14,26 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 using UnityEngine;
+using umi3d.cdk;
+using System.Threading.Tasks;
 
-namespace com.inetum.unitygeckowebview
+namespace umi3d.runtimeBrowser.webView
 {
-    /// <summary>
-    /// Represents <see cref="UnityGeckoWebView"/> bounds to optimize its rendering (only renderer it if visible). 
-    /// </summary>
-    public class UnityGeckoWebViewBounds : MonoBehaviour
+    public class WebViewFactory : AbstractWebViewFactory
     {
-        [SerializeField]
-        private UnityGeckoWebView webview;
+        public GameObject template = null;
 
-        private void Start()
+        public override async Task<AbstractUMI3DWebView> CreateWebView()
         {
-            Debug.Assert(webview != null, "Web view should not be null");
-        }
+            if (template == null)
+                return null;
 
-        private void OnBecameVisible()
-        {
-            webview?.StartRendering();
-        }
+            GameObject go = Instantiate(template);
+            AbstractUMI3DWebView view = go.GetComponent<AbstractUMI3DWebView>();
 
-        private void OnBecameInvisible()
-        {
-            webview?.StopRendering();
+            await UMI3DAsyncManager.Yield();
+
+            return view;
         }
     }
 }

@@ -57,11 +57,13 @@ namespace QuestBrowser.WebView
         [SerializeField]
         private RectTransform textureTransform = null;
 
-        //[SerializeField]
-        //private CustomInputWithKeyboard searchField;
+        [SerializeField]
+        private RectTransform searchFieldTransform;
+        [SerializeField]
+        private InputField searchField;
 
-        //[SerializeField]
-        //private Keyboard keyboard;
+        [SerializeField]
+        private RectTransform keyboard;
 
         private bool useSearchInput = false;
 
@@ -82,15 +84,14 @@ namespace QuestBrowser.WebView
 
         protected void Start()
         {
-            //searchField.SetKeyboard(keyboard);
-
             //keyboard.Hide();
 
-            //GetComponent<CanvasScaler>().dynamicPixelsPerUnit = 3;
+            GetComponent<CanvasScaler>().dynamicPixelsPerUnit = 3;
+        }
 
-            //searchField.OnSelectEvent.AddListener(() => {
-            //    useSearchInput = true;
-            //});
+        public void ToggleOnSearchInput()
+        {
+            useSearchInput = true;
         }
 
         protected override void OnCanInteractChanged(bool canInteract)
@@ -112,13 +113,20 @@ namespace QuestBrowser.WebView
             bottomBarContainer.position = (corners[1] + corners[2]) / 2f;
             topBarContainer.position = (corners[0] + corners[3]) / 2f;
 
-            //keyboard.transform.position = new Vector3(keyboard.transform.position.x, bottomBarContainer.position.y, keyboard.transform.position.z);
+            keyboard.position = new Vector3(
+                keyboard.position.x, 
+                bottomBarContainer.position.y, 
+                keyboard.position.z
+            );
 
             topBarContainer.localScale = new Vector3(topBarContainer.localScale.x,
                 topBarContainer.localScale.y / container.localScale.y, topBarContainer.localScale.z);
 
-            //searchField.transform.localScale = new Vector3(searchField.transform.localScale.x / container.localScale.x,
-            //     searchField.transform.localScale.y, searchField.transform.localScale.z);
+            searchFieldTransform.localScale = new Vector3(
+                searchFieldTransform.localScale.x / container.localScale.x,
+                searchFieldTransform.localScale.y,
+                searchFieldTransform.localScale.z
+            );
 
             searchButton.localScale = new Vector3(searchButton.localScale.x / container.localScale.x,
                 searchButton.localScale.y, searchButton.localScale.z);
@@ -153,7 +161,7 @@ namespace QuestBrowser.WebView
 
             previousUrl = url;
 
-            //searchField.text = url;
+            searchField.text = url;
 
             var request = new WebViewUrlChangedRequestDto
             {
@@ -184,10 +192,10 @@ namespace QuestBrowser.WebView
 
         public void OnUrlLoaded(string url)
         {
-            //if (searchField != null)
-            //{
-            //    searchField.text = url;
-            //}
+            if (searchField != null)
+            {
+                searchField.text = url;
+            }
         }
 
         public void OnInputSelected()

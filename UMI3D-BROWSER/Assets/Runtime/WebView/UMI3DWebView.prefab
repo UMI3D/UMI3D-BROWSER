@@ -689,7 +689,9 @@ GameObject:
   - component: {fileID: 7772356235599972409}
   - component: {fileID: 5023705159265667171}
   - component: {fileID: 6232226129368090552}
-  - component: {fileID: 5415712282139958022}
+  - component: {fileID: 4650864147995540401}
+  - component: {fileID: 4426248698612663754}
+  - component: {fileID: 9194549526547470808}
   m_Layer: 5
   m_Name: InputField (Legacy)
   m_TagString: Untagged
@@ -777,7 +779,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 175, y: 20, z: 1}
   m_Center: {x: 87.5, y: 0, z: 0}
---- !u!114 &5415712282139958022
+--- !u!114 &4650864147995540401
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -786,7 +788,50 @@ MonoBehaviour:
   m_GameObject: {fileID: 2872800089341976293}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 91fa5a87b0153964e9da913bf6fd3109, type: 3}
+  m_Script: {fileID: 11500000, guid: 07e95817b0b3bc349b4cec88c2dd6056, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnSelectEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2541948983036470959}
+        m_TargetAssemblyTypeName: QuestBrowser.WebView.WebView, umi3d.runtimeBrowser.android.webView
+        m_MethodName: ToggleOnSearchInput
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnDeselectEvent:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &4426248698612663754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2872800089341976293}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc6ed463cdc85cc40b5d20d289d1ac92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  keyboard: {fileID: 2042759322865483517}
+--- !u!114 &9194549526547470808
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2872800089341976293}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f184960e201bdbb46a3f71b5422ff45f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
@@ -819,7 +864,7 @@ MonoBehaviour:
   m_Interactable: 1
   m_TargetGraphic: {fileID: 5023705159265667171}
   m_TextComponent: {fileID: 2993638209836449951}
-  m_Placeholder: {fileID: 7823523494969791993}
+  m_Placeholder: {fileID: 0}
   m_ContentType: 0
   m_InputType: 0
   m_AsteriskChar: 42
@@ -845,12 +890,8 @@ MonoBehaviour:
   m_CaretWidth: 1
   m_ReadOnly: 0
   m_ShouldActivateOnSelect: 1
-  OnSelectEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  OnDeSelectEvent:
-    m_PersistentCalls:
-      m_Calls: []
+  selectable: {fileID: 4650864147995540401}
+  keyboardBinder: {fileID: 4426248698612663754}
 --- !u!1 &3504663032806773555
 GameObject:
   m_ObjectHideFlags: 0
@@ -1234,6 +1275,9 @@ MonoBehaviour:
   webView: {fileID: 7339341339357372392}
   container: {fileID: 4503148055620339736}
   textureTransform: {fileID: 6788902170019657819}
+  searchFieldTransform: {fileID: 5336952841518406278}
+  searchField: {fileID: 9194549526547470808}
+  keyboard: {fileID: 9218376598532778636}
 --- !u!1 &4748217240345349037
 GameObject:
   m_ObjectHideFlags: 0
@@ -2002,7 +2046,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   webView: {fileID: 7339341339357372392}
-  searchField: {fileID: 5415712282139958022}
+  searchField: {fileID: 9194549526547470808}
 --- !u!1001 &6779554335915301251
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4926,9 +4970,27 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 407f5219942420c4087287ea92a2bb02, type: 3}
+--- !u!114 &2042759322865483517 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4777341156007831422, guid: 407f5219942420c4087287ea92a2bb02,
+    type: 3}
+  m_PrefabInstance: {fileID: 6779554335915301251}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 072e9c5ddf7a54e44bb38a044ea95a7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &6375447332649826847 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 463856664420623260, guid: 407f5219942420c4087287ea92a2bb02,
+    type: 3}
+  m_PrefabInstance: {fileID: 6779554335915301251}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &9218376598532778636 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 2448709235142374159, guid: 407f5219942420c4087287ea92a2bb02,
     type: 3}
   m_PrefabInstance: {fileID: 6779554335915301251}
   m_PrefabAsset: {fileID: 0}

@@ -16,19 +16,22 @@ limitations under the License.
 using UnityEngine;
 using umi3d.cdk;
 using System.Threading.Tasks;
+using inetum.unityUtils.multiTarget;
 
 namespace umi3d.runtimeBrowser.webView
 {
     public class WebViewFactory : AbstractWebViewFactory
     {
-        public GameObject template = null;
+        public MultiTargetReference<GameObject> template;
 
         public override async Task<AbstractUMI3DWebView> CreateWebView()
         {
-            if (template == null)
+            if (template.Reference == null)
+            {
                 return null;
+            }
 
-            GameObject go = Instantiate(template);
+            GameObject go = Instantiate(template.Reference);
             AbstractUMI3DWebView view = go.GetComponent<AbstractUMI3DWebView>();
 
             await UMI3DAsyncManager.Yield();

@@ -36,6 +36,7 @@ namespace umi3d.browserEditor.BuildTool
         public Button B_BuildCount;
         public TextField TF_AdditionalVersion;
         public Button B_ResetVersion;
+        public Label L_SDKVersion;
         public Label L_OldVersion;
         public Label L_Version;
 
@@ -65,6 +66,7 @@ namespace umi3d.browserEditor.BuildTool
             B_BuildCount = V_BuildCount.Q<Button>();
             TF_AdditionalVersion = root.Q<TextField>("TF_AdditionalVersion");
             B_ResetVersion = root.Q<Button>("Reset");
+            L_SDKVersion = root.Q<Label>("L_SDKVersion");
             L_OldVersion = root.Q<Label>("L_OldVersion");
             L_Version = root.Q<Label>("L_BuildVersion");
         }
@@ -121,6 +123,7 @@ namespace umi3d.browserEditor.BuildTool
             IF_Minor.value = viewModel.NewVersion.minorVersion;
             IF_BuildCount.value = viewModel.NewVersion.buildCountVersion;
             TF_AdditionalVersion.value = viewModel.NewVersion.additionalVersion;
+            L_SDKVersion.text = viewModel.SDKVersion.Version;
             L_OldVersion.text = viewModel.OldVersion.Version;
         }
 

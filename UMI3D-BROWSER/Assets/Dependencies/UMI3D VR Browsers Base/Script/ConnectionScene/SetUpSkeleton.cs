@@ -135,8 +135,9 @@ namespace umi3dVRBrowsersBase.connection
         /// </summary>
         public IEnumerator SetUpAvatar()
         {
-            Joint.enabled = true;
-            Surface.enabled = true;
+            // Enable the joint and surface for debug.
+            //Joint.enabled = true;
+            //Surface.enabled = true;
             LeftWatch.SetActive(true);
             RightWatch.SetActive(true);
 

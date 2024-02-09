@@ -21,6 +21,8 @@ namespace umi3d.browserEditor.BuildTool
     //[CreateAssetMenu(fileName = "UMI3D Build Tool", menuName = "UMI3D/Tools/Build Tool")]
     public class UMI3DBuildToolTarget_SO : SerializableScriptableObject
     {
+        public string installer;
+        public string license;
         public List<TargetDto> targets = new();
     }
 }

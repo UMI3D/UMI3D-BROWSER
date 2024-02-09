@@ -16,6 +16,7 @@ limitations under the License.
 
 using System;
 using UnityEditor;
+using UnityEngine;
 
 namespace umi3d.browserEditor.BuildTool
 {
@@ -85,10 +86,26 @@ namespace umi3d.browserEditor.BuildTool
             Save();
         }
 
-        public void ApplyBuildFolder(int index, string buildFolder)
+        public void BrowseBuildFolder(int index, Action<string> updateView)
+        {
+            var folder = string.IsNullOrEmpty(buildToolTarget_SO.installer)
+                ? Application.dataPath
+                : this[index].BuildFolder;
+
+            string path = EditorUtility.OpenFolderPanel(
+                title: "Build folder",
+                folder,
+                defaultName: ""
+            );
+
+            UpdateBuildFolder(index, path);
+            updateView?.Invoke(path);
+        }
+
+        public void UpdateBuildFolder(int index, string path)
         {
             var targetDTO = buildToolTarget_SO.targets[index];
-            targetDTO.BuildFolder = buildFolder;
+            targetDTO.BuildFolder = path;
             buildToolTarget_SO.targets[index] = targetDTO;
             Save();
         }

@@ -66,9 +66,12 @@ namespace umi3d.browserEditor.BuildTool
             {
                 viewModel.Select(index, value.newValue);
             });
+            T_Select.SetValueWithoutNotify(viewModel[index].IsTargetEnabled);
 
             // Path
             TF_Path.label = "Build Folder";
+            TF_Path.RegisterValueChangedCallback(PathValueChanged);
+            TF_Path.SetValueWithoutNotify(viewModel[index].BuildFolder);
             B_Browse.clicked += Browse;
 
             // Device target.
@@ -86,37 +89,40 @@ namespace umi3d.browserEditor.BuildTool
             B_Apply.clicked += Apply;
             B_Build.clicked += Build;
 
-            T_Select.value = viewModel[index].IsTargetEnabled;
-            TF_Path.value = viewModel[index].BuildFolder;
             ApplyChangeView(viewModel[index].isApplied);
-        }
-
-        private void TargetSelectionValueChanged(ChangeEvent<string> value)
-        {
-            viewModel.ApplyTarget(index, Enum.Parse<E_Target>(value.newValue));
-            ApplyChange(false);
         }
 
         public void Unbind()
         {
             B_Browse.clicked -= Browse;
+            TF_Path.RegisterValueChangedCallback(PathValueChanged);
             DD_TargetSelection.UnregisterValueChangedCallback(TargetSelectionValueChanged);
             DD_ReleaseCycle.UnregisterValueChangedCallback(ReleaseCycleDDValueChanged);
             B_Apply.clicked -= Apply;
             B_Build.clicked -= Build;
         }
 
+        void PathValueChanged(ChangeEvent<string> value)
+        {
+            viewModel.UpdateBuildFolder(index, value.newValue);
+            ApplyChange(false);
+        }
+
+        void TargetSelectionValueChanged(ChangeEvent<string> value)
+        {
+            viewModel.ApplyTarget(index, Enum.Parse<E_Target>(value.newValue));
+            ApplyChange(false);
+        }
+
         void Browse()
         {
-            viewModel.ApplyBuildFolder(
-                    index,
-                    EditorUtility.OpenFolderPanel(
-                        title: "Build folder",
-                        viewModel[index].BuildFolder,
-                        defaultName: ""
-                    )
-                );
-            TF_Path.value = viewModel[index].BuildFolder;
+            viewModel.BrowseBuildFolder(
+                index,
+                updateView: path =>
+                {
+                    TF_Path.SetValueWithoutNotify(path);
+                }
+            );
         }
 
         void ReleaseCycleDDValueChanged(ChangeEvent<string> value)

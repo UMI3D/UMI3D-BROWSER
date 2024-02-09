@@ -15,11 +15,13 @@ limitations under the License.
 */
 
 using System;
+using UnityEditor;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace umi3d.browserEditor.BuildTool
 {
-    public class UMI3DBuildToolView 
+    public class UMI3DBuildToolView
     {
         public VisualElement root;
         public VisualTreeAsset ui = default;
@@ -34,6 +36,7 @@ namespace umi3d.browserEditor.BuildTool
         public Action<TargetDto> updateTarget;
         public Action build;
 
+        public UMI3DBuildToolViewModel viewModel;
         public TemplateContainer T_Installer;
         public TextField TF_Installer;
         public Button B_Installer;
@@ -57,6 +60,7 @@ namespace umi3d.browserEditor.BuildTool
             this.updateVersion = updateVersion;
             this.updateTarget = updateTarget;
             this.build = build;
+            this.viewModel = new(buildToolTarget_SO);
         }
 
         public void Bind()
@@ -107,11 +111,31 @@ namespace umi3d.browserEditor.BuildTool
 
             // Path
             TF_Installer.label = "Installer";
+            TF_Installer.RegisterValueChangedCallback(value =>
+            {
+                viewModel.UpdateInstaller(value.newValue);
+            });
+            TF_Installer.SetValueWithoutNotify(buildToolTarget_SO.installer);
             B_Installer.clicked += () =>
             {
-                UnityEngine.Debug.Log($"Todo");
+                viewModel.BrowseInstaller(path =>
+                {
+                    TF_Installer.SetValueWithoutNotify(path);
+                });
             };
             TF_License.label = "License";
+            TF_License.SetValueWithoutNotify(buildToolTarget_SO.license);
+            TF_License.RegisterValueChangedCallback(value =>
+            {
+                viewModel.UpdateLicense(value.newValue);
+            });
+            B_License.clicked += () =>
+            {
+                viewModel.BrowseLicense(path =>
+                {
+                    TF_License.SetValueWithoutNotify(path);
+                });
+            };
 
             // Targets.
             LV_Targets.reorderable = true;

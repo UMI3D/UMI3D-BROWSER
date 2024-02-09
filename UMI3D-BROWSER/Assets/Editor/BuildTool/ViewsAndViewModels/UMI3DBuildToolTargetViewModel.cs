@@ -83,6 +83,7 @@ namespace umi3d.browserEditor.BuildTool
             var targetDTO = buildToolTarget_SO.targets[index];
             targetDTO.IsTargetEnabled = isSelected;
             buildToolTarget_SO.targets[index] = targetDTO;
+            buildToolTarget_SO.SelectedTargetsChanged?.Invoke();
             Save();
         }
 

@@ -14,15 +14,30 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 using inetum.unityUtils.saveSystem;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace umi3d.browserEditor.BuildTool
 {
     //[CreateAssetMenu(fileName = "UMI3D Build Tool", menuName = "UMI3D/Tools/Build Tool")]
     public class UMI3DBuildToolTarget_SO : SerializableScriptableObject
     {
+        public Action SelectedTargetsChanged;
+
         public string installer;
         public string license;
         public List<TargetDto> targets = new();
+
+        public TargetDto[] SelectedTargets
+        {
+            get
+            {
+                return targets.Where(target =>
+                {
+                    return target.IsTargetEnabled;
+                }).ToArray();
+            }
+        }
     }
 }

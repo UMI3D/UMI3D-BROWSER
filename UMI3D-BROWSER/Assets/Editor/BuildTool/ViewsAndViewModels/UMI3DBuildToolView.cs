@@ -178,6 +178,13 @@ namespace umi3d.browserEditor.BuildTool
                 UMI3DBuildToolTargetView targetView = visual.userData as UMI3DBuildToolTargetView;
                 targetView.Unbind();
             };
+
+            UMI3DBuildToolBuildProgressView progressView = new(
+                root,
+                buildToolTarget_SO
+            );
+            progressView.Bind();
+            progressView.Set();
         }
     }
 }

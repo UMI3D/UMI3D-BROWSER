@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using NAudio.SoundFont;
 using System;
 using System.IO;
 using System.Linq;
@@ -61,6 +62,28 @@ namespace umi3d.browserEditor.BuildTool
             PlayerSettings.productName = name;
         }
 
+        public static string GetExeName(TargetDto target, VersionDTO version, bool withExtension)
+        {
+            string name = $"UMI3D {target.Target} Browser {version.VersionFromNow}";
+            if (withExtension)
+            {
+                switch (target.Target)
+                {
+                    case E_Target.Quest:
+                    case E_Target.Focus:
+                    case E_Target.Pico:
+                        name += ".apk";
+                        break;
+                    case E_Target.SteamXR:
+                        name += ".exe";
+                        break;
+                    default:
+                        break;
+                }
+            }
+            return name;
+        }
+
         public static void SetKeystore(string password, string path)
         {
             PlayerSettings.Android.useCustomKeystore = true;
@@ -89,24 +112,11 @@ namespace umi3d.browserEditor.BuildTool
             {
                 return scene.path;
             }).ToArray();
-            pbo.locationPathName = 
+            pbo.locationPathName =
                 $"{target.BuildFolder}/" +
                 $"{target.releaseCycle}/" +
-                $"{version.VersionFromNow}_SDK{sdkVersion.Version}/" +
-                $"UMI3D {target.Target} Browser";
-            switch (target.Target)
-            {
-                case E_Target.Quest:
-                case E_Target.Focus:
-                case E_Target.Pico:
-                    pbo.locationPathName += ".apk";
-                    break;
-                case E_Target.SteamXR:
-                    pbo.locationPathName += ".exe";
-                    break;
-                default:
-                    break;
-            }
+                $"{version.VersionFromNow}_SDK{sdkVersion.Version}/";
+            pbo.locationPathName += GetExeName(target, version, withExtension: true);
             pbo.target = target.Target.GetBuildTarget();
             pbo.options = BuildOptions.None;
 

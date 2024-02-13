@@ -99,7 +99,8 @@ namespace umi3dBrowsers.container
             gridLayout.spacing = vignetteSpace;
 
             scrollbar.value = 0;
-            StartCoroutine(ScaleColliders());
+            if (gameObject.activeSelf && isActiveAndEnabled)
+                StartCoroutine(ScaleColliders());
         }
 
         private void OnValidate()

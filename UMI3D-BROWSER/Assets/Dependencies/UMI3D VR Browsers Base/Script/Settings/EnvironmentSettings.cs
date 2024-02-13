@@ -65,7 +65,6 @@ namespace umi3dVRBrowsersBase.settings
             audioSetting = new AudioSetting();
             avatarSetting = new AvatarSetting();
             micSetting = new MicSetting();
-            Data = new();
 
             LinkWithBackEnd();
         }
@@ -73,11 +72,16 @@ namespace umi3dVRBrowsersBase.settings
         private void LinkWithBackEnd()
         {
             // Set settings saved
-            if (SettingPreferences.TryGetAudioData(out Data))
+            if (!SettingPreferences.TryGetAudioData(out Data))
             {
-                audioSetting.SetValue(Data.AudioOn);
-                micSetting.SetValue(Data.MicOn);
+                Data = new()
+                {
+                    AudioOn = true,
+                    MicOn = false,
+                };
             }
+            audioSetting.SetValue(Data.AudioOn);
+            micSetting.SetValue(Data.MicOn);
 
             // Add listener to store data
             audioSetting.OnValueChanged.AddListener(isOn =>

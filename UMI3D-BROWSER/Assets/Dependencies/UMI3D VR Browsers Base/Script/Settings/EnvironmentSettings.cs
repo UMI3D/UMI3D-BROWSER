@@ -65,6 +65,7 @@ namespace umi3dVRBrowsersBase.settings
             audioSetting = new AudioSetting();
             avatarSetting = new AvatarSetting();
             micSetting = new MicSetting();
+            Data = new();
 
             LinkWithBackEnd();
         }

@@ -221,6 +221,7 @@ namespace com.inetum.unitygeckowebview
         /// <param name="height"></param>
         public void ChangeTextureSize(int width, int height)
         {
+            return;
             this.width = width;
             this.height = height;
 
@@ -243,6 +244,7 @@ namespace com.inetum.unitygeckowebview
         /// <returns></returns>
         private IEnumerator RenderCoroutine()
         {
+            yield break;
             var wait = new WaitForSeconds(1f / fps);
 
             while (true)

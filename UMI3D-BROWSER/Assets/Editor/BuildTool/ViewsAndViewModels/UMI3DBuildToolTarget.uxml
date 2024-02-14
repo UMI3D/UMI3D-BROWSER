@@ -10,7 +10,7 @@
                 <ui:DropdownField label="Release Cycle" index="-1" choices="System.Collections.Generic.List`1[System.String]" name="DD_ReleaseCycle" style="flex-grow: 1;" />
             </ui:VisualElement>
             <ui:VisualElement style="flex-grow: 1; flex-direction: row; justify-content: space-around;">
-                <ui:Button text="Apply changes" parse-escape-sequences="true" display-tooltip-when-elided="true" name="B_Apply" style="flex-grow: 1;" />
+                <ui:Button text="Apply Target Options" parse-escape-sequences="true" display-tooltip-when-elided="true" name="B_Apply" style="flex-grow: 1;" />
                 <ui:Button text="BUILD" parse-escape-sequences="true" display-tooltip-when-elided="true" name="B_Build" style="flex-grow: 1;" />
             </ui:VisualElement>
         </ui:VisualElement>

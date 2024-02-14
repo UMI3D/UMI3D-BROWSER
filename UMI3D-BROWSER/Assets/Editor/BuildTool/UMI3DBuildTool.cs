@@ -38,6 +38,7 @@ namespace umi3d.browserEditor.BuildTool
         IBuilToolComponent _uMI3DConfigurator = null;
         IBuilToolComponent _targetAndPluginSwitcher = null;
 
+        TargetDto[] selectedTargets;
         TargetDto targetDTO;
         VersionDTO versionDTO;
 
@@ -135,6 +136,11 @@ namespace umi3d.browserEditor.BuildTool
             );
             BuildToolHelper.DeleteBurstDebugInformationFolder(report);
             BuildToolHelper.Report(report);
+        }
+
+        void BuildSelectedTarget()
+        {
+
         }
     }
 }

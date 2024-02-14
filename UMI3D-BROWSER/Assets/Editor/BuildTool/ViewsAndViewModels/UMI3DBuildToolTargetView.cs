@@ -142,7 +142,7 @@ namespace umi3d.browserEditor.BuildTool
             build?.Invoke();
         }
 
-        public void ApplyChangeView(bool isApplied)
+        void ApplyChangeView(bool isApplied)
         {
             B_Apply.style.backgroundColor = isApplied ? new Color(0.5f, 1, 0) : StyleKeyword.Null;
             B_Build.SetEnabled(isApplied);

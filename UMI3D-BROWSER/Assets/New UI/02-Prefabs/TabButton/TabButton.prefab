@@ -153,10 +153,14 @@ MonoBehaviour:
     m_DisabledTrigger: Disabled
   m_Interactable: 1
   m_TargetGraphic: {fileID: 80375914170488540}
+  OnClick:
+    m_PersistentCalls:
+      m_Calls: []
   hoverBar: {fileID: 8707659144256516872}
   label: {fileID: 6881837115150107110}
   selectedLabelColor: {r: 1, g: 1, b: 1, a: 1}
   animationTime: 0.3
+  labelBaseColor: {r: 0.5921569, g: 0.5921569, b: 0.6117647, a: 1}
   isSelected: 0
 --- !u!1 &7015280044433140162
 GameObject:

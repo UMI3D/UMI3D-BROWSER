@@ -1,14 +1,30 @@
+/*
+Copyright 2019 - 2024 Inetum
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
 using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.Events;
-using UnityEngine.UI;
-using Unity.VisualScripting;
 using TMPro;
+using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class TabButton : Selectable
 {
+    public UnityEvent OnClick;
+
     public Image hoverBar;
     public TextMeshProUGUI label;
     public Color selectedLabelColor;
@@ -23,24 +39,16 @@ public class TabButton : Selectable
         labelBaseColor = label.color;
     }
 
-    protected void Update()
-    {
-        if (currentSelectionState == SelectionState.Selected)
-        {
-            isSelected = true;
-        }
-        else
-        {
-            isSelected = false;
-        }
-    }
-
     public override void OnPointerDown(PointerEventData eventData)
     {
+        isSelected = true;
+
         if (eventData.button != PointerEventData.InputButton.Left)
             return;
         if (IsInteractable() && navigation.mode != Navigation.Mode.None && EventSystem.current != null)
             EventSystem.current.SetSelectedGameObject(gameObject, eventData);
+        OnClick.Invoke();
+
     }
 
     public override void OnPointerEnter(PointerEventData eventData)
@@ -55,22 +63,12 @@ public class TabButton : Selectable
         DisableHoverBarFX();
     }
 
-    public override void OnSelect(BaseEventData eventData)
-    {
-        base.OnSelect(eventData);
-        label.color = selectedLabelColor;
-    }
-
-    public override void OnDeselect(BaseEventData eventData)
-    {
-        base.OnDeselect(eventData);
-        label.color = labelBaseColor;
-        hoverBar.color = new Color(hoverBar.color.r, hoverBar.color.g, hoverBar.color.b, 0);
-    }
-
     public void EnableHoverBarFX()
     {
-       StartCoroutine(HoverBarAnimation(0, 1));      
+        if (!isSelected)
+        {
+            StartCoroutine(HoverBarAnimation(0, 1));
+        }
     }
 
     public void DisableHoverBarFX()

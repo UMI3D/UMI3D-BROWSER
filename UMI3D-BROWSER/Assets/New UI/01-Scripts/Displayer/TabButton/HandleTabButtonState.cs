@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using GLTFast.Schema;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -28,8 +29,8 @@ public class HandleTabButtonState : MonoBehaviour
     [SerializeField] TabButton leftTabButton;
     [SerializeField] TabButton rightTabButton;
 
-    [SerializeField] Image container1;
-    [SerializeField] Image container2;
+    [SerializeField] GameObject container1;
+    [SerializeField] GameObject container2;
 
     public currentActiveTabButton currentActiveButton = currentActiveTabButton.leftTab;
 
@@ -67,8 +68,8 @@ public class HandleTabButtonState : MonoBehaviour
                 rightTabButton.label.color = rightTabButton.labelBaseColor;
                 rightTabButton.hoverBar.color = new Color(rightTabButton.hoverBar.color.r, rightTabButton.hoverBar.color.g, rightTabButton.hoverBar.color.b, 0);
 
-                container1.enabled = true;
-                container2.enabled = false;
+                container1.SetActive(true);
+                container2.SetActive(false);
 
                 break;
 
@@ -81,8 +82,8 @@ public class HandleTabButtonState : MonoBehaviour
                 leftTabButton.label.color = leftTabButton.labelBaseColor;
                 leftTabButton.hoverBar.color = new Color(leftTabButton.hoverBar.color.r, leftTabButton.hoverBar.color.g, leftTabButton.hoverBar.color.b, 0);
 
-                container2.enabled = true;
-                container1.enabled = false;
+                container2.SetActive(true);
+                container1.SetActive(false);
                 break;
 
             default:

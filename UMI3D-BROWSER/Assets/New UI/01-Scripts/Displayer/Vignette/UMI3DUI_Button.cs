@@ -30,7 +30,7 @@ namespace umi3dBrowsers.displayer
         protected override void Awake()
         {
             _vignetteDisplayer = GetComponent<ISubDisplayer>();
-            onClick.AddListener(() => _vignetteDisplayer.Click());
+            onClick.AddListener(_vignetteDisplayer.Click);
         }
 
         public override void OnPointerEnter(PointerEventData eventData)

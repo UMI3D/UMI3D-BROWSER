@@ -36,7 +36,6 @@ namespace umi3d.browserEditor.BuildTool
 
         [SerializeField] UMI3DCollabLoadingParameters loadingParameters;
         IBuilToolComponent _uMI3DConfigurator = null;
-        IBuilToolComponent _targetAndPluginSwitcher = null;
 
         TargetDto[] selectedTargets;
         TargetDto targetDTO;
@@ -85,7 +84,6 @@ namespace umi3d.browserEditor.BuildTool
                 buildToolScene_SO,
                 "[UMI3D] BuildTool: buildToolScene_SO is null."
             );
-            _targetAndPluginSwitcher = new TargetAndPluginSwitcher();
             _uMI3DConfigurator = new UMI3DConfigurator(loadingParameters);
 
             UMI3DBuildToolView buildView = new(
@@ -116,7 +114,9 @@ namespace umi3d.browserEditor.BuildTool
 
             // Switch target if needed and toggle options.
             _uMI3DConfigurator.HandleTarget(target.Target);
-            _targetAndPluginSwitcher.HandleTarget(target.Target);
+            BuildTargetHelper.SwitchTarget(target);
+            PluginHelper.SwitchPlugins(target);
+            FeatureHelper.SwitchFeatures(target);
 
             EditorBuildSettings.scenes = buildToolScene_SO.GetScenesForTarget(target.Target).Select(scene =>
             {
@@ -127,13 +127,18 @@ namespace umi3d.browserEditor.BuildTool
 
         void BuildTarget(TargetDto target)
         {
+            BuildTarget(target, true);
+        }
+
+        int BuildTarget(TargetDto target, bool revealInFinder)
+        {
             var report = BuildToolHelper.BuildPlayer(
                 versionDTO,
                 buildToolVersion_SO.sdkVersion,
                 target
             );
             BuildToolHelper.DeleteBurstDebugInformationFolder(report);
-            BuildToolHelper.Report(report);
+            return BuildToolHelper.Report(report, revealInFinder);
         }
 
         void BuildSelectedTargets(params TargetDto[] target)

@@ -14,7 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using NAudio.SoundFont;
 using System;
 using System.IO;
 using System.Linq;
@@ -28,22 +27,7 @@ namespace umi3d.browserEditor.BuildTool
     {
         public static void UpdateApplicationName(TargetDto target)
         {
-            string name = $"UMI3D";
-
-            switch (target.Target)
-            {
-                case E_Target.Quest:
-                    break;
-                case E_Target.Focus:
-                    break;
-                case E_Target.Pico:
-                    break;
-                case E_Target.SteamXR:
-                    name = $" {target.Target}";
-                    break;
-                default:
-                    break;
-            }
+            string name = $"UMI3D {target.Target}";
 
             switch (target.releaseCycle)
             {
@@ -64,7 +48,7 @@ namespace umi3d.browserEditor.BuildTool
 
         public static string GetExeName(TargetDto target, VersionDTO version, bool withExtension)
         {
-            string name = $"UMI3D {target.Target} Browser {version.VersionFromNow}";
+            string name = $"UMI3D_{target.Target}_Browser_{version.VersionFromNow}";
             if (withExtension)
             {
                 switch (target.Target)
@@ -88,7 +72,6 @@ namespace umi3d.browserEditor.BuildTool
         {
             PlayerSettings.Android.useCustomKeystore = true;
             PlayerSettings.Android.keystoreName = path;
-            //PlayerSettings.Android.keyaliasName = path;
             PlayerSettings.keyaliasPass = password;
             PlayerSettings.keystorePass = password;
         }
@@ -149,25 +132,29 @@ namespace umi3d.browserEditor.BuildTool
             }
         }
 
-        public static void Report(BuildReport report)
+        public static int Report(BuildReport report, bool revealInFinder)
         {
             BuildSummary summary = report.summary;
 
             switch (summary.result)
             {
                 case BuildResult.Unknown:
-                    break;
+                    return 0;
                 case BuildResult.Succeeded:
                     UnityEngine.Debug.Log($"[UMI3D] BuildTool: Build succeeded: {summary.outputPath}");
-                    break;
+                    if (revealInFinder)
+                    {
+                        EditorUtility.RevealInFinder(report.summary.outputPath);
+                    }
+                    return 1;
                 case BuildResult.Failed:
                     UnityEngine.Debug.Log($"[UMI3D] BuildTool: Build failed: {summary.outputPath}");
-                    break;
+                    return -2;
                 case BuildResult.Cancelled:
                     UnityEngine.Debug.Log($"[UMI3D] BuildTool: Build Canceled: {summary.outputPath}");
-                    break;
+                    return -1;
                 default:
-                    break;
+                    return 0;
             }
         }
     }

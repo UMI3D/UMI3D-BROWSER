@@ -17,6 +17,7 @@ using inetum.unityUtils.saveSystem;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 
 namespace umi3d.browserEditor.BuildTool
 {
@@ -38,6 +39,34 @@ namespace umi3d.browserEditor.BuildTool
                     return target.IsTargetEnabled;
                 }).ToArray();
             }
+        }
+
+        public TargetDto[] GetSelectedTargets(BuildTarget buildTarget, E_ReleaseCycle releaseCycle)
+        {
+            return targets.Where(target =>
+            {
+                switch (target.Target)
+                {
+                    case E_Target.Quest:
+                    case E_Target.Focus:
+                    case E_Target.Pico:
+                        if (buildTarget != BuildTarget.Android)
+                        {
+                            return false;
+                        }
+                        break;
+                    case E_Target.SteamXR:
+                        if (buildTarget != BuildTarget.StandaloneWindows)
+                        {
+                            return false;
+                        }
+                        break;
+                    default:
+                        return false;
+                }
+
+                return target.IsTargetEnabled && target.releaseCycle == releaseCycle;
+            }).ToArray();
         }
     }
 }

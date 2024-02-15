@@ -132,6 +132,15 @@ namespace umi3d.browserEditor.BuildTool
             }
         }
 
+        /// <summary>
+        /// Return -2 if the build has failed.<br/>
+        /// Return -1 if the build has been cancelled.<br/>
+        /// Return 0 if the build result is unknown.<br/>
+        /// Return 1 if the build has succeeded.<br/>
+        /// </summary>
+        /// <param name="report"></param>
+        /// <param name="revealInFinder"></param>
+        /// <returns></returns>
         public static int Report(BuildReport report, bool revealInFinder)
         {
             BuildSummary summary = report.summary;

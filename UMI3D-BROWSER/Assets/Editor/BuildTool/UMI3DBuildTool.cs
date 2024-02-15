@@ -99,7 +99,8 @@ namespace umi3d.browserEditor.BuildTool
                     targetDTO = newTarget;
                 },
                 ApplyTargetOptions,
-                BuildTarget
+                BuildTarget,
+                BuildSelectedTargets
             );
             buildView.Bind();
             buildView.Set();
@@ -130,6 +131,16 @@ namespace umi3d.browserEditor.BuildTool
             BuildTarget(target, true);
         }
 
+        /// <summary>
+        /// Build.<br/>
+        /// Return -2 if the build has failed.<br/>
+        /// Return -1 if the build has been cancelled.<br/>
+        /// Return 0 if the build result is unknown.<br/>
+        /// Return 1 if the build has succeeded.<br/>
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="revealInFinder"></param>
+        /// <returns></returns>
         int BuildTarget(TargetDto target, bool revealInFinder)
         {
             var report = BuildToolHelper.BuildPlayer(
@@ -143,7 +154,12 @@ namespace umi3d.browserEditor.BuildTool
 
         void BuildSelectedTargets(params TargetDto[] target)
         {
-
+            for (int i = 0; i < target.Length; i++)
+            {
+                UnityEngine.Debug.Log($"{target[i].Target}");
+                ApplyTargetOptions(target[i]);
+                BuildTarget(target[i], i == target.Length - 1);
+            }
         }
     }
 }

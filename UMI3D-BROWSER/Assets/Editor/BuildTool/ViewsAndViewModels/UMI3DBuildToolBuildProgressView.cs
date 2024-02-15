@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using System;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -24,12 +25,17 @@ namespace umi3d.browserEditor.BuildTool
     {
         public VisualElement root;
         public UMI3DBuildToolTarget_SO buildToolTarget_SO;
+        public Action<TargetDto[]> buildSelectedTarget;
 
         Button B_BuildAllSelected;
         Button B_Abort;
         ProgressBar PB_Progress;
 
-        public UMI3DBuildToolBuildProgressView(VisualElement root, UMI3DBuildToolTarget_SO buildToolTarget_SO)
+        public UMI3DBuildToolBuildProgressView(
+            VisualElement root,
+            UMI3DBuildToolTarget_SO buildToolTarget_SO,
+            Action<TargetDto[]> buildSelectedTarget
+        )
         {
             this.root = root;
             this.buildToolTarget_SO = buildToolTarget_SO;
@@ -37,6 +43,7 @@ namespace umi3d.browserEditor.BuildTool
             {
                 OnUpdateTargetSelected(buildToolTarget_SO.SelectedTargets);
             };
+            this.buildSelectedTarget = buildSelectedTarget;
         }
 
         public void Bind()
@@ -50,10 +57,7 @@ namespace umi3d.browserEditor.BuildTool
         {
             B_Abort.SetEnabled(false);
             OnUpdateTargetSelected(buildToolTarget_SO.SelectedTargets);
-            B_BuildAllSelected.clicked += () =>
-            {
-
-            };
+            B_BuildAllSelected.clicked += BuildSelectedTarget;
         }
 
         void OnUpdateTargetSelected(params TargetDto[] targets)
@@ -61,6 +65,32 @@ namespace umi3d.browserEditor.BuildTool
             B_BuildAllSelected.text = "BUILD all selected targets";
             PB_Progress.value = 0;
             PB_Progress.title = $"{targets.Length} target(s) to be built";
+        }
+
+        void BuildSelectedTarget()
+        {
+            //var currentTarget = 
+
+            E_ReleaseCycle[] releases = (E_ReleaseCycle[])Enum.GetValues(typeof(E_ReleaseCycle));
+            for (int i = releases.Length - 1; i >= 0; i--)
+            {
+                buildSelectedTarget?.Invoke(
+                    buildToolTarget_SO.GetSelectedTargets(
+                        BuildTarget.Android,
+                        releases[i]
+                    )
+                );
+            }
+
+            for (int i = releases.Length - 1; i >= 0; i--)
+            {
+                buildSelectedTarget?.Invoke(
+                    buildToolTarget_SO.GetSelectedTargets(
+                        BuildTarget.StandaloneWindows,
+                        releases[i]
+                    )
+                );
+            }
         }
     }
 }

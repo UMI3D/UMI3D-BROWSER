@@ -36,7 +36,7 @@ namespace umi3d.browserEditor.BuildTool
         public Action<TargetDto> updateTarget;
         Action<TargetDto> applyTargetOptions;
         public Action<TargetDto> buildTarget;
-        public Action build;
+        public Action<TargetDto[]> buildSelectedTarget;
 
         public UMI3DBuildToolViewModel viewModel;
         public TemplateContainer T_Installer;
@@ -61,7 +61,8 @@ namespace umi3d.browserEditor.BuildTool
             Action<VersionDTO> updateVersion,
             Action<TargetDto> updateTarget,
             Action<TargetDto> applyTargetOptions,
-            Action<TargetDto> buildTarget
+            Action<TargetDto> buildTarget,
+            Action<TargetDto[]> buildSelectedTarget
         )
         {
             this.root = root;
@@ -77,6 +78,7 @@ namespace umi3d.browserEditor.BuildTool
             this.updateTarget = updateTarget;
             this.applyTargetOptions = applyTargetOptions;
             this.buildTarget = buildTarget;
+            this.buildSelectedTarget = buildSelectedTarget;
             this.viewModel = new(buildToolTarget_SO);
         }
 
@@ -199,7 +201,8 @@ namespace umi3d.browserEditor.BuildTool
 
             UMI3DBuildToolBuildProgressView progressView = new(
                 root,
-                buildToolTarget_SO
+                buildToolTarget_SO,
+                buildSelectedTarget
             );
             progressView.Bind();
             progressView.Set();

@@ -1,6 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <ui:Template name="UMI3DBuildToolPath" src="project://database/Assets/Editor/BuildTool/ViewsAndViewModels/UMI3DBuildToolPath.uxml?fileID=9197481963319205126&amp;guid=2a2426c927a341145822e1e97b4fab7e&amp;type=3#UMI3DBuildToolPath" />
-    <ui:VisualElement name="V_Target" style="flex-grow: 1; flex-direction: row;">
+    <ui:VisualElement name="V_Target" style="flex-grow: 1; flex-direction: row; padding-top: 4px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px;">
         <ui:Toggle focusable="true" name="T_Select" />
         <ui:VisualElement style="flex-grow: 1;">
             <ui:Instance template="UMI3DBuildToolPath" name="UMI3DBuildToolPath" />

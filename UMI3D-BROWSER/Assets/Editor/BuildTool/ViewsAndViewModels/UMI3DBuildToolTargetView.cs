@@ -26,6 +26,7 @@ namespace umi3d.browserEditor.BuildTool
         public VisualElement root;
         public UMI3DBuildToolVersion_SO buildToolVersion_SO;
         public int index;
+        public Action<TargetDto> applyTargetOptions;
         public Action<TargetDto> buildTarget;
 
         public UMI3DBuildToolTargetViewModel viewModel;
@@ -38,12 +39,27 @@ namespace umi3d.browserEditor.BuildTool
         public Button B_Apply;
         public Button B_Build;
 
-        public UMI3DBuildToolTargetView(VisualElement root, UMI3DBuildToolTarget_SO buildToolTarget_SO, UMI3DBuildToolVersion_SO buildToolVersion_SO, int index, Action<TargetDto> updateTarget, Action<int> refreshView, Action<TargetDto> buildTarget)
+        public UMI3DBuildToolTargetView(
+            VisualElement root,
+            UMI3DBuildToolTarget_SO buildToolTarget_SO,
+            UMI3DBuildToolVersion_SO buildToolVersion_SO,
+            int index,
+            Action<TargetDto> updateTarget,
+            Action<TargetDto> applyTargetOptions,
+            Action<int> refreshView,
+            Action<TargetDto> buildTarget
+        )
         {
             this.root = root;
-            this.viewModel = new(buildToolTarget_SO, updateTarget, refreshView);
+            this.viewModel = new(
+                buildToolTarget_SO,
+                updateTarget,
+                applyTargetOptions,
+                refreshView
+            );
             this.buildToolVersion_SO = buildToolVersion_SO;
             this.index = index;
+            this.applyTargetOptions = applyTargetOptions;
             this.buildTarget = buildTarget;
 
             var targetDto = viewModel[index];
@@ -159,6 +175,7 @@ namespace umi3d.browserEditor.BuildTool
         void Build()
         {
             buildToolVersion_SO.UpdateOldVersionWithNewVersion();
+            applyTargetOptions?.Invoke(viewModel[index]);
             buildTarget?.Invoke(viewModel[index]);
         }
     }

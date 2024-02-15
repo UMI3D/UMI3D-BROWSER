@@ -48,7 +48,12 @@ namespace umi3d.browserEditor.BuildTool
 
         public void Set()
         {
+            B_Abort.SetEnabled(false);
             OnUpdateTargetSelected(buildToolTarget_SO.SelectedTargets);
+            B_BuildAllSelected.clicked += () =>
+            {
+
+            };
         }
 
         void OnUpdateTargetSelected(params TargetDto[] targets)

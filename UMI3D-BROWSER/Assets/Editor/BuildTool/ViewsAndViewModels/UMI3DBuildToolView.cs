@@ -34,6 +34,7 @@ namespace umi3d.browserEditor.BuildTool
         public UMI3DBuildToolScene_SO buildToolScene_SO;
         public Action<VersionDTO> updateVersion;
         public Action<TargetDto> updateTarget;
+        Action<TargetDto> applyTargetOptions;
         public Action<TargetDto> buildTarget;
         public Action build;
 
@@ -47,7 +48,21 @@ namespace umi3d.browserEditor.BuildTool
         public ListView LV_Targets;
         public ListView LV_Scenes;
 
-        public UMI3DBuildToolView(VisualElement root, VisualTreeAsset ui, VisualTreeAsset target_VTA, VisualTreeAsset path_VTA, VisualTreeAsset scene_VTA, UMI3DBuildToolKeystore_SO buildToolKeystore_SO, UMI3DBuildToolVersion_SO buildToolVersion_SO, UMI3DBuildToolTarget_SO buildToolTarget_SO, UMI3DBuildToolScene_SO buildToolScene_SO, Action<VersionDTO> updateVersion, Action<TargetDto> updateTarget, Action<TargetDto> buildTarget)
+        public UMI3DBuildToolView(
+            VisualElement root,
+            VisualTreeAsset ui,
+            VisualTreeAsset target_VTA,
+            VisualTreeAsset path_VTA,
+            VisualTreeAsset scene_VTA,
+            UMI3DBuildToolKeystore_SO buildToolKeystore_SO,
+            UMI3DBuildToolVersion_SO buildToolVersion_SO,
+            UMI3DBuildToolTarget_SO buildToolTarget_SO,
+            UMI3DBuildToolScene_SO buildToolScene_SO,
+            Action<VersionDTO> updateVersion,
+            Action<TargetDto> updateTarget,
+            Action<TargetDto> applyTargetOptions,
+            Action<TargetDto> buildTarget
+        )
         {
             this.root = root;
             this.ui = ui;
@@ -60,6 +75,7 @@ namespace umi3d.browserEditor.BuildTool
             this.buildToolScene_SO = buildToolScene_SO;
             this.updateVersion = updateVersion;
             this.updateTarget = updateTarget;
+            this.applyTargetOptions = applyTargetOptions;
             this.buildTarget = buildTarget;
             this.viewModel = new(buildToolTarget_SO);
         }
@@ -154,10 +170,11 @@ namespace umi3d.browserEditor.BuildTool
             {
                 UMI3DBuildToolTargetView targetView = new(
                     root: visual,
-                    buildToolTarget_SO: buildToolTarget_SO,
-                    buildToolVersion_SO: buildToolVersion_SO,
-                    index: index,
-                    updateTarget: updateTarget,
+                    buildToolTarget_SO,
+                    buildToolVersion_SO,
+                    index,
+                    updateTarget,
+                    applyTargetOptions,
                     refreshView: index =>
                     {
                         for (int i = 0; i < buildToolTarget_SO.targets.Count; i++)
@@ -168,7 +185,7 @@ namespace umi3d.browserEditor.BuildTool
                             }
                         }
                     },
-                    buildTarget: buildTarget
+                    buildTarget
                 );
                 targetView.Bind();
                 targetView.Set();

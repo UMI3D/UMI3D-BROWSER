@@ -99,8 +99,8 @@ namespace umi3d.browserEditor.BuildTool
                 updateTarget: newTarget =>
                 {
                     targetDTO = newTarget;
-                    ApplyTargetOptions(targetDTO);
                 },
+                ApplyTargetOptions,
                 BuildTarget
             );
             buildView.Bind();
@@ -109,9 +109,12 @@ namespace umi3d.browserEditor.BuildTool
 
         void ApplyTargetOptions(TargetDto target)
         {
+            // Update App name, Version and Android.BundleVersion.
+            BuildToolHelper.UpdateApplicationName(target);
             PlayerSettings.bundleVersion = $"{target.releaseCycle.GetReleaseInitial()}_{versionDTO.VersionFromNow} Sdk: {buildToolVersion_SO.sdkVersion.Version}";
             PlayerSettings.Android.bundleVersionCode = versionDTO.BundleVersion;
 
+            // Switch target if needed and toggle options.
             _uMI3DConfigurator.HandleTarget(target.Target);
             _targetAndPluginSwitcher.HandleTarget(target.Target);
 
@@ -124,8 +127,6 @@ namespace umi3d.browserEditor.BuildTool
 
         void BuildTarget(TargetDto target)
         {
-            ApplyTargetOptions(target);
-            BuildToolHelper.UpdateApplicationName(target);
             var report = BuildToolHelper.BuildPlayer(
                 versionDTO,
                 buildToolVersion_SO.sdkVersion,
@@ -135,7 +136,7 @@ namespace umi3d.browserEditor.BuildTool
             BuildToolHelper.Report(report);
         }
 
-        void BuildSelectedTargets()
+        void BuildSelectedTargets(params TargetDto[] target)
         {
 
         }

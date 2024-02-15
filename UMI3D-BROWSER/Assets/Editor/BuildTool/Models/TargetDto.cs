@@ -20,19 +20,14 @@ using UnityEngine;
 namespace umi3d.browserEditor.BuildTool
 {
     [Serializable]
-    public struct TargetDto : IEquatable<TargetDto>
+    public struct TargetDto
     {
+        [HideInInspector]
+        public Guid Id;
         public bool IsTargetEnabled;
         public string BuildFolder;
         public E_Target Target;
         public E_ReleaseCycle releaseCycle;
         public bool isApplied;
-
-        public bool Equals(TargetDto other)
-        {
-            return this.BuildFolder == other.BuildFolder 
-                && this.Target == other.Target 
-                && this.releaseCycle == other.releaseCycle;
-        }
     }
 }

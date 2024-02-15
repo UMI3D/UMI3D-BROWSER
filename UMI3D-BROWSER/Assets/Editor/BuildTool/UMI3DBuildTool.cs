@@ -99,46 +99,43 @@ namespace umi3d.browserEditor.BuildTool
                 updateTarget: newTarget =>
                 {
                     targetDTO = newTarget;
-                    ApplyChange();
+                    ApplyTargetOptions(targetDTO);
                 },
-                Build
+                BuildTarget
             );
             buildView.Bind();
             buildView.Set();
         }
 
-        void ApplyChange()
+        void ApplyTargetOptions(TargetDto target)
         {
-            UpdateVersion();
-            _uMI3DConfigurator.HandleTarget(targetDTO.Target);
-            _targetAndPluginSwitcher.HandleTarget(targetDTO.Target);
-            EditorBuildSettings.scenes = buildToolScene_SO.GetScenesForTarget(targetDTO.Target).Select(scene =>
+            PlayerSettings.bundleVersion = $"{target.releaseCycle.GetReleaseInitial()}_{versionDTO.VersionFromNow} Sdk: {buildToolVersion_SO.sdkVersion.Version}";
+            PlayerSettings.Android.bundleVersionCode = versionDTO.BundleVersion;
+
+            _uMI3DConfigurator.HandleTarget(target.Target);
+            _targetAndPluginSwitcher.HandleTarget(target.Target);
+
+            EditorBuildSettings.scenes = buildToolScene_SO.GetScenesForTarget(target.Target).Select(scene =>
             {
                 return new EditorBuildSettingsScene(scene.path, true);
             }).ToArray();
             BuildToolHelper.SetKeystore(buildToolKeystore_SO.password, buildToolKeystore_SO.path);
         }
 
-        void UpdateVersion()
+        void BuildTarget(TargetDto target)
         {
-            PlayerSettings.bundleVersion = $"{targetDTO.releaseCycle.GetReleaseInitial()}_{versionDTO.VersionFromNow} Sdk: {buildToolVersion_SO.sdkVersion.Version}";
-            PlayerSettings.Android.bundleVersionCode = versionDTO.BundleVersion;
-        }
-
-        private void Build()
-        {
-            ApplyChange();
-            BuildToolHelper.UpdateApplicationName(targetDTO);
+            ApplyTargetOptions(target);
+            BuildToolHelper.UpdateApplicationName(target);
             var report = BuildToolHelper.BuildPlayer(
                 versionDTO,
                 buildToolVersion_SO.sdkVersion,
-                targetDTO
+                target
             );
             BuildToolHelper.DeleteBurstDebugInformationFolder(report);
             BuildToolHelper.Report(report);
         }
 
-        void BuildSelectedTarget()
+        void BuildSelectedTargets()
         {
 
         }

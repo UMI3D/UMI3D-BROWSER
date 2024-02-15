@@ -26,7 +26,7 @@ namespace umi3d.browserEditor.BuildTool
         public VisualElement root;
         public UMI3DBuildToolVersion_SO buildToolVersion_SO;
         public int index;
-        public Action build;
+        public Action<TargetDto> buildTarget;
 
         public UMI3DBuildToolTargetViewModel viewModel;
         public Toggle T_Select;
@@ -38,13 +38,20 @@ namespace umi3d.browserEditor.BuildTool
         public Button B_Apply;
         public Button B_Build;
 
-        public UMI3DBuildToolTargetView(VisualElement root, UMI3DBuildToolTarget_SO buildToolTarget_SO, UMI3DBuildToolVersion_SO buildToolVersion_SO, int index, Action<TargetDto> updateTarget, Action<int> rebuildView, Action build)
+        public UMI3DBuildToolTargetView(VisualElement root, UMI3DBuildToolTarget_SO buildToolTarget_SO, UMI3DBuildToolVersion_SO buildToolVersion_SO, int index, Action<TargetDto> updateTarget, Action<int> refreshView, Action<TargetDto> buildTarget)
         {
             this.root = root;
-            this.viewModel = new(buildToolTarget_SO, updateTarget, rebuildView);
+            this.viewModel = new(buildToolTarget_SO, updateTarget, refreshView);
             this.buildToolVersion_SO = buildToolVersion_SO;
             this.index = index;
-            this.build = build;
+            this.buildTarget = buildTarget;
+
+            var targetDto = viewModel[index];
+            if (targetDto.Id.Equals(new())) 
+            {
+                targetDto.Id = Guid.NewGuid();
+                viewModel[index] = targetDto;
+            }
         }
 
         public void Bind()
@@ -77,19 +84,19 @@ namespace umi3d.browserEditor.BuildTool
             // Device target.
             DD_TargetSelection.choices.Clear();
             DD_TargetSelection.choices.AddRange(Enum.GetNames(typeof(E_Target)));
-            DD_TargetSelection.value = viewModel[index].Target.ToString();
+            DD_TargetSelection.SetValueWithoutNotify(viewModel[index].Target.ToString());
             DD_TargetSelection.RegisterValueChangedCallback(TargetSelectionValueChanged);
 
             // Release cycle.
             DD_ReleaseCycle.choices.Clear();
             DD_ReleaseCycle.choices.AddRange(Enum.GetNames(typeof(E_ReleaseCycle)));
-            DD_ReleaseCycle.value = DD_ReleaseCycle.choices[(int)viewModel[index].releaseCycle];
+            DD_ReleaseCycle.SetValueWithoutNotify(viewModel[index].releaseCycle.ToString());
             DD_ReleaseCycle.RegisterValueChangedCallback(ReleaseCycleDDValueChanged);
 
-            B_Apply.clicked += Apply;
-            B_Build.clicked += Build;
-
             ApplyChangeView(viewModel[index].isApplied);
+            B_Apply.clicked += Apply;
+
+            B_Build.clicked += Build;
         }
 
         public void Unbind()
@@ -136,12 +143,6 @@ namespace umi3d.browserEditor.BuildTool
             ApplyChange(true);
         }
 
-        void Build()
-        {
-            buildToolVersion_SO.UpdateOldVersionWithNewVersion();
-            build?.Invoke();
-        }
-
         void ApplyChangeView(bool isApplied)
         {
             B_Apply.style.backgroundColor = isApplied ? new Color(0.5f, 1, 0) : StyleKeyword.Null;
@@ -153,6 +154,12 @@ namespace umi3d.browserEditor.BuildTool
             ApplyChangeView(isApplied);
 
             viewModel.ApplyChange(index, isApplied);
+        }
+
+        void Build()
+        {
+            buildToolVersion_SO.UpdateOldVersionWithNewVersion();
+            buildTarget?.Invoke(viewModel[index]);
         }
     }
 }

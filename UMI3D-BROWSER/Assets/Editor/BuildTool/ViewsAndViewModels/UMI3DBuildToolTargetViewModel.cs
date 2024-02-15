@@ -24,13 +24,17 @@ namespace umi3d.browserEditor.BuildTool
     {
         public UMI3DBuildToolTarget_SO buildToolTarget_SO;
         public Action<TargetDto> updateTarget;
-        public Action<int> rebuildView;
+        public Action<int> refreshView;
 
         public TargetDto this[int index]
         {
             get
             {
                 return buildToolTarget_SO.targets[index];
+            }
+            set
+            {
+                buildToolTarget_SO.targets[index] = value;
             }
         }
 
@@ -42,11 +46,11 @@ namespace umi3d.browserEditor.BuildTool
             }
         }
 
-        public UMI3DBuildToolTargetViewModel(UMI3DBuildToolTarget_SO buildToolTarget_SO, Action<TargetDto> updateTarget, Action<int> rebuildView)
+        public UMI3DBuildToolTargetViewModel(UMI3DBuildToolTarget_SO buildToolTarget_SO, Action<TargetDto> updateTarget, Action<int> refreshView)
         {
             this.buildToolTarget_SO = buildToolTarget_SO;
             this.updateTarget = updateTarget;
-            this.rebuildView = rebuildView;
+            this.refreshView = refreshView;
         }
 
         public void ApplyChange(int index, bool isApplied)
@@ -59,7 +63,7 @@ namespace umi3d.browserEditor.BuildTool
                 if (isApplied)
                 {
                     updateTarget?.Invoke(this[_index]);
-                    rebuildView?.Invoke(_index);
+                    refreshView?.Invoke(_index);
                 }
             }
             

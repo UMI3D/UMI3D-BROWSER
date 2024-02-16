@@ -27,9 +27,9 @@ using UnityEditor.Compilation;
 using UnityEngine;
 using Assembly = UnityEditor.Compilation.Assembly;
 
-public class MumbleCompiler 
+public class MumbleCompiler
 {
-    static string partialPath;
+    static string pluginPath;
 
     [MenuItem("Protobuf/Build model")]
     private static void BuildMyProtoModel()
@@ -38,12 +38,12 @@ public class MumbleCompiler
         RuntimeTypeModel typeModel = GetModel();
         typeModel.Compile("MyProtoModel", "MyProtoModel.dll");
 
-        if (!Directory.Exists(partialPath))
+        if (!Directory.Exists(pluginPath))
         {
-            Directory.CreateDirectory(partialPath);
+            Directory.CreateDirectory(pluginPath);
         }
 
-        File.Move("MyProtoModel.dll", partialPath + "/MyProtoModel.dll");
+        File.Move("MyProtoModel.dll", pluginPath + "/MyProtoModel.dll");
 
         AssetDatabase.Refresh();
     }
@@ -52,13 +52,13 @@ public class MumbleCompiler
     private static void CreateProtoFile()
     {
         GetPath();
-        if (!Directory.Exists(partialPath))
+        if (!Directory.Exists(pluginPath))
         {
-            Directory.CreateDirectory(partialPath);
+            Directory.CreateDirectory(pluginPath);
         }
 
         RuntimeTypeModel typeModel = GetModel();
-        using (FileStream stream = File.Open(partialPath + "/model.proto", FileMode.Create))
+        using (FileStream stream = File.Open(pluginPath + "/model.proto", FileMode.Create))
         {
             byte[] protoBytes = Encoding.UTF8.GetBytes(typeModel.GetSchema(null));
             stream.Write(protoBytes, 0, protoBytes.Length);
@@ -67,13 +67,14 @@ public class MumbleCompiler
 
     static void GetPath()
     {
+        // Get the relative path of this file from the Assets folder.
         string fileName = $"{nameof(MumbleCompiler)}";
         var assets = AssetDatabase.FindAssets($"t:Script {fileName}");
-
         string path = AssetDatabase.GUIDToAssetPath(assets[0]);
+
         // Remove script name with extension.
-        partialPath = path.Substring(0, path.Length - fileName.Length - 3);
-        partialPath += "Plugins";
+        pluginPath = path.Substring(0, path.Length - fileName.Length - 3);
+        pluginPath += "Plugins";
     }
 
     private static RuntimeTypeModel GetModel()

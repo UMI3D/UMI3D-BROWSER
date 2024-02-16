@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using NAudio.SoundFont;
 using System;
 using System.IO;
 using System.Linq;
@@ -25,7 +26,7 @@ namespace umi3d.browserEditor.BuildTool
 {
     public class BuildToolHelper
     {
-        public static void UpdateApplicationName(TargetDto target)
+        public static string GetApplicationName(TargetDto target)
         {
             string name = $"UMI3D {target.Target}";
 
@@ -43,7 +44,7 @@ namespace umi3d.browserEditor.BuildTool
                     break;
             }
 
-            PlayerSettings.productName = name;
+            return name;
         }
 
         public static string GetExeName(TargetDto target, VersionDTO version, bool withExtension)
@@ -66,6 +67,51 @@ namespace umi3d.browserEditor.BuildTool
                 }
             }
             return name;
+        }
+
+        public static string GetBuildPath(VersionDTO version, VersionDTO sdkVersion, TargetDto target)
+        {
+            string path = 
+                $"{target.BuildFolder}/" +
+                $"{target.releaseCycle}/" +
+                $"{version.VersionFromNow}_SDK{sdkVersion.Version}/";
+
+            if (EditorUserBuildSettings.selectedBuildTargetGroup == BuildTargetGroup.Standalone)
+            {
+                path += $"{GetExeName(target, version, withExtension: false)}/";
+            }
+
+            return path;
+        }
+
+        public static void CreateBuildPath(VersionDTO version, VersionDTO sdkVersion, TargetDto target, bool overwrite)
+        {
+            string path = GetBuildPath(version, sdkVersion, target);
+            if (Directory.Exists(path))
+            {
+                if (overwrite)
+                {
+                    Directory.Delete(path, true);
+                    Directory.CreateDirectory(path);
+                }
+            }
+            else
+            {
+                Directory.CreateDirectory(path);
+            }
+        }
+
+        public static void CopyLicense(string licensePath, VersionDTO version, VersionDTO sdkVersion, TargetDto target)
+        {
+            if (EditorUserBuildSettings.selectedBuildTargetGroup != BuildTargetGroup.Standalone)
+            {
+                return;
+            }
+            File.Copy(
+                licensePath, 
+                $"{GetBuildPath(version, sdkVersion, target)}license.txt", 
+                true
+            );
         }
 
         public static void SetKeystore(string password, string path)
@@ -95,11 +141,9 @@ namespace umi3d.browserEditor.BuildTool
             {
                 return scene.path;
             }).ToArray();
-            pbo.locationPathName =
-                $"{target.BuildFolder}/" +
-                $"{target.releaseCycle}/" +
-                $"{version.VersionFromNow}_SDK{sdkVersion.Version}/";
-            pbo.locationPathName += GetExeName(target, version, withExtension: true);
+            pbo.locationPathName = 
+                GetBuildPath(version, sdkVersion, target) 
+                + GetExeName(target, version, withExtension: true);
             pbo.target = target.Target.GetBuildTarget();
             pbo.options = BuildOptions.None;
 

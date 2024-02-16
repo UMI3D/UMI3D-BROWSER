@@ -109,7 +109,7 @@ namespace umi3d.browserEditor.BuildTool
         void ApplyTargetOptions(TargetDto target)
         {
             // Update App name, Version and Android.BundleVersion.
-            BuildToolHelper.UpdateApplicationName(target);
+            PlayerSettings.productName = BuildToolHelper.GetApplicationName(target);
             PlayerSettings.bundleVersion = $"{target.releaseCycle.GetReleaseInitial()}_{versionDTO.VersionFromNow} Sdk: {buildToolVersion_SO.sdkVersion.Version}";
             PlayerSettings.Android.bundleVersionCode = versionDTO.BundleVersion;
 
@@ -143,13 +143,29 @@ namespace umi3d.browserEditor.BuildTool
         /// <returns></returns>
         int BuildTarget(TargetDto target, bool revealInFinder)
         {
+            BuildToolHelper.CreateBuildPath(
+                versionDTO, 
+                buildToolVersion_SO.sdkVersion, 
+                target, 
+                overwrite: true
+            );
             var report = BuildToolHelper.BuildPlayer(
                 versionDTO,
                 buildToolVersion_SO.sdkVersion,
                 target
             );
             BuildToolHelper.DeleteBurstDebugInformationFolder(report);
-            return BuildToolHelper.Report(report, revealInFinder);
+            var reportInt = BuildToolHelper.Report(report, revealInFinder);
+            if (reportInt == 1)
+            {
+                BuildToolHelper.CopyLicense(
+                    buildToolTarget_SO.license,
+                    versionDTO,
+                    buildToolVersion_SO.sdkVersion,
+                    target
+                );
+            }
+            return reportInt;
         }
 
         void BuildSelectedTargets(params TargetDto[] target)

@@ -130,11 +130,11 @@ namespace umi3d.browserEditor.BuildTool
 
             // Path
             TF_Installer.label = "Installer";
+            TF_Installer.SetValueWithoutNotify(buildToolTarget_SO.installer);
             TF_Installer.RegisterValueChangedCallback(value =>
             {
                 viewModel.UpdateInstaller(value.newValue);
             });
-            TF_Installer.SetValueWithoutNotify(buildToolTarget_SO.installer);
             B_Installer.clicked += () =>
             {
                 viewModel.BrowseInstaller(path =>

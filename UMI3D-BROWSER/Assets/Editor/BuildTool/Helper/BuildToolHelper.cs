@@ -47,6 +47,20 @@ namespace umi3d.browserEditor.BuildTool
             return name;
         }
 
+        /// <summary>
+        /// doc: https://docs.unity3d.com/Manual/cus-naming.html
+        /// </summary>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public static string GetPackageName(TargetDto target)
+        {
+            return target.Target switch
+            {
+                E_Target.Quest => "com.inetum.OculusQuestBrowser",
+                _ => "com.inetum.umi3d_browser"
+            };
+        }
+
         public static string GetExeName(TargetDto target, VersionDTO version, bool withExtension)
         {
             string name = $"UMI3D_{target.Target}_Browser_{version.VersionFromNow}";

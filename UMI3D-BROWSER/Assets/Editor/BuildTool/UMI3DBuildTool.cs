@@ -110,6 +110,7 @@ namespace umi3d.browserEditor.BuildTool
         {
             // Update App name, Version and Android.BundleVersion.
             PlayerSettings.productName = BuildToolHelper.GetApplicationName(target);
+            PlayerSettings.applicationIdentifier = BuildToolHelper.GetPackageName(target);
             PlayerSettings.bundleVersion = $"{target.releaseCycle.GetReleaseInitial()}_{versionDTO.VersionFromNow} Sdk: {buildToolVersion_SO.sdkVersion.Version}";
             PlayerSettings.Android.bundleVersionCode = versionDTO.BundleVersion;
 

@@ -15,10 +15,11 @@ limitations under the License.
 */
 using inetum.unityUtils.saveSystem;
 using System;
+using UnityEngine;
 
 namespace umi3d.browserEditor.BuildTool
 {
-    //[CreateAssetMenu(fileName = "UMI3D Build Tool Version", menuName = "UMI3D/Tools/Build Tool Version")]
+    [CreateAssetMenu(fileName = "UMI3D Build Tool Version", menuName = "UMI3D/Build Tools/Build Tool Version")]
     public class UMI3DBuildToolVersion_SO : SerializableScriptableObject
     {
         public VersionDTO newVersion;

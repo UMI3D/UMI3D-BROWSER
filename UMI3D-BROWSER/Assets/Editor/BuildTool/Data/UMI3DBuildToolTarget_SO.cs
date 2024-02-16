@@ -18,10 +18,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
+using UnityEngine;
 
 namespace umi3d.browserEditor.BuildTool
 {
-    //[CreateAssetMenu(fileName = "UMI3D Build Tool", menuName = "UMI3D/Tools/Build Tool")]
+    [CreateAssetMenu(fileName = "UMI3D Build Tool", menuName = "UMI3D/Build Tools/Build Tool Target")]
     public class UMI3DBuildToolTarget_SO : SerializableScriptableObject
     {
         public Action SelectedTargetsChanged;

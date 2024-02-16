@@ -221,6 +221,8 @@ namespace com.inetum.unitygeckowebview
         /// <param name="height"></param>
         public void ChangeTextureSize(int width, int height)
         {
+            // Make the Application crash.
+            return;
             this.width = width;
             this.height = height;
 

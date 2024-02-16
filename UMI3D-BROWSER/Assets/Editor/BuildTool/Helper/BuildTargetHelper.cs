@@ -37,7 +37,7 @@ namespace umi3d.browserEditor.BuildTool
                 case E_Target.Pico:
                     return ChangeBuildTarget(BuildTargetGroup.Android, BuildTarget.Android);
                 case E_Target.SteamXR:
-                    return ChangeBuildTarget(BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows);
+                    return ChangeBuildTarget(BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows64);
                 default:
                     return -1;
             }

@@ -143,12 +143,6 @@ namespace umi3d.browserEditor.BuildTool
         /// <returns></returns>
         int BuildTarget(TargetDto target, bool revealInFinder)
         {
-            BuildToolHelper.CreateBuildPath(
-                versionDTO, 
-                buildToolVersion_SO.sdkVersion, 
-                target, 
-                overwrite: true
-            );
             var report = BuildToolHelper.BuildPlayer(
                 versionDTO,
                 buildToolVersion_SO.sdkVersion,

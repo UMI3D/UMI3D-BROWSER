@@ -63,7 +63,12 @@ namespace umi3d.browserEditor.BuildTool
                 return 0;
             }
 
-            var result = EditorUserBuildSettings.SwitchActiveBuildTarget(buildTargetGroup, buildTarget);
+            var result = EditorUserBuildSettings.SwitchActiveBuildTarget(
+                buildTargetGroup, 
+                buildTarget
+            );
+            // buildTargetGroup is not set correctly with EditorUserBuildSettings.SwitchActiveBuildTarget.
+            EditorUserBuildSettings.selectedBuildTargetGroup = buildTargetGroup;
 
             if (!result)
             {

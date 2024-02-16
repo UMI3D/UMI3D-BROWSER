@@ -83,14 +83,14 @@ namespace umi3d.browserEditor.BuildTool
             return name;
         }
 
-        public static string GetBuildPath(VersionDTO version, VersionDTO sdkVersion, TargetDto target)
+        public static string GetBuildPath(VersionDTO version, VersionDTO sdkVersion, TargetDto target, bool addExeDir)
         {
             string path = 
                 $"{target.BuildFolder}/" +
                 $"{target.releaseCycle}/" +
                 $"{version.VersionFromNow}_SDK{sdkVersion.Version}/";
 
-            if (EditorUserBuildSettings.selectedBuildTargetGroup == BuildTargetGroup.Standalone)
+            if (addExeDir)
             {
                 path += $"{GetExeName(target, version, withExtension: false)}/";
             }
@@ -100,7 +100,12 @@ namespace umi3d.browserEditor.BuildTool
 
         public static void CreateBuildPath(VersionDTO version, VersionDTO sdkVersion, TargetDto target, bool overwrite)
         {
-            string path = GetBuildPath(version, sdkVersion, target);
+            string path = GetBuildPath(
+                version, 
+                sdkVersion, 
+                target, 
+                addExeDir: EditorUserBuildSettings.selectedBuildTargetGroup == BuildTargetGroup.Standalone
+            );
             if (Directory.Exists(path))
             {
                 if (overwrite)
@@ -123,7 +128,7 @@ namespace umi3d.browserEditor.BuildTool
             }
             File.Copy(
                 licensePath, 
-                $"{GetBuildPath(version, sdkVersion, target)}license.txt", 
+                $"{GetBuildPath(version, sdkVersion, target, EditorUserBuildSettings.selectedBuildTargetGroup == BuildTargetGroup.Standalone)}license.txt", 
                 true
             );
         }
@@ -139,7 +144,7 @@ namespace umi3d.browserEditor.BuildTool
         public static BuildReport BuildPlayer(VersionDTO version, VersionDTO sdkVersion, TargetDto target)
         {
             return BuildPipeline.BuildPlayer(
-                BuildToolHelper.GetPlayerBuildOptions(
+                GetPlayerBuildOptions(
                     version,
                     sdkVersion,
                     target
@@ -156,7 +161,12 @@ namespace umi3d.browserEditor.BuildTool
                 return scene.path;
             }).ToArray();
             pbo.locationPathName = 
-                GetBuildPath(version, sdkVersion, target) 
+                GetBuildPath(
+                    version, 
+                    sdkVersion, 
+                    target, 
+                    addExeDir: EditorUserBuildSettings.selectedBuildTargetGroup == BuildTargetGroup.Standalone
+                ) 
                 + GetExeName(target, version, withExtension: true);
             pbo.target = target.Target.GetBuildTarget();
             pbo.options = BuildOptions.None;

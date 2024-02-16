@@ -17,23 +17,37 @@ limitations under the License.
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
+using UnityEditor;
 using UnityEngine;
 
 namespace umi3d.browserEditor.BuildTool
 {
     public static class InstallerHelper 
     {
-        public static void UpdateInstaller(string InstallerPath, VersionDTO version, TargetDto target)
+        public static void UpdateInstaller(string InstallerPath, string licensePath, VersionDTO version, VersionDTO sdkVersion, TargetDto target)
         {
+            if (!File.Exists(InstallerPath) || EditorUserBuildSettings.selectedBuildTargetGroup != BuildTargetGroup.Standalone)
+            {
+                UnityEngine.Debug.LogError($"[UMI3D] Build Tool: installer not found.");
+                return;
+            }
+
             string appName = BuildToolHelper.GetApplicationName(target);
-            string formattedVersion = version.GetFormattedVersion(DateTime.Now.ToString("yyMMdd"));
+            string formattedVersion = version.GetFormattedVersion(DateTime.Now.ToString("yyMMdd"), ".");
             string exeName = BuildToolHelper.GetExeName(target, version, true);
+            string outputDir = BuildToolHelper.GetBuildPath(version, sdkVersion, target, false);
+            string buildPath = BuildToolHelper.GetBuildPath(version, sdkVersion, target, true);
 
             string setupText = File.ReadAllText(InstallerPath);
             setupText = Regex.Replace(
                 input: setupText,
+                pattern: "#define MyTarget \"(.*)?\"",
+                replacement: $"#define MyTarget \"{target.Target}\""
+            );
+            setupText = Regex.Replace(
+                input: setupText,
                 pattern: "#define MyAppName \"(.*)?\"",
-                replacement: $"#define MyAppVersion \"{appName}\""
+                replacement: $"#define MyAppName \"{appName}\""
             );
             setupText = Regex.Replace(
                 input: setupText, 
@@ -42,14 +56,29 @@ namespace umi3d.browserEditor.BuildTool
             );
             setupText = Regex.Replace(
                 input: setupText,
-                pattern: "#define MyAppExeName \"(.*)?\"",
-                replacement: $"#define MyAppVersion \"{exeName}\""
+                pattern: "#define MyAppVersion2 \"(.*)?\"",
+                replacement: $"#define MyAppVersion2 \"{version.VersionFromNow}\""
             );
-            //setupText = Regex.Replace(
-            //    setupText, 
-            //    "OutputBaseFilename=" + fileNamePattern, 
-            //    $"OutputBaseFilename={fileName}"
-            //);
+            setupText = Regex.Replace(
+               input: setupText,
+               pattern: "#define MyAppLicense \"(.*)?\"",
+               replacement: $"#define MyAppLicense \"{licensePath}\""
+            );
+            setupText = Regex.Replace(
+                input: setupText,
+                pattern: "#define MyAppExeName \"(.*)?\"",
+                replacement: $"#define MyAppExeName \"{exeName}\""
+            );
+            setupText = Regex.Replace(
+                input: setupText,
+                pattern: "#define MyAppOutputDir \"(.*)?\"",
+                replacement: $"#define MyAppOutputDir \"{outputDir}\""
+            );
+            setupText = Regex.Replace(
+                input: setupText,
+                pattern: "#define MyBuildPath \"(.*)?\"",
+                replacement: $"#define MyBuildPath \"{buildPath}\""
+            );
             File.WriteAllText(InstallerPath, setupText);
 
 

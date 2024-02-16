@@ -144,6 +144,13 @@ namespace umi3d.browserEditor.BuildTool
         /// <returns></returns>
         int BuildTarget(TargetDto target, bool revealInFinder)
         {
+            InstallerHelper.UpdateInstaller(
+                buildToolTarget_SO.installer,
+                buildToolTarget_SO.license,
+                versionDTO,
+                buildToolVersion_SO.sdkVersion,
+                target
+            );
             var report = BuildToolHelper.BuildPlayer(
                 versionDTO,
                 buildToolVersion_SO.sdkVersion,

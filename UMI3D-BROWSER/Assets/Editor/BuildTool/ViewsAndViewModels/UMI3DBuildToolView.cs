@@ -129,7 +129,7 @@ namespace umi3d.browserEditor.BuildTool
             };
 
             // Path
-            TF_Installer.label = "Installer";
+            (TF_Installer.labelElement as INotifyValueChanged<string>).SetValueWithoutNotify("Installer");
             TF_Installer.SetValueWithoutNotify(buildToolTarget_SO.installer);
             TF_Installer.RegisterValueChangedCallback(value =>
             {
@@ -142,7 +142,7 @@ namespace umi3d.browserEditor.BuildTool
                     TF_Installer.SetValueWithoutNotify(path);
                 });
             };
-            TF_License.label = "License";
+            (TF_License.labelElement as INotifyValueChanged<string>).SetValueWithoutNotify("License");
             TF_License.SetValueWithoutNotify(buildToolTarget_SO.license);
             TF_License.RegisterValueChangedCallback(value =>
             {

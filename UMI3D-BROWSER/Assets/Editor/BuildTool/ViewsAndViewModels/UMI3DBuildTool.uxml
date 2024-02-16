@@ -10,6 +10,7 @@
             <ui:VisualElement name="Space" style="flex-grow: 1; min-height: 20px;" />
             <ui:Instance template="UMI3DBuildToolPath" name="T_Installer" />
             <ui:Instance template="UMI3DBuildToolPath" name="T_License" />
+            <ui:Instance template="UMI3DBuildToolPath" name="T_BuildFolder" />
             <ui:ListView focusable="true" name="LV_Targets" />
         </ui:VisualElement>
         <ui:VisualElement name="Space" style="flex-grow: 1; min-height: 20px;" />

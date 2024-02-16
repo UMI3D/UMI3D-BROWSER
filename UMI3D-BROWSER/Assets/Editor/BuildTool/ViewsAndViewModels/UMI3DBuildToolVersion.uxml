@@ -1,6 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <ui:VisualElement style="flex-grow: 1; flex-direction: row; justify-content: space-around;">
-        <ui:Button text="Reset&#10;" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Reset" style="min-width: 150px;" />
+    <ui:VisualElement style="flex-grow: 1; flex-direction: row; justify-content: space-around; -unity-text-align: middle-center;">
+        <ui:Button text="Reset&#10;" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Reset" style="min-width: 130px; margin-top: 10px; margin-bottom: 10px; margin-right: 10px; margin-left: 10px; -unity-text-align: middle-center;" />
         <ui:VisualElement style="flex-grow: 1;">
             <ui:VisualElement style="flex-grow: 1; flex-direction: row; justify-content: space-around;">
                 <ui:VisualElement name="V_Major" style="flex-grow: 1;">

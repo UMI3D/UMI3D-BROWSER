@@ -28,10 +28,12 @@ namespace umi3dBrowsers.container
         [Header("Language")]
         [SerializeField] private SupportedLanguages selectedLanguage;
         [SerializeField] private GridDropDown languageDropdown;
+        public event Action<SupportedLanguages> OnLanguageChanged;
 
         [Header("Theme")]
         [SerializeField] private AvailibleThemes selectedThemes;
         [SerializeField] private GridDropDown themeDropDown;
+        public event Action<AvailibleThemes> OnThemeChanged;
 
         private void Awake()
         {

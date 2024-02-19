@@ -24,7 +24,37 @@ namespace umi3dBrowsers.container
     {
         [Header("General")]
         [SerializeField] private SupportedLanguages selectedLanguage;
+        [SerializeField] private AvailibleThemes selectedTheme;
+        [SerializeField] private GeneralSettingsContainer generalSettingsContainer;
 
+        [Header("Audio")]
+        [SerializeField] private float environmentVolume;
+        [SerializeField] private float conversationVolume;
+        [SerializeField] private bool isMicOn;
+        [SerializeField] private AudioSettingsContainer audioSettingsContainer;
+
+        public List<GameObject> settingPanels = new();
+
+        private void Awake()
+        {
+            settingPanels.Add(generalSettingsContainer.gameObject);
+            generalSettingsContainer.OnLanguageChanged += (language) => this.selectedLanguage = language;
+            generalSettingsContainer.OnThemeChanged += (theme) => this.selectedTheme = theme;
+
+            audioSettingsContainer.OnConversationVolumenChanged += (value) => this.conversationVolume = value;
+            audioSettingsContainer.OnEnvironmentVolumeChanged += (value) => this.environmentVolume = value;
+            audioSettingsContainer.OnIsMicOnChanged += (value) => this.isMicOn = value;
+        }
+
+        public void OpenGeneralSettings()
+        {
+            foreach (GameObject panel in settingPanels)
+            {
+                panel.SetActive(false);
+            }
+
+            generalSettingsContainer.gameObject.SetActive(true);
+        }
     }
 }
 

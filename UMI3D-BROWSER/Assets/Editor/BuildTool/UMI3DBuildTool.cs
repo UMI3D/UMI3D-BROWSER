@@ -33,10 +33,10 @@ namespace umi3d.browserEditor.BuildTool
         [SerializeField] UMI3DBuildToolVersion_SO buildToolVersion_SO;
         [SerializeField] UMI3DBuildToolTarget_SO buildToolTarget_SO;
         [SerializeField] UMI3DBuildToolScene_SO buildToolScene_SO;
+        [SerializeField] UMI3DBuildToolSettings_SO buildToolSettings_SO;
 
         [SerializeField] UMI3DCollabLoadingParameters loadingParameters;
         IBuilToolComponent _uMI3DConfigurator = null;
-        IBuilToolComponent _targetAndPluginSwitcher = null;
 
         TargetDto targetDTO;
         VersionDTO versionDTO;
@@ -84,13 +84,12 @@ namespace umi3d.browserEditor.BuildTool
                 buildToolScene_SO,
                 "[UMI3D] BuildTool: buildToolScene_SO is null."
             );
-            _targetAndPluginSwitcher = new TargetAndPluginSwitcher();
             _uMI3DConfigurator = new UMI3DConfigurator(loadingParameters);
 
             UMI3DBuildToolView buildView = new(
                 rootVisualElement,
                 ui, target_VTA, path_VTA, scene_VTA,
-                buildToolKeystore_SO, buildToolVersion_SO, buildToolTarget_SO, buildToolScene_SO,
+                buildToolKeystore_SO, buildToolVersion_SO, buildToolTarget_SO, buildToolScene_SO, buildToolSettings_SO,
                 updateVersion: newVersion =>
                 {
                     versionDTO = newVersion;
@@ -98,43 +97,87 @@ namespace umi3d.browserEditor.BuildTool
                 updateTarget: newTarget =>
                 {
                     targetDTO = newTarget;
-                    ApplyChange();
                 },
-                Build
+                ApplyTargetOptions,
+                BuildTarget,
+                BuildSelectedTargets
             );
             buildView.Bind();
             buildView.Set();
         }
 
-        void ApplyChange()
+        void ApplyTargetOptions(TargetDto target)
         {
-            UpdateVersion();
-            _uMI3DConfigurator.HandleTarget(targetDTO.Target);
-            _targetAndPluginSwitcher.HandleTarget(targetDTO.Target);
-            EditorBuildSettings.scenes = buildToolScene_SO.GetScenesForTarget(targetDTO.Target).Select(scene =>
+            // Update App name, Version and Android.BundleVersion.
+            PlayerSettings.productName = BuildToolHelper.GetApplicationName(target);
+            PlayerSettings.applicationIdentifier = BuildToolHelper.GetPackageName(target);
+            PlayerSettings.bundleVersion = $"{target.releaseCycle.GetReleaseInitial()}_{versionDTO.VersionFromNow} Sdk: {buildToolVersion_SO.sdkVersion.Version}";
+            PlayerSettings.Android.bundleVersionCode = versionDTO.BundleVersion;
+
+            // Switch target if needed and toggle options.
+            _uMI3DConfigurator.HandleTarget(target.Target);
+            BuildTargetHelper.SwitchTarget(target);
+            PluginHelper.SwitchPlugins(target);
+            FeatureHelper.SwitchFeatures(target);
+
+            EditorBuildSettings.scenes = buildToolScene_SO.GetScenesForTarget(target.Target).Select(scene =>
             {
                 return new EditorBuildSettingsScene(scene.path, true);
             }).ToArray();
             BuildToolHelper.SetKeystore(buildToolKeystore_SO.password, buildToolKeystore_SO.path);
         }
 
-        void UpdateVersion()
+        void BuildTarget(TargetDto target)
         {
-            PlayerSettings.bundleVersion = $"{targetDTO.releaseCycle.GetReleaseInitial()}_{versionDTO.VersionFromNow} Sdk: {buildToolVersion_SO.sdkVersion.Version}";
-            PlayerSettings.Android.bundleVersionCode = versionDTO.BundleVersion;
+            BuildTarget(target, true);
         }
 
-        private void Build()
+        /// <summary>
+        /// Build.<br/>
+        /// Return -2 if the build has failed.<br/>
+        /// Return -1 if the build has been cancelled.<br/>
+        /// Return 0 if the build result is unknown.<br/>
+        /// Return 1 if the build has succeeded.<br/>
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="revealInFinder"></param>
+        /// <returns></returns>
+        int BuildTarget(TargetDto target, bool revealInFinder)
         {
-            ApplyChange();
-            BuildToolHelper.UpdateApplicationName(targetDTO);
+            InstallerHelper.UpdateInstaller(
+                buildToolTarget_SO.installer,
+                buildToolTarget_SO.license,
+                versionDTO,
+                buildToolVersion_SO.sdkVersion,
+                target
+            );
             var report = BuildToolHelper.BuildPlayer(
                 versionDTO,
                 buildToolVersion_SO.sdkVersion,
-                targetDTO
+                target
             );
             BuildToolHelper.DeleteBurstDebugInformationFolder(report);
-            BuildToolHelper.Report(report);
+            var reportInt = BuildToolHelper.Report(report, revealInFinder);
+            if (reportInt == 1)
+            {
+                BuildToolHelper.CopyLicense(
+                    buildToolTarget_SO.license,
+                    versionDTO,
+                    buildToolVersion_SO.sdkVersion,
+                    target
+                );
+            }
+            return reportInt;
+        }
+
+        void BuildSelectedTargets(params TargetDto[] target)
+        {
+            for (int i = 0; i < target.Length; i++)
+            {
+                UnityEngine.Debug.Log($"{target[i].Target}");
+                ApplyTargetOptions(target[i]);
+                BuildTarget(target[i], i == target.Length - 1);
+            }
         }
     }
 }

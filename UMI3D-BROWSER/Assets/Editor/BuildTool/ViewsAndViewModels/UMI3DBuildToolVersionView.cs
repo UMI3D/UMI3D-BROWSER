@@ -23,6 +23,7 @@ namespace umi3d.browserEditor.BuildTool
     public class UMI3DBuildToolVersionView 
     {
         public VisualElement root;
+        public UMI3DBuildToolSettings_SO buildToolSettings_SO;
 
         public UMI3DBuildToolVersionViewModel viewModel;
         public VisualElement V_Major;
@@ -36,12 +37,19 @@ namespace umi3d.browserEditor.BuildTool
         public Button B_BuildCount;
         public TextField TF_AdditionalVersion;
         public Button B_ResetVersion;
+        public Label L_SDKVersion;
         public Label L_OldVersion;
         public Label L_Version;
 
-        public UMI3DBuildToolVersionView(VisualElement root, UMI3DBuildToolVersion_SO buildToolVersion_SO, Action<VersionDTO> updateVersion)
+        public UMI3DBuildToolVersionView(
+            VisualElement root, 
+            UMI3DBuildToolVersion_SO buildToolVersion_SO,
+            UMI3DBuildToolSettings_SO buildToolSettings_SO,
+            Action<VersionDTO> updateVersion
+        )
         {
             this.root = root;
+            this.buildToolSettings_SO = buildToolSettings_SO;
             this.viewModel = new(
                 buildToolVersion_SO, 
                 updateVersion: version =>
@@ -65,6 +73,7 @@ namespace umi3d.browserEditor.BuildTool
             B_BuildCount = V_BuildCount.Q<Button>();
             TF_AdditionalVersion = root.Q<TextField>("TF_AdditionalVersion");
             B_ResetVersion = root.Q<Button>("Reset");
+            L_SDKVersion = root.Q<Label>("L_SDKVersion");
             L_OldVersion = root.Q<Label>("L_OldVersion");
             L_Version = root.Q<Label>("L_BuildVersion");
         }
@@ -76,6 +85,7 @@ namespace umi3d.browserEditor.BuildTool
             {
                 IF_Major.value = ++IF_Major.value;
             };
+            IF_Major.SetValueWithoutNotify(viewModel.NewVersion.majorVersion);
             IF_Major.RegisterValueChangedCallback(value =>
             {
                 viewModel.ApplyMajorVersion(value.newValue);
@@ -86,6 +96,7 @@ namespace umi3d.browserEditor.BuildTool
             {
                 IF_Minor.value = ++IF_Minor.value;
             };
+            IF_Minor.SetValueWithoutNotify(viewModel.NewVersion.minorVersion);
             IF_Minor.RegisterValueChangedCallback(value =>
             {
                 viewModel.ApplyMinorVersion(value.newValue);
@@ -96,6 +107,7 @@ namespace umi3d.browserEditor.BuildTool
             {
                 IF_BuildCount.value = ++IF_BuildCount.value;
             };
+            IF_BuildCount.SetValueWithoutNotify(viewModel.NewVersion.buildCountVersion);
             IF_BuildCount.RegisterValueChangedCallback(value =>
             {
                 viewModel.ApplyBuildCountVersion(value.newValue);
@@ -103,6 +115,7 @@ namespace umi3d.browserEditor.BuildTool
 
             // Additional information.
             // Like if you want to add unity editor version.
+            TF_AdditionalVersion.SetValueWithoutNotify(viewModel.NewVersion.additionalVersion);
             TF_AdditionalVersion.RegisterValueChangedCallback((value) =>
             {
                 viewModel.ApplyAdditionalVersion(value.newValue);
@@ -117,16 +130,36 @@ namespace umi3d.browserEditor.BuildTool
                 TF_AdditionalVersion.value = viewModel.OldVersion.additionalVersion;
             };
 
-            IF_Major.value = viewModel.NewVersion.majorVersion;
-            IF_Minor.value = viewModel.NewVersion.minorVersion;
-            IF_BuildCount.value = viewModel.NewVersion.buildCountVersion;
-            TF_AdditionalVersion.value = viewModel.NewVersion.additionalVersion;
+            L_SDKVersion.text = viewModel.SDKVersion.Version;
             L_OldVersion.text = viewModel.OldVersion.Version;
+
+            UpdateBorderColor(L_SDKVersion.parent, () => buildToolSettings_SO.sdkColor);
+            UpdateBorderColor(L_OldVersion.parent, () => buildToolSettings_SO.oldVersionColor);
+            UpdateBorderColor(L_Version.parent, () => buildToolSettings_SO.versionColor);
         }
 
         void UpdateVersionView()
         {
             L_Version.text = viewModel.NewVersion.VersionFromNow;
+        }
+
+        void UpdateBorderColor(VisualElement visual, Func<Color> applyColor)
+        {
+
+            if (buildToolSettings_SO != null)
+            {
+                visual.style.borderTopColor = applyColor.Invoke();
+                visual.style.borderRightColor = applyColor.Invoke();
+                visual.style.borderBottomColor = applyColor.Invoke();
+                visual.style.borderLeftColor = applyColor.Invoke();
+            }
+            else
+            {
+                visual.style.borderTopColor = StyleKeyword.Null;
+                visual.style.borderRightColor = StyleKeyword.Null;
+                visual.style.borderBottomColor = StyleKeyword.Null;
+                visual.style.borderLeftColor = StyleKeyword.Null;
+            }
         }
     }
 }

@@ -58,7 +58,7 @@ namespace umi3d.browserEditor.BuildTool
             }
         }
 
-        string GetFormattedVersion(string date)
+        public string GetFormattedVersion(string date, string separator = "_")
         {
             string result = $"";
 
@@ -67,7 +67,7 @@ namespace umi3d.browserEditor.BuildTool
                 result += $"{additionalVersion}_";
             }
 
-            result += $"{majorVersion}_{minorVersion}_{buildCountVersion}_{date}";
+            result += $"{majorVersion}{separator}{minorVersion}{separator}{buildCountVersion}{separator}{date}";
 
             return result;
         }

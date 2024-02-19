@@ -20,8 +20,10 @@ using UnityEngine;
 namespace umi3d.browserEditor.BuildTool
 {
     [Serializable]
-    public struct TargetDto 
+    public struct TargetDto
     {
+        [HideInInspector]
+        public Guid Id;
         public bool IsTargetEnabled;
         public string BuildFolder;
         public E_Target Target;

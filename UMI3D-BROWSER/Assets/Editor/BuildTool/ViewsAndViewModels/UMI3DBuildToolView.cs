@@ -32,6 +32,7 @@ namespace umi3d.browserEditor.BuildTool
         public UMI3DBuildToolVersion_SO buildToolVersion_SO;
         public UMI3DBuildToolTarget_SO buildToolTarget_SO;
         public UMI3DBuildToolScene_SO buildToolScene_SO;
+        public UMI3DBuildToolSettings_SO buildToolSettings_SO;
         public Action<VersionDTO> updateVersion;
         public Action<TargetDto> updateTarget;
         Action<TargetDto> applyTargetOptions;
@@ -45,6 +46,9 @@ namespace umi3d.browserEditor.BuildTool
         public TemplateContainer T_License;
         public TextField TF_License;
         public Button B_License;
+        public TemplateContainer T_BuildFolder;
+        public TextField TF_BuildFolder;
+        public Button B_BuildFolder;
         public ListView LV_Targets;
         public ListView LV_Scenes;
 
@@ -58,6 +62,7 @@ namespace umi3d.browserEditor.BuildTool
             UMI3DBuildToolVersion_SO buildToolVersion_SO,
             UMI3DBuildToolTarget_SO buildToolTarget_SO,
             UMI3DBuildToolScene_SO buildToolScene_SO,
+            UMI3DBuildToolSettings_SO buildToolSettings_SO,
             Action<VersionDTO> updateVersion,
             Action<TargetDto> updateTarget,
             Action<TargetDto> applyTargetOptions,
@@ -74,6 +79,7 @@ namespace umi3d.browserEditor.BuildTool
             this.buildToolVersion_SO = buildToolVersion_SO;
             this.buildToolTarget_SO = buildToolTarget_SO;
             this.buildToolScene_SO = buildToolScene_SO;
+            this.buildToolSettings_SO = buildToolSettings_SO;
             this.updateVersion = updateVersion;
             this.updateTarget = updateTarget;
             this.applyTargetOptions = applyTargetOptions;
@@ -91,6 +97,9 @@ namespace umi3d.browserEditor.BuildTool
             T_License = root.Q<TemplateContainer>("T_License");
             TF_License = T_License.Q<TextField>();
             B_License = T_License.Q<Button>();
+            T_BuildFolder = root.Q<TemplateContainer>("T_SingleBuildFolder");
+            TF_BuildFolder = T_BuildFolder.Q<TextField>();
+            B_BuildFolder = T_BuildFolder.Q<Button>();
             LV_Targets = root.Q<ListView>("LV_Targets");
             LV_Scenes = root.Q<ListView>("LV_Scenes");
         }
@@ -100,6 +109,7 @@ namespace umi3d.browserEditor.BuildTool
             UMI3DBuildToolVersionView versionView = new(
                 root,
                 buildToolVersion_SO,
+                buildToolSettings_SO,
                 updateVersion: updateVersion
             );
             versionView.Bind();
@@ -155,6 +165,22 @@ namespace umi3d.browserEditor.BuildTool
                     TF_License.SetValueWithoutNotify(path);
                 });
             };
+            T_BuildFolder.style.display = (buildToolSettings_SO?.useOneBuildFolder ?? true)
+                    ? DisplayStyle.Flex
+                    : DisplayStyle.None;
+            (TF_BuildFolder.labelElement as INotifyValueChanged<string>).SetValueWithoutNotify("Build Folder");
+            TF_BuildFolder.SetValueWithoutNotify(buildToolTarget_SO.buildFolder);
+            TF_BuildFolder.RegisterValueChangedCallback(value =>
+            {
+                viewModel.UpdateBuildFolder(value.newValue);
+            });
+            B_BuildFolder.clicked += () =>
+            {
+                viewModel.BrowseBuildFolder(path =>
+                {
+                    TF_BuildFolder.SetValueWithoutNotify(path);
+                });
+            };
 
             // Targets.
             LV_Targets.reorderable = true;
@@ -164,6 +190,16 @@ namespace umi3d.browserEditor.BuildTool
             LV_Targets.showAddRemoveFooter = true;
             LV_Targets.reorderMode = ListViewReorderMode.Animated;
             LV_Targets.itemsSource = buildToolTarget_SO.targets;
+            LV_Targets.itemsAdded += indexes =>
+            {
+                foreach (var index in indexes)
+                {
+                    var target = buildToolTarget_SO.targets[index];
+                    target.BuildFolder = buildToolTarget_SO.buildFolder;
+                    target.Target = E_Target.Quest;
+                    buildToolTarget_SO.targets[index] = target;
+                }
+            };
             LV_Targets.makeItem = () =>
             {
                 return target_VTA.Instantiate();
@@ -174,6 +210,7 @@ namespace umi3d.browserEditor.BuildTool
                     root: visual,
                     buildToolTarget_SO,
                     buildToolVersion_SO,
+                    buildToolSettings_SO,
                     index,
                     updateTarget,
                     applyTargetOptions,

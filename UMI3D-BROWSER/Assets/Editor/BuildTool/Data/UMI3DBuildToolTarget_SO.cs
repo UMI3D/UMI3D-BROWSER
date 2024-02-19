@@ -22,14 +22,16 @@ using UnityEngine;
 
 namespace umi3d.browserEditor.BuildTool
 {
-    [CreateAssetMenu(fileName = "UMI3D Build Tool", menuName = "UMI3D/Build Tools/Build Tool Target")]
+    [CreateAssetMenu(fileName = "UMI3D Build Tool Target", menuName = "UMI3D/Build Tools/Build Tool Target")]
     public class UMI3DBuildToolTarget_SO : SerializableScriptableObject
     {
         public Action SelectedTargetsChanged;
 
         public string installer;
         public string license;
+        public string buildFolder;
         public List<TargetDto> targets = new();
+
 
         public TargetDto[] SelectedTargets
         {

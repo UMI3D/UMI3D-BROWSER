@@ -33,11 +33,11 @@ namespace umi3d.browserEditor.BuildTool
         [SerializeField] UMI3DBuildToolVersion_SO buildToolVersion_SO;
         [SerializeField] UMI3DBuildToolTarget_SO buildToolTarget_SO;
         [SerializeField] UMI3DBuildToolScene_SO buildToolScene_SO;
+        [SerializeField] UMI3DBuildToolSettings_SO buildToolSettings_SO;
 
         [SerializeField] UMI3DCollabLoadingParameters loadingParameters;
         IBuilToolComponent _uMI3DConfigurator = null;
 
-        TargetDto[] selectedTargets;
         TargetDto targetDTO;
         VersionDTO versionDTO;
 
@@ -89,7 +89,7 @@ namespace umi3d.browserEditor.BuildTool
             UMI3DBuildToolView buildView = new(
                 rootVisualElement,
                 ui, target_VTA, path_VTA, scene_VTA,
-                buildToolKeystore_SO, buildToolVersion_SO, buildToolTarget_SO, buildToolScene_SO,
+                buildToolKeystore_SO, buildToolVersion_SO, buildToolTarget_SO, buildToolScene_SO, buildToolSettings_SO,
                 updateVersion: newVersion =>
                 {
                     versionDTO = newVersion;

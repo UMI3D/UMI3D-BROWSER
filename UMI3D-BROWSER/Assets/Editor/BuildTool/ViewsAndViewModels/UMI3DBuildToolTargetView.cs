@@ -25,6 +25,7 @@ namespace umi3d.browserEditor.BuildTool
     {
         public VisualElement root;
         public UMI3DBuildToolVersion_SO buildToolVersion_SO;
+        public UMI3DBuildToolSettings_SO buildToolSettings_SO;
         public int index;
         public Action<TargetDto> applyTargetOptions;
         public Action<TargetDto> buildTarget;
@@ -43,6 +44,7 @@ namespace umi3d.browserEditor.BuildTool
             VisualElement root,
             UMI3DBuildToolTarget_SO buildToolTarget_SO,
             UMI3DBuildToolVersion_SO buildToolVersion_SO,
+            UMI3DBuildToolSettings_SO buildToolSettings_SO,
             int index,
             Action<TargetDto> updateTarget,
             Action<TargetDto> applyTargetOptions,
@@ -58,6 +60,7 @@ namespace umi3d.browserEditor.BuildTool
                 refreshView
             );
             this.buildToolVersion_SO = buildToolVersion_SO;
+            this.buildToolSettings_SO = buildToolSettings_SO;
             this.index = index;
             this.applyTargetOptions = applyTargetOptions;
             this.buildTarget = buildTarget;
@@ -91,6 +94,9 @@ namespace umi3d.browserEditor.BuildTool
             });
             T_Select.SetValueWithoutNotify(viewModel[index].IsTargetEnabled);
 
+            V_Path.style.display = (buildToolSettings_SO?.useOneBuildFolder ?? true)
+                    ? DisplayStyle.None
+                    : DisplayStyle.Flex;
             // Path
             TF_Path.label = "Build Folder";
             TF_Path.RegisterValueChangedCallback(PathValueChanged);
@@ -161,7 +167,8 @@ namespace umi3d.browserEditor.BuildTool
 
         void ApplyChangeView(bool isApplied)
         {
-            B_Apply.style.backgroundColor = isApplied ? new Color(0.5f, 1, 0) : StyleKeyword.Null;
+            var selectedColor = buildToolSettings_SO?.selectedTargetColor ?? new Color(0.5f, 1, 0);
+            B_Apply.style.backgroundColor = isApplied ? selectedColor : StyleKeyword.Null;
             B_Build.SetEnabled(isApplied);
         }
 

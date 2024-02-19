@@ -36,6 +36,20 @@ namespace umi3d.browserEditor.BuildTool
             Save();
         }
 
+        public void UpdateBuildFolder(string path)
+        {
+            buildToolTarget_SO.buildFolder = path;
+
+            for (int i = 0; i < buildToolTarget_SO.targets.Count; i++)
+            {
+                var target = buildToolTarget_SO.targets[i];
+                target.BuildFolder = path;
+                buildToolTarget_SO.targets[i] = target;
+            }
+
+            Save();
+        }
+
         public void BrowseInstaller(Action<string> updateView)
         {
             string directory = string.IsNullOrEmpty(buildToolTarget_SO.installer)
@@ -71,6 +85,22 @@ namespace umi3d.browserEditor.BuildTool
                 );
 
             UpdateLicense(path);
+            updateView?.Invoke(path);
+        }
+
+        public void BrowseBuildFolder(Action<string> updateView)
+        {
+            string directory = string.IsNullOrEmpty(buildToolTarget_SO.buildFolder)
+                ? Application.dataPath
+                : buildToolTarget_SO.buildFolder;
+
+            string path = EditorUtility.OpenFolderPanel(
+                    title: "Build Folder",
+                    directory,
+                    defaultName: ""
+                );
+
+            UpdateBuildFolder(path);
             updateView?.Invoke(path);
         }
 

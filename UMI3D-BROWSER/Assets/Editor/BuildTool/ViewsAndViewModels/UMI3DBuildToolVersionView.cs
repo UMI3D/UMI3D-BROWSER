@@ -132,6 +132,7 @@ namespace umi3d.browserEditor.BuildTool
 
             L_SDKVersion.text = viewModel.SDKVersion.Version;
             L_OldVersion.text = viewModel.OldVersion.Version;
+            L_Version.text = viewModel.NewVersion.VersionFromNow;
 
             UpdateBorderColor(L_SDKVersion.parent, () => buildToolSettings_SO.sdkColor);
             UpdateBorderColor(L_OldVersion.parent, () => buildToolSettings_SO.oldVersionColor);

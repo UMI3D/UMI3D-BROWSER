@@ -174,7 +174,15 @@ namespace umi3dVRBrowsersBase.interactions
                     {
                         try
                         {
-                            AbstractUMI3DInput newInput = projectionMemory.PartialProject(this, UMI3DGlobalID.EnvironmentId, manip as ManipulationDto, sep, false, tool.id, hoveredObjectId);
+                            AbstractUMI3DInput newInput = projectionMemory.PartialProject(
+                                this, 
+                                UMI3DGlobalID.EnvironmentId, 
+                                manip as ManipulationDto, 
+                                tool.id, 
+                                hoveredObjectId,
+                                false, 
+                                sep
+                            );
                             if (newInput != null)
                             {
                                 var toolInputs = new List<AbstractUMI3DInput>();

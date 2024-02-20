@@ -19,6 +19,7 @@ using umi3d.common;
 using umi3dBrowsers.interaction.selection;
 using umi3dBrowsers.interaction.selection.intentdetector;
 using umi3dBrowsers.interaction.selection.projector;
+using umi3dVRBrowsersBase.ui;
 using UnityEngine;
 
 namespace umi3dVRBrowsersBase.interactions.selection.selector
@@ -28,6 +29,9 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
     /// </summary>
     public class InteractableVRSelector : AbstractVRSelector<InteractableContainer>
     {
+        [SerializeField] 
+        ParameterGear parameterGear;
+
         /// <summary>
         /// Selection Intent Detectors (virtual pointing). In order of decreasing priority.
         /// </summary>
@@ -44,7 +48,7 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
 
         private InteractableVRSelector() : base()
         {
-            projector = new InteractableProjector();
+            projector = new InteractableProjector(parameterGear);
         }
 
         /// <inheritdoc/>

@@ -16,6 +16,7 @@ limitations under the License.
 
 using System.Collections;
 using System.Collections.Generic;
+using umi3dBrowsers.containere;
 using UnityEngine;
 
 namespace umi3dBrowsers.container
@@ -33,6 +34,16 @@ namespace umi3dBrowsers.container
         [SerializeField] private bool isMicOn;
         [SerializeField] private AudioSettingsContainer audioSettingsContainer;
 
+        [Header("Graphics")]
+        [SerializeField] private QualityLevel quality;
+        [SerializeField] private GraphicsSettings graphicsSettingsContainer;
+
+        [Header("Comfort")]
+        [SerializeField] private bool isFadingWhenTP;
+        [SerializeField] private bool isFadingWhenReorient;
+        [SerializeField] private float fadingSpeedWhenReorient;
+        [SerializeField] private ComfortSettings comfortSettingsContainer;
+
         public List<GameObject> settingPanels = new();
 
         private void Awake()
@@ -44,16 +55,44 @@ namespace umi3dBrowsers.container
             audioSettingsContainer.OnConversationVolumenChanged += (value) => this.conversationVolume = value;
             audioSettingsContainer.OnEnvironmentVolumeChanged += (value) => this.environmentVolume = value;
             audioSettingsContainer.OnIsMicOnChanged += (value) => this.isMicOn = value;
+
+            graphicsSettingsContainer.OnQualityLevelChange += (value) => quality = value;
+
+            comfortSettingsContainer.OnTpFadingChanged += (value) => isFadingWhenTP = value;
+            comfortSettingsContainer.OnRiorientFadingChanged += (value) => isFadingWhenReorient = value;
+            comfortSettingsContainer.OnFadingValueChanged += (value) => fadingSpeedWhenReorient = value;
         }
 
         public void OpenGeneralSettings()
+        {
+            HideAll();
+            generalSettingsContainer.gameObject.SetActive(true);
+        }
+
+        public void OpenAudioSettings()
+        {
+            HideAll();
+            audioSettingsContainer.gameObject.SetActive(true);
+        }
+
+        public void OpenGraphicSettings()
+        {
+            HideAll();
+            graphicsSettingsContainer.gameObject.SetActive(true);
+        }
+
+        public void OpenComfortSettings()
+        {
+            HideAll();
+            comfortSettingsContainer.gameObject.SetActive(true);
+        }
+
+        private void HideAll()
         {
             foreach (GameObject panel in settingPanels)
             {
                 panel.SetActive(false);
             }
-
-            generalSettingsContainer.gameObject.SetActive(true);
         }
     }
 }

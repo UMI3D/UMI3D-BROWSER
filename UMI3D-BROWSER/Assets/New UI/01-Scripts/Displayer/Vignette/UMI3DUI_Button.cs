@@ -27,6 +27,7 @@ namespace umi3dBrowsers.displayer
     public class UMI3DUI_Button : Button
     {
         private ISubDisplayer _subDisplayer;
+        public ISubDisplayer SubDisplayer => _subDisplayer;
         public event Action OnHoverEnter;
         public event Action OnHoverExit;
 
@@ -34,13 +35,9 @@ namespace umi3dBrowsers.displayer
         public int ID => id;    
         public void SetID(int id) { this.id = id; }
 
-        private Image _image;
-        public Image Image => _image;   
-
         protected override void Awake()
         {
             _subDisplayer = GetComponent<ISubDisplayer>();
-            _image = GetComponent<Image>();
             if (_subDisplayer == null) return;
             onClick.AddListener(_subDisplayer.Click);
         }

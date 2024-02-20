@@ -47,16 +47,16 @@ namespace umi3d.cdk.interaction
             this.treeId = treeId;
             this.nodeId = nodeId;
 
-            if (Index < 0)
-            {
-                nodes.Add(new()
-                {
-                    treeId = treeId,
-                    id = nodeId,
-                    childrenId = new(),
-                    nodeDto = projectionTreeNodeDto
-                });
-            }
+            //if (Index < 0)
+            //{
+            //    nodes.Add(new()
+            //    {
+            //        treeId = treeId,
+            //        id = nodeId,
+            //        childrenId = new(),
+            //        nodeDto = projectionTreeNodeDto
+            //    });
+            //}
         }
 
         List<ProjectionTreeNodeDto> nodes
@@ -118,7 +118,10 @@ namespace umi3d.cdk.interaction
             {
                 node.childrenId = new();
             }
-            node.childrenId.Add(child.id);
+            if (!node.childrenId.Contains(child.id))
+            {
+                node.childrenId.Add(child.id);
+            }
             nodes[Index] = node;
         }
     }

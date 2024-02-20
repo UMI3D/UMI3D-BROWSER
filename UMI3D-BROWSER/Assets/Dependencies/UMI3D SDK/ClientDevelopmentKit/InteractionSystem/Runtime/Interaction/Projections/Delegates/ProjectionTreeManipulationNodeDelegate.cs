@@ -128,12 +128,11 @@ namespace umi3d.cdk.interaction
             };
         }
 
-        public override void PartialProject(
+        public override void PrepareForNodeFactory(
             ManipulationDto dto,
             ulong environmentId,
             ulong toolId,
             ulong hoveredObjectId,
-            bool unusedInputsOnly,
             Func<AbstractUMI3DInput> findInput,
             out Predicate<ProjectionTreeNode> adequation,
             out Func<ProjectionTreeNode> deepProjectionCreation,

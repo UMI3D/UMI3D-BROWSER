@@ -60,7 +60,13 @@ namespace umi3d.cdk.interaction
         {
             logger.MainContext = this;
             logger.MainTag = nameof(ProjectionMemory);
-            memoryRoot = new ProjectionTreeNode(TreeId) { id = 0 };
+            memoryRoot = new ProjectionTreeNode(
+                TreeId,
+                0,
+                null,
+                null,
+                projectionTree_SO
+            );
         }
 
         private void Start()
@@ -255,12 +261,11 @@ namespace umi3d.cdk.interaction
             {
                 case ManipulationDto manipulationDto:
                     ptManipulationNodeDelegate.sep = dof;
-                    ptManipulationNodeDelegate.PartialProject(
+                    ptManipulationNodeDelegate.PrepareForNodeFactory(
                         manipulationDto,
                         environmentId,
                         toolId,
                         hoveredObjectId,
-                        unusedInputsOnly,
                         () =>
                         {
                             return controller.FindInput(manipulationDto, dof, unusedInputsOnly);
@@ -271,15 +276,14 @@ namespace umi3d.cdk.interaction
                     );
                     break;
                 case EventDto eventDto:
-                    ptEventNodeDelegate.PartialProject(
+                    ptEventNodeDelegate.PrepareForNodeFactory(
                         eventDto,
                         environmentId,
                         toolId,
                         hoveredObjectId,
-                        unusedInputsOnly,
                         () =>
                         {
-                            return controller.FindInput(eventDto, true);
+                            return controller.FindInput(eventDto, unusedInputsOnly);
                         },
                         out adequation,
                         out deepProjectionCreation,
@@ -287,15 +291,14 @@ namespace umi3d.cdk.interaction
                     );
                     break;
                 case FormDto formDto:
-                    ptFormNodeDelegate.PartialProject(
+                    ptFormNodeDelegate.PrepareForNodeFactory(
                         formDto,
                         environmentId,
                         toolId,
                         hoveredObjectId,
-                        unusedInputsOnly,
                         () =>
                         {
-                            return controller.FindInput(formDto, true);
+                            return controller.FindInput(formDto, unusedInputsOnly);
                         },
                         out adequation,
                         out deepProjectionCreation,
@@ -303,15 +306,14 @@ namespace umi3d.cdk.interaction
                     );
                     break;
                 case LinkDto linkDto:
-                    ptLinkNodeDelegate.PartialProject(
+                    ptLinkNodeDelegate.PrepareForNodeFactory(
                         linkDto,
                         environmentId,
                         toolId,
                         hoveredObjectId,
-                        unusedInputsOnly,
                         () =>
                         {
-                            return controller.FindInput(linkDto, true);
+                            return controller.FindInput(linkDto, unusedInputsOnly);
                         },
                         out adequation,
                         out deepProjectionCreation,
@@ -319,15 +321,14 @@ namespace umi3d.cdk.interaction
                     );
                     break;
                 case AbstractParameterDto parameterDto:
-                    ptParameterNodeDelegate.PartialProject(
+                    ptParameterNodeDelegate.PrepareForNodeFactory(
                         parameterDto,
                         environmentId,
                         toolId,
                         hoveredObjectId,
-                        unusedInputsOnly,
                         () =>
                         {
-                            return controller.FindInput(parameterDto, true);
+                            return controller.FindInput(parameterDto, unusedInputsOnly);
                         },
                         out adequation,
                         out deepProjectionCreation,
@@ -338,7 +339,13 @@ namespace umi3d.cdk.interaction
                     throw new System.Exception("Unknown interaction type : " + dto);
             }
 
-            return Project(memoryRoot, adequation, deepProjectionCreation, chooseProjection, unusedInputsOnly).projectedInput;
+            return Project(
+                memoryRoot, 
+                adequation, 
+                deepProjectionCreation, 
+                chooseProjection, 
+                unusedInputsOnly
+            ).projectedInput;
         }
 
         /// <summary>
@@ -596,24 +603,6 @@ namespace umi3d.cdk.interaction
         }
 
         /// <summary>
-        /// Save current state of the memory.
-        /// </summary>
-        /// <param name="path">path to the file</param>
-        public void SaveToFile(string path)
-        {
-            memoryRoot.SaveToFile(path);
-        }
-
-        /// <summary>
-        /// Load a state of memory.
-        /// </summary>
-        /// <param name="path">path to the file</param>
-        public void LoadFromFile(string path)
-        {
-            memoryRoot.LoadFromFile(path);
-        }
-
-        /// <summary>
         /// Exception thrown when not associated input has been found for an interaction.
         /// </summary>
         public class NoInputFoundException : System.Exception
@@ -622,90 +611,5 @@ namespace umi3d.cdk.interaction
             public NoInputFoundException(string message) : base(message) { }
             public NoInputFoundException(string message, System.Exception inner) : base(message, inner) { }
         }
-    }
-
-
-
-
-
-    /// <summary>
-    /// Projection tree node associated to an <see cref="EventDto"/>.
-    /// </summary>
-    [System.Serializable]
-    public class EventNode : ProjectionTreeNode
-    {
-        /// <summary>
-        /// Associated Event DTO
-        /// </summary>
-        [SerializeField, Tooltip("Associated Event DTO")]
-        public EventDto evt;
-
-        public EventNode(string treeId) : base(treeId) { }
-    }
-
-    /// <summary>
-    /// Projection tree node associated to a <see cref="ManipulationDto"/>.
-    /// </summary>
-    [System.Serializable]
-    public class ManipulationNode : ProjectionTreeNode
-    {
-        /// <summary>
-        /// Associated Manipulation DTO
-        /// </summary>
-        [SerializeField, Tooltip("Associated Manipulation DTO")]
-        public ManipulationDto manipulation;
-
-        /// <summary>
-        /// Associated Degree of Freedom Group DTO
-        /// </summary>
-        [SerializeField, Tooltip("Associated Degree of Freedom Group DTO")]
-        public DofGroupDto manipulationDofGroupDto;
-
-        public ManipulationNode(string treeId) : base(treeId) { }
-    }
-
-    /// <summary>
-    /// Projection tree node associated to a <see cref="FormDto"/>.
-    /// </summary>
-    [System.Serializable]
-    public class FormNode : ProjectionTreeNode
-    {
-        /// <summary>
-        /// Associated Form DTO
-        /// </summary>
-        [SerializeField, Tooltip("Associated Form DTO")]
-        public FormDto form;
-
-        public FormNode(string treeId) : base(treeId) { }
-    }
-
-    /// <summary>
-    /// Projection tree node associated to a <see cref="LinkDto"/>.
-    /// </summary>
-    [System.Serializable]
-    public class LinkNode : ProjectionTreeNode
-    {
-        /// <summary>
-        /// Associated Link DTO
-        /// </summary>
-        [SerializeField, Tooltip("Associated Link DTO")]
-        public LinkDto link;
-
-        public LinkNode(string treeId) : base(treeId) { }
-    }
-
-    /// <summary>
-    /// Projection tree node associated to an <see cref="AbstractParameterDto"/>.
-    /// </summary>
-    [System.Serializable]
-    public class ParameterNode : ProjectionTreeNode
-    {
-        /// <summary>
-        /// Associated Parameter DTO
-        /// </summary>
-        [SerializeField, Tooltip("Associated Parameter DTO")]
-        public AbstractParameterDto parameter;
-
-        public ParameterNode(string treeId) : base(treeId) { }
     }
 }

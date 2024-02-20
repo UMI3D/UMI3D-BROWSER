@@ -33,11 +33,6 @@ namespace umi3d.cdk.interaction
         [SerializeField]
         public AbstractUMI3DInput projectedInput;
 
-        public ProjectionTreeNode(string treeId)
-        {
-            //this.treeId = treeId;
-        }
-
         public ProjectionTreeNode(
             string treeId, 
             ulong nodeId, 
@@ -92,48 +87,6 @@ namespace umi3d.cdk.interaction
                 //return buffer;
                 return null;
             }
-        }
-
-        public ulong id { get; set; }
-
-
-        /// <summary>
-        /// save a node state to a file.
-        /// </summary>
-        /// <param name="path">path to the file</param>
-        public void SaveToFile(string path)
-        {
-            //if (nodesByTree.TryGetValue(treeId, out Dictionary<ulong, ProjectionTreeNode> nodes))
-            //{
-
-            //    string objectJson = JsonUtility.ToJson(this, true);
-            //    string staticRefIds = JsonUtility.ToJson(nodes.Keys, true);
-            //    string storage = objectJson;// + "@\n" + static_json;
-
-            //    var writer = new StreamWriter(path);
-            //    writer.Write(storage);
-            //    writer.Close();
-            //}
-        }
-
-        /// <summary>
-        /// Load A node state from a file
-        /// </summary>
-        /// <param name="path">path to the file</param>
-        public void LoadFromFile(string path)
-        {
-            //if (nodesByTree.TryGetValue(treeId, out Dictionary<ulong, ProjectionTreeNode> nodes))
-            //{
-            //    var reader = new StreamReader(path);
-            //    string storage = reader.ReadToEnd();
-            //    string[] buffer = storage.Split('@');
-
-            //    string object_json = buffer[0];
-            //    string static_json = buffer[1];
-
-            //    JsonUtility.FromJsonOverwrite(static_json, nodes);
-            //    JsonUtility.FromJsonOverwrite(object_json, this);
-            //}
         }
     }
 }

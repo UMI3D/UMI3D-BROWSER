@@ -41,17 +41,25 @@ namespace umi3d
         [SerializeField] private GameObject parametersContent;
         [SerializeField] private GameObject storageContent;
         [SerializeField] private GameObject mainContent;
+        [SerializeField] private GameObject standUpContent;
+        [SerializeField] private GameObject flagContent;
+        [Space]
+        [SerializeField] private GameObject Top;
         // todo : call something like an hint manager hints
         // todo : call something like a pop up manager to open a bug popup
 
-        private enum ContentState { mainContent, storageContent, parametersContent };
-        [SerializeField, ReadOnly] private ContentState contentState;   
+        private enum ContentState { mainContent, storageContent, parametersContent, flagContent, standUpContent };
+        [SerializeField, Tooltip("start content")] private ContentState contentState;   
 
 
         [Header("Navigation")]
         [SerializeField] private SimpleButton backButton;
+        [SerializeField] private SimpleButton standUpButton;
+        [SerializeField] private SimpleButton flagButton;
         [Space]
         [SerializeField] private UnityEvent backButtonClicked;
+        [SerializeField] private UnityEvent standUpButtonClicked;
+        [SerializeField] private UnityEvent flagButtonClicked;
 
         [Header("Title")]
         [SerializeField] private TextMeshProUGUI prefixText;
@@ -64,6 +72,7 @@ namespace umi3d
         {
             navBarButtonsColors.colorMultiplier = 1.0f;
             InitializeButtons();
+            HandleContentState(contentState);
         }
 
         public void SetVersion(string version)
@@ -107,6 +116,16 @@ namespace umi3d
                 if (contentState == ContentState.parametersContent || contentState == ContentState.storageContent)
                     HandleContentState(ContentState.mainContent);
             });
+            flagButton?.OnClick.AddListener(() =>
+            {
+                flagButtonClicked?.Invoke();
+                HandleContentState(ContentState.standUpContent);
+            });
+            standUpButton?.OnClick.AddListener(() =>
+            {
+                standUpButtonClicked?.Invoke();
+                HandleContentState(ContentState.mainContent);
+            });
         }
 
         private void HandleContentState(ContentState state)
@@ -115,10 +134,12 @@ namespace umi3d
             switch (state)
             {
                 case ContentState.mainContent:
+                    Top.SetActive(true);
                     parametersContent.SetActive(false);
                     storageContent.SetActive(false);
                     mainContent.SetActive(true);
                     backButton?.gameObject.SetActive(false);
+                    standUpContent.SetActive(false);
                     break;
                 case ContentState.storageContent:
                     parametersContent.SetActive(false);
@@ -131,6 +152,24 @@ namespace umi3d
                     storageContent.SetActive(false);
                     mainContent.SetActive(false);
                     backButton?.gameObject.SetActive(true);
+                    break;
+                case ContentState.flagContent:
+                    Top.SetActive(false);
+                    parametersContent.SetActive(false);
+                    storageContent.SetActive(false);
+                    mainContent.SetActive(false);
+                    backButton?.gameObject.SetActive(false);
+                    standUpContent.SetActive(false);
+                    flagContent.SetActive(true);
+                    break;
+                case ContentState.standUpContent:
+                    Top.SetActive(false);
+                    parametersContent.SetActive(false);
+                    storageContent.SetActive(false);
+                    mainContent.SetActive(false);
+                    backButton?.gameObject.SetActive(false);
+                    flagContent.SetActive(false);
+                    standUpContent.SetActive(true);
                     break;
             }
         }

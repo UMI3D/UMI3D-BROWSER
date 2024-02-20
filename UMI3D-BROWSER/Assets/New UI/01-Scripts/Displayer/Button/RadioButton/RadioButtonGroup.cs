@@ -42,7 +42,7 @@ namespace umi3dBrowsers.displayer
             {
                 radio.onClick.AddListener(() =>
                 {
-                    OnSelectedButtonChanged(radio, radio.ID);
+                    OnSelectedButtonChanged?.Invoke(radio, radio.ID);
                     foreach (var rad in buttons)
                     {
                         rad.Image.color = NormalColor;

@@ -49,7 +49,7 @@ namespace umi3d
 
 
         [Header("Navigation")]
-        [SerializeField] private Button backButton;
+        [SerializeField] private SimpleButton backButton;
         [Space]
         [SerializeField] private UnityEvent backButtonClicked;
 
@@ -101,7 +101,7 @@ namespace umi3d
                 bugClicked?.Invoke();
 
             });
-            backButton?.onClick.AddListener(() =>
+            backButton?.OnClick.AddListener(() =>
             {
                 backButtonClicked?.Invoke();
                 if (contentState == ContentState.parametersContent || contentState == ContentState.storageContent)

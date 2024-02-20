@@ -35,6 +35,10 @@ namespace umi3dVRBrowsersBase.connection
         [Tooltip("Button to open advanced connection panel")]
         private Button advancedConnectionButton;
 
+        [SerializeField]
+        [Tooltip("Button to open advanced connection panel")]
+        private Button advancedConnectionButtonLBE;
+
         [Header("Add a new server panel")]
 
         [SerializeField]
@@ -149,6 +153,12 @@ namespace umi3dVRBrowsersBase.connection
             addNewServerInput.SetKeyboard(ConnectionMenuManager.instance.keyboard);
 
             advancedConnectionButton.onClick.AddListener(() =>
+            {
+                Hide();
+                ConnectionMenuManager.instance.SwitchToAdvancedConnectionPanel();
+            });
+
+            advancedConnectionButtonLBE.onClick.AddListener(() =>
             {
                 Hide();
                 ConnectionMenuManager.instance.SwitchToAdvancedConnectionPanel();

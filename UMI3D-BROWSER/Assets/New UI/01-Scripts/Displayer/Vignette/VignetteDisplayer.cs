@@ -83,7 +83,8 @@ namespace umi3dBrowsers.displayer
         public void HoverExit(PointerEventData eventData)
         {
             vignetteState = VignetteState.notHovering;
-            StartCoroutine(HoverDelay());
+            if (gameObject.activeInHierarchy)
+                StartCoroutine(HoverDelay());
         }
 
         public void Click()

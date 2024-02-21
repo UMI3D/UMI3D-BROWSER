@@ -23,7 +23,7 @@ namespace umi3d.cdk.interaction
     [Serializable]
     public struct ProjectionTreeManipulationNodeDto : IProjectionTreeNodeDto
     {
-        public ManipulationDto dto;
+        public ManipulationDto interaction;
 
         /// <summary>
         /// Associated Degree of Freedom Group DTO
@@ -31,11 +31,11 @@ namespace umi3d.cdk.interaction
         [Tooltip("Associated Degree of Freedom Group DTO")]
         public DofGroupDto manipulationDofGroupDto;
 
-        public AbstractInteractionDto interactionDto
+        public AbstractInteractionDto Interaction
         {
             get
             {
-                return dto;
+                return interaction;
             }
         }
     }

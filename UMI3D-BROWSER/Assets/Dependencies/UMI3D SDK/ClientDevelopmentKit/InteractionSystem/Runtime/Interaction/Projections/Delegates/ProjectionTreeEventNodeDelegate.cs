@@ -15,7 +15,6 @@ limitations under the License.
 */
 
 using System;
-using System.Buffers;
 using System.Collections.Generic;
 using umi3d.common.interaction;
 using UnityEngine;
@@ -25,17 +24,17 @@ namespace umi3d.cdk.interaction
     [CreateAssetMenu(fileName = "UMI3D PT Event Node Delegate", menuName = "UMI3D/Interactions/PT Delegates/PT Event Node Delegate")]
     public class ProjectionTreeEventNodeDelegate : AbstractProjectionTreeNodeDelegate<EventDto>
     {
-        public override Predicate<ProjectionTreeNode> IsNodeCompatible(EventDto dto)
+        public override Predicate<ProjectionTreeNodeDto> IsNodeCompatible(EventDto interaction)
         {
             return node =>
             {
-                var interactionDto = node.model.Node.nodeDto.interactionDto;
-                return interactionDto is EventDto && interactionDto.name.Equals(dto.name);
+                var interactionDto = node.interactionDto.Interaction;
+                return interactionDto is EventDto && interactionDto.name.Equals(interaction.name);
             };
         }
 
-        public override Func<ProjectionTreeNode> CreateNodeForInput(
-            EventDto dto,
+        public override Func<ProjectionTreeNodeDto> CreateNodeForInput(
+            EventDto interaction,
             Func<AbstractUMI3DInput> findInput
         )
         {
@@ -48,20 +47,21 @@ namespace umi3d.cdk.interaction
                     throw new NoInputFoundException();
                 }
 
-                return new ProjectionTreeNode(
-                    treeId: treeId,
-                    nodeId: dto.id,
-                    new ProjectionTreeEventNodeDto()
+                return new ProjectionTreeNodeDto()
+                {
+                    treeId = treeId,
+                    id = interaction.id,
+                    children = new(),
+                    interactionDto = new ProjectionTreeEventNodeDto()
                     {
-                        dto = dto
+                        interaction = interaction
                     },
-                    projection,
-                    projectionTree_SO
-                );
+                    input = projection
+                };
             };
         }
 
-        public override Action<ProjectionTreeNode> ChooseProjection(
+        public override Action<ProjectionTreeNodeDto> ChooseProjection(
             ulong? environmentId = null,
             ulong? toolId = null,
             ulong? hoveredObjectId = null,
@@ -72,8 +72,8 @@ namespace umi3d.cdk.interaction
             {
                 if (environmentId.HasValue && toolId.HasValue && hoveredObjectId.HasValue)
                 {
-                    var interactionDto = node.model.Node.nodeDto.interactionDto;
-                    node.projectedInput.Associate(
+                    var interactionDto = node.interactionDto.Interaction;
+                    node.input.Associate(
                         environmentId.Value,
                         interactionDto,
                         toolId.Value,
@@ -81,7 +81,7 @@ namespace umi3d.cdk.interaction
                     );
                 }
 
-                selectedInputs?.Add(node.projectedInput);
+                selectedInputs?.Add(node.input);
             };
         }
     }

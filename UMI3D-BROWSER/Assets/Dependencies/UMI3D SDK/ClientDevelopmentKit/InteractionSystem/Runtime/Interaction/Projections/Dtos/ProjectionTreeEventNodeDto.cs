@@ -24,13 +24,13 @@ namespace umi3d.cdk.interaction
     [Serializable]
     public struct ProjectionTreeEventNodeDto : IProjectionTreeNodeDto
     {
-        public EventDto dto;
+        public EventDto interaction;
 
-        public AbstractInteractionDto interactionDto
+        public AbstractInteractionDto Interaction
         {
             get
             {
-                return dto;
+                return interaction;
             }
         }
     }

@@ -24,17 +24,17 @@ namespace umi3d.cdk.interaction
     [CreateAssetMenu(fileName = "UMI3D PT Form Node Delegate", menuName = "UMI3D/Interactions/PT Delegates/PT Form Node Delegate")]
     public class ProjectionTreeFormNodeDelegate : AbstractProjectionTreeNodeDelegate<FormDto>
     {
-        public override Predicate<ProjectionTreeNode> IsNodeCompatible(FormDto dto)
+        public override Predicate<ProjectionTreeNodeDto> IsNodeCompatible(FormDto interaction)
         {
             return node =>
             {
-                var interactionDto = node.model.Node.nodeDto.interactionDto;
-                return interactionDto is FormDto && interactionDto.name.Equals(dto.name);
+                var interactionDto = node.interactionDto.Interaction;
+                return interactionDto is FormDto && interactionDto.name.Equals(interaction.name);
             };
         }
 
-        public override Func<ProjectionTreeNode> CreateNodeForInput(
-            FormDto dto,
+        public override Func<ProjectionTreeNodeDto> CreateNodeForInput(
+            FormDto interaction,
             Func<AbstractUMI3DInput> findInput
         )
         {
@@ -47,20 +47,21 @@ namespace umi3d.cdk.interaction
                     throw new NoInputFoundException();
                 }
 
-                return new ProjectionTreeNode(
-                    treeId: treeId,
-                    nodeId: dto.id,
-                    new ProjectionTreeFormNodeDto()
+                return new ProjectionTreeNodeDto()
+                {
+                    treeId = treeId,
+                    id = interaction.id,
+                    children = new(),
+                    interactionDto = new ProjectionTreeFormNodeDto()
                     {
-                        dto = dto
+                        interaction = interaction
                     },
-                    projection,
-                    projectionTree_SO
-                );
+                    input = projection,
+                };
             };
         }
 
-        public override Action<ProjectionTreeNode> ChooseProjection(
+        public override Action<ProjectionTreeNodeDto> ChooseProjection(
             ulong? environmentId = null,
             ulong? toolId = null,
             ulong? hoveredObjectId = null,
@@ -71,8 +72,8 @@ namespace umi3d.cdk.interaction
             {
                 if (environmentId.HasValue && toolId.HasValue && hoveredObjectId.HasValue)
                 {
-                    var interactionDto = node.model.Node.nodeDto.interactionDto;
-                    node.projectedInput.Associate(
+                    var interactionDto = node.interactionDto.Interaction;
+                    node.input.Associate(
                         environmentId.Value,
                         interactionDto,
                         toolId.Value,
@@ -80,7 +81,7 @@ namespace umi3d.cdk.interaction
                     );
                 }
 
-                selectedInputs?.Add(node.projectedInput);
+                selectedInputs?.Add(node.input);
             };
         }
     }

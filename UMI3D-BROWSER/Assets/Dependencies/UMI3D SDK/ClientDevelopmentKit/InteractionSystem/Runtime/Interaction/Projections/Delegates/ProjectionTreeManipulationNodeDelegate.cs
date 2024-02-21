@@ -26,19 +26,19 @@ namespace umi3d.cdk.interaction
     {
         public DofGroupDto sep;
 
-        public override Predicate<ProjectionTreeNode> IsNodeCompatible(ManipulationDto dto)
+        public override Predicate<ProjectionTreeNodeDto> IsNodeCompatible(ManipulationDto interaction)
         {
             return  node =>
             {
-                var interactionDto = node.model.Node.nodeDto.interactionDto;
-                var nodeDto = (ProjectionTreeManipulationNodeDto)node.model.Node.nodeDto;
+                var interactionDto = node.interactionDto.Interaction;
+                var nodeDto = (ProjectionTreeManipulationNodeDto)node.interactionDto;
                 return interactionDto is ManipulationDto
                 && nodeDto.manipulationDofGroupDto.dofs == sep.dofs;
             };
         }
 
-        public override Func<ProjectionTreeNode> CreateNodeForInput(
-            ManipulationDto dto,
+        public override Func<ProjectionTreeNodeDto> CreateNodeForInput(
+            ManipulationDto interaction,
             Func<AbstractUMI3DInput> findInput
         )
         {
@@ -51,21 +51,22 @@ namespace umi3d.cdk.interaction
                     throw new NoInputFoundException();
                 }
 
-                return new ProjectionTreeNode(
-                    treeId: treeId,
-                    nodeId: dto.id,
-                    new ProjectionTreeManipulationNodeDto()
+                return new ProjectionTreeNodeDto()
+                {
+                    treeId = treeId,
+                    id = interaction.id,
+                    children = new(),
+                    interactionDto = new ProjectionTreeManipulationNodeDto()
                     {
-                        dto = dto,
+                        interaction = interaction,
                         manipulationDofGroupDto = sep
                     },
-                    projection,
-                    projectionTree_SO
-                );
+                    input = projection,
+                };
             };
         }
 
-        public override Action<ProjectionTreeNode> ChooseProjection(
+        public override Action<ProjectionTreeNodeDto> ChooseProjection(
             ulong? environmentId = null,
             ulong? toolId = null,
             ulong? hoveredObjectId = null,
@@ -76,8 +77,8 @@ namespace umi3d.cdk.interaction
             {
                 if (environmentId.HasValue && toolId.HasValue && hoveredObjectId.HasValue)
                 {
-                    var interactionDto = node.model.Node.nodeDto.interactionDto;
-                    node.projectedInput.Associate(
+                    var interactionDto = node.interactionDto.Interaction;
+                    node.input.Associate(
                         environmentId.Value,
                         interactionDto as ManipulationDto,
                         sep.dofs,
@@ -86,7 +87,7 @@ namespace umi3d.cdk.interaction
                     );
                 }
 
-                selectedInputs?.Add(node.projectedInput);
+                selectedInputs?.Add(node.input);
             };
         }
     }

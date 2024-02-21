@@ -34,10 +34,14 @@ namespace umi3d.cdk.interaction
         /// <summary>
         /// Node's children IDs.
         /// </summary>
-        public List<ulong> childrenId;
+        public List<ProjectionTreeNodeDto> children;
         /// <summary>
-        /// The concreate node Dto.
+        /// The concreate interaction Dto.
         /// </summary>
-        public IProjectionTreeNodeDto nodeDto;
+        public IProjectionTreeNodeDto interactionDto;
+        /// <summary>
+        /// The input associated with this interaction.
+        /// </summary>
+        public AbstractUMI3DInput input;
     }
 }

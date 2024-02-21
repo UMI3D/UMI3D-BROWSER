@@ -28,6 +28,14 @@ namespace umi3d.cdk.interaction
         /// </summary>
         public string treeId;
 
+        /// <summary>
+        /// Root of this tree.
+        /// </summary>
+        public ProjectionTreeNodeDto root;
+
+        /// <summary>
+        /// List of all of the nodes.
+        /// </summary>
         public List<ProjectionTreeNodeDto> nodes;
     }
 }

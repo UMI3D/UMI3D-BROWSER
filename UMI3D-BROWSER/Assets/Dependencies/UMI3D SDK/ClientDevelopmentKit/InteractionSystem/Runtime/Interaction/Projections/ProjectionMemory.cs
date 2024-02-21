@@ -35,7 +35,7 @@ namespace umi3d.cdk.interaction
         public ProjectionTreeLinkNodeDelegate ptLinkNodeDelegate;
         public ProjectionTreeParameterNodeDelegate ptParameterNodeDelegate;
 
-        protected string treeId = "";
+        string treeId = "";
         /// <summary>
         /// Id of the projection tree.
         /// </summary>
@@ -53,19 +53,28 @@ namespace umi3d.cdk.interaction
         /// <summary>
         /// The root of the tree.
         /// </summary>
-        protected ProjectionTreeNode treeRoot;
+        ProjectionTreeNodeDto treeRoot;
+        ProjectionTreeModel treeModel;
 
         protected virtual void Awake()
         {
             logger.MainContext = this;
             logger.MainTag = nameof(ProjectionMemory);
-            treeRoot = new ProjectionTreeNode(
-                TreeId,
-                0,
-                null,
-                null,
-                projectionTree_SO
+
+            treeRoot = new ProjectionTreeNodeDto()
+            {
+                treeId = treeId,
+                id = 0,
+                children = new(),
+                interactionDto = null,
+                input = null
+            };
+            treeModel = new(
+                projectionTree_SO,
+                treeId
             );
+
+            treeModel.AddRoot(treeRoot);
         }
 
         private void Start()
@@ -96,7 +105,7 @@ namespace umi3d.cdk.interaction
             bool unused = true
         )
         {
-            ProjectionTreeNode currentMemoryTreeState = treeRoot;
+            ProjectionTreeNodeDto currentMemoryTreeState = treeRoot;
 
             List<AbstractUMI3DInput> selectedInputs = new();
 
@@ -173,7 +182,7 @@ namespace umi3d.cdk.interaction
                 unusedInputsOnly,
                 false,
                 dof
-            ).projectedInput;
+            ).input;
         }
 
         /// <summary>
@@ -213,7 +222,7 @@ namespace umi3d.cdk.interaction
                 }
             }
 
-            ProjectionTreeNode currentMemoryTreeState = treeRoot;
+            ProjectionTreeNodeDto currentMemoryTreeState = treeRoot;
             List<AbstractUMI3DInput> selectedInputs = new List<AbstractUMI3DInput>();
 
             for (int depth = 0; depth < interactions.Length; depth++)
@@ -278,10 +287,10 @@ namespace umi3d.cdk.interaction
         /// <param name="dof"></param>
         /// <returns></returns>
         /// <exception cref="System.Exception"></exception>
-        ProjectionTreeNode GetProjectionNode(
+        ProjectionTreeNodeDto GetProjectionNode(
             AbstractController controller,
             AbstractInteractionDto interaction,
-            ProjectionTreeNode currentMemoryTreeState,
+            ProjectionTreeNodeDto currentMemoryTreeState,
             ulong? environmentId = null,
             ulong? toolId = null,
             ulong? hoveredObjectId = null,
@@ -291,9 +300,9 @@ namespace umi3d.cdk.interaction
             DofGroupDto dof = null
         )
         {
-            System.Predicate<ProjectionTreeNode> adequation;
-            System.Func<ProjectionTreeNode> deepProjectionCreation;
-            System.Action<ProjectionTreeNode> chooseProjection;
+            System.Predicate<ProjectionTreeNodeDto> adequation;
+            System.Func<ProjectionTreeNodeDto> deepProjectionCreation;
+            System.Action<ProjectionTreeNodeDto> chooseProjection;
 
             switch (interaction)
             {
@@ -384,11 +393,11 @@ namespace umi3d.cdk.interaction
         /// <param name="currentTreeNode">Current node in tree projection</param>
         /// <param name="unusedInputsOnly">Project on unused inputs only</param>
         /// <exception cref="NoInputFoundException"></exception>
-        private ProjectionTreeNode Project(
-            ProjectionTreeNode currentTreeNode,
-            System.Predicate<ProjectionTreeNode> nodeAdequationTest,
-            System.Func<ProjectionTreeNode> deepProjectionCreation,
-            System.Action<ProjectionTreeNode> chooseProjection,
+        private ProjectionTreeNodeDto Project(
+            ProjectionTreeNodeDto currentTreeNode,
+            System.Predicate<ProjectionTreeNodeDto> nodeAdequationTest,
+            System.Func<ProjectionTreeNodeDto> deepProjectionCreation,
+            System.Action<ProjectionTreeNodeDto> chooseProjection,
             bool unusedInputsOnly = true,
             bool updateMemory = true
         )
@@ -410,40 +419,30 @@ namespace umi3d.cdk.interaction
                 catch (NoInputFoundException) { }
             }
 
-            ProjectionTreeNode deepProjection = currentTreeNode.children.Find(nodeAdequationTest);
-            if (deepProjection != null)
-            {
-                if (unusedInputsOnly && !deepProjection.projectedInput.IsAvailable())
-                {
-                    ProjectionTreeNode alternativeProjection = deepProjectionCreation();
-                    chooseProjection(alternativeProjection);
-                    return alternativeProjection;
-                }
-                else
-                {
-                    chooseProjection(deepProjection);
-                    return deepProjection;
-                }
-            }
-            else
-            {
-                ProjectionTreeNode rootProjection = treeRoot.children.Find(nodeAdequationTest);
-                if ((rootProjection == null) || (unusedInputsOnly && !rootProjection.projectedInput.IsAvailable()))
-                {
-                    deepProjection = deepProjectionCreation();
-                    chooseProjection(deepProjection);
-                    if (updateMemory)
-                        currentTreeNode.AddChild(deepProjection);
-                    return deepProjection;
-                }
-                else
-                {
-                    chooseProjection(rootProjection);
-                    if (updateMemory)
-                        currentTreeNode.AddChild(rootProjection);
-                    return rootProjection;
-                }
-            }
+            ProjectionTreeNodeDto projection = currentTreeNode.children.Find(nodeAdequationTest);
+            //if (projection != null)
+            //{
+            //    if (unusedInputsOnly && !projection.input.IsAvailable())
+            //    {
+            //        projection = deepProjectionCreation();
+            //    }
+            //}
+            //else
+            //{
+            //    projection = treeRoot.children.Find(nodeAdequationTest);
+            //    if ((projection == null) || (unusedInputsOnly && !projection.input.IsAvailable()))
+            //    {
+            //        projection = deepProjectionCreation();
+            //    }
+
+            //    if (updateMemory)
+            //    {
+            //        treeModel.AddChild(currentTreeNode.id, projection);
+            //    }
+            //}
+            
+            chooseProjection(projection);
+            return projection;
         }
     }
 }

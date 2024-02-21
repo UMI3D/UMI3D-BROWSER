@@ -26,72 +26,23 @@ namespace umi3d.cdk.interaction
     {
         public DofGroupDto sep;
 
-        public override void PrepareForNodeFactory(
-            ManipulationDto dto,
-            Func<AbstractUMI3DInput> findInput,
-            out Predicate<ProjectionTreeNode> adequation,
-            out Func<ProjectionTreeNode> deepProjectionCreation,
-            out Action<ProjectionTreeNode> chooseProjection,
-            List<AbstractUMI3DInput> selectedInputs
-        )
+        public override Predicate<ProjectionTreeNode> IsNodeCompatible(ManipulationDto dto)
         {
-            adequation = node =>
+            return  node =>
             {
                 var interactionDto = node.model.Node.nodeDto.interactionDto;
                 var nodeDto = (ProjectionTreeManipulationNodeDto)node.model.Node.nodeDto;
                 return interactionDto is ManipulationDto
                 && nodeDto.manipulationDofGroupDto.dofs == sep.dofs;
-            };
-
-            deepProjectionCreation = () =>
-            {
-                AbstractUMI3DInput projection = findInput?.Invoke();
-
-                if (projection == null)
-                {
-                    throw new NoInputFoundException();
-                }
-
-                return new ProjectionTreeNode(
-                    treeId: treeId,
-                    nodeId: dto.id,
-                    new ProjectionTreeManipulationNodeDto()
-                    {
-                        dto = dto,
-                        manipulationDofGroupDto = sep
-                    },
-                    projection,
-                    projectionTree_SO
-                );
-            };
-
-            chooseProjection = node =>
-            {
-                selectedInputs.Add(node.projectedInput);
             };
         }
 
-        public override void PrepareForNodeFactory(
+        public override Func<ProjectionTreeNode> CreateNodeForInput(
             ManipulationDto dto,
-            ulong environmentId,
-            ulong toolId, 
-            ulong hoveredObjectId,
-            Func<AbstractUMI3DInput> findInput,
-            out Predicate<ProjectionTreeNode> adequation,
-            out Func<ProjectionTreeNode> deepProjectionCreation,
-            out Action<ProjectionTreeNode> chooseProjection,
-            List<AbstractUMI3DInput> selectedInputs
+            Func<AbstractUMI3DInput> findInput
         )
         {
-            adequation = node =>
-            {
-                var interactionDto = node.model.Node.nodeDto.interactionDto;
-                var nodeDto = (ProjectionTreeManipulationNodeDto)node.model.Node.nodeDto;
-                return interactionDto is ManipulationDto
-                && nodeDto.manipulationDofGroupDto.dofs == sep.dofs;
-            };
-
-            deepProjectionCreation = () =>
+            return () =>
             {
                 AbstractUMI3DInput projection = findInput?.Invoke();
 
@@ -111,74 +62,31 @@ namespace umi3d.cdk.interaction
                     projection,
                     projectionTree_SO
                 );
-            };
-
-            chooseProjection = node =>
-            {
-                var interactionDto = node.model.Node.nodeDto.interactionDto;
-                node.projectedInput.Associate(
-                    environmentId,
-                    interactionDto as ManipulationDto,
-                    sep.dofs,
-                    toolId,
-                    hoveredObjectId
-                );
-
-                selectedInputs.Add(node.projectedInput);
             };
         }
 
-        public override void PrepareForNodeFactory(
-            ManipulationDto dto,
-            ulong environmentId,
-            ulong toolId,
-            ulong hoveredObjectId,
-            Func<AbstractUMI3DInput> findInput,
-            out Predicate<ProjectionTreeNode> adequation,
-            out Func<ProjectionTreeNode> deepProjectionCreation,
-            out Action<ProjectionTreeNode> chooseProjection
+        public override Action<ProjectionTreeNode> ChooseProjection(
+            ulong? environmentId = null,
+            ulong? toolId = null,
+            ulong? hoveredObjectId = null,
+            List<AbstractUMI3DInput> selectedInputs = null
         )
         {
-            adequation = node =>
+            return node =>
             {
-                var interactionDto = node.model.Node.nodeDto.interactionDto;
-                var nodeDto = (ProjectionTreeManipulationNodeDto)node.model.Node.nodeDto;
-                return interactionDto is ManipulationDto
-                && nodeDto.manipulationDofGroupDto.dofs == sep.dofs;
-            };
-
-            deepProjectionCreation = () =>
-            {
-                AbstractUMI3DInput projection = findInput?.Invoke();
-
-                if (projection == null)
+                if (environmentId.HasValue && toolId.HasValue && hoveredObjectId.HasValue)
                 {
-                    throw new NoInputFoundException();
+                    var interactionDto = node.model.Node.nodeDto.interactionDto;
+                    node.projectedInput.Associate(
+                        environmentId.Value,
+                        interactionDto as ManipulationDto,
+                        sep.dofs,
+                        toolId.Value,
+                        hoveredObjectId.Value
+                    );
                 }
 
-                return new ProjectionTreeNode(
-                    treeId: treeId,
-                    nodeId: dto.id,
-                    new ProjectionTreeManipulationNodeDto()
-                    {
-                        dto = dto,
-                        manipulationDofGroupDto = sep
-                    },
-                    projection,
-                    projectionTree_SO
-                );
-            };
-
-            chooseProjection = node =>
-            {
-                var interactionDto = node.model.Node.nodeDto.interactionDto;
-                node.projectedInput.Associate(
-                    environmentId,
-                    interactionDto as ManipulationDto,
-                    sep.dofs,
-                    toolId,
-                    hoveredObjectId
-                );
+                selectedInputs?.Add(node.projectedInput);
             };
         }
     }

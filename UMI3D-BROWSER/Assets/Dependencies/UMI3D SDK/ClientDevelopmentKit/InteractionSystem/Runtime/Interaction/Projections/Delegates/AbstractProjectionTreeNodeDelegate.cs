@@ -39,77 +39,38 @@ namespace umi3d.cdk.interaction
         }
 
         /// <summary>
-        /// When chosen to project, select the input found.
+        /// Return a predicate the is true if the node is compatible with the dto.
         /// </summary>
         /// <param name="dto"></param>
-        /// <param name="findInput">Find the input that matches this interaction.</param>
-        /// <param name="adequation">Is the [node] in adequation with this <paramref name="dto"/>.</param>
-        /// <param name="deepProjectionCreation">Create a tree node with the corresponding to a concreate node type.</param>
-        /// <param name="chooseProjection">Select the input found.</param>
-        /// <param name="selectedInputs"></param>
-        public abstract void PrepareForNodeFactory(
+        /// <returns></returns>
+        public abstract Predicate<ProjectionTreeNode> IsNodeCompatible(Dto dto);
+
+        /// <summary>
+        /// Return a <see cref="Func{ProjectionTreeNode}"/> that will create a tree node for this input found by <paramref name="findInput"/>.
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <param name="findInput"></param>
+        /// <returns></returns>
+        public abstract Func<ProjectionTreeNode> CreateNodeForInput(
             Dto dto,
-            Func<AbstractUMI3DInput> findInput,
-            out Predicate<ProjectionTreeNode> adequation,
-            out Func<ProjectionTreeNode> deepProjectionCreation,
-            out Action<ProjectionTreeNode> chooseProjection,
-            List<AbstractUMI3DInput> selectedInputs
+            Func<AbstractUMI3DInput> findInput
         );
 
         /// <summary>
-        /// When chosen to project, select the input found and associate it with the interaction.
+        /// Return a delegate that<br/>
+        /// - if <paramref name="environmentId"/> and <paramref name="toolId"/> and <paramref name="hoveredObjectId"/> are not null then associated the dto with its input.<br/>
+        /// - if <paramref name="selectedInputs"/> is not null select the node's input.
         /// </summary>
-        /// <param name="dto"></param>
         /// <param name="environmentId"></param>
         /// <param name="toolId"></param>
         /// <param name="hoveredObjectId"></param>
-        /// <param name="findInput">Find the input that match this interaction.</param>
-        /// <param name="adequation">Is the [node] in adequation with this <paramref name="dto"/>.</param>
-        /// <param name="deepProjectionCreation">Create a tree node with the corresponding to a concreate node type.</param>
-        /// <param name="chooseProjection">Select this input and associate the dto with this input.</param>
         /// <param name="selectedInputs"></param>
-        public abstract void PrepareForNodeFactory(
-            Dto dto,
-            ulong environmentId,
-            ulong toolId,
-            ulong hoveredObjectId,
-            Func<AbstractUMI3DInput> findInput,
-            out Predicate<ProjectionTreeNode> adequation,
-            out Func<ProjectionTreeNode> deepProjectionCreation,
-            out Action<ProjectionTreeNode> chooseProjection,
-            List<AbstractUMI3DInput> selectedInputs
+        /// <returns></returns>
+        public abstract Action<ProjectionTreeNode> ChooseProjection(
+            ulong? environmentId = null,
+            ulong? toolId = null,
+            ulong? hoveredObjectId = null,
+            List<AbstractUMI3DInput> selectedInputs = null
         );
-
-        /// <summary>
-        /// When chosen to project, associate it with the interaction.
-        /// </summary>
-        /// <param name="dto"></param>
-        /// <param name="environmentId"></param>
-        /// <param name="toolId"></param>
-        /// <param name="hoveredObjectId"></param>
-        /// <param name="findInput">Find the input that match this interaction.</param>
-        /// <param name="adequation">Is the [node] in adequation with this <paramref name="dto"/>.</param>
-        /// <param name="deepProjectionCreation">Create a tree node with the corresponding to a concreate node type.</param>
-        /// <param name="chooseProjection"> Associate the dto with this input but don't select it.</param>
-        public abstract void PrepareForNodeFactory(
-            Dto dto,
-            ulong environmentId,
-            ulong toolId,
-            ulong hoveredObjectId,
-            Func<AbstractUMI3DInput> findInput,
-            out Predicate<ProjectionTreeNode> adequation,
-            out Func<ProjectionTreeNode> deepProjectionCreation,
-            out Action<ProjectionTreeNode> chooseProjection
-        );
-
-        /// <summary>
-        /// Exception thrown when not associated input has been found for an interaction.
-        /// </summary>
-        public class NoInputFoundException : System.Exception
-        {
-            public NoInputFoundException() { }
-            public NoInputFoundException(string message) : base(message) { }
-            public NoInputFoundException(string message, System.Exception inner) : base(message, inner) { }
-        }
     }
 }

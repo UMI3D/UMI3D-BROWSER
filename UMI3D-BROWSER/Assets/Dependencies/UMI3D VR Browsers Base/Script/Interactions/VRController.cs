@@ -175,9 +175,9 @@ namespace umi3dVRBrowsersBase.interactions
                         try
                         {
                             AbstractUMI3DInput newInput = projectionMemory.PartialProject(
+                                manip as ManipulationDto, 
                                 this, 
                                 UMI3DGlobalID.EnvironmentId, 
-                                manip as ManipulationDto, 
                                 tool.id, 
                                 hoveredObjectId,
                                 false, 
@@ -198,7 +198,7 @@ namespace umi3dVRBrowsersBase.interactions
                             else
                                 throw new System.Exception("Internal Error");
                         }
-                        catch (ProjectionMemory.NoInputFoundException noInputException)
+                        catch (NoInputFoundException noInputException)
                         {
                             throw new System.Exception("Internal Error", noInputException);
                         }
@@ -227,7 +227,14 @@ namespace umi3dVRBrowsersBase.interactions
                     Debug.Log("Event menu item");
                     try
                     {
-                        AbstractUMI3DInput newInput = projectionMemory.PartialProject(this, UMI3DGlobalID.EnvironmentId, evt as EventDto, tool.id, hoveredObjectId, false);
+                        AbstractUMI3DInput newInput = projectionMemory.PartialProject(
+                            evt as EventDto,
+                            this,
+                            UMI3DGlobalID.EnvironmentId,
+                            tool.id,
+                            hoveredObjectId,
+                            false
+                        );
                         if (newInput != null)
                         {
                             var toolInputs = new List<AbstractUMI3DInput>();
@@ -243,7 +250,7 @@ namespace umi3dVRBrowsersBase.interactions
                         else
                             throw new System.Exception("Internal Error");
                     }
-                    catch (ProjectionMemory.NoInputFoundException noInputException)
+                    catch (NoInputFoundException noInputException)
                     {
                         throw new System.Exception("Internal Error", noInputException);
                     }

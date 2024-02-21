@@ -24,69 +24,22 @@ namespace umi3d.cdk.interaction
     [CreateAssetMenu(fileName = "UMI3D PT Parameter Node Delegate", menuName = "UMI3D/Interactions/PT Delegates/PT Parameter Node Delegate")]
     public class ProjectionTreeParameterNodeDelegate : AbstractProjectionTreeNodeDelegate<AbstractParameterDto>
     {
-        public override void PrepareForNodeFactory(
-            AbstractParameterDto dto,
-            Func<AbstractUMI3DInput> findInput,
-            out Predicate<ProjectionTreeNode> adequation,
-            out Func<ProjectionTreeNode> deepProjectionCreation,
-            out Action<ProjectionTreeNode> chooseProjection,
-            List<AbstractUMI3DInput> selectedInputs
-        )
+        public override Predicate<ProjectionTreeNode> IsNodeCompatible(AbstractParameterDto dto)
         {
-            adequation = node =>
-            {
-                var interactionDto = node.model.Node.nodeDto.interactionDto;
-                return interactionDto is AbstractParameterDto 
-                && (interactionDto as AbstractParameterDto).GetType().Equals(dto.GetType());
-            };
-
-            deepProjectionCreation = () =>
-            {
-                AbstractUMI3DInput projection = findInput?.Invoke();
-
-                if (projection == null)
-                {
-                    throw new NoInputFoundException();
-                }
-
-                return new ProjectionTreeNode(
-                    treeId: treeId,
-                    nodeId: dto.id,
-                    new ProjectionTreeParameterNodeDto()
-                    {
-                        dto = dto
-                    },
-                    projection,
-                    projectionTree_SO
-                );
-            };
-
-            chooseProjection = node =>
-            {
-                selectedInputs.Add(node.projectedInput);
-            };
-        }
-
-        public override void PrepareForNodeFactory(
-            AbstractParameterDto dto,
-            ulong environmentId,
-            ulong toolId,
-            ulong hoveredObjectId,
-            Func<AbstractUMI3DInput> findInput,
-            out Predicate<ProjectionTreeNode> adequation,
-            out Func<ProjectionTreeNode> deepProjectionCreation,
-            out Action<ProjectionTreeNode> chooseProjection,
-            List<AbstractUMI3DInput> selectedInputs
-        )
-        {
-            adequation = node =>
+            return node =>
             {
                 var interactionDto = node.model.Node.nodeDto.interactionDto;
                 return interactionDto is AbstractParameterDto
                 && (interactionDto as AbstractParameterDto).GetType().Equals(dto.GetType());
             };
+        }
 
-            deepProjectionCreation = () =>
+        public override Func<ProjectionTreeNode> CreateNodeForInput(
+            AbstractParameterDto dto,
+            Func<AbstractUMI3DInput> findInput
+        )
+        {
+            return () =>
             {
                 AbstractUMI3DInput projection = findInput?.Invoke();
 
@@ -105,69 +58,30 @@ namespace umi3d.cdk.interaction
                     projection,
                     projectionTree_SO
                 );
-            };
-
-            chooseProjection = node =>
-            {
-                var interactionDto = node.model.Node.nodeDto.interactionDto;
-                node.projectedInput.Associate(
-                    environmentId,
-                    interactionDto,
-                    toolId,
-                    hoveredObjectId
-                );
-                selectedInputs.Add(node.projectedInput);
             };
         }
 
-        public override void PrepareForNodeFactory(
-            AbstractParameterDto dto,
-            ulong environmentId,
-            ulong toolId,
-            ulong hoveredObjectId,
-            Func<AbstractUMI3DInput> findInput,
-            out Predicate<ProjectionTreeNode> adequation,
-            out Func<ProjectionTreeNode> deepProjectionCreation,
-            out Action<ProjectionTreeNode> chooseProjection
+        public override Action<ProjectionTreeNode> ChooseProjection(
+            ulong? environmentId = null,
+            ulong? toolId = null,
+            ulong? hoveredObjectId = null,
+            List<AbstractUMI3DInput> selectedInputs = null
         )
         {
-            adequation = node =>
+            return node =>
             {
-                var interactionDto = node.model.Node.nodeDto.interactionDto;
-                return interactionDto is AbstractParameterDto
-                && (interactionDto as AbstractParameterDto).GetType().Equals(dto.GetType());
-            };
-
-            deepProjectionCreation = () =>
-            {
-                AbstractUMI3DInput projection = findInput?.Invoke();
-
-                if (projection == null)
+                if (environmentId.HasValue && toolId.HasValue && hoveredObjectId.HasValue)
                 {
-                    throw new NoInputFoundException();
+                    var interactionDto = node.model.Node.nodeDto.interactionDto;
+                    node.projectedInput.Associate(
+                        environmentId.Value,
+                        interactionDto,
+                        toolId.Value,
+                        hoveredObjectId.Value
+                    );
                 }
 
-                return new ProjectionTreeNode(
-                    treeId: treeId,
-                    nodeId: dto.id,
-                    new ProjectionTreeParameterNodeDto()
-                    {
-                        dto = dto
-                    },
-                    projection,
-                    projectionTree_SO
-                );
-            };
-
-            chooseProjection = node =>
-            {
-                var interactionDto = node.model.Node.nodeDto.interactionDto;
-                node.projectedInput.Associate(
-                    environmentId,
-                    interactionDto,
-                    toolId,
-                    hoveredObjectId
-                );
+                selectedInputs?.Add(node.projectedInput);
             };
         }
     }

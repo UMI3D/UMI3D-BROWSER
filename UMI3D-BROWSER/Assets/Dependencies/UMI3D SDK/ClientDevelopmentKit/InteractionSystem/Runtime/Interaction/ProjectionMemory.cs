@@ -35,11 +35,6 @@ namespace umi3d.cdk.interaction
         public ProjectionTreeLinkNodeDelegate ptLinkNodeDelegate;
         public ProjectionTreeParameterNodeDelegate ptParameterNodeDelegate;
 
-        /// <summary>
-        /// Projection memory.
-        /// </summary>
-        protected ProjectionTreeNode memoryRoot;
-
         protected string treeId = "";
         /// <summary>
         /// Id of the projection tree.
@@ -55,12 +50,16 @@ namespace umi3d.cdk.interaction
                 return treeId;
             }
         }
+        /// <summary>
+        /// The root of the tree.
+        /// </summary>
+        protected ProjectionTreeNode treeRoot;
 
         protected virtual void Awake()
         {
             logger.MainContext = this;
             logger.MainTag = nameof(ProjectionMemory);
-            memoryRoot = new ProjectionTreeNode(
+            treeRoot = new ProjectionTreeNode(
                 TreeId,
                 0,
                 null,
@@ -97,11 +96,7 @@ namespace umi3d.cdk.interaction
             bool unused = true
         )
         {
-            ProjectionTreeNode currentMemoryTreeState = memoryRoot;
-
-            System.Func<ProjectionTreeNode> deepProjectionCreation;
-            System.Predicate<ProjectionTreeNode> adequation;
-            System.Action<ProjectionTreeNode> chooseProjection;
+            ProjectionTreeNode currentMemoryTreeState = treeRoot;
 
             List<AbstractUMI3DInput> selectedInputs = new();
 
@@ -109,127 +104,41 @@ namespace umi3d.cdk.interaction
             {
                 AbstractInteractionDto interaction = interactions[depth];
 
-                switch (interaction)
+                if (interaction is ManipulationDto manipulationDto)
                 {
-                    case ManipulationDto manipulationDto:
+                    DofGroupOptionDto[] options = manipulationDto.dofSeparationOptions.ToArray();
+                    DofGroupOptionDto bestDofGroupOption = controller.FindBest(options);
 
-                        DofGroupOptionDto[] options = manipulationDto.dofSeparationOptions.ToArray();
-                        DofGroupOptionDto bestDofGroupOption = controller.FindBest(options);
-
-                        foreach (DofGroupDto sep in bestDofGroupOption.separations)
-                        {
-                            ptManipulationNodeDelegate.sep = sep;
-                            ptManipulationNodeDelegate.PrepareForNodeFactory(
-                                manipulationDto,
-                                () =>
-                                {
-                                    return controller.FindInput(manipulationDto, sep, unused);
-                                },
-                                out adequation,
-                                out deepProjectionCreation,
-                                out chooseProjection,
-                                selectedInputs
-                            );
-
-                            currentMemoryTreeState = Project(
-                                currentMemoryTreeState,
-                                adequation,
-                                deepProjectionCreation,
-                                chooseProjection
-                            );
-                        }
-                        break;
-
-                    case EventDto eventDto:
-
-                        ptEventNodeDelegate.PrepareForNodeFactory(
-                            eventDto, 
-                            () =>
-                            {
-                                return controller.FindInput(eventDto, unused);
-                            }, 
-                            out adequation, 
-                            out deepProjectionCreation, 
-                            out chooseProjection, 
-                            selectedInputs
-                        );
-
-                        currentMemoryTreeState = Project(
+                    foreach (DofGroupDto sep in bestDofGroupOption.separations)
+                    {
+                        currentMemoryTreeState = GetProjectionNode(
+                            controller,
+                            interaction,
                             currentMemoryTreeState,
-                            adequation,
-                            deepProjectionCreation,
-                            chooseProjection
+                            null,
+                            null,
+                            null,
+                            selectedInputs,
+                            unused,
+                            false,
+                            sep
                         );
-                        break;
-
-                    case FormDto formDto:
-
-                        ptFormNodeDelegate.PrepareForNodeFactory(
-                            formDto, 
-                            () =>
-                            {
-                                return controller.FindInput(formDto, unused);
-                            },
-                            out adequation, 
-                            out deepProjectionCreation, 
-                            out chooseProjection, 
-                            selectedInputs
-                        );
-
-                        currentMemoryTreeState = Project(
+                    }
+                }
+                else
+                {
+                    currentMemoryTreeState = GetProjectionNode(
+                            controller,
+                            interaction,
                             currentMemoryTreeState,
-                            adequation,
-                            deepProjectionCreation,
-                            chooseProjection
+                            null,
+                            null,
+                            null,
+                            selectedInputs,
+                            unused,
+                            false,
+                            null
                         );
-
-                        break;
-
-                    case LinkDto linkDto:
-
-                        ptLinkNodeDelegate.PrepareForNodeFactory(linkDto, 
-                            () =>
-                            {
-                                return controller.FindInput(linkDto, unused);
-                            },
-                            out adequation,
-                            out deepProjectionCreation,
-                            out chooseProjection,
-                            selectedInputs
-                        );
-
-                        currentMemoryTreeState = Project(
-                            currentMemoryTreeState, 
-                            adequation, 
-                            deepProjectionCreation, 
-                            chooseProjection
-                        );
-                        break;
-
-                    case AbstractParameterDto parameterDto:
-
-                        ptParameterNodeDelegate.PrepareForNodeFactory(
-                            parameterDto,
-                            () =>
-                            {
-                                return controller.FindInput(parameterDto, unused);
-                            },
-                            out adequation,
-                            out deepProjectionCreation,
-                            out chooseProjection,
-                            selectedInputs
-                        );
-
-                        currentMemoryTreeState = Project(
-                            currentMemoryTreeState, 
-                            adequation, 
-                            deepProjectionCreation, 
-                            chooseProjection
-                        );
-                        break;
-
-                    default:
-                        throw new System.Exception("Unknown interaction type, can't project !");
                 }
             }
 
@@ -243,9 +152,9 @@ namespace umi3d.cdk.interaction
         /// <param name="evt">Event dto to project</param>
         /// <param name="unusedInputsOnly">Project on unused inputs only</param>
         public AbstractUMI3DInput PartialProject<Dto>(
+            Dto dto,
             AbstractController controller,
             ulong environmentId,
-            Dto dto,
             ulong toolId,
             ulong hoveredObjectId,
             bool unusedInputsOnly = false,
@@ -253,98 +162,17 @@ namespace umi3d.cdk.interaction
         )
             where Dto : AbstractInteractionDto
         {
-            System.Predicate<ProjectionTreeNode> adequation;
-            System.Func<ProjectionTreeNode> deepProjectionCreation;
-            System.Action<ProjectionTreeNode> chooseProjection;
-
-            switch (dto)
-            {
-                case ManipulationDto manipulationDto:
-                    ptManipulationNodeDelegate.sep = dof;
-                    ptManipulationNodeDelegate.PrepareForNodeFactory(
-                        manipulationDto,
-                        environmentId,
-                        toolId,
-                        hoveredObjectId,
-                        () =>
-                        {
-                            return controller.FindInput(manipulationDto, dof, unusedInputsOnly);
-                        },
-                        out adequation,
-                        out deepProjectionCreation,
-                        out chooseProjection
-                    );
-                    break;
-                case EventDto eventDto:
-                    ptEventNodeDelegate.PrepareForNodeFactory(
-                        eventDto,
-                        environmentId,
-                        toolId,
-                        hoveredObjectId,
-                        () =>
-                        {
-                            return controller.FindInput(eventDto, unusedInputsOnly);
-                        },
-                        out adequation,
-                        out deepProjectionCreation,
-                        out chooseProjection
-                    );
-                    break;
-                case FormDto formDto:
-                    ptFormNodeDelegate.PrepareForNodeFactory(
-                        formDto,
-                        environmentId,
-                        toolId,
-                        hoveredObjectId,
-                        () =>
-                        {
-                            return controller.FindInput(formDto, unusedInputsOnly);
-                        },
-                        out adequation,
-                        out deepProjectionCreation,
-                        out chooseProjection
-                    );
-                    break;
-                case LinkDto linkDto:
-                    ptLinkNodeDelegate.PrepareForNodeFactory(
-                        linkDto,
-                        environmentId,
-                        toolId,
-                        hoveredObjectId,
-                        () =>
-                        {
-                            return controller.FindInput(linkDto, unusedInputsOnly);
-                        },
-                        out adequation,
-                        out deepProjectionCreation,
-                        out chooseProjection
-                    );
-                    break;
-                case AbstractParameterDto parameterDto:
-                    ptParameterNodeDelegate.PrepareForNodeFactory(
-                        parameterDto,
-                        environmentId,
-                        toolId,
-                        hoveredObjectId,
-                        () =>
-                        {
-                            return controller.FindInput(parameterDto, unusedInputsOnly);
-                        },
-                        out adequation,
-                        out deepProjectionCreation,
-                        out chooseProjection
-                    );
-                    break;
-                default:
-                    throw new System.Exception("Unknown interaction type : " + dto);
-            }
-
-            return Project(
-                memoryRoot, 
-                adequation, 
-                deepProjectionCreation, 
-                chooseProjection, 
-                unusedInputsOnly
+            return GetProjectionNode(
+                controller,
+                dto,
+                treeRoot,
+                environmentId,
+                toolId,
+                hoveredObjectId,
+                null,
+                unusedInputsOnly,
+                false,
+                dof
             ).projectedInput;
         }
 
@@ -385,159 +213,166 @@ namespace umi3d.cdk.interaction
                 }
             }
 
-            ProjectionTreeNode currentMemoryTreeState = memoryRoot;
-
-            System.Func<ProjectionTreeNode> deepProjectionCreation;
-            System.Predicate<ProjectionTreeNode> adequation;
-            System.Action<ProjectionTreeNode> chooseProjection;
-
-            var selectedInputs = new List<AbstractUMI3DInput>();
+            ProjectionTreeNode currentMemoryTreeState = treeRoot;
+            List<AbstractUMI3DInput> selectedInputs = new List<AbstractUMI3DInput>();
 
             for (int depth = 0; depth < interactions.Length; depth++)
             {
-                AbstractInteractionDto interaction = interactions[depth];
+              AbstractInteractionDto interaction = interactions[depth];
 
-                switch (interaction)
+                if (interaction is ManipulationDto manipulationDto)
                 {
-                    case ManipulationDto manipulationDto:
+                    DofGroupOptionDto[] options = (interaction as ManipulationDto).dofSeparationOptions.ToArray();
+                    DofGroupOptionDto bestDofGroupOption = controller.FindBest(options);
 
-                        DofGroupOptionDto[] options = (interaction as ManipulationDto).dofSeparationOptions.ToArray();
-                        DofGroupOptionDto bestDofGroupOption = controller.FindBest(options);
-
-                        foreach (DofGroupDto sep in bestDofGroupOption.separations)
-                        {
-                            ptManipulationNodeDelegate.sep = sep;
-                            ptManipulationNodeDelegate.PrepareForNodeFactory(
-                                manipulationDto,
-                                environmentId,
-                                toolId,
-                                hoveredObjectId,
-                                () =>
-                                {
-                                    return controller.FindInput(manipulationDto, sep, true);
-                                },
-                                out adequation,
-                                out deepProjectionCreation,
-                                out chooseProjection,
-                                selectedInputs
-                            );
-
-                            currentMemoryTreeState = Project(
-                                currentMemoryTreeState, 
-                                adequation, 
-                                deepProjectionCreation, 
-                                chooseProjection
-                            );
-
-                        }
-                        break;
-
-                    case EventDto eventDto:
-
-                        ptEventNodeDelegate.PrepareForNodeFactory(
-                            eventDto,
-                            environmentId,
-                            toolId,
-                            hoveredObjectId,
-                            () =>
-                            {
-                                return controller.FindInput(eventDto, true, depth == 0 && foundHoldableEvent);
-                            },
-                            out adequation,
-                            out deepProjectionCreation,
-                            out chooseProjection,
-                            selectedInputs
-                        );
-
-                        currentMemoryTreeState = Project(
-                            currentMemoryTreeState, 
-                            adequation, 
-                            deepProjectionCreation, 
-                            chooseProjection
-                        );
-                        break;
-
-                    case FormDto formDto:
-
-                        ptFormNodeDelegate.PrepareForNodeFactory(
-                            formDto,
-                            environmentId,
-                            toolId,
-                            hoveredObjectId,
-                            () =>
-                            {
-                                return controller.FindInput(formDto, true);
-                            },
-                            out adequation,
-                            out deepProjectionCreation,
-                            out chooseProjection,
-                            selectedInputs
-                        );
-
-                        currentMemoryTreeState = Project(
+                    foreach (DofGroupDto sep in bestDofGroupOption.separations)
+                    {
+                        currentMemoryTreeState = GetProjectionNode(
+                            controller,
+                            interaction,
                             currentMemoryTreeState,
-                            adequation,
-                            deepProjectionCreation,
-                            chooseProjection
-                        );
-                        break;
-
-                    case LinkDto linkDto:
-
-                        ptLinkNodeDelegate.PrepareForNodeFactory(
-                            linkDto,
                             environmentId,
                             toolId,
                             hoveredObjectId,
-                            () =>
-                            {
-                                return controller.FindInput(linkDto, true);
-                            },
-                            out adequation,
-                            out deepProjectionCreation,
-                            out chooseProjection,
-                            selectedInputs
+                            selectedInputs,
+                            true,
+                            false,
+                            sep
                         );
-
-                        currentMemoryTreeState = Project(
-                            currentMemoryTreeState,
-                            adequation,
-                            deepProjectionCreation,
-                            chooseProjection
-                        );
-                        break;
-
-                    case AbstractParameterDto parameterDto:
-
-                        ptParameterNodeDelegate.PrepareForNodeFactory(
-                            parameterDto,
-                            environmentId,
-                            toolId,
-                            hoveredObjectId,
-                            () =>
-                            {
-                                return controller.FindInput(parameterDto, true);
-                            },
-                            out adequation,
-                            out deepProjectionCreation,
-                            out chooseProjection,
-                            selectedInputs
-                        );
-
-                        currentMemoryTreeState = Project(
-                            currentMemoryTreeState,
-                            adequation,
-                            deepProjectionCreation,
-                            chooseProjection
-                        );
-                        break;
-
-                    default:
-                        throw new System.Exception("Unknown interaction type : " + interaction);
+                    }
+                }
+                else
+                {
+                    currentMemoryTreeState = GetProjectionNode(
+                        controller,
+                        interaction,
+                        currentMemoryTreeState,
+                        environmentId,
+                        toolId,
+                        hoveredObjectId,
+                        selectedInputs,
+                        true,
+                        depth == 0 && foundHoldableEvent,
+                        null
+                    );
                 }
             }
 
             return selectedInputs.ToArray();
+        }
+
+        /// <summary>
+        /// Return projection node.<br/>
+        /// If <paramref name="environmentId"/>, <paramref name="hoveredObjectId"/>, <paramref name="toolId"/> are not null then associate the interaction with its input.<br/>
+        /// If <paramref name="selectedInputs"/> is not null add the found input to the list.
+        /// </summary>
+        /// <param name="controller"></param>
+        /// <param name="interaction"></param>
+        /// <param name="currentMemoryTreeState"></param>
+        /// <param name="environmentId"></param>
+        /// <param name="toolId"></param>
+        /// <param name="hoveredObjectId"></param>
+        /// <param name="selectedInputs"></param>
+        /// <param name="unused"></param>
+        /// <param name="tryToFindInputForHoldableEvent"></param>
+        /// <param name="dof"></param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception"></exception>
+        ProjectionTreeNode GetProjectionNode(
+            AbstractController controller,
+            AbstractInteractionDto interaction,
+            ProjectionTreeNode currentMemoryTreeState,
+            ulong? environmentId = null,
+            ulong? toolId = null,
+            ulong? hoveredObjectId = null,
+            List<AbstractUMI3DInput> selectedInputs = null,
+            bool unused = true,
+            bool tryToFindInputForHoldableEvent = false,
+            DofGroupDto dof = null
+        )
+        {
+            System.Predicate<ProjectionTreeNode> adequation;
+            System.Func<ProjectionTreeNode> deepProjectionCreation;
+            System.Action<ProjectionTreeNode> chooseProjection;
+
+            switch (interaction)
+            {
+                case ManipulationDto manipulationDto:
+
+                    ptManipulationNodeDelegate.sep = dof;
+                    adequation = ptManipulationNodeDelegate.IsNodeCompatible(manipulationDto);
+                    deepProjectionCreation = ptManipulationNodeDelegate.CreateNodeForInput(
+                        manipulationDto,
+                        () =>
+                        {
+                            return controller.FindInput(manipulationDto, dof, unused);
+                        }
+                    );
+                    chooseProjection = ptManipulationNodeDelegate.ChooseProjection(environmentId, toolId, hoveredObjectId, selectedInputs);
+                    break;
+
+                case EventDto eventDto:
+
+                    adequation = ptEventNodeDelegate.IsNodeCompatible(eventDto);
+                    deepProjectionCreation = ptEventNodeDelegate.CreateNodeForInput(
+                        eventDto,
+                        () =>
+                        {
+                            return controller.FindInput(eventDto, unused, tryToFindInputForHoldableEvent);
+                        }
+                    );
+                    chooseProjection = ptEventNodeDelegate.ChooseProjection(environmentId, toolId, hoveredObjectId, selectedInputs);
+                    break;
+
+                case FormDto formDto:
+
+                    adequation = ptFormNodeDelegate.IsNodeCompatible(formDto);
+                    deepProjectionCreation = ptFormNodeDelegate.CreateNodeForInput(
+                        formDto,
+                        () =>
+                        {
+                            return controller.FindInput(formDto, unused);
+                        }
+                    );
+                    chooseProjection = ptFormNodeDelegate.ChooseProjection(environmentId, toolId, hoveredObjectId, selectedInputs);
+                    break;
+
+                case LinkDto linkDto:
+
+                    adequation = ptLinkNodeDelegate.IsNodeCompatible(linkDto);
+                    deepProjectionCreation = ptLinkNodeDelegate.CreateNodeForInput(
+                        linkDto,
+                        () =>
+                        {
+                            return controller.FindInput(linkDto, unused);
+                        }
+                    );
+                    chooseProjection = ptLinkNodeDelegate.ChooseProjection(environmentId, toolId, hoveredObjectId, selectedInputs);
+                    break;
+
+                case AbstractParameterDto parameterDto:
+
+                    adequation = ptParameterNodeDelegate.IsNodeCompatible(parameterDto);
+                    deepProjectionCreation = ptParameterNodeDelegate.CreateNodeForInput(
+                        parameterDto,
+                        () =>
+                        {
+                            return controller.FindInput(parameterDto, unused);
+                        }
+                    );
+                    chooseProjection = ptParameterNodeDelegate.ChooseProjection(environmentId, toolId, hoveredObjectId, selectedInputs);
+                    break;
+
+                default:
+                    throw new System.Exception("Unknown interaction type, can't project !");
+            }
+
+            return Project(
+                currentMemoryTreeState,
+                adequation,
+                deepProjectionCreation,
+                chooseProjection
+            );
         }
 
         /// <summary>
@@ -549,19 +384,28 @@ namespace umi3d.cdk.interaction
         /// <param name="currentTreeNode">Current node in tree projection</param>
         /// <param name="unusedInputsOnly">Project on unused inputs only</param>
         /// <exception cref="NoInputFoundException"></exception>
-        private ProjectionTreeNode Project(ProjectionTreeNode currentTreeNode,
+        private ProjectionTreeNode Project(
+            ProjectionTreeNode currentTreeNode,
             System.Predicate<ProjectionTreeNode> nodeAdequationTest,
             System.Func<ProjectionTreeNode> deepProjectionCreation,
             System.Action<ProjectionTreeNode> chooseProjection,
             bool unusedInputsOnly = true,
-            bool updateMemory = true)
+            bool updateMemory = true
+        )
         {
+            // Try first to project on unused inputs.
             if (!unusedInputsOnly)
             {
                 try
                 {
-                    ProjectionTreeNode p = Project(currentTreeNode, nodeAdequationTest, deepProjectionCreation, chooseProjection, true, updateMemory);
-                    return p;
+                    return Project(
+                        currentTreeNode,
+                        nodeAdequationTest,
+                        deepProjectionCreation,
+                        chooseProjection,
+                        true,
+                        updateMemory
+                    );
                 }
                 catch (NoInputFoundException) { }
             }
@@ -583,7 +427,7 @@ namespace umi3d.cdk.interaction
             }
             else
             {
-                ProjectionTreeNode rootProjection = memoryRoot.children.Find(nodeAdequationTest);
+                ProjectionTreeNode rootProjection = treeRoot.children.Find(nodeAdequationTest);
                 if ((rootProjection == null) || (unusedInputsOnly && !rootProjection.projectedInput.IsAvailable()))
                 {
                     deepProjection = deepProjectionCreation();
@@ -600,16 +444,6 @@ namespace umi3d.cdk.interaction
                     return rootProjection;
                 }
             }
-        }
-
-        /// <summary>
-        /// Exception thrown when not associated input has been found for an interaction.
-        /// </summary>
-        public class NoInputFoundException : System.Exception
-        {
-            public NoInputFoundException() { }
-            public NoInputFoundException(string message) : base(message) { }
-            public NoInputFoundException(string message, System.Exception inner) : base(message, inner) { }
         }
     }
 }

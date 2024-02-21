@@ -75,6 +75,7 @@ namespace umi3d.cdk.interaction
         {
             get
             {
+
                 //var buffer = new List<ProjectionTreeNode>();
                 //foreach (ulong id in childrensId)
                 //{

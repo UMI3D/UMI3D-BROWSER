@@ -96,6 +96,14 @@ namespace umi3d.cdk.interaction
             }
         }
 
+        public List<ulong> Children
+        {
+            get
+            {
+                return nodes[Index].childrenId;
+            }
+        }
+
         public bool IsChild(ulong id)
         {
             var node = nodes.Find(node =>  node.id == id);

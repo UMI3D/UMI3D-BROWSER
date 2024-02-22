@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 using System.Collections.Generic;
+using System.Linq;
 using umi3d.common.interaction;
 using umi3d.debug;
 using UnityEngine;
@@ -21,8 +22,8 @@ using UnityEngine;
 namespace umi3d.cdk.interaction
 {
     /// <summary>
-    /// Saves and manages the links between projected tools and their associated inputs. 
-    /// This projection is based on a tree constituted of <see cref="ProjectionTreeNode"/>.
+    /// Manage the links between projected tools and their associated inputs. 
+    /// This projection is based on a tree <see cref="ProjectionTreeDto"/> constituted of <see cref="ProjectionTreeNodeDto"/>.
     /// </summary>
     public class ProjectionMemory : MonoBehaviour
     {
@@ -419,30 +420,72 @@ namespace umi3d.cdk.interaction
                 catch (NoInputFoundException) { }
             }
 
-            ProjectionTreeNodeDto projection = currentTreeNode.children.Find(nodeAdequationTest);
-            //if (projection != null)
-            //{
-            //    if (unusedInputsOnly && !projection.input.IsAvailable())
-            //    {
-            //        projection = deepProjectionCreation();
-            //    }
-            //}
-            //else
-            //{
-            //    projection = treeRoot.children.Find(nodeAdequationTest);
-            //    if ((projection == null) || (unusedInputsOnly && !projection.input.IsAvailable()))
-            //    {
-            //        projection = deepProjectionCreation();
-            //    }
+            ProjectionTreeNodeDto? projection;
+            ///<summary>
+            /// Return 1 when projection has been found.<br/>
+            /// Return 0 when projection has been found but the input is not available.<br/>
+            /// Return -1 when projection has not been found.
+            /// </summary>
+            int _FindProjection(List<ProjectionTreeNodeDto> children, out ProjectionTreeNodeDto? projection)
+            {
+                IEnumerable<int> indexes = Enumerable
+                    .Range(0, children.Count)
+                    .Where(i =>
+                    {
+                        return nodeAdequationTest?.Invoke(children[i]) ?? false;
+                    });
 
-            //    if (updateMemory)
-            //    {
-            //        treeModel.AddChild(currentTreeNode.id, projection);
-            //    }
-            //}
-            
-            chooseProjection(projection);
-            return projection;
+                foreach (var index in indexes)
+                {
+                    var tmp = children[index];
+                    if (unusedInputsOnly && !tmp.input.IsAvailable())
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        projection = tmp;
+                        return 1;
+                    }
+                }
+
+                projection = null;
+                return indexes.Count() == 0 ? -1 : 0;
+            }
+
+            int projectionStatus = _FindProjection(treeModel.GetAllSubNodes(currentTreeNode), out projection);
+            if (projectionStatus == -1) 
+            {
+                projectionStatus = _FindProjection(treeModel.GetAllSubNodes(treeRoot), out projection);
+                if (projectionStatus <= 0)
+                {
+                    projection = deepProjectionCreation();
+
+                    if (updateMemory)
+                    {
+                        treeModel.AddChild(currentTreeNode.id, projection.Value);
+                    }
+                }
+                else
+                {
+                    if (updateMemory)
+                    {
+                        treeModel.RemoveChild(projection.Value.parentId, projection.Value.id);
+                        treeModel.AddChild(currentTreeNode.id, projection.Value);
+                    }
+                }
+            }
+            else if (projectionStatus == 1)
+            {
+                if (updateMemory)
+                {
+                    treeModel.RemoveChild(projection.Value.parentId, projection.Value.id);
+                    treeModel.AddChild(currentTreeNode.id, projection.Value);
+                }
+            }
+
+            chooseProjection(projection.Value);
+            return projection.Value;
         }
     }
 }

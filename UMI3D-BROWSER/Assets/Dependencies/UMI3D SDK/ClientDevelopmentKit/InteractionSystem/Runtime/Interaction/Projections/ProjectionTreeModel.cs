@@ -79,6 +79,34 @@ namespace umi3d.cdk.interaction
             return IndexOfChildInParent(Nodes[parentIndex], child) != -1;
         }
 
+        /// <summary>
+        /// Breadth-first search to get all sub nodes of the <paramref name="parent"/> nodes.<br/>
+        /// 
+        /// <b>WARNING:</b> Please avoid calling this field too often as it is slow to compute.
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <returns></returns>
+        public List<ProjectionTreeNodeDto> GetAllSubNodes(ProjectionTreeNodeDto parent)
+        {
+            List<ProjectionTreeNodeDto> buffer = new();
+
+            Queue<List<ProjectionTreeNodeDto>> queue = new();
+            queue.Enqueue(parent.children);
+
+            while (queue.Count != 0)
+            {
+                var level = queue.Dequeue();
+                buffer.AddRange(level);
+
+                for (int i = 0; i < (level?.Count ?? 0); i++)
+                {
+                    queue.Enqueue(level[i].children);
+                }
+            }
+
+            return buffer;
+        }
+
         public bool AddRoot(ProjectionTreeNodeDto root)
         {
             if (projectionTree_SO.trees.FindIndex(tree =>
@@ -123,16 +151,42 @@ namespace umi3d.cdk.interaction
                 parentNode.children = new();
             }
 
-            if (IndexOfChildInParent(parentNode, child.id) == -1)
-            {
-                parentNode.children.Add(child);
-            }
+            child.parentId = parent;
+            parentNode.children.Add(child);
 
-            if (IndexOf(child.id) == -1)
+            var childIndex = IndexOf(child.id);
+            if (childIndex == -1)
             {
                 Nodes.Add(child);
             }
+            else
+            {
+                Nodes[childIndex] = child;
+            }
             Nodes[parentIndex] = parentNode;
+            return true;
+        }
+
+        public bool RemoveChild(ulong parent, ulong child)
+        {
+            var parentIndex = IndexOf(parent);
+            if (parentIndex != -1)
+            {
+                return false;
+            }
+
+            var childIndex = IndexOf(child);
+            if (childIndex != -1)
+            {
+                Nodes.RemoveAt(childIndex);
+            }
+
+            var parentNode = Nodes[parentIndex];
+            parentNode.children?.RemoveAll(_child =>
+            {
+                return _child.id == child;
+            });
+
             return true;
         }
     }

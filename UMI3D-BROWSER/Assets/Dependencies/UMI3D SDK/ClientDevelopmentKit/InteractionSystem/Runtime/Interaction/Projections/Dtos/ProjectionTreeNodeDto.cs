@@ -28,6 +28,10 @@ namespace umi3d.cdk.interaction
         /// </summary>
         public ulong id;
         /// <summary>
+        /// Node's parent id.
+        /// </summary>
+        public ulong parentId;
+        /// <summary>
         /// Tree's id the node belongs to.
         /// </summary>
         public string treeId;

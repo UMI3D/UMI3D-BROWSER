@@ -23,6 +23,7 @@ using umi3d.common;
 using umi3d.common.interaction;
 using umi3dVRBrowsersBase.interactions.input;
 using umi3dVRBrowsersBase.ui.playerMenu;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace umi3dVRBrowsersBase.interactions
@@ -55,13 +56,6 @@ namespace umi3dVRBrowsersBase.interactions
 
         #endregion Inputs Fields
 
-        private float timeSinceLastInput = 0;
-
-        /// <summary>
-        /// Time to wait after last input before considering it as unused.
-        /// </summary>
-        private float inputUsageTimeout = 10;
-
         #endregion Fields
 
         #region Methods
@@ -78,12 +72,6 @@ namespace umi3dVRBrowsersBase.interactions
                 input.Init(this);
             foreach (AbstractUMI3DInput input in booleanInputs)
                 input.Init(this);
-        }
-
-        protected virtual void Update()
-        {
-            if (timeSinceLastInput <= inputUsageTimeout)
-                timeSinceLastInput += Time.deltaTime;
         }
 
         #endregion
@@ -276,7 +264,7 @@ namespace umi3dVRBrowsersBase.interactions
         /// <param name="hoveredObjectId"></param>
         private void ProjectParameters(AbstractTool tool, List<AbstractInteractionDto> interactions, ulong hoveredObjectId)
         {
-            AbstractUMI3DInput[] inputs = projectionMemory.Project(this, UMI3DGlobalID.EnvironmentId, interactions.FindAll(inter => inter is AbstractParameterDto).ToArray(), tool.id, hoveredObjectId);
+            AbstractUMI3DInput[] inputs = projectionManager.Project(this, UMI3DGlobalID.EnvironmentId, interactions.FindAll(inter => inter is AbstractParameterDto).ToArray(), tool.id, hoveredObjectId);
             var toolInputs = new List<AbstractUMI3DInput>();
 
             if (associatedInputs.TryGetValue(tool.id, out AbstractUMI3DInput[] buffer))
@@ -304,27 +292,10 @@ namespace umi3dVRBrowsersBase.interactions
 
         #endregion
 
-        #region Status
-
-        /// <summary>
-        /// Check if the user is currently using the selected Tool.
-        /// </summary>
-        /// <returns>returns true if the user is currently interacting with the tool.</returns>
-        protected override bool isInteracting()
+        public virtual void Update()
         {
-            return (toolManager.toolDelegate.Tool != null) && (timeSinceLastInput <= inputUsageTimeout);
-        }
 
-        /// <summary>
-        /// Check if the user is currently manipulating the tools menu.
-        /// </summary>
-        /// <returns>returns true if the user is currently manipulating the tools menu.</returns>
-        protected override bool isNavigating()
-        {
-            throw new System.NotImplementedException();
         }
-
-        #endregion Status
 
         #region Change mapping
 

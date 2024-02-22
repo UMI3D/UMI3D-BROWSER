@@ -28,6 +28,11 @@ namespace umi3d.cdk.interaction
     {
         public UMI3DInputManager inputManager;
         public UMI3DToolManager toolManager;
+        /// <summary>
+        /// Projection Manager.
+        /// </summary>
+        [Tooltip("Projection Manager")]
+        public ProjectionManager projectionManager;
 
         #region properties
 
@@ -41,35 +46,9 @@ namespace umi3d.cdk.interaction
         /// </summary>
         protected Dictionary<ulong, AbstractUMI3DInput[]> associatedInputs = new Dictionary<ulong, AbstractUMI3DInput[]>();
 
-        /// <summary>
-        /// Controller projection memory.
-        /// </summary>
-        [Tooltip("Controller projection memory")]
-        public ProjectionMemory projectionMemory;
-
         #endregion
 
         #region interface
-
-        /// <summary>
-        /// Check if the user is currently using the selected Tool
-        /// </summary>
-        /// <returns>returns true if the user is currently interacting with the tool.</returns>
-        protected abstract bool isInteracting();
-        /// <summary>
-        /// Check if the user is currently using the selected Tool
-        /// </summary>
-        public bool Interacting => isInteracting();
-
-        /// <summary>
-        /// Check if the user is currently manipulating the tools menu
-        /// </summary>
-        /// <returns>returns true if the user is currently interacting with the tool.</returns>
-        protected abstract bool isNavigating();
-        /// <summary>
-        /// Check if the user is currently manipulating the tools menu
-        /// </summary>
-        public bool Navigating => isNavigating();
 
         /// <summary>
         /// Clear all menus and the projected tools
@@ -98,7 +77,7 @@ namespace umi3d.cdk.interaction
             else
             {
                 AbstractInteractionDto[] interactions = tool.interactionsLoaded.ToArray();
-                AbstractUMI3DInput[] inputs = projectionMemory.Project(this, tool.environmentId, interactions, tool.id, hoveredObjectId);
+                AbstractUMI3DInput[] inputs = projectionManager.Project(this, tool.environmentId, interactions, tool.id, hoveredObjectId);
                 associatedInputs.Add(tool.id, inputs);
             }
 
@@ -170,7 +149,7 @@ namespace umi3d.cdk.interaction
             else
             {
                 var interaction = new AbstractInteractionDto[] { abstractInteractionDto };
-                AbstractUMI3DInput[] inputs = projectionMemory.Project(this, tool.environmentId, interaction, tool.id, GetCurrentHoveredId());
+                AbstractUMI3DInput[] inputs = projectionManager.Project(this, tool.environmentId, interaction, tool.id, GetCurrentHoveredId());
                 if (associatedInputs.ContainsKey(tool.id))
                 {
                     associatedInputs[tool.id] = associatedInputs[tool.id].Concat(inputs).ToArray();

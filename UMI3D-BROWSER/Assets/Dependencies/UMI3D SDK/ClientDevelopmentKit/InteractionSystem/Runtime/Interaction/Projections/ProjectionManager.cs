@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using umi3d.common.interaction;
@@ -25,7 +26,8 @@ namespace umi3d.cdk.interaction
     /// Manage the links between projected tools and their associated inputs. 
     /// This projection is based on a tree <see cref="ProjectionTreeDto"/> constituted of <see cref="ProjectionTreeNodeDto"/>.
     /// </summary>
-    public class ProjectionMemory : MonoBehaviour
+    [Serializable]
+    public sealed class ProjectionManager
     {
         [SerializeField]
         UMI3DLogger logger = new();
@@ -36,32 +38,18 @@ namespace umi3d.cdk.interaction
         public ProjectionTreeLinkNodeDelegate ptLinkNodeDelegate;
         public ProjectionTreeParameterNodeDelegate ptParameterNodeDelegate;
 
-        string treeId = "";
-        /// <summary>
-        /// Id of the projection tree.
-        /// </summary>
-        public string TreeId
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(treeId))
-                {
-                    treeId = (this.gameObject.GetInstanceID() + Random.Range(0, 1000)).ToString();
-                }
-                return treeId;
-            }
-        }
         /// <summary>
         /// The root of the tree.
         /// </summary>
         ProjectionTreeNodeDto treeRoot;
         ProjectionTreeModel treeModel;
 
-        protected virtual void Awake()
+        public void Init(MonoBehaviour context)
         {
-            logger.MainContext = this;
-            logger.MainTag = nameof(ProjectionMemory);
+            logger.MainContext = context;
+            logger.MainTag = nameof(ProjectionManager);
 
+            var treeId = (context.gameObject.GetInstanceID() + UnityEngine.Random.Range(0, 1000)).ToString();
             treeRoot = new ProjectionTreeNodeDto()
             {
                 treeId = treeId,
@@ -74,23 +62,19 @@ namespace umi3d.cdk.interaction
                 projectionTree_SO,
                 treeId
             );
-
             treeModel.AddRoot(treeRoot);
-        }
 
-        private void Start()
-        {
             logger.Assert(ptManipulationNodeDelegate != null, $"{nameof(ptManipulationNodeDelegate)} is null");
             logger.Assert(ptEventNodeDelegate != null, $"{nameof(ptEventNodeDelegate)} is null");
             logger.Assert(ptFormNodeDelegate != null, $"{nameof(ptFormNodeDelegate)} is null");
             logger.Assert(ptLinkNodeDelegate != null, $"{nameof(ptLinkNodeDelegate)} is null");
             logger.Assert(ptParameterNodeDelegate != null, $"{nameof(ptParameterNodeDelegate)} is null");
 
-            ptManipulationNodeDelegate.Init(projectionTree_SO, TreeId);
-            ptEventNodeDelegate.Init(projectionTree_SO, TreeId);
-            ptFormNodeDelegate.Init(projectionTree_SO, TreeId);
-            ptLinkNodeDelegate.Init(projectionTree_SO, TreeId);
-            ptParameterNodeDelegate.Init(projectionTree_SO, TreeId);
+            ptManipulationNodeDelegate.Init(projectionTree_SO, treeId);
+            ptEventNodeDelegate.Init(projectionTree_SO, treeId);
+            ptFormNodeDelegate.Init(projectionTree_SO, treeId);
+            ptLinkNodeDelegate.Init(projectionTree_SO, treeId);
+            ptParameterNodeDelegate.Init(projectionTree_SO, treeId);
         }
 
         /// <summary>
@@ -396,7 +380,7 @@ namespace umi3d.cdk.interaction
         /// <param name="currentTreeNode">Current node in tree projection</param>
         /// <param name="unusedInputsOnly">Project on unused inputs only</param>
         /// <exception cref="NoInputFoundException"></exception>
-        private ProjectionTreeNodeDto Project(
+        ProjectionTreeNodeDto Project(
             ProjectionTreeNodeDto currentTreeNode,
             System.Predicate<ProjectionTreeNodeDto> nodeAdequationTest,
             System.Func<ProjectionTreeNodeDto> deepProjectionCreation,

@@ -21,7 +21,7 @@ using UnityEngine;
 namespace umi3d.cdk.interaction
 {
     [Serializable]
-    public class UMI3DInputManager 
+    public sealed class UMI3DInputManager 
     {
         public AbstractManipulationInputDelegate manipulationDelegate;
         public AbstractEventInputDelegate eventInputDelegate;

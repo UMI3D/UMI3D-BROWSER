@@ -117,7 +117,7 @@ namespace umi3d.cdk.interaction
                 if (interaction is ManipulationDto manipulationDto)
                 {
                     DofGroupOptionDto[] options = manipulationDto.dofSeparationOptions.ToArray();
-                    DofGroupOptionDto bestDofGroupOption = controller.FindBest(options);
+                    DofGroupOptionDto bestDofGroupOption = controller.inputManager.manipulationDelegate.FindBest(options);
 
                     foreach (DofGroupDto sep in bestDofGroupOption.separations)
                     {
@@ -233,7 +233,7 @@ namespace umi3d.cdk.interaction
                 if (interaction is ManipulationDto manipulationDto)
                 {
                     DofGroupOptionDto[] options = (interaction as ManipulationDto).dofSeparationOptions.ToArray();
-                    DofGroupOptionDto bestDofGroupOption = controller.FindBest(options);
+                    DofGroupOptionDto bestDofGroupOption = controller.inputManager.manipulationDelegate.FindBest(options);
 
                     foreach (DofGroupDto sep in bestDofGroupOption.separations)
                     {
@@ -315,7 +315,8 @@ namespace umi3d.cdk.interaction
                         manipulationDto,
                         () =>
                         {
-                            return controller.FindInput(manipulationDto, dof, unused);
+                            controller.inputManager.manipulationDelegate.dof = dof;
+                            return controller.inputManager.manipulationDelegate.FindInput(manipulationDto, unused);
                         }
                     );
                     chooseProjection = ptManipulationNodeDelegate.ChooseProjection(environmentId, toolId, hoveredObjectId, selectedInputs);
@@ -328,7 +329,8 @@ namespace umi3d.cdk.interaction
                         eventDto,
                         () =>
                         {
-                            return controller.FindInput(eventDto, unused, tryToFindInputForHoldableEvent);
+                            controller.inputManager.eventInputDelegate.tryToFindInputForHoldableEvent = tryToFindInputForHoldableEvent;
+                            return controller.inputManager.eventInputDelegate.FindInput(eventDto, unused);
                         }
                     );
                     chooseProjection = ptEventNodeDelegate.ChooseProjection(environmentId, toolId, hoveredObjectId, selectedInputs);
@@ -341,7 +343,7 @@ namespace umi3d.cdk.interaction
                         formDto,
                         () =>
                         {
-                            return controller.FindInput(formDto, unused);
+                            return controller.inputManager.formInputDelegate.FindInput(formDto, unused);
                         }
                     );
                     chooseProjection = ptFormNodeDelegate.ChooseProjection(environmentId, toolId, hoveredObjectId, selectedInputs);
@@ -354,7 +356,7 @@ namespace umi3d.cdk.interaction
                         linkDto,
                         () =>
                         {
-                            return controller.FindInput(linkDto, unused);
+                            return controller.inputManager.linkInputDelegate.FindInput(linkDto, unused);
                         }
                     );
                     chooseProjection = ptLinkNodeDelegate.ChooseProjection(environmentId, toolId, hoveredObjectId, selectedInputs);
@@ -367,7 +369,7 @@ namespace umi3d.cdk.interaction
                         parameterDto,
                         () =>
                         {
-                            return controller.FindInput(parameterDto, unused);
+                            return controller.inputManager.parameterInputDelegate.FindInput(parameterDto, unused);
                         }
                     );
                     chooseProjection = ptParameterNodeDelegate.ChooseProjection(environmentId, toolId, hoveredObjectId, selectedInputs);

@@ -171,128 +171,128 @@ namespace umi3dVRBrowsersBase.interactions
 
         #endregion
 
-        #region Find Interactions
+        //#region Find Interactions
 
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
-        /// <param name="form"></param>
-        /// <param name="unused"></param>
-        /// <returns></returns>
-        public override AbstractUMI3DInput FindInput(FormDto form, bool unused = true)
-            => FindInput(formInputs, i => i.IsAvailable() || !unused, this.gameObject);
+        ///// <summary>
+        ///// <inheritdoc/>
+        ///// </summary>
+        ///// <param name="form"></param>
+        ///// <param name="unused"></param>
+        ///// <returns></returns>
+        //public override AbstractUMI3DInput FindInput(FormDto form, bool unused = true)
+        //    => FindInput(formInputs, i => i.IsAvailable() || !unused, this.gameObject);
 
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
-        /// <param name="link"></param>
-        /// <param name="unused"></param>
-        /// <returns></returns>
-        public override AbstractUMI3DInput FindInput(LinkDto link, bool unused = true)
-        {
-            throw new System.NotImplementedException();
-        }
+        ///// <summary>
+        ///// <inheritdoc/>
+        ///// </summary>
+        ///// <param name="link"></param>
+        ///// <param name="unused"></param>
+        ///// <returns></returns>
+        //public override AbstractUMI3DInput FindInput(LinkDto link, bool unused = true)
+        //{
+        //    throw new System.NotImplementedException();
+        //}
 
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
-        /// <param name="evt"></param>
-        /// <param name="unused"></param>
-        /// <param name="tryToFindInputForHoldableEvent"></param>
-        /// <returns></returns>
-        public override AbstractUMI3DInput FindInput(EventDto evt, bool unused = true, bool tryToFindInputForHoldableEvent = false)
-        {
-            AbstractVRInput res = null;
+        ///// <summary>
+        ///// <inheritdoc/>
+        ///// </summary>
+        ///// <param name="evt"></param>
+        ///// <param name="unused"></param>
+        ///// <param name="tryToFindInputForHoldableEvent"></param>
+        ///// <returns></returns>
+        //public override AbstractUMI3DInput FindInput(EventDto evt, bool unused = true, bool tryToFindInputForHoldableEvent = false)
+        //{
+        //    AbstractVRInput res = null;
 
-            if (HoldInput != null && tryToFindInputForHoldableEvent && HoldInput.IsAvailable())
-                res = HoldInput;
+        //    if (HoldInput != null && tryToFindInputForHoldableEvent && HoldInput.IsAvailable())
+        //        res = HoldInput;
 
-            if (res == null)
-            {
-                foreach (BooleanInput input in booleanInputs)
-                {
-                    if (input.IsAvailable() || !unused)
-                    {
-                        res = input;
-                        break;
-                    }
-                }
-            }
+        //    if (res == null)
+        //    {
+        //        foreach (BooleanInput input in booleanInputs)
+        //        {
+        //            if (input.IsAvailable() || !unused)
+        //            {
+        //                res = input;
+        //                break;
+        //            }
+        //        }
+        //    }
 
-            if (res == null) res = FindVRInput(menuInputs, i => i.IsAvailable() || !unused, this.gameObject);
+        //    if (res == null) res = FindVRInput(menuInputs, i => i.IsAvailable() || !unused, this.gameObject);
 
-            PlayerMenuManager.Instance.CtrlToolMenu.AddBinding(res);
+        //    PlayerMenuManager.Instance.CtrlToolMenu.AddBinding(res);
 
-            return res;
-        }
+        //    return res;
+        //}
 
-        #endregion
+        //#endregion
 
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
-        /// <param name="param"></param>
-        /// <param name="unused"></param>
-        /// <returns></returns>
-        public override AbstractUMI3DInput FindInput(AbstractParameterDto param, bool unused = true)
-        {
-            if (param is FloatRangeParameterDto) return FindInput(floatRangeParameterInputs, i => i.IsAvailable(), this.gameObject);
-            else if (param is FloatParameterDto) return FindInput(floatParameterInputs, i => i.IsAvailable(), this.gameObject);
-            else if (param is IntegerParameterDto) return FindInput(intParameterInputs, i => i.IsAvailable());
-            else if (param is IntegerRangeParameterDto) throw new System.NotImplementedException();
-            else if (param is BooleanParameterDto) return FindInput(boolParameterInputs, i => i.IsAvailable(), this.gameObject);
-            else if (param is StringParameterDto) return FindInput(stringParameterInputs, i => i.IsAvailable(), this.gameObject);
-            else if (param is EnumParameterDto<string>) return FindInput(stringEnumParameterInputs, i => i.IsAvailable(), this.gameObject);
-            else return null;
-        }
+        ///// <summary>
+        ///// <inheritdoc/>
+        ///// </summary>
+        ///// <param name="param"></param>
+        ///// <param name="unused"></param>
+        ///// <returns></returns>
+        //public override AbstractUMI3DInput FindInput(AbstractParameterDto param, bool unused = true)
+        //{
+        //    if (param is FloatRangeParameterDto) return FindInput(floatRangeParameterInputs, i => i.IsAvailable(), this.gameObject);
+        //    else if (param is FloatParameterDto) return FindInput(floatParameterInputs, i => i.IsAvailable(), this.gameObject);
+        //    else if (param is IntegerParameterDto) return FindInput(intParameterInputs, i => i.IsAvailable());
+        //    else if (param is IntegerRangeParameterDto) throw new System.NotImplementedException();
+        //    else if (param is BooleanParameterDto) return FindInput(boolParameterInputs, i => i.IsAvailable(), this.gameObject);
+        //    else if (param is StringParameterDto) return FindInput(stringParameterInputs, i => i.IsAvailable(), this.gameObject);
+        //    else if (param is EnumParameterDto<string>) return FindInput(stringEnumParameterInputs, i => i.IsAvailable(), this.gameObject);
+        //    else return null;
+        //}
 
-        #region Find Manipulation
+        //#region Find Manipulation
 
-        /// <summary>
-        /// Find the best dof separation for this controller.
-        /// </summary>
-        /// <param name="options"></param>
-        /// <returns></returns>
-        public override DofGroupOptionDto FindBest(DofGroupOptionDto[] options)
-        {
-            return options[0];
-        }
+        ///// <summary>
+        ///// Find the best dof separation for this controller.
+        ///// </summary>
+        ///// <param name="options"></param>
+        ///// <returns></returns>
+        //public override DofGroupOptionDto FindBest(DofGroupOptionDto[] options)
+        //{
+        //    return options[0];
+        //}
 
-        /// <summary>
-        /// Find the best free input for a given manipulation dof.
-        /// </summary>
-        /// <param name="manip">Manipulation to associate input to</param>
-        /// <param name="dof">Degree of freedom to associate input to</param>
-        /// <returns></returns>
-        public override AbstractUMI3DInput FindInput(ManipulationDto manip, DofGroupDto dof, bool unused = true)
-        {
-            AbstractVRInput result = null;
+        ///// <summary>
+        ///// Find the best free input for a given manipulation dof.
+        ///// </summary>
+        ///// <param name="manip">Manipulation to associate input to</param>
+        ///// <param name="dof">Degree of freedom to associate input to</param>
+        ///// <returns></returns>
+        //public override AbstractUMI3DInput FindInput(ManipulationDto manip, DofGroupDto dof, bool unused = true)
+        //{
+        //    AbstractVRInput result = null;
 
-            foreach (ManipulationInput input in manipulationInputs)
-            {
-                if (input.IsCompatibleWith(manip))
-                {
-                    if (input.IsAvailable() || !unused)
-                    {
-                        result = input;
-                        break;
-                    }
-                }
-            }
+        //    foreach (ManipulationInput input in manipulationInputs)
+        //    {
+        //        if (input.IsCompatibleWith(manip))
+        //        {
+        //            if (input.IsAvailable() || !unused)
+        //            {
+        //                result = input;
+        //                break;
+        //            }
+        //        }
+        //    }
 
-            if (result == null)
-            {
-                //if no input was found
-                result = this.gameObject.AddComponent<MenuInput>();
-                result.Init(this);
-                menuInputs.Add(result as MenuInput);
-            }
+        //    if (result == null)
+        //    {
+        //        //if no input was found
+        //        result = this.gameObject.AddComponent<MenuInput>();
+        //        result.Init(this);
+        //        menuInputs.Add(result as MenuInput);
+        //    }
 
-            PlayerMenuManager.Instance.CtrlToolMenu.AddBinding(result);
+        //    PlayerMenuManager.Instance.CtrlToolMenu.AddBinding(result);
 
-            return result;
-        }
+        //    return result;
+        //}
 
-        #endregion
+        //#endregion
     }
 }

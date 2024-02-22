@@ -168,7 +168,7 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
                         || icToSelect.Interactable.InteractionDistance >= (icToSelect.transform.position - controller.transform.position).magnitude)
                     && icToSelect.Interactable.dto.interactions != null
                     && icToSelect.Interactable.dto.interactions.Count > 0
-                    && controller.IsCompatibleWith(icToSelect.Interactable)
+                    && controller.toolManager.toolDelegate.IsCompatibleWith(icToSelect.Interactable)
                     && (!InteractionMapper.Instance.IsToolSelected(UMI3DGlobalID.EnvironmentId, icToSelect.Interactable.id)
                         || (LastSelected?.selectedObject.Interactable == icToSelect.Interactable));
         }
@@ -244,10 +244,10 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
                 (selectionInfo as InteractableSelectionData).tool = interactionTool;
 
             if (isSelecting
-                && (LastSelected != null || (!controller.IsAvailableFor(interactionTool) && InteractionMapper.Instance.IsToolSelected(UMI3DGlobalID.EnvironmentId, interactionTool.id)))) // second case happens when an object is destroyed but the tool is not released
+                && (LastSelected != null || (!controller.toolManager.toolDelegate.IsAvailableFor(interactionTool) && InteractionMapper.Instance.IsToolSelected(UMI3DGlobalID.EnvironmentId, interactionTool.id)))) // second case happens when an object is destroyed but the tool is not released
                 Deselect(LastSelected);
 
-            if (controller.IsAvailableFor(interactionTool))
+            if (controller.toolManager.toolDelegate.IsAvailableFor(interactionTool))
             {
                 projector.Project(selectionInfo.selectedObject, controller);
                 selectionInfo.hasBeenSelected = true;

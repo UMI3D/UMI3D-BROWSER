@@ -98,11 +98,11 @@ namespace umi3dVRBrowsersBase.interactions
             AbstractController controller = GetController(tool, reason);
             if (controller != null)
             {
-                if (!controller.IsAvailableFor(tool))
+                if (!controller.toolManager.toolDelegate.IsAvailableFor(tool))
                 {
                     if (ShouldForceProjection(controller, tool, reason) || ShouldForceProjection(controller, reason))
                     {
-                        ReleaseTool(environmentId, controller.tool.id);
+                        ReleaseTool(environmentId, controller.toolManager.toolDelegate.Tool.id);
                     }
                     else
                     {

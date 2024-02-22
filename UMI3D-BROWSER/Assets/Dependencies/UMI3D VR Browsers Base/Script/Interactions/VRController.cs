@@ -101,7 +101,7 @@ namespace umi3dVRBrowsersBase.interactions
         {
             base.Project(tool, releasable, reason, hoveredObjectId);
 
-            if (currentTool == tool) // It means projection succedded
+            if (toolManager.toolDelegate.Tool == tool) // It means projection succedded
             {
                 PlayerMenuManager.Instance.MenuHeader.DisplayControllerButton(true, type, tool.name);
 
@@ -109,163 +109,164 @@ namespace umi3dVRBrowsersBase.interactions
             }
         }
 
-        /// <summary>
-        /// Check if a tool can be projected on this controller.
-        /// </summary>
-        /// <param name="tool"> The tool to be projected.</param>
-        /// <returns></returns>
-        public override bool IsCompatibleWith(AbstractTool tool)
-        {
-            return tool.interactionsLoaded.TrueForAll(inter =>
-                (inter is ManipulationDto ) ?
-                (inter as ManipulationDto).dofSeparationOptions.Exists(
-                    group => !group.separations.Exists(
-                        dof => (dof.dofs == DofGroupEnum.X_RX) || (dof.dofs == DofGroupEnum.Y_RY) || (dof.dofs == DofGroupEnum.Z_RZ)))
-                : true);
-        }
+        ///// <summary>
+        ///// Check if a tool can be projected on this controller.
+        ///// </summary>
+        ///// <param name="tool"> The tool to be projected.</param>
+        ///// <returns></returns>
+        //public override bool IsCompatibleWith(AbstractTool tool)
+        //{
+        //    return tool.interactionsLoaded.TrueForAll(inter =>
+        //        (inter is ManipulationDto ) ?
+        //        (inter as ManipulationDto).dofSeparationOptions.Exists(
+        //            group => !group.separations.Exists(
+        //                dof => (dof.dofs == DofGroupEnum.X_RX) || (dof.dofs == DofGroupEnum.Y_RY) || (dof.dofs == DofGroupEnum.Z_RZ)))
+        //        : true);
+        //}
 
-        /// <summary>
-        /// Check if a tool requires the generation of a menu to be projected.
-        /// </summary>
-        /// <param name="tool"> The tool to be projected.</param>
-        /// <returns></returns>
-        public override bool RequiresMenu(AbstractTool tool)
-        {
-            return false;
+        ///// <summary>
+        ///// Check if a tool requires the generation of a menu to be projected.
+        ///// </summary>
+        ///// <param name="tool"> The tool to be projected.</param>
+        ///// <returns></returns>
+        //public override bool RequiresMenu(AbstractTool tool)
+        //{
+        //    return false;
 
-            List<AbstractInteractionDto> manips = tool.interactionsLoaded.FindAll(x => x is ManipulationDto);
-            List<AbstractInteractionDto> events = tool.interactionsLoaded.FindAll(x => x is EventDto);
-            List<AbstractInteractionDto> param = tool.interactionsLoaded.FindAll(x => x is AbstractParameterDto);
-            return ((manips.Count > 1) || (events.Count > 3) || (param.Count > 0));
-        }
+        //    List<AbstractInteractionDto> manips = tool.interactionsLoaded.FindAll(x => x is ManipulationDto);
+        //    List<AbstractInteractionDto> events = tool.interactionsLoaded.FindAll(x => x is EventDto);
+        //    List<AbstractInteractionDto> param = tool.interactionsLoaded.FindAll(x => x is AbstractParameterDto);
+        //    return ((manips.Count > 1) || (events.Count > 3) || (param.Count > 0));
+        //}
 
         /// <summary>
         /// If current tool is not null, releases it.
         /// </summary>
         public void ReleaseCurrentTool()
         {
-            if (currentTool != null)
+            if (toolManager.toolDelegate.Tool != null)
             {
-                InteractionMapper.Instance.ReleaseTool(UMI3DGlobalID.EnvironmentId, currentTool.id);
+                InteractionMapper.Instance.ReleaseTool(UMI3DGlobalID.EnvironmentId, toolManager.toolDelegate.Tool.id);
             }
         }
 
-        /// <summary>
-        /// Create a menu to access each interactions of a tool separately.
-        /// </summary>
-        /// <param name="interactions"></param>
-        public override void CreateInteractionsMenuFor(AbstractTool tool)
-        {
-            List<AbstractInteractionDto> interactions = tool.interactionsLoaded;
-            List<AbstractInteractionDto> manips = interactions.FindAll(inter => inter is ManipulationDto);
-            foreach (AbstractInteractionDto manip in manips)
-            {
-                DofGroupOptionDto bestSeparationOption = FindBest((manip as ManipulationDto).dofSeparationOptions.ToArray());
-                foreach (DofGroupDto sep in bestSeparationOption.separations)
-                {
-                    var manipSeparationMenu = new ManipulationMenuItem()
-                    {
-                        Name = manip.name + "-" + sep.name,
-                        dof = sep,
-                        interaction = manip as ManipulationDto
-                    };
+        ///// <summary>
+        ///// Create a menu to access each interactions of a tool separately.
+        ///// </summary>
+        ///// <param name="interactions"></param>
+        //public override void CreateInteractionsMenuFor(AbstractTool tool)
+        //{
+        //    List<AbstractInteractionDto> interactions = tool.interactionsLoaded;
+        //    List<AbstractInteractionDto> manips = interactions.FindAll(inter => inter is ManipulationDto);
+        //    foreach (AbstractInteractionDto manip in manips)
+        //    {
+        //        DofGroupOptionDto bestSeparationOption = inputManager.manipulationDelegate.FindBest((manip as ManipulationDto).dofSeparationOptions.ToArray());
+        //        foreach (DofGroupDto sep in bestSeparationOption.separations)
+        //        {
+        //            var manipSeparationMenu = new ManipulationMenuItem()
+        //            {
+        //                Name = manip.name + "-" + sep.name,
+        //                dof = sep,
+        //                interaction = manip as ManipulationDto
+        //            };
 
-                    manipSeparationMenu.Subscribe(() =>
-                    {
-                        try
-                        {
-                            AbstractUMI3DInput newInput = projectionMemory.PartialProject(
-                                manip as ManipulationDto, 
-                                this, 
-                                UMI3DGlobalID.EnvironmentId, 
-                                tool.id, 
-                                hoveredObjectId,
-                                false, 
-                                sep
-                            );
-                            if (newInput != null)
-                            {
-                                var toolInputs = new List<AbstractUMI3DInput>();
-                                AbstractUMI3DInput[] buffer;
-                                if (associatedInputs.TryGetValue(tool.id, out buffer))
-                                {
-                                    toolInputs = new List<AbstractUMI3DInput>(buffer);
-                                    associatedInputs.Remove(tool.id);
-                                }
-                                toolInputs.Add(newInput);
-                                associatedInputs.Add(tool.id, toolInputs.ToArray());
-                            }
-                            else
-                                throw new System.Exception("Internal Error");
-                        }
-                        catch (NoInputFoundException noInputException)
-                        {
-                            throw new System.Exception("Internal Error", noInputException);
-                        }
-                    });
+        //            manipSeparationMenu.Subscribe(() =>
+        //            {
+        //                try
+        //                {
+        //                    AbstractUMI3DInput newInput = projectionMemory.PartialProject(
+        //                        manip as ManipulationDto, 
+        //                        this, 
+        //                        UMI3DGlobalID.EnvironmentId, 
+        //                        tool.id, 
+        //                        hoveredObjectId,
+        //                        false, 
+        //                        sep
+        //                    );
+        //                    if (newInput != null)
+        //                    {
+        //                        var toolInputs = new List<AbstractUMI3DInput>();
+        //                        AbstractUMI3DInput[] buffer;
+        //                        if (associatedInputs.TryGetValue(tool.id, out buffer))
+        //                        {
+        //                            toolInputs = new List<AbstractUMI3DInput>(buffer);
+        //                            associatedInputs.Remove(tool.id);
+        //                        }
+        //                        toolInputs.Add(newInput);
+        //                        associatedInputs.Add(tool.id, toolInputs.ToArray());
+        //                    }
+        //                    else
+        //                        throw new System.Exception("Internal Error");
+        //                }
+        //                catch (NoInputFoundException noInputException)
+        //                {
+        //                    throw new System.Exception("Internal Error", noInputException);
+        //                }
+        //            });
 
-                    Debug.Log("TODO : add this item to the player controllers menu");
+        //            Debug.Log("TODO : add this item to the player controllers menu");
 
-                    if (FindInput(manip as ManipulationDto, sep, true) != null)
-                    {
-                        manipSeparationMenu.Select();
-                    }
-                }
-            }
+        //            inputManager.manipulationDelegate.dof = sep;
+        //            if (inputManager.manipulationDelegate.FindInput(manip as ManipulationDto, true) != null)
+        //            {
+        //                manipSeparationMenu.Select();
+        //            }
+        //        }
+        //    }
 
-            List<AbstractInteractionDto> events = interactions.FindAll(inter => inter is EventDto);
-            foreach (AbstractInteractionDto evt in events)
-            {
-                var eventMenu = new EventMenuItem()
-                {
-                    interaction = evt as EventDto,
-                    Name = evt.name
-                };
+        //    List<AbstractInteractionDto> events = interactions.FindAll(inter => inter is EventDto);
+        //    foreach (AbstractInteractionDto evt in events)
+        //    {
+        //        var eventMenu = new EventMenuItem()
+        //        {
+        //            interaction = evt as EventDto,
+        //            Name = evt.name
+        //        };
 
-                eventMenu.Subscribe(() =>
-                {
-                    Debug.Log("Event menu item");
-                    try
-                    {
-                        AbstractUMI3DInput newInput = projectionMemory.PartialProject(
-                            evt as EventDto,
-                            this,
-                            UMI3DGlobalID.EnvironmentId,
-                            tool.id,
-                            hoveredObjectId,
-                            false
-                        );
-                        if (newInput != null)
-                        {
-                            var toolInputs = new List<AbstractUMI3DInput>();
-                            AbstractUMI3DInput[] buffer;
-                            if (associatedInputs.TryGetValue(tool.id, out buffer))
-                            {
-                                toolInputs = new List<AbstractUMI3DInput>(buffer);
-                                associatedInputs.Remove(tool.id);
-                            }
-                            toolInputs.Add(newInput);
-                            associatedInputs.Add(tool.id, toolInputs.ToArray());
-                        }
-                        else
-                            throw new System.Exception("Internal Error");
-                    }
-                    catch (NoInputFoundException noInputException)
-                    {
-                        throw new System.Exception("Internal Error", noInputException);
-                    }
-                });
+        //        eventMenu.Subscribe(() =>
+        //        {
+        //            Debug.Log("Event menu item");
+        //            try
+        //            {
+        //                AbstractUMI3DInput newInput = projectionMemory.PartialProject(
+        //                    evt as EventDto,
+        //                    this,
+        //                    UMI3DGlobalID.EnvironmentId,
+        //                    tool.id,
+        //                    hoveredObjectId,
+        //                    false
+        //                );
+        //                if (newInput != null)
+        //                {
+        //                    var toolInputs = new List<AbstractUMI3DInput>();
+        //                    AbstractUMI3DInput[] buffer;
+        //                    if (associatedInputs.TryGetValue(tool.id, out buffer))
+        //                    {
+        //                        toolInputs = new List<AbstractUMI3DInput>(buffer);
+        //                        associatedInputs.Remove(tool.id);
+        //                    }
+        //                    toolInputs.Add(newInput);
+        //                    associatedInputs.Add(tool.id, toolInputs.ToArray());
+        //                }
+        //                else
+        //                    throw new System.Exception("Internal Error");
+        //            }
+        //            catch (NoInputFoundException noInputException)
+        //            {
+        //                throw new System.Exception("Internal Error", noInputException);
+        //            }
+        //        });
 
-                Debug.Log("TODO : add this item to the player controllers menu");
+        //        Debug.Log("TODO : add this item to the player controllers menu");
 
-                if (FindInput(evt as EventDto, true) != null)
-                {
-                    eventMenu.Select();
-                }
-            }
+        //        if (inputManager.eventInputDelegate.FindInput(evt as EventDto, true) != null)
+        //        {
+        //            eventMenu.Select();
+        //        }
+        //    }
 
-            ProjectParameters(tool, interactions, hoveredObjectId);
-        }
+        //    ProjectParameters(tool, interactions, hoveredObjectId);
+        //}
 
         /// <summary>
         /// Projects all parameters on this tool.
@@ -311,7 +312,7 @@ namespace umi3dVRBrowsersBase.interactions
         /// <returns>returns true if the user is currently interacting with the tool.</returns>
         protected override bool isInteracting()
         {
-            return (currentTool != null) && (timeSinceLastInput <= inputUsageTimeout);
+            return (toolManager.toolDelegate.Tool != null) && (timeSinceLastInput <= inputUsageTimeout);
         }
 
         /// <summary>
@@ -369,10 +370,10 @@ namespace umi3dVRBrowsersBase.interactions
         /// <returns></returns>
         protected override ulong GetCurrentHoveredId()
         {
-            if (tool == null)
+            if (toolManager.toolDelegate.Tool == null)
                 return 0;
 
-            return tool.id;
+            return toolManager.toolDelegate.Tool.id;
         }
 
         #endregion Methods

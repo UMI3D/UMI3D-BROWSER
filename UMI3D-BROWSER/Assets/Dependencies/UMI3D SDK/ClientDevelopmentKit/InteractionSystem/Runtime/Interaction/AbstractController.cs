@@ -1,5 +1,5 @@
 ﻿/*
-Copyright 2019 - 2021 Inetum
+Copyright 2019 - 2024 Inetum
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -21,17 +21,27 @@ using UnityEngine;
 namespace umi3d.cdk.interaction
 {
     /// <summary>
-    /// Abstract class for UMI3D Controller.
+    /// A controller is a set of inputs.<br/>
+    /// <br/>
+    /// 
+    /// <example>
+    /// For example: The following device can be seen as a controller.
+    /// <list type="bullet">
+    /// <item>A VR controller.</item>
+    /// <item>A keyboard and a mouse.</item>
+    /// </list>
+    /// </example>
+    /// 
+    /// You have as many controller as you have of selector.<br/>
+    /// <example>
+    /// For example: A VR headset has 2 controllers with laser to select. A computer as 1 mouse to select (mouse and trackpad can be seen as the same input).
+    /// </example>
     /// </summary>
     [System.Serializable]
     public abstract class AbstractController : MonoBehaviour
     {
         public UMI3DInputManager inputManager;
         public UMI3DToolManager toolManager;
-        /// <summary>
-        /// Projection Manager.
-        /// </summary>
-        [Tooltip("Projection Manager")]
         public ProjectionManager projectionManager;
 
         #region properties
@@ -96,14 +106,8 @@ namespace umi3d.cdk.interaction
                 throw new System.Exception("Try to update wrong tool");
 
             Release(tool, new ToolNeedToBeUpdated());
-            Project(tool, releasable, reason, GetCurrentHoveredId());
+            Project(tool, releasable, reason, toolManager.toolDelegate.CurrentHoverTool.id);
         }
-
-        /// <summary>
-        /// Get the ID of the currently pointed object.
-        /// </summary>
-        /// <returns></returns>
-        protected abstract ulong GetCurrentHoveredId();
 
 
         /// <summary>
@@ -149,7 +153,7 @@ namespace umi3d.cdk.interaction
             else
             {
                 var interaction = new AbstractInteractionDto[] { abstractInteractionDto };
-                AbstractUMI3DInput[] inputs = projectionManager.Project(this, tool.environmentId, interaction, tool.id, GetCurrentHoveredId());
+                AbstractUMI3DInput[] inputs = projectionManager.Project(this, tool.environmentId, interaction, tool.id, toolManager.toolDelegate.CurrentHoverTool.id);
                 if (associatedInputs.ContainsKey(tool.id))
                 {
                     associatedInputs[tool.id] = associatedInputs[tool.id].Concat(inputs).ToArray();

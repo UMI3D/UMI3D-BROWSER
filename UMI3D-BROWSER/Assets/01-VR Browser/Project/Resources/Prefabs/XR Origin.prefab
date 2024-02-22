@@ -3711,7 +3711,6 @@ GameObject:
   - component: {fileID: 5051064084671288346}
   - component: {fileID: 5051064084671288345}
   - component: {fileID: 5051064084671288344}
-  - component: {fileID: 910392987944234023}
   m_Layer: 0
   m_Name: XR Origin
   m_TagString: Untagged
@@ -3766,48 +3765,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ActionAssets:
   - {fileID: -944628639613478452, guid: c348712bda248c246b8c49b3db54643f, type: 3}
---- !u!114 &910392987944234023
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5051064084671288343}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fd9f82377aeb9704193bd866d119aaa5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  screenFade: 0
-  eyeTracking: 0
-  trackingMode: 0
-  sharpeningMode: 0
-  sharpeningEnhance: 0
-  faceTracking: 0
-  lipsyncTracking: 0
-  lateLatching: 0
-  latelatchingDebug: 0
-  bodyTracking: 0
-  foveationLevel: -1
-  adaptiveResolution: 0
-  eyeFoveationLevel: -1
-  foveatedRenderingMode: 0
-  openMRC: 1
-  foregroundLayerMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  backLayerMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  backgroundCamObj: {fileID: 0}
-  foregroundCamObj: {fileID: 0}
-  mrcBackgroundRT: {fileID: 0}
-  mrcForegroundRT: {fileID: 0}
-  adaptiveResolutionPowerSetting: 1
-  minEyeTextureScale: 0.7
-  maxEyeTextureScale: 1.26
-  enableSuperResolution: 0
-  useRecommendedAntiAliasingLevel: 1
 --- !u!1 &5134930895423063594
 GameObject:
   m_ObjectHideFlags: 0
@@ -5324,7 +5281,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3330513765050380693}
-  - component: {fileID: 5112132678817394978}
   - component: {fileID: 6999658886912405955}
   m_Layer: 0
   m_Name: RightHand Input Controller
@@ -5351,18 +5307,6 @@ Transform:
   - {fileID: 3800200202806858080}
   m_Father: {fileID: 1010389418436109783}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5112132678817394978
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8396374326880053659}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf7b820e5feb6524089c63d3b45c3f96, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &6999658886912405955
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5375,7 +5319,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54e88a5f33eb8724baf007969a9bc812, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectionMemory: {fileID: 5112132678817394978}
+  inputManager:
+    manipulationDelegate: {fileID: 0}
+    eventInputDelegate: {fileID: 0}
+    formInputDelegate: {fileID: 0}
+    linkInputDelegate: {fileID: 0}
+    parameterInputDelegate: {fileID: 0}
+  toolManager:
+    toolDelegate: {fileID: 0}
+  projectionManager:
+    logger:
+      LogType: 511
+      MainTag: 
+      MainContext: {fileID: 0}
+      IsThreadDisplayed: 0
+    projectionTree_SO: {fileID: 0}
+    ptManipulationNodeDelegate: {fileID: 0}
+    ptEventNodeDelegate: {fileID: 0}
+    ptFormNodeDelegate: {fileID: 0}
+    ptLinkNodeDelegate: {fileID: 0}
+    ptParameterNodeDelegate: {fileID: 0}
   ObjectMenu: {fileID: 0}
   type: 1
   bone: {fileID: 8035229026326999914}
@@ -5527,7 +5490,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2448717183885898370}
-  - component: {fileID: 2630888635625566876}
   - component: {fileID: 1670370880847398130}
   m_Layer: 0
   m_Name: LeftHand Input Controller
@@ -5554,18 +5516,6 @@ Transform:
   - {fileID: 2134987819299093857}
   m_Father: {fileID: 6444150190615111377}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2630888635625566876
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8870520211233811369}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf7b820e5feb6524089c63d3b45c3f96, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1670370880847398130
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5578,7 +5528,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54e88a5f33eb8724baf007969a9bc812, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectionMemory: {fileID: 2630888635625566876}
+  inputManager:
+    manipulationDelegate: {fileID: 0}
+    eventInputDelegate: {fileID: 0}
+    formInputDelegate: {fileID: 0}
+    linkInputDelegate: {fileID: 0}
+    parameterInputDelegate: {fileID: 0}
+  toolManager:
+    toolDelegate: {fileID: 0}
+  projectionManager:
+    logger:
+      LogType: 511
+      MainTag: 
+      MainContext: {fileID: 0}
+      IsThreadDisplayed: 0
+    projectionTree_SO: {fileID: 0}
+    ptManipulationNodeDelegate: {fileID: 0}
+    ptEventNodeDelegate: {fileID: 0}
+    ptFormNodeDelegate: {fileID: 0}
+    ptLinkNodeDelegate: {fileID: 0}
+    ptParameterNodeDelegate: {fileID: 0}
   ObjectMenu: {fileID: 0}
   type: 0
   bone: {fileID: 107831871144475988}

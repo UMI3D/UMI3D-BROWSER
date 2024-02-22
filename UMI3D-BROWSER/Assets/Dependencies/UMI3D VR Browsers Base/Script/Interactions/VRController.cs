@@ -335,18 +335,6 @@ namespace umi3dVRBrowsersBase.interactions
 
         #endregion Change mapping
 
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
-        /// <returns></returns>
-        protected override ulong GetCurrentHoveredId()
-        {
-            if (toolManager.toolDelegate.Tool == null)
-                return 0;
-
-            return toolManager.toolDelegate.Tool.id;
-        }
-
         #endregion Methods
     }
 }

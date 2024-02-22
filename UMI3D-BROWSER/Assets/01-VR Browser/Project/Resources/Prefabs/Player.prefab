@@ -3735,7 +3735,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3445380699891482647}
-  - component: {fileID: 9023482557568781291}
   - component: {fileID: 5491514224795103998}
   m_Layer: 0
   m_Name: RightHand Input Controller
@@ -3762,18 +3761,6 @@ Transform:
   - {fileID: 2732544971239142316}
   m_Father: {fileID: 5267166352088235144}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &9023482557568781291
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3325278439223139300}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf7b820e5feb6524089c63d3b45c3f96, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &5491514224795103998
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3786,7 +3773,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54e88a5f33eb8724baf007969a9bc812, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectionMemory: {fileID: 9023482557568781291}
+  inputManager:
+    manipulationDelegate: {fileID: 0}
+    eventInputDelegate: {fileID: 0}
+    formInputDelegate: {fileID: 0}
+    linkInputDelegate: {fileID: 0}
+    parameterInputDelegate: {fileID: 0}
+  toolManager:
+    toolDelegate: {fileID: 0}
+  projectionManager:
+    logger:
+      LogType: 511
+      MainTag: 
+      MainContext: {fileID: 0}
+      IsThreadDisplayed: 0
+    projectionTree_SO: {fileID: 0}
+    ptManipulationNodeDelegate: {fileID: 0}
+    ptEventNodeDelegate: {fileID: 0}
+    ptFormNodeDelegate: {fileID: 0}
+    ptLinkNodeDelegate: {fileID: 0}
+    ptParameterNodeDelegate: {fileID: 0}
   ObjectMenu: {fileID: 0}
   type: 1
   bone: {fileID: 1829075691568033149}
@@ -13258,7 +13264,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2416673257089034087}
-  - component: {fileID: 6014133757010385626}
   - component: {fileID: 5067655147915799411}
   m_Layer: 0
   m_Name: LeftHand Input Controller
@@ -13285,18 +13290,6 @@ Transform:
   - {fileID: 4077554302073691644}
   m_Father: {fileID: 6620847097950126808}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6014133757010385626
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9132159692390996950}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf7b820e5feb6524089c63d3b45c3f96, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &5067655147915799411
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13309,7 +13302,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54e88a5f33eb8724baf007969a9bc812, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectionMemory: {fileID: 6014133757010385626}
+  inputManager:
+    manipulationDelegate: {fileID: 0}
+    eventInputDelegate: {fileID: 0}
+    formInputDelegate: {fileID: 0}
+    linkInputDelegate: {fileID: 0}
+    parameterInputDelegate: {fileID: 0}
+  toolManager:
+    toolDelegate: {fileID: 0}
+  projectionManager:
+    logger:
+      LogType: 511
+      MainTag: 
+      MainContext: {fileID: 0}
+      IsThreadDisplayed: 0
+    projectionTree_SO: {fileID: 0}
+    ptManipulationNodeDelegate: {fileID: 0}
+    ptEventNodeDelegate: {fileID: 0}
+    ptFormNodeDelegate: {fileID: 0}
+    ptLinkNodeDelegate: {fileID: 0}
+    ptParameterNodeDelegate: {fileID: 0}
   ObjectMenu: {fileID: 0}
   type: 0
   bone: {fileID: 7635485698679817576}

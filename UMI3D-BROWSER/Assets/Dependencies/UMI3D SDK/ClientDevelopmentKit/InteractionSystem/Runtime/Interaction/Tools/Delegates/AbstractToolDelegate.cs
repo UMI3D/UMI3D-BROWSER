@@ -16,6 +16,7 @@ limitations under the License.
 
 using inetum.unityUtils.saveSystem;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace umi3d.cdk.interaction
@@ -26,6 +27,16 @@ namespace umi3d.cdk.interaction
         /// The currently projected tool.
         /// </summary>
         public virtual AbstractTool Tool {  get; set; }
+
+        /// <summary>
+        /// The currently hovered tool.
+        /// </summary>
+        public virtual AbstractTool CurrentHoverTool { get; set; }
+
+        /// <summary>
+        /// The currently hovered tool.
+        /// </summary>
+        public virtual List<AbstractTool> ProjectedTools { get; set; }
 
         /// <summary>
         /// Whether or not <paramref name="tool"/> can be projected on this controller.

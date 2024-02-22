@@ -26,6 +26,8 @@ namespace umi3d.cdk.interaction
     [System.Serializable]
     public abstract class AbstractController : MonoBehaviour
     {
+        public UMI3DInputManager inputManager;
+
         #region properties
         /// <summary>
         /// Currently projected tool.

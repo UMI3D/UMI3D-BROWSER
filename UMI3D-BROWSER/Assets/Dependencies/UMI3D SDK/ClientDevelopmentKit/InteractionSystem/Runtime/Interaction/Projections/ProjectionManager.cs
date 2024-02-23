@@ -38,6 +38,7 @@ namespace umi3d.cdk.interaction
         public ProjectionTreeFormNodeDelegate ptFormNodeDelegate;
         public ProjectionTreeLinkNodeDelegate ptLinkNodeDelegate;
         public ProjectionTreeParameterNodeDelegate ptParameterNodeDelegate;
+        public ProjectionEventDelegate eventDelegate;
 
         [HideInInspector]
         public UMI3DInputManager inputManager;
@@ -79,6 +80,7 @@ namespace umi3d.cdk.interaction
             logger.Assert(ptFormNodeDelegate != null, $"{nameof(ptFormNodeDelegate)} is null");
             logger.Assert(ptLinkNodeDelegate != null, $"{nameof(ptLinkNodeDelegate)} is null");
             logger.Assert(ptParameterNodeDelegate != null, $"{nameof(ptParameterNodeDelegate)} is null");
+            logger.Assert(eventDelegate != null, $"{nameof(eventDelegate)} is null");
 
             ptManipulationNodeDelegate.Init(projectionTree_SO, treeId);
             ptEventNodeDelegate.Init(projectionTree_SO, treeId);
@@ -297,6 +299,7 @@ namespace umi3d.cdk.interaction
                     hoveredObjectId
                 );
                 //associatedInputs.Add(tool.id, inputs);
+                eventDelegate.OnProjected(tool);
             }
 
             toolManager.toolDelegate.Tool = tool;
@@ -532,6 +535,10 @@ namespace umi3d.cdk.interaction
             }
 
             chooseProjection(projection.Value);
+            eventDelegate.OnProjected(
+                projection.Value.interactionDto.Interaction,
+                projection.Value.input
+            );
             return projection.Value;
         }
     }

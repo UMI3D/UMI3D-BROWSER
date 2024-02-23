@@ -21,7 +21,7 @@ using UnityEngine;
 
 namespace umi3d.cdk.interaction
 {
-    [CreateAssetMenu(fileName = "UMI3D PT Event Node Delegate", menuName = "UMI3D/Interactions/PT Delegates/PT Event Node Delegate")]
+    [CreateAssetMenu(fileName = "UMI3D PT Event Node Delegate", menuName = "UMI3D/Interactions/Projection Delegate/PT Event Node Delegate")]
     public class ProjectionTreeEventNodeDelegate : AbstractProjectionTreeNodeDelegate<EventDto>
     {
         public override Predicate<ProjectionTreeNodeDto> IsNodeCompatible(EventDto interaction)

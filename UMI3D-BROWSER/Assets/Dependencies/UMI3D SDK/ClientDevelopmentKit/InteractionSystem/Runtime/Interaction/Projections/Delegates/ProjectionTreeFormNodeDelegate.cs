@@ -21,7 +21,7 @@ using UnityEngine;
 
 namespace umi3d.cdk.interaction
 {
-    [CreateAssetMenu(fileName = "UMI3D PT Form Node Delegate", menuName = "UMI3D/Interactions/PT Delegates/PT Form Node Delegate")]
+    [CreateAssetMenu(fileName = "UMI3D PT Form Node Delegate", menuName = "UMI3D/Interactions/Projection Delegate/PT Form Node Delegate")]
     public class ProjectionTreeFormNodeDelegate : AbstractProjectionTreeNodeDelegate<FormDto>
     {
         public override Predicate<ProjectionTreeNodeDto> IsNodeCompatible(FormDto interaction)

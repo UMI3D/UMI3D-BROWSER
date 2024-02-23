@@ -13,12 +13,14 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+using inetum.unityUtils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using umi3d.common.interaction;
 using umi3d.debug;
 using UnityEngine;
+using UnityEngine.Windows;
 
 namespace umi3d.cdk.interaction
 {
@@ -266,7 +268,7 @@ namespace umi3d.cdk.interaction
         }
 
         /// <summary>
-        /// Project a tool on this controller.
+        /// Project a tool and its interaction.
         /// </summary>
         /// <param name="tool"> The ToolDto to be projected.</param>
         /// <see cref="Release(AbstractTool)"/>
@@ -280,6 +282,14 @@ namespace umi3d.cdk.interaction
             if (!toolManager.toolDelegate.IsCompatibleWith(tool))
             {
                 throw new IncompatibleToolException($"For {tool.GetType().Name}: {tool.name}");
+            }
+
+            if (toolManager.toolDelegate.Tool.id == tool.id)
+            {
+                Release(
+                    tool,
+                    new ToolNeedToBeUpdated()
+                );
             }
 
             if (toolManager.toolDelegate.Tool != null)
@@ -303,6 +313,76 @@ namespace umi3d.cdk.interaction
             }
 
             toolManager.toolDelegate.Tool = tool;
+        }
+
+        /// <summary>
+        /// Project the newly added tool's interaction when the server update the tool.
+        /// </summary>
+        /// <param name="tool"></param>
+        /// <param name="newInteraction"></param>
+        /// <param name="releasable"></param>
+        /// <param name="reason"></param>
+        public void Project(
+            AbstractTool tool,
+            AbstractInteractionDto newInteraction,
+            bool releasable,
+            InteractionMappingReason reason
+        )
+        {
+            if (toolManager.toolDelegate.Tool != tool)
+            {
+                throw new NoToolFoundException($"Try to update {tool.GetType().Name}: {tool.name} but this tool is not projected.");
+            }
+
+            if (toolManager.toolDelegate.RequiresMenu(tool))
+            {
+                toolManager.toolDelegate.CreateInteractionsMenuFor(tool);
+            }
+            else
+            {
+                AbstractUMI3DInput input = Project(
+                    newInteraction,
+                    tool.environmentId,
+                    tool.id,
+                    toolManager.toolDelegate.CurrentHoverTool.id
+                );
+                //if (associatedInputs.ContainsKey(tool.id))
+                //{
+                //    associatedInputs[tool.id] = associatedInputs[tool.id].Concat(inputs).ToArray();
+                //}
+                //else
+                //{
+                //    associatedInputs.Add(tool.id, new AbstractUMI3DInput[] { input });
+                //}
+            }
+            toolManager.toolDelegate.Tool = tool;
+        }
+
+        /// <summary>
+        /// Release a projected tool.
+        /// </summary>
+        /// <param name="tool">Tool to release</param>
+        /// <see cref="Project(AbstractTool)"/>
+        public void Release(AbstractTool tool, InteractionMappingReason reason)
+        {
+            if (toolManager.toolDelegate.Tool == null)
+            {
+                throw new NoToolFoundException($"No tool is currently projected on this controller");
+                // TODO add controller id.
+            }
+            if (toolManager.toolDelegate.Tool.id != tool.id)
+                throw new System.Exception("This tool is not currently projected on this controller");
+
+            //if (associatedInputs.TryGetValue(tool.id, out AbstractUMI3DInput[] inputs))
+            //{
+            //    foreach (AbstractUMI3DInput input in inputs)
+            //    {
+            //        if (input.CurrentInteraction() != null)
+            //            input.Dissociate();
+            //    }
+            //    associatedInputs.Remove(tool.id);
+            //}
+            toolManager.toolDelegate.Tool = null;
         }
 
         /// <summary>

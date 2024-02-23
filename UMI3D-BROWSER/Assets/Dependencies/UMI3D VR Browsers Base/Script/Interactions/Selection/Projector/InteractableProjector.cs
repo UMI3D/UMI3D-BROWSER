@@ -77,7 +77,7 @@ namespace umi3dBrowsers.interaction.selection.projector
         /// <param name="controller"></param>
         public void Release(AbstractTool interactionTool, AbstractController controller)
         {
-            controller.Release(interactionTool, new RequestedUsingSelector<AbstractSelector>() { controller = controller });
+            controller.projectionManager.Release(interactionTool, new RequestedUsingSelector<AbstractSelector>() { controller = controller });
 
             parameterGear.HideWithDelay();
         }
@@ -85,7 +85,7 @@ namespace umi3dBrowsers.interaction.selection.projector
         /// <inheritdoc/>
         public void Release(InteractableContainer interactable, AbstractController controller)
         {
-            controller.Release(AbstractInteractionMapper.Instance.GetTool(UMI3DGlobalID.EnvironmentId, interactable.Interactable.dto.id), new RequestedUsingSelector<AbstractSelector>() { controller = controller });
+            controller.projectionManager.Release(AbstractInteractionMapper.Instance.GetTool(UMI3DGlobalID.EnvironmentId, interactable.Interactable.dto.id), new RequestedUsingSelector<AbstractSelector>() { controller = controller });
 
             parameterGear.HideWithDelay();
         }

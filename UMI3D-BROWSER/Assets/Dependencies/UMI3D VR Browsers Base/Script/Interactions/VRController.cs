@@ -281,19 +281,19 @@ namespace umi3dVRBrowsersBase.interactions
             associatedInputs.Add(tool.id, toolInputs.ToArray());
         }
 
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
-        /// <param name="tool"></param>
-        /// <param name="reason"></param>
-        public override void Release(AbstractTool tool, InteractionMappingReason reason)
-        {
-            base.Release(tool, reason);
-            tool.onReleased(bone.BoneType);
+        ///// <summary>
+        ///// <inheritdoc/>
+        ///// </summary>
+        ///// <param name="tool"></param>
+        ///// <param name="reason"></param>
+        //public override void Release(AbstractTool tool, InteractionMappingReason reason)
+        //{
+        //    base.Release(tool, reason);
+        //    tool.onReleased(bone.BoneType);
 
-            PlayerMenuManager.Instance.CtrlToolMenu.ClearBindingList(type);
-            PlayerMenuManager.Instance.MenuHeader.DisplayControllerButton(false, type, string.Empty);
-        }
+        //    PlayerMenuManager.Instance.CtrlToolMenu.ClearBindingList(type);
+        //    PlayerMenuManager.Instance.MenuHeader.DisplayControllerButton(false, type, string.Empty);
+        //}
 
         #endregion
 

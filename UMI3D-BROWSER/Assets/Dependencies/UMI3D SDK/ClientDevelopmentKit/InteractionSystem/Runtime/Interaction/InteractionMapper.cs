@@ -101,7 +101,7 @@ namespace umi3d.cdk.interaction
 
             if (toolIdToController.TryGetValue((tool.environmentId,tool.id), out AbstractController controller))
             {
-                controller.Release(tool, reason);
+                controller.projectionManager.Release(tool, reason);
                 toolIdToController.Remove((tool.environmentId, tool.id));
                 tool.OnUpdated.RemoveAllListeners();
                 tool.OnAdded.RemoveAllListeners();
@@ -196,7 +196,12 @@ namespace umi3d.cdk.interaction
                 if (tool.interactionsId.Count <= 0)
                     ReleaseTool(environmentId, tool.id, new ToolNeedToBeUpdated());
                 else
-                    controller.Update(tool, releasable, reason);
+                    controller.projectionManager.Project(
+                        tool, 
+                        releasable, 
+                        reason,
+                        controller.toolManager.toolDelegate.CurrentHoverTool.id
+                    );
                 return true;
             }
             throw new Exception("no controller have this tool projected");
@@ -209,7 +214,7 @@ namespace umi3d.cdk.interaction
             {
                 AbstractController controller = toolIdToController[(environmentId, toolId)];
                 AbstractTool tool = GetTool(environmentId, toolId);
-                controller.AddUpdate(tool, releasable, abstractInteractionDto, reason);
+                controller.projectionManager.Project(tool, abstractInteractionDto, releasable, reason);
                 return true;
             }
             throw new Exception("no controller have this tool projected");

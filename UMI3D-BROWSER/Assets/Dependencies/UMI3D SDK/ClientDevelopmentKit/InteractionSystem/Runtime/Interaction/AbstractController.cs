@@ -44,6 +44,16 @@ namespace umi3d.cdk.interaction
         public UMI3DToolManager toolManager;
         public ProjectionManager projectionManager;
 
+        private void Awake()
+        {
+            projectionManager.Init(
+                this, 
+                inputManager, 
+                toolManager
+            );
+        }
+
+
         #region properties
 
         /// <summary>
@@ -72,34 +82,6 @@ namespace umi3d.cdk.interaction
         /// </summary>
         /// <param name="tool"> The ToolDto to be projected.</param>
         /// <see cref="Release(AbstractTool)"/>
-        public virtual void Project(AbstractTool tool, bool releasable, InteractionMappingReason reason, ulong hoveredObjectId)
-        {
-            if (!toolManager.toolDelegate.IsCompatibleWith(tool))
-                throw new System.Exception("Trying to project an uncompatible tool !");
-
-            if (toolManager.toolDelegate.Tool != null)
-                throw new System.Exception("A tool is already projected !");
-
-            if (toolManager.toolDelegate.RequiresMenu(tool))
-            {
-                toolManager.toolDelegate.CreateInteractionsMenuFor(tool);
-            }
-            else
-            {
-                AbstractInteractionDto[] interactions = tool.interactionsLoaded.ToArray();
-                AbstractUMI3DInput[] inputs = projectionManager.Project(this, tool.environmentId, interactions, tool.id, hoveredObjectId);
-                associatedInputs.Add(tool.id, inputs);
-            }
-
-            toolManager.toolDelegate.Tool = tool;
-        }
-
-
-        /// <summary>
-        /// Project a tool on this controller.
-        /// </summary>
-        /// <param name="tool"> The ToolDto to be projected.</param>
-        /// <see cref="Release(AbstractTool)"/>
         public virtual void Update(AbstractTool tool, bool releasable, InteractionMappingReason reason)
         {
             if (toolManager.toolDelegate.Tool != tool)
@@ -118,7 +100,10 @@ namespace umi3d.cdk.interaction
         public virtual void Release(AbstractTool tool, InteractionMappingReason reason)
         {
             if (toolManager.toolDelegate.Tool == null)
-                throw new System.Exception("no tool is currently projected on this controller");
+            {
+                throw new NoToolFoundException($"No tool is currently projected on this controller");
+                // TODO add controller id.
+            }
             if (toolManager.toolDelegate.Tool.id != tool.id)
                 throw new System.Exception("This tool is not currently projected on this controller");
 
@@ -134,6 +119,36 @@ namespace umi3d.cdk.interaction
             toolManager.toolDelegate.Tool = null;
         }
 
+
+        /// <summary>
+        /// Project a tool on this controller.
+        /// </summary>
+        /// <param name="tool"> The ToolDto to be projected.</param>
+        /// <see cref="Release(AbstractTool)"/>
+        public virtual void Project(AbstractTool tool, bool releasable, InteractionMappingReason reason, ulong hoveredObjectId)
+        {
+            if (!toolManager.toolDelegate.IsCompatibleWith(tool))
+            {
+                throw new IncompatibleToolException($"For {tool.GetType().Name}: {tool.name}");
+            }
+
+            if (toolManager.toolDelegate.Tool != null)
+                throw new System.Exception("A tool is already projected !");
+
+            if (toolManager.toolDelegate.RequiresMenu(tool))
+            {
+                toolManager.toolDelegate.CreateInteractionsMenuFor(tool);
+            }
+            else
+            {
+                AbstractInteractionDto[] interactions = tool.interactionsLoaded.ToArray();
+                AbstractUMI3DInput[] inputs = projectionManager.Project(tool.environmentId, interactions, tool.id, hoveredObjectId);
+                associatedInputs.Add(tool.id, inputs);
+            }
+
+            toolManager.toolDelegate.Tool = tool;
+        }
+
         /// <summary>
         /// Change a tool on this controller to add a new interaction
         /// </summary>
@@ -144,7 +159,9 @@ namespace umi3d.cdk.interaction
         public virtual void AddUpdate(AbstractTool tool, bool releasable, AbstractInteractionDto abstractInteractionDto, InteractionMappingReason reason)
         {
             if (toolManager.toolDelegate.Tool != tool)
-                throw new System.Exception("Try to update wrong tool");
+            {
+                throw new NoToolFoundException($"Try to update {tool.GetType().Name}: {tool.name} but this tool is not projected.");
+            }
 
             if (toolManager.toolDelegate.RequiresMenu(tool))
             {
@@ -153,7 +170,7 @@ namespace umi3d.cdk.interaction
             else
             {
                 var interaction = new AbstractInteractionDto[] { abstractInteractionDto };
-                AbstractUMI3DInput[] inputs = projectionManager.Project(this, tool.environmentId, interaction, tool.id, toolManager.toolDelegate.CurrentHoverTool.id);
+                AbstractUMI3DInput[] inputs = projectionManager.Project(tool.environmentId, interaction, tool.id, toolManager.toolDelegate.CurrentHoverTool.id);
                 if (associatedInputs.ContainsKey(tool.id))
                 {
                     associatedInputs[tool.id] = associatedInputs[tool.id].Concat(inputs).ToArray();

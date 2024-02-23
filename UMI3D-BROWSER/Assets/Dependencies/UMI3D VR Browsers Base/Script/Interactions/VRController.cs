@@ -264,7 +264,7 @@ namespace umi3dVRBrowsersBase.interactions
         /// <param name="hoveredObjectId"></param>
         private void ProjectParameters(AbstractTool tool, List<AbstractInteractionDto> interactions, ulong hoveredObjectId)
         {
-            AbstractUMI3DInput[] inputs = projectionManager.Project(this, UMI3DGlobalID.EnvironmentId, interactions.FindAll(inter => inter is AbstractParameterDto).ToArray(), tool.id, hoveredObjectId);
+            AbstractUMI3DInput[] inputs = projectionManager.Project(UMI3DGlobalID.EnvironmentId, interactions.FindAll(inter => inter is AbstractParameterDto).ToArray(), tool.id, hoveredObjectId);
             var toolInputs = new List<AbstractUMI3DInput>();
 
             if (associatedInputs.TryGetValue(tool.id, out AbstractUMI3DInput[] buffer))

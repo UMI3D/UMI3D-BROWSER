@@ -45,7 +45,7 @@ namespace umi3d.cdk.interaction
 
                 if (projection == null)
                 {
-                    throw new NoInputFoundException();
+                    throw new NoInputFoundException($"For {nameof(AbstractParameterDto)}: {interaction.name}");
                 }
 
                 return new ProjectionTreeNodeDto()

@@ -31,6 +31,7 @@ namespace umi3d.cdk.interaction
     {
         [SerializeField]
         UMI3DLogger logger = new();
+        [Header("Inspector Dependency Injection")]
         public ProjectionTree_SO projectionTree_SO;
         public ProjectionTreeManipulationNodeDelegate ptManipulationNodeDelegate;
         public ProjectionTreeEventNodeDelegate ptEventNodeDelegate;
@@ -38,13 +39,22 @@ namespace umi3d.cdk.interaction
         public ProjectionTreeLinkNodeDelegate ptLinkNodeDelegate;
         public ProjectionTreeParameterNodeDelegate ptParameterNodeDelegate;
 
+        [HideInInspector]
+        public UMI3DInputManager inputManager;
+        [HideInInspector]
+        public UMI3DToolManager toolManager;
+
         /// <summary>
         /// The root of the tree.
         /// </summary>
         ProjectionTreeNodeDto treeRoot;
         ProjectionTreeModel treeModel;
 
-        public void Init(MonoBehaviour context)
+        public void Init(
+            MonoBehaviour context,
+            UMI3DInputManager inputManager,
+            UMI3DToolManager toolManager
+        )
         {
             logger.MainContext = context;
             logger.MainTag = nameof(ProjectionManager);
@@ -75,17 +85,21 @@ namespace umi3d.cdk.interaction
             ptFormNodeDelegate.Init(projectionTree_SO, treeId);
             ptLinkNodeDelegate.Init(projectionTree_SO, treeId);
             ptParameterNodeDelegate.Init(projectionTree_SO, treeId);
+
+            logger.Assert(inputManager != null, $"{nameof(inputManager)} is null");
+            logger.Assert(toolManager != null, $"{nameof(toolManager)} is null");
+
+            this.inputManager = inputManager;
+            this.toolManager = toolManager;
         }
 
         /// <summary>
         /// Get Inputs of a controller for a list of interactions.
         /// </summary>
-        /// <param name="controller">The controller on which the input should be</param>
         /// <param name="interactions">the array of interaction for which an input is seeked</param>
         /// <param name="unused"></param>
         /// <returns></returns>
         public AbstractUMI3DInput[] GetInputs(
-            AbstractController controller,
             AbstractInteractionDto[] interactions,
             bool unused = true
         )
@@ -101,12 +115,11 @@ namespace umi3d.cdk.interaction
                 if (interaction is ManipulationDto manipulationDto)
                 {
                     DofGroupOptionDto[] options = manipulationDto.dofSeparationOptions.ToArray();
-                    DofGroupOptionDto bestDofGroupOption = controller.inputManager.manipulationDelegate.FindBest(options);
+                    DofGroupOptionDto bestDofGroupOption = inputManager.manipulationDelegate.FindBest(options);
 
                     foreach (DofGroupDto sep in bestDofGroupOption.separations)
                     {
                         currentMemoryTreeState = GetProjectionNode(
-                            controller,
                             interaction,
                             currentMemoryTreeState,
                             null,
@@ -122,7 +135,6 @@ namespace umi3d.cdk.interaction
                 else
                 {
                     currentMemoryTreeState = GetProjectionNode(
-                            controller,
                             interaction,
                             currentMemoryTreeState,
                             null,
@@ -140,14 +152,13 @@ namespace umi3d.cdk.interaction
         }
 
         /// <summary>
-        /// Project a dto on a controller and return associated input.
+        /// Project an interaction on a controller and return associated input.
         /// </summary>
         /// <param name="controller">Controller to project on</param>
         /// <param name="evt">Event dto to project</param>
         /// <param name="unusedInputsOnly">Project on unused inputs only</param>
         public AbstractUMI3DInput PartialProject<Dto>(
             Dto dto,
-            AbstractController controller,
             ulong environmentId,
             ulong toolId,
             ulong hoveredObjectId,
@@ -157,7 +168,6 @@ namespace umi3d.cdk.interaction
             where Dto : AbstractInteractionDto
         {
             return GetProjectionNode(
-                controller,
                 dto,
                 treeRoot,
                 environmentId,
@@ -173,10 +183,11 @@ namespace umi3d.cdk.interaction
         /// <summary>
         /// Project on a given controller a set of interactions and return associated inputs.
         /// </summary>
-        /// <param name="controller">Controller to project interactions on</param>
         /// <param name="interactions">Interactions to project</param>
+        /// <param name="environmentId"></param>
+        /// <param name="toolId"></param>
+        /// <param name="hoveredObjectId"></param>
         public AbstractUMI3DInput[] Project(
-            AbstractController controller, 
             ulong environmentId, 
             AbstractInteractionDto[] interactions, 
             ulong toolId, 
@@ -217,12 +228,11 @@ namespace umi3d.cdk.interaction
                 if (interaction is ManipulationDto manipulationDto)
                 {
                     DofGroupOptionDto[] options = (interaction as ManipulationDto).dofSeparationOptions.ToArray();
-                    DofGroupOptionDto bestDofGroupOption = controller.inputManager.manipulationDelegate.FindBest(options);
+                    DofGroupOptionDto bestDofGroupOption = inputManager.manipulationDelegate.FindBest(options);
 
                     foreach (DofGroupDto sep in bestDofGroupOption.separations)
                     {
                         currentMemoryTreeState = GetProjectionNode(
-                            controller,
                             interaction,
                             currentMemoryTreeState,
                             environmentId,
@@ -238,7 +248,6 @@ namespace umi3d.cdk.interaction
                 else
                 {
                     currentMemoryTreeState = GetProjectionNode(
-                        controller,
                         interaction,
                         currentMemoryTreeState,
                         environmentId,
@@ -260,7 +269,6 @@ namespace umi3d.cdk.interaction
         /// If <paramref name="environmentId"/>, <paramref name="hoveredObjectId"/>, <paramref name="toolId"/> are not null then associate the interaction with its input.<br/>
         /// If <paramref name="selectedInputs"/> is not null add the found input to the list.
         /// </summary>
-        /// <param name="controller"></param>
         /// <param name="interaction"></param>
         /// <param name="currentMemoryTreeState"></param>
         /// <param name="environmentId"></param>
@@ -273,7 +281,6 @@ namespace umi3d.cdk.interaction
         /// <returns></returns>
         /// <exception cref="System.Exception"></exception>
         ProjectionTreeNodeDto GetProjectionNode(
-            AbstractController controller,
             AbstractInteractionDto interaction,
             ProjectionTreeNodeDto currentMemoryTreeState,
             ulong? environmentId = null,
@@ -299,8 +306,8 @@ namespace umi3d.cdk.interaction
                         manipulationDto,
                         () =>
                         {
-                            controller.inputManager.manipulationDelegate.dof = dof;
-                            return controller.inputManager.manipulationDelegate.FindInput(manipulationDto, unused);
+                            inputManager.manipulationDelegate.dof = dof;
+                            return inputManager.manipulationDelegate.FindInput(manipulationDto, unused);
                         }
                     );
                     chooseProjection = ptManipulationNodeDelegate.ChooseProjection(environmentId, toolId, hoveredObjectId, selectedInputs);
@@ -313,8 +320,8 @@ namespace umi3d.cdk.interaction
                         eventDto,
                         () =>
                         {
-                            controller.inputManager.eventInputDelegate.tryToFindInputForHoldableEvent = tryToFindInputForHoldableEvent;
-                            return controller.inputManager.eventInputDelegate.FindInput(eventDto, unused);
+                            inputManager.eventInputDelegate.tryToFindInputForHoldableEvent = tryToFindInputForHoldableEvent;
+                            return inputManager.eventInputDelegate.FindInput(eventDto, unused);
                         }
                     );
                     chooseProjection = ptEventNodeDelegate.ChooseProjection(environmentId, toolId, hoveredObjectId, selectedInputs);
@@ -327,7 +334,7 @@ namespace umi3d.cdk.interaction
                         formDto,
                         () =>
                         {
-                            return controller.inputManager.formInputDelegate.FindInput(formDto, unused);
+                            return inputManager.formInputDelegate.FindInput(formDto, unused);
                         }
                     );
                     chooseProjection = ptFormNodeDelegate.ChooseProjection(environmentId, toolId, hoveredObjectId, selectedInputs);
@@ -340,7 +347,7 @@ namespace umi3d.cdk.interaction
                         linkDto,
                         () =>
                         {
-                            return controller.inputManager.linkInputDelegate.FindInput(linkDto, unused);
+                            return inputManager.linkInputDelegate.FindInput(linkDto, unused);
                         }
                     );
                     chooseProjection = ptLinkNodeDelegate.ChooseProjection(environmentId, toolId, hoveredObjectId, selectedInputs);
@@ -353,7 +360,7 @@ namespace umi3d.cdk.interaction
                         parameterDto,
                         () =>
                         {
-                            return controller.inputManager.parameterInputDelegate.FindInput(parameterDto, unused);
+                            return inputManager.parameterInputDelegate.FindInput(parameterDto, unused);
                         }
                     );
                     chooseProjection = ptParameterNodeDelegate.ChooseProjection(environmentId, toolId, hoveredObjectId, selectedInputs);

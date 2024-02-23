@@ -23,7 +23,7 @@ using UnityEngine;
 namespace umi3d.cdk.interaction
 {
     /// <summary>
-    /// Manage the links between projected tools and their associated inputs. 
+    /// Manage the links between projected tools and their associated inputs.<br/> 
     /// This projection is based on a tree <see cref="ProjectionTreeDto"/> constituted of <see cref="ProjectionTreeNodeDto"/>.
     /// </summary>
     [Serializable]
@@ -94,7 +94,7 @@ namespace umi3d.cdk.interaction
         }
 
         /// <summary>
-        /// Get Inputs of a controller for a list of interactions.
+        /// Get the inputs associated with this <paramref name="interactions"/>.
         /// </summary>
         /// <param name="interactions">the array of interaction for which an input is seeked</param>
         /// <param name="unused"></param>
@@ -119,32 +119,32 @@ namespace umi3d.cdk.interaction
 
                     foreach (DofGroupDto sep in bestDofGroupOption.separations)
                     {
-                        currentMemoryTreeState = GetProjectionNode(
+                        currentMemoryTreeState = ProjectAndUpdateTree(
                             interaction,
                             currentMemoryTreeState,
                             null,
                             null,
                             null,
-                            selectedInputs,
                             unused,
                             false,
                             sep
                         );
+                        selectedInputs.Add(currentMemoryTreeState.input);
                     }
                 }
                 else
                 {
-                    currentMemoryTreeState = GetProjectionNode(
+                    currentMemoryTreeState = ProjectAndUpdateTree(
                             interaction,
                             currentMemoryTreeState,
                             null,
                             null,
                             null,
-                            selectedInputs,
                             unused,
                             false,
                             null
                         );
+                    selectedInputs.Add(currentMemoryTreeState.input);
                 }
             }
 
@@ -152,13 +152,13 @@ namespace umi3d.cdk.interaction
         }
 
         /// <summary>
-        /// Project an interaction on a controller and return associated input.
+        /// Project an interaction and return associated input.
         /// </summary>
         /// <param name="controller">Controller to project on</param>
         /// <param name="evt">Event dto to project</param>
         /// <param name="unusedInputsOnly">Project on unused inputs only</param>
-        public AbstractUMI3DInput PartialProject<Dto>(
-            Dto dto,
+        public AbstractUMI3DInput Project<Dto>(
+            Dto interaction,
             ulong environmentId,
             ulong toolId,
             ulong hoveredObjectId,
@@ -167,13 +167,12 @@ namespace umi3d.cdk.interaction
         )
             where Dto : AbstractInteractionDto
         {
-            return GetProjectionNode(
-                dto,
+            return ProjectAndUpdateTree(
+                interaction,
                 treeRoot,
                 environmentId,
                 toolId,
                 hoveredObjectId,
-                null,
                 unusedInputsOnly,
                 false,
                 dof
@@ -181,15 +180,15 @@ namespace umi3d.cdk.interaction
         }
 
         /// <summary>
-        /// Project on a given controller a set of interactions and return associated inputs.
+        /// Project a set of interactions and return associated inputs.
         /// </summary>
         /// <param name="interactions">Interactions to project</param>
         /// <param name="environmentId"></param>
         /// <param name="toolId"></param>
         /// <param name="hoveredObjectId"></param>
         public AbstractUMI3DInput[] Project(
-            ulong environmentId, 
             AbstractInteractionDto[] interactions, 
+            ulong environmentId, 
             ulong toolId, 
             ulong hoveredObjectId
         )
@@ -232,32 +231,32 @@ namespace umi3d.cdk.interaction
 
                     foreach (DofGroupDto sep in bestDofGroupOption.separations)
                     {
-                        currentMemoryTreeState = GetProjectionNode(
+                        currentMemoryTreeState = ProjectAndUpdateTree(
                             interaction,
                             currentMemoryTreeState,
                             environmentId,
                             toolId,
                             hoveredObjectId,
-                            selectedInputs,
                             true,
                             false,
                             sep
                         );
+                        selectedInputs.Add(currentMemoryTreeState.input);
                     }
                 }
                 else
                 {
-                    currentMemoryTreeState = GetProjectionNode(
+                    currentMemoryTreeState = ProjectAndUpdateTree(
                         interaction,
                         currentMemoryTreeState,
                         environmentId,
                         toolId,
                         hoveredObjectId,
-                        selectedInputs,
                         true,
                         depth == 0 && foundHoldableEvent,
                         null
                     );
+                    selectedInputs.Add(currentMemoryTreeState.input);
                 }
             }
 
@@ -265,28 +264,66 @@ namespace umi3d.cdk.interaction
         }
 
         /// <summary>
-        /// Return projection node.<br/>
-        /// If <paramref name="environmentId"/>, <paramref name="hoveredObjectId"/>, <paramref name="toolId"/> are not null then associate the interaction with its input.<br/>
-        /// If <paramref name="selectedInputs"/> is not null add the found input to the list.
+        /// Project a tool on this controller.
+        /// </summary>
+        /// <param name="tool"> The ToolDto to be projected.</param>
+        /// <see cref="Release(AbstractTool)"/>
+        public void Project(
+            AbstractTool tool, 
+            bool releasable, 
+            InteractionMappingReason reason, 
+            ulong hoveredObjectId
+        )
+        {
+            if (!toolManager.toolDelegate.IsCompatibleWith(tool))
+            {
+                throw new IncompatibleToolException($"For {tool.GetType().Name}: {tool.name}");
+            }
+
+            if (toolManager.toolDelegate.Tool != null)
+                throw new System.Exception("A tool is already projected !");
+
+            if (toolManager.toolDelegate.RequiresMenu(tool))
+            {
+                toolManager.toolDelegate.CreateInteractionsMenuFor(tool);
+            }
+            else
+            {
+                AbstractInteractionDto[] interactions = tool.interactionsLoaded.ToArray();
+                AbstractUMI3DInput[] inputs = Project(
+                    interactions, 
+                    tool.environmentId, 
+                    tool.id, 
+                    hoveredObjectId
+                );
+                //associatedInputs.Add(tool.id, inputs);
+            }
+
+            toolManager.toolDelegate.Tool = tool;
+        }
+
+        /// <summary>
+        /// Updates the projection tree and project the interaction.<br/>
+        /// 
+        /// <b>Warning</b> interaction is associated with its input only if 
+        /// <paramref name="environmentId"/>, <paramref name="hoveredObjectId"/> and <paramref name="toolId"/> are not null.<br/>
         /// </summary>
         /// <param name="interaction"></param>
-        /// <param name="currentMemoryTreeState"></param>
+        /// <param name="currentTreeNode"></param>
         /// <param name="environmentId"></param>
         /// <param name="toolId"></param>
         /// <param name="hoveredObjectId"></param>
-        /// <param name="selectedInputs"></param>
         /// <param name="unused"></param>
         /// <param name="tryToFindInputForHoldableEvent"></param>
         /// <param name="dof"></param>
         /// <returns></returns>
         /// <exception cref="System.Exception"></exception>
-        ProjectionTreeNodeDto GetProjectionNode(
+        ProjectionTreeNodeDto ProjectAndUpdateTree(
             AbstractInteractionDto interaction,
-            ProjectionTreeNodeDto currentMemoryTreeState,
+            ProjectionTreeNodeDto currentTreeNode,
             ulong? environmentId = null,
             ulong? toolId = null,
             ulong? hoveredObjectId = null,
-            List<AbstractUMI3DInput> selectedInputs = null,
             bool unused = true,
             bool tryToFindInputForHoldableEvent = false,
             DofGroupDto dof = null
@@ -310,7 +347,11 @@ namespace umi3d.cdk.interaction
                             return inputManager.manipulationDelegate.FindInput(manipulationDto, unused);
                         }
                     );
-                    chooseProjection = ptManipulationNodeDelegate.ChooseProjection(environmentId, toolId, hoveredObjectId, selectedInputs);
+                    chooseProjection = ptManipulationNodeDelegate.ChooseProjection(
+                        environmentId, 
+                        toolId, 
+                        hoveredObjectId
+                    );
                     break;
 
                 case EventDto eventDto:
@@ -324,7 +365,11 @@ namespace umi3d.cdk.interaction
                             return inputManager.eventInputDelegate.FindInput(eventDto, unused);
                         }
                     );
-                    chooseProjection = ptEventNodeDelegate.ChooseProjection(environmentId, toolId, hoveredObjectId, selectedInputs);
+                    chooseProjection = ptEventNodeDelegate.ChooseProjection(
+                        environmentId,
+                        toolId,
+                        hoveredObjectId
+                    );
                     break;
 
                 case FormDto formDto:
@@ -337,7 +382,11 @@ namespace umi3d.cdk.interaction
                             return inputManager.formInputDelegate.FindInput(formDto, unused);
                         }
                     );
-                    chooseProjection = ptFormNodeDelegate.ChooseProjection(environmentId, toolId, hoveredObjectId, selectedInputs);
+                    chooseProjection = ptFormNodeDelegate.ChooseProjection(
+                        environmentId,
+                        toolId,
+                        hoveredObjectId
+                    );
                     break;
 
                 case LinkDto linkDto:
@@ -350,7 +399,11 @@ namespace umi3d.cdk.interaction
                             return inputManager.linkInputDelegate.FindInput(linkDto, unused);
                         }
                     );
-                    chooseProjection = ptLinkNodeDelegate.ChooseProjection(environmentId, toolId, hoveredObjectId, selectedInputs);
+                    chooseProjection = ptLinkNodeDelegate.ChooseProjection(
+                        environmentId,
+                        toolId,
+                        hoveredObjectId
+                    );
                     break;
 
                 case AbstractParameterDto parameterDto:
@@ -363,15 +416,19 @@ namespace umi3d.cdk.interaction
                             return inputManager.parameterInputDelegate.FindInput(parameterDto, unused);
                         }
                     );
-                    chooseProjection = ptParameterNodeDelegate.ChooseProjection(environmentId, toolId, hoveredObjectId, selectedInputs);
+                    chooseProjection = ptParameterNodeDelegate.ChooseProjection(
+                        environmentId,
+                        toolId,
+                        hoveredObjectId
+                    );
                     break;
 
                 default:
                     throw new System.Exception("Unknown interaction type, can't project !");
             }
 
-            return Project(
-                currentMemoryTreeState,
+            return ProjectAndUpdateTree(
+                currentTreeNode,
                 adequation,
                 deepProjectionCreation,
                 chooseProjection
@@ -379,21 +436,22 @@ namespace umi3d.cdk.interaction
         }
 
         /// <summary>
-        /// Navigates through tree and project an interaction. Updates the tree if necessary.
+        /// Updates the projection tree and project the interaction.<br/>
+        /// 
+        /// <b>Warning</b> interaction is not necessary associated with an input.
         /// </summary>
-        /// <param name="nodeAdequationTest">Decides if the given projection node is adequate for the interaction to project</param>
-        /// <param name="deepProjectionCreation">Create a new deep projection node, should throw an <see cref="NoInputFoundException"/> if no input is available</param>
+        /// <param name="isAdequate">Whether the given projection node is adequate for the interaction to project</param>
+        /// <param name="projectionNodeCreation">Create a new projection node, should throw an <see cref="NoInputFoundException"/> if no input is available</param>
         /// <param name="chooseProjection">Project the interaction to the given node's input</param>
         /// <param name="currentTreeNode">Current node in tree projection</param>
         /// <param name="unusedInputsOnly">Project on unused inputs only</param>
         /// <exception cref="NoInputFoundException"></exception>
-        ProjectionTreeNodeDto Project(
+        ProjectionTreeNodeDto ProjectAndUpdateTree(
             ProjectionTreeNodeDto currentTreeNode,
-            System.Predicate<ProjectionTreeNodeDto> nodeAdequationTest,
-            System.Func<ProjectionTreeNodeDto> deepProjectionCreation,
-            System.Action<ProjectionTreeNodeDto> chooseProjection,
-            bool unusedInputsOnly = true,
-            bool updateMemory = true
+            Predicate<ProjectionTreeNodeDto> isAdequate,
+            Func<ProjectionTreeNodeDto> projectionNodeCreation,
+            Action<ProjectionTreeNodeDto> chooseProjection,
+            bool unusedInputsOnly = true
         )
         {
             // Try first to project on unused inputs.
@@ -401,13 +459,12 @@ namespace umi3d.cdk.interaction
             {
                 try
                 {
-                    return Project(
+                    return ProjectAndUpdateTree(
                         currentTreeNode,
-                        nodeAdequationTest,
-                        deepProjectionCreation,
+                        isAdequate,
+                        projectionNodeCreation,
                         chooseProjection,
-                        true,
-                        updateMemory
+                        true
                     );
                 }
                 catch (NoInputFoundException) { }
@@ -425,7 +482,7 @@ namespace umi3d.cdk.interaction
                     .Range(0, children.Count)
                     .Where(i =>
                     {
-                        return nodeAdequationTest?.Invoke(children[i]) ?? false;
+                        return isAdequate?.Invoke(children[i]) ?? false;
                     });
 
                 foreach (var index in indexes)
@@ -446,35 +503,32 @@ namespace umi3d.cdk.interaction
                 return indexes.Count() == 0 ? -1 : 0;
             }
 
-            int projectionStatus = _FindProjection(treeModel.GetAllSubNodes(currentTreeNode), out projection);
+            int projectionStatus = _FindProjection(
+                treeModel.GetAllSubNodes(currentTreeNode),
+                out projection
+            );
             if (projectionStatus == -1) 
             {
-                projectionStatus = _FindProjection(treeModel.GetAllSubNodes(treeRoot), out projection);
+                projectionStatus = _FindProjection(
+                    treeModel.GetAllSubNodes(treeRoot),
+                    out projection
+                );
                 if (projectionStatus <= 0)
                 {
-                    projection = deepProjectionCreation();
+                    projection = projectionNodeCreation();
 
-                    if (updateMemory)
-                    {
-                        treeModel.AddChild(currentTreeNode.id, projection.Value);
-                    }
+                    treeModel.AddChild(currentTreeNode.id, projection.Value);
                 }
                 else
-                {
-                    if (updateMemory)
-                    {
-                        treeModel.RemoveChild(projection.Value.parentId, projection.Value.id);
-                        treeModel.AddChild(currentTreeNode.id, projection.Value);
-                    }
-                }
-            }
-            else if (projectionStatus == 1)
-            {
-                if (updateMemory)
                 {
                     treeModel.RemoveChild(projection.Value.parentId, projection.Value.id);
                     treeModel.AddChild(currentTreeNode.id, projection.Value);
                 }
+            }
+            else if (projectionStatus == 1)
+            {
+                treeModel.RemoveChild(projection.Value.parentId, projection.Value.id);
+                treeModel.AddChild(currentTreeNode.id, projection.Value);
             }
 
             chooseProjection(projection.Value);

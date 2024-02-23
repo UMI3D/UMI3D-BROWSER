@@ -67,7 +67,7 @@ namespace umi3dBrowsers.interaction.selection.projector
         /// <param name="controller"></param>
         public void Project(AbstractTool interactionTool, ulong selectedObjectId, AbstractController controller)
         {
-            controller.Project(interactionTool, true, new RequestedUsingSelector<AbstractSelector>() { controller = controller }, selectedObjectId);
+            controller.projectionManager.Project(interactionTool, true, new RequestedUsingSelector<AbstractSelector>() { controller = controller }, selectedObjectId);
         }
 
         /// <summary>

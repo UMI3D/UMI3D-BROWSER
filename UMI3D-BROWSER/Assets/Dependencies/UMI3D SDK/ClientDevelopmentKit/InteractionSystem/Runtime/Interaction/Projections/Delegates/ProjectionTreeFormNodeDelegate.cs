@@ -64,8 +64,7 @@ namespace umi3d.cdk.interaction
         public override Action<ProjectionTreeNodeDto> ChooseProjection(
             ulong? environmentId = null,
             ulong? toolId = null,
-            ulong? hoveredObjectId = null,
-            List<AbstractUMI3DInput> selectedInputs = null
+            ulong? hoveredObjectId = null
         )
         {
             return node =>
@@ -80,8 +79,6 @@ namespace umi3d.cdk.interaction
                         hoveredObjectId.Value
                     );
                 }
-
-                selectedInputs?.Add(node.input);
             };
         }
     }

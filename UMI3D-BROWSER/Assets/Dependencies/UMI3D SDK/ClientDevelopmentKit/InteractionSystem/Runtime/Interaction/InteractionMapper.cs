@@ -171,7 +171,12 @@ namespace umi3d.cdk.interaction
                 tool.OnAdded.AddListener(abstractInteractionDto => { UpdateAddOnTools(environmentId, toolId, releasable, abstractInteractionDto, reason); });
                 tool.OnRemoved.AddListener(abstractInteractionDto => { UpdateRemoveOnTools(environmentId, toolId, releasable, abstractInteractionDto, reason); });
 
-                controller.Project(tool, releasable, reason, hoveredObjectId);
+                controller.projectionManager.Project(
+                    tool, 
+                    releasable, 
+                    reason, 
+                    hoveredObjectId
+                );
 
                 return true;
             }

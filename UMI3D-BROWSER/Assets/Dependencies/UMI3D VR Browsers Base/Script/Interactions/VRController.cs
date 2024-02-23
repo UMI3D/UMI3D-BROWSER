@@ -78,24 +78,24 @@ namespace umi3dVRBrowsersBase.interactions
 
         #region Tool : projection and release
 
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
-        /// <param name="tool"></param>
-        /// <param name="releasable"></param>
-        /// <param name="reason"></param>
-        /// <param name="hoveredObjectId"></param>
-        public override void Project(AbstractTool tool, bool releasable, InteractionMappingReason reason, ulong hoveredObjectId)
-        {
-            base.Project(tool, releasable, reason, hoveredObjectId);
+        ///// <summary>
+        ///// <inheritdoc/>
+        ///// </summary>
+        ///// <param name="tool"></param>
+        ///// <param name="releasable"></param>
+        ///// <param name="reason"></param>
+        ///// <param name="hoveredObjectId"></param>
+        //public override void Project(AbstractTool tool, bool releasable, InteractionMappingReason reason, ulong hoveredObjectId)
+        //{
+        //    base.Project(tool, releasable, reason, hoveredObjectId);
 
-            if (toolManager.toolDelegate.Tool == tool) // It means projection succedded
-            {
-                PlayerMenuManager.Instance.MenuHeader.DisplayControllerButton(true, type, tool.name);
+        //    if (toolManager.toolDelegate.Tool == tool) // It means projection succedded
+        //    {
+        //        PlayerMenuManager.Instance.MenuHeader.DisplayControllerButton(true, type, tool.name);
 
-                tool.onProjected(bone.BoneType);
-            }
-        }
+        //        tool.onProjected(bone.BoneType);
+        //    }
+        //}
 
         ///// <summary>
         ///// Check if a tool can be projected on this controller.
@@ -264,7 +264,12 @@ namespace umi3dVRBrowsersBase.interactions
         /// <param name="hoveredObjectId"></param>
         private void ProjectParameters(AbstractTool tool, List<AbstractInteractionDto> interactions, ulong hoveredObjectId)
         {
-            AbstractUMI3DInput[] inputs = projectionManager.Project(UMI3DGlobalID.EnvironmentId, interactions.FindAll(inter => inter is AbstractParameterDto).ToArray(), tool.id, hoveredObjectId);
+            AbstractUMI3DInput[] inputs = projectionManager.Project(
+                interactions.FindAll(inter => inter is AbstractParameterDto).ToArray(), 
+                UMI3DGlobalID.EnvironmentId, 
+                tool.id, 
+                hoveredObjectId
+            );
             var toolInputs = new List<AbstractUMI3DInput>();
 
             if (associatedInputs.TryGetValue(tool.id, out AbstractUMI3DInput[] buffer))

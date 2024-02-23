@@ -39,14 +39,15 @@ namespace umi3d.cdk.interaction
         }
 
         /// <summary>
-        /// Return a predicate the is true if the node is compatible with the dto.
+        /// Return a predicate the is true if the node is compatible with the interaction.
         /// </summary>
         /// <param name="interaction"></param>
         /// <returns></returns>
         public abstract Predicate<ProjectionTreeNodeDto> IsNodeCompatible(Dto interaction);
 
         /// <summary>
-        /// Return a <see cref="Func{ProjectionTreeNode}"/> that will create a tree node for this input found by <paramref name="findInput"/>.
+        /// Return a <see cref="Func{ProjectionTreeNode}"/> that will create a tree node for this input found by <paramref name="findInput"/>.<br/>
+        /// This <see cref="Func{ProjectionTreeNode}"/> must throw a <see cref="NoInputFoundException"/> if no input is found.
         /// </summary>
         /// <param name="interaction"></param>
         /// <param name="findInput"></param>
@@ -58,19 +59,17 @@ namespace umi3d.cdk.interaction
 
         /// <summary>
         /// Return a delegate that<br/>
-        /// - if <paramref name="environmentId"/> and <paramref name="toolId"/> and <paramref name="hoveredObjectId"/> are not null then associated the dto with its input.<br/>
+        /// - if <paramref name="environmentId"/> and <paramref name="toolId"/> and <paramref name="hoveredObjectId"/> are not null then associated the interaction with its input.<br/>
         /// - if <paramref name="selectedInputs"/> is not null select the node's input.
         /// </summary>
         /// <param name="environmentId"></param>
         /// <param name="toolId"></param>
         /// <param name="hoveredObjectId"></param>
-        /// <param name="selectedInputs"></param>
         /// <returns></returns>
         public abstract Action<ProjectionTreeNodeDto> ChooseProjection(
             ulong? environmentId = null,
             ulong? toolId = null,
-            ulong? hoveredObjectId = null,
-            List<AbstractUMI3DInput> selectedInputs = null
+            ulong? hoveredObjectId = null
         );
     }
 }

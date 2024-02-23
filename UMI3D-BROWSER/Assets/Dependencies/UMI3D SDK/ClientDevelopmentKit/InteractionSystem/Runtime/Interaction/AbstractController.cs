@@ -88,7 +88,12 @@ namespace umi3d.cdk.interaction
                 throw new System.Exception("Try to update wrong tool");
 
             Release(tool, new ToolNeedToBeUpdated());
-            Project(tool, releasable, reason, toolManager.toolDelegate.CurrentHoverTool.id);
+            projectionManager.Project(
+                tool, 
+                releasable, 
+                reason, 
+                toolManager.toolDelegate.CurrentHoverTool.id
+            );
         }
 
 
@@ -120,34 +125,7 @@ namespace umi3d.cdk.interaction
         }
 
 
-        /// <summary>
-        /// Project a tool on this controller.
-        /// </summary>
-        /// <param name="tool"> The ToolDto to be projected.</param>
-        /// <see cref="Release(AbstractTool)"/>
-        public virtual void Project(AbstractTool tool, bool releasable, InteractionMappingReason reason, ulong hoveredObjectId)
-        {
-            if (!toolManager.toolDelegate.IsCompatibleWith(tool))
-            {
-                throw new IncompatibleToolException($"For {tool.GetType().Name}: {tool.name}");
-            }
-
-            if (toolManager.toolDelegate.Tool != null)
-                throw new System.Exception("A tool is already projected !");
-
-            if (toolManager.toolDelegate.RequiresMenu(tool))
-            {
-                toolManager.toolDelegate.CreateInteractionsMenuFor(tool);
-            }
-            else
-            {
-                AbstractInteractionDto[] interactions = tool.interactionsLoaded.ToArray();
-                AbstractUMI3DInput[] inputs = projectionManager.Project(tool.environmentId, interactions, tool.id, hoveredObjectId);
-                associatedInputs.Add(tool.id, inputs);
-            }
-
-            toolManager.toolDelegate.Tool = tool;
-        }
+        
 
         /// <summary>
         /// Change a tool on this controller to add a new interaction
@@ -170,7 +148,12 @@ namespace umi3d.cdk.interaction
             else
             {
                 var interaction = new AbstractInteractionDto[] { abstractInteractionDto };
-                AbstractUMI3DInput[] inputs = projectionManager.Project(tool.environmentId, interaction, tool.id, toolManager.toolDelegate.CurrentHoverTool.id);
+                AbstractUMI3DInput[] inputs = projectionManager.Project(
+                    interaction, 
+                    tool.environmentId, 
+                    tool.id, 
+                    toolManager.toolDelegate.CurrentHoverTool.id
+                );
                 if (associatedInputs.ContainsKey(tool.id))
                 {
                     associatedInputs[tool.id] = associatedInputs[tool.id].Concat(inputs).ToArray();

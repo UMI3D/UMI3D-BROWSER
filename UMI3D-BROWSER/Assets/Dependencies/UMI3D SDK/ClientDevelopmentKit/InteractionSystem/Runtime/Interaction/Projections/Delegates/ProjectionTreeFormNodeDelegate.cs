@@ -24,16 +24,16 @@ namespace umi3d.cdk.interaction
     [CreateAssetMenu(fileName = "UMI3D PT Form Node Delegate", menuName = "UMI3D/Interactions/Projection Delegate/PT Form Node Delegate")]
     public class ProjectionTreeFormNodeDelegate : AbstractProjectionTreeNodeDelegate<FormDto>
     {
-        public override Predicate<ProjectionTreeNodeDto> IsNodeCompatible(FormDto interaction)
+        public override Predicate<ProjectionTreeNodeData> IsNodeCompatible(FormDto interaction)
         {
             return node =>
             {
-                var interactionDto = node.interactionDto.Interaction;
+                var interactionDto = node.interactionData.Interaction;
                 return interactionDto is FormDto && interactionDto.name.Equals(interaction.name);
             };
         }
 
-        public override Func<ProjectionTreeNodeDto> CreateNodeForInput(
+        public override Func<ProjectionTreeNodeData> CreateNodeForInput(
             FormDto interaction,
             Func<AbstractUMI3DInput> findInput
         )
@@ -47,12 +47,12 @@ namespace umi3d.cdk.interaction
                     throw new NoInputFoundException($"For {nameof(FormDto)}: {interaction.name}");
                 }
 
-                return new ProjectionTreeNodeDto()
+                return new ProjectionTreeNodeData()
                 {
                     treeId = treeId,
                     id = interaction.id,
                     children = new(),
-                    interactionDto = new ProjectionTreeFormNodeDto()
+                    interactionData = new ProjectionTreeFormNodeData()
                     {
                         interaction = interaction
                     },
@@ -61,7 +61,7 @@ namespace umi3d.cdk.interaction
             };
         }
 
-        public override Action<ProjectionTreeNodeDto> ChooseProjection(
+        public override Action<ProjectionTreeNodeData> ChooseProjection(
             ulong? environmentId = null,
             ulong? toolId = null,
             ulong? hoveredObjectId = null
@@ -71,7 +71,7 @@ namespace umi3d.cdk.interaction
             {
                 if (environmentId.HasValue && toolId.HasValue && hoveredObjectId.HasValue)
                 {
-                    var interactionDto = node.interactionDto.Interaction;
+                    var interactionDto = node.interactionData.Interaction;
                     node.input.Associate(
                         environmentId.Value,
                         interactionDto,

@@ -43,7 +43,7 @@ namespace umi3d.cdk.interaction
         /// </summary>
         /// <param name="interaction"></param>
         /// <returns></returns>
-        public abstract Predicate<ProjectionTreeNodeDto> IsNodeCompatible(Dto interaction);
+        public abstract Predicate<ProjectionTreeNodeData> IsNodeCompatible(Dto interaction);
 
         /// <summary>
         /// Return a <see cref="Func{ProjectionTreeNode}"/> that will create a tree node for this input found by <paramref name="findInput"/>.<br/>
@@ -52,7 +52,7 @@ namespace umi3d.cdk.interaction
         /// <param name="interaction"></param>
         /// <param name="findInput"></param>
         /// <returns></returns>
-        public abstract Func<ProjectionTreeNodeDto> CreateNodeForInput(
+        public abstract Func<ProjectionTreeNodeData> CreateNodeForInput(
             Dto interaction,
             Func<AbstractUMI3DInput> findInput
         );
@@ -66,7 +66,7 @@ namespace umi3d.cdk.interaction
         /// <param name="toolId"></param>
         /// <param name="hoveredObjectId"></param>
         /// <returns></returns>
-        public abstract Action<ProjectionTreeNodeDto> ChooseProjection(
+        public abstract Action<ProjectionTreeNodeData> ChooseProjection(
             ulong? environmentId = null,
             ulong? toolId = null,
             ulong? hoveredObjectId = null

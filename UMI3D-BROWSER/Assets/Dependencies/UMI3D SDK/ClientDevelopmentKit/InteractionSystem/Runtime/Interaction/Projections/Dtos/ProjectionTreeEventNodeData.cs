@@ -16,14 +16,13 @@ limitations under the License.
 
 using System;
 using umi3d.common.interaction;
-using UnityEngine;
 
 namespace umi3d.cdk.interaction
 {
     [Serializable]
-    public struct ProjectionTreeParameterNodeDto : IProjectionTreeNodeDto
+    public struct ProjectionTreeEventNodeData : IProjectionTreeNodeData
     {
-        public AbstractParameterDto interaction;
+        public EventDto interaction;
 
         public AbstractInteractionDto Interaction
         {

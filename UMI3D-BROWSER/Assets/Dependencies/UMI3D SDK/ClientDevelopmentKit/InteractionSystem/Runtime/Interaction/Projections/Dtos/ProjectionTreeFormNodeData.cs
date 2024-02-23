@@ -21,9 +21,9 @@ using UnityEngine;
 namespace umi3d.cdk.interaction
 {
     [Serializable]
-    public struct ProjectionTreeLinkNodeDto : IProjectionTreeNodeDto
+    public struct ProjectionTreeFormNodeData : IProjectionTreeNodeData
     {
-        public LinkDto interaction;
+        public FormDto interaction;
 
         public AbstractInteractionDto Interaction
         {

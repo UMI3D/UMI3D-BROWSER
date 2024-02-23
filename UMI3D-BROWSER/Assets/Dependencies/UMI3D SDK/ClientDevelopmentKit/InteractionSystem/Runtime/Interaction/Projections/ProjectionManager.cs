@@ -26,7 +26,7 @@ namespace umi3d.cdk.interaction
 {
     /// <summary>
     /// Manage the links between projected tools and their associated inputs.<br/> 
-    /// This projection is based on a tree <see cref="ProjectionTreeDto"/> constituted of <see cref="ProjectionTreeNodeDto"/>.
+    /// This projection is based on a tree <see cref="ProjectionTreeData"/> constituted of <see cref="ProjectionTreeNodeData"/>.
     /// </summary>
     [Serializable]
     public sealed class ProjectionManager
@@ -50,7 +50,7 @@ namespace umi3d.cdk.interaction
         /// <summary>
         /// The root of the tree.
         /// </summary>
-        ProjectionTreeNodeDto treeRoot;
+        ProjectionTreeNodeData treeRoot;
         ProjectionTreeModel treeModel;
 
         public void Init(
@@ -63,12 +63,12 @@ namespace umi3d.cdk.interaction
             logger.MainTag = nameof(ProjectionManager);
 
             var treeId = (context.gameObject.GetInstanceID() + UnityEngine.Random.Range(0, 1000)).ToString();
-            treeRoot = new ProjectionTreeNodeDto()
+            treeRoot = new ProjectionTreeNodeData()
             {
                 treeId = treeId,
                 id = 0,
                 children = new(),
-                interactionDto = null,
+                interactionData = null,
                 input = null
             };
             treeModel = new(
@@ -108,7 +108,7 @@ namespace umi3d.cdk.interaction
             bool unused = true
         )
         {
-            ProjectionTreeNodeDto currentMemoryTreeState = treeRoot;
+            ProjectionTreeNodeData currentMemoryTreeState = treeRoot;
 
             List<AbstractUMI3DInput> selectedInputs = new();
 
@@ -221,7 +221,7 @@ namespace umi3d.cdk.interaction
                 }
             }
 
-            ProjectionTreeNodeDto currentMemoryTreeState = treeRoot;
+            ProjectionTreeNodeData currentMemoryTreeState = treeRoot;
             List<AbstractUMI3DInput> selectedInputs = new List<AbstractUMI3DInput>();
 
             for (int depth = 0; depth < interactions.Length; depth++)
@@ -402,9 +402,9 @@ namespace umi3d.cdk.interaction
         /// <param name="dof"></param>
         /// <returns></returns>
         /// <exception cref="System.Exception"></exception>
-        ProjectionTreeNodeDto ProjectAndUpdateTree(
+        ProjectionTreeNodeData ProjectAndUpdateTree(
             AbstractInteractionDto interaction,
-            ProjectionTreeNodeDto currentTreeNode,
+            ProjectionTreeNodeData currentTreeNode,
             ulong? environmentId = null,
             ulong? toolId = null,
             ulong? hoveredObjectId = null,
@@ -413,9 +413,9 @@ namespace umi3d.cdk.interaction
             DofGroupDto dof = null
         )
         {
-            System.Predicate<ProjectionTreeNodeDto> adequation;
-            System.Func<ProjectionTreeNodeDto> deepProjectionCreation;
-            System.Action<ProjectionTreeNodeDto> chooseProjection;
+            System.Predicate<ProjectionTreeNodeData> adequation;
+            System.Func<ProjectionTreeNodeData> deepProjectionCreation;
+            System.Action<ProjectionTreeNodeData> chooseProjection;
 
             switch (interaction)
             {
@@ -530,11 +530,11 @@ namespace umi3d.cdk.interaction
         /// <param name="currentTreeNode">Current node in tree projection</param>
         /// <param name="unusedInputsOnly">Project on unused inputs only</param>
         /// <exception cref="NoInputFoundException"></exception>
-        ProjectionTreeNodeDto ProjectAndUpdateTree(
-            ProjectionTreeNodeDto currentTreeNode,
-            Predicate<ProjectionTreeNodeDto> isAdequate,
-            Func<ProjectionTreeNodeDto> projectionNodeCreation,
-            Action<ProjectionTreeNodeDto> chooseProjection,
+        ProjectionTreeNodeData ProjectAndUpdateTree(
+            ProjectionTreeNodeData currentTreeNode,
+            Predicate<ProjectionTreeNodeData> isAdequate,
+            Func<ProjectionTreeNodeData> projectionNodeCreation,
+            Action<ProjectionTreeNodeData> chooseProjection,
             bool unusedInputsOnly = true
         )
         {
@@ -554,13 +554,13 @@ namespace umi3d.cdk.interaction
                 catch (NoInputFoundException) { }
             }
 
-            ProjectionTreeNodeDto? projection;
+            ProjectionTreeNodeData? projection;
             ///<summary>
             /// Return 1 when projection has been found.<br/>
             /// Return 0 when projection has been found but the input is not available.<br/>
             /// Return -1 when projection has not been found.
             /// </summary>
-            int _FindProjection(List<ProjectionTreeNodeDto> children, out ProjectionTreeNodeDto? projection)
+            int _FindProjection(List<ProjectionTreeNodeData> children, out ProjectionTreeNodeData? projection)
             {
                 IEnumerable<int> indexes = Enumerable
                     .Range(0, children.Count)
@@ -617,7 +617,7 @@ namespace umi3d.cdk.interaction
 
             chooseProjection(projection.Value);
             eventDelegate.OnProjected(
-                projection.Value.interactionDto.Interaction,
+                projection.Value.interactionData.Interaction,
                 projection.Value.input
             );
             return projection.Value;

@@ -24,6 +24,6 @@ namespace umi3d.cdk.interaction
     [CreateAssetMenu(fileName = "UMI3D Projection Tree", menuName = "UMI3D/Data/Interaction/Projection Tree")]
     public class ProjectionTree_SO : SerializableScriptableObject
     {
-        public List<ProjectionTreeDto> trees;
+        public List<ProjectionTreeData> trees;
     }
 }

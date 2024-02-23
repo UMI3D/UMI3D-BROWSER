@@ -26,18 +26,17 @@ namespace umi3d.cdk.interaction
     {
         public DofGroupDto sep;
 
-        public override Predicate<ProjectionTreeNodeDto> IsNodeCompatible(ManipulationDto interaction)
+        public override Predicate<ProjectionTreeNodeData> IsNodeCompatible(ManipulationDto interaction)
         {
             return  node =>
             {
-                var interactionDto = node.interactionDto.Interaction;
-                var nodeDto = (ProjectionTreeManipulationNodeDto)node.interactionDto;
-                return interactionDto is ManipulationDto
-                && nodeDto.manipulationDofGroupDto.dofs == sep.dofs;
+                var nodeData = (ProjectionTreeManipulationNodeData)node.interactionData;
+                return nodeData.interaction is ManipulationDto
+                && nodeData.manipulationDofGroupDto.dofs == sep.dofs;
             };
         }
 
-        public override Func<ProjectionTreeNodeDto> CreateNodeForInput(
+        public override Func<ProjectionTreeNodeData> CreateNodeForInput(
             ManipulationDto interaction,
             Func<AbstractUMI3DInput> findInput
         )
@@ -51,12 +50,12 @@ namespace umi3d.cdk.interaction
                     throw new NoInputFoundException($"For {nameof(ManipulationDto)}: {interaction.name}");
                 }
 
-                return new ProjectionTreeNodeDto()
+                return new ProjectionTreeNodeData()
                 {
                     treeId = treeId,
                     id = interaction.id,
                     children = new(),
-                    interactionDto = new ProjectionTreeManipulationNodeDto()
+                    interactionData = new ProjectionTreeManipulationNodeData()
                     {
                         interaction = interaction,
                         manipulationDofGroupDto = sep
@@ -66,7 +65,7 @@ namespace umi3d.cdk.interaction
             };
         }
 
-        public override Action<ProjectionTreeNodeDto> ChooseProjection(
+        public override Action<ProjectionTreeNodeData> ChooseProjection(
             ulong? environmentId = null,
             ulong? toolId = null,
             ulong? hoveredObjectId = null
@@ -76,7 +75,7 @@ namespace umi3d.cdk.interaction
             {
                 if (environmentId.HasValue && toolId.HasValue && hoveredObjectId.HasValue)
                 {
-                    var interactionDto = node.interactionDto.Interaction;
+                    var interactionDto = node.interactionData.Interaction;
                     node.input.Associate(
                         environmentId.Value,
                         interactionDto as ManipulationDto,

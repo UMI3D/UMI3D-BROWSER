@@ -14,28 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System;
-using System.Collections.Generic;
-using UnityEngine;
+using umi3d.common.interaction;
 
 namespace umi3d.cdk.interaction
 {
-    [Serializable]
-    public struct ProjectionTreeDto 
+    public interface IProjectionTreeNodeData 
     {
-        /// <summary>
-        /// Tree's id.
-        /// </summary>
-        public string treeId;
-
-        /// <summary>
-        /// Root of this tree.
-        /// </summary>
-        public ProjectionTreeNodeDto root;
-
-        /// <summary>
-        /// List of all of the nodes.
-        /// </summary>
-        public List<ProjectionTreeNodeDto> nodes;
+        AbstractInteractionDto Interaction { get; }
     }
 }

@@ -383,6 +383,7 @@ namespace umi3d.cdk.interaction
             //    associatedInputs.Remove(tool.id);
             //}
             toolManager.toolDelegate.Tool = null;
+            eventDelegate.OnReleased(tool);
         }
 
         /// <summary>

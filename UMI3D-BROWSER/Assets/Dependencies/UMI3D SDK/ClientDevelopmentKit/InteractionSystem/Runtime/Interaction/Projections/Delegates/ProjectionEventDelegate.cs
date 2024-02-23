@@ -26,6 +26,7 @@ namespace umi3d.cdk.interaction
     {
         public event Action<AbstractInteractionDto, AbstractUMI3DInput> interactionProjected;
         public event Action<AbstractTool> toolProjected;
+        public event Action<AbstractTool> toolReleased;
 
         internal void OnProjected(AbstractInteractionDto interaction, AbstractUMI3DInput input)
         {
@@ -35,6 +36,11 @@ namespace umi3d.cdk.interaction
         internal void OnProjected(AbstractTool tool)
         {
             toolProjected?.Invoke(tool);
+        }
+
+        internal void OnReleased(AbstractTool tool)
+        {
+            toolReleased?.Invoke(tool);
         }
     }
 }

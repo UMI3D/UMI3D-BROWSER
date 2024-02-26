@@ -38,7 +38,8 @@ namespace umi3dBrowsers.interaction.selection.projector
         /// <returns></returns>
         public bool IsProjected(InteractableContainer interactable, AbstractController controller)
         {
-            return InteractionMapper.Instance.IsToolSelected(UMI3DGlobalID.EnvironmentId, interactable.Interactable.dto.id);
+            throw new System.NotImplementedException();
+            //return InteractionMapper.Instance.IsToolSelected(UMI3DGlobalID.EnvironmentId, interactable.Interactable.dto.id);
         }
 
         /// <summary>
@@ -48,15 +49,16 @@ namespace umi3dBrowsers.interaction.selection.projector
         /// <param name="controller"></param>
         public void Project(InteractableContainer interactable, AbstractController controller)
         {
-            var interactionTool = AbstractInteractionMapper.Instance.GetTool(UMI3DGlobalID.EnvironmentId, interactable.Interactable.dto.id);
-            Project(interactionTool, interactable.Interactable.dto.nodeId, controller);
+            throw new System.NotImplementedException();
+            //var interactionTool = AbstractInteractionMapper.Instance.GetTool(UMI3DGlobalID.EnvironmentId, interactable.Interactable.dto.id);
+            //Project(interactionTool, interactable.Interactable.dto.nodeId, controller);
 
-            // display the parameter gear if it is required to access the interactions
-            if (interactable.Interactable.interactions.FindAll(i => i.Result is AbstractParameterDto).Count > 0)
-            {
-                parameterGear.Display(interactable, controller.transform.position);
-                PlayerMenuManager.Instance.CtrlToolMenu.RememberParameters();
-            }
+            //// display the parameter gear if it is required to access the interactions
+            //if (interactable.Interactable.interactions.FindAll(i => i.Result is AbstractParameterDto).Count > 0)
+            //{
+            //    parameterGear.Display(interactable, controller.transform.position);
+            //    PlayerMenuManager.Instance.CtrlToolMenu.RememberParameters();
+            //}
         }
 
         /// <summary>
@@ -85,9 +87,10 @@ namespace umi3dBrowsers.interaction.selection.projector
         /// <inheritdoc/>
         public void Release(InteractableContainer interactable, AbstractController controller)
         {
-            controller.projectionManager.Release(AbstractInteractionMapper.Instance.GetTool(UMI3DGlobalID.EnvironmentId, interactable.Interactable.dto.id), new RequestedUsingSelector<AbstractSelector>() { controller = controller });
+            throw new System.NotImplementedException();
+            //controller.projectionManager.Release(AbstractInteractionMapper.Instance.GetTool(UMI3DGlobalID.EnvironmentId, interactable.Interactable.dto.id), new RequestedUsingSelector<AbstractSelector>() { controller = controller });
 
-            parameterGear.HideWithDelay();
+            //parameterGear.HideWithDelay();
         }
     }
 }

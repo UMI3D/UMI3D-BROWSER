@@ -43,6 +43,8 @@ namespace umi3d.cdk.interaction
         public ProjectionEventDelegate eventDelegate;
 
         [HideInInspector]
+        public AbstractControllerDelegate controllerDelegate;
+        [HideInInspector]
         public UMI3DInputManager inputManager;
         [HideInInspector]
         public UMI3DToolManager toolManager;
@@ -55,6 +57,7 @@ namespace umi3d.cdk.interaction
 
         public void Init(
             MonoBehaviour context,
+            AbstractControllerDelegate controllerDelegate,
             UMI3DInputManager inputManager,
             UMI3DToolManager toolManager
         )
@@ -93,6 +96,7 @@ namespace umi3d.cdk.interaction
             logger.Assert(inputManager != null, $"{nameof(inputManager)} is null");
             logger.Assert(toolManager != null, $"{nameof(toolManager)} is null");
 
+            this.controllerDelegate = controllerDelegate;
             this.inputManager = inputManager;
             this.toolManager = toolManager;
         }
@@ -279,12 +283,12 @@ namespace umi3d.cdk.interaction
             ulong hoveredObjectId
         )
         {
-            if (!toolManager.toolDelegate.IsCompatibleWith(tool))
+            if (!controllerDelegate.IsCompatibleWith(tool))
             {
                 throw new IncompatibleToolException($"For {tool.GetType().Name}: {tool.name}");
             }
 
-            if (toolManager.toolDelegate.Tool.id == tool.id)
+            if (controllerDelegate.IsAvailableFor(tool))
             {
                 Release(
                     tool,
@@ -292,12 +296,9 @@ namespace umi3d.cdk.interaction
                 );
             }
 
-            if (toolManager.toolDelegate.Tool != null)
-                throw new System.Exception("A tool is already projected !");
-
-            if (toolManager.toolDelegate.RequiresMenu(tool))
+            if (toolManager.RequiresMenu(tool))
             {
-                toolManager.toolDelegate.CreateInteractionsMenuFor(tool);
+                toolManager.CreateInteractionsMenuFor(tool);
             }
             else
             {
@@ -308,11 +309,11 @@ namespace umi3d.cdk.interaction
                     tool.id, 
                     hoveredObjectId
                 );
-                //associatedInputs.Add(tool.id, inputs);
+                toolManager.AssociateInputs(tool, inputs);
                 eventDelegate.OnProjected(tool);
             }
 
-            toolManager.toolDelegate.Tool = tool;
+            toolManager.ProjectTool(tool);
         }
 
         /// <summary>
@@ -329,14 +330,13 @@ namespace umi3d.cdk.interaction
             InteractionMappingReason reason
         )
         {
-            if (toolManager.toolDelegate.Tool != tool)
+            if (!toolManager.IsProjected(tool))
             {
-                throw new NoToolFoundException($"Try to update {tool.GetType().Name}: {tool.name} but this tool is not projected.");
+                throw new System.Exception("This tool is not currently projected on this controller");
             }
-
-            if (toolManager.toolDelegate.RequiresMenu(tool))
+            if (toolManager.RequiresMenu(tool))
             {
-                toolManager.toolDelegate.CreateInteractionsMenuFor(tool);
+                toolManager.CreateInteractionsMenuFor(tool);
             }
             else
             {
@@ -344,18 +344,10 @@ namespace umi3d.cdk.interaction
                     newInteraction,
                     tool.environmentId,
                     tool.id,
-                    toolManager.toolDelegate.CurrentHoverTool.id
+                    toolManager.tool_SO.currentHoverTool.id
                 );
-                //if (associatedInputs.ContainsKey(tool.id))
-                //{
-                //    associatedInputs[tool.id] = associatedInputs[tool.id].Concat(inputs).ToArray();
-                //}
-                //else
-                //{
-                //    associatedInputs.Add(tool.id, new AbstractUMI3DInput[] { input });
-                //}
+                toolManager.AssociateInputs(tool, input);
             }
-            toolManager.toolDelegate.Tool = tool;
         }
 
         /// <summary>
@@ -365,24 +357,18 @@ namespace umi3d.cdk.interaction
         /// <see cref="Project(AbstractTool)"/>
         public void Release(AbstractTool tool, InteractionMappingReason reason)
         {
-            if (toolManager.toolDelegate.Tool == null)
+            if (toolManager.ProjectedTools.Count() == 0)
             {
-                throw new NoToolFoundException($"No tool is currently projected on this controller");
                 // TODO add controller id.
+                throw new NoToolFoundException($"No tool is currently projected on this controller");
             }
-            if (toolManager.toolDelegate.Tool.id != tool.id)
+            if (!toolManager.IsProjected(tool))
+            {
                 throw new System.Exception("This tool is not currently projected on this controller");
+            }
 
-            //if (associatedInputs.TryGetValue(tool.id, out AbstractUMI3DInput[] inputs))
-            //{
-            //    foreach (AbstractUMI3DInput input in inputs)
-            //    {
-            //        if (input.CurrentInteraction() != null)
-            //            input.Dissociate();
-            //    }
-            //    associatedInputs.Remove(tool.id);
-            //}
-            toolManager.toolDelegate.Tool = null;
+            toolManager.DissociateAllInputs(tool);
+            toolManager.ReleaseTool(tool);
             eventDelegate.OnReleased(tool);
         }
 

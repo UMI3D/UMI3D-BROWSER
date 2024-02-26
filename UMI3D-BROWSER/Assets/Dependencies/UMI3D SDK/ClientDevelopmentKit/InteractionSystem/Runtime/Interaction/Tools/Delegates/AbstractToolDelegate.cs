@@ -17,48 +17,35 @@ limitations under the License.
 using inetum.unityUtils.saveSystem;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace umi3d.cdk.interaction
 {
-    public abstract class AbstractToolDelegate : SerializableScriptableObject
+    public abstract class AbstractToolDelegate<Tool> : SerializableScriptableObject
+        where Tool : AbstractTool
     {
-        /// <summary>
-        /// The currently projected tool.
-        /// </summary>
-        public virtual AbstractTool Tool {  get; set; }
+        [HideInInspector]
+        public Tool_SO tool_SO;
 
         /// <summary>
-        /// The currently hovered tool.
+        /// Check if a tool with the given id exists.
         /// </summary>
-        public virtual AbstractTool CurrentHoverTool { get; set; }
+        public abstract bool Exists(ulong environmentId, ulong id);
 
         /// <summary>
-        /// The currently hovered tool.
+        /// Get the tool with the given id (if any).
         /// </summary>
-        public virtual List<AbstractTool> ProjectedTools { get; set; }
+        public abstract Tool GetTool(ulong environmentId, ulong id);
 
         /// <summary>
-        /// Whether or not <paramref name="tool"/> can be projected on this controller.
-        /// </summary>
-        /// <param name="tool"> The tool to be projected.</param>
-        /// <returns></returns>
-        public abstract bool IsCompatibleWith(AbstractTool tool);
-
-        /// <summary>
-        /// Whether or not <paramref name="tool"/> is currently projected on this controller.
+        /// Whether this tool is projected.
         /// </summary>
         /// <param name="tool"></param>
         /// <returns></returns>
-        /// <see cref="IsCompatibleWith(AbstractToolDto)"/>
-        public virtual bool IsAvailableFor(AbstractTool tool)
+        public virtual bool IsProjected(AbstractTool tool)
         {
-            if (!IsCompatibleWith(tool))
-            {
-                return false;
-            }
-
-            return Tool == null;
+            return tool_SO.projectedTools.Contains(tool);
         }
 
         /// <summary>
@@ -66,12 +53,101 @@ namespace umi3d.cdk.interaction
         /// </summary>
         /// <param name="tool"> The tool to be projected.</param>
         /// <returns></returns>
-        public abstract bool RequiresMenu(AbstractTool tool);
+        public abstract bool RequiresMenu(Tool tool);
 
         /// <summary>
         /// Create a menu to access each interactions of a tool separately.
         /// </summary>
         /// <param name="interactions"></param>
-        public abstract void CreateInteractionsMenuFor(AbstractTool tool);
+        public abstract void CreateInteractionsMenuFor(Tool tool);
+
+        /// <summary>
+        /// Project <paramref name="tool"/> on this controller.
+        /// </summary>
+        /// <param name="tool"></param>
+        public virtual void ProjectTool(Tool tool)
+        {
+            if (IsProjected(tool))
+            {
+                return;
+            }
+
+            tool_SO.projectedTools.Add(tool);
+        }
+
+        /// <summary>
+        /// Release tool from this controller.
+        /// </summary>
+        /// <param name="tool"></param>
+        public virtual void ReleaseTool(Tool tool)
+        {
+            tool_SO.projectedTools.Remove(tool);
+        }
+
+        /// <summary>
+        /// Whether this <paramref name="input"/> is associated to <paramref name="tool"/>.
+        /// </summary>
+        /// <param name="tool"></param>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public virtual bool IsAssociated(Tool tool, AbstractUMI3DInput input)
+        {
+            if (!tool_SO.inputsByTool.ContainsKey(tool.id))
+            {
+                return false;
+            }
+
+            return tool_SO.inputsByTool[tool.id].Contains(input);
+        }
+
+        /// <summary>
+        /// Associates <paramref name="inputs"/> to this <paramref name="tool"/>.
+        /// </summary>
+        /// <param name="tool"></param>
+        /// <param name="inputs"></param>
+        public virtual void AssociateInputs(Tool tool, params AbstractUMI3DInput[] inputs)
+        {
+            if (!tool_SO.inputsByTool.ContainsKey(tool.id))
+            {
+                tool_SO.inputsByTool.Add(tool.id, inputs);
+            }
+            else
+            {
+                tool_SO.inputsByTool[tool.id] = tool_SO.inputsByTool[tool.id]
+                    .Concat(inputs)
+                    .ToArray();
+            }
+        }
+
+        /// <summary>
+        /// Dissociates <paramref name="input"/> from <paramref name="tool"/>.
+        /// </summary>
+        /// <param name="tool"></param>
+        /// <param name="input"></param>
+        public virtual void DissociateInput(Tool tool, AbstractUMI3DInput input)
+        {
+            if (!tool_SO.inputsByTool.ContainsKey(tool.id))
+            {
+                return;
+            }
+
+            var tmp = new List<AbstractUMI3DInput>(tool_SO.inputsByTool[tool.id]);
+            tmp.Remove(input);
+            tool_SO.inputsByTool[tool.id] = tmp.ToArray();
+        }
+
+        /// <summary>
+        /// Dissociates all inputs from <paramref name="tool"/>.
+        /// </summary>
+        /// <param name="tool"></param>
+        public virtual void DissociateAllInputs(Tool tool)
+        {
+            if (!tool_SO.inputsByTool.ContainsKey(tool.id))
+            {
+                return;
+            }
+
+            tool_SO.inputsByTool.Remove(tool.id);
+        }
     }
 }

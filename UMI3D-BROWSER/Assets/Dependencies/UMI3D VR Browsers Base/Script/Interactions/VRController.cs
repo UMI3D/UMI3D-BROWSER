@@ -132,10 +132,10 @@ namespace umi3dVRBrowsersBase.interactions
         /// </summary>
         public void ReleaseCurrentTool()
         {
-            if (toolManager.toolDelegate.Tool != null)
-            {
-                InteractionMapper.Instance.ReleaseTool(UMI3DGlobalID.EnvironmentId, toolManager.toolDelegate.Tool.id);
-            }
+            //if (toolManager.toolDelegate.Tool != null)
+            //{
+            //    //InteractionMapper.Instance.ReleaseTool(UMI3DGlobalID.EnvironmentId, toolManager.toolDelegate.Tool.id);
+            //}
         }
 
         ///// <summary>
@@ -264,21 +264,22 @@ namespace umi3dVRBrowsersBase.interactions
         /// <param name="hoveredObjectId"></param>
         private void ProjectParameters(AbstractTool tool, List<AbstractInteractionDto> interactions, ulong hoveredObjectId)
         {
-            AbstractUMI3DInput[] inputs = projectionManager.Project(
-                interactions.FindAll(inter => inter is AbstractParameterDto).ToArray(), 
-                UMI3DGlobalID.EnvironmentId, 
-                tool.id, 
-                hoveredObjectId
-            );
-            var toolInputs = new List<AbstractUMI3DInput>();
+            throw new System.NotImplementedException();
+            //AbstractUMI3DInput[] inputs = projectionManager.Project(
+            //    interactions.FindAll(inter => inter is AbstractParameterDto).ToArray(), 
+            //    UMI3DGlobalID.EnvironmentId, 
+            //    tool.id, 
+            //    hoveredObjectId
+            //);
+            //var toolInputs = new List<AbstractUMI3DInput>();
 
-            if (associatedInputs.TryGetValue(tool.id, out AbstractUMI3DInput[] buffer))
-            {
-                toolInputs = new List<AbstractUMI3DInput>(buffer);
-                associatedInputs.Remove(tool.id);
-            }
-            toolInputs.AddRange(inputs);
-            associatedInputs.Add(tool.id, toolInputs.ToArray());
+            //if (associatedInputs.TryGetValue(tool.id, out AbstractUMI3DInput[] buffer))
+            //{
+            //    toolInputs = new List<AbstractUMI3DInput>(buffer);
+            //    associatedInputs.Remove(tool.id);
+            //}
+            //toolInputs.AddRange(inputs);
+            //associatedInputs.Add(tool.id, toolInputs.ToArray());
         }
 
         ///// <summary>

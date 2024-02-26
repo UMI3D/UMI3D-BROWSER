@@ -76,68 +76,68 @@ namespace umi3dVRBrowsersBase.interactions
             releasableTools.Clear();
         }
 
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
-        /// <param name="toolId"></param>
-        /// <param name="releasable"></param>
-        /// <param name="hoveredObjectId"></param>
-        /// <param name="reason"></param>
-        /// <returns></returns>
-        public override bool SelectTool(ulong environmentId, ulong toolId, bool releasable, ulong hoveredObjectId, InteractionMappingReason reason = null)
-        {
-            AbstractTool tool = GetTool(environmentId, toolId);
-            if (tool == null)
-                throw new Exception("tool does not exist");
+        ///// <summary>
+        ///// <inheritdoc/>
+        ///// </summary>
+        ///// <param name="toolId"></param>
+        ///// <param name="releasable"></param>
+        ///// <param name="hoveredObjectId"></param>
+        ///// <param name="reason"></param>
+        ///// <returns></returns>
+        //public override bool SelectTool(ulong environmentId, ulong toolId, bool releasable, ulong hoveredObjectId, InteractionMappingReason reason = null)
+        //{
+        //    AbstractTool tool = GetTool(environmentId, toolId);
+        //    if (tool == null)
+        //        throw new Exception("tool does not exist");
 
-            if (toolIdToController.ContainsKey((environmentId, tool.id)))
-            {
-                throw new Exception("Tool already projected");
-            }
+        //    if (toolIdToController.ContainsKey((environmentId, tool.id)))
+        //    {
+        //        throw new Exception("Tool already projected");
+        //    }
 
-            AbstractController controller = GetController(tool, reason);
-            if (controller != null)
-            {
-                if (!controller.toolManager.toolDelegate.IsAvailableFor(tool))
-                {
-                    if (ShouldForceProjection(controller, tool, reason) || ShouldForceProjection(controller, reason))
-                    {
-                        ReleaseTool(environmentId, controller.toolManager.toolDelegate.Tool.id);
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
+        //    AbstractController controller = GetController(tool, reason);
+        //    if (controller != null)
+        //    {
+        //        if (!controller.toolManager.toolDelegate.IsAvailableFor(tool))
+        //        {
+        //            if (ShouldForceProjection(controller, tool, reason) || ShouldForceProjection(controller, reason))
+        //            {
+        //                ReleaseTool(environmentId, controller.toolManager.toolDelegate.Tool.id);
+        //            }
+        //            else
+        //            {
+        //                return false;
+        //            }
+        //        }
 
-                if (releasableTools.ContainsKey(tool.id))
-                    releasableTools[tool.id] = releasable;
-                else
-                    releasableTools.Add(tool.id, releasable);
+        //        if (releasableTools.ContainsKey(tool.id))
+        //            releasableTools[tool.id] = releasable;
+        //        else
+        //            releasableTools.Add(tool.id, releasable);
 
-                bool res = SelectTool(environmentId, tool.id, releasable, controller, hoveredObjectId, reason);
-                if (res)
-                {
-                    lastReason = reason;
-                }
-                return res;
-            }
-            else
-            {
-                throw new Exception("No controller is compatible with this tool");
-            }
-        }
+        //        bool res = SelectTool(environmentId, tool.id, releasable, controller, hoveredObjectId, reason);
+        //        if (res)
+        //        {
+        //            lastReason = reason;
+        //        }
+        //        return res;
+        //    }
+        //    else
+        //    {
+        //        throw new Exception("No controller is compatible with this tool");
+        //    }
+        //}
 
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
-        /// <param name="toolId"></param>
-        /// <param name="reason"></param>
-        public override void ReleaseTool(ulong environmentId, ulong toolId, InteractionMappingReason reason = null)
-        {
-            base.ReleaseTool(environmentId, toolId, reason);
-            lastReason = null;
-        }
+        ///// <summary>
+        ///// <inheritdoc/>
+        ///// </summary>
+        ///// <param name="toolId"></param>
+        ///// <param name="reason"></param>
+        //public override void ReleaseTool(ulong environmentId, ulong toolId, InteractionMappingReason reason = null)
+        //{
+        //    base.ReleaseTool(environmentId, toolId, reason);
+        //    lastReason = null;
+        //}
 
         private InteractionMappingReason lastReason = null;
 
@@ -203,58 +203,58 @@ namespace umi3dVRBrowsersBase.interactions
         }
 
 
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
-        /// <param name="select"></param>
-        /// <param name="release"></param>
-        /// <param name="releasable"></param>
-        /// <param name="hoveredObjectId"></param>
-        /// <param name="reason"></param>
-        /// <returns></returns>
-        public override bool SwitchTools(ulong environmentId, ulong select, ulong release, bool releasable, ulong hoveredObjectId, InteractionMappingReason reason = null)
-        {
-            if (toolIdToController.ContainsKey((environmentId, release)))
-            {
-                AbstractController controller = toolIdToController[((environmentId, release))];
-                ReleaseTool(environmentId, release);
-                if (!SelectTool(environmentId, select, releasable, controller, hoveredObjectId, reason))
-                {
-                    if (SelectTool(environmentId, release, releasable, controller, hoveredObjectId))
-                    {
-                        lastReason = reason;
-                        return false;
-                    }
-                    else
-                        throw new Exception("Internal error");
-                }
-                else
-                {
-                    lastReason = reason;
-                }
-            }
-            else
-            {
-                foreach (AbstractController c in Controllers)
-                {
-                    if ((c as VRController).type == lastControllerUsedToClick)
-                    {
-                        if (SelectTool(environmentId, select, releasable, hoveredObjectId, new RequestedUsingSelector { controller = c }))
-                        {
-                            PlayerMenuManager.Instance.Close();
-                            lastReason = new RequestedFromMenu();
-                            return true;
-                        }
-                    }
-                }
+        ///// <summary>
+        ///// <inheritdoc/>
+        ///// </summary>
+        ///// <param name="select"></param>
+        ///// <param name="release"></param>
+        ///// <param name="releasable"></param>
+        ///// <param name="hoveredObjectId"></param>
+        ///// <param name="reason"></param>
+        ///// <returns></returns>
+        //public override bool SwitchTools(ulong environmentId, ulong select, ulong release, bool releasable, ulong hoveredObjectId, InteractionMappingReason reason = null)
+        //{
+        //    if (toolIdToController.ContainsKey((environmentId, release)))
+        //    {
+        //        AbstractController controller = toolIdToController[((environmentId, release))];
+        //        ReleaseTool(environmentId, release);
+        //        if (!SelectTool(environmentId, select, releasable, controller, hoveredObjectId, reason))
+        //        {
+        //            if (SelectTool(environmentId, release, releasable, controller, hoveredObjectId))
+        //            {
+        //                lastReason = reason;
+        //                return false;
+        //            }
+        //            else
+        //                throw new Exception("Internal error");
+        //        }
+        //        else
+        //        {
+        //            lastReason = reason;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        foreach (AbstractController c in Controllers)
+        //        {
+        //            if ((c as VRController).type == lastControllerUsedToClick)
+        //            {
+        //                if (SelectTool(environmentId, select, releasable, hoveredObjectId, new RequestedUsingSelector { controller = c }))
+        //                {
+        //                    PlayerMenuManager.Instance.Close();
+        //                    lastReason = new RequestedFromMenu();
+        //                    return true;
+        //                }
+        //            }
+        //        }
 
-                if (!SelectTool(environmentId, select, releasable, hoveredObjectId, reason))
-                {
-                    throw new Exception("Internal error");
-                }
-            }
-            return true;
-        }
+        //        if (!SelectTool(environmentId, select, releasable, hoveredObjectId, reason))
+        //        {
+        //            throw new Exception("Internal error");
+        //        }
+        //    }
+        //    return true;
+        //}
 
         /// <summary>
         /// Gets <see cref="Transform"/> of <paramref name="controller"/>.

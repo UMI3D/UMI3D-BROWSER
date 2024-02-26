@@ -40,35 +40,29 @@ namespace umi3d.cdk.interaction
     [System.Serializable]
     public abstract class AbstractController : MonoBehaviour
     {
+        public AbstractControllerDelegate controllerDelegate;
         public UMI3DInputManager inputManager;
         public UMI3DToolManager toolManager;
         public ProjectionManager projectionManager;
 
         private void Awake()
         {
+            toolManager.Init();
             projectionManager.Init(
                 this, 
+                controllerDelegate,
                 inputManager, 
                 toolManager
             );
         }
 
 
-        #region properties
+        #region Old
 
         /// <summary>
         /// Controller's inputs.
         /// </summary>
         public abstract List<AbstractUMI3DInput> inputs { get; }
-
-        /// <summary>
-        /// Inputs associated to a given tool (keys are tools' ids).
-        /// </summary>
-        protected Dictionary<ulong, AbstractUMI3DInput[]> associatedInputs = new Dictionary<ulong, AbstractUMI3DInput[]>();
-
-        #endregion
-
-        #region interface
 
         /// <summary>
         /// Clear all menus and the projected tools

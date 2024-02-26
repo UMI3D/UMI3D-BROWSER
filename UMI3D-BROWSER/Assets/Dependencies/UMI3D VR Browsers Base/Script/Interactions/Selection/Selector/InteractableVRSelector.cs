@@ -160,17 +160,18 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
         /// <returns></returns>
         protected override bool CanSelect(InteractableContainer icToSelect)
         {
-            return icToSelect != null
-                    && icToSelect.enabled
-                    && icToSelect.Interactable != null
-                    && icToSelect.Interactable.Active
-                    && ((icToSelect.Interactable.InteractionDistance < 0)
-                        || icToSelect.Interactable.InteractionDistance >= (icToSelect.transform.position - controller.transform.position).magnitude)
-                    && icToSelect.Interactable.dto.interactions != null
-                    && icToSelect.Interactable.dto.interactions.Count > 0
-                    && controller.toolManager.toolDelegate.IsCompatibleWith(icToSelect.Interactable)
-                    && (!InteractionMapper.Instance.IsToolSelected(UMI3DGlobalID.EnvironmentId, icToSelect.Interactable.id)
-                        || (LastSelected?.selectedObject.Interactable == icToSelect.Interactable));
+            throw new System.NotImplementedException();
+            //return icToSelect != null
+            //        && icToSelect.enabled
+            //        && icToSelect.Interactable != null
+            //        && icToSelect.Interactable.Active
+            //        && ((icToSelect.Interactable.InteractionDistance < 0)
+            //            || icToSelect.Interactable.InteractionDistance >= (icToSelect.transform.position - controller.transform.position).magnitude)
+            //        && icToSelect.Interactable.dto.interactions != null
+            //        && icToSelect.Interactable.dto.interactions.Count > 0
+            //        && controller.toolManager.toolDelegate.IsCompatibleWith(icToSelect.Interactable)
+            //        && (!InteractionMapper.Instance.IsToolSelected(UMI3DGlobalID.EnvironmentId, icToSelect.Interactable.id)
+            //            || (LastSelected?.selectedObject.Interactable == icToSelect.Interactable));
         }
 
         /// <summary>
@@ -210,55 +211,56 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
         /// <param name="selectionInfo"></param>
         protected override void Select(SelectionIntentData<InteractableContainer> selectionInfo)
         {
-            if (isSelecting)
-            {
-                if (selectionInfo == null && LastSelected != null) //the selector was selecting something before and should remember it choose to select nothing this time
-                {
-                    Deselect(LastSelected);
-                    LastSelected = null;
-                    return;
-                }
-                else if (selectionInfo == null)
-                    throw new ArgumentNullException("Argument should be null only if moving outside of an object");
-                else if (IsObjectSelected(selectionInfo.selectedObject)) //  the selector was selecting the same target before
-                {
-                    if (LastSelected != null && selectionInfo.detectionOrigin != LastSelected.detectionOrigin)
-                    {
-                        selectionFeedbackHandler.UpdateFeedback(selectionInfo);
-                        LastSelected.detectionOrigin = selectionInfo.detectionOrigin;
-                    }
-                    return;
-                }
-            }
+            throw new System.NotImplementedException();
+            //if (isSelecting)
+            //{
+            //    if (selectionInfo == null && LastSelected != null) //the selector was selecting something before and should remember it choose to select nothing this time
+            //    {
+            //        Deselect(LastSelected);
+            //        LastSelected = null;
+            //        return;
+            //    }
+            //    else if (selectionInfo == null)
+            //        throw new ArgumentNullException("Argument should be null only if moving outside of an object");
+            //    else if (IsObjectSelected(selectionInfo.selectedObject)) //  the selector was selecting the same target before
+            //    {
+            //        if (LastSelected != null && selectionInfo.detectionOrigin != LastSelected.detectionOrigin)
+            //        {
+            //            selectionFeedbackHandler.UpdateFeedback(selectionInfo);
+            //            LastSelected.detectionOrigin = selectionInfo.detectionOrigin;
+            //        }
+            //        return;
+            //    }
+            //}
 
-            if (AbstractInteractionMapper.Instance == null) return;
-            if 
-            (
-                selectionInfo == null 
-                || selectionInfo.selectedObject == null 
-                || selectionInfo.selectedObject.Interactable == null 
-                || selectionInfo.selectedObject.Interactable.dto == null
-            ) return;
-            var interactionTool = AbstractInteractionMapper.Instance.GetTool(UMI3DGlobalID.EnvironmentId, selectionInfo.selectedObject.Interactable.dto.id);
-            if (selectionInfo is InteractableSelectionData)
-                (selectionInfo as InteractableSelectionData).tool = interactionTool;
+            //if (AbstractInteractionMapper.Instance == null) return;
+            //if 
+            //(
+            //    selectionInfo == null 
+            //    || selectionInfo.selectedObject == null 
+            //    || selectionInfo.selectedObject.Interactable == null 
+            //    || selectionInfo.selectedObject.Interactable.dto == null
+            //) return;
+            //var interactionTool = AbstractInteractionMapper.Instance.GetTool(UMI3DGlobalID.EnvironmentId, selectionInfo.selectedObject.Interactable.dto.id);
+            //if (selectionInfo is InteractableSelectionData)
+            //    (selectionInfo as InteractableSelectionData).tool = interactionTool;
 
-            if (isSelecting
-                && (LastSelected != null || (!controller.toolManager.toolDelegate.IsAvailableFor(interactionTool) && InteractionMapper.Instance.IsToolSelected(UMI3DGlobalID.EnvironmentId, interactionTool.id)))) // second case happens when an object is destroyed but the tool is not released
-                Deselect(LastSelected);
+            //if (isSelecting
+            //    && (LastSelected != null || (!controller.toolManager.toolDelegate.IsAvailableFor(interactionTool) && InteractionMapper.Instance.IsToolSelected(UMI3DGlobalID.EnvironmentId, interactionTool.id)))) // second case happens when an object is destroyed but the tool is not released
+            //    Deselect(LastSelected);
 
-            if (controller.toolManager.toolDelegate.IsAvailableFor(interactionTool))
-            {
-                projector.Project(selectionInfo.selectedObject, controller);
-                selectionInfo.hasBeenSelected = true;
-                LastSelected = selectionInfo;
-                isSelecting = true;
-                selectionEvent?.Invoke(selectionInfo);
-                foreach (var detector in pointingDetectors)
-                    detector.Reinit();
-                foreach (var detector in proximityDetectors)
-                    detector.Reinit();
-            }
+            //if (controller.toolManager.toolDelegate.IsAvailableFor(interactionTool))
+            //{
+            //    projector.Project(selectionInfo.selectedObject, controller);
+            //    selectionInfo.hasBeenSelected = true;
+            //    LastSelected = selectionInfo;
+            //    isSelecting = true;
+            //    selectionEvent?.Invoke(selectionInfo);
+            //    foreach (var detector in pointingDetectors)
+            //        detector.Reinit();
+            //    foreach (var detector in proximityDetectors)
+            //        detector.Reinit();
+            //}
         }
 
         /// <inheritdoc/>

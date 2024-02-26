@@ -139,8 +139,8 @@ namespace umi3d.cdk.interaction
         /// </summary>
         public virtual void Destroy()
         {
-            if (InteractionMapper.Instance.IsToolSelected(environmentId,id))
-                InteractionMapper.Instance.ReleaseTool(environmentId,id, new RequestedByEnvironment());
+            //if (InteractionMapper.Instance.IsToolSelected(environmentId,id))
+            //    InteractionMapper.Instance.ReleaseTool(environmentId,id, new RequestedByEnvironment());
         }
     }
 }

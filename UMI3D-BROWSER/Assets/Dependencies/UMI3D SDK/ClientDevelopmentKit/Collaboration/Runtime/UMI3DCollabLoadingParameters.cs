@@ -58,6 +58,9 @@ namespace umi3d.cdk.collaboration
 
         #endregion Emotes
 
+        public AbstractToolSelectionDelegate toolSelectionDelegate;
+        public AbstractToolUpdateDelegate toolUpdateDelegate;
+
         public override void Init()
         {
             // force instanciation
@@ -97,13 +100,13 @@ namespace umi3d.cdk.collaboration
             switch (operation.operation)
             {
                 case SwitchToolDto switchTool:
-                    AbstractInteractionMapper.Instance.SwitchTools(operation.environmentId, switchTool.toolId, switchTool.replacedToolId, switchTool.releasable, 0, new interaction.RequestedByEnvironment());
+                    toolUpdateDelegate.SwitchTools(operation.environmentId, switchTool.toolId, switchTool.replacedToolId, switchTool.releasable, 0, new interaction.RequestedByEnvironment());
                     break;
                 case ProjectToolDto projection:
-                    AbstractInteractionMapper.Instance.SelectTool(operation.environmentId, projection.toolId, projection.releasable, 0, new interaction.RequestedByEnvironment());
+                    toolSelectionDelegate.SelectTool(operation.environmentId, projection.toolId, projection.releasable, 0, new interaction.RequestedByEnvironment());
                     break;
                 case ReleaseToolDto release:
-                    AbstractInteractionMapper.Instance.ReleaseTool(operation.environmentId, release.toolId, new interaction.RequestedByEnvironment());
+                    toolSelectionDelegate.ReleaseTool(operation.environmentId, release.toolId, new interaction.RequestedByEnvironment());
                     break;
             }
             return Task.CompletedTask;
@@ -123,16 +126,16 @@ namespace umi3d.cdk.collaboration
                     id = UMI3DSerializer.Read<ulong>(container);
                     ulong oldid = UMI3DSerializer.Read<ulong>(container);
                     releasable = UMI3DSerializer.Read<bool>(container);
-                    AbstractInteractionMapper.Instance.SwitchTools(container.environmentId, id, oldid, releasable, 0, new interaction.RequestedByEnvironment());
+                    toolUpdateDelegate.SwitchTools(container.environmentId, id, oldid, releasable, 0, new interaction.RequestedByEnvironment());
                     break;
                 case UMI3DOperationKeys.ProjectTool:
                     id = UMI3DSerializer.Read<ulong>(container);
                     releasable = UMI3DSerializer.Read<bool>(container);
-                    AbstractInteractionMapper.Instance.SelectTool(container.environmentId, id, releasable, 0, new interaction.RequestedByEnvironment());
+                    toolSelectionDelegate.SelectTool(container.environmentId, id, releasable, 0, new interaction.RequestedByEnvironment());
                     break;
                 case UMI3DOperationKeys.ReleaseTool:
                     id = UMI3DSerializer.Read<ulong>(container);
-                    AbstractInteractionMapper.Instance.ReleaseTool(container.environmentId, id, new interaction.RequestedByEnvironment());
+                    toolSelectionDelegate.ReleaseTool(container.environmentId, id, new interaction.RequestedByEnvironment());
                     break;
             }
             return Task.CompletedTask;

@@ -40,7 +40,11 @@ namespace umi3d.cdk.interaction
     [System.Serializable]
     public abstract class AbstractController : MonoBehaviour
     {
+        [Header("Controller")]
+        public AbstractControllerData_SO controllerData_SO;
         public AbstractControllerDelegate controllerDelegate;
+
+        [Header("Manager")]
         public UMI3DInputManager inputManager;
         public UMI3DToolManager toolManager;
         public ProjectionManager projectionManager;

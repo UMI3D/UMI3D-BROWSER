@@ -461,7 +461,7 @@ PrefabInstance:
     - target: {fileID: 5988314907380347006, guid: 6d8cc188ac4cb49419e2616ed25f607d,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0.0000037774444
+      value: 0.00031886055
       objectReference: {fileID: 0}
     - target: {fileID: 6093459749334264534, guid: 6d8cc188ac4cb49419e2616ed25f607d,
         type: 3}
@@ -801,9 +801,21 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5067655147915799411, guid: aa50e35a45eaaed43a950ae34ef532dc,
         type: 3}
+      propertyPath: toolManager.tool_SO
+      value: 
+      objectReference: {fileID: 11400000, guid: dfdeedc5c697ae24ca5ec7449c121587,
+        type: 2}
+    - target: {fileID: 5067655147915799411, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
       propertyPath: toolManager.toolDelegate
       value: 
       objectReference: {fileID: 11400000, guid: 7c9a9c25903061e4ba33dc4c4629a0b8,
+        type: 2}
+    - target: {fileID: 5067655147915799411, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: toolManager.toolboxDelegate
+      value: 
+      objectReference: {fileID: 11400000, guid: fa034dd4f9ecc4e45b3e476a4669a18e,
         type: 2}
     - target: {fileID: 5067655147915799411, guid: aa50e35a45eaaed43a950ae34ef532dc,
         type: 3}
@@ -816,6 +828,12 @@ PrefabInstance:
       propertyPath: inputManager.linkInputDelegate
       value: 
       objectReference: {fileID: 11400000, guid: 5e74a8bb3ff872d428ebbd3b8c5303df,
+        type: 2}
+    - target: {fileID: 5067655147915799411, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: toolManager.globalToolDelegate
+      value: 
+      objectReference: {fileID: 11400000, guid: 9a81f7a5106b41f47a9b70c719fb8865,
         type: 2}
     - target: {fileID: 5067655147915799411, guid: aa50e35a45eaaed43a950ae34ef532dc,
         type: 3}
@@ -852,6 +870,12 @@ PrefabInstance:
       propertyPath: projectionManager.ptLinkNodeDelegate
       value: 
       objectReference: {fileID: 11400000, guid: db64a8ea92c7ee74db9e0717b4b7e3e7,
+        type: 2}
+    - target: {fileID: 5067655147915799411, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: toolManager.interactableToolDelegate
+      value: 
+      objectReference: {fileID: 11400000, guid: 7c9a9c25903061e4ba33dc4c4629a0b8,
         type: 2}
     - target: {fileID: 5067655147915799411, guid: aa50e35a45eaaed43a950ae34ef532dc,
         type: 3}

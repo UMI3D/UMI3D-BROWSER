@@ -54,45 +54,36 @@ namespace umi3d.cdk.interaction
         /// <summary>
         /// Check if a tool with the given id exists.
         /// </summary>
-        public bool Exists(
+        public bool Exists<Tool>(
             ulong environmentId,
-            ulong id,
-            ToolType type
+            ulong id
         )
+            where Tool: AbstractTool
         {
-            switch (type)
+            return default(Tool) switch
             {
-                case ToolType.InteractableTool:
-                    return interactableToolDelegate.Exists(environmentId, id);
-                case ToolType.GlobalTool:
-                    return globalToolDelegate.Exists(environmentId, id);
-                case ToolType.Toolbox:
-                    return toolboxDelegate.Exists(environmentId, id);
-                default:
-                    throw new NoToolFoundException();
-            }
+                Interactable => interactableToolDelegate.Exists(environmentId, id),
+                Toolbox => toolboxDelegate.Exists(environmentId, id),
+                GlobalTool => globalToolDelegate.Exists(environmentId, id),
+                _ => throw new NoToolFoundException()
+            };
         }
 
         /// <summary>
         /// Get the tool with the given id (if any).
         /// </summary>
-        public AbstractTool GetTool(
+        public AbstractTool GetTool<Tool>(
             ulong environmentId,
-            ulong id,
-            ToolType type
+            ulong id
         )
         {
-            switch (type)
+            return default(Tool) switch
             {
-                case ToolType.InteractableTool:
-                    return interactableToolDelegate.GetTool(environmentId, id);
-                case ToolType.GlobalTool:
-                    return globalToolDelegate.GetTool(environmentId, id);
-                case ToolType.Toolbox:
-                    return toolboxDelegate.GetTool(environmentId, id);
-                default:
-                    throw new NoToolFoundException();
-            }
+                Interactable => interactableToolDelegate.GetTool(environmentId, id),
+                Toolbox => toolboxDelegate.GetTool(environmentId, id),
+                GlobalTool => globalToolDelegate.GetTool(environmentId, id),
+                _ => throw new NoToolFoundException()
+            };
         }
 
         /// <summary>

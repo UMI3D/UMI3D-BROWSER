@@ -20,6 +20,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.Events;
 
 namespace umi3d.cdk.collaboration
@@ -334,6 +335,7 @@ namespace umi3d.cdk.collaboration
                     }
                 }
             }
+
             SetGainAndVolumeForUser(user);
         }
 

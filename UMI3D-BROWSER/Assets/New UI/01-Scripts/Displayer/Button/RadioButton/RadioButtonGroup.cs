@@ -33,9 +33,11 @@ namespace umi3dBrowsers.displayer
         [SerializeField] private Color HoverColor;
         [SerializeField] private Color SelectedColor;
 
+
+        int _panelStartId;
         UMI3DUI_Button _selected;
 
-        private void Awake()
+        private void Start()
         {
             int i = 0;
             foreach (var radio in buttons)
@@ -53,6 +55,13 @@ namespace umi3dBrowsers.displayer
                 radio.SubDisplayer.Init(NormalColor, HoverColor, SelectedColor);
                 radio.SetID(i++);
             }
+
+            buttons[_panelStartId].SubDisplayer.Click();
+        }
+
+        public void ActivateButtonWithId(int id)
+        {
+            _panelStartId = id;
         }
     }
 }

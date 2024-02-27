@@ -17,6 +17,7 @@ limitations under the License.
 using System.Collections;
 using System.Collections.Generic;
 using umi3dBrowsers.containere;
+using umi3dBrowsers.displayer;
 using UnityEngine;
 
 namespace umi3dBrowsers.container
@@ -44,6 +45,10 @@ namespace umi3dBrowsers.container
         [SerializeField] private float fadingSpeedWhenReorient;
         [SerializeField] private ComfortSettings comfortSettingsContainer;
 
+        [Header("Navigation")]
+        [SerializeField] private RadioButtonGroup navigationRadioButton;
+        [SerializeField] private int startPanelIndex;
+
         public List<GameObject> settingPanels = new();
 
         private void Awake()
@@ -61,12 +66,15 @@ namespace umi3dBrowsers.container
             comfortSettingsContainer.OnTpFadingChanged += (value) => isFadingWhenTP = value;
             comfortSettingsContainer.OnRiorientFadingChanged += (value) => isFadingWhenReorient = value;
             comfortSettingsContainer.OnFadingValueChanged += (value) => fadingSpeedWhenReorient = value;
+
+            OpenGeneralSettings();
         }
 
         public void OpenGeneralSettings()
         {
             HideAll();
             generalSettingsContainer.gameObject.SetActive(true);
+            navigationRadioButton.ActivateButtonWithId(0);
         }
 
         public void OpenAudioSettings()

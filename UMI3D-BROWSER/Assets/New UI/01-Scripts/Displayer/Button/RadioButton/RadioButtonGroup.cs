@@ -40,6 +40,7 @@ namespace umi3dBrowsers.displayer
         private void Start()
         {
             int i = 0;
+            _selected = buttons[0];
             foreach (var radio in buttons)
             {
                 radio.onClick.AddListener(() =>

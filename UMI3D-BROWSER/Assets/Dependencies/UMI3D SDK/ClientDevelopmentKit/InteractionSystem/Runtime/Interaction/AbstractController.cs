@@ -64,11 +64,6 @@ namespace umi3d.cdk.interaction
         #region Old
 
         /// <summary>
-        /// Controller's inputs.
-        /// </summary>
-        public abstract List<AbstractUMI3DInput> inputs { get; }
-
-        /// <summary>
         /// Clear all menus and the projected tools
         /// </summary>
         public abstract void Clear();

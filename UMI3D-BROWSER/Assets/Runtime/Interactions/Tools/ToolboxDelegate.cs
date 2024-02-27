@@ -46,7 +46,8 @@ namespace umi3d.cdk.interaction
 
         public override bool RequiresMenu(Toolbox tool)
         {
-            throw new NotImplementedException();
+            //TODO: Not Imp
+            return false;
         }
     }
 }

@@ -26,7 +26,7 @@ namespace umi3dVRBrowsersBase.interactions
 {
     public partial class VRController
     {
-        public override List<AbstractUMI3DInput> inputs
+        public /*override*/ List<AbstractUMI3DInput> inputs
         {
             get
             {

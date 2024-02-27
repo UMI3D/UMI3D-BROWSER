@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using System;
+using System.Collections.Generic;
 using umi3d.common.interaction;
 using UnityEngine;
 
@@ -28,5 +29,27 @@ namespace umi3d.cdk.interaction
         public AbstractInputDelegate<FormDto> formInputDelegate;
         public AbstractInputDelegate<LinkDto> linkInputDelegate;
         public AbstractInputDelegate<AbstractParameterDto> parameterInputDelegate;
+
+        public AbstractUMI3DInput FindInput<T>(
+            List<T> inputs,
+            Predicate<T> predicate
+        ) where T : AbstractUMI3DInput, new()
+        {
+            T input = inputs.Find(predicate);
+            if (input == null) AddInput(inputs, out input);
+            return input;
+        }
+
+        void AddInput<T>(
+            List<T> inputs,
+            out T input
+        ) where T : AbstractUMI3DInput, new()
+        {
+            input = new T();
+
+            //input.Init(this);
+            //input.Menu = ObjectMenu.menu;
+            inputs.Add(input);
+        }
     }
 }

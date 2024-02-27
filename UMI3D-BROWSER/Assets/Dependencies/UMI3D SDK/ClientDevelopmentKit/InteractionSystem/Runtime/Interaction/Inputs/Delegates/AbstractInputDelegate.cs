@@ -16,6 +16,7 @@ limitations under the License.
 
 using inetum.unityUtils.saveSystem;
 using System;
+using System.Collections.Generic;
 using umi3d.common.interaction;
 using UnityEngine;
 
@@ -24,6 +25,8 @@ namespace umi3d.cdk.interaction
     public abstract class AbstractInputDelegate<Interaction>: SerializableScriptableObject
         where Interaction: AbstractInteractionDto
     {
+        public List<AbstractUMI3DInput> inputs;
+
         /// <summary>
         /// Return an input for a given parameter.<br/> 
         /// Return null if no input is available.

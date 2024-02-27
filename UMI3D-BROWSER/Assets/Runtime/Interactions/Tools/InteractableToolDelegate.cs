@@ -51,7 +51,8 @@ namespace umi3d.browserRuntime.interaction
 
         public override bool RequiresMenu(Interactable tool)
         {
-            throw new NotImplementedException();
+            //TODO: Not Imp
+            return false;
         }
     }
 }

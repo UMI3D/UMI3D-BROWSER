@@ -38,9 +38,6 @@ namespace umi3d.browserEditor.BuildTool
         [SerializeField] UMI3DCollabLoadingParameters loadingParameters;
         IBuilToolComponent _uMI3DConfigurator = null;
 
-        TargetDto targetDTO;
-        VersionDTO versionDTO;
-
         [MenuItem("Tools/BuildTool")]
         public static void OpenWindow()
         {
@@ -92,11 +89,11 @@ namespace umi3d.browserEditor.BuildTool
                 buildToolKeystore_SO, buildToolVersion_SO, buildToolTarget_SO, buildToolScene_SO, buildToolSettings_SO,
                 updateVersion: newVersion =>
                 {
-                    versionDTO = newVersion;
+                    //versionDTO = newVersion;
                 },
                 updateTarget: newTarget =>
                 {
-                    targetDTO = newTarget;
+                    //targetDTO = newTarget;
                 },
                 ApplyTargetOptions,
                 BuildTarget,
@@ -111,8 +108,9 @@ namespace umi3d.browserEditor.BuildTool
             // Update App name, Version and Android.BundleVersion.
             PlayerSettings.productName = BuildToolHelper.GetApplicationName(target);
             PlayerSettings.applicationIdentifier = BuildToolHelper.GetPackageName(target);
-            PlayerSettings.bundleVersion = $"{target.releaseCycle.GetReleaseInitial()}_{versionDTO.VersionFromNow} Sdk: {buildToolVersion_SO.sdkVersion.Version}";
-            PlayerSettings.Android.bundleVersionCode = versionDTO.BundleVersion;
+            PlayerSettings.bundleVersion = $"{target.releaseCycle.GetReleaseInitial()}_{buildToolVersion_SO.newVersion.VersionFromNow} Sdk: {buildToolVersion_SO.sdkVersion.Version}";
+            PlayerSettings.Android.bundleVersionCode = buildToolVersion_SO.newVersion.BundleVersion;
+            UnityEngine.Debug.Log($"{buildToolVersion_SO.newVersion.BundleVersion}, {buildToolVersion_SO.newVersion.VersionFromNow}");
 
             // Switch target if needed and toggle options.
             _uMI3DConfigurator.HandleTarget(target.Target);
@@ -147,12 +145,12 @@ namespace umi3d.browserEditor.BuildTool
             InstallerHelper.UpdateInstaller(
                 buildToolTarget_SO.installer,
                 buildToolTarget_SO.license,
-                versionDTO,
+                buildToolVersion_SO.newVersion,
                 buildToolVersion_SO.sdkVersion,
                 target
             );
             var report = BuildToolHelper.BuildPlayer(
-                versionDTO,
+                buildToolVersion_SO.newVersion,
                 buildToolVersion_SO.sdkVersion,
                 target
             );
@@ -162,7 +160,7 @@ namespace umi3d.browserEditor.BuildTool
             {
                 BuildToolHelper.CopyLicense(
                     buildToolTarget_SO.license,
-                    versionDTO,
+                    buildToolVersion_SO.newVersion,
                     buildToolVersion_SO.sdkVersion,
                     target
                 );

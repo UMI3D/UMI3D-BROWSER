@@ -461,7 +461,7 @@ PrefabInstance:
     - target: {fileID: 5988314907380347006, guid: 6d8cc188ac4cb49419e2616ed25f607d,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0.00031886055
+      value: 0.000059806913
       objectReference: {fileID: 0}
     - target: {fileID: 6093459749334264534, guid: 6d8cc188ac4cb49419e2616ed25f607d,
         type: 3}
@@ -799,6 +799,12 @@ PrefabInstance:
       propertyPath: hoveredObjectId
       value: 18446744073709551578
       objectReference: {fileID: 0}
+    - target: {fileID: 5067655147915799411, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: controllerDelegate
+      value: 
+      objectReference: {fileID: 11400000, guid: 835b6981bd227394c856fe678469134b,
+        type: 2}
     - target: {fileID: 5067655147915799411, guid: aa50e35a45eaaed43a950ae34ef532dc,
         type: 3}
       propertyPath: toolManager.tool_SO

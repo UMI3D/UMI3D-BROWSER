@@ -347,6 +347,7 @@ namespace umi3d.cdk.interaction
                     toolManager.tool_SO.currentHoverTool.id
                 );
                 toolManager.AssociateInputs(tool, input);
+                eventDelegate.OnProjected(tool);
             }
         }
 

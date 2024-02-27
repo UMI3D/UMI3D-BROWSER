@@ -16,6 +16,7 @@ limitations under the License.
 
 
 using System;
+using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace umi3dBrowsers.displayer
@@ -30,5 +31,6 @@ namespace umi3dBrowsers.displayer
         void HoverEnter(PointerEventData eventData);
         void HoverExit(PointerEventData eventData);
         void Disable();
+        void Init(Color normalColor, Color hoverColor, Color selectedColor);
     }
 }

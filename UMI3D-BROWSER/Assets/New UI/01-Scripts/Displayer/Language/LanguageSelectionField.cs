@@ -100,6 +100,11 @@ namespace umi3dBrowsers.displayer
             if(!_isSelected)
                 BackgroundImage.color = normalBGColor;
         }
+
+        public void Init(Color normalColor, Color hoverColor, Color selectedColor)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
 

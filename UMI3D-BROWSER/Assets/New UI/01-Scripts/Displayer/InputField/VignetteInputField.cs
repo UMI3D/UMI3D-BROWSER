@@ -129,6 +129,11 @@ namespace umi3dBrowsers.displayer
 
             if (!isEnabeling) OnDisabled?.Invoke();
         }
+
+        public void Init(Color normalColor, Color hoverColor, Color selectedColor)
+        {
+
+        }
     }
 }
 

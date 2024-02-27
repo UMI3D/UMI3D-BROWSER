@@ -33,8 +33,6 @@ namespace umi3d.browserEditor.BuildTool
         public UMI3DBuildToolTarget_SO buildToolTarget_SO;
         public UMI3DBuildToolScene_SO buildToolScene_SO;
         public UMI3DBuildToolSettings_SO buildToolSettings_SO;
-        public Action<VersionDTO> updateVersion;
-        public Action<TargetDto> updateTarget;
         Action<TargetDto> applyTargetOptions;
         public Action<TargetDto> buildTarget;
         public Action<TargetDto[]> buildSelectedTarget;
@@ -63,8 +61,6 @@ namespace umi3d.browserEditor.BuildTool
             UMI3DBuildToolTarget_SO buildToolTarget_SO,
             UMI3DBuildToolScene_SO buildToolScene_SO,
             UMI3DBuildToolSettings_SO buildToolSettings_SO,
-            Action<VersionDTO> updateVersion,
-            Action<TargetDto> updateTarget,
             Action<TargetDto> applyTargetOptions,
             Action<TargetDto> buildTarget,
             Action<TargetDto[]> buildSelectedTarget
@@ -80,8 +76,6 @@ namespace umi3d.browserEditor.BuildTool
             this.buildToolTarget_SO = buildToolTarget_SO;
             this.buildToolScene_SO = buildToolScene_SO;
             this.buildToolSettings_SO = buildToolSettings_SO;
-            this.updateVersion = updateVersion;
-            this.updateTarget = updateTarget;
             this.applyTargetOptions = applyTargetOptions;
             this.buildTarget = buildTarget;
             this.buildSelectedTarget = buildSelectedTarget;
@@ -109,8 +103,7 @@ namespace umi3d.browserEditor.BuildTool
             UMI3DBuildToolVersionView versionView = new(
                 root,
                 buildToolVersion_SO,
-                buildToolSettings_SO,
-                updateVersion: updateVersion
+                buildToolSettings_SO
             );
             versionView.Bind();
             versionView.Set();
@@ -212,7 +205,6 @@ namespace umi3d.browserEditor.BuildTool
                     buildToolVersion_SO,
                     buildToolSettings_SO,
                     index,
-                    updateTarget,
                     applyTargetOptions,
                     refreshView: index =>
                     {

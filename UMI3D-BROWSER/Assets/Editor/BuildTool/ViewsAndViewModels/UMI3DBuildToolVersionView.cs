@@ -44,8 +44,7 @@ namespace umi3d.browserEditor.BuildTool
         public UMI3DBuildToolVersionView(
             VisualElement root, 
             UMI3DBuildToolVersion_SO buildToolVersion_SO,
-            UMI3DBuildToolSettings_SO buildToolSettings_SO,
-            Action<VersionDTO> updateVersion
+            UMI3DBuildToolSettings_SO buildToolSettings_SO
         )
         {
             this.root = root;
@@ -55,7 +54,6 @@ namespace umi3d.browserEditor.BuildTool
                 updateVersion: version =>
                 {
                     UpdateVersionView();
-                    updateVersion?.Invoke(version);
                 }
             );
         }
@@ -132,6 +130,7 @@ namespace umi3d.browserEditor.BuildTool
 
             L_SDKVersion.text = viewModel.SDKVersion.Version;
             L_OldVersion.text = viewModel.OldVersion.Version;
+            L_Version.text = viewModel.NewVersion.VersionFromNow;
 
             UpdateBorderColor(L_SDKVersion.parent, () => buildToolSettings_SO.sdkColor);
             UpdateBorderColor(L_OldVersion.parent, () => buildToolSettings_SO.oldVersionColor);

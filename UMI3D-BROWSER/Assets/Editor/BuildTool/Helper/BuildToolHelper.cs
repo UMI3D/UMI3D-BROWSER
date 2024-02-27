@@ -126,6 +126,12 @@ namespace umi3d.browserEditor.BuildTool
             {
                 return;
             }
+
+            if (string.IsNullOrEmpty(licensePath))
+            {
+                UnityEngine.Debug.LogError($"[UMI3D] Build Tool: license path is empty");
+                return;
+            }
             File.Copy(
                 licensePath, 
                 $"{GetBuildPath(version, sdkVersion, target, EditorUserBuildSettings.selectedBuildTargetGroup == BuildTargetGroup.Standalone)}license.txt", 
@@ -143,6 +149,11 @@ namespace umi3d.browserEditor.BuildTool
 
         public static BuildReport BuildPlayer(VersionDTO version, VersionDTO sdkVersion, TargetDto target)
         {
+            if (string.IsNullOrEmpty(target.BuildFolder))
+            {
+                throw new Exception($"[UMI3D] Build Tool: BuildFolder path is empty");
+            }
+
             return BuildPipeline.BuildPlayer(
                 GetPlayerBuildOptions(
                     version,

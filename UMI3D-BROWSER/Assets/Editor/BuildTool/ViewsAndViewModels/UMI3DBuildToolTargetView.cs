@@ -46,7 +46,6 @@ namespace umi3d.browserEditor.BuildTool
             UMI3DBuildToolVersion_SO buildToolVersion_SO,
             UMI3DBuildToolSettings_SO buildToolSettings_SO,
             int index,
-            Action<TargetDto> updateTarget,
             Action<TargetDto> applyTargetOptions,
             Action<int> refreshView,
             Action<TargetDto> buildTarget
@@ -55,7 +54,6 @@ namespace umi3d.browserEditor.BuildTool
             this.root = root;
             this.viewModel = new(
                 buildToolTarget_SO,
-                updateTarget,
                 applyTargetOptions,
                 refreshView
             );

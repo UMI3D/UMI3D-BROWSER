@@ -36,6 +36,11 @@ namespace umi3dBrowsers.utils
             }
         }
 
+        private void OnValidate()
+        {
+            ScaleCollider();
+        }
+
         private void OnDisable()
         {
             if (uiColliderScalers.Contains(this))

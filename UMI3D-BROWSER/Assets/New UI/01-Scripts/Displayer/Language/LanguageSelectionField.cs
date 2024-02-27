@@ -48,9 +48,9 @@ namespace umi3dBrowsers.displayer
         [SerializeField] private TextMeshProUGUI languageText;
         [SerializeField] private Image BackgroundImage;
         [Space]
-        [SerializeField, ColorUsage(showAlpha: true, hdr: true)] private Color normalBGColor;
-        [SerializeField, ColorUsage(showAlpha: true, hdr: true)] private Color hoverBG;
-        [SerializeField, ColorUsage(showAlpha: true, hdr: true)] private Color selectedBG;
+        [SerializeField] private Color normalBGColor;
+        [SerializeField] private Color hoverBG;
+        [SerializeField] private Color selectedBG;
 
 
         public event Action OnClick;

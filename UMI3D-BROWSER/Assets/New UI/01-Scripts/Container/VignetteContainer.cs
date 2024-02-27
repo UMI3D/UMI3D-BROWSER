@@ -62,6 +62,10 @@ namespace umi3dBrowsers.container
         private void Awake()
         {
             vignetteDisplayers = GetComponentsInChildren<VignetteDisplayer>().ToList();
+        }
+
+        private void Start()
+        {           
             scrollbar.value = 0;
         }
 

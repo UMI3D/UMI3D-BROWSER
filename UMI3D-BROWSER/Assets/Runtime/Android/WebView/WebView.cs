@@ -17,7 +17,6 @@ using com.inetum.unitygeckowebview;
 using umi3d.cdk;
 using umi3d.common;
 using umi3d.common.interaction;
-//using umi3dVRBrowsersBase.ui.keyboard;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -196,11 +195,6 @@ namespace QuestBrowser.WebView
             {
                 searchField.text = url;
             }
-        }
-
-        public void OnInputSelected()
-        {
-            //keyboard.OpenKeyboard();
         }
 
         public void OnPointerDown(Vector2 pointer)

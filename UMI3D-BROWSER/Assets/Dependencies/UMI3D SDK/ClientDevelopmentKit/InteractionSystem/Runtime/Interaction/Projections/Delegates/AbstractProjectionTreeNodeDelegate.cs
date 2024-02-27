@@ -26,35 +26,41 @@ namespace umi3d.cdk.interaction
     {
         public ProjectionTree_SO projectionTree_SO;
         public string treeId;
+        public UMI3DInputManager controlManager;
 
         /// <summary>
         /// Init this object with dependency injection.
         /// </summary>
         /// <param name="projectionTree_SO"></param>
         /// <param name="treeId"></param>
-        public virtual void Init(ProjectionTree_SO projectionTree_SO, string treeId)
+        public virtual void Init(
+            ProjectionTree_SO projectionTree_SO,
+            string treeId,
+            UMI3DInputManager controlManager
+        )
         {
             this.projectionTree_SO = projectionTree_SO;
             this.treeId = treeId;
+            this.controlManager = controlManager;
         }
 
         /// <summary>
-        /// Return a predicate the is true if the node is compatible with the interaction.
+        /// Return a predicate that is true if the node is compatible with the interaction.
         /// </summary>
         /// <param name="interaction"></param>
         /// <returns></returns>
         public abstract Predicate<ProjectionTreeNodeData> IsNodeCompatible(Dto interaction);
 
         /// <summary>
-        /// Return a <see cref="Func{ProjectionTreeNode}"/> that will create a tree node for this input found by <paramref name="findInput"/>.<br/>
-        /// This <see cref="Func{ProjectionTreeNode}"/> must throw a <see cref="NoInputFoundException"/> if no input is found.
+        /// Return a <see cref="Func{ProjectionTreeNode}"/> that will create a tree node for this input found by <paramref name="getControlId"/>.<br/>
+        /// This <see cref="Func{ProjectionTreeNode}"/> must throw a <see cref="NoInputFoundException"/> if no controlId is found.
         /// </summary>
         /// <param name="interaction"></param>
-        /// <param name="findInput"></param>
+        /// <param name="getControlId"></param>
         /// <returns></returns>
-        public abstract Func<ProjectionTreeNodeData> CreateNodeForInput(
+        public abstract Func<ProjectionTreeNodeData> CreateNodeForControl(
             Dto interaction,
-            Func<AbstractUMI3DInput> findInput
+            Func<Guid?> getControlId
         );
 
         /// <summary>

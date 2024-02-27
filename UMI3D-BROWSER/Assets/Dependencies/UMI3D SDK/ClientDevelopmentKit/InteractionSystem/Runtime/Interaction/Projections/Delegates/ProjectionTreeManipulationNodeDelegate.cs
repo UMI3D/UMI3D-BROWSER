@@ -36,16 +36,16 @@ namespace umi3d.cdk.interaction
             };
         }
 
-        public override Func<ProjectionTreeNodeData> CreateNodeForInput(
+        public override Func<ProjectionTreeNodeData> CreateNodeForControl(
             ManipulationDto interaction,
-            Func<AbstractUMI3DInput> findInput
+            Func<Guid?> getControlId
         )
         {
             return () =>
             {
-                AbstractUMI3DInput projection = findInput?.Invoke();
+                Guid? controlId = getControlId?.Invoke();
 
-                if (projection == null)
+                if (controlId == null)
                 {
                     throw new NoInputFoundException($"For {nameof(ManipulationDto)}: {interaction.name}");
                 }
@@ -60,7 +60,7 @@ namespace umi3d.cdk.interaction
                         interaction = interaction,
                         manipulationDofGroupDto = sep
                     },
-                    input = projection,
+                    controlId = controlId.Value
                 };
             };
         }
@@ -75,10 +75,10 @@ namespace umi3d.cdk.interaction
             {
                 if (environmentId.HasValue && toolId.HasValue && hoveredObjectId.HasValue)
                 {
-                    var interactionDto = node.interactionData.Interaction;
-                    node.input.Associate(
+                    controlManager.model.Associate(
+                        node.controlId,
                         environmentId.Value,
-                        interactionDto as ManipulationDto,
+                        node.interactionData.Interaction as ManipulationDto,
                         sep.dofs,
                         toolId.Value,
                         hoveredObjectId.Value

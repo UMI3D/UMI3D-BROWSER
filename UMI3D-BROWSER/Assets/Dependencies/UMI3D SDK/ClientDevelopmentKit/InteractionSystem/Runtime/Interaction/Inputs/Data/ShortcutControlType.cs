@@ -15,18 +15,12 @@ limitations under the License.
 */
 
 using System;
-using umi3d.cdk.interaction;
-using umi3d.common.interaction;
 using UnityEngine;
 
-namespace umi3d.browserRuntime.interaction
+namespace umi3d.cdk.interaction
 {
-    [CreateAssetMenu(fileName = "UMI3D Parameter Input Delegate", menuName = "UMI3D/Interactions/Input Delegates/Parameter Input Delegate")]
-    public class ParameterInputDelegate : AbstractInputDelegate<AbstractParameterDto>
+    [CreateAssetMenu(fileName = "UMI3D Shortcut Control [Shortcut]", menuName = "UMI3D/Interactions/Control/Shortcut Type")]
+    public class ShortcutControlType : AbstractControlType
     {
-        public override Guid? GetControlId(AbstractParameterDto interaction, bool unused = true)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

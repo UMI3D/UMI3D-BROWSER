@@ -33,16 +33,16 @@ namespace umi3d.cdk.interaction
             };
         }
 
-        public override Func<ProjectionTreeNodeData> CreateNodeForInput(
+        public override Func<ProjectionTreeNodeData> CreateNodeForControl(
             FormDto interaction,
-            Func<AbstractUMI3DInput> findInput
+            Func<Guid?> getControlId
         )
         {
             return () =>
             {
-                AbstractUMI3DInput projection = findInput?.Invoke();
+                Guid? controlId = getControlId?.Invoke();
 
-                if (projection == null)
+                if (controlId == null)
                 {
                     throw new NoInputFoundException($"For {nameof(FormDto)}: {interaction.name}");
                 }
@@ -56,7 +56,7 @@ namespace umi3d.cdk.interaction
                     {
                         interaction = interaction
                     },
-                    input = projection,
+                    controlId = controlId.Value,
                 };
             };
         }
@@ -71,10 +71,10 @@ namespace umi3d.cdk.interaction
             {
                 if (environmentId.HasValue && toolId.HasValue && hoveredObjectId.HasValue)
                 {
-                    var interactionDto = node.interactionData.Interaction;
-                    node.input.Associate(
+                    controlManager.model.Associate(
+                        node.controlId,
                         environmentId.Value,
-                        interactionDto,
+                        node.interactionData.Interaction,
                         toolId.Value,
                         hoveredObjectId.Value
                     );

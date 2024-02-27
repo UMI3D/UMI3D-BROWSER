@@ -24,11 +24,24 @@ namespace umi3d.cdk.interaction
     [Serializable]
     public sealed class UMI3DInputManager 
     {
+        [SerializeField]
+        debug.UMI3DLogger logger = new();
+
+        public Control_SO control_SO;
         public AbstractManipulationInputDelegate manipulationDelegate;
         public AbstractEventInputDelegate eventInputDelegate;
         public AbstractInputDelegate<FormDto> formInputDelegate;
         public AbstractInputDelegate<LinkDto> linkInputDelegate;
         public AbstractInputDelegate<AbstractParameterDto> parameterInputDelegate;
+
+        public ControlModel model = new();
+
+        public void Init(MonoBehaviour context)
+        {
+            logger.MainContext = context;
+            logger.MainTag = nameof(UMI3DInputManager);
+            model.Init(control_SO);
+        }
 
         public AbstractUMI3DInput FindInput<T>(
             List<T> inputs,

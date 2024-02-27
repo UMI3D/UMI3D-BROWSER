@@ -24,7 +24,7 @@ namespace umi3d.browserRuntime.interaction
     [CreateAssetMenu(fileName = "UMI3D Event Input Delegate", menuName = "UMI3D/Interactions/Input Delegates/Event Input Delegate")]
     public class EventInputDelegate : AbstractEventInputDelegate
     {
-        public override AbstractUMI3DInput FindInput(EventDto param, bool unused = true)
+        public override Guid? GetControlId(EventDto interaction, bool unused = true)
         {
             throw new NotImplementedException();
         }

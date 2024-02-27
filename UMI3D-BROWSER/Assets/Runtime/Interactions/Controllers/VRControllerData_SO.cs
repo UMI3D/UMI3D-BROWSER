@@ -16,17 +16,13 @@ limitations under the License.
 
 using System;
 using umi3d.cdk.interaction;
-using umi3d.common.interaction;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.interaction
 {
-    [CreateAssetMenu(fileName = "UMI3D Parameter Input Delegate", menuName = "UMI3D/Interactions/Input Delegates/Parameter Input Delegate")]
-    public class ParameterInputDelegate : AbstractInputDelegate<AbstractParameterDto>
+    [CreateAssetMenu(fileName = "UMI3D Controller Data For [ControllerName]", menuName = "UMI3D/Interactions/Controller/VR Controller Data")]
+    public class VRControllerData_SO : AbstractControllerData_SO
     {
-        public override Guid? GetControlId(AbstractParameterDto interaction, bool unused = true)
-        {
-            throw new NotImplementedException();
-        }
+        //public ControlData teleportationControl;
     }
 }

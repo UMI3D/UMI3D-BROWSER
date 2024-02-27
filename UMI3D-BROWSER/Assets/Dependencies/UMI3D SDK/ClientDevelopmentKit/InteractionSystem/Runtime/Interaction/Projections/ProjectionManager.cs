@@ -87,11 +87,31 @@ namespace umi3d.cdk.interaction
             logger.Assert(ptParameterNodeDelegate != null, $"{nameof(ptParameterNodeDelegate)} is null");
             logger.Assert(eventDelegate != null, $"{nameof(eventDelegate)} is null");
 
-            ptManipulationNodeDelegate.Init(projectionTree_SO, treeId);
-            ptEventNodeDelegate.Init(projectionTree_SO, treeId);
-            ptFormNodeDelegate.Init(projectionTree_SO, treeId);
-            ptLinkNodeDelegate.Init(projectionTree_SO, treeId);
-            ptParameterNodeDelegate.Init(projectionTree_SO, treeId);
+            ptManipulationNodeDelegate.Init(
+                projectionTree_SO,
+                treeId,
+                inputManager
+            );
+            ptEventNodeDelegate.Init(
+                projectionTree_SO,
+                treeId,
+                inputManager
+            );
+            ptFormNodeDelegate.Init(
+                projectionTree_SO,
+                treeId,
+                inputManager
+            );
+            ptLinkNodeDelegate.Init(
+                projectionTree_SO,
+                treeId,
+                inputManager
+            );
+            ptParameterNodeDelegate.Init(
+                projectionTree_SO,
+                treeId,
+                inputManager
+            );
 
             logger.Assert(inputManager != null, $"{nameof(inputManager)} is null");
             logger.Assert(toolManager != null, $"{nameof(toolManager)} is null");
@@ -410,12 +430,15 @@ namespace umi3d.cdk.interaction
 
                     ptManipulationNodeDelegate.sep = dof;
                     adequation = ptManipulationNodeDelegate.IsNodeCompatible(manipulationDto);
-                    deepProjectionCreation = ptManipulationNodeDelegate.CreateNodeForInput(
+                    deepProjectionCreation = ptManipulationNodeDelegate.CreateNodeForControl(
                         manipulationDto,
                         () =>
                         {
                             inputManager.manipulationDelegate.dof = dof;
-                            return inputManager.manipulationDelegate.FindInput(manipulationDto, unused);
+                            return inputManager.manipulationDelegate.GetControlId(
+                                manipulationDto, 
+                                unused
+                            );
                         }
                     );
                     chooseProjection = ptManipulationNodeDelegate.ChooseProjection(
@@ -428,12 +451,15 @@ namespace umi3d.cdk.interaction
                 case EventDto eventDto:
 
                     adequation = ptEventNodeDelegate.IsNodeCompatible(eventDto);
-                    deepProjectionCreation = ptEventNodeDelegate.CreateNodeForInput(
+                    deepProjectionCreation = ptEventNodeDelegate.CreateNodeForControl(
                         eventDto,
                         () =>
                         {
                             inputManager.eventInputDelegate.tryToFindInputForHoldableEvent = tryToFindInputForHoldableEvent;
-                            return inputManager.eventInputDelegate.FindInput(eventDto, unused);
+                            return inputManager.eventInputDelegate.GetControlId(
+                                eventDto, 
+                                unused
+                            );
                         }
                     );
                     chooseProjection = ptEventNodeDelegate.ChooseProjection(
@@ -446,11 +472,14 @@ namespace umi3d.cdk.interaction
                 case FormDto formDto:
 
                     adequation = ptFormNodeDelegate.IsNodeCompatible(formDto);
-                    deepProjectionCreation = ptFormNodeDelegate.CreateNodeForInput(
+                    deepProjectionCreation = ptFormNodeDelegate.CreateNodeForControl(
                         formDto,
                         () =>
                         {
-                            return inputManager.formInputDelegate.FindInput(formDto, unused);
+                            return inputManager.formInputDelegate.GetControlId(
+                                formDto, 
+                                unused
+                            );
                         }
                     );
                     chooseProjection = ptFormNodeDelegate.ChooseProjection(
@@ -463,11 +492,14 @@ namespace umi3d.cdk.interaction
                 case LinkDto linkDto:
 
                     adequation = ptLinkNodeDelegate.IsNodeCompatible(linkDto);
-                    deepProjectionCreation = ptLinkNodeDelegate.CreateNodeForInput(
+                    deepProjectionCreation = ptLinkNodeDelegate.CreateNodeForControl(
                         linkDto,
                         () =>
                         {
-                            return inputManager.linkInputDelegate.FindInput(linkDto, unused);
+                            return inputManager.linkInputDelegate.GetControlId(
+                                linkDto, 
+                                unused
+                            );
                         }
                     );
                     chooseProjection = ptLinkNodeDelegate.ChooseProjection(
@@ -480,11 +512,14 @@ namespace umi3d.cdk.interaction
                 case AbstractParameterDto parameterDto:
 
                     adequation = ptParameterNodeDelegate.IsNodeCompatible(parameterDto);
-                    deepProjectionCreation = ptParameterNodeDelegate.CreateNodeForInput(
+                    deepProjectionCreation = ptParameterNodeDelegate.CreateNodeForControl(
                         parameterDto,
                         () =>
                         {
-                            return inputManager.parameterInputDelegate.FindInput(parameterDto, unused);
+                            return inputManager.parameterInputDelegate.GetControlId(
+                                parameterDto, 
+                                unused
+                            );
                         }
                     );
                     chooseProjection = ptParameterNodeDelegate.ChooseProjection(

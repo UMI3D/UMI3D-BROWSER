@@ -25,15 +25,20 @@ namespace umi3d.cdk.interaction
     public abstract class AbstractInputDelegate<Interaction>: SerializableScriptableObject
         where Interaction: AbstractInteractionDto
     {
-        public List<AbstractUMI3DInput> inputs;
+        public ControlModel model;
+
+        public virtual void Init(ControlModel model)
+        {
+            this.model = model;
+        }
 
         /// <summary>
-        /// Return an input for a given parameter.<br/> 
-        /// Return null if no input is available.
+        /// Return the id of a control.<br/> 
+        /// Return null if no control is available.
         /// </summary>
-        /// <param name="param"></param>
+        /// <param name="interaction"></param>
         /// <param name="unused"></param>
         /// <returns></returns>
-        public abstract AbstractUMI3DInput FindInput(Interaction param, bool unused = true);
+        public abstract Guid? GetControlId(Interaction interaction, bool unused = true);
     }
 }

@@ -13,9 +13,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-using System.Collections.Generic;
-using System.Linq;
-using umi3d.common.interaction;
 using UnityEngine;
 
 namespace umi3d.cdk.interaction
@@ -51,6 +48,7 @@ namespace umi3d.cdk.interaction
 
         private void Awake()
         {
+            inputManager.Init(this);
             toolManager.Init();
             projectionManager.Init(
                 this, 

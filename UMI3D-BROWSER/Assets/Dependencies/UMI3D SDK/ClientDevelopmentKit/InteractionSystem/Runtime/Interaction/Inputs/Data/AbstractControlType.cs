@@ -14,19 +14,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils.saveSystem;
 using System;
-using umi3d.cdk.interaction;
-using umi3d.common.interaction;
 using UnityEngine;
 
-namespace umi3d.browserRuntime.interaction
+namespace umi3d.cdk.interaction
 {
-    [CreateAssetMenu(fileName = "UMI3D Parameter Input Delegate", menuName = "UMI3D/Interactions/Input Delegates/Parameter Input Delegate")]
-    public class ParameterInputDelegate : AbstractInputDelegate<AbstractParameterDto>
+    /// <summary>
+    /// Type of control.
+    /// </summary>
+    public abstract class AbstractControlType : SerializableScriptableObject
     {
-        public override Guid? GetControlId(AbstractParameterDto interaction, bool unused = true)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

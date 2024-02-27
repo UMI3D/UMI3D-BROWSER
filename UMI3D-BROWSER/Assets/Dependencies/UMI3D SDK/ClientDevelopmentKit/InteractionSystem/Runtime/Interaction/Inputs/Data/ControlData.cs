@@ -15,12 +15,33 @@ limitations under the License.
 */
 
 using System;
+using umi3d.common.interaction;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace umi3d.cdk.interaction
 {
+    [Serializable]
     public struct ControlData 
     {
-        
+        [HideInInspector]
+        public Guid id;
+        /// <summary>
+        /// Current controller associated with this control.
+        /// </summary>
+        [HideInInspector] public AbstractController controller;
+        /// <summary>
+        /// Tool's id currently associated with this control.
+        /// </summary>
+        [HideInInspector] public ulong toolId;
+        /// <summary>
+        /// Interaction currently associated with this control.
+        /// </summary>
+        public AbstractInteractionDto interaction;
+        public AbstractControlType type;
+        /// <summary>
+        /// The new input system InputAction.
+        /// </summary>
+        public InputActionProperty inputActionProperty;
     }
 }

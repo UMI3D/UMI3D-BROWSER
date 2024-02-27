@@ -29,7 +29,7 @@ namespace umi3d.browserRuntime.interaction
             throw new NotImplementedException();
         }
 
-        public override AbstractUMI3DInput FindInput(ManipulationDto param, bool unused = true)
+        public override Guid? GetControlId(ManipulationDto interaction, bool unused = true)
         {
             throw new NotImplementedException();
         }

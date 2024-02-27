@@ -16,11 +16,14 @@ limitations under the License.
 
 using inetum.unityUtils.saveSystem;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace umi3d.cdk.interaction
 {
     public class AbstractControllerData_SO : SerializableScriptableObject
     {
+        public List<ControlData> actions = new();
+        public List<ControlData> shortcuts = new();
     }
 }

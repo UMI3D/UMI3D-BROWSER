@@ -47,5 +47,9 @@ namespace umi3d.cdk.interaction
         /// The input associated with this interaction.
         /// </summary>
         public AbstractUMI3DInput input;
+        /// <summary>
+        /// The control's id associated with this interaction.
+        /// </summary>
+        public Guid controlId;
     }
 }

@@ -31,7 +31,7 @@ namespace umi3d.browserEditor.BuildTool
         public VisualElement V_Path;
         public TextField TF_Path;
         public Button B_Browse;
-        public EnumFlagsField EFF_Targets;
+        public EnumFlagsField EFF_Targets = new("Targets", E_Target.Quest);
 
         public UMI3DBuildToolSceneView(VisualElement root, UMI3DBuildToolScene_SO buildToolScene_SO, int index)
         {
@@ -47,7 +47,6 @@ namespace umi3d.browserEditor.BuildTool
             V_Path = root.Q("V_Path");
             TF_Path = V_Path.Q<TextField>();
             B_Browse = V_Path.Q<Button>();
-            EFF_Targets = new EnumFlagsField("Targets", E_Target.Quest);
         }
 
         public void Set()
@@ -83,6 +82,11 @@ namespace umi3d.browserEditor.BuildTool
                 sceneDTO.targets = (E_Target)value.newValue;
                 viewModel[index] = sceneDTO;
             });
+        }
+
+        public void Unbind()
+        {
+            root.Q("V_Container").Remove(EFF_Targets);
         }
     }
 }

@@ -129,6 +129,11 @@ namespace umi3d.browserEditor.BuildTool
                 );
                 sceneView.Bind();
                 sceneView.Set();
+                visual.userData = sceneView;
+            };
+            LV_Scenes.unbindItem = (visual, index) =>
+            {
+                (visual?.userData as UMI3DBuildToolSceneView)?.Unbind();
             };
 
             // Path

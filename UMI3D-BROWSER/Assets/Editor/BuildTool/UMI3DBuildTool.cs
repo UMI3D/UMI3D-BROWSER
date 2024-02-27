@@ -163,7 +163,6 @@ namespace umi3d.browserEditor.BuildTool
         {
             for (int i = 0; i < target.Length; i++)
             {
-                UnityEngine.Debug.Log($"{target[i].Target}");
                 ApplyTargetOptions(target[i]);
                 BuildTarget(target[i], i == target.Length - 1);
             }

@@ -24,8 +24,25 @@ namespace umi3d.browserEditor.BuildTool
 {
     public static class InstallerHelper 
     {
-        public static void UpdateInstaller(string InstallerPath, string licensePath, VersionDTO version, VersionDTO sdkVersion, TargetDto target)
+        public static void UpdateInstaller(
+            string InstallerPath,
+            string licensePath,
+            VersionDTO version,
+            VersionDTO sdkVersion,
+            TargetDto target
+        )
         {
+            if (string.IsNullOrEmpty(InstallerPath))
+            {
+                UnityEngine.Debug.LogError($"[UMI3D] Build Tool: Installer path is empty");
+                return;
+            }
+            if (string.IsNullOrEmpty(licensePath))
+            {
+                UnityEngine.Debug.LogError($"[UMI3D] Build Tool: License path is empty");
+                return;
+            }
+
             if (!File.Exists(InstallerPath) || EditorUserBuildSettings.selectedBuildTargetGroup != BuildTargetGroup.Standalone)
             {
                 UnityEngine.Debug.LogError($"[UMI3D] Build Tool: installer not found.");

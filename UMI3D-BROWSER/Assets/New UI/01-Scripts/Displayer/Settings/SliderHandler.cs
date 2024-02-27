@@ -28,6 +28,20 @@ namespace umi3dBrowsers.displayer
         [SerializeField] TextMeshProUGUI text;
         [SerializeField] Slider slider;
 
+        private void Start()
+        {
+            SetText(0);
+        }
+
+        /// <summary>
+        /// Call it before start
+        /// </summary>
+        public void Init(float value)
+        {
+            SetText(value);
+            slider.value = value;
+        }
+
         public void SetText(float value)
         {
             text.SetText(value.ToString("0"));

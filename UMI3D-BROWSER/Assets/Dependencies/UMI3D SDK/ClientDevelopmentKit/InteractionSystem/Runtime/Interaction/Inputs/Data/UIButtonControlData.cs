@@ -15,28 +15,25 @@ limitations under the License.
 */
 
 using System;
-using umi3d.common.interaction;
 using UnityEngine;
 
 namespace umi3d.cdk.interaction
 {
-    [Serializable]
-    public struct ProjectionTreeManipulationNodeData : IProjectionTreeNodeData
+    public class UIButtonControlData : AbstractControlData
     {
-        public ManipulationDto interaction;
-
-        /// <summary>
-        /// Associated Degree of Freedom Group DTO
-        /// </summary>
-        [Tooltip("Associated Degree of Freedom Group DTO")]
-        public DofGroupDto dofGroup;
-
-        public AbstractInteractionDto Interaction
+        public override void Disable()
         {
-            get
-            {
-                return interaction;
-            }
+            throw new NotImplementedException();
+        }
+
+        public override void Dissociate()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Enable()
+        {
+            throw new NotImplementedException();
         }
     }
 }

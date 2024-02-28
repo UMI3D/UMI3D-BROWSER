@@ -15,18 +15,167 @@ limitations under the License.
 */
 
 using System;
+using umi3d.cdk;
 using umi3d.cdk.interaction;
+using umi3d.common;
 using umi3d.common.interaction;
+using umi3d.common.userCapture;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace umi3d.browserRuntime.interaction
 {
     [CreateAssetMenu(fileName = "UMI3D Event Input Delegate", menuName = "UMI3D/Interactions/Input Delegates/Event Input Delegate")]
-    public class EventInputDelegate : AbstractEventInputDelegate
+    public class EventInputDelegate : AbstractEventInputDelegate 
     {
+        public override void Associate(
+            AbstractControlData control,
+            ulong environmentId,
+            AbstractInteractionDto interaction,
+            ulong toolId,
+            ulong hoveredObjectId
+        )
+        {
+            if (interaction is not EventDto evtInteraction)
+            {
+                throw new Exception($"[UMI3D] Control: Interaction is not an {nameof(EventDto)}.");
+            }
+            if (control is not AbstractButtonControlData buttonControl)
+            {
+                throw new Exception($"[UMI3D] Control: control is not an {nameof(AbstractButtonControlData)}.");
+            }
+
+            control.Enable();
+            uint boneType = control
+                .controller
+                .controllerData_SO
+                .BoneType;
+            Vector3Dto bonePosition = control
+                .controller
+                .controllerData_SO
+                .BoneTransform
+                .position
+                .Dto();
+            Vector4Dto boneRotation = control
+                .controller
+                .controllerData_SO
+                .BoneTransform
+                .rotation
+                .Dto();
+
+            buttonControl.actionPerformed = phase =>
+            {
+                buttonControl.phase = phase;
+                InteractionRequestDto request = null;
+                switch (phase)
+                {
+                    case InputActionPhase.Started:
+                        if (evtInteraction.hold)
+                        {
+                            request = new EventStateChangedDto()
+                            {
+                                active = true
+                            };
+                        }
+                        else
+                        {
+                            request = new EventTriggeredDto();
+                        }
+                        request.boneType = boneType;
+                        request.toolId = toolId;
+                        request.id = interaction.id;
+                        request.hoveredObjectId = hoveredObjectId;
+                        request.bonePosition = bonePosition;
+                        request.boneRotation = boneRotation;
+
+                        UMI3DClientServer.SendRequest(request, true);
+                        if (evtInteraction.TriggerAnimationId != 0)
+                        {
+                            //TODO
+                            StartAnim(evtInteraction.TriggerAnimationId);
+                        }
+                        break;
+                    case InputActionPhase.Canceled:
+                        if (evtInteraction.hold)
+                        {
+                            request = new EventStateChangedDto()
+                            {
+                                active = false,
+                                boneType = boneType,
+                                id = interaction.id,
+                                toolId = toolId,
+                                hoveredObjectId = hoveredObjectId,
+                                bonePosition = bonePosition,
+                                boneRotation = boneRotation,
+                            };
+
+                            UMI3DClientServer.SendRequest(request, true);
+                            if (evtInteraction.ReleaseAnimationId != 0)
+                            {
+                                //TODO
+                                StartAnim(evtInteraction.ReleaseAnimationId);
+                            }
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            };
+            buttonControl.canPerform = CanPerform;
+            buttonControl.dissociate = () =>
+            {
+                Dissociate(control);
+            };
+        }
+
+        protected virtual bool CanPerform(InputActionPhase phase)
+        {
+            //TODO
+            return true;
+        }
+
+        public override void Dissociate(AbstractControlData control)
+        {
+            control.Disable();
+        }
+
         public override Guid? GetControlId(EventDto interaction, bool unused = true)
         {
             throw new NotImplementedException();
+        }
+
+        async void StartAnim(ulong id)
+        {
+            UMI3DEntityInstance entity = UMI3DEnvironmentLoader
+                .Instance
+                .TryGetEntityInstance(
+                UMI3DGlobalID.EnvironmentId,
+                id
+            );
+
+            if (entity == null)
+            {
+                return;
+            }
+
+            UMI3DAbstractAnimation animation = entity.Object as UMI3DAbstractAnimation;
+            if (animation == null)
+            {
+                return;
+            }
+
+            await animation.SetUMI3DProperty(
+            new SetUMI3DPropertyData(
+                UMI3DGlobalID.EnvironmentId,
+                new SetEntityPropertyDto()
+                {
+                    entityId = id,
+                    property = UMI3DPropertyKeys.AnimationPlaying,
+                    value = true
+                },
+                entity)
+            );
+            animation.Start();
         }
     }
 }

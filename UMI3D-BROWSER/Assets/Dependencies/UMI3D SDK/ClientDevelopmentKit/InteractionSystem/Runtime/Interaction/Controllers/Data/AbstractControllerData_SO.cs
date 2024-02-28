@@ -21,9 +21,15 @@ using UnityEngine;
 
 namespace umi3d.cdk.interaction
 {
-    public class AbstractControllerData_SO : SerializableScriptableObject
+    public abstract class AbstractControllerData_SO : SerializableScriptableObject
     {
-        public List<ControlData> actions = new();
-        public List<ControlData> shortcuts = new();
+        public abstract uint BoneType { get; }
+        public abstract Transform BoneTransform { get; }
+
+
+
+
+        public List<AbstractControlData> actions = new();
+        public List<AbstractControlData> shortcuts = new();
     }
 }

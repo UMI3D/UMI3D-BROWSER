@@ -71,7 +71,7 @@ namespace umi3d.cdk.interaction
             {
                 if (environmentId.HasValue && toolId.HasValue && hoveredObjectId.HasValue)
                 {
-                    controlManager.model.Associate(
+                    controlManager.eventInputDelegate.Associate(
                         node.controlId,
                         environmentId.Value,
                         node.interactionData.Interaction,

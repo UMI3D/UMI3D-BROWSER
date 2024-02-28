@@ -24,6 +24,7 @@ namespace umi3d.browserRuntime.interaction
     [CreateAssetMenu(fileName = "UMI3D Link Input Delegate", menuName = "UMI3D/Interactions/Input Delegates/Link Input Delegate")]
     public class LinkInputDelegate : AbstractInputDelegate<LinkDto>
     {
+
         public override Guid? GetControlId(LinkDto interaction, bool unused = true)
         {
             throw new NotImplementedException();

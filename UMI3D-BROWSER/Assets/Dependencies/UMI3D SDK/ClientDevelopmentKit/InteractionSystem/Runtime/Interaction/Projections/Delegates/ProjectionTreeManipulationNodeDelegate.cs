@@ -24,15 +24,15 @@ namespace umi3d.cdk.interaction
     [CreateAssetMenu(fileName = "UMI3D PT Manipulation Node Delegate", menuName = "UMI3D/Interactions/Projection Delegate/PT Manipulation Node Delegate")]
     public class ProjectionTreeManipulationNodeDelegate : AbstractProjectionTreeNodeDelegate<ManipulationDto>
     {
-        public DofGroupDto sep;
+        public DofGroupDto dofGroup;
 
         public override Predicate<ProjectionTreeNodeData> IsNodeCompatible(ManipulationDto interaction)
         {
             return  node =>
             {
-                var nodeData = (ProjectionTreeManipulationNodeData)node.interactionData;
-                return nodeData.interaction is ManipulationDto
-                && nodeData.manipulationDofGroupDto.dofs == sep.dofs;
+                return node.interactionData is ProjectionTreeManipulationNodeData nodeData
+                && nodeData.interaction is ManipulationDto
+                && nodeData.dofGroup.dofs == dofGroup.dofs;
             };
         }
 
@@ -58,7 +58,7 @@ namespace umi3d.cdk.interaction
                     interactionData = new ProjectionTreeManipulationNodeData()
                     {
                         interaction = interaction,
-                        manipulationDofGroupDto = sep
+                        dofGroup = dofGroup
                     },
                     controlId = controlId.Value
                 };
@@ -75,11 +75,11 @@ namespace umi3d.cdk.interaction
             {
                 if (environmentId.HasValue && toolId.HasValue && hoveredObjectId.HasValue)
                 {
-                    controlManager.model.Associate(
+                    controlManager.manipulationDelegate.dof = dofGroup;
+                    controlManager.manipulationDelegate.Associate(
                         node.controlId,
                         environmentId.Value,
-                        node.interactionData.Interaction as ManipulationDto,
-                        sep.dofs,
+                        node.interactionData.Interaction,
                         toolId.Value,
                         hoveredObjectId.Value
                     );

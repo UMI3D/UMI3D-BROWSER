@@ -16,6 +16,7 @@ limitations under the License.
 
 using System;
 using umi3d.cdk.interaction;
+using umi3d.cdk.userCapture.tracking;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.interaction
@@ -23,6 +24,25 @@ namespace umi3d.browserRuntime.interaction
     [CreateAssetMenu(fileName = "UMI3D Controller Data For [ControllerName]", menuName = "UMI3D/Interactions/Controller/VR Controller Data")]
     public class VRControllerData_SO : AbstractControllerData_SO
     {
-        //public ControlData teleportationControl;
+        /// <summary>
+        /// Associated bone.
+        /// </summary>
+        public Tracker bone;
+
+        public override uint BoneType
+        {
+            get
+            {
+                return bone.BoneType;
+            }
+        }
+
+        public override Transform BoneTransform
+        {
+            get
+            {
+                return bone.transform;
+            }
+        }
     }
 }

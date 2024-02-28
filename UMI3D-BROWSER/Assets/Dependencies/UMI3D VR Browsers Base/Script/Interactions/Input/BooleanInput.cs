@@ -111,118 +111,52 @@ namespace umi3dVRBrowsersBase.interactions.input
         /// <param name="hoveredObjectId"></param>
         public override void Associate(ulong environmentId, AbstractInteractionDto interaction, ulong toolId, ulong hoveredObjectId)
         {
-            if (associatedInteraction != null)
+            UnityAction<bool> action = (bool pressDown) =>
             {
-                throw new System.Exception("This input is already binded to a interaction ! (" + associatedInteraction + ")");
-            }
-
-            if (IsCompatibleWith(interaction))
-            {
-                vrInput.AddOnStateUpListener(VRInput_onStateUp);
-                vrInput.AddOnStateDownListener(VRInput_onStateDown);
-
-                UnityAction<bool> action = (bool pressDown) =>
+                if (pressDown)
                 {
-                    if (pressDown)
+                    if ((interaction as EventDto).hold)
                     {
-                        if ((interaction as EventDto).hold)
-                        {
-                            UMI3DClientServer.SendData(new EventStateChangedDto()
-                            {
-                                active = true,
-                                boneType = boneType,
-                                id = interaction.id,
-                                toolId = toolId,
-                                hoveredObjectId = hoveredObjectId,
-                                bonePosition = boneTransform.position.Dto(),
-                                boneRotation = boneTransform.rotation.Dto(),
-                            }, true);
-                            risingEdgeEventSent = true;
-                        }
-                        else
-                        {
-                            UMI3DClientServer.SendData(new EventTriggeredDto()
-                            {
-                                boneType = boneType,
-                                toolId = toolId,
-                                id = interaction.id,
-                                hoveredObjectId = hoveredObjectId,
-                                bonePosition = boneTransform.position.Dto(),
-                                boneRotation = boneTransform.rotation.Dto(),
-                            }, true);
-                        }
-                        (controller as VRController).IsInputPressed = true;
-                        isDown = true;
-
-
-                        if ((interaction as EventDto).TriggerAnimationId != 0)
-                        {
-                            BooleanEvent.Invoke(boneType);
-                            StartAnim((interaction as EventDto).TriggerAnimationId);
-                        }
-
-                        onInputDown.Invoke();
+                        
+                        risingEdgeEventSent = true;
                     }
                     else
                     {
-                        if ((interaction as EventDto).hold)
-                        {
-                            if (risingEdgeEventSent)
-                            {
-                                UMI3DClientServer.SendData(new EventStateChangedDto()
-                                {
-                                    active = false,
-                                    boneType = boneType,
-                                    id = interaction.id,
-                                    toolId = toolId,
-                                    bonePosition = boneTransform.position.Dto(),
-                                    boneRotation = boneTransform.rotation.Dto(),
-                                }, true);
-                                risingEdgeEventSent = false;
-                            }
-                        }
-                        (controller as VRController).IsInputPressed = false;
-                        isDown = false;
-                        onInputUp.Invoke();
+                        
+                    }
+                    (controller as VRController).IsInputPressed = true;
+                    isDown = true;
 
 
-                        if ((interaction as EventDto).ReleaseAnimationId != 0)
+                    if ((interaction as EventDto).TriggerAnimationId != 0)
+                    {
+                        BooleanEvent.Invoke(boneType);
+                    }
+
+                    onInputDown.Invoke();
+                }
+                else
+                {
+                    if ((interaction as EventDto).hold)
+                    {
+                        if (risingEdgeEventSent)
                         {
-                            BooleanEvent.Invoke(boneType);
-                            StartAnim((interaction as EventDto).ReleaseAnimationId);
+                            risingEdgeEventSent = false;
                         }
                     }
-                };
+                    (controller as VRController).IsInputPressed = false;
+                    isDown = false;
+                    onInputUp.Invoke();
 
-                onActionDown.AddListener(() => { action.Invoke(true); });
-                onActionUp.AddListener(() => { action.Invoke(false); });
 
-                base.Associate(environmentId, interaction, toolId, hoveredObjectId);
-            }
-            else
-            {
-                throw new System.Exception("Trying to associate an uncompatible interaction !");
-            }
-        }
+                    if ((interaction as EventDto).ReleaseAnimationId != 0)
+                    {
+                        BooleanEvent.Invoke(boneType);
+                    }
+                }
+            };
 
-        protected async void StartAnim(ulong id)
-        {
-            var anim = UMI3DAbstractAnimation.Get(UMI3DGlobalID.EnvironmentId, id);
-            if (anim != null)
-            {
-                await anim.SetUMI3DProperty(
-                    new SetUMI3DPropertyData(
-                        UMI3DGlobalID.EnvironmentId,
-                         new SetEntityPropertyDto()
-                         {
-                             entityId = id,
-                             property = UMI3DPropertyKeys.AnimationPlaying,
-                             value = true
-                         },
-                        UMI3DEnvironmentLoader.GetEntity(UMI3DGlobalID.EnvironmentId, id))
-                    );
-                anim.Start();
-            }
+            base.Associate(environmentId, interaction, toolId, hoveredObjectId);
         }
 
         /// <summary>
@@ -242,47 +176,7 @@ namespace umi3dVRBrowsersBase.interactions.input
         /// </summary>
         public override void Dissociate()
         {
-            if (associatedInteraction == null)
-                return;
-
-            if ((associatedInteraction as EventDto).hold && risingEdgeEventSent)
-            {
-                onActionUp.AddListener(() => StartCoroutine(WaitAndDissociate()));
-            }
-            else
-            {
-                DissociateInternal();
-            }
-        }
-
-        /// <summary>
-        /// Dissociates after the end of the current frame.
-        /// </summary>
-        /// <returns></returns>
-        private IEnumerator WaitAndDissociate()
-        {
-            yield return new WaitForEndOfFrame();
-            DissociateInternal();
-        }
-
-        /// <summary>
-        /// Performs dissociation.
-        /// </summary>
-        private void DissociateInternal()
-        {
-            base.Dissociate();
-
-            onActionUp.RemoveAllListeners();
-            onActionDown.RemoveAllListeners();
-
-            vrInput.RemoveOnStateUpListener(VRInput_onStateUp);
-            vrInput.RemoveOnStateDownListener(VRInput_onStateDown);
-
-            if (isDown)
-            {
-                (controller as VRController).IsInputPressed = false;
-                isDown = false;
-            }
+            
         }
 
         /// <summary>

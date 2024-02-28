@@ -21,12 +21,19 @@ using UnityEngine;
 
 namespace umi3d.cdk.interaction
 {
-    public class Control_SO : SerializableScriptableObject
+    public class Controls_SO : SerializableScriptableObject
     {
-        public List<ControlData> actions = new();
-        public List<ControlData> shortcuts = new();
+        public List<AbstractControlData> actions = new();
 
-        public virtual ControlData this[int index, AbstractControlType type]
+
+        public List<AbstractButtonControlData> buttonControls = new();
+        public List<AbstractManipulationControlData> manipulationControls = new();
+        public List<UIButtonControlData> uIControls = new();
+
+
+        public List<AbstractControlData> shortcuts = new();
+
+        public virtual AbstractControlData this[int index, AbstractControlType type]
         {
             get
             {
@@ -39,7 +46,7 @@ namespace umi3d.cdk.interaction
             }
         }
 
-        public ControlData this[Guid id, AbstractControlType type]
+        public AbstractControlData this[Guid id, AbstractControlType type]
         {
             get
             {

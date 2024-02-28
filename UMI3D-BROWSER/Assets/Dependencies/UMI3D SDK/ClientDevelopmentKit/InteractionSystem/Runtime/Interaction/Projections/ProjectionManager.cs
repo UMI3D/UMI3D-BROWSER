@@ -428,7 +428,7 @@ namespace umi3d.cdk.interaction
             {
                 case ManipulationDto manipulationDto:
 
-                    ptManipulationNodeDelegate.sep = dof;
+                    ptManipulationNodeDelegate.dofGroup = dof;
                     adequation = ptManipulationNodeDelegate.IsNodeCompatible(manipulationDto);
                     deepProjectionCreation = ptManipulationNodeDelegate.CreateNodeForControl(
                         manipulationDto,

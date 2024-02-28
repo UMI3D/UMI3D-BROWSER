@@ -27,7 +27,7 @@ namespace umi3d.cdk.interaction
         [SerializeField]
         debug.UMI3DLogger logger = new();
 
-        public Control_SO control_SO;
+        public Controls_SO controls_SO;
         public AbstractManipulationInputDelegate manipulationDelegate;
         public AbstractEventInputDelegate eventInputDelegate;
         public AbstractInputDelegate<FormDto> formInputDelegate;
@@ -40,7 +40,7 @@ namespace umi3d.cdk.interaction
         {
             logger.MainContext = context;
             logger.MainTag = nameof(UMI3DInputManager);
-            model.Init(control_SO);
+            model.Init(controls_SO);
         }
 
         public AbstractUMI3DInput FindInput<T>(

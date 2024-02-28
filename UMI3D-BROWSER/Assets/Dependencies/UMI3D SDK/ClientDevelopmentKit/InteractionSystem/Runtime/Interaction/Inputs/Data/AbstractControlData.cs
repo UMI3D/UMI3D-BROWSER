@@ -22,14 +22,17 @@ using UnityEngine.InputSystem;
 namespace umi3d.cdk.interaction
 {
     [Serializable]
-    public struct ControlData 
+    public abstract class AbstractControlData 
     {
-        [HideInInspector]
-        public Guid id;
+        [HideInInspector] public Guid id;
         /// <summary>
         /// Current controller associated with this control.
         /// </summary>
         [HideInInspector] public AbstractController controller;
+        /// <summary>
+        /// Environment's id.
+        /// </summary>
+        [HideInInspector] public ulong environmentId;
         /// <summary>
         /// Tool's id currently associated with this control.
         /// </summary>
@@ -37,11 +40,27 @@ namespace umi3d.cdk.interaction
         /// <summary>
         /// Interaction currently associated with this control.
         /// </summary>
-        public AbstractInteractionDto interaction;
-        public AbstractControlType type;
+        [HideInInspector] public AbstractInteractionDto interaction;
         /// <summary>
-        /// The new input system InputAction.
+        /// Whether this control is being used by the browser.
         /// </summary>
-        public InputActionProperty inputActionProperty;
+        public bool isUsed;
+        /// <summary>
+        /// Type of control.
+        /// </summary>
+        public AbstractControlType type;
+
+        public Action dissociate;
+
+        public AbstractControlData()
+        {
+            id = Guid.NewGuid();
+        }
+
+        public abstract void Enable();
+
+        public abstract void Disable();
+
+        public abstract void Dissociate();
     }
 }

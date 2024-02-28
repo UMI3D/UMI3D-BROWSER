@@ -24,45 +24,45 @@ namespace umi3d.cdk.interaction
     {
         debug.UMI3DLogger logger = new(mainTag: nameof(ControlModel));
 
-        public Control_SO control_SO;
+        public Controls_SO controls_SO;
 
-        public void Init(Control_SO control_SO)
+        public void Init(Controls_SO controls_SO)
         {
-            this.control_SO = control_SO;
+            this.controls_SO = controls_SO;
         }
 
-        public void Associate(
-            Guid controlId,
-            ulong environmentId,
-            AbstractInteractionDto interaction,
-            ulong toolId,
-            ulong hoveredObjectId
-        )
-        {
-            var index = control_SO.IndexOf(controlId, default(ActionControlType));
-            if (index == -1)
-            {
-                throw new NoInputFoundException();
-            }
-            var control = control_SO[index, default(ActionControlType)];
-            control.toolId = toolId;
-        }
+        //public void Associate(
+        //    Guid controlId,
+        //    ulong environmentId,
+        //    AbstractInteractionDto interaction,
+        //    ulong toolId,
+        //    ulong hoveredObjectId
+        //)
+        //{
+        //    var index = controls_SO.IndexOf(controlId, default(ActionControlType));
+        //    if (index == -1)
+        //    {
+        //        throw new NoInputFoundException();
+        //    }
+        //    var control = controls_SO[index, default(ActionControlType)];
+        //    control.toolId = toolId;
+        //}
 
-        /// <summary>
-        /// Associate a Manipulation Interaction to a Control.
-        /// </summary>
-        /// <param name="manipulation"></param>
-        /// <param name="dofs"></param>
-        public void Associate(
-            Guid controlId,
-            ulong environmentId,
-            ManipulationDto manipulation,
-            DofGroupEnum dofs,
-            ulong toolId,
-            ulong hoveredObjectId
-        )
-        {
-            throw new System.NotImplementedException();
-        }
+        ///// <summary>
+        ///// Associate a Manipulation Interaction to a Control.
+        ///// </summary>
+        ///// <param name="manipulation"></param>
+        ///// <param name="dofs"></param>
+        //public void Associate(
+        //    Guid controlId,
+        //    ulong environmentId,
+        //    ManipulationDto manipulation,
+        //    DofGroupEnum dofs,
+        //    ulong toolId,
+        //    ulong hoveredObjectId
+        //)
+        //{
+        //    throw new System.NotImplementedException();
+        //}
     }
 }

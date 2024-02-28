@@ -24,6 +24,49 @@ namespace umi3d.browserRuntime.interaction
     [CreateAssetMenu(fileName = "UMI3D Manipulation Input Delegate", menuName = "UMI3D/Interactions/Input Delegates/Manipulation Input Delegate")]
     public class ManipulationInputDelegate : AbstractManipulationInputDelegate
     {
+        public override void Associate(
+            AbstractControlData control,
+            ulong environmentId,
+            AbstractInteractionDto interaction,
+            ulong toolId,
+            ulong hoveredObjectId
+        )
+        {
+            if (interaction is not ManipulationDto manipInteraction)
+            {
+                throw new Exception($"[UMI3D] Control: Interaction is not an {nameof(ManipulationDto)}.");
+            }
+
+            foreach (DofGroupOptionDto group in manipInteraction.dofSeparationOptions)
+            {
+                foreach (DofGroupDto sep in group.separations)
+                {
+                    //if (IsCompatibleWith(sep.dofs))
+                    //{
+                    //    Associate(
+                    //        environmentId,
+                    //        toolId,
+                    //        hoveredObjectId,
+                    //        manipInteraction,
+                    //        sep.dofs
+                    //    );
+                    //    return;
+                    //}
+                }
+            }
+        }
+
+        public void Associate(
+            ulong environmentId,
+            ulong toolId,
+            ulong hoveredObjectId,
+            ManipulationDto interaction,
+            DofGroupEnum dof
+        )
+        {
+
+        }
+
         public override DofGroupOptionDto FindBest(DofGroupOptionDto[] options)
         {
             throw new NotImplementedException();

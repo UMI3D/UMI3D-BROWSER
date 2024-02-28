@@ -14,9 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
-using System;
 using TMPro;
+using umi3dVRBrowsersBase.connection;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -67,6 +66,7 @@ namespace umi3d
 
         [Header("Version")]
         [SerializeField] private TextMeshProUGUI versionText;
+
 
         private void Awake()
         {
@@ -133,6 +133,8 @@ namespace umi3d
             standUpButton?.OnClick.AddListener(() =>
             {
                 standUpButtonClicked?.Invoke();
+                SetUpSkeleton setUp = PlayerDependenciesAccessor.Instance.SetUpSkeleton;
+                StartCoroutine(setUp.SetUpAvatar());
                 HandleContentState(ContentState.mainContent);
             });
         }
@@ -143,47 +145,45 @@ namespace umi3d
             switch (state)
             {
                 case ContentState.mainContent:
+                    CloseAllPanels();
                     Top.SetActive(true);
-                    parametersContent.SetActive(false);
-                    storageContent.SetActive(false);
                     mainContent.SetActive(true);
-                    backButton?.gameObject.SetActive(false);
-                    standUpContent.SetActive(false);
                     SetTitle("Connect to an", "Intraverse Portal");
                     break;
                 case ContentState.storageContent:
-                    parametersContent.SetActive(false);
+                    CloseAllPanels();
+                    Top.SetActive(true);
                     storageContent.SetActive(true);
-                    mainContent.SetActive(false);
                     backButton?.gameObject.SetActive(true);
                     break;
                 case ContentState.parametersContent:
+                    CloseAllPanels();
+                    Top.SetActive(true);
                     parametersContent.SetActive(true);
-                    storageContent.SetActive(false);
-                    mainContent.SetActive(false);
                     backButton?.gameObject.SetActive(true);
                     SetTitle("", "Settings");
                     break;
                 case ContentState.flagContent:
-                    Top.SetActive(false);
-                    parametersContent.SetActive(false);
-                    storageContent.SetActive(false);
-                    mainContent.SetActive(false);
-                    backButton?.gameObject.SetActive(false);
-                    standUpContent.SetActive(false);
+                    CloseAllPanels();
                     flagContent.SetActive(true);
                     SetTitle("Choose your", "language");
                     break;
                 case ContentState.standUpContent:
-                    Top.SetActive(false);
-                    parametersContent.SetActive(false);
-                    storageContent.SetActive(false);
-                    mainContent.SetActive(false);
-                    backButton?.gameObject.SetActive(false);
-                    flagContent.SetActive(false);
+                    CloseAllPanels();
                     standUpContent.SetActive(true);
                     break;
             }
+        }
+
+        private void CloseAllPanels()
+        {
+            Top.SetActive(false);
+            parametersContent.SetActive(false);
+            storageContent.SetActive(false);
+            mainContent.SetActive(false);
+            backButton?.gameObject.SetActive(false);
+            flagContent.SetActive(false);
+            standUpContent.SetActive(false);
         }
     }
 }

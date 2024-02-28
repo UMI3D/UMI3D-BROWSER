@@ -82,8 +82,17 @@ namespace umi3d
 
         public void SetTitle(string prefix, string suffix)
         {
+            float suffitLength = suffix.Length;
+            float prefixLength = prefix.Length;
+            Rect suffitRectTransform = suffixText.rectTransform.rect;
+            Rect prefixRectTransform = prefixText.rectTransform.rect;
+
             prefixText.text = prefix;
             suffixText.text = suffix;
+            suffitRectTransform.width = suffitLength * 12.5f;
+            prefixRectTransform.width = prefixLength * 10f;
+            suffixText.rectTransform.sizeDelta = new Vector2(suffitRectTransform.width, suffitRectTransform.height);
+            prefixText.rectTransform.sizeDelta = new Vector2(prefixRectTransform.width, prefixRectTransform.height);
         }
 
         private void InitializeButtons()
@@ -140,6 +149,7 @@ namespace umi3d
                     mainContent.SetActive(true);
                     backButton?.gameObject.SetActive(false);
                     standUpContent.SetActive(false);
+                    SetTitle("Connect to an", "Intraverse Portal");
                     break;
                 case ContentState.storageContent:
                     parametersContent.SetActive(false);
@@ -152,6 +162,7 @@ namespace umi3d
                     storageContent.SetActive(false);
                     mainContent.SetActive(false);
                     backButton?.gameObject.SetActive(true);
+                    SetTitle("", "Settings");
                     break;
                 case ContentState.flagContent:
                     Top.SetActive(false);
@@ -161,6 +172,7 @@ namespace umi3d
                     backButton?.gameObject.SetActive(false);
                     standUpContent.SetActive(false);
                     flagContent.SetActive(true);
+                    SetTitle("Choose your", "language");
                     break;
                 case ContentState.standUpContent:
                     Top.SetActive(false);

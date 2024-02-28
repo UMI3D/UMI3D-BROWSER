@@ -73,11 +73,14 @@ namespace umi3dBrowsers.displayer
 
         public void HoverEnter(PointerEventData eventData)
         {
+            DisableSubComponents();
+
             vignetteState = VignetteState.Hovering;
 
             likeButton.gameObject.SetActive(true);
             trashButton.gameObject.SetActive(true);
             inputFieldBackground.gameObject.SetActive(true);
+           
         }
 
         public void HoverExit(PointerEventData eventData)

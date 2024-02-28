@@ -148,12 +148,15 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
 
         private void OnEnable()
         {
+            return;
             if (UMI3DCollaborationClientServer.Exists)
                 UMI3DCollaborationClientServer.Instance.OnRedirection.AddListener(OnEnvironmentLeave);
         }
 
         private void OnDisable()
         {
+            return;
+
             if (UMI3DCollaborationClientServer.Exists)
                 UMI3DCollaborationClientServer.Instance.OnRedirection.RemoveListener(OnEnvironmentLeave);
         }

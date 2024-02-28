@@ -35,6 +35,9 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
     public class RayCursor : AbstractPointingCursor
     {
 
+        [Tooltip("Controller associated to the laser."), SerializeField]
+        private VRController controller;
+
         [Header("Laser"), SerializeField, Tooltip("Laser's cylindric part.")]
         public GameObject laserObject;
 
@@ -47,8 +50,6 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
         private LayerMask _uiMask;
 
         private Renderer impactPointRenderer;
-
-        private VRController controller;
 
         /// <summary>
         /// True if the laser is currently displayed
@@ -120,7 +121,7 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
 
         protected virtual void Awake()
         {
-            controller = GetComponentInParent<VRController>();
+            controller = controller == null ? GetComponentInParent<VRController>(): controller;
             laserObjectRenderer = laserObject.GetComponent<Renderer>();
             impactPointRenderer = impactPoint.GetComponent<Renderer>();
 

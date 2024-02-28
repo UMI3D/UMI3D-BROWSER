@@ -27,9 +27,9 @@ namespace umi3dBrowsers.interaction.selection.intentdetector.method
         /// Initialize the detection method with the specified controller
         /// </summary>
         /// <param name="controller"></param>
-        public virtual void Init(AbstractController controller)
+        public virtual void Init(AbstractController controller, Transform customTransform = null)
         {
-            controllerTransform = controller.transform;
+            controllerTransform = customTransform == null ? controller.transform : customTransform;
         }
 
         /// <summary>

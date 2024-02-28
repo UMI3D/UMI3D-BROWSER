@@ -15,8 +15,10 @@ limitations under the License.
 */
 using System;
 using System.Collections.Generic;
+using System.Linq;
+
 using umi3dVRBrowsersBase.interactions;
-using Unity.XR.PXR;
+
 using UnityEngine;
 using UnityEngine.XR;
 
@@ -69,10 +71,11 @@ namespace umi3d.picoBrowser
 
         public Dictionary<ControllerType, bool> isTeleportDown = new Dictionary<ControllerType, bool>();
 
-        [HideInInspector]
-        public UnityEngine.XR.InputDevice LeftController;
-        [HideInInspector]
-        public UnityEngine.XR.InputDevice RightController;
+        public UnityEngine.XR.InputDevice LeftController => leftControllersGroup.controllerDevice;
+        public UnityEngine.XR.InputDevice RightController => rightControllersGroup.controllerDevice;
+
+        public UnityEngine.XR.InputDevice LeftHandTrackingController => leftControllersGroup.handTrackingDevice;
+        public UnityEngine.XR.InputDevice RightHandTrackingController => rightControllersGroup.handTrackingDevice;
 
         protected override void Awake()
         {
@@ -87,97 +90,217 @@ namespace umi3d.picoBrowser
             }
         }
 
+        private Dictionary<ActionType, PressStateCoordinator> pressStateCoordinators;
+
+        private class ControllerGroup
+        {
+            public InputDevice controllerDevice;
+            public InputDevice handTrackingDevice;
+            public VRGestureDevice gestureDevice;
+        }
+
+        private ControllerGroup leftControllersGroup = new();
+        private ControllerGroup rightControllersGroup = new();
+
+        private class PressStateCoordinator
+        {
+            public ActionType actionType;
+            public InputFeatureUsage<bool> xrInputFeatureUsage;
+
+            public bool isLeftHandTrackingInput;
+            public bool isRightHandTrackingInput;
+
+            public PressState leftState;
+            public PressState rightState;
+
+            public void UpdateInputState(ControllerGroup left, ControllerGroup right)
+            {
+                leftState.IncrementFrame();
+                left.controllerDevice.TryGetFeatureValue(xrInputFeatureUsage, out bool value);
+                if (left.gestureDevice != null)
+                    value = value || isLeftHandTrackingInput;
+                leftState.SetPressState(value);
+
+                rightState.IncrementFrame();
+                right.controllerDevice.TryGetFeatureValue(xrInputFeatureUsage, out value);
+                if (right.gestureDevice != null)
+                    value = value || isRightHandTrackingInput;
+                rightState.SetPressState(value);
+            }
+
+            public bool GetButton(ControllerType controller)
+            {
+                switch (controller)
+                {
+                    case ControllerType.LeftHandController:
+                        return leftState.IsDown;
+                    case ControllerType.RightHandController:
+                        return rightState.IsDown;
+                    default:
+                        return false;
+                }
+            }
+
+            public bool GetButtonDown(ControllerType controller)
+            {
+                switch (controller)
+                {
+                    case ControllerType.LeftHandController:
+                        return leftState.IsDownThisFrame;
+                    case ControllerType.RightHandController:
+                        return rightState.IsDownThisFrame;
+                    default:
+                        return false;
+                }
+            }
+
+            public bool GetButtonUp(ControllerType controller)
+            {
+                switch (controller)
+                {
+                    case ControllerType.LeftHandController:
+                        return leftState.IsUpThisFrame;
+                    case ControllerType.RightHandController:
+                        return rightState.IsUpThisFrame;
+                    default:
+                        return false;
+                }
+            }
+        }
+
+        #region Lifecycle
+
         private void Start()
         {
-            LeftController = InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);
-            RightController = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
+            List<InputDevice> queryResult = new(); //maybe remove held in hand
+            InputDevices.GetDevicesWithCharacteristics(InputDeviceCharacteristics.Left | InputDeviceCharacteristics.Controller | InputDeviceCharacteristics.HeldInHand, queryResult);
+            leftControllersGroup.controllerDevice = queryResult.Count > 0 ? queryResult[0] : default;
+            queryResult.Clear();
+
+            InputDevices.GetDevicesWithCharacteristics(InputDeviceCharacteristics.Right | InputDeviceCharacteristics.Controller | InputDeviceCharacteristics.HeldInHand, queryResult);
+            rightControllersGroup.controllerDevice = queryResult.Count > 0 ? queryResult[0] : default;
+            queryResult.Clear();
+
+            InputDevices.GetDevicesWithCharacteristics(InputDeviceCharacteristics.Left | InputDeviceCharacteristics.HandTracking, queryResult);
+            leftControllersGroup.handTrackingDevice = queryResult.Count > 0 ? queryResult[0] : default;
+            queryResult.Clear();
+
+            InputDevices.GetDevicesWithCharacteristics(InputDeviceCharacteristics.Right | InputDeviceCharacteristics.HandTracking, queryResult);
+            rightControllersGroup.handTrackingDevice = queryResult.Count > 0 ? queryResult[0] : default;
+            queryResult.Clear();
+
+            UnityEngine.Debug.Log("Controllers found :\n" +
+                $"Left Controller {LeftController != default}. Name: {LeftController.name}. IsValid: {LeftController.isValid}. Charac: {LeftController.characteristics}\n" +
+                $"Right Controller {RightController != default}. Name: {RightController.name}. IsValid: {RightController.isValid}. Charac: {RightController.characteristics}\n" +
+                $"Left Hand Controller {LeftHandTrackingController != default}. Name: {LeftHandTrackingController.name}. IsValid: {LeftHandTrackingController.isValid}. Charac: {LeftHandTrackingController.characteristics}\n");
+
+            InputDevices.GetDevices(queryResult);
+            Debug.Log(queryResult.Count);
+            Debug.Log(queryResult.Aggregate("", (x, y) => x + " " + y.name + " : " + y.characteristics.ToString() + " | "));
+
+            pressStateCoordinators = new()
+            {
+                { ActionType.Trigger, new() { actionType = ActionType.Trigger, xrInputFeatureUsage = UnityEngine.XR.CommonUsages.triggerButton } },
+                { ActionType.Grab, new() { actionType = ActionType.Grab, xrInputFeatureUsage = UnityEngine.XR.CommonUsages.gripButton } },
+                { ActionType.PrimaryButton, new() { actionType = ActionType.PrimaryButton, xrInputFeatureUsage = UnityEngine.XR.CommonUsages.primaryButton } },
+                { ActionType.SecondaryButton, new() { actionType = ActionType.SecondaryButton, xrInputFeatureUsage = UnityEngine.XR.CommonUsages.secondaryButton } },
+                { ActionType.JoystickButton, new() { actionType = ActionType.JoystickButton, xrInputFeatureUsage = UnityEngine.XR.CommonUsages.primary2DAxisClick } },
+            };
         }
 
         protected override void Update()
         {
             base.Update();
 
-            bool value;
-
-            GrabLeftState.IncrementFrame();
-            LeftController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.gripButton, out value);
-            GrabLeftState.SetPressState(value);
-            GrabRightState.IncrementFrame();
-            RightController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.gripButton, out value);
-            GrabRightState.SetPressState(value);
-
-            JoystickLeftButtonState.IncrementFrame();
-            LeftController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.primary2DAxisClick, out value);
-            JoystickLeftButtonState.SetPressState(value);
-            JoystickRightButtonState.IncrementFrame();
-            RightController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.primary2DAxisClick, out value);
-            JoystickRightButtonState.SetPressState(value);
-
-            PrimaryLeftState.IncrementFrame();
-            LeftController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.primaryButton, out value);
-            PrimaryLeftState.SetPressState(value);
-            PrimaryRightState.IncrementFrame();
-            RightController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.primaryButton, out value);
-            PrimaryRightState.SetPressState(value);
-
-            SecondaryLeftState.IncrementFrame();
-            LeftController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.secondaryButton, out value);
-            SecondaryLeftState.SetPressState(value);
-            SecondaryRightState.IncrementFrame();
-            RightController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.secondaryButton, out value);
-            SecondaryRightState.SetPressState(value);
-
-            TriggerLeftState.IncrementFrame();
-            LeftController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.triggerButton, out value);
-            TriggerLeftState.SetPressState(value);
-            TriggerRightState.IncrementFrame();
-            RightController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.triggerButton, out value);
-            TriggerRightState.SetPressState(value);
+            foreach (PressStateCoordinator pressStateCoordinator in pressStateCoordinators.Values)
+            {
+                pressStateCoordinator.UpdateInputState(leftControllersGroup, rightControllersGroup);
+            }
         }
+
+        #endregion Lifecycle
+
+        public void AddPhysicalDevice(ControllerType controllerType, InputDevice device)
+        {
+            if (controllerType == ControllerType.LeftHandController && LeftController == default)
+            {
+                leftControllersGroup.controllerDevice = device;
+            }
+            else if (controllerType == ControllerType.RightHandController && RightController == default)
+            {
+                rightControllersGroup.controllerDevice = device;
+            }
+        }
+
+        #region Hand Tracking
+
+        public void AddHandTrackedDevice(ControllerType controllerType, InputDevice device)
+        {
+            Debug.Log($"Add Hand Tracked Device Controller {controllerType}");
+            if (controllerType == ControllerType.LeftHandController && LeftHandTrackingController == default)
+            {
+                leftControllersGroup.handTrackingDevice = device;
+            }
+            else if (RightHandTrackingController == default)
+            {
+                rightControllersGroup.handTrackingDevice = device;
+            }
+        }
+
+        public void AddHandTrackedGestureDevice(VRGestureDevice device)
+        {
+            if (device.ControllerType is ControllerType.LeftHandController && leftControllersGroup.gestureDevice != device)
+            {
+                leftControllersGroup.gestureDevice = device;
+            }
+            else if (device.ControllerType is ControllerType.RightHandController && rightControllersGroup.gestureDevice != device)
+            {
+                rightControllersGroup.gestureDevice = device;
+            }
+            else
+                return;
+
+            foreach (VRGestureObserver observer in device.GestureInputs.Where(x => x != null))
+            {
+                observer.GestureStarted += () => SetHandTrackingInputAction(device.ControllerType, observer.ActionType, true);
+                observer.GestureStopped += () => SetHandTrackingInputAction(device.ControllerType, observer.ActionType, false);
+            }
+        }
+
+        private void SetHandTrackingInputAction(ControllerType controllerType, ActionType actionType, bool value)
+        {
+            if (!pressStateCoordinators.ContainsKey(actionType))
+                return;
+
+            if (controllerType == ControllerType.LeftHandController)
+                pressStateCoordinators[actionType].isLeftHandTrackingInput = value;
+            else if (controllerType == ControllerType.RightHandController)
+                pressStateCoordinators[actionType].isRightHandTrackingInput = value;
+        }
+
+        #endregion Hand Tracking
+
+        #region Inputs
 
         #region Grab
 
-        [HideInInspector]
-        public PressState GrabLeftState;
-        [HideInInspector]
-        public PressState GrabRightState;
+
+        public PressState GrabLeftState => pressStateCoordinators[ActionType.Grab].leftState;
+
+        public PressState GrabRightState => pressStateCoordinators[ActionType.Grab].rightState;
         public override bool GetGrab(ControllerType controller)
         {
-            switch (controller)
-            {
-                case ControllerType.LeftHandController:
-                    return GrabLeftState.IsDown;
-                case ControllerType.RightHandController:
-                    return GrabRightState.IsDown;
-                default:
-                    return false;
-            }
+            return pressStateCoordinators[ActionType.Grab].GetButton(controller);
         }
 
         public override bool GetGrabDown(ControllerType controller)
         {
-            switch (controller)
-            {
-                case ControllerType.LeftHandController:
-                    return GrabLeftState.IsDownThisFrame;
-                case ControllerType.RightHandController:
-                    return GrabRightState.IsDownThisFrame;
-                default:
-                    return false;
-            }
+            return pressStateCoordinators[ActionType.Grab].GetButtonDown(controller);
         }
 
         public override bool GetGrabUp(ControllerType controller)
         {
-            switch (controller)
-            {
-                case ControllerType.LeftHandController:
-                    return GrabLeftState.IsUpThisFrame;
-                case ControllerType.RightHandController:
-                    return GrabRightState.IsUpThisFrame;
-                default:
-                    return false;
-            }
+            return pressStateCoordinators[ActionType.Grab].GetButtonUp(controller);
         }
 
         #endregion
@@ -202,48 +325,22 @@ namespace umi3d.picoBrowser
             return value;
         }
 
-        [HideInInspector]
-        public PressState JoystickLeftButtonState;
-        [HideInInspector]
-        public PressState JoystickRightButtonState;
+        public PressState JoystickLeftButtonState => pressStateCoordinators[ActionType.JoystickButton].leftState;
+
+        public PressState JoystickRightButtonState => pressStateCoordinators[ActionType.JoystickButton].rightState;
         public override bool GetJoystickButton(ControllerType controller)
         {
-            switch (controller)
-            {
-                case ControllerType.LeftHandController:
-                    return JoystickLeftButtonState.IsDown;
-                case ControllerType.RightHandController:
-                    return JoystickRightButtonState.IsDown;
-                default:
-                    return false;
-            }
+            return pressStateCoordinators[ActionType.JoystickButton].GetButton(controller);
         }
 
         public override bool GetJoystickButtonDown(ControllerType controller)
         {
-            switch (controller)
-            {
-                case ControllerType.LeftHandController:
-                    return JoystickLeftButtonState.IsDownThisFrame;
-                case ControllerType.RightHandController:
-                    return JoystickRightButtonState.IsDownThisFrame;
-                default:
-                    return false;
-            }
-
+            return pressStateCoordinators[ActionType.JoystickButton].GetButtonDown(controller);
         }
 
         public override bool GetJoystickButtonUp(ControllerType controller)
         {
-            switch (controller)
-            {
-                case ControllerType.LeftHandController:
-                    return JoystickLeftButtonState.IsUpThisFrame;
-                case ControllerType.RightHandController:
-                    return JoystickRightButtonState.IsUpThisFrame;
-                default:
-                    return false;
-            }
+            return pressStateCoordinators[ActionType.JoystickButton].GetButtonUp(controller);
         }
 
         public override bool GetRightSnapTurn(ControllerType controller)
@@ -322,47 +419,23 @@ namespace umi3d.picoBrowser
 
         #region Primary Button
 
-        [HideInInspector]
-        public PressState PrimaryLeftState;
-        [HideInInspector]
-        public PressState PrimaryRightState;
+
+        public PressState PrimaryLeftState => pressStateCoordinators[ActionType.PrimaryButton].leftState;
+
+        public PressState PrimaryRightState => pressStateCoordinators[ActionType.PrimaryButton].rightState;
         public override bool GetPrimaryButton(ControllerType controller)
         {
-            switch (controller)
-            {
-                case ControllerType.LeftHandController:
-                    return PrimaryLeftState.IsDown;
-                case ControllerType.RightHandController:
-                    return PrimaryRightState.IsDown;
-                default:
-                    return false;
-            }
+            return pressStateCoordinators[ActionType.PrimaryButton].GetButton(controller);
         }
 
         public override bool GetPrimaryButtonDown(ControllerType controller)
         {
-            switch (controller)
-            {
-                case ControllerType.LeftHandController:
-                    return PrimaryLeftState.IsDownThisFrame;
-                case ControllerType.RightHandController:
-                    return PrimaryRightState.IsDownThisFrame;
-                default:
-                    return false;
-            }
+            return pressStateCoordinators[ActionType.PrimaryButton].GetButtonDown(controller);
         }
 
         public override bool GetPrimaryButtonUp(ControllerType controller)
         {
-            switch (controller)
-            {
-                case ControllerType.LeftHandController:
-                    return PrimaryLeftState.IsUpThisFrame;
-                case ControllerType.RightHandController:
-                    return PrimaryRightState.IsUpThisFrame;
-                default:
-                    return false;
-            }
+            return pressStateCoordinators[ActionType.PrimaryButton].GetButtonUp(controller);
         }
 
         #endregion
@@ -370,46 +443,22 @@ namespace umi3d.picoBrowser
         #region Secondary Button
 
         [HideInInspector]
-        public PressState SecondaryLeftState;
+        public PressState SecondaryLeftState => pressStateCoordinators[ActionType.SecondaryButton].leftState;
         [HideInInspector]
-        public PressState SecondaryRightState;
+        public PressState SecondaryRightState => pressStateCoordinators[ActionType.SecondaryButton].rightState;
         public override bool GetSecondaryButton(ControllerType controller)
         {
-            switch (controller)
-            {
-                case ControllerType.LeftHandController:
-                    return SecondaryLeftState.IsDown;
-                case ControllerType.RightHandController:
-                    return SecondaryRightState.IsDown;
-                default:
-                    return false;
-            }
+            return pressStateCoordinators[ActionType.SecondaryButton].GetButton(controller);
         }
 
         public override bool GetSecondaryButtonDown(ControllerType controller)
         {
-            switch (controller)
-            {
-                case ControllerType.LeftHandController:
-                    return SecondaryLeftState.IsDownThisFrame;
-                case ControllerType.RightHandController:
-                    return SecondaryRightState.IsDownThisFrame;
-                default:
-                    return false;
-            }
+            return pressStateCoordinators[ActionType.SecondaryButton].GetButtonDown(controller);
         }
 
         public override bool GetSecondaryButtonUp(ControllerType controller)
         {
-            switch (controller)
-            {
-                case ControllerType.LeftHandController:
-                    return SecondaryLeftState.IsUpThisFrame;
-                case ControllerType.RightHandController:
-                    return SecondaryRightState.IsUpThisFrame;
-                default:
-                    return false;
-            }
+            return pressStateCoordinators[ActionType.SecondaryButton].GetButtonUp(controller);
         }
 
         #endregion
@@ -417,46 +466,22 @@ namespace umi3d.picoBrowser
         #region Trigger
 
         [HideInInspector]
-        public PressState TriggerLeftState;
+        public PressState TriggerLeftState => pressStateCoordinators[ActionType.Trigger].leftState;
         [HideInInspector]
-        public PressState TriggerRightState;
+        public PressState TriggerRightState => pressStateCoordinators[ActionType.Trigger].rightState;
         public override bool GetTrigger(ControllerType controller)
         {
-            switch (controller)
-            {
-                case ControllerType.LeftHandController:
-                    return TriggerLeftState.IsDown;
-                case ControllerType.RightHandController:
-                    return TriggerRightState.IsDown;
-                default:
-                    return false;
-            }
+            return pressStateCoordinators[ActionType.Trigger].GetButton(controller);
         }
 
         public override bool GetTriggerDown(ControllerType controller)
         {
-            switch (controller)
-            {
-                case ControllerType.LeftHandController:
-                    return TriggerLeftState.IsDownThisFrame;
-                case ControllerType.RightHandController:
-                    return TriggerRightState.IsDownThisFrame;
-                default:
-                    return false;
-            }
+            return pressStateCoordinators[ActionType.Trigger].GetButtonDown(controller);
         }
 
         public override bool GetTriggerUp(ControllerType controller)
         {
-            switch (controller)
-            {
-                case ControllerType.LeftHandController:
-                    return TriggerLeftState.IsUpThisFrame;
-                case ControllerType.RightHandController:
-                    return TriggerRightState.IsUpThisFrame;
-                default:
-                    return false;
-            }
+            return pressStateCoordinators[ActionType.Trigger].GetButtonUp(controller);
         }
 
         #endregion
@@ -495,6 +520,8 @@ namespace umi3d.picoBrowser
 
             return res;
         }
+
+        #endregion Inputs
 
         public override void VibrateController(ControllerType controller, float vibrationDuration, float vibrationFrequency, float vibrationAmplitude)
         {

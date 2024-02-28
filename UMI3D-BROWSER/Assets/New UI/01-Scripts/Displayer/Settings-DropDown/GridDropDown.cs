@@ -148,6 +148,11 @@ namespace umi3dBrowsers.displayer
         {
             thisImage.color = thisColor;
         }
+
+        public void Init(Color normalColor, Color hoverColor, Color selectedColor)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
 

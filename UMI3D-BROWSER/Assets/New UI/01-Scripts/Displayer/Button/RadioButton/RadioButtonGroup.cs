@@ -33,34 +33,36 @@ namespace umi3dBrowsers.displayer
         [SerializeField] private Color HoverColor;
         [SerializeField] private Color SelectedColor;
 
-        private UMI3DUI_Button _selectedButton;
 
-        private void Awake()
+        int _panelStartId;
+        UMI3DUI_Button _selected;
+
+        private void Start()
         {
             int i = 0;
+            _selected = buttons[0];
             foreach (var radio in buttons)
             {
                 radio.onClick.AddListener(() =>
                 {
-                    OnSelectedButtonChanged(radio, radio.ID);
-                    foreach (var rad in buttons)
+                    if (_selected != radio)
                     {
-                        rad.Image.color = NormalColor;
+                        _selected?.SubDisplayer.Disable();
+                        _selected = radio;
                     }
-                    radio.Image.color = SelectedColor;
-                    _selectedButton = radio;
+                    OnSelectedButtonChanged?.Invoke(radio, radio.ID);
                 });
-                radio.OnHoverEnter += () =>
-                {
-                    radio.Image.color = HoverColor;
-                };
-                radio.OnHoverExit += () =>
-                {
-                    if (radio == _selectedButton) return;
-                    radio.Image.color = NormalColor;
-                };
+
+                radio.SubDisplayer.Init(NormalColor, HoverColor, SelectedColor);
                 radio.SetID(i++);
             }
+
+            buttons[_panelStartId].SubDisplayer.Click();
+        }
+
+        public void ActivateButtonWithId(int id)
+        {
+            _panelStartId = id;
         }
     }
 }

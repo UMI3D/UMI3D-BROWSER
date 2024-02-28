@@ -230,6 +230,7 @@ GameObject:
   - component: {fileID: 1825188989199805278}
   - component: {fileID: 121989445035905963}
   - component: {fileID: 4189506322699775564}
+  - component: {fileID: 2011530661798078836}
   m_Layer: 5
   m_Name: Off
   m_TagString: Untagged
@@ -339,6 +340,22 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &2011530661798078836
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5983340912528077369}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74e6319f93fc2554ebaf644415859ad9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  image: {fileID: 121989445035905963}
+  NormalColor: {r: 0, g: 0, b: 0, a: 0}
+  HoverColor: {r: 0, g: 0, b: 0, a: 0}
+  SelectedColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &8661897096173985423
 GameObject:
   m_ObjectHideFlags: 0
@@ -486,6 +503,7 @@ GameObject:
   - component: {fileID: 6859897284636890009}
   - component: {fileID: 4549650834296572726}
   - component: {fileID: 7149778198147884166}
+  - component: {fileID: 2429263823639219141}
   m_Layer: 5
   m_Name: On
   m_TagString: Untagged
@@ -595,3 +613,19 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &2429263823639219141
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9212252724864999547}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74e6319f93fc2554ebaf644415859ad9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  image: {fileID: 4549650834296572726}
+  NormalColor: {r: 0, g: 0, b: 0, a: 0}
+  HoverColor: {r: 0, g: 0, b: 0, a: 0}
+  SelectedColor: {r: 0, g: 0, b: 0, a: 0}

@@ -14,8 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System;
 using UnityEditor;
 using UnityEditor.UIElements;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace umi3d.browserEditor.BuildTool
@@ -53,40 +55,55 @@ namespace umi3d.browserEditor.BuildTool
         {
             // Select
             T_Select.value = viewModel[index].enabled;
-            T_Select.RegisterValueChangedCallback(value =>
-            {
-                viewModel.Select(index, value.newValue);
-            });
+            T_Select.RegisterValueChangedCallback(SelectValueChanged);
 
             // Path
             TF_Path.label = "Scene Path";
-            TF_Path.value = viewModel[index].path;
-            B_Browse.clicked += () =>
-            {
-                viewModel.ApplyScenePath(
-                    index,
-                    EditorUtility.OpenFilePanel(
-                        title: "Scene Path",
-                        viewModel[index].path,
-                        extension: "unity"
-                    )
-                );
-                TF_Path.value = viewModel[index].path;
-            };
+            TF_Path.SetValueWithoutNotify(viewModel[index].path);
+            TF_Path.RegisterValueChangedCallback(PathValueChanged);
+            B_Browse.clicked += Browse;
 
             root.Q("V_Container").Add(EFF_Targets);
-            EFF_Targets.value = viewModel[index].targets;
-            EFF_Targets.RegisterValueChangedCallback(value =>
-            {
-                var sceneDTO = viewModel[index];
-                sceneDTO.targets = (E_Target)value.newValue;
-                viewModel[index] = sceneDTO;
-            });
+            EFF_Targets.SetValueWithoutNotify(viewModel[index].targets);
+            EFF_Targets.RegisterValueChangedCallback(TargetValueChanged);
         }
 
         public void Unbind()
         {
+            T_Select.UnregisterValueChangedCallback(SelectValueChanged);
+            TF_Path.UnregisterValueChangedCallback(PathValueChanged);
+            B_Browse.clicked -= Browse;
+            EFF_Targets.UnregisterValueChangedCallback(TargetValueChanged);
             root.Q("V_Container").Remove(EFF_Targets);
+        }
+
+        void SelectValueChanged(ChangeEvent<bool> value)
+        {
+            viewModel.Select(index, value.newValue);
+        }
+        
+        void PathValueChanged(ChangeEvent<string> value)
+        {
+            UnityEngine.Debug.Log($"message");
+            viewModel.UpdatedScenePath(index, value.newValue);
+        }
+
+        void TargetValueChanged(ChangeEvent<Enum> value)
+        {
+            var sceneDTO = viewModel[index];
+            sceneDTO.targets = (E_Target)value.newValue;
+            viewModel[index] = sceneDTO;
+        }
+
+        public void Browse()
+        {
+            viewModel.BrowseScenePath(
+                index,
+                path =>
+                {
+                    TF_Path.SetValueWithoutNotify(path);
+                }
+            );
         }
     }
 }

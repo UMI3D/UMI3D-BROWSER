@@ -1,17 +1,14 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 
-using umi3d.cdk.interaction;
-using umi3d.picoBrowser;
-
 using umi3dVRBrowsersBase.interactions;
 using umi3dVRBrowsersBase.interactions.selection;
-using umi3dVRBrowsersBase.ui;
 
 using UnityEngine;
-using UnityEngine.UI;
 
+/// <summary>
+/// Listen to selection and its own collider to define a poke input.
+/// </summary>
 public class VRPokeInputObserver : MonoBehaviour
 {
     public VRSelectionManager selectionManager;
@@ -23,10 +20,15 @@ public class VRPokeInputObserver : MonoBehaviour
     public ActionType ActionType => actionType;
 
     [SerializeField]
-    private float pokeFrequency = 0.2f;
+    private float pokePeriod = 0.15f;
+
+    [SerializeField]
+    private float pokeSamePeriod = 0.3f;
 
     public event System.Action Poked;
     public event System.Action Unpoked;
+
+    public LayerMask layerToIgnore;
 
     private void Start()
     {
@@ -42,15 +44,18 @@ public class VRPokeInputObserver : MonoBehaviour
         selectionManager.elementSelector.deselectionEvent.AddListener((e) => RemoveSelected(e.selectedObject.gameObject));
     }
 
-    private HashSet<Collider> containedColliders = new();
+    private readonly HashSet<Collider> containedColliders = new();
 
     private void OnTriggerEnter(Collider other)
     {
-        if(containedColliders.Contains(other))
+        if (containedColliders.Contains(other))
             return;
 
-        Debug.Log($"Add collider of object {other.name}");
+        if (other.gameObject.layer == layerToIgnore)
+            return;
+
         containedColliders.Add(other);
+
         TryPoke(other.gameObject);
     }
 
@@ -59,16 +64,23 @@ public class VRPokeInputObserver : MonoBehaviour
         if (!containedColliders.Contains(other))
             return;
 
-        Debug.Log($"Remove collider of object {other.name}");
-
         containedColliders.Remove(other);
     }
 
-    public HashSet<GameObject> selectedObjects = new HashSet<GameObject>();
+    private void FixedUpdate()
+    {
+        if (selectionManager.LastSelectedInfo == null || !selectionManager.LastSelectedInfo.hasBeenSelected)
+        {
+            selectedObjects.Clear();
+        }
+    }
+
+    public HashSet<GameObject> selectedObjects = new();
 
     private void AddSelected(GameObject selectedGo)
     {
         selectedObjects.Add(selectedGo);
+
         TryPoke(selectedGo);
     }
 
@@ -82,6 +94,9 @@ public class VRPokeInputObserver : MonoBehaviour
         if (!canPoke)
             return;
 
+        if (!canPokeSame && go == lastPoked)
+            return;
+
         if (!selectedObjects.Contains(go))
             return;
 
@@ -89,18 +104,39 @@ public class VRPokeInputObserver : MonoBehaviour
         if (!containedColliders.Contains(collider))
             return;
 
+        lastPoked = go;
         Poked?.Invoke();
-        Debug.Log($"POKE {go.name}");
         canPoke = false; // don't spam pokes
-        StartCoroutine(WaitBeforeNextPokeCoroutine());
+        canPokeSame = false;
+        if (waitCoroutine != null)
+            StopCoroutine(waitCoroutine);
+        waitCoroutine = StartCoroutine(WaitBeforeNextPokeCoroutine());
     }
 
+    private Coroutine waitCoroutine;
     private bool canPoke = true;
+    private bool canPokeSame = true;
+
+    private GameObject lastPoked;
 
     private IEnumerator WaitBeforeNextPokeCoroutine()
     {
-        yield return new WaitForSeconds(pokeFrequency);
+        yield return new WaitForSeconds(pokePeriod);
+        ReenablePoke();
+
+        yield return new WaitForSeconds(pokeSamePeriod - pokePeriod);
+        ReenableSamePoke();
+        waitCoroutine = null;
+    }
+
+    private void ReenablePoke()
+    {
         canPoke = true;
         Unpoked?.Invoke();
+    }
+
+    private void ReenableSamePoke()
+    {
+        canPokeSame = true;
     }
 }

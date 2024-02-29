@@ -14,7 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System;
+using System.Linq;
 using TMPro;
+using umi3dBrowsers.mv.connection;
 using umi3dVRBrowsersBase.connection;
 using UnityEngine;
 using UnityEngine.Events;
@@ -42,12 +45,13 @@ namespace umi3d
         [SerializeField] private GameObject mainContent;
         [SerializeField] private GameObject standUpContent;
         [SerializeField] private GameObject flagContent;
+        [SerializeField] private GameObject dynamicServerContent;
         [Space]
         [SerializeField] private GameObject Top;
         // todo : call something like an hint manager hints
         // todo : call something like a pop up manager to open a bug popup
 
-        private enum ContentState { mainContent, storageContent, parametersContent, flagContent, standUpContent };
+        private enum ContentState { mainContent, storageContent, parametersContent, flagContent, standUpContent, dynamicServerContent };
         [SerializeField, Tooltip("start content")] private ContentState contentState;   
 
 
@@ -67,11 +71,23 @@ namespace umi3d
         [Header("Version")]
         [SerializeField] private TextMeshProUGUI versionText;
 
+        [Header("Connection")]
+        [SerializeField] private URLDisplayer urlDisplayer;
+
+        [Header("Services")]
+        [SerializeField] private ConnectionProcessor connectionProcessorService;
+
 
         private void Awake()
         {
             navBarButtonsColors.colorMultiplier = 1.0f;
-            InitializeButtons();
+        }
+
+        private void Start()
+        {
+            BindNavigationButtons();
+            BindURL();
+            BindServices();
             HandleContentState(contentState);
         }
 
@@ -95,7 +111,7 @@ namespace umi3d
             prefixText.rectTransform.sizeDelta = new Vector2(prefixRectTransform.width, prefixRectTransform.height);
         }
 
-        private void InitializeButtons()
+        private void BindNavigationButtons()
         {
             parameterButton.colors = navBarButtonsColors;
             storageButton.colors = navBarButtonsColors;
@@ -139,6 +155,24 @@ namespace umi3d
             });
         }
 
+        private void BindURL()
+        {
+            urlDisplayer.OnSubmit.AddListener((url) =>
+            {
+                connectionProcessorService.TryConnectToMediaServer(url);
+            });
+        }
+
+        private void BindServices()
+        {
+            connectionProcessorService.OnConnectionFailure += (message) => { Debug.LogError("Failled to conenct"); };
+            connectionProcessorService.OnMediaServerConnectionSucess += (mediaDto) => 
+            {
+                SetTitle("Connected to", mediaDto.name);
+                HandleContentState(ContentState.dynamicServerContent);
+            };
+        }
+
         private void HandleContentState(ContentState state)
         {
             contentState = state;
@@ -171,6 +205,11 @@ namespace umi3d
                 case ContentState.standUpContent:
                     CloseAllPanels();
                     standUpContent.SetActive(true);
+                    break;
+                case ContentState.dynamicServerContent:
+                    CloseAllPanels();
+                    Top.SetActive(true);
+                    dynamicServerContent.SetActive(true);
                     break;
             }
         }

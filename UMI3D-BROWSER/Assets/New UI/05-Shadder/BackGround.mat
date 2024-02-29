@@ -26,16 +26,16 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
-  - _SURFACE_TYPE_TRANSPARENT
+  - _RECEIVE_SHADOWS_OFF
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
+  m_CustomRenderQueue: 2000
   stringTagMap:
-    RenderType: Transparent
+    RenderType: Opaque
   disabledShaderPasses:
-  - DepthOnly
+  - SHADOWCASTER
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
@@ -57,16 +57,19 @@ Material:
     - _AlphaClip: 0
     - _AlphaToMask: 0
     - _Blend: 0
-    - _CastShadows: 1
+    - _BlendModePreserveSpecular: 1
+    - _CastShadows: 0
     - _Cull: 0
-    - _DstBlend: 10
-    - _Float: 0
+    - _DstBlend: 0
+    - _Float: 473.31
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _SrcBlend: 5
-    - _Surface: 1
+    - _ReceiveShadows: 0
+    - _SrcBlend: 1
+    - _Surface: 0
+    - _WorkflowMode: 1
     - _ZTest: 4
-    - _ZWrite: 0
+    - _ZWrite: 1
     - _ZWriteControl: 0
     m_Colors: []
   m_BuildTextureStacks: []

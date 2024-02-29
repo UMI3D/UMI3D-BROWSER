@@ -28,7 +28,7 @@ namespace umi3d
         [SerializeField] private TMP_UMI3DUIInputField urlField;
         [SerializeField] private Button submitButton;
         [Space]
-        [SerializeField] private UnityEvent<string> OnSubmit;
+        public UnityEvent<string> OnSubmit;
 
         private void Awake()
         {

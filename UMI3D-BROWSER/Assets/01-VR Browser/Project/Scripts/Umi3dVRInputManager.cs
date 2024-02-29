@@ -265,6 +265,12 @@ namespace umi3d.picoBrowser
                 observer.GestureStarted += () => SetHandTrackingInputAction(device.ControllerType, observer.ActionType, true);
                 observer.GestureStopped += () => SetHandTrackingInputAction(device.ControllerType, observer.ActionType, false);
             }
+
+            foreach (VRPokeInputObserver observer in device.PokeInputs.Where(x => x != null))
+            {
+                observer.Poked += () => SetHandTrackingInputAction(device.ControllerType, observer.ActionType, true);
+                observer.Unpoked += () => SetHandTrackingInputAction(device.ControllerType, observer.ActionType, false);
+            }
         }
 
         private void SetHandTrackingInputAction(ControllerType controllerType, ActionType actionType, bool value)

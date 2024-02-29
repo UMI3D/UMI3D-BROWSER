@@ -10,31 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d5fb3781030442f2bcc893f0dbffabc5, type: 3}
-  m_Name: Shaka Hand Shape
+  m_Name: Closed thumb
   m_EditorClassIdentifier: 
   m_FingerShapeConditions:
   - m_FingerID: 0
     m_Targets:
-    - m_ShapeType: 0
-      m_Desired: 0
-      m_Tolerance: 0.3
-  - m_FingerID: 1
-    m_Targets:
-    - m_ShapeType: 0
+    - m_ShapeType: 1
       m_Desired: 1
-      m_Tolerance: 0.4
-  - m_FingerID: 2
-    m_Targets:
-    - m_ShapeType: 0
-      m_Desired: 1
-      m_Tolerance: 0.4
-  - m_FingerID: 3
-    m_Targets:
-    - m_ShapeType: 0
-      m_Desired: 1
-      m_Tolerance: 0.4
-  - m_FingerID: 4
-    m_Targets:
-    - m_ShapeType: 0
-      m_Desired: 0
-      m_Tolerance: 0.3
+      m_Tolerance: 0.2

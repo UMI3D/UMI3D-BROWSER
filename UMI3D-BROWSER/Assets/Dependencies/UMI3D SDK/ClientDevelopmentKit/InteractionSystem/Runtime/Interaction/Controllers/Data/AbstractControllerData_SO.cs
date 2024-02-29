@@ -25,11 +25,5 @@ namespace umi3d.cdk.interaction
     {
         public abstract uint BoneType { get; }
         public abstract Transform BoneTransform { get; }
-
-
-
-
-        public List<AbstractControlData> actions = new();
-        public List<AbstractControlData> shortcuts = new();
     }
 }

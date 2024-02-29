@@ -45,7 +45,7 @@ namespace umi3d.cdk.interaction
         [HideInInspector]
         public AbstractControllerDelegate controllerDelegate;
         [HideInInspector]
-        public UMI3DInputManager inputManager;
+        public UMI3DInputManager controlManager;
         [HideInInspector]
         public UMI3DToolManager toolManager;
 
@@ -117,7 +117,7 @@ namespace umi3d.cdk.interaction
             logger.Assert(toolManager != null, $"{nameof(toolManager)} is null");
 
             this.controllerDelegate = controllerDelegate;
-            this.inputManager = inputManager;
+            this.controlManager = inputManager;
             this.toolManager = toolManager;
         }
 
@@ -143,7 +143,7 @@ namespace umi3d.cdk.interaction
                 if (interaction is ManipulationDto manipulationDto)
                 {
                     DofGroupOptionDto[] options = manipulationDto.dofSeparationOptions.ToArray();
-                    DofGroupOptionDto bestDofGroupOption = inputManager.manipulationDelegate.FindBest(options);
+                    DofGroupOptionDto bestDofGroupOption = controlManager.manipulationDelegate.FindBest(options);
 
                     foreach (DofGroupDto sep in bestDofGroupOption.separations)
                     {
@@ -255,7 +255,7 @@ namespace umi3d.cdk.interaction
                 if (interaction is ManipulationDto manipulationDto)
                 {
                     DofGroupOptionDto[] options = (interaction as ManipulationDto).dofSeparationOptions.ToArray();
-                    DofGroupOptionDto bestDofGroupOption = inputManager.manipulationDelegate.FindBest(options);
+                    DofGroupOptionDto bestDofGroupOption = controlManager.manipulationDelegate.FindBest(options);
 
                     foreach (DofGroupDto sep in bestDofGroupOption.separations)
                     {
@@ -434,10 +434,10 @@ namespace umi3d.cdk.interaction
                         manipulationDto,
                         () =>
                         {
-                            inputManager.manipulationDelegate.dof = dof;
-                            return inputManager.manipulationDelegate.GetControlId(
+                            return controlManager.GetControlId(
                                 manipulationDto, 
-                                unused
+                                unused,
+                                dof: dof
                             );
                         }
                     );
@@ -455,10 +455,10 @@ namespace umi3d.cdk.interaction
                         eventDto,
                         () =>
                         {
-                            inputManager.eventInputDelegate.tryToFindInputForHoldableEvent = tryToFindInputForHoldableEvent;
-                            return inputManager.eventInputDelegate.GetControlId(
+                            return controlManager.GetControlId(
                                 eventDto, 
-                                unused
+                                unused,
+                                tryToFindInputForHoldableEvent
                             );
                         }
                     );
@@ -476,7 +476,7 @@ namespace umi3d.cdk.interaction
                         formDto,
                         () =>
                         {
-                            return inputManager.formInputDelegate.GetControlId(
+                            return controlManager.GetControlId(
                                 formDto, 
                                 unused
                             );
@@ -496,7 +496,7 @@ namespace umi3d.cdk.interaction
                         linkDto,
                         () =>
                         {
-                            return inputManager.linkInputDelegate.GetControlId(
+                            return controlManager.GetControlId(
                                 linkDto, 
                                 unused
                             );
@@ -516,7 +516,7 @@ namespace umi3d.cdk.interaction
                         parameterDto,
                         () =>
                         {
-                            return inputManager.parameterInputDelegate.GetControlId(
+                            return controlManager.GetControlId(
                                 parameterDto, 
                                 unused
                             );
@@ -556,26 +556,9 @@ namespace umi3d.cdk.interaction
             ProjectionTreeNodeData currentTreeNode,
             Predicate<ProjectionTreeNodeData> isAdequate,
             Func<ProjectionTreeNodeData> projectionNodeCreation,
-            Action<ProjectionTreeNodeData> chooseProjection,
-            bool unusedInputsOnly = true
+            Action<ProjectionTreeNodeData> chooseProjection
         )
         {
-            // Try first to project on unused inputs.
-            if (!unusedInputsOnly)
-            {
-                try
-                {
-                    return ProjectAndUpdateTree(
-                        currentTreeNode,
-                        isAdequate,
-                        projectionNodeCreation,
-                        chooseProjection,
-                        true
-                    );
-                }
-                catch (NoInputFoundException) { }
-            }
-
             ProjectionTreeNodeData? projection;
             ///<summary>
             /// Return 1 when projection has been found.<br/>
@@ -594,11 +577,7 @@ namespace umi3d.cdk.interaction
                 foreach (var index in indexes)
                 {
                     var tmp = children[index];
-                    if (unusedInputsOnly && !tmp.input.IsAvailable())
-                    {
-                        continue;
-                    }
-                    else
+                    if (tmp.input.IsAvailable())
                     {
                         projection = tmp;
                         return 1;

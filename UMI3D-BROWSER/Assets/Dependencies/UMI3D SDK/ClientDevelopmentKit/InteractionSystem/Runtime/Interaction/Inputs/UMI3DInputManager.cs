@@ -43,6 +43,57 @@ namespace umi3d.cdk.interaction
             model.Init(controls_SO);
         }
 
+        /// <summary>
+        /// Return the id of a control.<br/> 
+        /// Return null if no control is available.
+        /// </summary>
+        /// <param name="interaction"></param>
+        /// <param name="unused"></param>
+        /// <param name="tryToFindInputForHoldableEvent"></param>
+        /// <param name="dof"></param>
+        /// <returns></returns>
+        public Guid? GetControlId<Interaction>(
+            Interaction interaction, 
+            bool unused = true,
+            bool tryToFindInputForHoldableEvent = false,
+            DofGroupDto dof = null
+        )
+            where Interaction: AbstractInteractionDto
+        {
+            switch (interaction)
+            {
+                case ManipulationDto manipulation:
+                    manipulationDelegate.dof = dof;
+                    return manipulationDelegate.GetControlId(
+                        manipulation,
+                        unused
+                    );
+                case EventDto button:
+                    eventInputDelegate.tryToFindInputForHoldableEvent = tryToFindInputForHoldableEvent;
+                    return eventInputDelegate.GetControlId(
+                        button,
+                        unused
+                    );
+                case FormDto form:
+                    return formInputDelegate.GetControlId(
+                        form,
+                        unused
+                    );
+                case LinkDto link:
+                    return linkInputDelegate.GetControlId(
+                        link,
+                        unused
+                    );
+                case AbstractParameterDto parameter:
+                    return parameterInputDelegate.GetControlId(
+                        parameter,
+                        unused
+                    );
+                default:
+                    throw new System.Exception("Unknown interaction type, can't project !");
+            }
+        }
+
         public AbstractUMI3DInput FindInput<T>(
             List<T> inputs,
             Predicate<T> predicate

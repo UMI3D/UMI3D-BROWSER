@@ -25,7 +25,10 @@ namespace umi3d.cdk.interaction
     {
         public List<AbstractControlData> actions = new();
 
-
+        /// <summary>
+        /// The button type controls for EventDto interactions.
+        /// </summary>
+        [Tooltip("The button type controls for EventDto interactions")]
         public List<AbstractButtonControlData> buttonControls = new();
         public List<AbstractManipulationControlData> manipulationControls = new();
         public List<UIButtonControlData> uIControls = new();

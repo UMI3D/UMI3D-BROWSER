@@ -30,39 +30,5 @@ namespace umi3d.cdk.interaction
         {
             this.controls_SO = controls_SO;
         }
-
-        //public void Associate(
-        //    Guid controlId,
-        //    ulong environmentId,
-        //    AbstractInteractionDto interaction,
-        //    ulong toolId,
-        //    ulong hoveredObjectId
-        //)
-        //{
-        //    var index = controls_SO.IndexOf(controlId, default(ActionControlType));
-        //    if (index == -1)
-        //    {
-        //        throw new NoInputFoundException();
-        //    }
-        //    var control = controls_SO[index, default(ActionControlType)];
-        //    control.toolId = toolId;
-        //}
-
-        ///// <summary>
-        ///// Associate a Manipulation Interaction to a Control.
-        ///// </summary>
-        ///// <param name="manipulation"></param>
-        ///// <param name="dofs"></param>
-        //public void Associate(
-        //    Guid controlId,
-        //    ulong environmentId,
-        //    ManipulationDto manipulation,
-        //    DofGroupEnum dofs,
-        //    ulong toolId,
-        //    ulong hoveredObjectId
-        //)
-        //{
-        //    throw new System.NotImplementedException();
-        //}
     }
 }

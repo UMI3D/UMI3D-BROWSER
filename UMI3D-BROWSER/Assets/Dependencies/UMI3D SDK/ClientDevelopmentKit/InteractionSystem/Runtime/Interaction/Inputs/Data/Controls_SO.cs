@@ -23,8 +23,6 @@ namespace umi3d.cdk.interaction
 {
     public class Controls_SO : SerializableScriptableObject
     {
-        public List<AbstractControlData> actions = new();
-
         /// <summary>
         /// The button type controls for EventDto interactions.
         /// </summary>
@@ -42,7 +40,6 @@ namespace umi3d.cdk.interaction
             {
                 return type switch
                 {
-                    ActionControlType => actions[index],
                     ShortcutControlType => shortcuts[index],
                     _ => throw new NoInputFoundException()
                 };
@@ -55,10 +52,6 @@ namespace umi3d.cdk.interaction
             {
                 return type switch
                 {
-                    ActionControlType => actions.Find(control =>
-                    {
-                        return control.id == id;
-                    }),
                     ShortcutControlType => shortcuts.Find(control =>
                     {
                         return control.id == id;
@@ -72,10 +65,6 @@ namespace umi3d.cdk.interaction
         {
             return type switch
             {
-                ActionControlType => actions.FindIndex(control =>
-                {
-                    return control.id == id;
-                }),
                 ShortcutControlType => shortcuts.FindIndex(control =>
                 {
                     return control.id == id;

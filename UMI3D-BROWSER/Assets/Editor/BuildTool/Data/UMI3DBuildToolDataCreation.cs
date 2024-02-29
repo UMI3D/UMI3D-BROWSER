@@ -82,7 +82,7 @@ namespace umi3d.browserEditor.BuildTool
             SO so = null;
             if (!Contains(name))
             {
-                UnityEngine.Debug.Log($"message");
+                UnityEngine.Debug.Log($"[UMI3D] Build Tool: {typeof(SO).Name} Created");
                 so = ScriptableObject.CreateInstance<SO>();
                 AssetDatabase.CreateAsset(so, ExcludedPath + $"/UMI3D Build Tool {name}.asset");
             }

@@ -41,10 +41,6 @@ namespace umi3d.browserEditor.BuildTool
         [MenuItem("Tools/BuildTool")]
         public static void OpenWindow()
         {
-            UMI3DBuildToolDataCreation.GetPath();
-            UMI3DBuildToolDataCreation.CreateExcludedFolderIfNecessary();
-            UMI3DBuildToolDataCreation.GetFiles();
-
             UMI3DBuildTool wnd = GetWindow<UMI3DBuildTool>();
             wnd.titleContent = new GUIContent("UMI3D Build Tool");
         }
@@ -68,10 +64,14 @@ namespace umi3d.browserEditor.BuildTool
                 "[UMI3D] BuildTool: scene_VTA is null."
             );
 
+            UMI3DBuildToolDataCreation.GetPath();
+            UMI3DBuildToolDataCreation.CreateExcludedFolderIfNecessary();
+            UMI3DBuildToolDataCreation.GetFiles();
             buildToolKeystore_SO = UMI3DBuildToolDataCreation.GetSO<UMI3DBuildToolKeystore_SO>("Keystore");
             buildToolVersion_SO = UMI3DBuildToolDataCreation.GetSO<UMI3DBuildToolVersion_SO>("Version");
             buildToolScene_SO = UMI3DBuildToolDataCreation.GetSO<UMI3DBuildToolScene_SO>("Scenes");
             buildToolTarget_SO = UMI3DBuildToolDataCreation.GetSO<UMI3DBuildToolTarget_SO>("Target");
+            buildToolSettings_SO = UMI3DBuildToolDataCreation.GetSO<UMI3DBuildToolSettings_SO>("Settings");
             UMI3DBuildToolDataCreation.SaveAndRefresh();
 
             Assert.IsNotNull(

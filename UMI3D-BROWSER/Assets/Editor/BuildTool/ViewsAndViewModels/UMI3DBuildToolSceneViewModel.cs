@@ -59,7 +59,11 @@ namespace umi3d.browserEditor.BuildTool
         {
             var sceneDTO = buildToolScene_SO.scenes[index];
             var indexOfAsset = path.IndexOf("Asset");
-            sceneDTO.path = path.Substring(indexOfAsset);
+            if (indexOfAsset > 0)
+            {
+                path = path.Substring(indexOfAsset);
+            }
+            sceneDTO.path = path;
             buildToolScene_SO.scenes[index] = sceneDTO;
             Save();
         }

@@ -54,11 +54,12 @@ namespace umi3d.browserEditor.BuildTool
         public void Set()
         {
             // Select
-            T_Select.value = viewModel[index].enabled;
+            T_Select.SetValueWithoutNotify(viewModel[index].enabled);
             T_Select.RegisterValueChangedCallback(SelectValueChanged);
 
             // Path
-            TF_Path.label = "Scene Path";
+            (TF_Path.labelElement as INotifyValueChanged<string>).SetValueWithoutNotify("Scene Path");
+            //TF_Path.label = "Scene Path";
             TF_Path.SetValueWithoutNotify(viewModel[index].path);
             TF_Path.RegisterValueChangedCallback(PathValueChanged);
             B_Browse.clicked += Browse;
@@ -84,7 +85,6 @@ namespace umi3d.browserEditor.BuildTool
         
         void PathValueChanged(ChangeEvent<string> value)
         {
-            UnityEngine.Debug.Log($"message");
             viewModel.UpdatedScenePath(index, value.newValue);
         }
 

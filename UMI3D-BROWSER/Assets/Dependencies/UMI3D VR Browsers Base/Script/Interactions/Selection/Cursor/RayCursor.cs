@@ -46,10 +46,11 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
         [Header("ImpactPoint"), SerializeField, Tooltip("Laser's impact sphere.")]
         private GameObject impactPoint;
 
+        private Renderer impactPointRenderer;
+
         [SerializeField]
         private LayerMask _uiMask;
 
-        private Renderer impactPointRenderer;
 
         /// <summary>
         /// True if the laser is currently displayed
@@ -94,10 +95,10 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
         protected readonly float fadeDuration = 0.25f;
 
         private float savedAlphaDefaultMaterial;
-        private Coroutine fadeDefaultMaterialCoroutine;
+        private Coroutine fadeLaserCoroutine;
 
         private float savedAlphaSelectedMaterial;
-        private Coroutine fadeSelectedMaterialCoroutine;
+        private Coroutine fadeCursorCoroutine;
 
         private bool fadeCoroutineRunning;
 
@@ -450,26 +451,26 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
         {
             if (fadeCoroutineRunning)
             {
-                StopCoroutine(fadeDefaultMaterialCoroutine);
-                StopCoroutine(fadeSelectedMaterialCoroutine);
+                StopCoroutine(fadeLaserCoroutine);
+                StopCoroutine(fadeCursorCoroutine);
                 fadeCoroutineRunning = false;
             }
 
-            fadeDefaultMaterialCoroutine = StartCoroutine(FadingCoroutine(fadeDuration, defaultMaterial, targetAlpha: 0f));
-            fadeSelectedMaterialCoroutine = StartCoroutine(FadingCoroutine(fadeDuration, selectionMaterial, targetAlpha: 0f));
+            fadeLaserCoroutine = StartCoroutine(FadingCoroutine(fadeDuration, laserObjectRenderer.material, targetAlpha: 0f));
+            fadeCursorCoroutine = StartCoroutine(FadingCoroutine(fadeDuration, impactPointRenderer.material, targetAlpha: 0f));
         }
 
         private void FadeIn()
         {
             if (fadeCoroutineRunning)
             {
-                StopCoroutine(fadeDefaultMaterialCoroutine);
-                StopCoroutine(fadeSelectedMaterialCoroutine);
+                StopCoroutine(fadeLaserCoroutine);
+                StopCoroutine(fadeCursorCoroutine);
                 fadeCoroutineRunning = false;
             }
 
-            fadeDefaultMaterialCoroutine = StartCoroutine(FadingCoroutine(fadeDuration, defaultMaterial, targetAlpha: savedAlphaDefaultMaterial));
-            fadeSelectedMaterialCoroutine = StartCoroutine(FadingCoroutine(fadeDuration, selectionMaterial, targetAlpha: savedAlphaSelectedMaterial));
+            fadeLaserCoroutine = StartCoroutine(FadingCoroutine(fadeDuration, laserObjectRenderer.material, targetAlpha: savedAlphaDefaultMaterial));
+            fadeCursorCoroutine = StartCoroutine(FadingCoroutine(fadeDuration, impactPointRenderer.material, targetAlpha: savedAlphaSelectedMaterial));
         }
 
         private IEnumerator FadingCoroutine(float duration, Material material, float targetAlpha)

@@ -24,7 +24,7 @@ namespace umi3d.browserEditor.BuildTool
     [CreateAssetMenu(fileName = "UMI3D Build Tool Scenes", menuName = "UMI3D/Build Tools/Build Tool Scenes")]
     public class UMI3DBuildToolScene_SO : SerializableScriptableObject
     {
-        public List<SceneDTO> scenes;
+        public List<SceneDTO> scenes = new();
 
         public SceneDTO[] GetScenesForTarget(E_Target target)
         {

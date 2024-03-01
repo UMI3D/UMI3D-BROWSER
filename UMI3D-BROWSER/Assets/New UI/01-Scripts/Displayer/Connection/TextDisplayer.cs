@@ -17,43 +17,40 @@ limitations under the License.
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace umi3dBrowsers.displayer
 {
-    public class PinDisplayer : MonoBehaviour
+    public class TextDisplayer : MonoBehaviour, IDisplayer
     {
         [Header("Form")]
-        [SerializeField] private TMP_UMI3DUIInputField pinInputField;
-        [Space]
-        [SerializeField] private Button button;
-        [SerializeField] private UnityEvent<PinData> OnPinButtonPressed;
+        [SerializeField] private TMP_UMI3DUIInputField textInputField;
+        [SerializeField] private TextMeshProUGUI placeHolder;
+        [SerializeField] private TextMeshProUGUI title;
 
-        private void Awake()
+        public object GetValue(bool trim)
         {
-            button.onClick.AddListener(() =>
-            {
-                PinData id = new PinData(
-                    pinInputField.text.Trim()
-                );
-
-                OnPinButtonPressed?.Invoke(id);
-            });
+            return GetText(trim);
         }
-    }
-
-    [Serializable]
-    public class PinData
-    {
-        [SerializeField] private string pin;
-
-        public string Pin => pin;
-
-        public PinData(string pin)
+        public string GetText(bool trim)
         {
-            this.pin = pin;
+            if (trim)
+                return textInputField.text.Trim();
+            else
+                return textInputField.text;
+        }
+
+        public void SetTitle(string title)
+        {
+            this.title.text = title + " :";
+        }
+
+        public void SetPlaceHolder(string placeHolder)
+        {
+            this.placeHolder.text = placeHolder;
         }
     }
 }

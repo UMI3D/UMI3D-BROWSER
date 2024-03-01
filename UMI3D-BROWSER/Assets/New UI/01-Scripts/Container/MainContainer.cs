@@ -15,12 +15,14 @@ limitations under the License.
 */
 
 using System;
-using System.Linq;
 using TMPro;
-using umi3dBrowsers.mv.connection;
+using umi3d.common.interaction;
+using umi3dBrowsers.container;
+using umi3dBrowsers.services.connection;
 using umi3dVRBrowsersBase.connection;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace umi3d
@@ -73,10 +75,10 @@ namespace umi3d
 
         [Header("Connection")]
         [SerializeField] private URLDisplayer urlDisplayer;
+        [SerializeField] private DynamicServerContainer dynamicServerContainer;
 
         [Header("Services")]
         [SerializeField] private ConnectionProcessor connectionProcessorService;
-
 
         private void Awake()
         {
@@ -87,6 +89,7 @@ namespace umi3d
         {
             BindNavigationButtons();
             BindURL();
+            BindFormContainer();
             BindServices();
             HandleContentState(contentState);
         }
@@ -162,14 +165,22 @@ namespace umi3d
                 connectionProcessorService.TryConnectToMediaServer(url);
             });
         }
+        private void BindFormContainer()
+        {
+            dynamicServerContainer.OnFormAnwser += (formAnswer) => connectionProcessorService.SendFormAnswer(formAnswer);
+        }
 
         private void BindServices()
         {
             connectionProcessorService.OnConnectionFailure += (message) => { Debug.LogError("Failled to conenct"); };
-            connectionProcessorService.OnMediaServerConnectionSucess += (mediaDto) => 
+            connectionProcessorService.OnMediaServerPingSuccess += (virtualWorldData) => 
             {
-                SetTitle("Connected to", mediaDto.name);
+                SetTitle("Connected to", virtualWorldData.worldName);
+            };
+            connectionProcessorService.OnFormReceived += (connectionFormDto) =>
+            {
                 HandleContentState(ContentState.dynamicServerContent);
+                dynamicServerContainer.ProcessConnectionFormDto(connectionFormDto);
             };
         }
 
@@ -224,5 +235,24 @@ namespace umi3d
             flagContent.SetActive(false);
             standUpContent.SetActive(false);
         }
+
+        //public void ConnectToUmi3DEnvironement(string url, string port)
+        //{
+
+        //    StartCoroutine(WaitReady(new AdvancedConnectionPanel.Data() { ip = url, port = port }));
+        //}
+
+        //private IEnumerator WaitReady(AdvancedConnectionPanel.Data data)
+        //{
+        //    while (!Connecting.Exists && !UMI3DEnvironmentLoader.Exists)
+        //        yield return new WaitForEndOfFrame();
+
+        //    Connecting.Instance.Connect(data);
+
+        //    while (!UMI3DEnvironmentLoader.Exists)
+        //        yield return new WaitForEndOfFrame();
+
+        //    UMI3DEnvironmentLoader.Instance.onEnvironmentLoaded.AddListener(() => Debug.Log("environment loaded"));
+        //}
     }
 }

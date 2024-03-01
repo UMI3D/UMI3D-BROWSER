@@ -14,7 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System;
 using UnityEditor;
+using UnityEngine;
 
 namespace umi3d.browserEditor.BuildTool
 {
@@ -55,13 +57,33 @@ namespace umi3d.browserEditor.BuildTool
             Save();
         }
 
-        public void ApplyScenePath(int index, string path)
+        public void UpdatedScenePath(int index, string path)
         {
             var sceneDTO = buildToolScene_SO.scenes[index];
             var indexOfAsset = path.IndexOf("Asset");
-            sceneDTO.path = path.Substring(indexOfAsset);
+            if (indexOfAsset > 0)
+            {
+                path = path.Substring(indexOfAsset);
+            }
+            sceneDTO.path = path;
             buildToolScene_SO.scenes[index] = sceneDTO;
             Save();
+        }
+
+        public void BrowseScenePath(int index, Action<string> updateView)
+        {
+            string directory = string.IsNullOrEmpty(buildToolScene_SO.scenes[index].path)
+                ? Application.dataPath
+                : buildToolScene_SO.scenes[index].path;
+
+            string path = EditorUtility.OpenFilePanel(
+                title: "Scene Path",
+                directory,
+                extension: "unity"
+            );
+
+            UpdatedScenePath(index, path);
+            updateView?.Invoke(path);
         }
 
         public void Save()

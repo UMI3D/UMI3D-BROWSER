@@ -33,6 +33,7 @@ namespace umi3d.cdk.interaction
     {
         [SerializeField]
         UMI3DLogger logger = new();
+
         [Header("Inspector Dependency Injection")]
         public ProjectionTree_SO projectionTree_SO;
         public ProjectionTreeManipulationNodeDelegate ptManipulationNodeDelegate;
@@ -122,75 +123,15 @@ namespace umi3d.cdk.interaction
         }
 
         /// <summary>
-        /// Get the inputs associated with this <paramref name="interactions"/>.
-        /// </summary>
-        /// <param name="interactions">the array of interaction for which an input is seeked</param>
-        /// <param name="unused"></param>
-        /// <returns></returns>
-        public AbstractUMI3DInput[] GetInputs(
-            AbstractInteractionDto[] interactions,
-            bool unused = true
-        )
-        {
-            ProjectionTreeNodeData currentMemoryTreeState = treeRoot;
-
-            List<AbstractUMI3DInput> selectedInputs = new();
-
-            for (int depth = 0; depth < interactions.Length; depth++)
-            {
-                AbstractInteractionDto interaction = interactions[depth];
-
-                if (interaction is ManipulationDto manipulationDto)
-                {
-                    DofGroupOptionDto[] options = manipulationDto.dofSeparationOptions.ToArray();
-                    DofGroupOptionDto bestDofGroupOption = controlManager.manipulationDelegate.FindBest(options);
-
-                    foreach (DofGroupDto sep in bestDofGroupOption.separations)
-                    {
-                        currentMemoryTreeState = ProjectAndUpdateTree(
-                            interaction,
-                            currentMemoryTreeState,
-                            null,
-                            null,
-                            null,
-                            unused,
-                            false,
-                            sep
-                        );
-                        selectedInputs.Add(currentMemoryTreeState.input);
-                    }
-                }
-                else
-                {
-                    currentMemoryTreeState = ProjectAndUpdateTree(
-                            interaction,
-                            currentMemoryTreeState,
-                            null,
-                            null,
-                            null,
-                            unused,
-                            false,
-                            null
-                        );
-                    selectedInputs.Add(currentMemoryTreeState.input);
-                }
-            }
-
-            return selectedInputs.ToArray();
-        }
-
-        /// <summary>
         /// Project an interaction and return associated input.
         /// </summary>
         /// <param name="controller">Controller to project on</param>
         /// <param name="evt">Event dto to project</param>
-        /// <param name="unusedInputsOnly">Project on unused inputs only</param>
         public AbstractUMI3DInput Project<Dto>(
             Dto interaction,
             ulong environmentId,
             ulong toolId,
             ulong hoveredObjectId,
-            bool unusedInputsOnly = false,
             DofGroupDto dof = null
         )
             where Dto : AbstractInteractionDto
@@ -201,7 +142,6 @@ namespace umi3d.cdk.interaction
                 environmentId,
                 toolId,
                 hoveredObjectId,
-                unusedInputsOnly,
                 false,
                 dof
             ).input;
@@ -265,7 +205,6 @@ namespace umi3d.cdk.interaction
                             environmentId,
                             toolId,
                             hoveredObjectId,
-                            true,
                             false,
                             sep
                         );
@@ -280,7 +219,6 @@ namespace umi3d.cdk.interaction
                         environmentId,
                         toolId,
                         hoveredObjectId,
-                        true,
                         depth == 0 && foundHoldableEvent,
                         null
                     );
@@ -415,7 +353,6 @@ namespace umi3d.cdk.interaction
             ulong? environmentId = null,
             ulong? toolId = null,
             ulong? hoveredObjectId = null,
-            bool unused = true,
             bool tryToFindInputForHoldableEvent = false,
             DofGroupDto dof = null
         )
@@ -434,9 +371,8 @@ namespace umi3d.cdk.interaction
                         manipulationDto,
                         () =>
                         {
-                            return controlManager.GetControlId(
-                                manipulationDto, 
-                                unused,
+                            return controlManager.GetControl(
+                                manipulationDto,
                                 dof: dof
                             );
                         }
@@ -455,9 +391,8 @@ namespace umi3d.cdk.interaction
                         eventDto,
                         () =>
                         {
-                            return controlManager.GetControlId(
-                                eventDto, 
-                                unused,
+                            return controlManager.GetControl(
+                                eventDto,
                                 tryToFindInputForHoldableEvent
                             );
                         }
@@ -476,9 +411,8 @@ namespace umi3d.cdk.interaction
                         formDto,
                         () =>
                         {
-                            return controlManager.GetControlId(
-                                formDto, 
-                                unused
+                            return controlManager.GetControl(
+                                formDto
                             );
                         }
                     );
@@ -496,9 +430,8 @@ namespace umi3d.cdk.interaction
                         linkDto,
                         () =>
                         {
-                            return controlManager.GetControlId(
-                                linkDto, 
-                                unused
+                            return controlManager.GetControl(
+                                linkDto
                             );
                         }
                     );
@@ -516,9 +449,8 @@ namespace umi3d.cdk.interaction
                         parameterDto,
                         () =>
                         {
-                            return controlManager.GetControlId(
-                                parameterDto, 
-                                unused
+                            return controlManager.GetControl(
+                                parameterDto
                             );
                         }
                     );

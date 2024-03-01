@@ -52,15 +52,15 @@ namespace umi3d.cdk.interaction
         public abstract Predicate<ProjectionTreeNodeData> IsNodeCompatible(Dto interaction);
 
         /// <summary>
-        /// Return a <see cref="Func{ProjectionTreeNode}"/> that will create a tree node for this input found by <paramref name="getControlId"/>.<br/>
+        /// Return a <see cref="Func{ProjectionTreeNode}"/> that will create a tree node for this control found by <paramref name="getControl"/>.<br/>
         /// This <see cref="Func{ProjectionTreeNode}"/> must throw a <see cref="NoInputFoundException"/> if no controlId is found.
         /// </summary>
         /// <param name="interaction"></param>
-        /// <param name="getControlId"></param>
+        /// <param name="getControl"></param>
         /// <returns></returns>
         public abstract Func<ProjectionTreeNodeData> CreateNodeForControl(
             Dto interaction,
-            Func<Guid?> getControlId
+            Func<AbstractControlData> getControl
         );
 
         /// <summary>

@@ -16,24 +16,49 @@ limitations under the License.
 
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace umi3d.cdk.interaction
 {
-    public class UIButtonControlData : AbstractControlData
+    [Serializable]
+    public class UIButtonControlData : AbstractButtonControlData
     {
+        public UIInputType input;
+
         public override void Disable()
         {
-            throw new NotImplementedException();
-        }
-
-        public override void Dissociate()
-        {
-            throw new NotImplementedException();
+            try
+            {
+                input.UIInputAction.performed -= UIActionPerformed;
+            }
+            catch (Exception e)
+            {
+                UnityEngine.Debug.LogError($"[UMI3D] Control: ui input type action Exception");
+                UnityEngine.Debug.LogException(e);
+            }
+            
         }
 
         public override void Enable()
         {
-            throw new NotImplementedException();
+            try
+            {
+                input.UIInputAction.performed += UIActionPerformed;
+            }
+            catch (Exception e)
+            {
+                UnityEngine.Debug.LogError($"[UMI3D] Control: ui input type action Exception");
+                UnityEngine.Debug.LogException(e);
+            }
+        }
+
+        void UIActionPerformed(System.Object value)
+        {
+            if (value is not InputActionPhase)
+            {
+                throw new Exception($"[UMI3D] Control: ui input value is not InputActionPhase");
+            }
+            ActionPerformed((InputActionPhase)value);
         }
     }
 }

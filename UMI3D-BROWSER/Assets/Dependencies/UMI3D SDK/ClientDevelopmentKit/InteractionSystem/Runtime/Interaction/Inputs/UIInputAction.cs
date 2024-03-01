@@ -15,18 +15,28 @@ limitations under the License.
 */
 
 using System;
-using umi3d.cdk.interaction;
-using umi3d.common.interaction;
 using UnityEngine;
 
-namespace umi3d.browserRuntime.interaction
+namespace umi3d.cdk.interaction
 {
-    [CreateAssetMenu(fileName = "UMI3D Parameter Input Delegate", menuName = "UMI3D/Interactions/Input Delegates/Parameter Input Delegate")]
-    public class ParameterInputDelegate : AbstractInputDelegate<AbstractParameterDto>
+    public class UIInputAction : MonoBehaviour
     {
-        public override AbstractControlData GetControl(AbstractParameterDto interaction)
+        public event Action<System.Object> performed;
+
+        public System.Object value;
+        public T ReadValue<T>()
         {
-            throw new NotImplementedException();
+            if (value is not T)
+            {
+                throw new Exception($"[UMI3D] Input: input value is not {typeof(T).Name}");
+            }
+            return (T)value;
+        }
+
+        public void Perform(System.Object value)
+        {
+            this.value = value;
+            performed?.Invoke(value);
         }
     }
 }

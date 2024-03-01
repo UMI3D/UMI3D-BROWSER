@@ -44,7 +44,7 @@ namespace umi3d.cdk.interaction
         }
 
         /// <summary>
-        /// Return the id of a control.<br/> 
+        /// Return a control compatible with <paramref name="interaction"/>.<br/> 
         /// Return null if no control is available.
         /// </summary>
         /// <param name="interaction"></param>
@@ -52,9 +52,8 @@ namespace umi3d.cdk.interaction
         /// <param name="tryToFindInputForHoldableEvent"></param>
         /// <param name="dof"></param>
         /// <returns></returns>
-        public Guid? GetControlId<Interaction>(
-            Interaction interaction, 
-            bool unused = true,
+        public AbstractControlData GetControl<Interaction>(
+            Interaction interaction,
             bool tryToFindInputForHoldableEvent = false,
             DofGroupDto dof = null
         )
@@ -64,30 +63,25 @@ namespace umi3d.cdk.interaction
             {
                 case ManipulationDto manipulation:
                     manipulationDelegate.dof = dof;
-                    return manipulationDelegate.GetControlId(
-                        manipulation,
-                        unused
+                    return manipulationDelegate.GetControl(
+                        manipulation
                     );
                 case EventDto button:
                     eventInputDelegate.tryToFindInputForHoldableEvent = tryToFindInputForHoldableEvent;
-                    return eventInputDelegate.GetControlId(
-                        button,
-                        unused
+                    return eventInputDelegate.GetControl(
+                        button
                     );
                 case FormDto form:
-                    return formInputDelegate.GetControlId(
-                        form,
-                        unused
+                    return formInputDelegate.GetControl(
+                        form
                     );
                 case LinkDto link:
-                    return linkInputDelegate.GetControlId(
-                        link,
-                        unused
+                    return linkInputDelegate.GetControl(
+                        link
                     );
                 case AbstractParameterDto parameter:
-                    return parameterInputDelegate.GetControlId(
-                        parameter,
-                        unused
+                    return parameterInputDelegate.GetControl(
+                        parameter
                     );
                 default:
                     throw new System.Exception("Unknown interaction type, can't project !");

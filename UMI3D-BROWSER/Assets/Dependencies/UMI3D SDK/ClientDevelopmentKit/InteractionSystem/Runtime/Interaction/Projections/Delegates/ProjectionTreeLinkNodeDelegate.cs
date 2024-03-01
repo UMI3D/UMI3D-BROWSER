@@ -35,14 +35,14 @@ namespace umi3d.cdk.interaction
 
         public override Func<ProjectionTreeNodeData> CreateNodeForControl(
             LinkDto interaction,
-            Func<Guid?> getControlId
+            Func<AbstractControlData> getControl
         )
         {
             return () =>
             {
-                Guid? controlId = getControlId?.Invoke();
+                AbstractControlData control = getControl?.Invoke();
 
-                if (controlId == null)
+                if (control == null)
                 {
                     throw new NoInputFoundException($"For {nameof(LinkDto)}: {interaction.name}");
                 }
@@ -56,7 +56,7 @@ namespace umi3d.cdk.interaction
                     {
                         interaction = interaction
                     },
-                    controlId = controlId.Value
+                    controlId = control
                 };
             };
         }

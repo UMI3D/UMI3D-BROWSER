@@ -142,10 +142,15 @@ namespace umi3d.cdk.interaction
             control.Disable();
         }
 
-        public override Guid? GetControlId(EventDto interaction, bool unused = true)
+        public override AbstractControlData GetControl(EventDto interaction)
         {
-            throw new System.NotImplementedException();
-            //model.
+            var physicalButton = model.GetPhysicalButton();
+            if (physicalButton != null)
+            {
+                return physicalButton;
+            }
+
+            return model.GetUIButton();
         }
 
         async void StartAnim(ulong id)

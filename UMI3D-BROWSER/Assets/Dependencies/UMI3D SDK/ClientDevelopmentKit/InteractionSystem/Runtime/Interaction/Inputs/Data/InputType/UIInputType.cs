@@ -19,8 +19,30 @@ using UnityEngine;
 
 namespace umi3d.cdk.interaction
 {
-    [CreateAssetMenu(fileName = "UMI3D Action Control [Action]", menuName = "UMI3D/Interactions/Control/Action Type")]
-    public class ActionControlType : AbstractControlType
+    [Serializable]
+    public struct UIInputType
     {
+        public GameObject prefab;
+        [HideInInspector] public GameObject uIObject;
+
+        public GameObject UIObject
+        {
+            get
+            {
+                if (uIObject == null)
+                {
+                    uIObject = GameObject.Instantiate(prefab);
+                }
+                return uIObject;
+            }
+        }
+
+        public UIInputAction UIInputAction
+        {
+            get
+            {
+                return UIObject.GetComponent<UIInputAction>();
+            }
+        }
     }
 }

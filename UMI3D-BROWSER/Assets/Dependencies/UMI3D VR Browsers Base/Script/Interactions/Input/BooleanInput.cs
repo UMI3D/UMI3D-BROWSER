@@ -39,29 +39,6 @@ namespace umi3dVRBrowsersBase.interactions.input
         /// </summary>
         public VRInputObserver vrInput;
 
-        /// <summary>
-        /// Event raised on user input release (first frame).
-        /// </summary>
-        [SerializeField]
-        protected UnityEvent onActionUp = new UnityEvent();
-
-        /// <summary>
-        /// Event raised on user input (first frame only).
-        /// </summary>
-        [SerializeField]
-        protected UnityEvent onActionDown = new UnityEvent();
-
-
-        /// <summary>
-        /// True if the rising edge event has been sent through network (to avoid sending falling edge only).
-        /// </summary>
-        private bool risingEdgeEventSent = false;
-
-        /// <summary>
-        /// Is input button down ?
-        /// </summary>
-        private bool isDown = false;
-
         public class VRInteractionEvent : UnityEvent<uint> { };
 
         [HideInInspector]
@@ -83,8 +60,6 @@ namespace umi3dVRBrowsersBase.interactions.input
                 || PlayerMenuManager.Instance.IsMenuHovered
                 || (Keyboard.Instance?.IsOpen ?? false))
                 return;
-
-            onActionUp.Invoke();
         }
 
         /// <summary>
@@ -99,8 +74,6 @@ namespace umi3dVRBrowsersBase.interactions.input
                 || PlayerMenuManager.Instance.IsMenuHovered
                 || (Keyboard.Instance?.IsOpen ?? false))
                 return;
-
-            onActionDown.Invoke();
         }
 
         /// <summary>
@@ -115,18 +88,7 @@ namespace umi3dVRBrowsersBase.interactions.input
             {
                 if (pressDown)
                 {
-                    if ((interaction as EventDto).hold)
-                    {
-                        
-                        risingEdgeEventSent = true;
-                    }
-                    else
-                    {
-                        
-                    }
                     (controller as VRController).IsInputPressed = true;
-                    isDown = true;
-
 
                     if ((interaction as EventDto).TriggerAnimationId != 0)
                     {
@@ -137,17 +99,8 @@ namespace umi3dVRBrowsersBase.interactions.input
                 }
                 else
                 {
-                    if ((interaction as EventDto).hold)
-                    {
-                        if (risingEdgeEventSent)
-                        {
-                            risingEdgeEventSent = false;
-                        }
-                    }
                     (controller as VRController).IsInputPressed = false;
-                    isDown = false;
                     onInputUp.Invoke();
-
 
                     if ((interaction as EventDto).ReleaseAnimationId != 0)
                     {
@@ -169,14 +122,6 @@ namespace umi3dVRBrowsersBase.interactions.input
         public override void Associate(ulong environmentId, ManipulationDto manipulation, DofGroupEnum dofs, ulong toolId, ulong hoveredObjectId)
         {
             throw new System.Exception("Boolean input is not compatible with manipulation");
-        }
-
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
-        public override void Dissociate()
-        {
-            
         }
 
         /// <summary>

@@ -72,7 +72,7 @@ namespace umi3d.browserRuntime.interaction
             throw new NotImplementedException();
         }
 
-        public override Guid? GetControlId(ManipulationDto interaction, bool unused = true)
+        public override AbstractControlData GetControl(ManipulationDto interaction)
         {
             throw new NotImplementedException();
         }

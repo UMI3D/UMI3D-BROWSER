@@ -21,18 +21,37 @@ using UnityEngine;
 
 namespace umi3d.cdk.interaction
 {
+    [CreateAssetMenu(fileName = "UMI3D Control Data For [ControllerName]", menuName = "UMI3D/Interactions/Control/Control Data")]
     public class Controls_SO : SerializableScriptableObject
     {
         /// <summary>
-        /// The button type controls for EventDto interactions.
+        /// The physical button type controls for EventDto interactions.<br/>
+        /// Value can only be 0/1 (down/up).
         /// </summary>
-        [Tooltip("The button type controls for EventDto interactions")]
-        public List<AbstractButtonControlData> buttonControls = new();
+        [Tooltip("The physical button type controls for EventDto interactions")]
+        public List<PhysicalButtonControlData> physicalButtonControls = new();
+
+        [Space()]
+        /// <summary>
+        /// The ui button type control prefabs for EventDto interactions.<br/>
+        /// Value can only be 0/1 (down/up).
+        /// </summary>
+        [Tooltip("The ui button type control prefabs for EventDto interactions")]
+        public List<UIButtonControlData> uIButtonControlPrefabs;
+        [HideInInspector] 
+        public List<UIButtonControlData> uIButtonControls = new();
+
+
+
         public List<AbstractManipulationControlData> manipulationControls = new();
-        public List<UIButtonControlData> uIControls = new();
 
-
-        public List<AbstractControlData> shortcuts = new();
+        [Space()]
+        /// <summary>
+        /// The button type controls for shortcuts.<br/>
+        /// Value can only be 0/1 (down/up).
+        /// </summary>
+        [Tooltip("The button type controls for shortcuts")]
+        public List<PhysicalButtonControlData> shortcuts = new();
 
         public virtual AbstractControlData this[int index, AbstractControlType type]
         {
@@ -50,27 +69,13 @@ namespace umi3d.cdk.interaction
         {
             get
             {
-                return type switch
-                {
-                    ShortcutControlType => shortcuts.Find(control =>
-                    {
-                        return control.id == id;
-                    }),
-                    _ => throw new NoInputFoundException()
-                };
+                throw new System.NotImplementedException();
             }
         }
 
         public int IndexOf(Guid id, AbstractControlType type)
         {
-            return type switch
-            {
-                ShortcutControlType => shortcuts.FindIndex(control =>
-                {
-                    return control.id == id;
-                }),
-                _ => throw new NoInputFoundException()
-            };
+            throw new System.NotImplementedException();
         }
     }
 }

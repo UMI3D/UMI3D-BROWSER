@@ -30,5 +30,34 @@ namespace umi3d.cdk.interaction
         {
             this.controls_SO = controls_SO;
         }
+
+        public PhysicalButtonControlData GetPhysicalButton()
+        {
+            return controls_SO
+                .physicalButtonControls
+                .Find(
+                control =>
+                    {
+                        return !control.isUsed;
+                    }
+                );
+        }
+
+        public UIButtonControlData GetUIButton()
+        {
+            var uiButton = controls_SO
+                .uIButtonControls
+                .Find(
+                    control =>
+                    {
+                        return !control.isUsed;
+                    }
+                );
+            if (uiButton == null)
+            {
+                uiButton = controls_SO.uIButtonControlPrefabs[0];
+            }
+            return uiButton;
+        }
     }
 }

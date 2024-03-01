@@ -34,13 +34,13 @@ namespace umi3d.cdk.interaction
         }
 
         /// <summary>
-        /// Return the id of a control.<br/> 
+        /// Return a control compatible with <paramref name="interaction"/>.<br/> 
         /// Return null if no control is available.
         /// </summary>
         /// <param name="interaction"></param>
         /// <param name="unused"></param>
         /// <returns></returns>
-        public abstract Guid? GetControlId(Interaction interaction, bool unused = true);
+        public abstract AbstractControlData GetControl(Interaction interaction);
 
         public void Associate(
             Guid controlId,
@@ -51,7 +51,7 @@ namespace umi3d.cdk.interaction
         )
         {
             var control = model
-                .controls_SO[controlId, default(ActionControlType)];
+                .controls_SO[controlId, default(AbstractButtonControlType)];
             if (control == null)
             {
                 throw new ArgumentNullException($"[UMI3D] Control: control is null for id: {controlId}");
@@ -87,7 +87,7 @@ namespace umi3d.cdk.interaction
         public void Dissociate(Guid controlId)
         {
             var control = model
-                .controls_SO[controlId, default(ActionControlType)];
+                .controls_SO[controlId, default(AbstractButtonControlType)];
 
             if (control == null)
             {

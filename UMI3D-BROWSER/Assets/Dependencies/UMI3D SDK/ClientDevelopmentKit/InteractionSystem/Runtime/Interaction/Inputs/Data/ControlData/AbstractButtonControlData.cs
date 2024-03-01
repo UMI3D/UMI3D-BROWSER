@@ -20,20 +20,26 @@ using UnityEngine.InputSystem;
 
 namespace umi3d.cdk.interaction
 {
+    [Serializable]
     public abstract class AbstractButtonControlData : AbstractControlData
     {
+        public AbstractButtonControlType type;
+
         /// <summary>
         /// Action phase.
         /// </summary>
-        public InputActionPhase phase;
+        [HideInInspector] public InputActionPhase phase;
         [HideInInspector] public bool shouldDissociateAsSoonAsPossible;
 
         public Action<InputActionPhase> actionPerformed;
         public Func<InputActionPhase, bool> canPerform;
 
-        public AbstractButtonControlData()
+        public override AbstractControlType Type 
         {
-            phase = InputActionPhase.Canceled;
+            get
+            {
+                return type;
+            }
         }
 
         /// <summary>
@@ -41,17 +47,29 @@ namespace umi3d.cdk.interaction
         /// See <see cref="actionPerformed"/>.
         /// </summary>
         /// <param name="obj"></param>
-        public void ActionPerformed(InputActionPhase ctx)
+        public void ActionPerformed(InputActionPhase phase)
         {
-            if (canPerform?.Invoke(ctx) ?? true)
+            if (canPerform?.Invoke(phase) ?? true)
             {
-                actionPerformed?.Invoke(ctx);
+                actionPerformed?.Invoke(phase);
             }
 
             if (shouldDissociateAsSoonAsPossible)
             {
                 dissociate?.Invoke();
                 shouldDissociateAsSoonAsPossible = false;
+            }
+        }
+
+        public override void Dissociate()
+        {
+            if (phase != InputActionPhase.Canceled)
+            {
+                shouldDissociateAsSoonAsPossible = true;
+            }
+            else
+            {
+                dissociate?.Invoke();
             }
         }
     }

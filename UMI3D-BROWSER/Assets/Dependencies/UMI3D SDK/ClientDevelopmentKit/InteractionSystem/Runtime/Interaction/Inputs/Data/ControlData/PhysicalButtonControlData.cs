@@ -21,42 +21,37 @@ using UnityEngine.InputSystem;
 
 namespace umi3d.cdk.interaction
 {
+    [Serializable]
     public class PhysicalButtonControlData : AbstractButtonControlData
     {
-        /// <summary>
-        /// The new input system InputAction.
-        /// </summary>
-        public InputActionProperty inputActionProperty;
+        public NewInputType input;
+
+        public PhysicalButtonControlData()
+        {
+            input.actionPerformed = ActionPerformed;
+        }
 
         public override void Enable()
         {
-            inputActionProperty.action.performed += ActionPerformed;
+            try
+            {
+                input.inputActionProperty.action.performed += input.ActionPerformed;
+            }
+            catch (NullReferenceException)
+            {
+                UnityEngine.Debug.LogError($"[UMI3D] Control: new input type action is null");
+            }
         }
 
         public override void Disable()
         {
-            inputActionProperty.action.performed -= ActionPerformed;
-        }
-
-        /// <summary>
-        /// The action performed method add to the <see cref="InputAction.performed"/> event.<br/>
-        /// See <see cref="actionPerformed"/>.
-        /// </summary>
-        /// <param name="obj"></param>
-        void ActionPerformed(InputAction.CallbackContext ctx)
-        {
-            ActionPerformed(ctx.phase);
-        }
-
-        public override void Dissociate()
-        {
-            if (phase != InputActionPhase.Canceled)
+            try
             {
-                shouldDissociateAsSoonAsPossible = true;
+                input.inputActionProperty.action.performed -= input.ActionPerformed;
             }
-            else
+            catch (NullReferenceException)
             {
-                dissociate?.Invoke();
+                UnityEngine.Debug.LogError($"[UMI3D] Control: new input type action is null");
             }
         }
     }

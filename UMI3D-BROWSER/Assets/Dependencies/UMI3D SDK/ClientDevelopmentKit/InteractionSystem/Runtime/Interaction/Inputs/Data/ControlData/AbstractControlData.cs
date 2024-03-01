@@ -24,7 +24,6 @@ namespace umi3d.cdk.interaction
     [Serializable]
     public abstract class AbstractControlData 
     {
-        [HideInInspector] public Guid id;
         /// <summary>
         /// Current controller associated with this control.
         /// </summary>
@@ -45,17 +44,13 @@ namespace umi3d.cdk.interaction
         /// Whether this control is being used by the browser.
         /// </summary>
         public bool isUsed;
-        /// <summary>
-        /// Type of control.
-        /// </summary>
-        public AbstractControlType type;
 
         public Action dissociate;
 
-        public AbstractControlData()
-        {
-            id = Guid.NewGuid();
-        }
+        /// <summary>
+        /// Type of control.
+        /// </summary>
+        public abstract AbstractControlType Type { get; }
 
         public abstract void Enable();
 

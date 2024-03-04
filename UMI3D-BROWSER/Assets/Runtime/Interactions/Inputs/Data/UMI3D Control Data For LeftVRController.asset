@@ -13,17 +13,75 @@ MonoBehaviour:
   m_Name: UMI3D Control Data For LeftVRController
   m_EditorClassIdentifier: 
   _guid: eac53400111dbca40bcc969c74acf1dc
-  physicalButtonControls: []
+  physicalButtonControls:
+  - controller: {fileID: 0}
+    environmentId: 0
+    toolId: 0
+    isUsed: 0
+    phase: 0
+    shouldDissociateAsSoonAsPossible: 0
+    type: {fileID: 0}
+    input:
+      inputActionProperty:
+        m_UseReference: 0
+        m_Action:
+          m_Name: 
+          m_Type: 0
+          m_ExpectedControlType: 
+          m_Id: 61334c96-d9d7-4f51-90e6-138745973cea
+          m_Processors: 
+          m_Interactions: 
+          m_SingletonActionBindings: []
+          m_Flags: 0
+        m_Reference: {fileID: 0}
   uIButtonControlPrefabs:
   - controller: {fileID: 0}
     environmentId: 0
     toolId: 0
     isUsed: 0
-    type: {fileID: 0}
     phase: 0
     shouldDissociateAsSoonAsPossible: 0
+    type: {fileID: 0}
     input:
       prefab: {fileID: 0}
       uIObject: {fileID: 0}
   uIButtonControls: []
+  physicalManipulationControls:
+  - controller: {fileID: 0}
+    environmentId: 0
+    toolId: 0
+    isUsed: 0
+    phase: 0
+    shouldDissociateAsSoonAsPossible: 0
+    messageSender:
+      networkFrameRate: 1
+    activationInput:
+      inputActionProperty:
+        m_UseReference: 1
+        m_Action:
+          m_Name: Input Action Property
+          m_Type: 0
+          m_ExpectedControlType: 
+          m_Id: 05647b4e-8fbe-42c6-8c07-2e047ea174b8
+          m_Processors: 
+          m_Interactions: 
+          m_SingletonActionBindings: []
+          m_Flags: 0
+        m_Reference: {fileID: 0}
+    trackingInput:
+      inputActionProperty:
+        m_UseReference: 1
+        m_Action:
+          m_Name: Input Action Property
+          m_Type: 0
+          m_ExpectedControlType: 
+          m_Id: d86b6ee5-db4d-43ed-9fd6-703403c38cd3
+          m_Processors: 
+          m_Interactions: 
+          m_SingletonActionBindings: []
+          m_Flags: 0
+        m_Reference: {fileID: 684395432459739428, guid: c348712bda248c246b8c49b3db54643f,
+          type: 3}
+  uIManipulationControlPrefabs: []
+  uIManipulationControls: []
   shortcuts: []

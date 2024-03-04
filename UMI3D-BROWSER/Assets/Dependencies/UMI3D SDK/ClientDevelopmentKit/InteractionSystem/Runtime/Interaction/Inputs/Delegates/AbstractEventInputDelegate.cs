@@ -71,7 +71,6 @@ namespace umi3d.cdk.interaction
 
             buttonControl.actionPerformed = phase =>
             {
-                buttonControl.phase = phase;
                 InteractionRequestDto request = null;
                 switch (phase)
                 {
@@ -135,12 +134,6 @@ namespace umi3d.cdk.interaction
         }
 
         protected abstract bool CanPerform(InputActionPhase phase);
-
-        public override void Dissociate(AbstractControlData control)
-        {
-            base.Dissociate(control);
-            control.Disable();
-        }
 
         public override AbstractControlData GetControl(EventDto interaction)
         {

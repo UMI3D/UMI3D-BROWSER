@@ -42,34 +42,6 @@ namespace umi3d.cdk.interaction
         /// <returns></returns>
         public abstract AbstractControlData GetControl(Interaction interaction);
 
-        public void Associate(
-            Guid controlId,
-            ulong environmentId,
-            AbstractInteractionDto interaction,
-            ulong toolId,
-            ulong hoveredObjectId
-        )
-        {
-            var control = model
-                .controls_SO[controlId, default(AbstractButtonControlType)];
-            if (control == null)
-            {
-                throw new ArgumentNullException($"[UMI3D] Control: control is null for id: {controlId}");
-            }
-            if (control.isUsed)
-            {
-                throw new Exception($"[UMI3D] Control: control is already used for {control.GetType().Name}, {typeof(Interaction).Name}.");
-            }
-
-            Associate(
-                control,
-                environmentId,
-                interaction,
-                toolId,
-                hoveredObjectId
-            );
-        }
-
         public virtual void Associate(
             AbstractControlData control,
             ulong environmentId,
@@ -84,25 +56,13 @@ namespace umi3d.cdk.interaction
             control.interaction = interaction;
         }
 
-        public void Dissociate(Guid controlId)
-        {
-            var control = model
-                .controls_SO[controlId, default(AbstractButtonControlType)];
-
-            if (control == null)
-            {
-                throw new ArgumentNullException($"[UMI3D] Control: control is null for id: {controlId}");
-            }
-
-            control.Dissociate();
-        }
-
         public virtual void Dissociate(AbstractControlData control)
         {
             control.isUsed = false;
             control.environmentId = 0;
             control.toolId = 0;
             control.interaction = null;
+            control.Disable();
         }
     }
 }

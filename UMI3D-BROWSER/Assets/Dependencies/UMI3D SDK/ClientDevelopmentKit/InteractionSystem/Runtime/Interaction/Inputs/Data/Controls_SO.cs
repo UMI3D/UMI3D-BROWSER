@@ -24,6 +24,7 @@ namespace umi3d.cdk.interaction
     [CreateAssetMenu(fileName = "UMI3D Control Data For [ControllerName]", menuName = "UMI3D/Interactions/Control/Control Data")]
     public class Controls_SO : SerializableScriptableObject
     {
+        [Header("Buttons")]
         /// <summary>
         /// The physical button type controls for EventDto interactions.<br/>
         /// Value can only be 0/1 (down/up).
@@ -41,9 +42,13 @@ namespace umi3d.cdk.interaction
         [HideInInspector] 
         public List<UIButtonControlData> uIButtonControls = new();
 
+        [Header("Manipulations")]
+        public List<PhysicalManipulationControlData> physicalManipulationControls = new();
 
-
-        public List<AbstractManipulationControlData> manipulationControls = new();
+        [Space()]
+        public List<UIManipulationControlData> uIManipulationControlPrefabs = new();
+        [HideInInspector]
+        public List<UIManipulationControlData> uIManipulationControls = new();
 
         [Space()]
         /// <summary>
@@ -53,17 +58,6 @@ namespace umi3d.cdk.interaction
         [Tooltip("The button type controls for shortcuts")]
         public List<PhysicalButtonControlData> shortcuts = new();
 
-        public virtual AbstractControlData this[int index, AbstractControlType type]
-        {
-            get
-            {
-                return type switch
-                {
-                    ShortcutControlType => shortcuts[index],
-                    _ => throw new NoInputFoundException()
-                };
-            }
-        }
 
         public AbstractControlData this[Guid id, AbstractControlType type]
         {
@@ -71,11 +65,6 @@ namespace umi3d.cdk.interaction
             {
                 throw new System.NotImplementedException();
             }
-        }
-
-        public int IndexOf(Guid id, AbstractControlType type)
-        {
-            throw new System.NotImplementedException();
         }
     }
 }

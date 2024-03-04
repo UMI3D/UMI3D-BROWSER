@@ -45,6 +45,14 @@ namespace umi3d.cdk.interaction
         /// </summary>
         public bool isUsed;
 
+        /// <summary>
+        /// Action phase.
+        /// </summary>
+        [HideInInspector] public InputActionPhase phase;
+        [HideInInspector] public bool shouldDissociateAsSoonAsPossible;
+
+        public Action<InputActionPhase> actionPerformed;
+        public Func<InputActionPhase, bool> canPerform;
         public Action dissociate;
 
         /// <summary>
@@ -56,6 +64,36 @@ namespace umi3d.cdk.interaction
 
         public abstract void Disable();
 
-        public abstract void Dissociate();
+        public virtual void Dissociate()
+        {
+            if (phase != InputActionPhase.Canceled)
+            {
+                shouldDissociateAsSoonAsPossible = true;
+            }
+            else
+            {
+                dissociate?.Invoke();
+            }
+        }
+
+        /// <summary>
+        /// The action performed method add to the <see cref="InputAction.performed"/> event.<br/>
+        /// See <see cref="actionPerformed"/>.
+        /// </summary>
+        /// <param name="obj"></param>
+        public void ActionPerformed(InputActionPhase phase)
+        {
+            this.phase = phase;
+            if (canPerform?.Invoke(phase) ?? true)
+            {
+                actionPerformed?.Invoke(phase);
+            }
+
+            if (shouldDissociateAsSoonAsPossible && phase == InputActionPhase.Canceled)
+            {
+                dissociate?.Invoke();
+                shouldDissociateAsSoonAsPossible = false;
+            }
+        }
     }
 }

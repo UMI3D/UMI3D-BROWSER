@@ -14,10 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using MathNet.Numerics;
 using System;
-using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace umi3d.cdk.interaction
 {

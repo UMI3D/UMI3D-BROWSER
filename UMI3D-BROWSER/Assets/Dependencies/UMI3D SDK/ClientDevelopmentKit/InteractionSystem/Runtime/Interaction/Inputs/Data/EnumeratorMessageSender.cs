@@ -15,21 +15,33 @@ limitations under the License.
 */
 
 using System;
+using System.Collections;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace umi3d.cdk.interaction
 {
     [Serializable]
-    public abstract class AbstractButtonControlData : AbstractControlData
+    public class EnumeratorMessageSender 
     {
-        public AbstractButtonControlType type;
+        [Tooltip("Network message emission frame rate")]
+        /// <summary>
+        /// Network message emission frame rate.<br/>
+        /// <br/>
+        /// Warning: high values can cause network flood.
+        /// </summary>
+        public float networkFrameRate = 1;
 
-        public override AbstractControlType Type 
+        public Func<bool> canSend;
+        public Action messageHandler;
+
+        public IEnumerator NetworkMessageSender()
         {
-            get
+            var wait = new WaitForSeconds(1f / networkFrameRate);
+
+            while (canSend?.Invoke() ?? false)
             {
-                return type;
+                messageHandler?.Invoke();
+                yield return wait;
             }
         }
     }

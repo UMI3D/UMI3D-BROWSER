@@ -19,11 +19,22 @@ using UnityEngine;
 
 namespace umi3d.cdk.interaction
 {
-    public abstract class AbstractManipulationControlData : AbstractControlData
+    [Serializable]
+    public class UIManipulationControlData : AbstractManipulationControlData
     {
-        public EnumeratorMessageSender messageSender;
-        public Coroutine networkMessage;
+        public override void Disable()
+        {
+            throw new NotImplementedException();
+        }
 
-        public override AbstractControlType Type => throw new NotImplementedException();
+        public override void Dissociate()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Enable()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

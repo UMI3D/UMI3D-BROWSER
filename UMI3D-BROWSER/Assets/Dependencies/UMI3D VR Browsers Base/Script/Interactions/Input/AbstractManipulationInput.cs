@@ -225,16 +225,6 @@ namespace umi3dVRBrowsersBase.interactions.input
             if (PlayerMenuManager.Instance.parameterGear.IsHovered 
                 || PlayerMenuManager.Instance.IsMenuHovered)
                 return;
-
-            if (messageSenderCoroutine != null)
-            {
-                StopCoroutine(messageSenderCoroutine);
-                onInputUp.Invoke();
-                messageSenderCoroutine = null;
-            }
-
-            (controller as VRController).IsInputPressed = false;
-            isDown = false;
         }
 
         /// <summary>
@@ -245,14 +235,6 @@ namespace umi3dVRBrowsersBase.interactions.input
             if (PlayerMenuManager.Instance.parameterGear.IsHovered 
                 || PlayerMenuManager.Instance.IsMenuHovered)
                 return;
-
-            if (messageSenderCoroutine != null)
-                StopCoroutine(messageSenderCoroutine);
-
-            messageSenderCoroutine = StartCoroutine(NetworkMessageSender());
-            onInputDown.Invoke();
-            (controller as VRController).IsInputPressed = true;
-            isDown = true;
         }
 
         /// <summary>

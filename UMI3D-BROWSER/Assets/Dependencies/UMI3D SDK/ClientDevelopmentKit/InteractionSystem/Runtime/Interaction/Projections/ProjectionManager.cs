@@ -194,7 +194,7 @@ namespace umi3d.cdk.interaction
 
                 if (interaction is ManipulationDto manipulationDto)
                 {
-                    DofGroupOptionDto[] options = (interaction as ManipulationDto).dofSeparationOptions.ToArray();
+                    DofGroupOptionDto[] options = manipulationDto.dofSeparationOptions.ToArray();
                     DofGroupOptionDto bestDofGroupOption = controlManager.manipulationDelegate.FindBest(options);
 
                     foreach (DofGroupDto sep in bestDofGroupOption.separations)

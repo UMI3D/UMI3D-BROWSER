@@ -128,7 +128,6 @@ namespace umi3d.cdk.interaction
                         break;
                 }
             };
-            control.controlData.canPerformHandler = CanPerform;
         }
 
         public override AbstractControlData GetControl(EventDto interaction)

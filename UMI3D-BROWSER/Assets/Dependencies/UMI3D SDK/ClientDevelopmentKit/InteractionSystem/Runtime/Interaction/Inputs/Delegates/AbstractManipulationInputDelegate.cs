@@ -149,7 +149,6 @@ namespace umi3d.cdk.interaction
                         break;
                 }
             };
-            //TODO
         }
 
         public override AbstractControlData GetControl(ManipulationDto interaction)

@@ -60,6 +60,7 @@ namespace umi3d.cdk.interaction
             {
                 Dissociate(control);
             };
+            control.controlData.canPerformHandler = CanPerform;
             control.controlData.enableHandler?.Invoke();
         }
 

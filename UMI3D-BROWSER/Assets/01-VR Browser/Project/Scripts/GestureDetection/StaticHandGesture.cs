@@ -25,10 +25,13 @@ namespace UnityEngine.XR.Hands.Samples.GestureSample
         [SerializeField]
         [Tooltip("The event fired when the gesture is performed.")]
         UnityEvent m_GesturePerformed;
+        public UnityEvent GesturePerformed => m_GesturePerformed;
 
         [SerializeField]
         [Tooltip("The event fired when the gesture is ended.")]
         UnityEvent m_GestureEnded;
+        public UnityEvent GestureEnded => m_GestureEnded;
+
 
         [SerializeField]
         [Tooltip("The minimum amount of time the hand must be held in the required shape and orientation for the gesture to be performed.")]

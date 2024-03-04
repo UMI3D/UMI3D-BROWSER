@@ -26,13 +26,14 @@ using umi3dVRBrowsersBase.ui;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using UnityEngine.XR.Interaction.Toolkit;
 
 namespace umi3dVRBrowsersBase.interactions.selection.cursor
 {
     /// <summary>
     /// Display a laser using a cylinder (has to be configured directly in the scene).
     /// </summary>
-    public class RayCursor : AbstractPointingCursor
+    public class RayCursor : AbstractPointingCursor, IXRRayProvider
     {
 
         [Tooltip("Controller associated to the laser."), SerializeField]
@@ -56,6 +57,10 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
         /// True if the laser is currently displayed
         /// </summary>
         public bool IsDisplayed { get => _isDisplayed; }
+
+        public Vector3 rayEndPoint => impactPoint.transform.position;
+
+        public Transform rayEndTransform => impactPoint.transform;
 
         private bool _isDisplayed = false;
 
@@ -508,5 +513,10 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
                                        defaultMaterial.color.b,
                                        savedAlphaDefaultMaterial);
         }
+
+        public Transform GetOrCreateRayOrigin() => throw new NotImplementedException();
+        public Transform GetOrCreateAttachTransform() => throw new NotImplementedException();
+        public void SetRayOrigin(Transform newOrigin) => throw new NotImplementedException();
+        public void SetAttachTransform(Transform newAttach) => throw new NotImplementedException();
     }
 }

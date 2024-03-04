@@ -9,8 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e8b156269db36c4b9023b7a06798932, type: 3}
-  m_Name: One Euro Filter Rotation Ray
+  m_Script: {fileID: 11500000, guid: bb902a4ac682f59499934f11f685508a, type: 3}
+  m_Name: Average Moving Rotation Left
   m_EditorClassIdentifier: 
-  m_MinCutoff: 1
-  m_Beta: 0.007
+  m_WindowSize: 30

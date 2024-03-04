@@ -2372,7 +2372,6 @@ GameObject:
   - component: {fileID: 5829391401614954005}
   - component: {fileID: 8077894725708776653}
   - component: {fileID: 7697513992140240273}
-  - component: {fileID: 173296198150482788}
   - component: {fileID: 7728927527981548987}
   m_Layer: 0
   m_Name: Selectors
@@ -2430,32 +2429,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gesturesDisablingRay:
-  - {fileID: 173296198150482788}
   - {fileID: 7728927527981548987}
   selectionManager: {fileID: 8077894725708776653}
---- !u!114 &173296198150482788
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4414817634804964751}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf93899325d5df74eb9176e097ee3d4f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_HandTrackingEvents: {fileID: 4580364636133797154}
-  m_HandShapeOrPose: {fileID: 11400000, guid: 730573c01bf862943b0577df89770a57, type: 2}
-  m_TargetTransform: {fileID: 0}
-  m_GesturePerformed:
-    m_PersistentCalls:
-      m_Calls: []
-  m_GestureEnded:
-    m_PersistentCalls:
-      m_Calls: []
-  m_MinimumHoldTime: 0.2
-  m_GestureDetectionInterval: 0.1
 --- !u!114 &7728927527981548987
 MonoBehaviour:
   m_ObjectHideFlags: 0

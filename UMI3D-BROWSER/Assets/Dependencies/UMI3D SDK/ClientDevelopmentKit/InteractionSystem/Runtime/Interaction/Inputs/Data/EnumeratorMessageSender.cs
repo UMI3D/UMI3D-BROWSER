@@ -31,6 +31,8 @@ namespace umi3d.cdk.interaction
         /// </summary>
         public float networkFrameRate = 1;
 
+        public Coroutine networkMessage;
+
         public Func<bool> canSend;
         public Action messageHandler;
 

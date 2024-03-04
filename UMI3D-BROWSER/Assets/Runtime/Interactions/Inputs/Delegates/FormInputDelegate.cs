@@ -18,6 +18,7 @@ using System;
 using umi3d.cdk.interaction;
 using umi3d.common.interaction;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace umi3d.browserRuntime.interaction
 {
@@ -25,6 +26,11 @@ namespace umi3d.browserRuntime.interaction
     public class FormInputDelegate : AbstractInputDelegate<FormDto>
     {
         public override AbstractControlData GetControl(FormDto Interaction)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override bool CanPerform(InputActionPhase phase)
         {
             throw new NotImplementedException();
         }

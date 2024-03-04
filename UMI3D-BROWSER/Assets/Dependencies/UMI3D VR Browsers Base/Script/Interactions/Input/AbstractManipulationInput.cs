@@ -40,21 +40,6 @@ namespace umi3dVRBrowsersBase.interactions.input
         public VRInputObserver activationButton;
 
         /// <summary>
-        /// Frame rate applied to message emission through network (high values can cause network flood).
-        /// </summary>
-        public float networkFrameRate = 1;
-
-        /// <summary>
-        /// Input multiplicative strength.
-        /// </summary>
-        public float translationStrenght = 1;
-
-        /// <summary>
-        /// Input multiplicative strength.
-        /// </summary>
-        public float rotationStrenght = 200;
-
-        /// <summary>
         /// First argument is the frame of reference, the second is the dof.
         /// </summary>
         [System.Serializable]
@@ -235,39 +220,6 @@ namespace umi3dVRBrowsersBase.interactions.input
             if (PlayerMenuManager.Instance.parameterGear.IsHovered 
                 || PlayerMenuManager.Instance.IsMenuHovered)
                 return;
-        }
-
-        /// <summary>
-        /// Projects current user's movments to <paramref name="dofs"/>.
-        /// </summary>
-        /// <param name="dofs"></param>
-        /// <returns></returns>
-        protected abstract ManipulationRequestDto ComputeManipulationArgument(DofGroupEnum dofs);
-
-        /// <summary>
-        /// Coroutine responsible for sending manipualtion data to UMI3D server.
-        /// </summary>
-        /// <returns></returns>
-        protected IEnumerator NetworkMessageSender()
-        {
-            var wait = new WaitForSeconds(1f / networkFrameRate);
-
-            while (associatedInteraction != null)
-            {
-                if (true)
-                {
-                    ManipulationRequestDto arg = ComputeManipulationArgument(associatedManipulationDof);
-
-                    arg.boneType = boneType;
-                    arg.bonePosition = boneTransform.position.Dto();
-                    arg.boneRotation = boneTransform.rotation.Dto();
-                    arg.id = associatedInteraction.id;
-                    arg.toolId = toolId;
-                    arg.hoveredObjectId = hoveredObjectId;
-                    UMI3DClientServer.SendData(arg, true);
-                }
-                yield return wait;
-            }
         }
 
         #endregion

@@ -38,9 +38,9 @@ namespace umi3d.cdk.interaction
             {
                 throw new Exception($"[UMI3D] Control: Interaction is not an {nameof(EventDto)}.");
             }
-            if (control is not AbstractButtonControlData buttonControl)
+            if (control is not PhysicalButtonControlData && control is not UIButtonControlData)
             {
-                throw new Exception($"[UMI3D] Control: control is not an {nameof(AbstractButtonControlData)}.");
+                throw new Exception($"[UMI3D] Control: control is not a button.");
             }
 
             base.Associate(
@@ -51,25 +51,27 @@ namespace umi3d.cdk.interaction
                 hoveredObjectId
             );
 
-            control.Enable();
             uint boneType = control
+                .controlData
                 .controller
                 .controllerData_SO
                 .BoneType;
             Vector3Dto bonePosition = control
+                .controlData
                 .controller
                 .controllerData_SO
                 .BoneTransform
                 .position
                 .Dto();
             Vector4Dto boneRotation = control
+                .controlData
                 .controller
                 .controllerData_SO
                 .BoneTransform
                 .rotation
                 .Dto();
 
-            buttonControl.actionPerformed = phase =>
+            control.controlData.actionPerformedHandler = phase =>
             {
                 InteractionRequestDto request = null;
                 switch (phase)
@@ -126,14 +128,8 @@ namespace umi3d.cdk.interaction
                         break;
                 }
             };
-            buttonControl.canPerform = CanPerform;
-            buttonControl.dissociate = () =>
-            {
-                Dissociate(control);
-            };
+            control.controlData.canPerformHandler = CanPerform;
         }
-
-        protected abstract bool CanPerform(InputActionPhase phase);
 
         public override AbstractControlData GetControl(EventDto interaction)
         {

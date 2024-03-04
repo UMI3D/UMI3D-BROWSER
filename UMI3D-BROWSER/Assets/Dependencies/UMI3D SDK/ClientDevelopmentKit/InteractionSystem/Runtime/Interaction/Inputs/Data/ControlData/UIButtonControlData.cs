@@ -21,11 +21,18 @@ using UnityEngine.InputSystem;
 namespace umi3d.cdk.interaction
 {
     [Serializable]
-    public class UIButtonControlData : AbstractButtonControlData
+    public sealed class UIButtonControlData : AbstractControlData
     {
-        public UIInputType input;
+        public ButtonControlData buttonData = new();
+        public UIInputType input = new();
 
-        public override void Disable()
+        public UIButtonControlData()
+        {
+            controlData.enableHandler += Enable;
+            controlData.disableHandler += Disable;
+        }
+
+        public void Disable()
         {
             try
             {
@@ -39,7 +46,7 @@ namespace umi3d.cdk.interaction
             
         }
 
-        public override void Enable()
+        public void Enable()
         {
             try
             {
@@ -58,7 +65,7 @@ namespace umi3d.cdk.interaction
             {
                 throw new Exception($"[UMI3D] Control: ui input value is not InputActionPhase");
             }
-            ActionPerformed((InputActionPhase)value);
+            controlData.ActionPerformed((InputActionPhase)value);
         }
     }
 }

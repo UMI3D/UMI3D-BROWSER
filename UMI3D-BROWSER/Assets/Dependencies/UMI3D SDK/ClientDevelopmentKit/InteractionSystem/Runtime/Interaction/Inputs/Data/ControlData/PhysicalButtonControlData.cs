@@ -19,16 +19,19 @@ using System;
 namespace umi3d.cdk.interaction
 {
     [Serializable]
-    public class PhysicalButtonControlData : AbstractButtonControlData
+    public class PhysicalButtonControlData : AbstractControlData
     {
-        public NewInputType input;
+        public ButtonControlData buttonData = new();
+        public NewInputType input = new();
 
         public PhysicalButtonControlData()
         {
-            input.actionPerformed = ActionPerformed;
+            input.actionPerformed = controlData.ActionPerformed;
+            controlData.enableHandler += Enable;
+            controlData.disableHandler += Disable;
         }
 
-        public override void Enable()
+        public void Enable()
         {
             try
             {
@@ -40,7 +43,7 @@ namespace umi3d.cdk.interaction
             }
         }
 
-        public override void Disable()
+        public void Disable()
         {
             try
             {

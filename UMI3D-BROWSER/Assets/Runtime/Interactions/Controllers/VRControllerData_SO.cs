@@ -44,5 +44,13 @@ namespace umi3d.browserRuntime.interaction
                 return bone.transform;
             }
         }
+
+        public override Transform ManipulationTransform
+        {
+            get
+            {
+                return bone.transform;
+            }
+        }
     }
 }

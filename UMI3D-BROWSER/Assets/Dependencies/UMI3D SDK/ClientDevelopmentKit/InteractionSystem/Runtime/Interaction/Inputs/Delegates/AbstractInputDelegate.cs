@@ -33,6 +33,8 @@ namespace umi3d.cdk.interaction
             this.model = model;
         }
 
+        protected abstract bool CanPerform(InputActionPhase phase);
+
         /// <summary>
         /// Return a control compatible with <paramref name="interaction"/>.<br/> 
         /// Return null if no control is available.
@@ -50,19 +52,24 @@ namespace umi3d.cdk.interaction
             ulong hoveredObjectId
         )
         {
-            control.isUsed = true;
-            control.environmentId = environmentId;
-            control.toolId = toolId;
-            control.interaction = interaction;
+            control.controlData.isUsed = true;
+            control.controlData.environmentId = environmentId;
+            control.controlData.toolId = toolId;
+            control.controlData.interaction = interaction;
+            control.controlData.dissociateHandler = () =>
+            {
+                Dissociate(control);
+            };
+            control.controlData.enableHandler?.Invoke();
         }
 
         public virtual void Dissociate(AbstractControlData control)
         {
-            control.isUsed = false;
-            control.environmentId = 0;
-            control.toolId = 0;
-            control.interaction = null;
-            control.Disable();
+            control.controlData.isUsed = false;
+            control.controlData.environmentId = 0;
+            control.controlData.toolId = 0;
+            control.controlData.interaction = null;
+            control.controlData.disableHandler?.Invoke();
         }
     }
 }

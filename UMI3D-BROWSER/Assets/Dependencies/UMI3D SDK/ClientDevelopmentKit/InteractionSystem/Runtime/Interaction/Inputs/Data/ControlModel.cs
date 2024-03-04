@@ -38,7 +38,7 @@ namespace umi3d.cdk.interaction
                 .Find(
                 control =>
                     {
-                        return !control.isUsed;
+                        return !control.controlData.isUsed;
                     }
                 );
         }
@@ -50,7 +50,7 @@ namespace umi3d.cdk.interaction
                 .Find(
                     control =>
                     {
-                        return !control.isUsed;
+                        return !control.controlData.isUsed;
                     }
                 );
             if (uiButton == null)

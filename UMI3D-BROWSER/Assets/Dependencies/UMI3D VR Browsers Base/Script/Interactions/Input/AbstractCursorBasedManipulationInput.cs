@@ -31,26 +31,6 @@ namespace umi3dVRBrowsersBase.interactions.input
         public Transform cursor;
 
         /// <summary>
-        /// World position of <see cref="cursor"/> on activation.
-        /// </summary>
-        protected Vector3 cursorPositionOnActivation;
-
-        /// <summary>
-        /// World rotation of <see cref="cursor"/> on activation.
-        /// </summary>
-        protected Quaternion cursorRotationOnActivation;
-
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
-        protected override void ActivationButton_onStateDown()
-        {
-            cursorPositionOnActivation = cursor.position;
-            cursorRotationOnActivation = cursor.rotation;
-            base.ActivationButton_onStateDown();
-        }
-
-        /// <summary>
         /// <inheritdoc/>
         /// </summary>
         /// <param name="hoveredObjectId"></param>

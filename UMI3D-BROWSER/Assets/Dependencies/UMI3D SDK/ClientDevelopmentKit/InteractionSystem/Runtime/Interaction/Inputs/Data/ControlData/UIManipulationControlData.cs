@@ -20,19 +20,16 @@ using UnityEngine;
 namespace umi3d.cdk.interaction
 {
     [Serializable]
-    public class UIManipulationControlData : AbstractManipulationControlData
+    public class UIManipulationControlData : AbstractControlData
     {
-        public override void Disable()
+        public ManipulationControlData manipulationData = new();
+
+        public void Disable()
         {
             throw new NotImplementedException();
         }
 
-        public override void Dissociate()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Enable()
+        public void Enable()
         {
             throw new NotImplementedException();
         }

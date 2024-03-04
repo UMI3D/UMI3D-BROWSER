@@ -88,6 +88,68 @@ namespace umi3d.cdk.interaction
             }
         }
 
+        public void Associate(
+            AbstractControlData control,
+            ulong environmentId,
+            ulong toolId,
+            AbstractInteractionDto interaction,
+            ulong hoveredObjectId,
+            DofGroupDto dof = null
+        )
+        {
+            switch (interaction)
+            {
+                case ManipulationDto manipulation:
+                    manipulationDelegate.dof = dof;
+                    manipulationDelegate.Associate(
+                        control,
+                        environmentId,
+                        interaction,
+                        toolId,
+                        hoveredObjectId
+                    );
+                    break;
+                case EventDto button:
+                    eventInputDelegate.Associate(
+                        control,
+                        environmentId,
+                        interaction,
+                        toolId,
+                        hoveredObjectId
+                    );
+                    break;
+                case FormDto form:
+                    formInputDelegate.Associate(
+                        control,
+                        environmentId,
+                        interaction,
+                        toolId,
+                        hoveredObjectId
+                    );
+                    break;
+                case LinkDto link:
+                    linkInputDelegate.Associate(
+                        control,
+                        environmentId,
+                        interaction,
+                        toolId,
+                        hoveredObjectId
+                    );
+                    break;
+                case AbstractParameterDto parameter:
+                    parameterInputDelegate.Associate(
+                        control,
+                        environmentId,
+                        interaction,
+                        toolId,
+                        hoveredObjectId
+                    );
+                    break;
+                default:
+                    throw new System.Exception("Unknown interaction type, can't project !");
+            }
+        }
+
         public AbstractUMI3DInput FindInput<T>(
             List<T> inputs,
             Predicate<T> predicate

@@ -19,7 +19,6 @@ using System;
 using umi3d.common;
 using umi3d.common.interaction;
 using UnityEngine;
-using UnityEngine.InputSystem.Controls;
 
 namespace umi3d.cdk.interaction
 {
@@ -39,9 +38,18 @@ namespace umi3d.cdk.interaction
             {
                 throw new Exception($"[UMI3D] Control: Interaction is not an {nameof(ManipulationDto)}.");
             }
-            if (control is not AbstractManipulationControlData manipControl)
+            ManipulationControlData manipData;
+            if (control is PhysicalManipulationControlData phManipControl)
             {
-                throw new Exception($"[UMI3D] Control: control is not an {nameof(AbstractManipulationControlData)}.");
+                manipData = phManipControl.manipulationData;
+            }
+            else if (control is UIManipulationControlData uiManipControl)
+            {
+                manipData = uiManipControl.manipulationData;
+            }
+            else
+            {
+                throw new Exception($"[UMI3D] Control: control is not a manipulation.");
             }
 
             base.Associate(
@@ -52,46 +60,80 @@ namespace umi3d.cdk.interaction
                 hoveredObjectId
             );
 
-            control.Enable();
+            manipData.frameOfReference = UMI3DEnvironmentLoader
+                .GetNode(
+                    environmentId,
+                    manipInteraction.frameOfReference
+                )
+                .gameObject
+                .transform;
+
             uint boneType = control
+                .controlData
                 .controller
                 .controllerData_SO
                 .BoneType;
             Vector3Dto bonePosition = control
+                .controlData
                 .controller
                 .controllerData_SO
                 .BoneTransform
                 .position
                 .Dto();
             Vector4Dto boneRotation = control
+                .controlData
                 .controller
                 .controllerData_SO
                 .BoneTransform
                 .rotation
                 .Dto();
 
-            manipControl.messageSender.messageHandler = () =>
+            manipData.messageSender.messageHandler = () =>
             {
-                ManipulationRequestDto arg = null;
-                arg.boneType = boneType;
-                arg.bonePosition = bonePosition;
-                arg.boneRotation = boneRotation;
-                arg.id = interaction.id;
-                arg.toolId = toolId;
-                arg.hoveredObjectId = hoveredObjectId;
-                UMI3DClientServer.SendRequest(arg, true);
+                ManipulationRequestDto request = new(); 
+                manipData.SetRequestTranslationAndRotation(
+                    dof.dofs, 
+                    request,
+                    control
+                        .controlData
+                        .controller
+                        .controllerData_SO
+                        .ManipulationTransform
+                );
+                request.boneType = boneType;
+                request.bonePosition = bonePosition;
+                request.boneRotation = boneRotation;
+                request.id = interaction.id;
+                request.toolId = toolId;
+                request.hoveredObjectId = hoveredObjectId;
+                UMI3DClientServer.SendRequest(request, true);
             };
 
-            manipControl.actionPerformed += phase =>
+            control.controlData.actionPerformedHandler += phase =>
             {
                 switch (phase)
                 {
                     case UnityEngine.InputSystem.InputActionPhase.Started:
-                        manipControl.networkMessage 
+                        manipData.initialPosition = 
+                            control
+                                .controlData
+                                .controller
+                                .controllerData_SO
+                                .ManipulationTransform
+                                .position;
+                        manipData.initialRotation =
+                           control
+                               .controlData
+                               .controller
+                               .controllerData_SO
+                               .ManipulationTransform
+                               .rotation;
+
+                        manipData.messageSender.networkMessage
                             = CoroutineManager
                                 .Instance
                                 .AttachCoroutine(
-                                    manipControl
+                                    manipData
                                     .messageSender
                                     .NetworkMessageSender()
                                 );
@@ -100,7 +142,7 @@ namespace umi3d.cdk.interaction
                         CoroutineManager
                             .Instance
                             .DetachCoroutine(
-                                manipControl.networkMessage
+                                manipData.messageSender.networkMessage
                             );
                         break;
                     default:
@@ -108,11 +150,11 @@ namespace umi3d.cdk.interaction
                 }
             };
             //TODO
+        }
 
-            manipControl.dissociate = () =>
-            {
-                Dissociate(control);
-            };
+        public override AbstractControlData GetControl(ManipulationDto interaction)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>

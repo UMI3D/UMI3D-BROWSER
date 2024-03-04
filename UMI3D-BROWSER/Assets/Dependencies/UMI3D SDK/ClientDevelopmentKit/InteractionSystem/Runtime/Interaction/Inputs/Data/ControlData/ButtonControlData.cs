@@ -19,11 +19,9 @@ using UnityEngine;
 
 namespace umi3d.cdk.interaction
 {
-    public abstract class AbstractManipulationControlData : AbstractControlData
+    [Serializable]
+    public sealed class ButtonControlData 
     {
-        public EnumeratorMessageSender messageSender;
-        public Coroutine networkMessage;
-
-        public override AbstractControlType Type => throw new NotImplementedException();
+        public AbstractButtonControlType type;
     }
 }

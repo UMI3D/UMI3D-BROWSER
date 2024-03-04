@@ -18,7 +18,7 @@ public class AverageMovingVector3 : FilterAlgoVector3
         m_Cache.Add(value);
 
         Vector3 vec = m_Cache[0];
-        for (var i = 1; i < m_Cache.Count - 1; i++)
+        for (var i = 1; i < m_Cache.Count; i++)
         {
             vec += m_Cache[i];
         }

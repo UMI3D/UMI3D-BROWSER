@@ -18,14 +18,14 @@ public class AverageMovingRotation : FilterAlgoRotation
         m_Cache.Add(value);
 
         Vector3 newForward = m_Cache[0].forward;
-        for (var i = 1; i < m_Cache.Count - 1; i++)
+        for (var i = 1; i < m_Cache.Count; i++)
         {
             newForward += m_Cache[i].forward;
         }
         BurstMathUtility.FastSafeDivide(newForward, m_Cache.Count, out var resultForward);
 
         Vector3 newUp = m_Cache[0].up;
-        for (var i = 1; i < m_Cache.Count - 1; i++)
+        for (var i = 1; i < m_Cache.Count; i++)
         {
             newUp += m_Cache[i].up;
         }

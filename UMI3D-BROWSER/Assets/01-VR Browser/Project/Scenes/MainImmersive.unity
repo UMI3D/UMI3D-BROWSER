@@ -854,7 +854,7 @@ PrefabInstance:
     - target: {fileID: 5988314907380347006, guid: 6d8cc188ac4cb49419e2616ed25f607d,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0.0000043969985
+      value: 0.0001299628
       objectReference: {fileID: 0}
     - target: {fileID: 6093459749334264534, guid: 6d8cc188ac4cb49419e2616ed25f607d,
         type: 3}
@@ -1102,7 +1102,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 1131452852}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1423786216}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4c26d0ce8e0d76a4cbe25756a5438d96, type: 3}
@@ -1171,6 +1171,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 250257293954053854, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 277730926632166098, guid: aa50e35a45eaaed43a950ae34ef532dc,
         type: 3}
@@ -1357,6 +1362,16 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3984685109457449432, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: centerEyeAnchor
+      value: 
+      objectReference: {fileID: 1423786217}
+    - target: {fileID: 3984685109457449432, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: teleportingObject
+      value: 
+      objectReference: {fileID: 1423786216}
     - target: {fileID: 3999068789731578615, guid: aa50e35a45eaaed43a950ae34ef532dc,
         type: 3}
       propertyPath: controllerTransform
@@ -1392,6 +1407,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4225194682776532377, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: onActionUp.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: umi3dVRBrowsersBase.navigation.Teleporting, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 4428492941319165980, guid: aa50e35a45eaaed43a950ae34ef532dc,
         type: 3}
@@ -1749,6 +1769,11 @@ PrefabInstance:
       propertyPath: m_InteractionManager
       value: 
       objectReference: {fileID: 732734013}
+    - target: {fileID: 8339782578340436364, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8430962180001979688, guid: aa50e35a45eaaed43a950ae34ef532dc,
         type: 3}
       propertyPath: m_ActionAssets.Array.size
@@ -1845,6 +1870,18 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2674705051583403392, guid: 6d8cc188ac4cb49419e2616ed25f607d,
     type: 3}
   m_PrefabInstance: {fileID: 343249369}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1423786216 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5582060202346245420, guid: aa50e35a45eaaed43a950ae34ef532dc,
+    type: 3}
+  m_PrefabInstance: {fileID: 1131452852}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1423786217 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8430962178111685219, guid: aa50e35a45eaaed43a950ae34ef532dc,
+    type: 3}
+  m_PrefabInstance: {fileID: 1131452852}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &1722181418 stripped
 MonoBehaviour:

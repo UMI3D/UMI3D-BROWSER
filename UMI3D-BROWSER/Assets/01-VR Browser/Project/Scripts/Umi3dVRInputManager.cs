@@ -69,7 +69,9 @@ namespace umi3d.picoBrowser
             public void IncrementFrame() => Frame++;
         }
 
-        public Dictionary<ControllerType, bool> isTeleportDown = new Dictionary<ControllerType, bool>();
+        private Dictionary<ControllerType, bool> isTeleporting = new Dictionary<ControllerType, bool>();
+        private Dictionary<ControllerType, bool> isHandTeleporting = new Dictionary<ControllerType, bool>();
+        private Dictionary<ControllerType, bool> isUsingHandTeleportation = new Dictionary<ControllerType, bool>();
 
         public UnityEngine.XR.InputDevice LeftController => leftControllersGroup.controllerDevice;
         public UnityEngine.XR.InputDevice RightController => rightControllersGroup.controllerDevice;
@@ -86,7 +88,9 @@ namespace umi3d.picoBrowser
 
             foreach (ControllerType ctrl in Enum.GetValues(typeof(ControllerType)))
             {
-                isTeleportDown.Add(ctrl, false);
+                isTeleporting.Add(ctrl, false);
+                isHandTeleporting.Add(ctrl, false);
+                isUsingHandTeleportation.Add(ctrl, false);
             }
         }
 
@@ -275,6 +279,13 @@ namespace umi3d.picoBrowser
 
         private void SetHandTrackingInputAction(ControllerType controllerType, ActionType actionType, bool value)
         {
+            Debug.Log($"Action {actionType} on {controllerType} to {value}");
+            if (actionType == ActionType.Teleport)
+            {
+                isHandTeleporting[controllerType] = value;
+                return;
+            }
+
             if (!pressStateCoordinators.ContainsKey(actionType))
                 return;
 
@@ -494,37 +505,47 @@ namespace umi3d.picoBrowser
 
         public override bool GetTeleportDown(ControllerType controller)
         {
-            var res = GetJoystickDown(controller);
-
-            if (res)
+            if (isHandTeleporting[controller] && !isUsingHandTeleportation[controller] && !isTeleporting[controller])
             {
-
-                (float pole, float magnitude) = GetJoystickPoleAndMagnitude(controller);
-
-                if ((pole > 20 && pole < 160))
-                {
-                    isTeleportDown[controller] = true;
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                isTeleporting[controller] = true;
+                isUsingHandTeleportation[controller] = true;
+                return isTeleporting[controller];
             }
 
-            return res;
+            if (!GetJoystickDown(controller))
+                return false;
+            
+            (float pole, float magnitude) = GetJoystickPoleAndMagnitude(controller);
+
+            if ((pole > 20 && pole < 160))
+            {
+                isTeleporting[controller] = true;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public override bool GetTeleportUp(ControllerType controller)
         {
-            var res = GetJoystickUp(controller) && isTeleportDown[controller];
-
-            if (res)
-            {
-                isTeleportDown[controller] = false;
+            if (!isTeleporting[controller])
+                return false;
+            
+            if (!isHandTeleporting[controller] && isUsingHandTeleportation[controller])
+            {   
+                isTeleporting[controller] = false;
+                isUsingHandTeleportation[controller] = false;
+                return true;
             }
-
-            return res;
+            else if (GetJoystickUp(controller))
+            {
+                isTeleporting[controller] = false;
+                return true;
+            }
+            else
+                return false;
         }
 
         #endregion Inputs

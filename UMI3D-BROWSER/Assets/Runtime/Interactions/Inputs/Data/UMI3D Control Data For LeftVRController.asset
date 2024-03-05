@@ -14,18 +14,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _guid: eac53400111dbca40bcc969c74acf1dc
   physicalButtonControls:
-  - controller: {fileID: 0}
-    environmentId: 0
-    toolId: 0
-    isUsed: 0
-    phase: 0
-    shouldDissociateAsSoonAsPossible: 0
-    type: {fileID: 0}
+  - controlData:
+      isUsed: 0
+      controller: {fileID: 0}
+      environmentId: 0
+      toolId: 0
+      phase: 0
+      shouldDissociateAsSoonAsPossible: 0
+    buttonData:
+      type: {fileID: 0}
     input:
       inputActionProperty:
         m_UseReference: 0
         m_Action:
-          m_Name: 
+          m_Name: Input Action Property
           m_Type: 0
           m_ExpectedControlType: 
           m_Id: 61334c96-d9d7-4f51-90e6-138745973cea
@@ -35,26 +37,36 @@ MonoBehaviour:
           m_Flags: 0
         m_Reference: {fileID: 0}
   uIButtonControlPrefabs:
-  - controller: {fileID: 0}
-    environmentId: 0
-    toolId: 0
-    isUsed: 0
-    phase: 0
-    shouldDissociateAsSoonAsPossible: 0
-    type: {fileID: 0}
+  - controlData:
+      isUsed: 0
+      controller: {fileID: 0}
+      environmentId: 0
+      toolId: 0
+      phase: 0
+      shouldDissociateAsSoonAsPossible: 0
+    buttonData:
+      type: {fileID: 0}
     input:
       prefab: {fileID: 0}
       uIObject: {fileID: 0}
   uIButtonControls: []
   physicalManipulationControls:
-  - controller: {fileID: 0}
-    environmentId: 0
-    toolId: 0
-    isUsed: 0
-    phase: 0
-    shouldDissociateAsSoonAsPossible: 0
-    messageSender:
-      networkFrameRate: 1
+  - controlData:
+      isUsed: 0
+      controller: {fileID: 0}
+      environmentId: 0
+      toolId: 0
+      phase: 0
+      shouldDissociateAsSoonAsPossible: 0
+    manipulationData:
+      messageSender:
+        networkFrameRate: 1
+      translationStrength: 1
+      rotationStrength: 200
+      compatibleDofGroup: 00000000
+      initialPosition: {x: 0, y: 0, z: 0}
+      initialRotation: {x: 0, y: 0, z: 0, w: 0}
+      frameOfReference: {fileID: 0}
     activationInput:
       inputActionProperty:
         m_UseReference: 1

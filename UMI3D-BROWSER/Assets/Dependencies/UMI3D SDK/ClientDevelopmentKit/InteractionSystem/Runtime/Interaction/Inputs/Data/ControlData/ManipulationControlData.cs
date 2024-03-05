@@ -21,6 +21,11 @@ using UnityEngine;
 
 namespace umi3d.cdk.interaction
 {
+    public interface HasManipulationControlData
+    {
+        ManipulationControlData ManipulationControlData { get; set; }
+    }
+
     [Serializable]
     public sealed class ManipulationControlData
     {

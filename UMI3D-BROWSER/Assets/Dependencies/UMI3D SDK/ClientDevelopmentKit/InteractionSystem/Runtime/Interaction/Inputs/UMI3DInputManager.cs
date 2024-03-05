@@ -52,7 +52,7 @@ namespace umi3d.cdk.interaction
         /// <param name="tryToFindInputForHoldableEvent"></param>
         /// <param name="dof"></param>
         /// <returns></returns>
-        public AbstractControlData GetControl<Interaction>(
+        public AbstractControlEntity GetControl<Interaction>(
             Interaction interaction,
             bool tryToFindInputForHoldableEvent = false,
             DofGroupDto dof = null
@@ -89,7 +89,7 @@ namespace umi3d.cdk.interaction
         }
 
         public void Associate(
-            AbstractControlData control,
+            AbstractControlEntity control,
             ulong environmentId,
             ulong toolId,
             AbstractInteractionDto interaction,

@@ -27,7 +27,7 @@ namespace umi3d.cdk.interaction
         public DofGroupDto dof;
 
         public override void Associate(
-            AbstractControlData control,
+            AbstractControlEntity control,
             ulong environmentId,
             AbstractInteractionDto interaction,
             ulong toolId,
@@ -38,18 +38,9 @@ namespace umi3d.cdk.interaction
             {
                 throw new Exception($"[UMI3D] Control: Interaction is not an {nameof(ManipulationDto)}.");
             }
-            ManipulationControlData manipData;
-            if (control is PhysicalManipulationControlData phManipControl)
+            if (control is not HasManipulationControlData manipControl)
             {
-                manipData = phManipControl.manipulationData;
-            }
-            else if (control is UIManipulationControlData uiManipControl)
-            {
-                manipData = uiManipControl.manipulationData;
-            }
-            else
-            {
-                throw new Exception($"[UMI3D] Control: control is not a manipulation.");
+                throw new Exception($"[UMI3D] Control: control is not a {nameof(HasManipulationControlData)}.");
             }
 
             base.Associate(
@@ -60,7 +51,7 @@ namespace umi3d.cdk.interaction
                 hoveredObjectId
             );
 
-            manipData.frameOfReference = UMI3DEnvironmentLoader
+            manipControl.ManipulationControlData.frameOfReference = UMI3DEnvironmentLoader
                 .GetNode(
                     environmentId,
                     manipInteraction.frameOfReference
@@ -88,10 +79,13 @@ namespace umi3d.cdk.interaction
                 .rotation
                 .Dto();
 
-            manipData.messageSender.messageHandler = () =>
+            manipControl
+                .ManipulationControlData
+                .messageSender
+                .messageHandler = () =>
             {
-                ManipulationRequestDto request = new(); 
-                manipData.SetRequestTranslationAndRotation(
+                ManipulationRequestDto request = new();
+                manipControl.ManipulationControlData.SetRequestTranslationAndRotation(
                     dof.dofs, 
                     request,
                     control
@@ -114,14 +108,14 @@ namespace umi3d.cdk.interaction
                 switch (phase)
                 {
                     case UnityEngine.InputSystem.InputActionPhase.Started:
-                        manipData.initialPosition = 
+                        manipControl.ManipulationControlData.initialPosition = 
                             control
                                 .controlData
                                 .controller
                                 .controllerData_SO
                                 .ManipulationTransform
                                 .position;
-                        manipData.initialRotation =
+                        manipControl.ManipulationControlData.initialRotation =
                            control
                                .controlData
                                .controller
@@ -129,11 +123,11 @@ namespace umi3d.cdk.interaction
                                .ManipulationTransform
                                .rotation;
 
-                        manipData.messageSender.networkMessage
+                        manipControl.ManipulationControlData.messageSender.networkMessage
                             = CoroutineManager
                                 .Instance
                                 .AttachCoroutine(
-                                    manipData
+                                    manipControl.ManipulationControlData
                                     .messageSender
                                     .NetworkMessageSender()
                                 );
@@ -142,7 +136,10 @@ namespace umi3d.cdk.interaction
                         CoroutineManager
                             .Instance
                             .DetachCoroutine(
-                                manipData.messageSender.networkMessage
+                                manipControl
+                                .ManipulationControlData
+                                .messageSender
+                                .networkMessage
                             );
                         break;
                     default:
@@ -151,9 +148,15 @@ namespace umi3d.cdk.interaction
             };
         }
 
-        public override AbstractControlData GetControl(ManipulationDto interaction)
+        public override AbstractControlEntity GetControl(ManipulationDto interaction)
         {
-            throw new NotImplementedException();
+            var physicalManipulation = model.GetPhysicalManipulation(dof);
+            if (physicalManipulation != null)
+            {
+                return physicalManipulation;
+            }
+
+            return model.GetUIManipulation(dof);
         }
 
         /// <summary>

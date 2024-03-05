@@ -31,7 +31,7 @@ namespace umi3d.cdk.interaction
             this.controls_SO = controls_SO;
         }
 
-        public PhysicalButtonControlData GetPhysicalButton()
+        public PhysicalButtonControlEntity GetPhysicalButton()
         {
             return controls_SO
                 .physicalButtonControls
@@ -43,7 +43,7 @@ namespace umi3d.cdk.interaction
                 );
         }
 
-        public UIButtonControlData GetUIButton()
+        public UIButtonControlEntity GetUIButton()
         {
             var uiButton = controls_SO
                 .uIButtonControls
@@ -58,6 +58,74 @@ namespace umi3d.cdk.interaction
                 uiButton = controls_SO.uIButtonControlPrefabs[0];
             }
             return uiButton;
+        }
+
+        public PhysicalManipulationControlEntity GetPhysicalManipulation(DofGroupDto dof)
+        {
+            return controls_SO
+                .physicalManipulationControls
+                .Find(
+                    control =>
+                    {
+                        bool isUsed = control.controlData.isUsed;
+                        bool isDofCompatible = 
+                            control
+                            .manipulationData
+                            .compatibleDofGroup
+                            .FindIndex(
+                                _dof =>
+                                {
+                                    return _dof == dof.dofs;
+                                }
+                            ) >= 0;
+                        return !isUsed && isDofCompatible;
+                    }
+                );
+        }
+
+        public UIManipulationControlEntity GetUIManipulation(DofGroupDto dof)
+        {
+            var uiManipulation = controls_SO
+                .uIManipulationControls
+                .Find(
+                    control =>
+                    {
+                        bool isUsed = control.controlData.isUsed;
+                        bool isDofCompatible =
+                            control
+                            .manipulationData
+                            .compatibleDofGroup
+                            .FindIndex(
+                                _dof =>
+                                {
+                                    return _dof == dof.dofs;
+                                }
+                            ) >= 0;
+                        return !isUsed && isDofCompatible;
+                    }
+                );
+            if (uiManipulation == null)
+            {
+                uiManipulation = controls_SO.uIManipulationControlPrefabs.Find(
+                    control =>
+                    {
+                        return control
+                            .manipulationData
+                            .compatibleDofGroup
+                            .FindIndex(
+                                _dof =>
+                                {
+                                    return _dof == dof.dofs;
+                                }
+                            ) >= 0;
+                    }
+                );
+                if (uiManipulation == null)
+                {
+                    throw new NoInputFoundException();
+                }
+            }
+            return uiManipulation;
         }
     }
 }

@@ -25,7 +25,7 @@ namespace umi3d.browserRuntime.interaction
     [CreateAssetMenu(fileName = "UMI3D Parameter Input Delegate", menuName = "UMI3D/Interactions/Input Delegates/Parameter Input Delegate")]
     public class ParameterInputDelegate : AbstractInputDelegate<AbstractParameterDto>
     {
-        public override AbstractControlData GetControl(AbstractParameterDto interaction)
+        public override AbstractControlEntity GetControl(AbstractParameterDto interaction)
         {
             throw new NotImplementedException();
         }

@@ -38,12 +38,12 @@ namespace umi3d.cdk.interaction
 
         public override Func<ProjectionTreeNodeData> CreateNodeForControl(
             ManipulationDto interaction,
-            Func<AbstractControlData> getControl
+            Func<AbstractControlEntity> getControl
         )
         {
             return () =>
             {
-                AbstractControlData control = getControl?.Invoke();
+                AbstractControlEntity control = getControl?.Invoke();
 
                 if (control == null)
                 {

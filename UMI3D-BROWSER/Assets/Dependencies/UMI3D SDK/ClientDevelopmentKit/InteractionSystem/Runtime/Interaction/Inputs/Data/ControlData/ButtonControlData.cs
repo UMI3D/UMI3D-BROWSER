@@ -19,6 +19,11 @@ using UnityEngine;
 
 namespace umi3d.cdk.interaction
 {
+    public interface HasButtonControlData
+    {
+        ButtonControlData ButtonControlData { get; set; }
+    }
+
     [Serializable]
     public sealed class ButtonControlData 
     {

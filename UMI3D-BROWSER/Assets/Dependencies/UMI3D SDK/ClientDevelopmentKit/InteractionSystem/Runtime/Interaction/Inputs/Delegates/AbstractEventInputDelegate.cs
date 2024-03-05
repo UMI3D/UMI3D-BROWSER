@@ -27,7 +27,7 @@ namespace umi3d.cdk.interaction
         public bool tryToFindInputForHoldableEvent;
 
         public override void Associate(
-            AbstractControlData control,
+            AbstractControlEntity control,
             ulong environmentId,
             AbstractInteractionDto interaction,
             ulong toolId,
@@ -38,9 +38,9 @@ namespace umi3d.cdk.interaction
             {
                 throw new Exception($"[UMI3D] Control: Interaction is not an {nameof(EventDto)}.");
             }
-            if (control is not PhysicalButtonControlData && control is not UIButtonControlData)
+            if (control is not HasButtonControlData)
             {
-                throw new Exception($"[UMI3D] Control: control is not a button.");
+                throw new Exception($"[UMI3D] Control: control is not a {nameof(HasButtonControlData)}.");
             }
 
             base.Associate(
@@ -130,7 +130,7 @@ namespace umi3d.cdk.interaction
             };
         }
 
-        public override AbstractControlData GetControl(EventDto interaction)
+        public override AbstractControlEntity GetControl(EventDto interaction)
         {
             var physicalButton = model.GetPhysicalButton();
             if (physicalButton != null)

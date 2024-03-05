@@ -21,7 +21,7 @@ using UnityEngine.Windows;
 namespace umi3d.cdk.interaction
 {
     [Serializable]
-    public class PhysicalManipulationControlData : AbstractControlData
+    public class PhysicalManipulationControlEntity : AbstractControlEntity, HasManipulationControlData
     {
         public ManipulationControlData manipulationData = new();
         [Tooltip("The input that activates the manipulation")]
@@ -35,11 +35,23 @@ namespace umi3d.cdk.interaction
         /// </summary>
         public NewInputType trackingInput;
 
-        public PhysicalManipulationControlData()
+        public PhysicalManipulationControlEntity()
         {
             activationInput.actionPerformed = controlData.ActionPerformed;
             controlData.enableHandler += Enable;
             controlData.disableHandler += Disable;
+        }
+
+        public ManipulationControlData ManipulationControlData
+        {
+            get
+            {
+                return manipulationData;
+            }
+            set
+            {
+                manipulationData = value;
+            }
         }
 
         public void Disable()

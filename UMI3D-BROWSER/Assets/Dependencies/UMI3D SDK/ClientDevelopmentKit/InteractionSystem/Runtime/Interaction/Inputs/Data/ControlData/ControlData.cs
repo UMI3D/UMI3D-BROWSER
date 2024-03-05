@@ -21,6 +21,11 @@ using UnityEngine.InputSystem;
 
 namespace umi3d.cdk.interaction
 {
+    public interface HasControlData
+    {
+        ControlData ControlData { get; set; }
+    }
+
     [Serializable]
     public sealed class ControlData 
     {

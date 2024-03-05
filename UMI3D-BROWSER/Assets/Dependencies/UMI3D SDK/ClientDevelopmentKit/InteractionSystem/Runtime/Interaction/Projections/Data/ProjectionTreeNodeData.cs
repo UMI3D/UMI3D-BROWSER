@@ -50,6 +50,6 @@ namespace umi3d.cdk.interaction
         /// <summary>
         /// The control associated with this interaction.
         /// </summary>
-        public AbstractControlData controlId;
+        public AbstractControlEntity controlId;
     }
 }

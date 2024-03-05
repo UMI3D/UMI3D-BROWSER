@@ -30,7 +30,7 @@ namespace umi3d.cdk.interaction
         /// Value can only be 0/1 (down/up).
         /// </summary>
         [Tooltip("The physical button type controls for EventDto interactions")]
-        public List<PhysicalButtonControlData> physicalButtonControls = new();
+        public List<PhysicalButtonControlEntity> physicalButtonControls = new();
 
         [Space()]
         /// <summary>
@@ -38,17 +38,17 @@ namespace umi3d.cdk.interaction
         /// Value can only be 0/1 (down/up).
         /// </summary>
         [Tooltip("The ui button type control prefabs for EventDto interactions")]
-        public List<UIButtonControlData> uIButtonControlPrefabs;
+        public List<UIButtonControlEntity> uIButtonControlPrefabs;
         [HideInInspector] 
-        public List<UIButtonControlData> uIButtonControls = new();
+        public List<UIButtonControlEntity> uIButtonControls = new();
 
         [Header("Manipulations")]
-        public List<PhysicalManipulationControlData> physicalManipulationControls = new();
+        public List<PhysicalManipulationControlEntity> physicalManipulationControls = new();
 
         [Space()]
-        public List<UIManipulationControlData> uIManipulationControlPrefabs = new();
+        public List<UIManipulationControlEntity> uIManipulationControlPrefabs = new();
         [HideInInspector]
-        public List<UIManipulationControlData> uIManipulationControls = new();
+        public List<UIManipulationControlEntity> uIManipulationControls = new();
 
         [Space()]
         /// <summary>
@@ -56,10 +56,10 @@ namespace umi3d.cdk.interaction
         /// Value can only be 0/1 (down/up).
         /// </summary>
         [Tooltip("The button type controls for shortcuts")]
-        public List<PhysicalButtonControlData> shortcuts = new();
+        public List<PhysicalButtonControlEntity> shortcuts = new();
 
 
-        public AbstractControlData this[Guid id, AbstractControlType type]
+        public AbstractControlEntity this[Guid id, AbstractControlType type]
         {
             get
             {

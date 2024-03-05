@@ -19,12 +19,24 @@ using System;
 namespace umi3d.cdk.interaction
 {
     [Serializable]
-    public class PhysicalButtonControlData : AbstractControlData
+    public class PhysicalButtonControlEntity : AbstractControlEntity, HasButtonControlData
     {
         public ButtonControlData buttonData = new();
         public NewInputType input = new();
 
-        public PhysicalButtonControlData()
+        public ButtonControlData ButtonControlData
+        {
+            get
+            {
+                return buttonData;
+            }
+            set
+            {
+                buttonData = value;
+            }
+        }
+
+        public PhysicalButtonControlEntity()
         {
             input.actionPerformed = controlData.ActionPerformed;
             controlData.enableHandler += Enable;

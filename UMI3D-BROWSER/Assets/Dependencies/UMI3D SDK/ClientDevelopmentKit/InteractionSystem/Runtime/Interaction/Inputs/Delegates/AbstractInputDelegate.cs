@@ -42,10 +42,10 @@ namespace umi3d.cdk.interaction
         /// <param name="interaction"></param>
         /// <param name="unused"></param>
         /// <returns></returns>
-        public abstract AbstractControlData GetControl(Interaction interaction);
+        public abstract AbstractControlEntity GetControl(Interaction interaction);
 
         public virtual void Associate(
-            AbstractControlData control,
+            AbstractControlEntity control,
             ulong environmentId,
             AbstractInteractionDto interaction,
             ulong toolId,
@@ -64,7 +64,7 @@ namespace umi3d.cdk.interaction
             control.controlData.enableHandler?.Invoke();
         }
 
-        public virtual void Dissociate(AbstractControlData control)
+        public virtual void Dissociate(AbstractControlEntity control)
         {
             control.controlData.isUsed = false;
             control.controlData.environmentId = 0;

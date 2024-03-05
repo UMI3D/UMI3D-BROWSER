@@ -26,7 +26,7 @@ namespace umi3d.browserRuntime.interaction
     public class LinkInputDelegate : AbstractInputDelegate<LinkDto>
     {
 
-        public override AbstractControlData GetControl(LinkDto interaction)
+        public override AbstractControlEntity GetControl(LinkDto interaction)
         {
             throw new NotImplementedException();
         }

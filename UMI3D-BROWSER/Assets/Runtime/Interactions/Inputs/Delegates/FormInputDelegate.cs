@@ -25,7 +25,7 @@ namespace umi3d.browserRuntime.interaction
     [CreateAssetMenu(fileName = "UMI3D Form Input Delegate", menuName = "UMI3D/Interactions/Input Delegates/Form Input Delegate")]
     public class FormInputDelegate : AbstractInputDelegate<FormDto>
     {
-        public override AbstractControlData GetControl(FormDto Interaction)
+        public override AbstractControlEntity GetControl(FormDto Interaction)
         {
             throw new NotImplementedException();
         }

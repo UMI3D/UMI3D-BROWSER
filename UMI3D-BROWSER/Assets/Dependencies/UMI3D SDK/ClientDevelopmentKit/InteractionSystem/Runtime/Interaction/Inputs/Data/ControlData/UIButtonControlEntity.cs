@@ -21,15 +21,27 @@ using UnityEngine.InputSystem;
 namespace umi3d.cdk.interaction
 {
     [Serializable]
-    public sealed class UIButtonControlData : AbstractControlData
+    public sealed class UIButtonControlEntity : AbstractControlEntity, HasButtonControlData
     {
         public ButtonControlData buttonData = new();
         public UIInputType input = new();
 
-        public UIButtonControlData()
+        public UIButtonControlEntity()
         {
             controlData.enableHandler += Enable;
             controlData.disableHandler += Disable;
+        }
+
+        public ButtonControlData ButtonControlData
+        {
+            get
+            {
+                return buttonData;
+            }
+            set
+            {
+                buttonData = value;
+            }
         }
 
         public void Disable()

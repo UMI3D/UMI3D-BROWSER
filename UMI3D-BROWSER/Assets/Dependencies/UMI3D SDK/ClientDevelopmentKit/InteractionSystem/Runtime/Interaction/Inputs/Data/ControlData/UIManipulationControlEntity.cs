@@ -20,9 +20,21 @@ using UnityEngine;
 namespace umi3d.cdk.interaction
 {
     [Serializable]
-    public class UIManipulationControlData : AbstractControlData
+    public class UIManipulationControlEntity : AbstractControlEntity, HasManipulationControlData
     {
         public ManipulationControlData manipulationData = new();
+
+        public ManipulationControlData ManipulationControlData
+        {
+            get
+            {
+                return manipulationData;
+            }
+            set
+            {
+                manipulationData = value;
+            }
+        }
 
         public void Disable()
         {

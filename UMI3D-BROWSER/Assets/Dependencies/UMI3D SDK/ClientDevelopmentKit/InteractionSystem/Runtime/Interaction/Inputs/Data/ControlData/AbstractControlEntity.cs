@@ -22,8 +22,20 @@ using UnityEngine.InputSystem;
 namespace umi3d.cdk.interaction
 {
     [Serializable]
-    public abstract class AbstractControlData 
+    public abstract class AbstractControlEntity : HasControlData 
     {
         public ControlData controlData = new();
+
+        public ControlData ControlData 
+        { 
+            get 
+            { 
+                return controlData; 
+            }
+            set
+            {
+                controlData = value;
+            }
+        }
     }
 }

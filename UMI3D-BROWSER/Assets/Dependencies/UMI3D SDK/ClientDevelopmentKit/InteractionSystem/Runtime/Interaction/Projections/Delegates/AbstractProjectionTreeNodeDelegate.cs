@@ -60,7 +60,7 @@ namespace umi3d.cdk.interaction
         /// <returns></returns>
         public abstract Func<ProjectionTreeNodeData> CreateNodeForControl(
             Dto interaction,
-            Func<AbstractControlData> getControl
+            Func<AbstractControlEntity> getControl
         );
 
         /// <summary>

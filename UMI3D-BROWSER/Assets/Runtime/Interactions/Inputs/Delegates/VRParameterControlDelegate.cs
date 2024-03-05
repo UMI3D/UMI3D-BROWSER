@@ -25,7 +25,7 @@ namespace umi3d.browserRuntime.interaction
     [CreateAssetMenu(fileName = "UMI3D VR Parameter Control Delegate", menuName = "UMI3D/Interactions/Control/Delegates/VR Parameter")]
     public class VRParameterControlDelegate : AbstractControlDelegate<AbstractParameterDto>
     {
-        public override AbstractControlEntity GetControl(AbstractParameterDto interaction)
+        public override AbstractControlEntity GetControl(AbstractController controller, AbstractParameterDto interaction)
         {
             throw new NotImplementedException();
         }

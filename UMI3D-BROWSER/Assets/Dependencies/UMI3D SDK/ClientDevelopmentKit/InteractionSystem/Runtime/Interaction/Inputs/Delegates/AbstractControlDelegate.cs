@@ -26,13 +26,6 @@ namespace umi3d.cdk.interaction
     public abstract class AbstractControlDelegate<Interaction>: SerializableScriptableObject
         where Interaction: AbstractInteractionDto
     {
-        public ControlModel model;
-
-        public virtual void Init(ControlModel model)
-        {
-            this.model = model;
-        }
-
         protected abstract bool CanPerform(InputActionPhase phase);
 
         /// <summary>
@@ -42,9 +35,13 @@ namespace umi3d.cdk.interaction
         /// <param name="interaction"></param>
         /// <param name="unused"></param>
         /// <returns></returns>
-        public abstract AbstractControlEntity GetControl(Interaction interaction);
+        public abstract AbstractControlEntity GetControl(
+            AbstractController controller, 
+            Interaction interaction
+        );
 
         public virtual void Associate(
+            AbstractController controller,
             AbstractControlEntity control,
             ulong environmentId,
             AbstractInteractionDto interaction,
@@ -52,6 +49,7 @@ namespace umi3d.cdk.interaction
             ulong hoveredObjectId
         )
         {
+            control.controlData.controller = controller;
             control.controlData.isUsed = true;
             control.controlData.environmentId = environmentId;
             control.controlData.toolId = toolId;
@@ -66,6 +64,7 @@ namespace umi3d.cdk.interaction
 
         public virtual void Dissociate(AbstractControlEntity control)
         {
+            control.controlData.controller = null;
             control.controlData.isUsed = false;
             control.controlData.environmentId = 0;
             control.controlData.toolId = 0;

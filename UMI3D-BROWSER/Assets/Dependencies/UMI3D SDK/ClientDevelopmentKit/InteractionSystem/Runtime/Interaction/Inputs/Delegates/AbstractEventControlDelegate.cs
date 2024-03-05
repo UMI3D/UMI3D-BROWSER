@@ -27,6 +27,7 @@ namespace umi3d.cdk.interaction
         public bool tryToFindInputForHoldableEvent;
 
         public override void Associate(
+            AbstractController controller,
             AbstractControlEntity control,
             ulong environmentId,
             AbstractInteractionDto interaction,
@@ -44,6 +45,7 @@ namespace umi3d.cdk.interaction
             }
 
             base.Associate(
+                controller,
                 control,
                 environmentId,
                 interaction,
@@ -54,20 +56,17 @@ namespace umi3d.cdk.interaction
             uint boneType = control
                 .controlData
                 .controller
-                .controllerData_SO
-                .BoneType;
+                .boneType;
             Vector3Dto bonePosition = control
                 .controlData
                 .controller
-                .controllerData_SO
-                .BoneTransform
+                .boneTransform
                 .position
                 .Dto();
             Vector4Dto boneRotation = control
                 .controlData
                 .controller
-                .controllerData_SO
-                .BoneTransform
+                .boneTransform
                 .rotation
                 .Dto();
 
@@ -130,8 +129,9 @@ namespace umi3d.cdk.interaction
             };
         }
 
-        public override AbstractControlEntity GetControl(EventDto interaction)
+        public override AbstractControlEntity GetControl(AbstractController controller, EventDto interaction)
         {
+            var model = controller.controlManager.model;
             var physicalButton = model.GetPhysicalButton();
             if (physicalButton != null)
             {

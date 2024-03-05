@@ -31,33 +31,5 @@ namespace umi3d.browserRuntime.interaction
         }
 
         public ControllerType type;
-        /// <summary>
-        /// Associated bone.
-        /// </summary>
-        public Tracker bone;
-
-        public override uint BoneType
-        {
-            get
-            {
-                return bone.BoneType;
-            }
-        }
-
-        public override Transform BoneTransform
-        {
-            get
-            {
-                return bone.transform;
-            }
-        }
-
-        public override Transform ManipulationTransform
-        {
-            get
-            {
-                return bone.transform;
-            }
-        }
     }
 }

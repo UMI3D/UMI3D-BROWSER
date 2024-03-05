@@ -27,6 +27,7 @@ namespace umi3d.cdk.interaction
         public DofGroupDto dof;
 
         public override void Associate(
+            AbstractController controller,
             AbstractControlEntity control,
             ulong environmentId,
             AbstractInteractionDto interaction,
@@ -44,6 +45,7 @@ namespace umi3d.cdk.interaction
             }
 
             base.Associate(
+                controller,
                 control,
                 environmentId,
                 interaction,
@@ -62,20 +64,17 @@ namespace umi3d.cdk.interaction
             uint boneType = control
                 .controlData
                 .controller
-                .controllerData_SO
-                .BoneType;
+                .boneType;
             Vector3Dto bonePosition = control
                 .controlData
                 .controller
-                .controllerData_SO
-                .BoneTransform
+                .boneTransform
                 .position
                 .Dto();
             Vector4Dto boneRotation = control
                 .controlData
                 .controller
-                .controllerData_SO
-                .BoneTransform
+                .boneTransform
                 .rotation
                 .Dto();
 
@@ -91,8 +90,7 @@ namespace umi3d.cdk.interaction
                     control
                         .controlData
                         .controller
-                        .controllerData_SO
-                        .ManipulationTransform
+                        .manipulationTransform
                 );
                 request.boneType = boneType;
                 request.bonePosition = bonePosition;
@@ -112,15 +110,13 @@ namespace umi3d.cdk.interaction
                             control
                                 .controlData
                                 .controller
-                                .controllerData_SO
-                                .ManipulationTransform
+                                .manipulationTransform
                                 .position;
                         manipControl.ManipulationControlData.initialRotation =
                            control
                                .controlData
                                .controller
-                               .controllerData_SO
-                               .ManipulationTransform
+                               .manipulationTransform
                                .rotation;
 
                         manipControl.ManipulationControlData.messageSender.networkMessage
@@ -148,8 +144,9 @@ namespace umi3d.cdk.interaction
             };
         }
 
-        public override AbstractControlEntity GetControl(ManipulationDto interaction)
+        public override AbstractControlEntity GetControl(AbstractController controller, ManipulationDto interaction)
         {
+            var model = controller.controlManager.model;
             var physicalManipulation = model.GetPhysicalManipulation(dof);
             if (physicalManipulation != null)
             {

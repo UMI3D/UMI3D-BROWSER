@@ -26,7 +26,7 @@ namespace umi3d.cdk.interaction
     {
         public ProjectionTree_SO projectionTree_SO;
         public string treeId;
-        public UMI3DInputManager controlManager;
+        public UMI3DControlManager controlManager;
 
         /// <summary>
         /// Init this object with dependency injection.
@@ -36,7 +36,7 @@ namespace umi3d.cdk.interaction
         public virtual void Init(
             ProjectionTree_SO projectionTree_SO,
             string treeId,
-            UMI3DInputManager controlManager
+            UMI3DControlManager controlManager
         )
         {
             this.projectionTree_SO = projectionTree_SO;

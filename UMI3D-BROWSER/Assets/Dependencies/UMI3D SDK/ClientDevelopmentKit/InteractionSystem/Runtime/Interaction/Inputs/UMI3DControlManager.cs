@@ -22,24 +22,25 @@ using UnityEngine;
 namespace umi3d.cdk.interaction
 {
     [Serializable]
-    public sealed class UMI3DInputManager 
+    public sealed class UMI3DControlManager 
     {
         [SerializeField]
         debug.UMI3DLogger logger = new();
 
         public Controls_SO controls_SO;
         public AbstractManipulationControlDelegate manipulationDelegate;
-        public AbstractEventControlDelegate eventInputDelegate;
-        public AbstractControlDelegate<FormDto> formInputDelegate;
-        public AbstractControlDelegate<LinkDto> linkInputDelegate;
-        public AbstractControlDelegate<AbstractParameterDto> parameterInputDelegate;
+        public AbstractEventControlDelegate eventDelegate;
+        public AbstractControlDelegate<FormDto> formDelegate;
+        public AbstractControlDelegate<LinkDto> linkDelegate;
+        public AbstractControlDelegate<AbstractParameterDto> parameterDelegate;
 
-        public ControlModel model = new();
+        [HideInInspector] public ControlModel model = new();
+        [HideInInspector] public AbstractController controller;
 
-        public void Init(MonoBehaviour context)
+        public void Init(MonoBehaviour context, AbstractController controller)
         {
             logger.MainContext = context;
-            logger.MainTag = nameof(UMI3DInputManager);
+            logger.MainTag = nameof(UMI3DControlManager);
             model.Init(controls_SO);
         }
 
@@ -64,23 +65,28 @@ namespace umi3d.cdk.interaction
                 case ManipulationDto manipulation:
                     manipulationDelegate.dof = dof;
                     return manipulationDelegate.GetControl(
+                        controller,
                         manipulation
                     );
                 case EventDto button:
-                    eventInputDelegate.tryToFindInputForHoldableEvent = tryToFindInputForHoldableEvent;
-                    return eventInputDelegate.GetControl(
+                    eventDelegate.tryToFindInputForHoldableEvent = tryToFindInputForHoldableEvent;
+                    return eventDelegate.GetControl(
+                        controller,
                         button
                     );
                 case FormDto form:
-                    return formInputDelegate.GetControl(
+                    return formDelegate.GetControl(
+                        controller,
                         form
                     );
                 case LinkDto link:
-                    return linkInputDelegate.GetControl(
+                    return linkDelegate.GetControl(
+                        controller,
                         link
                     );
                 case AbstractParameterDto parameter:
-                    return parameterInputDelegate.GetControl(
+                    return parameterDelegate.GetControl(
+                        controller,
                         parameter
                     );
                 default:
@@ -102,6 +108,7 @@ namespace umi3d.cdk.interaction
                 case ManipulationDto manipulation:
                     manipulationDelegate.dof = dof;
                     manipulationDelegate.Associate(
+                        controller,
                         control,
                         environmentId,
                         interaction,
@@ -110,7 +117,8 @@ namespace umi3d.cdk.interaction
                     );
                     break;
                 case EventDto button:
-                    eventInputDelegate.Associate(
+                    eventDelegate.Associate(
+                        controller,
                         control,
                         environmentId,
                         interaction,
@@ -119,7 +127,8 @@ namespace umi3d.cdk.interaction
                     );
                     break;
                 case FormDto form:
-                    formInputDelegate.Associate(
+                    formDelegate.Associate(
+                        controller,
                         control,
                         environmentId,
                         interaction,
@@ -128,7 +137,8 @@ namespace umi3d.cdk.interaction
                     );
                     break;
                 case LinkDto link:
-                    linkInputDelegate.Associate(
+                    linkDelegate.Associate(
+                        controller,
                         control,
                         environmentId,
                         interaction,
@@ -137,7 +147,8 @@ namespace umi3d.cdk.interaction
                     );
                     break;
                 case AbstractParameterDto parameter:
-                    parameterInputDelegate.Associate(
+                    parameterDelegate.Associate(
+                        controller,
                         control,
                         environmentId,
                         interaction,

@@ -13,8 +13,10 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+using inetum.unityUtils;
 using System.Collections.Generic;
 using umi3d.common;
+using umi3d.common.userCapture;
 using UnityEngine;
 
 namespace umi3d.cdk.interaction
@@ -44,20 +46,32 @@ namespace umi3d.cdk.interaction
         public AbstractControllerDelegate controllerDelegate;
 
         [Header("Manager")]
-        public UMI3DInputManager inputManager;
+        public UMI3DControlManager controlManager;
         public UMI3DToolManager toolManager;
         public ProjectionManager projectionManager;
+
+        [Header("Hierarchy References")]
+        [SerializeField, ConstEnum(typeof(BoneType), typeof(uint))]
+        public uint boneType;
+        public Transform boneTransform;
+        /// <summary>
+        /// Transform reference to track translation and rotation.
+        /// </summary>
+        public Transform manipulationTransform;
 
         public readonly static List<AbstractController> activeControllers = new();
 
         private void Awake()
         {
-            inputManager.Init(this);
+            controlManager.Init(
+                this,
+                this
+            );
             toolManager.Init();
             projectionManager.Init(
                 this, 
                 controllerDelegate,
-                inputManager, 
+                controlManager, 
                 toolManager
             );
         }

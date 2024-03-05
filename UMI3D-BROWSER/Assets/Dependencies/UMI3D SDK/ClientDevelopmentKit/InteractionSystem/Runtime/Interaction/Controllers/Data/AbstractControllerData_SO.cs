@@ -32,12 +32,5 @@ namespace umi3d.cdk.interaction
                 id = this.GetType().FullName;
             }
         }
-
-        public abstract uint BoneType { get; }
-        public abstract Transform BoneTransform { get; }
-        /// <summary>
-        /// Transform reference to track translation and rotation.
-        /// </summary>
-        public abstract Transform ManipulationTransform { get; }
     }
 }

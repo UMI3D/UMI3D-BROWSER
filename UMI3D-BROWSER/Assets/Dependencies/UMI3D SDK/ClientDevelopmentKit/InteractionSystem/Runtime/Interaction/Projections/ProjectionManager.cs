@@ -46,7 +46,7 @@ namespace umi3d.cdk.interaction
         [HideInInspector]
         public AbstractControllerDelegate controllerDelegate;
         [HideInInspector]
-        public UMI3DInputManager controlManager;
+        public UMI3DControlManager controlManager;
         [HideInInspector]
         public UMI3DToolManager toolManager;
 
@@ -59,7 +59,7 @@ namespace umi3d.cdk.interaction
         public void Init(
             MonoBehaviour context,
             AbstractControllerDelegate controllerDelegate,
-            UMI3DInputManager inputManager,
+            UMI3DControlManager inputManager,
             UMI3DToolManager toolManager
         )
         {

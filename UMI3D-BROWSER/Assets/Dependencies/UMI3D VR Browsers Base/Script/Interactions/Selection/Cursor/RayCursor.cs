@@ -142,9 +142,9 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
                 if (controller != (trackingInfo.controller as VRController))
                     return;
                 trackingInfo.targetContainer.Interactable.HoverEnter(
-                    controller.controllerData_SO.BoneType,
-                    controller.controllerData_SO.BoneTransform.position,
-                    new Vector4(controller.controllerData_SO.BoneTransform.rotation.x, controller.controllerData_SO.BoneTransform.rotation.y, controller.controllerData_SO.BoneTransform.rotation.z, controller.controllerData_SO.BoneTransform.rotation.w),
+                    controller.boneType,
+                    controller.boneTransform.position,
+                    new Vector4(controller.boneTransform.rotation.x, controller.boneTransform.rotation.y, controller.boneTransform.rotation.z, controller.boneTransform.rotation.w),
                     trackingInfo.targetContainer.Interactable.id,
                     trackingInfo.targetContainer.transform.InverseTransformPoint(trackingInfo.raycastHit.point),
                     trackingInfo.targetContainer.transform.InverseTransformDirection(trackingInfo.raycastHit.normal),
@@ -152,7 +152,7 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
 
                 if (trackingInfo.target.dto.HoverEnterAnimationId != 0)
                 {
-                    changelastBone.Invoke(controller.controllerData_SO.BoneType);
+                    changelastBone.Invoke(controller.boneType);
                     StartAnim(trackingInfo.target.dto.HoverEnterAnimationId);
                 }
             });
@@ -165,9 +165,9 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
                 if (!IsNullOrDestroyed(trackingInfo.targetContainer))
                 {
                     trackingInfo.targetContainer.Interactable.HoverExit(
-                        controller.controllerData_SO.BoneType,
-                        controller.controllerData_SO.BoneTransform.position,
-                        new Vector4(controller.controllerData_SO.BoneTransform.rotation.x, controller.controllerData_SO.BoneTransform.rotation.y, controller.controllerData_SO.BoneTransform.rotation.z, controller.controllerData_SO.BoneTransform.rotation.w),
+                        controller.boneType,
+                        controller.boneTransform.position,
+                        new Vector4(controller.boneTransform.rotation.x, controller.boneTransform.rotation.y, controller.boneTransform.rotation.z, controller.boneTransform.rotation.w),
                         trackingInfo.targetContainer.Interactable.id,
                         trackingInfo.targetContainer.transform.InverseTransformPoint(trackingInfo.raycastHit.point),
                         trackingInfo.targetContainer.transform.InverseTransformDirection(trackingInfo.raycastHit.normal),
@@ -179,7 +179,7 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
                     {
                         toolId = trackingInfo.targetContainer.Interactable.id,
                         hoveredObjectId = trackingInfo.targetContainer.Interactable.id,
-                        boneType = controller.controllerData_SO.BoneType,
+                        boneType = controller.boneType,
                         state = false,
                         normal = Vector3.zero.Dto(),
                         position = Vector3.zero.Dto(),
@@ -190,7 +190,7 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
 
                 if (trackingInfo.target.dto.HoverExitAnimationId != 0)
                 {
-                    changelastBone.Invoke(controller.controllerData_SO.BoneType);
+                    changelastBone.Invoke(controller.boneType);
                     StartAnim(trackingInfo.target.dto.HoverExitAnimationId);
                 }
             });
@@ -200,9 +200,9 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
                 if (controller != (trackingInfo.controller as VRController))
                     return;
                 trackingInfo.targetContainer.Interactable.Hovered(
-                    controller.controllerData_SO.BoneType,
-                    controller.controllerData_SO.BoneTransform.position,
-                    new Vector4(controller.controllerData_SO.BoneTransform.rotation.x, controller.controllerData_SO.BoneTransform.rotation.y, controller.controllerData_SO.BoneTransform.rotation.z, controller.controllerData_SO.BoneTransform.rotation.w),
+                    controller.boneType,
+                    controller.boneTransform.position,
+                    new Vector4(controller.boneTransform.rotation.x, controller.boneTransform.rotation.y, controller.boneTransform.rotation.z, controller.boneTransform.rotation.w),
                     trackingInfo.targetContainer.Interactable.id,
                     trackingInfo.targetContainer.transform.InverseTransformPoint(trackingInfo.raycastHit.point),
                     trackingInfo.targetContainer.transform.InverseTransformDirection(trackingInfo.raycastHit.normal),

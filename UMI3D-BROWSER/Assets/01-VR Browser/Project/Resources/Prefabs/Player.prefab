@@ -641,6 +641,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6605635086317432081}
   - component: {fileID: 5590756866439804338}
+  - component: {fileID: 8783384652987114445}
+  - component: {fileID: 1448515520248017203}
   m_Layer: 0
   m_Name: RightTeleportArc
   m_TagString: Untagged
@@ -690,6 +692,80 @@ MonoBehaviour:
   navmeshLayer:
     serializedVersion: 2
     m_Bits: 1024
+--- !u!114 &8783384652987114445
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 600320480300563922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 719c7fa679465b545bde3f5fdae3ee30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  teleportingObject: {fileID: 5582060202346245420}
+  centerEyeAnchor: {fileID: 8430962178111685219}
+  arc: {fileID: 5590756866439804338}
+--- !u!114 &1448515520248017203
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 600320480300563922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76a753d697b6290408411f19ff79a837, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  action: 5
+  controller: 1
+  onActionDown:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5590756866439804338}
+        m_TargetAssemblyTypeName: umi3dVRBrowsersBase.navigation.TeleportArc, Assembly-CSharp
+        m_MethodName: Display
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onAction:
+    m_PersistentCalls:
+      m_Calls: []
+  onActionUp:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8783384652987114445}
+        m_TargetAssemblyTypeName: umi3dVRBrowsersBase.navigation.Teleporting, Assembly-CSharp
+        m_MethodName: Teleport
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 5590756866439804338}
+        m_TargetAssemblyTypeName: umi3dVRBrowsersBase.navigation.TeleportArc, Assembly-CSharp
+        m_MethodName: Hide
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &624752277324398074
 GameObject:
   m_ObjectHideFlags: 0
@@ -2773,113 +2849,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.0146072, y: 0, z: 0.014607439}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!1 &2422016455146106223
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1691177791447877506}
-  - component: {fileID: 8342425605310868961}
-  - component: {fileID: 335970365947459460}
-  m_Layer: 0
-  m_Name: TeleportingRight
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1691177791447877506
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2422016455146106223}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 4563722139069628583}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8342425605310868961
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2422016455146106223}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 719c7fa679465b545bde3f5fdae3ee30, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  teleportingObject: {fileID: 5582060202346245420}
-  centerEyeAnchor: {fileID: 8430962178111685219}
-  arc: {fileID: 5590756866439804338}
---- !u!114 &335970365947459460
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2422016455146106223}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76a753d697b6290408411f19ff79a837, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  action: 5
-  controller: 1
-  onActionDown:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5590756866439804338}
-        m_TargetAssemblyTypeName: umi3dVRBrowsersBase.navigation.TeleportArc, Assembly-CSharp
-        m_MethodName: Display
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  onAction:
-    m_PersistentCalls:
-      m_Calls: []
-  onActionUp:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8342425605310868961}
-        m_TargetAssemblyTypeName: umi3dVRBrowsersBase.navigation.Teleporting, Assembly-CSharp
-        m_MethodName: Teleport
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 5590756866439804338}
-        m_TargetAssemblyTypeName: umi3dVRBrowsersBase.navigation.TeleportArc, Assembly-CSharp
-        m_MethodName: Hide
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!1 &2461829432428137550
 GameObject:
   m_ObjectHideFlags: 0
@@ -8606,8 +8575,6 @@ Transform:
   m_Children:
   - {fileID: 2410285728944169566}
   - {fileID: 2883507140013485058}
-  - {fileID: 1691177791447877506}
-  - {fileID: 4459496909929756640}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7954513139463406435
@@ -8903,113 +8870,6 @@ MonoBehaviour:
   onClicked:
     m_PersistentCalls:
       m_Calls: []
---- !u!1 &5701619714344126091
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4459496909929756640}
-  - component: {fileID: 2844354397237156859}
-  - component: {fileID: 3559625777175927475}
-  m_Layer: 0
-  m_Name: TeleportingLeft
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4459496909929756640
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5701619714344126091}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 4563722139069628583}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2844354397237156859
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5701619714344126091}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 719c7fa679465b545bde3f5fdae3ee30, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  teleportingObject: {fileID: 5582060202346245420}
-  centerEyeAnchor: {fileID: 8430962178111685219}
-  arc: {fileID: 0}
---- !u!114 &3559625777175927475
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5701619714344126091}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76a753d697b6290408411f19ff79a837, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  action: 5
-  controller: 0
-  onActionDown:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: umi3dVRBrowsersBase.navigation.TeleportArc, Assembly-CSharp
-        m_MethodName: Display
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  onAction:
-    m_PersistentCalls:
-      m_Calls: []
-  onActionUp:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2844354397237156859}
-        m_TargetAssemblyTypeName: umi3dVRBrowsersBase.navigation.Teleporting, Assembly-CSharp
-        m_MethodName: Teleport
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: umi3dVRBrowsersBase.navigation.TeleportArc, Assembly-CSharp
-        m_MethodName: Hide
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!1 &5707428257278610355
 GameObject:
   m_ObjectHideFlags: 0
@@ -9641,6 +9501,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2363286020926254052}
+  - component: {fileID: 6741651820899844942}
   m_Layer: 0
   m_Name: HandTracking
   m_TagString: Untagged
@@ -9666,6 +9527,26 @@ Transform:
   - {fileID: 9145268605288402511}
   m_Father: {fileID: 8430962178163016153}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6741651820899844942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6129948950877350513}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4912832fb5367b24b8e7d485a8168804, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_LeftHandPositionFilter: {fileID: 11400000, guid: b7f8466fbfab63b4da799a5c999ed64e,
+    type: 2}
+  m_RightHandPositionFilter: {fileID: 11400000, guid: 4bac0aa6a34579a4c9d47b9c5279bef0,
+    type: 2}
+  m_LeftHandRotationFilter: {fileID: 11400000, guid: e585315868d58b3418c1681a5da275d4,
+    type: 2}
+  m_RightHandRotationFilter: {fileID: 11400000, guid: 6b78fd93cf2cefa47853e2c09144c296,
+    type: 2}
 --- !u!1 &6147399470313406180
 GameObject:
   m_ObjectHideFlags: 0
@@ -12872,8 +12753,9 @@ GameObject:
   - component: {fileID: 6270033178672626940}
   - component: {fileID: 7497586320880237508}
   - component: {fileID: 4225194682776532377}
+  - component: {fileID: 7505736296991897994}
   m_Layer: 0
-  m_Name: LeftTeleportArc
+  m_Name: TeleportArc
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -12956,10 +12838,10 @@ MonoBehaviour:
   onActionUp:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 7505736296991897994}
         m_TargetAssemblyTypeName: umi3dVRBrowsersBase.ikManagement.Umi3dPlayerManager,
           Assembly-CSharp
-        m_MethodName: TeleportLeft
+        m_MethodName: Teleport
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -12981,6 +12863,21 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &7505736296991897994
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8513167943632695580}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 719c7fa679465b545bde3f5fdae3ee30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  teleportingObject: {fileID: 5582060202346245420}
+  centerEyeAnchor: {fileID: 8430962178111685219}
+  arc: {fileID: 7497586320880237508}
 --- !u!1 &8539592475066947852
 GameObject:
   m_ObjectHideFlags: 0
@@ -13967,6 +13864,16 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 2528698652903959209, guid: bbea8cf7c571dce44a1cbc6db1ddb94c,
+        type: 3}
+      propertyPath: centerEyeAnchor
+      value: 
+      objectReference: {fileID: 8430962178111685219}
+    - target: {fileID: 2528698652903959209, guid: bbea8cf7c571dce44a1cbc6db1ddb94c,
+        type: 3}
+      propertyPath: teleportingObject
+      value: 
+      objectReference: {fileID: 5582060202346245420}
     - target: {fileID: 6469791313041439444, guid: bbea8cf7c571dce44a1cbc6db1ddb94c,
         type: 3}
       propertyPath: m_Layer
@@ -14022,6 +13929,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9001599231720978614, guid: bbea8cf7c571dce44a1cbc6db1ddb94c,
+        type: 3}
+      propertyPath: m_AimTargetObject
+      value: 
+      objectReference: {fileID: 9025057256480211408}
     - target: {fileID: 9051510290141637486, guid: bbea8cf7c571dce44a1cbc6db1ddb94c,
         type: 3}
       propertyPath: m_Name
@@ -14056,6 +13968,18 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1466994768715619185}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &9025057256480211408 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7594404028888783521, guid: bbea8cf7c571dce44a1cbc6db1ddb94c,
+    type: 3}
+  m_PrefabInstance: {fileID: 1466994768715619185}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4288cab000fb86248929a54f994f7ec7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &9145268605288402511 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7688008158624208190, guid: bbea8cf7c571dce44a1cbc6db1ddb94c,
@@ -14307,6 +14231,16 @@ PrefabInstance:
       propertyPath: selectionManager
       value: 
       objectReference: {fileID: 4619398231863992284}
+    - target: {fileID: 1501752191188164636, guid: 67d05fa4e1fbad64b91004ddc620e93f,
+        type: 3}
+      propertyPath: centerEyeAnchor
+      value: 
+      objectReference: {fileID: 8430962178111685219}
+    - target: {fileID: 1501752191188164636, guid: 67d05fa4e1fbad64b91004ddc620e93f,
+        type: 3}
+      propertyPath: teleportingObject
+      value: 
+      objectReference: {fileID: 5582060202346245420}
     - target: {fileID: 2075539030872729909, guid: 67d05fa4e1fbad64b91004ddc620e93f,
         type: 3}
       propertyPath: selectionManager
@@ -14397,11 +14331,21 @@ PrefabInstance:
       propertyPath: pokeInputs.Array.size
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 4881277827287384733, guid: 67d05fa4e1fbad64b91004ddc620e93f,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5358607397094515163, guid: 67d05fa4e1fbad64b91004ddc620e93f,
         type: 3}
       propertyPath: m_Name
       value: Left Hand Tracking
       objectReference: {fileID: 0}
+    - target: {fileID: 5416967650487988739, guid: 67d05fa4e1fbad64b91004ddc620e93f,
+        type: 3}
+      propertyPath: m_AimTargetObject
+      value: 
+      objectReference: {fileID: 7972884089332927237}
     - target: {fileID: 5898800265916000656, guid: 67d05fa4e1fbad64b91004ddc620e93f,
         type: 3}
       propertyPath: selectionManager
@@ -14569,6 +14513,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 3459068270090230545}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &7972884089332927237 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6819658841358077972, guid: 67d05fa4e1fbad64b91004ddc620e93f,
+    type: 3}
+  m_PrefabInstance: {fileID: 3459068270090230545}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4288cab000fb86248929a54f994f7ec7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8817077522103859914 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5358607397094515163, guid: 67d05fa4e1fbad64b91004ddc620e93f,

@@ -22,7 +22,7 @@ using UnityEngine.InputSystem;
 
 namespace umi3d.cdk.interaction
 {
-    public abstract class AbstractEventInputDelegate : AbstractInputDelegate<EventDto>
+    public abstract class AbstractEventControlDelegate : AbstractControlDelegate<EventDto>
     {
         public bool tryToFindInputForHoldableEvent;
 

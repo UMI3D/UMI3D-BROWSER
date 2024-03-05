@@ -28,11 +28,11 @@ namespace umi3d.cdk.interaction
         debug.UMI3DLogger logger = new();
 
         public Controls_SO controls_SO;
-        public AbstractManipulationInputDelegate manipulationDelegate;
-        public AbstractEventInputDelegate eventInputDelegate;
-        public AbstractInputDelegate<FormDto> formInputDelegate;
-        public AbstractInputDelegate<LinkDto> linkInputDelegate;
-        public AbstractInputDelegate<AbstractParameterDto> parameterInputDelegate;
+        public AbstractManipulationControlDelegate manipulationDelegate;
+        public AbstractEventControlDelegate eventInputDelegate;
+        public AbstractControlDelegate<FormDto> formInputDelegate;
+        public AbstractControlDelegate<LinkDto> linkInputDelegate;
+        public AbstractControlDelegate<AbstractParameterDto> parameterInputDelegate;
 
         public ControlModel model = new();
 
@@ -148,28 +148,6 @@ namespace umi3d.cdk.interaction
                 default:
                     throw new System.Exception("Unknown interaction type, can't project !");
             }
-        }
-
-        public AbstractUMI3DInput FindInput<T>(
-            List<T> inputs,
-            Predicate<T> predicate
-        ) where T : AbstractUMI3DInput, new()
-        {
-            T input = inputs.Find(predicate);
-            if (input == null) AddInput(inputs, out input);
-            return input;
-        }
-
-        void AddInput<T>(
-            List<T> inputs,
-            out T input
-        ) where T : AbstractUMI3DInput, new()
-        {
-            input = new T();
-
-            //input.Init(this);
-            //input.Menu = ObjectMenu.menu;
-            inputs.Add(input);
         }
     }
 }

@@ -24,6 +24,13 @@ namespace umi3d.browserRuntime.interaction
     [CreateAssetMenu(fileName = "UMI3D Controller Data For [ControllerName]", menuName = "UMI3D/Interactions/Controller/VR Controller Data")]
     public class VRControllerData_SO : AbstractControllerData_SO
     {
+        public enum ControllerType
+        {
+            LeftHand,
+            RightHand,
+        }
+
+        public ControllerType type;
         /// <summary>
         /// Associated bone.
         /// </summary>

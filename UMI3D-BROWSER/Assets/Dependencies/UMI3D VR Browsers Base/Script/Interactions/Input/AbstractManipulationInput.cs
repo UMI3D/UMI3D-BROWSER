@@ -197,7 +197,6 @@ namespace umi3dVRBrowsersBase.interactions.input
 
             if (isDown)
             {
-                (controller as VRController).IsInputPressed = false;
                 isDown = false;
             }
         }

@@ -108,8 +108,6 @@ namespace umi3dVRBrowsersBase.interactions
         /// </summary>
         public override void Clear()
         {
-            ReleaseCurrentTool();
-
             Action<AbstractUMI3DInput> action = (input) =>
             {
                 input.Dissociate();

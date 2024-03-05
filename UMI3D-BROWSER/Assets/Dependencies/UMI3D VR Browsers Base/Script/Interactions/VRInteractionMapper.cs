@@ -256,21 +256,6 @@ namespace umi3dVRBrowsersBase.interactions
         //    return true;
         //}
 
-        /// <summary>
-        /// Gets <see cref="Transform"/> of <paramref name="controller"/>.
-        /// </summary>
-        /// <param name="controller"></param>
-        /// <returns></returns>
-        public Transform GetControllerTransform(ControllerType controller)
-        {
-            foreach (AbstractController c in Controllers)
-            {
-                if ((c as VRController)?.type == controller)
-                    return c.transform;
-            }
-            return null;
-        }
-
         /// <summary> 
         /// Returns <see cref="VRController"/> associated to <paramref name="controller"/>.
         /// </summary>
@@ -278,11 +263,11 @@ namespace umi3dVRBrowsersBase.interactions
         /// <returns></returns>
         public VRController GetController(ControllerType controller)
         {
-            foreach (AbstractController c in Controllers)
-            {
-                if ((c as VRController)?.type == controller)
-                    return (c as VRController);
-            }
+            //foreach (AbstractController c in Controllers)
+            //{
+            //    if ((c as VRController)?.type == controller)
+            //        return (c as VRController);
+            //}
             return null;
         }
 

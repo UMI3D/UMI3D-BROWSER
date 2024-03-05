@@ -22,7 +22,7 @@ using UnityEngine;
 
 namespace umi3d.cdk.interaction
 {
-    public abstract class AbstractManipulationInputDelegate : AbstractInputDelegate<ManipulationDto>
+    public abstract class AbstractManipulationControlDelegate : AbstractControlDelegate<ManipulationDto>
     {
         public DofGroupDto dof;
 

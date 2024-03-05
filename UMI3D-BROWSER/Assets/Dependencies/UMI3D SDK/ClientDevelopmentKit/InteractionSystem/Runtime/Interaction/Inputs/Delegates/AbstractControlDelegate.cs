@@ -23,7 +23,7 @@ using UnityEngine.InputSystem;
 
 namespace umi3d.cdk.interaction
 {
-    public abstract class AbstractInputDelegate<Interaction>: SerializableScriptableObject
+    public abstract class AbstractControlDelegate<Interaction>: SerializableScriptableObject
         where Interaction: AbstractInteractionDto
     {
         public ControlModel model;

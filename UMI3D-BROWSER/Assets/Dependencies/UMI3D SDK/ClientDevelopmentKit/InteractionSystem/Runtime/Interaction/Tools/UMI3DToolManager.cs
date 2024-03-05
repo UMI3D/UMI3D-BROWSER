@@ -207,6 +207,9 @@ namespace umi3d.cdk.interaction
                 default:
                     throw new NoToolFoundException();
             }
+            tool.OnUpdated.RemoveAllListeners();
+            tool.OnAdded.RemoveAllListeners();
+            tool.OnRemoved.RemoveAllListeners();
         }
 
         /// <summary>

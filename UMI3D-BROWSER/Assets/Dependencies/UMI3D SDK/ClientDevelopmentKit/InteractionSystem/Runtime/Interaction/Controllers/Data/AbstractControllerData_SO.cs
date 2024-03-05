@@ -23,6 +23,16 @@ namespace umi3d.cdk.interaction
 {
     public abstract class AbstractControllerData_SO : SerializableScriptableObject
     {
+        public static string id;
+
+        public AbstractControllerData_SO()
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                id = this.GetType().FullName;
+            }
+        }
+
         public abstract uint BoneType { get; }
         public abstract Transform BoneTransform { get; }
         /// <summary>

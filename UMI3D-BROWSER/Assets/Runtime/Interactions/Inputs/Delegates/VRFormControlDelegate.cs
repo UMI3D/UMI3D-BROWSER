@@ -22,11 +22,10 @@ using UnityEngine.InputSystem;
 
 namespace umi3d.browserRuntime.interaction
 {
-    [CreateAssetMenu(fileName = "UMI3D Link Input Delegate", menuName = "UMI3D/Interactions/Input Delegates/Link Input Delegate")]
-    public class LinkInputDelegate : AbstractInputDelegate<LinkDto>
+    [CreateAssetMenu(fileName = "UMI3D VR Form Control Delegate", menuName = "UMI3D/Interactions/Control/Delegates/VR Form")]
+    public class VRFormControlDelegate : AbstractControlDelegate<FormDto>
     {
-
-        public override AbstractControlEntity GetControl(LinkDto interaction)
+        public override AbstractControlEntity GetControl(FormDto Interaction)
         {
             throw new NotImplementedException();
         }

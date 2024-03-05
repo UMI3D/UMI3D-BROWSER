@@ -21,7 +21,7 @@ using UnityEngine;
 
 namespace umi3d.cdk.interaction
 {
-    [CreateAssetMenu(fileName = "UMI3D Control Data For [ControllerName]", menuName = "UMI3D/Interactions/Control/Control Data")]
+    [CreateAssetMenu(fileName = "UMI3D [ControllerName] Control Data", menuName = "UMI3D/Interactions/Control/Control Data")]
     public class Controls_SO : SerializableScriptableObject
     {
         [Header("Buttons")]
@@ -57,14 +57,5 @@ namespace umi3d.cdk.interaction
         /// </summary>
         [Tooltip("The button type controls for shortcuts")]
         public List<PhysicalButtonControlEntity> shortcuts = new();
-
-
-        public AbstractControlEntity this[Guid id, AbstractControlType type]
-        {
-            get
-            {
-                throw new System.NotImplementedException();
-            }
-        }
     }
 }

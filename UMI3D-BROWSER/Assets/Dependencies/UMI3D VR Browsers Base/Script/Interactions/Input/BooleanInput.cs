@@ -88,8 +88,6 @@ namespace umi3dVRBrowsersBase.interactions.input
             {
                 if (pressDown)
                 {
-                    (controller as VRController).IsInputPressed = true;
-
                     if ((interaction as EventDto).TriggerAnimationId != 0)
                     {
                         BooleanEvent.Invoke(boneType);
@@ -99,7 +97,6 @@ namespace umi3dVRBrowsersBase.interactions.input
                 }
                 else
                 {
-                    (controller as VRController).IsInputPressed = false;
                     onInputUp.Invoke();
 
                     if ((interaction as EventDto).ReleaseAnimationId != 0)

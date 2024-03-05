@@ -56,7 +56,7 @@ namespace umi3d.cdk.interaction
         /// <inheritdoc/>
         public override void ResetModule()
         {
-            foreach (AbstractController c in Controllers)
+            foreach (AbstractController c in AbstractController.activeControllers)
                 c.Clear();
 
             if (toolboxMenu != null)
@@ -94,26 +94,6 @@ namespace umi3d.cdk.interaction
 
             //return null;
         }
-
-        ///// <inheritdoc/>
-        //public override void ReleaseTool(ulong environmentId, ulong toolId, InteractionMappingReason reason = null)
-        //{
-        //    AbstractTool tool = GetTool(environmentId, toolId);
-
-        //    if (toolIdToController.TryGetValue((tool.environmentId,tool.id), out AbstractController controller))
-        //    {
-        //        controller.projectionManager.Release(tool, reason);
-        //        toolIdToController.Remove((tool.environmentId, tool.id));
-        //        tool.OnUpdated.RemoveAllListeners();
-        //        tool.OnAdded.RemoveAllListeners();
-        //        tool.OnRemoved.RemoveAllListeners();
-        //        projectedTools.Remove((tool.environmentId, tool.id));
-        //    }
-        //    else
-        //    {
-        //        throw new Exception("Tool not selected");
-        //    }
-        //}
 
         ///// <inheritdoc/>
         //public override bool SelectTool(ulong environmentId, ulong toolId, bool releasable, ulong hoveredObjectId, InteractionMappingReason reason = null)

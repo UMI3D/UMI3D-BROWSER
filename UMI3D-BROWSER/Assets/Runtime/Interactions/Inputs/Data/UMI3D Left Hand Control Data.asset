@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 52af0853fdef5f64ba01649f51add375, type: 3}
-  m_Name: UMI3D Control Data For LeftVRController
+  m_Name: UMI3D Left Hand Control Data
   m_EditorClassIdentifier: 
   _guid: eac53400111dbca40bcc969c74acf1dc
   physicalButtonControls:
@@ -63,7 +63,7 @@ MonoBehaviour:
         networkFrameRate: 1
       translationStrength: 1
       rotationStrength: 200
-      compatibleDofGroup: 00000000
+      compatibleDofGroup: 01000000020000000300000004000000050000000700000008000000090000000a0000000b0000000c0000000d0000000e0000000f00000010000000110000000600000000000000
       initialPosition: {x: 0, y: 0, z: 0}
       initialRotation: {x: 0, y: 0, z: 0, w: 0}
       frameOfReference: {fileID: 0}
@@ -79,7 +79,52 @@ MonoBehaviour:
           m_Interactions: 
           m_SingletonActionBindings: []
           m_Flags: 0
-        m_Reference: {fileID: 0}
+        m_Reference: {fileID: -5982496924579745919, guid: c348712bda248c246b8c49b3db54643f,
+          type: 3}
+    trackingInput:
+      inputActionProperty:
+        m_UseReference: 1
+        m_Action:
+          m_Name: Input Action Property
+          m_Type: 0
+          m_ExpectedControlType: 
+          m_Id: d86b6ee5-db4d-43ed-9fd6-703403c38cd3
+          m_Processors: 
+          m_Interactions: 
+          m_SingletonActionBindings: []
+          m_Flags: 0
+        m_Reference: {fileID: 684395432459739428, guid: c348712bda248c246b8c49b3db54643f,
+          type: 3}
+  - controlData:
+      isUsed: 0
+      controller: {fileID: 0}
+      environmentId: 0
+      toolId: 0
+      phase: 0
+      shouldDissociateAsSoonAsPossible: 0
+    manipulationData:
+      messageSender:
+        networkFrameRate: 1
+      translationStrength: 1
+      rotationStrength: 200
+      compatibleDofGroup: 01000000020000000300000004000000050000000700000008000000090000000a0000000b0000000c0000000d0000000e0000000f00000010000000110000000600000000000000
+      initialPosition: {x: 0, y: 0, z: 0}
+      initialRotation: {x: 0, y: 0, z: 0, w: 0}
+      frameOfReference: {fileID: 0}
+    activationInput:
+      inputActionProperty:
+        m_UseReference: 1
+        m_Action:
+          m_Name: Input Action Property
+          m_Type: 0
+          m_ExpectedControlType: 
+          m_Id: 05647b4e-8fbe-42c6-8c07-2e047ea174b8
+          m_Processors: 
+          m_Interactions: 
+          m_SingletonActionBindings: []
+          m_Flags: 0
+        m_Reference: {fileID: -6131295136447488360, guid: c348712bda248c246b8c49b3db54643f,
+          type: 3}
     trackingInput:
       inputActionProperty:
         m_UseReference: 1

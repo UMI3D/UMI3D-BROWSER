@@ -185,7 +185,7 @@ namespace umi3d.cdk.interaction
                 }
             }
 
-            ProjectionTreeNodeData currentMemoryTreeState = treeRoot;
+            ProjectionTreeNodeData currentNode = treeRoot;
             List<AbstractUMI3DInput> selectedInputs = new List<AbstractUMI3DInput>();
 
             for (int depth = 0; depth < interactions.Length; depth++)
@@ -194,35 +194,41 @@ namespace umi3d.cdk.interaction
 
                 if (interaction is ManipulationDto manipulationDto)
                 {
-                    DofGroupOptionDto[] options = manipulationDto.dofSeparationOptions.ToArray();
-                    DofGroupOptionDto bestDofGroupOption = controlManager.manipulationDelegate.FindBest(options);
+                    DofGroupOptionDto[] options 
+                        = manipulationDto
+                        .dofSeparationOptions
+                        .ToArray();
+                    DofGroupOptionDto bestDofGroupOption 
+                        = controlManager
+                        .manipulationDelegate
+                        .FindBest(options);
 
                     foreach (DofGroupDto sep in bestDofGroupOption.separations)
                     {
-                        currentMemoryTreeState = ProjectAndUpdateTree(
+                        currentNode = ProjectAndUpdateTree(
                             interaction,
-                            currentMemoryTreeState,
+                            currentNode,
                             environmentId,
                             toolId,
                             hoveredObjectId,
                             false,
                             sep
                         );
-                        selectedInputs.Add(currentMemoryTreeState.input);
+                        selectedInputs.Add(currentNode.input);
                     }
                 }
                 else
                 {
-                    currentMemoryTreeState = ProjectAndUpdateTree(
+                    currentNode = ProjectAndUpdateTree(
                         interaction,
-                        currentMemoryTreeState,
+                        currentNode,
                         environmentId,
                         toolId,
                         hoveredObjectId,
                         depth == 0 && foundHoldableEvent,
                         null
                     );
-                    selectedInputs.Add(currentMemoryTreeState.input);
+                    selectedInputs.Add(currentNode.input);
                 }
             }
 

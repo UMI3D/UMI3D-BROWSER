@@ -40,22 +40,6 @@ namespace umi3dVRBrowsersBase.interactions
         /// </summary>
         public ControllerType type;
 
-        /// <summary>
-        /// Asoociated bone.
-        /// </summary>
-        public Tracker bone;
-
-        #region Inputs Fields
-
-        /// <summary>
-        /// Id of the current hovered UMI3DNode.
-        /// </summary>
-        public ulong hoveredObjectId;
-
-        public bool IsInputPressed = false;
-
-        #endregion Inputs Fields
-
         #endregion Fields
 
         #region Methods
@@ -77,36 +61,6 @@ namespace umi3dVRBrowsersBase.interactions
         #endregion
 
         #region Tool : projection and release
-
-        ///// <summary>
-        ///// <inheritdoc/>
-        ///// </summary>
-        ///// <param name="tool"></param>
-        ///// <param name="releasable"></param>
-        ///// <param name="reason"></param>
-        ///// <param name="hoveredObjectId"></param>
-        //public override void Project(AbstractTool tool, bool releasable, InteractionMappingReason reason, ulong hoveredObjectId)
-        //{
-        //    base.Project(tool, releasable, reason, hoveredObjectId);
-
-        //    if (toolManager.toolDelegate.Tool == tool) // It means projection succedded
-        //    {
-        //        PlayerMenuManager.Instance.MenuHeader.DisplayControllerButton(true, type, tool.name);
-
-        //        tool.onProjected(bone.BoneType);
-        //    }
-        //}
-
-        /// <summary>
-        /// If current tool is not null, releases it.
-        /// </summary>
-        public void ReleaseCurrentTool()
-        {
-            //if (toolManager.toolDelegate.Tool != null)
-            //{
-            //    //InteractionMapper.Instance.ReleaseTool(UMI3DGlobalID.EnvironmentId, toolManager.toolDelegate.Tool.id);
-            //}
-        }
 
         /// <summary>
         /// Projects all parameters on this tool.

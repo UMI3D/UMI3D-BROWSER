@@ -71,7 +71,7 @@ namespace umi3dVRBrowsersBase.interactions.input
         public override void Init(AbstractController controller)
         {
             base.Init(controller);
-            bone = (controller as VRController).bone;
+            //bone = (controller as VRController).bone;
             UnityEngine.Debug.Assert(bone != null, "Bone of " + controller.name + " not set.");
         }
 

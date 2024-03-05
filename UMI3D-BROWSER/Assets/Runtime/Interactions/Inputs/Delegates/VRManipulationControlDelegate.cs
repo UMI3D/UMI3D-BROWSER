@@ -22,12 +22,12 @@ using UnityEngine.InputSystem;
 
 namespace umi3d.browserRuntime.interaction
 {
-    [CreateAssetMenu(fileName = "UMI3D Form Input Delegate", menuName = "UMI3D/Interactions/Input Delegates/Form Input Delegate")]
-    public class FormInputDelegate : AbstractInputDelegate<FormDto>
+    [CreateAssetMenu(fileName = "UMI3D VR Manipulation Control Delegate", menuName = "UMI3D/Interactions/Control/Delegates/VR Manipulation")]
+    public class VRManipulationControlDelegate : AbstractManipulationControlDelegate
     {
-        public override AbstractControlEntity GetControl(FormDto Interaction)
+        public override DofGroupOptionDto FindBest(DofGroupOptionDto[] options)
         {
-            throw new NotImplementedException();
+            return options[0];
         }
 
         protected override bool CanPerform(InputActionPhase phase)

@@ -54,21 +54,21 @@ namespace umi3dVRBrowsersBase.tutorial
         /// <returns></returns>
         private IEnumerator UpdateCoroutine()
         {
-            Transform hand = (VRInteractionMapper.Instance as VRInteractionMapper).GetControllerTransform(ControllerType.RightHandController);
+            //Transform hand = (VRInteractionMapper.Instance as VRInteractionMapper).GetControllerTransform(ControllerType.RightHandController);
 
-            position = hand.position.x;
+            //position = hand.position.x;
 
             yield return null;
 
-            while (true)
-            {
-                float delta = hand.transform.position.x - position;
+            //while (true)
+            //{
+            //    float delta = hand.transform.position.x - position;
 
-                transform.localPosition = new Vector3(Mathf.Clamp(transform.localPosition.x + delta, -1.5f, 0), transform.localPosition.y, transform.localPosition.z);
+            //    transform.localPosition = new Vector3(Mathf.Clamp(transform.localPosition.x + delta, -1.5f, 0), transform.localPosition.y, transform.localPosition.z);
 
-                position = hand.transform.position.x;
-                yield return null;
-            }
+            //    position = hand.transform.position.x;
+            //    yield return null;
+            //}
         }
 
         /// <summary>

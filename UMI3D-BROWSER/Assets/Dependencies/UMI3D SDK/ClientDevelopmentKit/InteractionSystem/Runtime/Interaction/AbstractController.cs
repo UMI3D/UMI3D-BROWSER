@@ -13,6 +13,8 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+using System.Collections.Generic;
+using umi3d.common;
 using UnityEngine;
 
 namespace umi3d.cdk.interaction
@@ -46,6 +48,8 @@ namespace umi3d.cdk.interaction
         public UMI3DToolManager toolManager;
         public ProjectionManager projectionManager;
 
+        public readonly static List<AbstractController> activeControllers = new();
+
         private void Awake()
         {
             inputManager.Init(this);
@@ -58,14 +62,24 @@ namespace umi3d.cdk.interaction
             );
         }
 
+        private void OnEnable()
+        {
+            activeControllers.Add(this);
+        }
 
-        #region Old
+        private void OnDisable()
+        {
+            activeControllers.Remove(this);
+        }
 
         /// <summary>
         /// Clear all menus and the projected tools
         /// </summary>
-        public abstract void Clear();
+        public virtual void Clear()
+        {
+            projectionManager.Release(null, null);
 
-        #endregion
+            //toolManager.ReleaseTool(UMI3DGlobalID.EnvironmentId, toolManager.toolDelegate.Tool.id);
+        }
     }
 }

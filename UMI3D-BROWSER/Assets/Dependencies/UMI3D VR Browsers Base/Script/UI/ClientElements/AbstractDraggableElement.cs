@@ -78,7 +78,7 @@ namespace umi3dVRBrowsersBase.ui
         /// <summary>
         /// Controller used for dragging if any.
         /// </summary>
-        protected AbstractController usedController;
+        protected UMI3DController usedController;
 
         /// <summary>
         /// World position of <see cref="scrollbarTransform"/> 's bottom left corner.
@@ -181,13 +181,13 @@ namespace umi3dVRBrowsersBase.ui
         }
 
         /// <inheritdoc/>
-        public override void Select(AbstractController controller)
+        public override void Select(UMI3DController controller)
         {
             usedController = controller;
         }
 
         /// <inheritdoc/>
-        public override void Deselect(AbstractController controller)
+        public override void Deselect(UMI3DController controller)
         {
             usedController = null;
         }

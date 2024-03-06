@@ -26,7 +26,7 @@ namespace umi3d.browserRuntime.interaction
     public class VRLinkControlDelegate : AbstractControlDelegate<LinkDto>
     {
 
-        public override AbstractControlEntity GetControl(AbstractController controller, LinkDto interaction)
+        public override AbstractControlEntity GetControl(UMI3DController controller, LinkDto interaction)
         {
             throw new NotImplementedException();
         }

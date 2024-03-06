@@ -30,7 +30,7 @@ namespace umi3dBrowsers.interaction.selection.cursor
         /// <summary>
         /// Controller tracked
         /// </summary>
-        public AbstractController controller;
+        public UMI3DController controller;
 
         /// <summary>
         /// Interactable currently pointed at

@@ -44,7 +44,7 @@ namespace umi3d.cdk.interaction
         public ProjectionEventDelegate eventDelegate;
 
         [HideInInspector]
-        public AbstractController controller;
+        public UMI3DController controller;
         [HideInInspector]
         public UMI3DControlManager controlManager;
         [HideInInspector]
@@ -58,7 +58,7 @@ namespace umi3d.cdk.interaction
 
         public void Init(
             MonoBehaviour context,
-            AbstractController controller,
+            UMI3DController controller,
             UMI3DControlManager inputManager,
             UMI3DToolManager toolManager
         )

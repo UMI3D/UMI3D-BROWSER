@@ -36,7 +36,7 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
         /// <summary>
         /// Controller the selector belongs to
         /// </summary>
-        protected AbstractController controller;
+        protected UMI3DController controller;
 
         public class SelectionEvent : UnityEvent<SelectionIntentData<T>>
         { };

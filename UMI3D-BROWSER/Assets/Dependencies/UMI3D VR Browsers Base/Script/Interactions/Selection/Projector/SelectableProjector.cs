@@ -29,7 +29,7 @@ namespace umi3dBrowsers.interaction.selection.projector
     public class SelectableProjector : IProjector<Selectable>
     {
         /// <inheritdoc/>
-        public void Project(Selectable selectable, AbstractController controller)
+        public void Project(Selectable selectable, UMI3DController controller)
         {
             throw new System.NotImplementedException();
             //var pointerEventData = new PointerEventData(EventSystem.current) { clickCount = 1, pointerId = (int) (controller as VRController).type };
@@ -52,7 +52,7 @@ namespace umi3dBrowsers.interaction.selection.projector
         }
 
         /// <inheritdoc/>
-        public void Release(Selectable selectable, AbstractController controller)
+        public void Release(Selectable selectable, UMI3DController controller)
         {
             Release(selectable);
         }
@@ -62,7 +62,7 @@ namespace umi3dBrowsers.interaction.selection.projector
         /// </summary>
         /// <param name="selectable"></param>
         /// <param name="controller"></param>
-        public void Pick(Selectable selectable, AbstractController controller, PointerEventData eventData)
+        public void Pick(Selectable selectable, UMI3DController controller, PointerEventData eventData)
         {
             switch (selectable)
             {
@@ -106,7 +106,7 @@ namespace umi3dBrowsers.interaction.selection.projector
         /// </summary>
         /// <param name="selectable"></param>
         /// <param name="controller"></param>
-        public void PressDown(Selectable selectable, AbstractController controller, PointerEventData eventData)
+        public void PressDown(Selectable selectable, UMI3DController controller, PointerEventData eventData)
         {
             switch (selectable)
             {
@@ -127,7 +127,7 @@ namespace umi3dBrowsers.interaction.selection.projector
         /// <param name="selectable"></param>
         /// <param name="controller"></param>
         /// <param name="eventData"></param>
-        private void SendDefaultSelectableEvent(Selectable selectable, AbstractController controller, PointerEventData eventData, bool down)
+        private void SendDefaultSelectableEvent(Selectable selectable, UMI3DController controller, PointerEventData eventData, bool down)
         {
             RaySelectionZone<Selectable> raycastHelper = new RaySelectionZone<Selectable>(controller.Transform);
             var closestAndRaycastHit = raycastHelper.GetClosestAndRaycastHit();

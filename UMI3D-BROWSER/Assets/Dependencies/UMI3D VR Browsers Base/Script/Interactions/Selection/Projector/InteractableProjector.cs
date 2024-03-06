@@ -36,7 +36,7 @@ namespace umi3dBrowsers.interaction.selection.projector
         /// </summary>
         /// <param name="interactable"></param>
         /// <returns></returns>
-        public bool IsProjected(InteractableContainer interactable, AbstractController controller)
+        public bool IsProjected(InteractableContainer interactable, UMI3DController controller)
         {
             throw new System.NotImplementedException();
             //return InteractionMapper.Instance.IsToolSelected(UMI3DGlobalID.EnvironmentId, interactable.Interactable.dto.id);
@@ -47,7 +47,7 @@ namespace umi3dBrowsers.interaction.selection.projector
         /// </summary>
         /// <param name="interactable"></param>
         /// <param name="controller"></param>
-        public void Project(InteractableContainer interactable, AbstractController controller)
+        public void Project(InteractableContainer interactable, UMI3DController controller)
         {
             throw new System.NotImplementedException();
             //var interactionTool = AbstractInteractionMapper.Instance.GetTool(UMI3DGlobalID.EnvironmentId, interactable.Interactable.dto.id);
@@ -67,7 +67,7 @@ namespace umi3dBrowsers.interaction.selection.projector
         /// <param name="interactionTool"></param>
         /// <param name="selectedObjectId"></param>
         /// <param name="controller"></param>
-        public void Project(AbstractTool interactionTool, ulong selectedObjectId, AbstractController controller)
+        public void Project(AbstractTool interactionTool, ulong selectedObjectId, UMI3DController controller)
         {
             throw new System.NotImplementedException();
             //controller.projectionManager.Project(interactionTool, true, new RequestedUsingSelector<AbstractSelector>() { controller = controller }, selectedObjectId);
@@ -78,7 +78,7 @@ namespace umi3dBrowsers.interaction.selection.projector
         /// </summary>
         /// <param name="interactionTool"></param>
         /// <param name="controller"></param>
-        public void Release(AbstractTool interactionTool, AbstractController controller)
+        public void Release(AbstractTool interactionTool, UMI3DController controller)
         {
             throw new System.NotImplementedException();
             //controller.projectionManager.Release(interactionTool, new RequestedUsingSelector<AbstractSelector>() { controller = controller });
@@ -87,7 +87,7 @@ namespace umi3dBrowsers.interaction.selection.projector
         }
 
         /// <inheritdoc/>
-        public void Release(InteractableContainer interactable, AbstractController controller)
+        public void Release(InteractableContainer interactable, UMI3DController controller)
         {
             throw new System.NotImplementedException();
             //controller.projectionManager.Release(AbstractInteractionMapper.Instance.GetTool(UMI3DGlobalID.EnvironmentId, interactable.Interactable.dto.id), new RequestedUsingSelector<AbstractSelector>() { controller = controller });

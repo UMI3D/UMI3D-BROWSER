@@ -45,7 +45,7 @@ namespace umi3dBrowsers.interaction.selection.intentdetector.method
         }
 
         /// <inheritdoc/>
-        public override void Init(AbstractController controller)
+        public override void Init(UMI3DController controller)
         {
             base.Init(controller);
             zoneSelection = new ColliderSelectionZone<T>(proximityColliderHandler);

@@ -197,7 +197,7 @@ namespace umi3dVRBrowsersBase.editor
                 errors.Add("Prefab without MicrophoneListener.");
 
             //Check Controllers.
-            int nbControllers = player.GetComponentsInChildren<AbstractController>().Length;
+            int nbControllers = player.GetComponentsInChildren<UMI3DController>().Length;
             if (nbControllers != 2)
                 errors.Add("Prefab with " + nbControllers + "AbstractController, generally 2 are required for VR players.");
 

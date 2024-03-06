@@ -27,7 +27,7 @@ namespace umi3d.cdk.interaction
         public DofGroupDto dof;
 
         public override void Associate(
-            AbstractController controller,
+            UMI3DController controller,
             AbstractControlEntity control,
             ulong environmentId,
             AbstractInteractionDto interaction,
@@ -144,7 +144,7 @@ namespace umi3d.cdk.interaction
             };
         }
 
-        public override AbstractControlEntity GetControl(AbstractController controller, ManipulationDto interaction)
+        public override AbstractControlEntity GetControl(UMI3DController controller, ManipulationDto interaction)
         {
             var model = controller.controlManager.model;
             var physicalManipulation = model.GetPhysicalManipulation(dof);

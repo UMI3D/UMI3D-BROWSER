@@ -49,7 +49,7 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
 
         private Renderer impactPointRenderer;
 
-        private AbstractController controller;
+        private UMI3DController controller;
 
         /// <summary>
         /// True if the laser is currently displayed
@@ -121,7 +121,7 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
 
         protected virtual void Awake()
         {
-            controller = GetComponentInParent<AbstractController>();
+            controller = GetComponentInParent<UMI3DController>();
             laserObjectRenderer = laserObject.GetComponent<Renderer>();
             impactPointRenderer = impactPoint.GetComponent<Renderer>();
 

@@ -18,7 +18,6 @@ using inetum.unityUtils;
 using System;
 using umi3d.cdk.interaction;
 using umi3d.cdk.userCapture.tracking;
-using umi3d.common.userCapture;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.interaction
@@ -26,7 +25,7 @@ namespace umi3d.browserRuntime.interaction
     public class UMI3DVRController : MonoBehaviour
     {
         [Header("Manager")]
-        public AbstractController controller;
+        public UMI3DController controller;
         public UMI3DControlManager controlManager;
         public UMI3DToolManager toolManager;
         public ProjectionManager projectionManager;
@@ -55,6 +54,16 @@ namespace umi3d.browserRuntime.interaction
                 controlManager,
                 toolManager
             );
+        }
+
+        private void OnEnable()
+        {
+            controller.Enable();
+        }
+
+        private void OnDisable()
+        {
+            controller.Disable();
         }
     }
 }

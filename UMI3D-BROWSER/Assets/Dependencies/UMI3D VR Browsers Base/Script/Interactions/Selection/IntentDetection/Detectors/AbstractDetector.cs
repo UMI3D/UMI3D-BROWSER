@@ -52,7 +52,7 @@ namespace umi3dBrowsers.interaction.selection.intentdetector
         /// <summary>
         /// Initialize the detector
         /// </summary>
-        public virtual void Init(AbstractController controller)
+        public virtual void Init(UMI3DController controller)
         {
             SetDetectionMethod();
             detectionMethod.Init(controller);

@@ -23,7 +23,7 @@ namespace umi3dBrowsers.interaction.selection
         /// <summary>
         /// Controller source of detection
         /// </summary>
-        public AbstractController controller;
+        public UMI3DController controller;
 
         /// <summary>
         /// Set to true when the object is the one chosen to be projected on the controller

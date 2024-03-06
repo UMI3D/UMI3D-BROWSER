@@ -39,13 +39,13 @@ namespace umi3dVRBrowsersBase.ui
         /// Selects the object
         /// </summary>
         /// <param name="controller">Controller used for selection</param>
-        void Select(AbstractController controller);
+        void Select(UMI3DController controller);
 
         /// <summary>
         /// Deselects the object
         /// </summary>
         /// <param name="controller">Controller that was used for selection</param>
-        void Deselect(AbstractController controller);
+        void Deselect(UMI3DController controller);
 
         /// <summary>
         /// Returns true i the object is currenlty selected

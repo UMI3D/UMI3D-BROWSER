@@ -33,10 +33,10 @@ namespace umi3dVRBrowsersBase.ui
         public UnityEvent OnDeselected { get; private set; } = new UnityEvent();
 
         /// <inheritdoc/>
-        public abstract void Select(AbstractController controller);
+        public abstract void Select(UMI3DController controller);
 
         /// <inheritdoc/>
-        public abstract void Deselect(AbstractController controller);
+        public abstract void Deselect(UMI3DController controller);
 
         /// <summary>
         /// Is the element currently selected ?

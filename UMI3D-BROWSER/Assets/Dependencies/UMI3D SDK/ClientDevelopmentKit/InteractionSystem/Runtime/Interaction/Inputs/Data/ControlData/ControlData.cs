@@ -37,7 +37,7 @@ namespace umi3d.cdk.interaction
         /// <summary>
         /// Current controller associated with this control.
         /// </summary>
-        [HideInInspector] public AbstractController controller;
+        [HideInInspector] public UMI3DController controller;
         /// <summary>
         /// Environment's id.
         /// </summary>

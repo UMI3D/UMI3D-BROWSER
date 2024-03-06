@@ -141,7 +141,7 @@ namespace umi3dVRBrowsersBase.ui
         public virtual bool IsHovered(ControllerType controller) => isHovered;
 
         /// <inheritdoc/>
-        public override void Select(AbstractController controller)
+        public override void Select(UMI3DController controller)
         {
             if (!isSelected)
             {
@@ -155,7 +155,7 @@ namespace umi3dVRBrowsersBase.ui
         }
 
         /// <inheritdoc/>
-        public override void Deselect(AbstractController controller)
+        public override void Deselect(UMI3DController controller)
         {
             if (isSelected)
             {

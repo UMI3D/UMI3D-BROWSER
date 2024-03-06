@@ -27,7 +27,7 @@ namespace umi3d.cdk.interaction
         public bool tryToFindInputForHoldableEvent;
 
         public override void Associate(
-            AbstractController controller,
+            UMI3DController controller,
             AbstractControlEntity control,
             ulong environmentId,
             AbstractInteractionDto interaction,
@@ -129,7 +129,7 @@ namespace umi3d.cdk.interaction
             };
         }
 
-        public override AbstractControlEntity GetControl(AbstractController controller, EventDto interaction)
+        public override AbstractControlEntity GetControl(UMI3DController controller, EventDto interaction)
         {
             var model = controller.controlManager.model;
             var physicalButton = model.GetPhysicalButton();

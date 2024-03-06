@@ -35,9 +35,9 @@ namespace umi3d.cdk.interaction
         public AbstractControlDelegate<AbstractParameterDto> parameterDelegate;
 
         [HideInInspector] public ControlModel model = new();
-        [HideInInspector] public AbstractController controller;
+        [HideInInspector] public UMI3DController controller;
 
-        public void Init(MonoBehaviour context, AbstractController controller)
+        public void Init(MonoBehaviour context, UMI3DController controller)
         {
             logger.MainContext = context;
             logger.MainTag = nameof(UMI3DControlManager);

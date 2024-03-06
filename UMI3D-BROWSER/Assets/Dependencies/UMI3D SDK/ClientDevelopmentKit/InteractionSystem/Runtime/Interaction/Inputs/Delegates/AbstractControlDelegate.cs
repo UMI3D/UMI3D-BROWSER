@@ -36,12 +36,12 @@ namespace umi3d.cdk.interaction
         /// <param name="unused"></param>
         /// <returns></returns>
         public abstract AbstractControlEntity GetControl(
-            AbstractController controller, 
+            UMI3DController controller, 
             Interaction interaction
         );
 
         public virtual void Associate(
-            AbstractController controller,
+            UMI3DController controller,
             AbstractControlEntity control,
             ulong environmentId,
             AbstractInteractionDto interaction,

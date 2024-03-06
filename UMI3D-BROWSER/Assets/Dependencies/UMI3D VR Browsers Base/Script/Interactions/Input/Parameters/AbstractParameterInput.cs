@@ -68,7 +68,7 @@ namespace umi3dVRBrowsersBase.interactions.input
         /// <inheritdoc/>
         /// </summary>
         /// <param name="controller"></param>
-        public override void Init(AbstractController controller)
+        public override void Init(UMI3DController controller)
         {
             base.Init(controller);
             //bone = (controller as VRController).bone;

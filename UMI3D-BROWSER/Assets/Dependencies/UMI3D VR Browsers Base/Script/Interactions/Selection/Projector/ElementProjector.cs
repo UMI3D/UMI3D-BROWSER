@@ -24,13 +24,13 @@ namespace umi3dVRBrowsersBase.interactions.selection.projector
     public class ElementProjector : IProjector<AbstractClientInteractableElement>
     {
         /// <inheritdoc/>
-        public void Project(AbstractClientInteractableElement objToProjec, AbstractController controller)
+        public void Project(AbstractClientInteractableElement objToProjec, UMI3DController controller)
         {
             objToProjec.Select(controller);
         }
 
         /// <inheritdoc/>
-        public void Release(AbstractClientInteractableElement objToRelease, AbstractController controller)
+        public void Release(AbstractClientInteractableElement objToRelease, UMI3DController controller)
         {
             objToRelease.Deselect(controller);
         }

@@ -47,7 +47,7 @@ namespace umi3dVRBrowsersBase.interactions
         /// </summary>
         private Dictionary<ulong, GlobalTool> interactionsIdToTool = new Dictionary<ulong, GlobalTool>();
 
-        public AbstractController lastControllerUsedInMenu;
+        public UMI3DController lastControllerUsedInMenu;
 
         /// <summary>
         /// Associate a tool id and if it is releasable or not.
@@ -144,7 +144,7 @@ namespace umi3dVRBrowsersBase.interactions
         /// <summary>
         /// To remove in the future, made because InteractionMapper.ShouldForceProjection(AbstractController, AbstractTool, Reason) can be overriden
         /// </summary>
-        private bool ShouldForceProjection(AbstractController controller, InteractionMappingReason reason)
+        private bool ShouldForceProjection(UMI3DController controller, InteractionMappingReason reason)
         {
             bool res = false;
 
@@ -168,7 +168,7 @@ namespace umi3dVRBrowsersBase.interactions
         /// </summary>
         /// <param name="tool"></param>
         /// <returns></returns>
-        protected AbstractController GetController(AbstractTool tool, InteractionMappingReason reason)
+        protected UMI3DController GetController(AbstractTool tool, InteractionMappingReason reason)
         {
             if (reason is RequestedFromMenu)
             {

@@ -37,7 +37,7 @@ namespace umi3d.cdk.interaction
     /// </example>
     /// </summary>
     [Serializable]
-    public class AbstractController
+    public class UMI3DController
     {
         [SerializeField]
         debug.UMI3DLogger logger = new();
@@ -48,12 +48,12 @@ namespace umi3d.cdk.interaction
         [HideInInspector] public UMI3DControlManager controlManager;
         MonoBehaviour context;
 
-        public readonly static List<AbstractController> activeControllers = new();
+        public readonly static List<UMI3DController> activeControllers = new();
 
         public void Init(MonoBehaviour context, UMI3DControlManager controlManager)
         {
             logger.MainContext = context;
-            logger.MainTag = nameof(AbstractController);
+            logger.MainTag = nameof(UMI3DController);
             this.context = context;
             this.controlManager = controlManager;
         }

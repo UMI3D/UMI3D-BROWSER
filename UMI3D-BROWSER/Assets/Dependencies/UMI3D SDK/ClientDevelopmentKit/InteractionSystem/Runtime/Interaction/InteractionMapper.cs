@@ -38,7 +38,7 @@ namespace umi3d.cdk.interaction
         /// <summary>
         /// Associate a toolid with the controller the tool is projected on.
         /// </summary>
-        public Dictionary<(ulong, ulong), AbstractController> toolIdToController { get; protected set; } = new Dictionary<(ulong, ulong), AbstractController>();
+        public Dictionary<(ulong, ulong), UMI3DController> toolIdToController { get; protected set; } = new Dictionary<(ulong, ulong), UMI3DController>();
 
         /// <summary>
         /// Id to Dto interactions map.
@@ -56,7 +56,7 @@ namespace umi3d.cdk.interaction
         /// <inheritdoc/>
         public override void ResetModule()
         {
-            foreach (AbstractController c in AbstractController.activeControllers)
+            foreach (UMI3DController c in UMI3DController.activeControllers)
                 c.Clear();
 
             if (toolboxMenu != null)
@@ -65,7 +65,7 @@ namespace umi3d.cdk.interaction
                 toolboxMenu.RemoveAllMenuItem();
             }
 
-            toolIdToController = new Dictionary<(ulong, ulong), AbstractController>();
+            toolIdToController = new Dictionary<(ulong, ulong), UMI3DController>();
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace umi3d.cdk.interaction
         /// </summary>
         /// <param name="tool"></param>
         /// <returns></returns>
-        protected AbstractController GetController(AbstractTool tool)
+        protected UMI3DController GetController(AbstractTool tool)
         {
             throw new System.NotImplementedException();
             //foreach (AbstractController controller in Controllers)
@@ -136,7 +136,7 @@ namespace umi3d.cdk.interaction
         /// </summary>
         /// <param name="tool">The tool to select</param>
         /// <param name="controller">Controller to project the tool on</param>
-        public bool SelectTool(ulong environmentId, ulong toolId, bool releasable, AbstractController controller, ulong hoveredObjectId, InteractionMappingReason reason = null)
+        public bool SelectTool(ulong environmentId, ulong toolId, bool releasable, UMI3DController controller, ulong hoveredObjectId, InteractionMappingReason reason = null)
         {
             //AbstractTool tool = GetTool(environmentId, toolId);
             //if (controller.toolManager.toolDelegate.IsCompatibleWith(tool))
@@ -248,7 +248,7 @@ namespace umi3d.cdk.interaction
         //}
 
         //this function will change/move in the future.
-        protected bool ShouldForceProjection(AbstractController controller, AbstractTool tool, InteractionMappingReason reason)
+        protected bool ShouldForceProjection(UMI3DController controller, AbstractTool tool, InteractionMappingReason reason)
         {
             throw new System.NotImplementedException();
             //if (controller.toolManager.toolDelegate.IsAvailableFor(tool))
@@ -315,7 +315,7 @@ namespace umi3d.cdk.interaction
         }
 
         /// <inheritdoc/>
-        public override AbstractController GetController(ulong environmentId, ulong projectedToolId)
+        public override UMI3DController GetController(ulong environmentId, ulong projectedToolId)
         {
             throw new System.NotImplementedException();
             //if (!IsToolSelected(environmentId, projectedToolId))

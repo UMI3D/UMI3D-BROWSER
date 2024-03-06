@@ -26,13 +26,13 @@ namespace umi3dBrowsers.interaction.selection.projector
         /// </summary>
         /// <param name="objToProjec"></param>
         /// <param name="controller"></param>
-        void Project(T objToProjec, AbstractController controller);
+        void Project(T objToProjec, UMI3DController controller);
 
         /// <summary>
         /// Remove the interaction of an object from a controller
         /// </summary>
         /// <param name="objToRelease"></param>
         /// <param name="controller"></param>
-        void Release(T objToRelease, AbstractController controller);
+        void Release(T objToRelease, UMI3DController controller);
     }
 }

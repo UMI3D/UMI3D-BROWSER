@@ -87,6 +87,6 @@ namespace umi3d.cdk.interaction
         /// </summary>
         /// <param name="projectedToolId">Tool's id</param>
         /// <returns></returns>
-        public abstract AbstractController GetController(ulong environmentId, ulong projectedToolId);
+        public abstract UMI3DController GetController(ulong environmentId, ulong projectedToolId);
     }
 }

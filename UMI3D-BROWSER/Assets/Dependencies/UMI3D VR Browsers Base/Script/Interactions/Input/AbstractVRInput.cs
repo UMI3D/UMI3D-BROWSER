@@ -58,7 +58,7 @@ namespace umi3dVRBrowsersBase.interactions.input
 
         #region Methods 
 
-        public override void Init(AbstractController controller)
+        public override void Init(UMI3DController controller)
         {
             base.Init(controller);
 

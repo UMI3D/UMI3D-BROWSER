@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,18 +33,22 @@ namespace umi3d.picoBrowser
             /// The number of frames since the state changed.
             /// </summary>
             public int Frame;
+
             /// <summary>
             /// Whether or not this button is down.
             /// </summary>
             public bool IsDown => m_isDown;
+
             /// <summary>
             /// Whether or not this button is up.
             /// </summary>
             public bool IsUp => !m_isDown;
+
             /// <summary>
             /// Whether or not this button has been pressed this frame.
             /// </summary>
             public bool IsDownThisFrame => m_isDown && Frame == 0;
+
             /// <summary>
             /// Whether or not this button has been released this frame.
             /// </summary>
@@ -73,29 +78,6 @@ namespace umi3d.picoBrowser
         private Dictionary<ControllerType, bool> isHandTeleporting = new Dictionary<ControllerType, bool>();
         private Dictionary<ControllerType, bool> isUsingHandTeleportation = new Dictionary<ControllerType, bool>();
 
-        public UnityEngine.XR.InputDevice LeftController => leftControllersGroup.controllerDevice;
-        public UnityEngine.XR.InputDevice RightController => rightControllersGroup.controllerDevice;
-
-        public UnityEngine.XR.InputDevice LeftHandTrackingController => leftControllersGroup.handTrackingDevice;
-        public UnityEngine.XR.InputDevice RightHandTrackingController => rightControllersGroup.handTrackingDevice;
-
-        protected override void Awake()
-        {
-            // For pico preview
-            Application.targetFrameRate = 72;
-
-            base.Awake();
-
-            foreach (ControllerType ctrl in Enum.GetValues(typeof(ControllerType)))
-            {
-                isTeleporting.Add(ctrl, false);
-                isHandTeleporting.Add(ctrl, false);
-                isUsingHandTeleportation.Add(ctrl, false);
-            }
-        }
-
-        private Dictionary<ActionType, PressStateCoordinator> pressStateCoordinators;
-
         private class ControllerGroup
         {
             public InputDevice controllerDevice;
@@ -103,8 +85,8 @@ namespace umi3d.picoBrowser
             public VRGestureDevice gestureDevice;
         }
 
-        private ControllerGroup leftControllersGroup = new();
-        private ControllerGroup rightControllersGroup = new();
+        private readonly ControllerGroup leftControllersGroup = new();
+        private readonly ControllerGroup rightControllersGroup = new();
 
         private class PressStateCoordinator
         {
@@ -138,8 +120,10 @@ namespace umi3d.picoBrowser
                 {
                     case ControllerType.LeftHandController:
                         return leftState.IsDown;
+
                     case ControllerType.RightHandController:
                         return rightState.IsDown;
+
                     default:
                         return false;
                 }
@@ -151,8 +135,10 @@ namespace umi3d.picoBrowser
                 {
                     case ControllerType.LeftHandController:
                         return leftState.IsDownThisFrame;
+
                     case ControllerType.RightHandController:
                         return rightState.IsDownThisFrame;
+
                     default:
                         return false;
                 }
@@ -164,43 +150,52 @@ namespace umi3d.picoBrowser
                 {
                     case ControllerType.LeftHandController:
                         return leftState.IsUpThisFrame;
+
                     case ControllerType.RightHandController:
                         return rightState.IsUpThisFrame;
+
                     default:
                         return false;
                 }
             }
         }
 
+        private Dictionary<ActionType, PressStateCoordinator> pressStateCoordinators;
+
+        public UnityEngine.XR.InputDevice LeftController => leftControllersGroup.controllerDevice;
+
+        public UnityEngine.XR.InputDevice RightController => rightControllersGroup.controllerDevice;
+
+        public UnityEngine.XR.InputDevice LeftHandTrackingController => leftControllersGroup.handTrackingDevice;
+        public UnityEngine.XR.InputDevice RightHandTrackingController => rightControllersGroup.handTrackingDevice;
+
         #region Lifecycle
+
+        protected override void Awake()
+        {
+            // For pico preview
+            Application.targetFrameRate = 72;
+
+            base.Awake();
+
+            foreach (ControllerType ctrl in Enum.GetValues(typeof(ControllerType)))
+            {
+                isTeleporting.Add(ctrl, false);
+                isHandTeleporting.Add(ctrl, false);
+                isUsingHandTeleportation.Add(ctrl, false);
+            }
+        }
 
         private void Start()
         {
-            List<InputDevice> queryResult = new(); //maybe remove held in hand
-            InputDevices.GetDevicesWithCharacteristics(InputDeviceCharacteristics.Left | InputDeviceCharacteristics.Controller | InputDeviceCharacteristics.HeldInHand, queryResult);
-            leftControllersGroup.controllerDevice = queryResult.Count > 0 ? queryResult[0] : default;
-            queryResult.Clear();
-
-            InputDevices.GetDevicesWithCharacteristics(InputDeviceCharacteristics.Right | InputDeviceCharacteristics.Controller | InputDeviceCharacteristics.HeldInHand, queryResult);
-            rightControllersGroup.controllerDevice = queryResult.Count > 0 ? queryResult[0] : default;
-            queryResult.Clear();
-
-            InputDevices.GetDevicesWithCharacteristics(InputDeviceCharacteristics.Left | InputDeviceCharacteristics.HandTracking, queryResult);
-            leftControllersGroup.handTrackingDevice = queryResult.Count > 0 ? queryResult[0] : default;
-            queryResult.Clear();
-
-            InputDevices.GetDevicesWithCharacteristics(InputDeviceCharacteristics.Right | InputDeviceCharacteristics.HandTracking, queryResult);
-            rightControllersGroup.handTrackingDevice = queryResult.Count > 0 ? queryResult[0] : default;
-            queryResult.Clear();
+            TryGetPhysicalControllers();
+            TryGetHandTrackingControllers();
 
             UnityEngine.Debug.Log("Controllers found :\n" +
                 $"Left Controller {LeftController != default}. Name: {LeftController.name}. IsValid: {LeftController.isValid}. Charac: {LeftController.characteristics}\n" +
                 $"Right Controller {RightController != default}. Name: {RightController.name}. IsValid: {RightController.isValid}. Charac: {RightController.characteristics}\n" +
-                $"Left Hand Controller {LeftHandTrackingController != default}. Name: {LeftHandTrackingController.name}. IsValid: {LeftHandTrackingController.isValid}. Charac: {LeftHandTrackingController.characteristics}\n");
-
-            InputDevices.GetDevices(queryResult);
-            Debug.Log(queryResult.Count);
-            Debug.Log(queryResult.Aggregate("", (x, y) => x + " " + y.name + " : " + y.characteristics.ToString() + " | "));
+                $"Left Hand Tracking Controller {LeftHandTrackingController != default}. Name: {LeftHandTrackingController.name}. IsValid: {LeftHandTrackingController.isValid}. Charac: {LeftHandTrackingController.characteristics}\n" +
+                $"Right Hand Tracking Controller {RightHandTrackingController != default}. Name: {RightHandTrackingController.name}. IsValid: {RightHandTrackingController.isValid}. Charac: {RightHandTrackingController.characteristics}\n");
 
             pressStateCoordinators = new()
             {
@@ -224,6 +219,23 @@ namespace umi3d.picoBrowser
 
         #endregion Lifecycle
 
+        #region Devices
+
+        private void TryGetPhysicalControllers()
+        {
+            List<InputDevice> queryResult = new();
+
+            InputDevices.GetDevicesWithCharacteristics(InputDeviceCharacteristics.Left | InputDeviceCharacteristics.Controller | InputDeviceCharacteristics.HeldInHand, queryResult);
+            if (queryResult.Count > 0)
+                AddPhysicalDevice(ControllerType.LeftHandController, queryResult[0]);
+            queryResult.Clear();
+
+            InputDevices.GetDevicesWithCharacteristics(InputDeviceCharacteristics.Right | InputDeviceCharacteristics.Controller | InputDeviceCharacteristics.HeldInHand, queryResult);
+            if (queryResult.Count > 0)
+                AddPhysicalDevice(ControllerType.RightHandController, queryResult[0]);
+            queryResult.Clear();
+        }
+
         public void AddPhysicalDevice(ControllerType controllerType, InputDevice device)
         {
             if (controllerType == ControllerType.LeftHandController && LeftController == default)
@@ -234,13 +246,32 @@ namespace umi3d.picoBrowser
             {
                 rightControllersGroup.controllerDevice = device;
             }
+            else return;
+            Debug.Log($"<color=green>Add Physical Device Controller {controllerType}</color>");
         }
 
         #region Hand Tracking
 
+        private void TryGetHandTrackingControllers()
+        {
+            List<InputDevice> queryResult = new();
+
+            InputDevices.GetDevicesWithCharacteristics(InputDeviceCharacteristics.Left | InputDeviceCharacteristics.HandTracking, queryResult);
+            if (queryResult.Count > 0)
+                AddHandTrackedDevice(ControllerType.LeftHandController, queryResult[0]);
+            queryResult.Clear();
+
+            InputDevices.GetDevicesWithCharacteristics(InputDeviceCharacteristics.Right | InputDeviceCharacteristics.HandTracking, queryResult);
+            if (queryResult.Count > 0)
+                AddHandTrackedDevice(ControllerType.RightHandController, queryResult[0]);
+            queryResult.Clear();
+
+            foreach (VRGestureDevice gestureDevice in UnityEngine.Object.FindObjectsOfType<VRGestureDevice>(true))
+                AddHandTrackedGestureDevice(gestureDevice);
+        }
+
         public void AddHandTrackedDevice(ControllerType controllerType, InputDevice device)
         {
-            Debug.Log($"Add Hand Tracked Device Controller {controllerType}");
             if (controllerType == ControllerType.LeftHandController && LeftHandTrackingController == default)
             {
                 leftControllersGroup.handTrackingDevice = device;
@@ -249,6 +280,8 @@ namespace umi3d.picoBrowser
             {
                 rightControllersGroup.handTrackingDevice = device;
             }
+            else return;
+            Debug.Log($"<color=green>Add Hand Tracked Device Controller {controllerType}</color>");
         }
 
         public void AddHandTrackedGestureDevice(VRGestureDevice device)
@@ -263,6 +296,8 @@ namespace umi3d.picoBrowser
             }
             else
                 return;
+
+            Debug.Log($"<color=green>Add hand tracked gesture device {device.ControllerType}</color>");
 
             foreach (VRGestureObserver observer in device.GestureInputs.Where(x => x != null))
             {
@@ -279,7 +314,7 @@ namespace umi3d.picoBrowser
 
         private void SetHandTrackingInputAction(ControllerType controllerType, ActionType actionType, bool value)
         {
-            Debug.Log($"Action {actionType} on {controllerType} to {value}");
+            Debug.Log($"<color=yellow>Action {actionType} on {controllerType} to {value}</color>");
             if (actionType == ActionType.Teleport)
             {
                 isHandTeleporting[controllerType] = value;
@@ -297,14 +332,16 @@ namespace umi3d.picoBrowser
 
         #endregion Hand Tracking
 
+        #endregion Devices
+
         #region Inputs
 
         #region Grab
 
-
         public PressState GrabLeftState => pressStateCoordinators[ActionType.Grab].leftState;
 
         public PressState GrabRightState => pressStateCoordinators[ActionType.Grab].rightState;
+
         public override bool GetGrab(ControllerType controller)
         {
             return pressStateCoordinators[ActionType.Grab].GetButton(controller);
@@ -320,7 +357,7 @@ namespace umi3d.picoBrowser
             return pressStateCoordinators[ActionType.Grab].GetButtonUp(controller);
         }
 
-        #endregion
+        #endregion Grab
 
         #region Joystick
 
@@ -332,9 +369,11 @@ namespace umi3d.picoBrowser
                 case ControllerType.LeftHandController:
                     LeftController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.primary2DAxis, out value);
                     break;
+
                 case ControllerType.RightHandController:
                     RightController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.primary2DAxis, out value);
                     break;
+
                 default:
                     return Vector2.zero;
             }
@@ -345,6 +384,7 @@ namespace umi3d.picoBrowser
         public PressState JoystickLeftButtonState => pressStateCoordinators[ActionType.JoystickButton].leftState;
 
         public PressState JoystickRightButtonState => pressStateCoordinators[ActionType.JoystickButton].rightState;
+
         public override bool GetJoystickButton(ControllerType controller)
         {
             return pressStateCoordinators[ActionType.JoystickButton].GetButton(controller);
@@ -432,14 +472,14 @@ namespace umi3d.picoBrowser
             return (pole, getAxis.magnitude);
         }
 
-        #endregion
+        #endregion Joystick
 
         #region Primary Button
-
 
         public PressState PrimaryLeftState => pressStateCoordinators[ActionType.PrimaryButton].leftState;
 
         public PressState PrimaryRightState => pressStateCoordinators[ActionType.PrimaryButton].rightState;
+
         public override bool GetPrimaryButton(ControllerType controller)
         {
             return pressStateCoordinators[ActionType.PrimaryButton].GetButton(controller);
@@ -455,14 +495,16 @@ namespace umi3d.picoBrowser
             return pressStateCoordinators[ActionType.PrimaryButton].GetButtonUp(controller);
         }
 
-        #endregion
+        #endregion Primary Button
 
         #region Secondary Button
 
         [HideInInspector]
         public PressState SecondaryLeftState => pressStateCoordinators[ActionType.SecondaryButton].leftState;
+
         [HideInInspector]
         public PressState SecondaryRightState => pressStateCoordinators[ActionType.SecondaryButton].rightState;
+
         public override bool GetSecondaryButton(ControllerType controller)
         {
             return pressStateCoordinators[ActionType.SecondaryButton].GetButton(controller);
@@ -478,14 +520,16 @@ namespace umi3d.picoBrowser
             return pressStateCoordinators[ActionType.SecondaryButton].GetButtonUp(controller);
         }
 
-        #endregion
+        #endregion Secondary Button
 
         #region Trigger
 
         [HideInInspector]
         public PressState TriggerLeftState => pressStateCoordinators[ActionType.Trigger].leftState;
+
         [HideInInspector]
         public PressState TriggerRightState => pressStateCoordinators[ActionType.Trigger].rightState;
+
         public override bool GetTrigger(ControllerType controller)
         {
             return pressStateCoordinators[ActionType.Trigger].GetButton(controller);
@@ -501,7 +545,9 @@ namespace umi3d.picoBrowser
             return pressStateCoordinators[ActionType.Trigger].GetButtonUp(controller);
         }
 
-        #endregion
+        #endregion Trigger
+
+        #region Teleport
 
         public override bool GetTeleportDown(ControllerType controller)
         {
@@ -514,7 +560,7 @@ namespace umi3d.picoBrowser
 
             if (!GetJoystickDown(controller))
                 return false;
-            
+
             (float pole, float magnitude) = GetJoystickPoleAndMagnitude(controller);
 
             if ((pole > 20 && pole < 160))
@@ -532,9 +578,9 @@ namespace umi3d.picoBrowser
         {
             if (!isTeleporting[controller])
                 return false;
-            
+
             if (!isHandTeleporting[controller] && isUsingHandTeleportation[controller])
-            {   
+            {
                 isTeleporting[controller] = false;
                 isUsingHandTeleportation[controller] = false;
                 return true;
@@ -547,6 +593,8 @@ namespace umi3d.picoBrowser
             else
                 return false;
         }
+
+        #endregion Teleport
 
         #endregion Inputs
 

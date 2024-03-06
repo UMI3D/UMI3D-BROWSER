@@ -70,39 +70,40 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
         protected override void Update()
         {
             base.Update();
-            // look for interaction from the controller and send the right events
-            // probably should not belong in that piece of code
-            if (AbstractControllerInputManager.Instance.GetButtonDown(controller.type, ActionType.Trigger))
-            {
-                if (activated)
-                {
-                    VRInteractionMapper.lastControllerUsedToClick = controller.type;
-                    OnPointerDown(new PointerEventData(EventSystem.current) { clickCount = 1, pointerId = (int) controller.type });
-                    LockedSelector = true;
-                }
-            }
-            else if (AbstractControllerInputManager.Instance.GetButtonUp(controller.type, ActionType.Trigger))
-            {
-                if (activated)
-                {
-                    VRInteractionMapper.lastControllerUsedToClick = controller.type;
-                    OnPointerUp(new PointerEventData(EventSystem.current) { clickCount = 1, pointerId = (int)controller.type });
-                    LockedSelector = false;
-                }
-            } else if (activated && LastSelected != null)
-            {
-                raycastHelper.origin = controller.transform.position;
-                raycastHelper.direction = controller.transform.forward;
+            throw new System.NotImplementedException();
+            //// look for interaction from the controller and send the right events
+            //// probably should not belong in that piece of code
+            //if (AbstractControllerInputManager.Instance.GetButtonDown(controller.type, ActionType.Trigger))
+            //{
+            //    if (activated)
+            //    {
+            //        VRInteractionMapper.lastControllerUsedToClick = controller.type;
+            //        OnPointerDown(new PointerEventData(EventSystem.current) { clickCount = 1, pointerId = (int) controller.type });
+            //        LockedSelector = true;
+            //    }
+            //}
+            //else if (AbstractControllerInputManager.Instance.GetButtonUp(controller.type, ActionType.Trigger))
+            //{
+            //    if (activated)
+            //    {
+            //        VRInteractionMapper.lastControllerUsedToClick = controller.type;
+            //        OnPointerUp(new PointerEventData(EventSystem.current) { clickCount = 1, pointerId = (int)controller.type });
+            //        LockedSelector = false;
+            //    }
+            //} else if (activated && LastSelected != null)
+            //{
+            //    raycastHelper.origin = controller.Transform.position;
+            //    raycastHelper.direction = controller.Transform.forward;
 
-                var closestAndRaycastHit = raycastHelper.GetClosestAndRaycastHit();
+            //    var closestAndRaycastHit = raycastHelper.GetClosestAndRaycastHit();
 
-                if (closestAndRaycastHit.obj != null)
-                {
-                    hoverEventData.pointerCurrentRaycast = new RaycastResult { worldPosition = closestAndRaycastHit.raycastHit.point };
-                    hoverEventData.pointerId = (int)controller.type;
-                    ExecuteEvents.Execute(LastSelected.selectedObject.gameObject, hoverEventData, ExecuteEvents.pointerMoveHandler);
-                }
-            }
+            //    if (closestAndRaycastHit.obj != null)
+            //    {
+            //        hoverEventData.pointerCurrentRaycast = new RaycastResult { worldPosition = closestAndRaycastHit.raycastHit.point };
+            //        hoverEventData.pointerId = (int)controller.type;
+            //        ExecuteEvents.Execute(LastSelected.selectedObject.gameObject, hoverEventData, ExecuteEvents.pointerMoveHandler);
+            //    }
+            //}
         }
 
         /// <summary>

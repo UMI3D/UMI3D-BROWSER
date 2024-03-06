@@ -68,31 +68,32 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
         protected override void Update()
         {
             base.Update();
-            // look for interaction from the controller and send the right events
-            // probably should not belong in that piece of code
-            if (!activated)
-                return;
+            throw new System.NotImplementedException();
+            //// look for interaction from the controller and send the right events
+            //// probably should not belong in that piece of code
+            //if (!activated)
+            //    return;
 
-            if (AbstractControllerInputManager.Instance.GetButtonDown(controller.type, ActionType.Trigger)
-                || AbstractControllerInputManager.Instance.GetButtonDown(controller.type, ActionType.Grab))
-            {
-                VRInteractionMapper.lastControllerUsedToClick = controller.type;
-                OnPointerDown();
-                if (!LockedSelector)
-                    LockSelector();
-            }
-            if (AbstractControllerInputManager.Instance.GetButtonUp(controller.type, ActionType.Trigger)
-                || AbstractControllerInputManager.Instance.GetButtonUp(controller.type, ActionType.Grab))
-            {
-                VRInteractionMapper.lastControllerUsedToClick = controller.type;
-                OnPointerUp();
-            }
-            else if (!AbstractControllerInputManager.Instance.GetButton(controller.type, ActionType.Trigger)
-                     && !AbstractControllerInputManager.Instance.GetButton(controller.type, ActionType.Grab))
-            {
-                if (LockedSelector)
-                    UnlockSelector();
-            }
+            //if (AbstractControllerInputManager.Instance.GetButtonDown(controller.type, ActionType.Trigger)
+            //    || AbstractControllerInputManager.Instance.GetButtonDown(controller.type, ActionType.Grab))
+            //{
+            //    VRInteractionMapper.lastControllerUsedToClick = controller.type;
+            //    OnPointerDown();
+            //    if (!LockedSelector)
+            //        LockSelector();
+            //}
+            //if (AbstractControllerInputManager.Instance.GetButtonUp(controller.type, ActionType.Trigger)
+            //    || AbstractControllerInputManager.Instance.GetButtonUp(controller.type, ActionType.Grab))
+            //{
+            //    VRInteractionMapper.lastControllerUsedToClick = controller.type;
+            //    OnPointerUp();
+            //}
+            //else if (!AbstractControllerInputManager.Instance.GetButton(controller.type, ActionType.Trigger)
+            //         && !AbstractControllerInputManager.Instance.GetButton(controller.type, ActionType.Grab))
+            //{
+            //    if (LockedSelector)
+            //        UnlockSelector();
+            //}
         }
 
         private void OnPointerUp()

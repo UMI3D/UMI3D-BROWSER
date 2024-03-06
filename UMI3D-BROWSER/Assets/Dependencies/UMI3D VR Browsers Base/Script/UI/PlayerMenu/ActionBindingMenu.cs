@@ -156,16 +156,17 @@ namespace umi3dVRBrowsersBase.ui.playerMenu
         /// <param name="input"></param>
         public void AddToList(AbstractVRInput input)
         {
-            if (displayers.Count == 0) InitFields();
+            throw new System.NotImplementedException();
+            //if (displayers.Count == 0) InitFields();
 
-            GameObject go = Instantiate(actionEntry, actionScrollViewContent.transform);
-            go.SetActive(true);
-            ActionBindingEntry bindingEntry = go.GetComponent<ActionBindingEntry>();
-            Debug.Assert(bindingEntry != null);
-            bindingEntry.Init(input);
-            go.SetActive(false);
+            //GameObject go = Instantiate(actionEntry, actionScrollViewContent.transform);
+            //go.SetActive(true);
+            //ActionBindingEntry bindingEntry = go.GetComponent<ActionBindingEntry>();
+            //Debug.Assert(bindingEntry != null);
+            //bindingEntry.Init(input);
+            //go.SetActive(false);
 
-            displayers[(input.controller as VRController).type].Add(go);
+            //displayers[(input.controller as VRController).type].Add(go);
         }
 
         /// <summary>

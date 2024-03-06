@@ -69,7 +69,8 @@ namespace umi3dBrowsers.interaction.selection.projector
         /// <param name="controller"></param>
         public void Project(AbstractTool interactionTool, ulong selectedObjectId, AbstractController controller)
         {
-            controller.projectionManager.Project(interactionTool, true, new RequestedUsingSelector<AbstractSelector>() { controller = controller }, selectedObjectId);
+            throw new System.NotImplementedException();
+            //controller.projectionManager.Project(interactionTool, true, new RequestedUsingSelector<AbstractSelector>() { controller = controller }, selectedObjectId);
         }
 
         /// <summary>
@@ -79,7 +80,8 @@ namespace umi3dBrowsers.interaction.selection.projector
         /// <param name="controller"></param>
         public void Release(AbstractTool interactionTool, AbstractController controller)
         {
-            controller.projectionManager.Release(interactionTool, new RequestedUsingSelector<AbstractSelector>() { controller = controller });
+            throw new System.NotImplementedException();
+            //controller.projectionManager.Release(interactionTool, new RequestedUsingSelector<AbstractSelector>() { controller = controller });
 
             parameterGear.HideWithDelay();
         }

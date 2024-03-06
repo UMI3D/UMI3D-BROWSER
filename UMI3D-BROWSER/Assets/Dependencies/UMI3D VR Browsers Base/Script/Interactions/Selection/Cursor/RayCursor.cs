@@ -49,7 +49,7 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
 
         private Renderer impactPointRenderer;
 
-        private VRController controller;
+        private AbstractController controller;
 
         /// <summary>
         /// True if the laser is currently displayed
@@ -121,7 +121,7 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
 
         protected virtual void Awake()
         {
-            controller = GetComponentInParent<VRController>();
+            controller = GetComponentInParent<AbstractController>();
             laserObjectRenderer = laserObject.GetComponent<Renderer>();
             impactPointRenderer = impactPoint.GetComponent<Renderer>();
 
@@ -139,12 +139,12 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
 
             OnCursorEnter.AddListener((PointingInfo trackingInfo) =>
             {
-                if (controller != (trackingInfo.controller as VRController))
+                if (controller != trackingInfo.controller)
                     return;
                 trackingInfo.targetContainer.Interactable.HoverEnter(
-                    controller.boneType,
-                    controller.boneTransform.position,
-                    new Vector4(controller.boneTransform.rotation.x, controller.boneTransform.rotation.y, controller.boneTransform.rotation.z, controller.boneTransform.rotation.w),
+                    controller.BoneType,
+                    controller.BoneTransform.position,
+                    new Vector4(controller.BoneTransform.rotation.x, controller.BoneTransform.rotation.y, controller.BoneTransform.rotation.z, controller.BoneTransform.rotation.w),
                     trackingInfo.targetContainer.Interactable.id,
                     trackingInfo.targetContainer.transform.InverseTransformPoint(trackingInfo.raycastHit.point),
                     trackingInfo.targetContainer.transform.InverseTransformDirection(trackingInfo.raycastHit.normal),
@@ -152,22 +152,22 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
 
                 if (trackingInfo.target.dto.HoverEnterAnimationId != 0)
                 {
-                    changelastBone.Invoke(controller.boneType);
+                    changelastBone.Invoke(controller.BoneType);
                     StartAnim(trackingInfo.target.dto.HoverEnterAnimationId);
                 }
             });
 
             OnCursorExit.AddListener((PointingInfo trackingInfo) =>
             {
-                if (controller != (trackingInfo.controller as VRController))
+                if (controller != trackingInfo.controller)
                     return;
 
                 if (!IsNullOrDestroyed(trackingInfo.targetContainer))
                 {
                     trackingInfo.targetContainer.Interactable.HoverExit(
-                        controller.boneType,
-                        controller.boneTransform.position,
-                        new Vector4(controller.boneTransform.rotation.x, controller.boneTransform.rotation.y, controller.boneTransform.rotation.z, controller.boneTransform.rotation.w),
+                        controller.BoneType,
+                        controller.BoneTransform.position,
+                        new Vector4(controller.BoneTransform.rotation.x, controller.BoneTransform.rotation.y, controller.BoneTransform.rotation.z, controller.BoneTransform.rotation.w),
                         trackingInfo.targetContainer.Interactable.id,
                         trackingInfo.targetContainer.transform.InverseTransformPoint(trackingInfo.raycastHit.point),
                         trackingInfo.targetContainer.transform.InverseTransformDirection(trackingInfo.raycastHit.normal),
@@ -179,7 +179,7 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
                     {
                         toolId = trackingInfo.targetContainer.Interactable.id,
                         hoveredObjectId = trackingInfo.targetContainer.Interactable.id,
-                        boneType = controller.boneType,
+                        boneType = controller.BoneType,
                         state = false,
                         normal = Vector3.zero.Dto(),
                         position = Vector3.zero.Dto(),
@@ -190,19 +190,19 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
 
                 if (trackingInfo.target.dto.HoverExitAnimationId != 0)
                 {
-                    changelastBone.Invoke(controller.boneType);
+                    changelastBone.Invoke(controller.BoneType);
                     StartAnim(trackingInfo.target.dto.HoverExitAnimationId);
                 }
             });
 
             OnCursorStay.AddListener((PointingInfo trackingInfo) =>
             {
-                if (controller != (trackingInfo.controller as VRController))
+                if (controller != trackingInfo.controller)
                     return;
                 trackingInfo.targetContainer.Interactable.Hovered(
-                    controller.boneType,
-                    controller.boneTransform.position,
-                    new Vector4(controller.boneTransform.rotation.x, controller.boneTransform.rotation.y, controller.boneTransform.rotation.z, controller.boneTransform.rotation.w),
+                    controller.BoneType,
+                    controller.BoneTransform.position,
+                    new Vector4(controller.BoneTransform.rotation.x, controller.BoneTransform.rotation.y, controller.BoneTransform.rotation.z, controller.BoneTransform.rotation.w),
                     trackingInfo.targetContainer.Interactable.id,
                     trackingInfo.targetContainer.transform.InverseTransformPoint(trackingInfo.raycastHit.point),
                     trackingInfo.targetContainer.transform.InverseTransformDirection(trackingInfo.raycastHit.normal),
@@ -294,7 +294,7 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
 
             var isHitting = closestInteractable.obj != null
                 && ((closestInteractable.obj.Interactable.InteractionDistance < 0)
-                        || closestInteractable.obj.Interactable.InteractionDistance >= (closestInteractable.obj.transform.position - controller.transform.position).magnitude);
+                        || closestInteractable.obj.Interactable.InteractionDistance >= (closestInteractable.obj.transform.position - controller.Transform.position).magnitude);
 
             if (isHitting)
             {
@@ -354,7 +354,7 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
             if (container == null || container.Interactable == null)
                 return false;
             return (container.Interactable.InteractionDistance < 0) ||
-                (container.Interactable.InteractionDistance >= (container.transform.position - controller.transform.position).magnitude);
+                (container.Interactable.InteractionDistance >= (container.transform.position - controller.Transform.position).magnitude);
         }
 
         /// <inheritdoc/>

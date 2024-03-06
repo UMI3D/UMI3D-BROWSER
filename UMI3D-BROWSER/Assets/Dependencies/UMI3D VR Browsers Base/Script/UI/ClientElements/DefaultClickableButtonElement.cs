@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using System.Collections;
+using umi3d.cdk.interaction;
 using umi3dVRBrowsersBase.interactions;
 using UnityEngine;
 using UnityEngine.Events;
@@ -140,7 +141,7 @@ namespace umi3dVRBrowsersBase.ui
         public virtual bool IsHovered(ControllerType controller) => isHovered;
 
         /// <inheritdoc/>
-        public override void Select(VRController controller)
+        public override void Select(AbstractController controller)
         {
             if (!isSelected)
             {
@@ -154,7 +155,7 @@ namespace umi3dVRBrowsersBase.ui
         }
 
         /// <inheritdoc/>
-        public override void Deselect(VRController controller)
+        public override void Deselect(AbstractController controller)
         {
             if (isSelected)
             {

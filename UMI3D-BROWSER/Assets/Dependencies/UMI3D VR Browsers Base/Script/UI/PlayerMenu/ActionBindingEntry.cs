@@ -69,7 +69,8 @@ namespace umi3dVRBrowsersBase.ui.playerMenu
         /// <param name="actionBinding"></param>
         internal void SwitchInputTo(ActionBindingEntry actionBinding)
         {
-            (VRInteractionMapper.Instance as VRInteractionMapper).GetController((actionBinding.input.controller as VRController).type).ChangeInputMapping(actionBinding.input, input);
+            throw new System.NotImplementedException();
+            //(VRInteractionMapper.Instance as VRInteractionMapper).GetController((actionBinding.input.controller as VRController).type).ChangeInputMapping(actionBinding.input, input);
 
             AbstractVRInput tmp = this.input;
             this.input = actionBinding.input;

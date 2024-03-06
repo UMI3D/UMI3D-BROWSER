@@ -36,7 +36,7 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
         /// <summary>
         /// Controller the selector belongs to
         /// </summary>
-        protected VRController controller;
+        protected AbstractController controller;
 
         public class SelectionEvent : UnityEvent<SelectionIntentData<T>>
         { };
@@ -142,7 +142,8 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
 
         protected override void Awake()
         {
-            controller = GetComponentInParent<VRSelectionManager>().controller; //controller is required before awake
+            throw new System.NotImplementedException();
+            //controller = GetComponentInParent<VRSelectionManager>().controller; //controller is required before awake
             base.Awake();
         }
 

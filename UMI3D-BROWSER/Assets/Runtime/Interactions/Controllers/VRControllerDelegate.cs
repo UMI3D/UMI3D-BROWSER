@@ -31,15 +31,19 @@ namespace umi3d.browserRuntime.interaction
 
         public override bool IsCompatibleWith(AbstractTool tool)
         {
-            return tool.interactionsLoaded.TrueForAll(inter =>
+            return tool.interactionsLoaded.TrueForAll(
+                inter =>
                 {
                     if (inter is ManipulationDto manipulation)
                     {
                         return manipulation.dofSeparationOptions.Exists(group =>
                             {
-                                return !group.separations.Exists(dof =>
+                                return !group.separations.Exists(
+                                    dof =>
                                     {
-                                        return (dof.dofs == DofGroupEnum.X_RX) || (dof.dofs == DofGroupEnum.Y_RY) || (dof.dofs == DofGroupEnum.Z_RZ);
+                                        return (dof.dofs == DofGroupEnum.X_RX) 
+                                        || (dof.dofs == DofGroupEnum.Y_RY) 
+                                        || (dof.dofs == DofGroupEnum.Z_RZ);
                                     }
                                 );
                             }

@@ -445,41 +445,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8f14b42f5a33a642b817f246bf5ff48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &564007112338151312
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2653555052501228888}
-  m_Layer: 0
-  m_Name: Interactions
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2653555052501228888
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 564007112338151312}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 3324105777713425814}
-  - {fileID: 1103758340951710491}
-  - {fileID: 5649630829009366400}
-  - {fileID: 1943026403074351021}
-  m_Father: {fileID: 2416673257089034087}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &572356182075366072
 GameObject:
   m_ObjectHideFlags: 0
@@ -707,7 +672,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2802874253620683214}
   - {fileID: 432324056213434402}
   - {fileID: 2416673257089034087}
   - {fileID: 4379250088103083146}
@@ -927,7 +891,105 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shouldProjectHoldableEventOnSpecificInput: 1
   interactableLoadTimeout: 60
-  lastControllerUsedInMenu: {fileID: 0}
+  lastControllerUsedInMenu:
+    logger:
+      LogType: 511
+      MainTag: 
+      MainContext: {fileID: 0}
+      IsThreadDisplayed: 0
+    controllerData_SO: {fileID: 0}
+    controllerDelegate: {fileID: 0}
+    controlManager:
+      logger:
+        LogType: 511
+        MainTag: 
+        MainContext: {fileID: 0}
+        IsThreadDisplayed: 0
+      controls_SO: {fileID: 0}
+      manipulationDelegate: {fileID: 0}
+      eventDelegate: {fileID: 0}
+      formDelegate: {fileID: 0}
+      linkDelegate: {fileID: 0}
+      parameterDelegate: {fileID: 0}
+      controller:
+        logger:
+          LogType: 511
+          MainTag: 
+          MainContext: {fileID: 0}
+          IsThreadDisplayed: 0
+        controllerData_SO: {fileID: 0}
+        controllerDelegate: {fileID: 0}
+        controlManager:
+          logger:
+            LogType: 511
+            MainTag: 
+            MainContext: {fileID: 0}
+            IsThreadDisplayed: 0
+          controls_SO: {fileID: 0}
+          manipulationDelegate: {fileID: 0}
+          eventDelegate: {fileID: 0}
+          formDelegate: {fileID: 0}
+          linkDelegate: {fileID: 0}
+          parameterDelegate: {fileID: 0}
+          controller:
+            logger:
+              LogType: 511
+              MainTag: 
+              MainContext: {fileID: 0}
+              IsThreadDisplayed: 0
+            controllerData_SO: {fileID: 0}
+            controllerDelegate: {fileID: 0}
+            controlManager:
+              logger:
+                LogType: 511
+                MainTag: 
+                MainContext: {fileID: 0}
+                IsThreadDisplayed: 0
+              controls_SO: {fileID: 0}
+              manipulationDelegate: {fileID: 0}
+              eventDelegate: {fileID: 0}
+              formDelegate: {fileID: 0}
+              linkDelegate: {fileID: 0}
+              parameterDelegate: {fileID: 0}
+              controller:
+                logger:
+                  LogType: 511
+                  MainTag: 
+                  MainContext: {fileID: 0}
+                  IsThreadDisplayed: 0
+                controllerData_SO: {fileID: 0}
+                controllerDelegate: {fileID: 0}
+                controlManager:
+                  logger:
+                    LogType: 511
+                    MainTag: 
+                    MainContext: {fileID: 0}
+                    IsThreadDisplayed: 0
+                  controls_SO: {fileID: 0}
+                  manipulationDelegate: {fileID: 0}
+                  eventDelegate: {fileID: 0}
+                  formDelegate: {fileID: 0}
+                  linkDelegate: {fileID: 0}
+                  parameterDelegate: {fileID: 0}
+                  controller:
+                    logger:
+                      LogType: 511
+                      MainTag: 
+                      MainContext: {fileID: 0}
+                      IsThreadDisplayed: 0
+                    controllerData_SO: {fileID: 0}
+                    controllerDelegate: {fileID: 0}
+                    controlManager:
+                      logger:
+                        LogType: 511
+                        MainTag: 
+                        IsThreadDisplayed: 0
+                      controls_SO: {fileID: 0}
+                      manipulationDelegate: {fileID: 0}
+                      eventDelegate: {fileID: 0}
+                      formDelegate: {fileID: 0}
+                      linkDelegate: {fileID: 0}
+                      parameterDelegate: {fileID: 0}
 --- !u!1 &840585359277003131
 GameObject:
   m_ObjectHideFlags: 0
@@ -2997,41 +3059,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   boneType: 52
   positionComputed: 0
---- !u!1 &2606481175791918828
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3908761770671574885}
-  m_Layer: 0
-  m_Name: Interactions
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &3908761770671574885
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2606481175791918828}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 3026098980199896064}
-  - {fileID: 7709543028485426603}
-  - {fileID: 6541731327453399320}
-  - {fileID: 6477027808260769909}
-  m_Father: {fileID: 3445380699891482647}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2685996447141743565
 GameObject:
   m_ObjectHideFlags: 0
@@ -3460,61 +3487,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!1 &3199323185184791001
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6541731327453399320}
-  - component: {fileID: 766844897719399235}
-  m_Layer: 0
-  m_Name: AButton
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &6541731327453399320
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3199323185184791001}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3908761770671574885}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &766844897719399235
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3199323185184791001}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76a753d697b6290408411f19ff79a837, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  action: 2
-  controller: 1
-  onActionDown:
-    m_PersistentCalls:
-      m_Calls: []
-  onAction:
-    m_PersistentCalls:
-      m_Calls: []
-  onActionUp:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &3261779112344303466
 GameObject:
   m_ObjectHideFlags: 0
@@ -3691,8 +3663,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 3908761770671574885}
-  - {fileID: 7395448536371780299}
   - {fileID: 2732544971239142316}
   m_Father: {fileID: 5267166352088235144}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3708,65 +3678,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54e88a5f33eb8724baf007969a9bc812, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controllerData_SO: {fileID: 0}
-  controllerDelegate: {fileID: 0}
-  controlManager:
-    logger:
-      LogType: 511
-      MainTag: 
-      MainContext: {fileID: 0}
-      IsThreadDisplayed: 0
-    controls_SO: {fileID: 0}
-    manipulationDelegate: {fileID: 0}
-    eventDelegate: {fileID: 0}
-    formDelegate: {fileID: 0}
-    linkDelegate: {fileID: 0}
-    parameterDelegate: {fileID: 0}
-    controller: {fileID: 0}
-  toolManager:
-    tool_SO: {fileID: 0}
-    toolSelectionDelegate: {fileID: 0}
-    toolUpdateDelegate: {fileID: 0}
-    interactableToolDelegate: {fileID: 0}
-    globalToolDelegate: {fileID: 0}
-    toolboxDelegate: {fileID: 0}
-  projectionManager:
-    logger:
-      LogType: 511
-      MainTag: 
-      MainContext: {fileID: 0}
-      IsThreadDisplayed: 0
-    projectionTree_SO: {fileID: 0}
-    ptManipulationNodeDelegate: {fileID: 0}
-    ptEventNodeDelegate: {fileID: 0}
-    ptFormNodeDelegate: {fileID: 0}
-    ptLinkNodeDelegate: {fileID: 0}
-    ptParameterNodeDelegate: {fileID: 0}
-    eventDelegate: {fileID: 0}
-    controllerDelegate: {fileID: 0}
-    controlManager:
-      logger:
-        LogType: 511
-        MainTag: 
-        MainContext: {fileID: 0}
-        IsThreadDisplayed: 0
-      controls_SO: {fileID: 0}
-      manipulationDelegate: {fileID: 0}
-      eventDelegate: {fileID: 0}
-      formDelegate: {fileID: 0}
-      linkDelegate: {fileID: 0}
-      parameterDelegate: {fileID: 0}
-      controller: {fileID: 0}
-    toolManager:
-      tool_SO: {fileID: 0}
-      toolSelectionDelegate: {fileID: 0}
-      toolUpdateDelegate: {fileID: 0}
-      interactableToolDelegate: {fileID: 0}
-      globalToolDelegate: {fileID: 0}
-      toolboxDelegate: {fileID: 0}
-  boneType: 0
-  boneTransform: {fileID: 0}
-  manipulationTransform: {fileID: 0}
   ObjectMenu: {fileID: 0}
   type: 1
 --- !u!1 &3375278577611896053
@@ -3878,63 +3789,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 3445380699891482647}
+  m_Father: {fileID: 8430962179540647081}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &3517179060133501427
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3026098980199896064}
-  - component: {fileID: 2108295683219707162}
-  m_Layer: 0
-  m_Name: IndexTrigger
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &3026098980199896064
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3517179060133501427}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3908761770671574885}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2108295683219707162
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3517179060133501427}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76a753d697b6290408411f19ff79a837, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  action: 0
-  controller: 1
-  onActionDown:
-    m_PersistentCalls:
-      m_Calls: []
-  onAction:
-    m_PersistentCalls:
-      m_Calls: []
-  onActionUp:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &3533457566793611592
 GameObject:
   m_ObjectHideFlags: 0
@@ -5286,7 +5142,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1821964332424342261}
   - {fileID: 6605635086317432081}
   - {fileID: 3445380699891482647}
   - {fileID: 4359160616692422937}
@@ -6202,61 +6057,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8f14b42f5a33a642b817f246bf5ff48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &4685589946166057372
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3324105777713425814}
-  - component: {fileID: 4135602394309484734}
-  m_Layer: 0
-  m_Name: IndexTrigger
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &3324105777713425814
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4685589946166057372}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 2653555052501228888}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4135602394309484734
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4685589946166057372}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76a753d697b6290408411f19ff79a837, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  action: 0
-  controller: 0
-  onActionDown:
-    m_PersistentCalls:
-      m_Calls: []
-  onAction:
-    m_PersistentCalls:
-      m_Calls: []
-  onActionUp:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &4810450382266167283
 GameObject:
   m_ObjectHideFlags: 0
@@ -6518,10 +6318,10 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: -1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2416673257089034087}
+  m_Father: {fileID: 8430962179464926926}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4923662758858722816
 GameObject:
@@ -6905,61 +6705,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bone: 37
---- !u!1 &5179084514104980387
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1103758340951710491}
-  - component: {fileID: 5711717247495984115}
-  m_Layer: 0
-  m_Name: HandGrab
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1103758340951710491
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5179084514104980387}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 2653555052501228888}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5711717247495984115
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5179084514104980387}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76a753d697b6290408411f19ff79a837, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  action: 1
-  controller: 0
-  onActionDown:
-    m_PersistentCalls:
-      m_Calls: []
-  onAction:
-    m_PersistentCalls:
-      m_Calls: []
-  onActionUp:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &5190679644766261611
 GameObject:
   m_ObjectHideFlags: 0
@@ -7372,61 +7117,6 @@ MonoBehaviour:
   RightTarget: {fileID: 7070147536268303346}
   LeftTracker: {fileID: 0}
   RightTracker: {fileID: 0}
---- !u!1 &5323699113089971488
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6477027808260769909}
-  - component: {fileID: 5345796036497263231}
-  m_Layer: 0
-  m_Name: BButton
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &6477027808260769909
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5323699113089971488}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3908761770671574885}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5345796036497263231
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5323699113089971488}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76a753d697b6290408411f19ff79a837, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  action: 3
-  controller: 1
-  onActionDown:
-    m_PersistentCalls:
-      m_Calls: []
-  onAction:
-    m_PersistentCalls:
-      m_Calls: []
-  onActionUp:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &5333682153228286028
 GameObject:
   m_ObjectHideFlags: 0
@@ -9103,11 +8793,11 @@ Transform:
   m_GameObject: {fileID: 6225216837173611544}
   serializedVersion: 2
   m_LocalRotation: {x: -0.5, y: -0.5, z: -0.5, w: 0.5}
-  m_LocalPosition: {x: 0.015, y: -0.03, z: -0.115}
+  m_LocalPosition: {x: 0.015014648, y: -0.03, z: -0.11499977}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 5267166352088235144}
+  m_Father: {fileID: 8430962179540647081}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: -90}
 --- !u!114 &5677127686177395456
 MonoBehaviour:
@@ -9332,61 +9022,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.017138062, y: 0.0061300863, z: 0.015925959}
   m_Center: {x: 0, y: 0.009008283, z: 0.018101737}
---- !u!1 &6457869947227067382
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 5649630829009366400}
-  - component: {fileID: 9022464393445043107}
-  m_Layer: 0
-  m_Name: AButton
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &5649630829009366400
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6457869947227067382}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 2653555052501228888}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &9022464393445043107
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6457869947227067382}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76a753d697b6290408411f19ff79a837, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  action: 2
-  controller: 0
-  onActionDown:
-    m_PersistentCalls:
-      m_Calls: []
-  onAction:
-    m_PersistentCalls:
-      m_Calls: []
-  onActionUp:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &6549835375918445624
 GameObject:
   m_ObjectHideFlags: 0
@@ -10021,61 +9656,6 @@ MonoBehaviour:
   exceptions:
     keys: []
     values: []
---- !u!1 &7242146812806268539
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1943026403074351021}
-  - component: {fileID: 9092015558053177882}
-  m_Layer: 0
-  m_Name: BButton
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1943026403074351021
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7242146812806268539}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 2653555052501228888}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &9092015558053177882
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7242146812806268539}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76a753d697b6290408411f19ff79a837, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  action: 3
-  controller: 0
-  onActionDown:
-    m_PersistentCalls:
-      m_Calls: []
-  onAction:
-    m_PersistentCalls:
-      m_Calls: []
-  onActionUp:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &7245898542400531233
 GameObject:
   m_ObjectHideFlags: 0
@@ -10624,61 +10204,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!1 &7483410646205766466
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7709543028485426603}
-  - component: {fileID: 3263654056213084274}
-  m_Layer: 0
-  m_Name: HandGrab
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &7709543028485426603
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7483410646205766466}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3908761770671574885}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3263654056213084274
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7483410646205766466}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76a753d697b6290408411f19ff79a837, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  action: 1
-  controller: 1
-  onActionDown:
-    m_PersistentCalls:
-      m_Calls: []
-  onAction:
-    m_PersistentCalls:
-      m_Calls: []
-  onActionUp:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &7516651795888111311
 GameObject:
   m_ObjectHideFlags: 0
@@ -12106,11 +11631,11 @@ Transform:
   m_GameObject: {fileID: 8559044531999918945}
   serializedVersion: 2
   m_LocalRotation: {x: -0.5, y: 0.5, z: 0.5, w: 0.5}
-  m_LocalPosition: {x: -0.015, y: -0.03, z: -0.115}
+  m_LocalPosition: {x: -0.015014648, y: -0.03, z: -0.11499977}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 6620847097950126808}
+  m_Father: {fileID: 8430962179464926926}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 90}
 --- !u!114 &4973301238224497954
 MonoBehaviour:
@@ -12880,8 +12405,6 @@ Transform:
   m_LocalScale: {x: -1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2653555052501228888}
-  - {fileID: 5105538428608976202}
   - {fileID: 4077554302073691644}
   m_Father: {fileID: 6620847097950126808}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -12897,65 +12420,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54e88a5f33eb8724baf007969a9bc812, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controllerData_SO: {fileID: 0}
-  controllerDelegate: {fileID: 0}
-  controlManager:
-    logger:
-      LogType: 511
-      MainTag: 
-      MainContext: {fileID: 0}
-      IsThreadDisplayed: 0
-    controls_SO: {fileID: 0}
-    manipulationDelegate: {fileID: 0}
-    eventDelegate: {fileID: 0}
-    formDelegate: {fileID: 0}
-    linkDelegate: {fileID: 0}
-    parameterDelegate: {fileID: 0}
-    controller: {fileID: 0}
-  toolManager:
-    tool_SO: {fileID: 0}
-    toolSelectionDelegate: {fileID: 0}
-    toolUpdateDelegate: {fileID: 0}
-    interactableToolDelegate: {fileID: 0}
-    globalToolDelegate: {fileID: 0}
-    toolboxDelegate: {fileID: 0}
-  projectionManager:
-    logger:
-      LogType: 511
-      MainTag: 
-      MainContext: {fileID: 0}
-      IsThreadDisplayed: 0
-    projectionTree_SO: {fileID: 0}
-    ptManipulationNodeDelegate: {fileID: 0}
-    ptEventNodeDelegate: {fileID: 0}
-    ptFormNodeDelegate: {fileID: 0}
-    ptLinkNodeDelegate: {fileID: 0}
-    ptParameterNodeDelegate: {fileID: 0}
-    eventDelegate: {fileID: 0}
-    controllerDelegate: {fileID: 0}
-    controlManager:
-      logger:
-        LogType: 511
-        MainTag: 
-        MainContext: {fileID: 0}
-        IsThreadDisplayed: 0
-      controls_SO: {fileID: 0}
-      manipulationDelegate: {fileID: 0}
-      eventDelegate: {fileID: 0}
-      formDelegate: {fileID: 0}
-      linkDelegate: {fileID: 0}
-      parameterDelegate: {fileID: 0}
-      controller: {fileID: 0}
-    toolManager:
-      tool_SO: {fileID: 0}
-      toolSelectionDelegate: {fileID: 0}
-      toolUpdateDelegate: {fileID: 0}
-      interactableToolDelegate: {fileID: 0}
-      globalToolDelegate: {fileID: 0}
-      toolboxDelegate: {fileID: 0}
-  boneType: 0
-  boneTransform: {fileID: 0}
-  manipulationTransform: {fileID: 0}
   ObjectMenu: {fileID: 0}
   type: 0
 --- !u!1 &9152519809803672745
@@ -13630,12 +13094,32 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5051064084134830078, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
         type: 3}
       insertIndex: -1
+      addedObject: {fileID: 2802874253620683214}
+    - targetCorrespondingSourceObject: {fileID: 5051064084134830078, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5105538428608976202}
+    - targetCorrespondingSourceObject: {fileID: 5051064084134830078, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
+        type: 3}
+      insertIndex: -1
       addedObject: {fileID: 6620847097950126808}
     - targetCorrespondingSourceObject: {fileID: 5051064084377662873, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
         type: 3}
       insertIndex: -1
+      addedObject: {fileID: 1821964332424342261}
+    - targetCorrespondingSourceObject: {fileID: 5051064084377662873, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7395448536371780299}
+    - targetCorrespondingSourceObject: {fileID: 5051064084377662873, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
+        type: 3}
+      insertIndex: -1
       addedObject: {fileID: 5267166352088235144}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5051064084134830077, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1090631631072059896}
   m_SourcePrefab: {fileID: 100100000, guid: 3bacf1bc1e19629438bb4b12b4fd005b, type: 3}
 --- !u!114 &4714219837757317792 stripped
 MonoBehaviour:
@@ -13679,6 +13163,429 @@ Camera:
     type: 3}
   m_PrefabInstance: {fileID: 3681753628165900592}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &8430962179464926925 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5051064084134830077, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
+    type: 3}
+  m_PrefabInstance: {fileID: 3681753628165900592}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1090631631072059896
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8430962179464926925}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a5239ba344d96342af597af6cf22989, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  controller:
+    logger:
+      LogType: 511
+      MainTag: 
+      MainContext: {fileID: 0}
+      IsThreadDisplayed: 0
+    controllerData_SO: {fileID: 0}
+    controllerDelegate: {fileID: 0}
+    controlManager:
+      logger:
+        LogType: 511
+        MainTag: 
+        MainContext: {fileID: 0}
+        IsThreadDisplayed: 0
+      controls_SO: {fileID: 0}
+      manipulationDelegate: {fileID: 0}
+      eventDelegate: {fileID: 0}
+      formDelegate: {fileID: 0}
+      linkDelegate: {fileID: 0}
+      parameterDelegate: {fileID: 0}
+      controller:
+        logger:
+          LogType: 511
+          MainTag: 
+          MainContext: {fileID: 0}
+          IsThreadDisplayed: 0
+        controllerData_SO: {fileID: 0}
+        controllerDelegate: {fileID: 0}
+        controlManager:
+          logger:
+            LogType: 511
+            MainTag: 
+            MainContext: {fileID: 0}
+            IsThreadDisplayed: 0
+          controls_SO: {fileID: 0}
+          manipulationDelegate: {fileID: 0}
+          eventDelegate: {fileID: 0}
+          formDelegate: {fileID: 0}
+          linkDelegate: {fileID: 0}
+          parameterDelegate: {fileID: 0}
+          controller:
+            logger:
+              LogType: 511
+              MainTag: 
+              MainContext: {fileID: 0}
+              IsThreadDisplayed: 0
+            controllerData_SO: {fileID: 0}
+            controllerDelegate: {fileID: 0}
+            controlManager:
+              logger:
+                LogType: 511
+                MainTag: 
+                MainContext: {fileID: 0}
+                IsThreadDisplayed: 0
+              controls_SO: {fileID: 0}
+              manipulationDelegate: {fileID: 0}
+              eventDelegate: {fileID: 0}
+              formDelegate: {fileID: 0}
+              linkDelegate: {fileID: 0}
+              parameterDelegate: {fileID: 0}
+              controller:
+                logger:
+                  LogType: 511
+                  MainTag: 
+                  MainContext: {fileID: 0}
+                  IsThreadDisplayed: 0
+                controllerData_SO: {fileID: 0}
+                controllerDelegate: {fileID: 0}
+                controlManager:
+                  logger:
+                    LogType: 511
+                    MainTag: 
+                    MainContext: {fileID: 0}
+                    IsThreadDisplayed: 0
+                  controls_SO: {fileID: 0}
+                  manipulationDelegate: {fileID: 0}
+                  eventDelegate: {fileID: 0}
+                  formDelegate: {fileID: 0}
+                  linkDelegate: {fileID: 0}
+                  parameterDelegate: {fileID: 0}
+                  controller:
+                    logger:
+                      LogType: 511
+                      MainTag: 
+                      MainContext: {fileID: 0}
+                      IsThreadDisplayed: 0
+                    controllerData_SO: {fileID: 0}
+                    controllerDelegate: {fileID: 0}
+                    controlManager:
+                      logger:
+                        LogType: 511
+                        MainTag: 
+                        IsThreadDisplayed: 0
+                      controls_SO: {fileID: 0}
+                      manipulationDelegate: {fileID: 0}
+                      eventDelegate: {fileID: 0}
+                      formDelegate: {fileID: 0}
+                      linkDelegate: {fileID: 0}
+                      parameterDelegate: {fileID: 0}
+  controlManager:
+    logger:
+      LogType: 511
+      MainTag: 
+      MainContext: {fileID: 0}
+      IsThreadDisplayed: 0
+    controls_SO: {fileID: 0}
+    manipulationDelegate: {fileID: 0}
+    eventDelegate: {fileID: 0}
+    formDelegate: {fileID: 0}
+    linkDelegate: {fileID: 0}
+    parameterDelegate: {fileID: 0}
+    controller:
+      logger:
+        LogType: 511
+        MainTag: 
+        MainContext: {fileID: 0}
+        IsThreadDisplayed: 0
+      controllerData_SO: {fileID: 0}
+      controllerDelegate: {fileID: 0}
+      controlManager:
+        logger:
+          LogType: 511
+          MainTag: 
+          MainContext: {fileID: 0}
+          IsThreadDisplayed: 0
+        controls_SO: {fileID: 0}
+        manipulationDelegate: {fileID: 0}
+        eventDelegate: {fileID: 0}
+        formDelegate: {fileID: 0}
+        linkDelegate: {fileID: 0}
+        parameterDelegate: {fileID: 0}
+        controller:
+          logger:
+            LogType: 511
+            MainTag: 
+            MainContext: {fileID: 0}
+            IsThreadDisplayed: 0
+          controllerData_SO: {fileID: 0}
+          controllerDelegate: {fileID: 0}
+          controlManager:
+            logger:
+              LogType: 511
+              MainTag: 
+              MainContext: {fileID: 0}
+              IsThreadDisplayed: 0
+            controls_SO: {fileID: 0}
+            manipulationDelegate: {fileID: 0}
+            eventDelegate: {fileID: 0}
+            formDelegate: {fileID: 0}
+            linkDelegate: {fileID: 0}
+            parameterDelegate: {fileID: 0}
+            controller:
+              logger:
+                LogType: 511
+                MainTag: 
+                MainContext: {fileID: 0}
+                IsThreadDisplayed: 0
+              controllerData_SO: {fileID: 0}
+              controllerDelegate: {fileID: 0}
+              controlManager:
+                logger:
+                  LogType: 511
+                  MainTag: 
+                  MainContext: {fileID: 0}
+                  IsThreadDisplayed: 0
+                controls_SO: {fileID: 0}
+                manipulationDelegate: {fileID: 0}
+                eventDelegate: {fileID: 0}
+                formDelegate: {fileID: 0}
+                linkDelegate: {fileID: 0}
+                parameterDelegate: {fileID: 0}
+                controller:
+                  logger:
+                    LogType: 511
+                    MainTag: 
+                    MainContext: {fileID: 0}
+                    IsThreadDisplayed: 0
+                  controllerData_SO: {fileID: 0}
+                  controllerDelegate: {fileID: 0}
+                  controlManager:
+                    logger:
+                      LogType: 511
+                      MainTag: 
+                      MainContext: {fileID: 0}
+                      IsThreadDisplayed: 0
+                    controls_SO: {fileID: 0}
+                    manipulationDelegate: {fileID: 0}
+                    eventDelegate: {fileID: 0}
+                    formDelegate: {fileID: 0}
+                    linkDelegate: {fileID: 0}
+                    parameterDelegate: {fileID: 0}
+                    controller:
+                      logger:
+                        LogType: 511
+                        MainTag: 
+                        IsThreadDisplayed: 0
+                      controllerData_SO: {fileID: 0}
+                      controllerDelegate: {fileID: 0}
+  toolManager:
+    tool_SO: {fileID: 0}
+    toolSelectionDelegate: {fileID: 0}
+    toolUpdateDelegate: {fileID: 0}
+    interactableToolDelegate: {fileID: 0}
+    globalToolDelegate: {fileID: 0}
+    toolboxDelegate: {fileID: 0}
+  projectionManager:
+    logger:
+      LogType: 511
+      MainTag: 
+      MainContext: {fileID: 0}
+      IsThreadDisplayed: 0
+    projectionTree_SO: {fileID: 0}
+    ptManipulationNodeDelegate: {fileID: 0}
+    ptEventNodeDelegate: {fileID: 0}
+    ptFormNodeDelegate: {fileID: 0}
+    ptLinkNodeDelegate: {fileID: 0}
+    ptParameterNodeDelegate: {fileID: 0}
+    eventDelegate: {fileID: 0}
+    controller:
+      logger:
+        LogType: 511
+        MainTag: 
+        MainContext: {fileID: 0}
+        IsThreadDisplayed: 0
+      controllerData_SO: {fileID: 0}
+      controllerDelegate: {fileID: 0}
+      controlManager:
+        logger:
+          LogType: 511
+          MainTag: 
+          MainContext: {fileID: 0}
+          IsThreadDisplayed: 0
+        controls_SO: {fileID: 0}
+        manipulationDelegate: {fileID: 0}
+        eventDelegate: {fileID: 0}
+        formDelegate: {fileID: 0}
+        linkDelegate: {fileID: 0}
+        parameterDelegate: {fileID: 0}
+        controller:
+          logger:
+            LogType: 511
+            MainTag: 
+            MainContext: {fileID: 0}
+            IsThreadDisplayed: 0
+          controllerData_SO: {fileID: 0}
+          controllerDelegate: {fileID: 0}
+          controlManager:
+            logger:
+              LogType: 511
+              MainTag: 
+              MainContext: {fileID: 0}
+              IsThreadDisplayed: 0
+            controls_SO: {fileID: 0}
+            manipulationDelegate: {fileID: 0}
+            eventDelegate: {fileID: 0}
+            formDelegate: {fileID: 0}
+            linkDelegate: {fileID: 0}
+            parameterDelegate: {fileID: 0}
+            controller:
+              logger:
+                LogType: 511
+                MainTag: 
+                MainContext: {fileID: 0}
+                IsThreadDisplayed: 0
+              controllerData_SO: {fileID: 0}
+              controllerDelegate: {fileID: 0}
+              controlManager:
+                logger:
+                  LogType: 511
+                  MainTag: 
+                  MainContext: {fileID: 0}
+                  IsThreadDisplayed: 0
+                controls_SO: {fileID: 0}
+                manipulationDelegate: {fileID: 0}
+                eventDelegate: {fileID: 0}
+                formDelegate: {fileID: 0}
+                linkDelegate: {fileID: 0}
+                parameterDelegate: {fileID: 0}
+                controller:
+                  logger:
+                    LogType: 511
+                    MainTag: 
+                    MainContext: {fileID: 0}
+                    IsThreadDisplayed: 0
+                  controllerData_SO: {fileID: 0}
+                  controllerDelegate: {fileID: 0}
+                  controlManager:
+                    logger:
+                      LogType: 511
+                      MainTag: 
+                      MainContext: {fileID: 0}
+                      IsThreadDisplayed: 0
+                    controls_SO: {fileID: 0}
+                    manipulationDelegate: {fileID: 0}
+                    eventDelegate: {fileID: 0}
+                    formDelegate: {fileID: 0}
+                    linkDelegate: {fileID: 0}
+                    parameterDelegate: {fileID: 0}
+                    controller:
+                      logger:
+                        LogType: 511
+                        MainTag: 
+                        IsThreadDisplayed: 0
+                      controllerData_SO: {fileID: 0}
+                      controllerDelegate: {fileID: 0}
+    controlManager:
+      logger:
+        LogType: 511
+        MainTag: 
+        MainContext: {fileID: 0}
+        IsThreadDisplayed: 0
+      controls_SO: {fileID: 0}
+      manipulationDelegate: {fileID: 0}
+      eventDelegate: {fileID: 0}
+      formDelegate: {fileID: 0}
+      linkDelegate: {fileID: 0}
+      parameterDelegate: {fileID: 0}
+      controller:
+        logger:
+          LogType: 511
+          MainTag: 
+          MainContext: {fileID: 0}
+          IsThreadDisplayed: 0
+        controllerData_SO: {fileID: 0}
+        controllerDelegate: {fileID: 0}
+        controlManager:
+          logger:
+            LogType: 511
+            MainTag: 
+            MainContext: {fileID: 0}
+            IsThreadDisplayed: 0
+          controls_SO: {fileID: 0}
+          manipulationDelegate: {fileID: 0}
+          eventDelegate: {fileID: 0}
+          formDelegate: {fileID: 0}
+          linkDelegate: {fileID: 0}
+          parameterDelegate: {fileID: 0}
+          controller:
+            logger:
+              LogType: 511
+              MainTag: 
+              MainContext: {fileID: 0}
+              IsThreadDisplayed: 0
+            controllerData_SO: {fileID: 0}
+            controllerDelegate: {fileID: 0}
+            controlManager:
+              logger:
+                LogType: 511
+                MainTag: 
+                MainContext: {fileID: 0}
+                IsThreadDisplayed: 0
+              controls_SO: {fileID: 0}
+              manipulationDelegate: {fileID: 0}
+              eventDelegate: {fileID: 0}
+              formDelegate: {fileID: 0}
+              linkDelegate: {fileID: 0}
+              parameterDelegate: {fileID: 0}
+              controller:
+                logger:
+                  LogType: 511
+                  MainTag: 
+                  MainContext: {fileID: 0}
+                  IsThreadDisplayed: 0
+                controllerData_SO: {fileID: 0}
+                controllerDelegate: {fileID: 0}
+                controlManager:
+                  logger:
+                    LogType: 511
+                    MainTag: 
+                    MainContext: {fileID: 0}
+                    IsThreadDisplayed: 0
+                  controls_SO: {fileID: 0}
+                  manipulationDelegate: {fileID: 0}
+                  eventDelegate: {fileID: 0}
+                  formDelegate: {fileID: 0}
+                  linkDelegate: {fileID: 0}
+                  parameterDelegate: {fileID: 0}
+                  controller:
+                    logger:
+                      LogType: 511
+                      MainTag: 
+                      MainContext: {fileID: 0}
+                      IsThreadDisplayed: 0
+                    controllerData_SO: {fileID: 0}
+                    controllerDelegate: {fileID: 0}
+                    controlManager:
+                      logger:
+                        LogType: 511
+                        MainTag: 
+                        IsThreadDisplayed: 0
+                      controls_SO: {fileID: 0}
+                      manipulationDelegate: {fileID: 0}
+                      eventDelegate: {fileID: 0}
+                      formDelegate: {fileID: 0}
+                      linkDelegate: {fileID: 0}
+                      parameterDelegate: {fileID: 0}
+    toolManager:
+      tool_SO: {fileID: 0}
+      toolSelectionDelegate: {fileID: 0}
+      toolUpdateDelegate: {fileID: 0}
+      interactableToolDelegate: {fileID: 0}
+      globalToolDelegate: {fileID: 0}
+      toolboxDelegate: {fileID: 0}
+  bone: {fileID: 7635485698679817576}
+  manipulationTransform: {fileID: 5105538428608976202}
 --- !u!4 &8430962179464926926 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5051064084134830078, guid: 3bacf1bc1e19629438bb4b12b4fd005b,

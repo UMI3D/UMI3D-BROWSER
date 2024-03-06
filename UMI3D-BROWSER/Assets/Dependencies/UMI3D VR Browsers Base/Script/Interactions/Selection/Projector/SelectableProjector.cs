@@ -31,8 +31,9 @@ namespace umi3dBrowsers.interaction.selection.projector
         /// <inheritdoc/>
         public void Project(Selectable selectable, AbstractController controller)
         {
-            var pointerEventData = new PointerEventData(EventSystem.current) { clickCount = 1, pointerId = (int) (controller as VRController).type };
-            selectable.OnPointerEnter(pointerEventData);
+            throw new System.NotImplementedException();
+            //var pointerEventData = new PointerEventData(EventSystem.current) { clickCount = 1, pointerId = (int) (controller as VRController).type };
+            //selectable.OnPointerEnter(pointerEventData);
         }
 
         /// <summary>
@@ -78,19 +79,19 @@ namespace umi3dBrowsers.interaction.selection.projector
                     break;
 
                 case InputField inputfield:
-                    inputfield.Click(controller.transform);
+                    inputfield.Click(controller.Transform);
                     break;
 
                 case TMP_InputField tmp_input:
-                    tmp_input.Click(controller.transform);
+                    tmp_input.Click(controller.Transform);
                     break;
 
                 case Scrollbar scrollbar:
-                    scrollbar.Click(controller.transform);
+                    scrollbar.Click(controller.Transform);
                     break;
 
                 case Slider slider:
-                    slider.Click(controller.transform);
+                    slider.Click(controller.Transform);
                     break;
 
                 default:
@@ -128,7 +129,7 @@ namespace umi3dBrowsers.interaction.selection.projector
         /// <param name="eventData"></param>
         private void SendDefaultSelectableEvent(Selectable selectable, AbstractController controller, PointerEventData eventData, bool down)
         {
-            RaySelectionZone<Selectable> raycastHelper = new RaySelectionZone<Selectable>(controller.transform);
+            RaySelectionZone<Selectable> raycastHelper = new RaySelectionZone<Selectable>(controller.Transform);
             var closestAndRaycastHit = raycastHelper.GetClosestAndRaycastHit();
 
             eventData.pointerCurrentRaycast = new RaycastResult { worldPosition = closestAndRaycastHit.raycastHit.point };

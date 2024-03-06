@@ -26,13 +26,13 @@ namespace umi3dVRBrowsersBase.interactions.selection.projector
         /// <inheritdoc/>
         public void Project(AbstractClientInteractableElement objToProjec, AbstractController controller)
         {
-            objToProjec.Select(controller as VRController);
+            objToProjec.Select(controller);
         }
 
         /// <inheritdoc/>
         public void Release(AbstractClientInteractableElement objToRelease, AbstractController controller)
         {
-            objToRelease.Deselect(controller as VRController);
+            objToRelease.Deselect(controller);
         }
     }
 }

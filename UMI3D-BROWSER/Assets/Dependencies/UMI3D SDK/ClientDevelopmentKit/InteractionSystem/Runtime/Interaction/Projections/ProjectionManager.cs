@@ -44,7 +44,7 @@ namespace umi3d.cdk.interaction
         public ProjectionEventDelegate eventDelegate;
 
         [HideInInspector]
-        public AbstractControllerDelegate controllerDelegate;
+        public AbstractController controller;
         [HideInInspector]
         public UMI3DControlManager controlManager;
         [HideInInspector]
@@ -58,7 +58,7 @@ namespace umi3d.cdk.interaction
 
         public void Init(
             MonoBehaviour context,
-            AbstractControllerDelegate controllerDelegate,
+            AbstractController controller,
             UMI3DControlManager inputManager,
             UMI3DToolManager toolManager
         )
@@ -117,7 +117,7 @@ namespace umi3d.cdk.interaction
             logger.Assert(inputManager != null, $"{nameof(inputManager)} is null");
             logger.Assert(toolManager != null, $"{nameof(toolManager)} is null");
 
-            this.controllerDelegate = controllerDelegate;
+            this.controller = controller;
             this.controlManager = inputManager;
             this.toolManager = toolManager;
         }
@@ -247,12 +247,12 @@ namespace umi3d.cdk.interaction
             ulong hoveredObjectId
         )
         {
-            if (!controllerDelegate.IsCompatibleWith(tool))
+            if (!controller.controllerDelegate.IsCompatibleWith(tool))
             {
                 throw new IncompatibleToolException($"For {tool.GetType().Name}: {tool.name}");
             }
 
-            if (controllerDelegate.IsAvailableFor(tool))
+            if (controller.controllerDelegate.IsAvailableFor(tool))
             {
                 Release(
                     tool,

@@ -56,17 +56,17 @@ namespace umi3d.cdk.interaction
             uint boneType = control
                 .controlData
                 .controller
-                .boneType;
+                .BoneType;
             Vector3Dto bonePosition = control
                 .controlData
                 .controller
-                .boneTransform
+                .BoneTransform
                 .position
                 .Dto();
             Vector4Dto boneRotation = control
                 .controlData
                 .controller
-                .boneTransform
+                .BoneTransform
                 .rotation
                 .Dto();
 

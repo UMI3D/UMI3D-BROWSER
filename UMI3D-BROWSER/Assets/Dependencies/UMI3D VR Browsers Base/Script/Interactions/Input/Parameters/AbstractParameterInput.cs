@@ -72,7 +72,7 @@ namespace umi3dVRBrowsersBase.interactions.input
         {
             base.Init(controller);
             //bone = (controller as VRController).bone;
-            UnityEngine.Debug.Assert(bone != null, "Bone of " + controller.name + " not set.");
+            //UnityEngine.Debug.Assert(bone != null, "Bone of " + controller.name + " not set.");
         }
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace umi3dVRBrowsersBase.interactions.input
                 };
 
                 menuItem.NotifyValueChange((interaction as ParameterType).value);
-                PlayerMenuManager.Instance.CtrlToolMenu.AddParameter((controller as VRController).type, menuItem, DesynchronizeMenuItem);
+                //PlayerMenuManager.Instance.CtrlToolMenu.AddParameter((controller as VRController).type, menuItem, DesynchronizeMenuItem);
 
                 var param = interaction as ParameterType;
                 callback = x =>
@@ -145,7 +145,7 @@ namespace umi3dVRBrowsersBase.interactions.input
         public void DesynchronizeMenuItem()
         {
             menuItem.UnSubscribe(callback);
-            PlayerMenuManager.Instance.CtrlToolMenu.RemoveParameter((controller as VRController).type, menuItem);
+            //PlayerMenuManager.Instance.CtrlToolMenu.RemoveParameter((controller as VRController).type, menuItem);
             Menu?.Remove(menuItem);
         }
 
@@ -176,7 +176,7 @@ namespace umi3dVRBrowsersBase.interactions.input
         public override void Dissociate()
         {
             currentInteraction = null;
-            PlayerMenuManager.Instance.CtrlToolMenu.RemoveParameter((controller as VRController).type, menuItem);
+            //PlayerMenuManager.Instance.CtrlToolMenu.RemoveParameter((controller as VRController).type, menuItem);
             Menu?.Remove(menuItem);
         }
 

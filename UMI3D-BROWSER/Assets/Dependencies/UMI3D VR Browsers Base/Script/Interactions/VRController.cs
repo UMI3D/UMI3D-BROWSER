@@ -28,7 +28,7 @@ using UnityEngine;
 
 namespace umi3dVRBrowsersBase.interactions
 {
-    public partial class VRController : AbstractController
+    public partial class VRController : MonoBehaviour
     {
         #region Fields
 

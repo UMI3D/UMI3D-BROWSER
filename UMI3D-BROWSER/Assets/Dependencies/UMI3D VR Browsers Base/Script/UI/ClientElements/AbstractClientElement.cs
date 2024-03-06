@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using umi3d.cdk.interaction;
 using umi3dVRBrowsersBase.interactions;
 using UnityEngine;
 using UnityEngine.Events;
@@ -32,10 +33,10 @@ namespace umi3dVRBrowsersBase.ui
         public UnityEvent OnDeselected { get; private set; } = new UnityEvent();
 
         /// <inheritdoc/>
-        public abstract void Select(VRController controller);
+        public abstract void Select(AbstractController controller);
 
         /// <inheritdoc/>
-        public abstract void Deselect(VRController controller);
+        public abstract void Deselect(AbstractController controller);
 
         /// <summary>
         /// Is the element currently selected ?

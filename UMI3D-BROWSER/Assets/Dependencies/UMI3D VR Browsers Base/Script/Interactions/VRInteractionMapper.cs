@@ -148,16 +148,17 @@ namespace umi3dVRBrowsersBase.interactions
         {
             bool res = false;
 
-            var vrController = controller as VRController;
-            if (vrController != null)
-            {
-                if (lastReason is AutoProjectOnHover && reason is AutoProjectOnHover)
-                    res = true;
-            }
-            else
-            {
-                Debug.LogError("controller must be an instance of OculusCOntroller");
-            }
+            throw new System.NotImplementedException();
+            //var vrController = controller as VRController;
+            //if (vrController != null)
+            //{
+            //    if (lastReason is AutoProjectOnHover && reason is AutoProjectOnHover)
+            //        res = true;
+            //}
+            //else
+            //{
+            //    Debug.LogError("controller must be an instance of OculusCOntroller");
+            //}
 
             return res;
         }

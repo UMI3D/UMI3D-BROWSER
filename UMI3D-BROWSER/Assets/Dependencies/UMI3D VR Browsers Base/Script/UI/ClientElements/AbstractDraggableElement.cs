@@ -17,6 +17,7 @@ limitations under the License.
 using System;
 using System.Drawing;
 using System.Linq;
+using umi3d.cdk.interaction;
 using umi3dVRBrowsersBase.interactions;
 using UnityEngine;
 using UnityEngine.Events;
@@ -77,7 +78,7 @@ namespace umi3dVRBrowsersBase.ui
         /// <summary>
         /// Controller used for dragging if any.
         /// </summary>
-        protected VRController usedController;
+        protected AbstractController usedController;
 
         /// <summary>
         /// World position of <see cref="scrollbarTransform"/> 's bottom left corner.
@@ -122,8 +123,8 @@ namespace umi3dVRBrowsersBase.ui
             currentDragPlane = new Plane(GetNormal(), GetPosition());
             var ray = new Ray
             {
-                direction = usedController.transform.forward,
-                origin = usedController.transform.position
+                direction = usedController.Transform.forward,
+                origin = usedController.Transform.position
             };
 
             (RaycastHit[] hits, int hitCount) hitsInfo = umi3d.common.Physics.RaycastAll(ray);
@@ -145,18 +146,18 @@ namespace umi3dVRBrowsersBase.ui
                 case DragAndDropType.Planar:
                     Ray ray = new Ray()
                     {
-                        direction = usedController.transform.forward,
-                        origin = usedController.transform.position
+                        direction = usedController.Transform.forward,
+                        origin = usedController.Transform.position
                     };
                     float enter;
                     if (currentDragPlane.Raycast(ray, out enter))
                     {
-                        DragMove(ray.GetPoint(enter), usedController.transform);
+                        DragMove(ray.GetPoint(enter), usedController.Transform);
                     }
                     break;
                 case DragAndDropType.Spatial:
-                    Vector3 point = usedController.transform.position + usedController.transform.forward * startDistanceFromObject;
-                    DragMove(point, usedController.transform);
+                    Vector3 point = usedController.Transform.position + usedController.Transform.forward * startDistanceFromObject;
+                    DragMove(point, usedController.Transform);
                     break;
                 default:
                     break;
@@ -180,13 +181,13 @@ namespace umi3dVRBrowsersBase.ui
         }
 
         /// <inheritdoc/>
-        public override void Select(VRController controller)
+        public override void Select(AbstractController controller)
         {
             usedController = controller;
         }
 
         /// <inheritdoc/>
-        public override void Deselect(VRController controller)
+        public override void Deselect(AbstractController controller)
         {
             usedController = null;
         }

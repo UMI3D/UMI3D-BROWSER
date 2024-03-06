@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using umi3d.cdk.interaction;
 using umi3dVRBrowsersBase.interactions;
 using UnityEngine.Events;
 
@@ -38,13 +39,13 @@ namespace umi3dVRBrowsersBase.ui
         /// Selects the object
         /// </summary>
         /// <param name="controller">Controller used for selection</param>
-        void Select(VRController controller);
+        void Select(AbstractController controller);
 
         /// <summary>
         /// Deselects the object
         /// </summary>
         /// <param name="controller">Controller that was used for selection</param>
-        void Deselect(VRController controller);
+        void Deselect(AbstractController controller);
 
         /// <summary>
         /// Returns true i the object is currenlty selected

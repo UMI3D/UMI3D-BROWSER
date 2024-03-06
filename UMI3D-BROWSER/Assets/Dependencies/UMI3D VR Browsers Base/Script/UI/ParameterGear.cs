@@ -291,12 +291,12 @@ namespace umi3dVRBrowsersBase.ui
             //StartCoroutine(HideCoroutine());
         }
 
-        public override void Select(VRController controller)
+        public override void Select(AbstractController controller)
         {
             isSelected = true;
         }
 
-        public override void Deselect(VRController controller)
+        public override void Deselect(AbstractController controller)
         {
             isSelected = false;
         }

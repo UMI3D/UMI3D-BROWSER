@@ -64,17 +64,17 @@ namespace umi3d.cdk.interaction
             uint boneType = control
                 .controlData
                 .controller
-                .boneType;
+                .BoneType;
             Vector3Dto bonePosition = control
                 .controlData
                 .controller
-                .boneTransform
+                .BoneTransform
                 .position
                 .Dto();
             Vector4Dto boneRotation = control
                 .controlData
                 .controller
-                .boneTransform
+                .BoneTransform
                 .rotation
                 .Dto();
 
@@ -90,7 +90,7 @@ namespace umi3d.cdk.interaction
                     control
                         .controlData
                         .controller
-                        .manipulationTransform
+                        .ManipulationTransform
                 );
                 request.boneType = boneType;
                 request.bonePosition = bonePosition;
@@ -110,13 +110,13 @@ namespace umi3d.cdk.interaction
                             control
                                 .controlData
                                 .controller
-                                .manipulationTransform
+                                .ManipulationTransform
                                 .position;
                         manipControl.ManipulationControlData.initialRotation =
                            control
                                .controlData
                                .controller
-                               .manipulationTransform
+                               .ManipulationTransform
                                .rotation;
 
                         manipControl.ManipulationControlData.messageSender.networkMessage

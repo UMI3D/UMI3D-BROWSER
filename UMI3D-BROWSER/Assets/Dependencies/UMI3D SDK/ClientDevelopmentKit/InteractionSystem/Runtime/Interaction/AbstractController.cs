@@ -13,10 +13,8 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-using inetum.unityUtils;
+using System;
 using System.Collections.Generic;
-using umi3d.common;
-using umi3d.common.userCapture;
 using UnityEngine;
 
 namespace umi3d.cdk.interaction
@@ -38,50 +36,66 @@ namespace umi3d.cdk.interaction
     /// For example: A VR headset has 2 controllers with laser to select. A computer as 1 mouse to select (mouse and trackpad can be seen as the same input).
     /// </example>
     /// </summary>
-    [System.Serializable]
-    public abstract class AbstractController : MonoBehaviour
+    [Serializable]
+    public class AbstractController
     {
-        [Header("Controller")]
+        [SerializeField]
+        debug.UMI3DLogger logger = new();
+
         public AbstractControllerData_SO controllerData_SO;
         public AbstractControllerDelegate controllerDelegate;
 
-        [Header("Manager")]
-        public UMI3DControlManager controlManager;
-        public UMI3DToolManager toolManager;
-        public ProjectionManager projectionManager;
-
-        [Header("Hierarchy References")]
-        [SerializeField, ConstEnum(typeof(BoneType), typeof(uint))]
-        public uint boneType;
-        public Transform boneTransform;
-        /// <summary>
-        /// Transform reference to track translation and rotation.
-        /// </summary>
-        public Transform manipulationTransform;
+        [HideInInspector] public UMI3DControlManager controlManager;
+        MonoBehaviour context;
 
         public readonly static List<AbstractController> activeControllers = new();
 
-        private void Awake()
+        public void Init(MonoBehaviour context, UMI3DControlManager controlManager)
         {
-            controlManager.Init(
-                this,
-                this
-            );
-            toolManager.Init();
-            projectionManager.Init(
-                this, 
-                controllerDelegate,
-                controlManager, 
-                toolManager
-            );
+            logger.MainContext = context;
+            logger.MainTag = nameof(AbstractController);
+            this.context = context;
+            this.controlManager = controlManager;
         }
 
-        private void OnEnable()
+        public Transform Transform
+        {
+            get
+            {
+                return context.transform;
+            }
+        }
+        public uint BoneType
+        {
+            get
+            {
+                throw new System.NotImplementedException();
+            }
+        }
+        public Transform BoneTransform
+        {
+            get
+            {
+                throw new System.NotImplementedException();
+            }
+        }
+        /// <summary>
+        /// Transform reference to track translation and rotation.
+        /// </summary>
+        public Transform ManipulationTransform
+        {
+            get
+            {
+                throw new System.NotImplementedException();
+            }
+        }
+
+        public void Enable()
         {
             activeControllers.Add(this);
         }
 
-        private void OnDisable()
+        public void Disable()
         {
             activeControllers.Remove(this);
         }
@@ -91,7 +105,7 @@ namespace umi3d.cdk.interaction
         /// </summary>
         public virtual void Clear()
         {
-            projectionManager.Release(null, null);
+            //projectionManager.Release(null, null);
 
             //toolManager.ReleaseTool(UMI3DGlobalID.EnvironmentId, toolManager.toolDelegate.Tool.id);
         }

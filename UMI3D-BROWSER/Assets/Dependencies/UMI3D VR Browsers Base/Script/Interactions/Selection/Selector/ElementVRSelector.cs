@@ -57,31 +57,32 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
         protected override void Update()
         {
             base.Update();
-            // look for interaction from the controller and send the right events
-            // probably should not belong in that piece of code
-            if (AbstractControllerInputManager.Instance.GetButtonDown(controller.type, ActionType.Trigger))
-            {
-                if (activated)
-                {
-                    VRInteractionMapper.lastControllerUsedToClick = controller.type;
-                    OnPointerDown();
-                    LockedSelector = true;
-                }
-            }
-            if (AbstractControllerInputManager.Instance.GetButtonUp(controller.type, ActionType.Trigger))
-            {
-                if (activated)
-                {
-                    VRInteractionMapper.lastControllerUsedToClick = controller.type;
-                    OnPointerUp();
-                    LockedSelector = false;
-                }
-            }
-            if (AbstractControllerInputManager.Instance.GetButton(controller.type, ActionType.Trigger))
-            {
-                if (activated)
-                    OnPointerPressed();
-            }
+            throw new System.NotImplementedException();
+            //// look for interaction from the controller and send the right events
+            //// probably should not belong in that piece of code
+            //if (AbstractControllerInputManager.Instance.GetButtonDown(controller.type, ActionType.Trigger))
+            //{
+            //    if (activated)
+            //    {
+            //        VRInteractionMapper.lastControllerUsedToClick = controller.type;
+            //        OnPointerDown();
+            //        LockedSelector = true;
+            //    }
+            //}
+            //if (AbstractControllerInputManager.Instance.GetButtonUp(controller.type, ActionType.Trigger))
+            //{
+            //    if (activated)
+            //    {
+            //        VRInteractionMapper.lastControllerUsedToClick = controller.type;
+            //        OnPointerUp();
+            //        LockedSelector = false;
+            //    }
+            //}
+            //if (AbstractControllerInputManager.Instance.GetButton(controller.type, ActionType.Trigger))
+            //{
+            //    if (activated)
+            //        OnPointerPressed();
+            //}
         }
 
         /// <summary>
@@ -89,11 +90,12 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
         /// </summary>
         private void OnPointerPressed()
         {
-            if (isSelecting)
-            {
-                if (LastSelected.selectedObject is IPressableElement)
-                    (LastSelected.selectedObject as IPressableElement).PressStay(controller.type);
-            }
+            throw new System.NotImplementedException();
+            //if (isSelecting)
+            //{
+            //    if (LastSelected.selectedObject is IPressableElement)
+            //        (LastSelected.selectedObject as IPressableElement).PressStay(controller.type);
+            //}
         }
 
         /// <summary>
@@ -101,13 +103,14 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
         /// </summary>
         protected void OnPointerDown()
         {
-            if (isSelecting)
-            {
-                if (LastSelected.selectedObject is IPressableElement)
-                    (LastSelected.selectedObject as IPressableElement).PressDown(controller.type);
-                if (LastSelected.selectedObject is ITriggerableElement)
-                    (LastSelected.selectedObject as ITriggerableElement).Trigger(controller.type);
-            }
+            throw new System.NotImplementedException();
+            //if (isSelecting)
+            //{
+            //    if (LastSelected.selectedObject is IPressableElement)
+            //        (LastSelected.selectedObject as IPressableElement).PressDown(controller.type);
+            //    if (LastSelected.selectedObject is ITriggerableElement)
+            //        (LastSelected.selectedObject as ITriggerableElement).Trigger(controller.type);
+            //}
         }
 
         /// <summary>
@@ -115,11 +118,12 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
         /// </summary>
         protected void OnPointerUp()
         {
-            if (isSelecting)
-            {
-                if (LastSelected.selectedObject is IPressableElement)
-                    (LastSelected.selectedObject as IPressableElement).PressUp(controller.type);
-            }
+            throw new System.NotImplementedException();
+            //if (isSelecting)
+            //{
+            //    if (LastSelected.selectedObject is IPressableElement)
+            //        (LastSelected.selectedObject as IPressableElement).PressUp(controller.type);
+            //}
         }
 
         #endregion lifecycle

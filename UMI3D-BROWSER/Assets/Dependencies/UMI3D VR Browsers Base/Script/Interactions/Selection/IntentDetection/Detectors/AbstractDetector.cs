@@ -11,6 +11,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using umi3d.browserRuntime.interaction;
 using umi3d.cdk.interaction;
 using umi3dBrowsers.interaction.selection.intentdetector.method;
 using UnityEngine;
@@ -36,7 +37,7 @@ namespace umi3dBrowsers.interaction.selection.intentdetector
 
         protected virtual void Awake()
         {
-            controllerTransform = GetComponentInParent<AbstractController>().transform;
+            controllerTransform = GetComponentInParent<UMI3DVRController>().transform;
         }
     }
 
@@ -55,7 +56,6 @@ namespace umi3dBrowsers.interaction.selection.intentdetector
         {
             SetDetectionMethod();
             detectionMethod.Init(controller);
-            controllerTransform = controller.transform;
             isRunning = true;
         }
 

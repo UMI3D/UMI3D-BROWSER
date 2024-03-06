@@ -18,13 +18,13 @@ public class XRInputModalityListener : MonoBehaviour
     {
         XRInputModalityManager = GetComponent<XRInputModalityManager>();
 
-        XRInputModalityManager.trackedHandModeStarted.AddListener(AddHand);
-        XRInputModalityManager.motionControllerModeStarted.AddListener(AddPhysicalDevice);
+        XRInputModalityManager.trackedHandModeStarted.AddListener(AddHandDevices);
+        XRInputModalityManager.motionControllerModeStarted.AddListener(AddPhysicalDevices);
     }
 
-    void AddPhysicalDevice()
+    void AddPhysicalDevices()
     {
-
+        Debug.Log("<color=green>Modality changed to physical</color>");
         List<InputDevice> queryResult = new(); //maybe remove held in hand
 
         InputDevices.GetDevicesWithCharacteristics(InputDeviceCharacteristics.Left | InputDeviceCharacteristics.Controller | InputDeviceCharacteristics.HeldInHand, queryResult);
@@ -34,16 +34,18 @@ public class XRInputModalityListener : MonoBehaviour
         if (leftController != default)
             ((Umi3dVRInputManager)Umi3dVRInputManager.Instance).AddPhysicalDevice(ControllerType.LeftHandController, leftController);
 
-        InputDevices.GetDeviceAtXRNode(XRNode.RightEye);
-        InputDevice rightController = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
+        InputDevices.GetDevicesWithCharacteristics(InputDeviceCharacteristics.Right | InputDeviceCharacteristics.Controller | InputDeviceCharacteristics.HeldInHand, queryResult);
+        InputDevice rightController = queryResult.Count > 0 ? queryResult[0] : default;
         queryResult.Clear();
 
         if (leftController != default)
             ((Umi3dVRInputManager)Umi3dVRInputManager.Instance).AddPhysicalDevice(ControllerType.RightHandController, rightController);
     }
 
-    void AddHand()
+    void AddHandDevices()
     {
+        Debug.Log("<color=green>Modality changed to tracked hands</color>");
+
         List<InputDevice> queryResult = new();
 
         InputDevices.GetDevicesWithCharacteristics(InputDeviceCharacteristics.Left | InputDeviceCharacteristics.HandTracking, queryResult);

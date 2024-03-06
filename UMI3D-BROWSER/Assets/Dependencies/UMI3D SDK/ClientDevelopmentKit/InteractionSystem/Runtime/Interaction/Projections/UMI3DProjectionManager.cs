@@ -25,11 +25,12 @@ using UnityEngine.Windows;
 namespace umi3d.cdk.interaction
 {
     /// <summary>
-    /// Manage the links between projected tools and their associated inputs.<br/> 
+    /// Manage the links between projected tools and their associated inputs.<br/>
+    /// <br/>
     /// This projection is based on a tree <see cref="ProjectionTreeData"/> constituted of <see cref="ProjectionTreeNodeData"/>.
     /// </summary>
     [Serializable]
-    public sealed class ProjectionManager
+    public sealed class UMI3DProjectionManager
     {
         [SerializeField]
         UMI3DLogger logger = new();
@@ -70,7 +71,7 @@ namespace umi3d.cdk.interaction
         )
         {
             logger.MainContext = context;
-            logger.MainTag = nameof(ProjectionManager);
+            logger.MainTag = nameof(UMI3DProjectionManager);
 
             var treeId = (context.gameObject.GetInstanceID() + UnityEngine.Random.Range(0, 1000)).ToString();
             treeRoot = new ProjectionTreeNodeData()
@@ -79,7 +80,7 @@ namespace umi3d.cdk.interaction
                 id = 0,
                 children = new(),
                 interactionData = null,
-                input = null
+                control = null
             };
             treeModel = new(
                 projectionTree_SO,
@@ -130,11 +131,11 @@ namespace umi3d.cdk.interaction
         }
 
         /// <summary>
-        /// Project an interaction and return associated input.
+        /// Project an interaction and return associated control.
         /// </summary>
         /// <param name="controller">Controller to project on</param>
         /// <param name="evt">Event dto to project</param>
-        public AbstractUMI3DInput Project<Dto>(
+        public AbstractControlEntity Project<Dto>(
             Dto interaction,
             ulong environmentId,
             ulong toolId,
@@ -151,18 +152,18 @@ namespace umi3d.cdk.interaction
                 hoveredObjectId,
                 false,
                 dof
-            ).input;
+            ).control;
         }
 
         /// <summary>
-        /// Project a set of interactions and return associated inputs.
+        /// Project a set of interactions and return associated controls.
         /// </summary>
         /// <param name="interactions">Interactions to project</param>
         /// <param name="environmentId"></param>
         /// <param name="toolId"></param>
         /// <param name="hoveredObjectId"></param>
-        public AbstractUMI3DInput[] Project(
-            AbstractInteractionDto[] interactions, 
+        public List<AbstractControlEntity> Project(
+            IEnumerable<AbstractInteractionDto> interactions, 
             ulong environmentId, 
             ulong toolId, 
             ulong hoveredObjectId
@@ -193,12 +194,11 @@ namespace umi3d.cdk.interaction
             }
 
             ProjectionTreeNodeData currentNode = treeRoot;
-            List<AbstractUMI3DInput> selectedInputs = new List<AbstractUMI3DInput>();
+            List<AbstractControlEntity> selectedControls = new();
 
-            for (int depth = 0; depth < interactions.Length; depth++)
+            int depth = 0;
+            foreach (AbstractInteractionDto interaction in interactions)
             {
-              AbstractInteractionDto interaction = interactions[depth];
-
                 if (interaction is ManipulationDto manipulationDto)
                 {
                     DofGroupOptionDto[] options 
@@ -221,7 +221,7 @@ namespace umi3d.cdk.interaction
                             false,
                             sep
                         );
-                        selectedInputs.Add(currentNode.input);
+                        selectedControls.Add(currentNode.control);
                     }
                 }
                 else
@@ -235,11 +235,12 @@ namespace umi3d.cdk.interaction
                         depth == 0 && foundHoldableEvent,
                         null
                     );
-                    selectedInputs.Add(currentNode.input);
+                    selectedControls.Add(currentNode.control);
                 }
+                depth++;
             }
 
-            return selectedInputs.ToArray();
+            return selectedControls;
         }
 
         /// <summary>
@@ -273,14 +274,13 @@ namespace umi3d.cdk.interaction
             }
             else
             {
-                AbstractInteractionDto[] interactions = tool.interactionsLoaded.ToArray();
-                AbstractUMI3DInput[] inputs = Project(
-                    interactions, 
+                var controls = Project(
+                    tool.interactionsLoaded, 
                     tool.environmentId, 
                     tool.id, 
                     hoveredObjectId
                 );
-                toolManager.AssociateInputs(tool, inputs);
+                toolManager.AssociateControls(tool, controls.ToArray());
                 eventSystem.OnProjected(tool);
             }
 
@@ -311,13 +311,13 @@ namespace umi3d.cdk.interaction
             }
             else
             {
-                AbstractUMI3DInput input = Project(
+                var control = Project(
                     newInteraction,
                     tool.environmentId,
                     tool.id,
                     toolManager.tool_SO.currentHoverTool.id
                 );
-                toolManager.AssociateInputs(tool, input);
+                toolManager.AssociateControls(tool, control);
                 eventSystem.OnProjected(tool);
             }
         }
@@ -340,7 +340,7 @@ namespace umi3d.cdk.interaction
                 return;
             }
 
-            toolManager.DissociateAllInputs(tool);
+            toolManager.DissociateAllControls(tool);
             toolManager.ReleaseTool(tool);
             eventSystem.OnReleased(tool);
         }
@@ -348,7 +348,7 @@ namespace umi3d.cdk.interaction
         /// <summary>
         /// Updates the projection tree and project the interaction.<br/>
         /// 
-        /// <b>Warning</b> interaction is associated with its input only if 
+        /// <b>Warning</b> interaction is associated with its control only if 
         /// <paramref name="environmentId"/>, <paramref name="hoveredObjectId"/> and <paramref name="toolId"/> are not null.<br/>
         /// </summary>
         /// <param name="interaction"></param>
@@ -490,13 +490,13 @@ namespace umi3d.cdk.interaction
         /// <summary>
         /// Updates the projection tree and project the interaction.<br/>
         /// 
-        /// <b>Warning</b> interaction is not necessary associated with an input.
+        /// <b>Warning</b> interaction is not necessary associated with a control.
         /// </summary>
         /// <param name="isAdequate">Whether the given projection node is adequate for the interaction to project</param>
         /// <param name="projectionNodeCreation">Create a new projection node, should throw an <see cref="NoInputFoundException"/> if no input is available</param>
-        /// <param name="chooseProjection">Project the interaction to the given node's input</param>
+        /// <param name="chooseProjection">Project the interaction to the given node's control</param>
         /// <param name="currentTreeNode">Current node in tree projection</param>
-        /// <param name="unusedInputsOnly">Project on unused inputs only</param>
+        /// <param name="unusedInputsOnly">Project on unused controls only</param>
         /// <exception cref="NoInputFoundException"></exception>
         ProjectionTreeNodeData ProjectAndUpdateTree(
             ProjectionTreeNodeData currentTreeNode,
@@ -523,7 +523,7 @@ namespace umi3d.cdk.interaction
                 foreach (var index in indexes)
                 {
                     var tmp = children[index];
-                    if (tmp.input.IsAvailable())
+                    if (!tmp.control.controlData.isUsed)
                     {
                         projection = tmp;
                         return 1;
@@ -564,8 +564,7 @@ namespace umi3d.cdk.interaction
 
             chooseProjection(projection.Value);
             eventSystem.OnProjected(
-                projection.Value.interactionData.Interaction,
-                projection.Value.input
+                projection.Value.control
             );
             return projection.Value;
         }

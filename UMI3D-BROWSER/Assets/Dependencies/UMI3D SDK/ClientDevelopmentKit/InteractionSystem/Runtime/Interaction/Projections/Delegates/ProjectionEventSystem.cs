@@ -24,13 +24,13 @@ namespace umi3d.cdk.interaction
     [CreateAssetMenu(fileName = "UMI3D Projection Event System", menuName = "UMI3D/Interactions/Projection/Projection Event System")]
     public class ProjectionEventSystem : SerializableScriptableObject
     {
-        public event Action<AbstractInteractionDto, AbstractUMI3DInput> interactionProjected;
+        public event Action<AbstractControlEntity> interactionProjected;
         public event Action<AbstractTool> toolProjected;
         public event Action<AbstractTool> toolReleased;
 
-        internal void OnProjected(AbstractInteractionDto interaction, AbstractUMI3DInput input)
+        internal void OnProjected(AbstractControlEntity controlEntity)
         {
-            interactionProjected?.Invoke(interaction, input);
+            interactionProjected?.Invoke(controlEntity);
         }
 
         internal void OnProjected(AbstractTool tool)

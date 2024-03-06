@@ -85,54 +85,54 @@ namespace umi3d.cdk.interaction
         }
 
         /// <summary>
-        /// Whether this <paramref name="input"/> is associated to <paramref name="tool"/>.
+        /// Whether this <paramref name="control"/> is associated to <paramref name="tool"/>.
         /// </summary>
         /// <param name="tool"></param>
-        /// <param name="input"></param>
+        /// <param name="control"></param>
         /// <returns></returns>
-        public virtual bool IsAssociated(Tool tool, AbstractUMI3DInput input)
+        public virtual bool IsAssociated(Tool tool, AbstractControlEntity control)
         {
             if (!tool_SO.inputsByTool.ContainsKey(tool.id))
             {
                 return false;
             }
 
-            return tool_SO.inputsByTool[tool.id].Contains(input);
+            return tool_SO.inputsByTool[tool.id].Contains(control);
         }
 
         /// <summary>
-        /// Associates <paramref name="inputs"/> to this <paramref name="tool"/>.
+        /// Associates <paramref name="controls"/> to this <paramref name="tool"/>.
         /// </summary>
         /// <param name="tool"></param>
-        /// <param name="inputs"></param>
-        public virtual void AssociateInputs(Tool tool, params AbstractUMI3DInput[] inputs)
+        /// <param name="controls"></param>
+        public virtual void AssociateControls(Tool tool, params AbstractControlEntity[] controls)
         {
             if (!tool_SO.inputsByTool.ContainsKey(tool.id))
             {
-                tool_SO.inputsByTool.Add(tool.id, inputs);
+                tool_SO.inputsByTool.Add(tool.id, controls);
             }
             else
             {
                 tool_SO.inputsByTool[tool.id] = tool_SO.inputsByTool[tool.id]
-                    .Concat(inputs)
+                    .Concat(controls)
                     .ToArray();
             }
         }
 
         /// <summary>
-        /// Dissociates <paramref name="input"/> from <paramref name="tool"/>.
+        /// Dissociates <paramref name="control"/> from <paramref name="tool"/>.
         /// </summary>
         /// <param name="tool"></param>
-        /// <param name="input"></param>
-        public virtual void DissociateInput(Tool tool, AbstractUMI3DInput input)
+        /// <param name="control"></param>
+        public virtual void DissociateControl(Tool tool, AbstractControlEntity control)
         {
             if (!tool_SO.inputsByTool.ContainsKey(tool.id))
             {
                 return;
             }
 
-            var tmp = new List<AbstractUMI3DInput>(tool_SO.inputsByTool[tool.id]);
-            tmp.Remove(input);
+            var tmp = new List<AbstractControlEntity>(tool_SO.inputsByTool[tool.id]);
+            tmp.Remove(control);
             tool_SO.inputsByTool[tool.id] = tmp.ToArray();
         }
 
@@ -140,7 +140,7 @@ namespace umi3d.cdk.interaction
         /// Dissociates all inputs from <paramref name="tool"/>.
         /// </summary>
         /// <param name="tool"></param>
-        public virtual void DissociateAllInputs(Tool tool)
+        public virtual void DissociateAllControls(Tool tool)
         {
             if (!tool_SO.inputsByTool.ContainsKey(tool.id))
             {

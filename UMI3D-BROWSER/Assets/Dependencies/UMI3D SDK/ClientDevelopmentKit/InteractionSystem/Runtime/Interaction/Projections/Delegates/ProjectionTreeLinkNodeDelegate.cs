@@ -56,7 +56,7 @@ namespace umi3d.cdk.interaction
                     {
                         interaction = interaction
                     },
-                    controlId = control
+                    control = control
                 };
             };
         }
@@ -72,7 +72,7 @@ namespace umi3d.cdk.interaction
                 if (environmentId.HasValue && toolId.HasValue && hoveredObjectId.HasValue)
                 {
                     controlManager.Associate(
-                        node.controlId,
+                        node.control,
                         environmentId.Value,
                         toolId.Value,
                         node.interactionData.Interaction,

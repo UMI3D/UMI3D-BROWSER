@@ -218,7 +218,7 @@ namespace umi3d.cdk.interaction
         /// <param name="tool"></param>
         /// <param name="input"></param>
         /// <returns></returns>
-        public bool IsAssociated(AbstractTool tool, AbstractUMI3DInput input)
+        public bool IsAssociated(AbstractTool tool, AbstractControlEntity input)
         {
             switch (tool)
             {
@@ -234,22 +234,22 @@ namespace umi3d.cdk.interaction
         }
 
         /// <summary>
-        /// Associates <paramref name="inputs"/> to this <paramref name="tool"/>.
+        /// Associates <paramref name="controls"/> to this <paramref name="tool"/>.
         /// </summary>
         /// <param name="tool"></param>
-        /// <param name="inputs"></param>
-        public void AssociateInputs(AbstractTool tool, params AbstractUMI3DInput[] inputs)
+        /// <param name="controls"></param>
+        public void AssociateControls(AbstractTool tool, params AbstractControlEntity[] controls)
         {
             switch (tool)
             {
                 case Interactable interactable:
-                    interactableToolDelegate.AssociateInputs(interactable, inputs);
+                    interactableToolDelegate.AssociateControls(interactable, controls);
                     break;
                 case Toolbox toolbox:
-                    toolboxDelegate.AssociateInputs(toolbox, inputs);
+                    toolboxDelegate.AssociateControls(toolbox, controls);
                     break;
                 case GlobalTool globalTool:
-                    globalToolDelegate.AssociateInputs(globalTool, inputs);
+                    globalToolDelegate.AssociateControls(globalTool, controls);
                     break;
                 default:
                     throw new NoToolFoundException();
@@ -257,22 +257,22 @@ namespace umi3d.cdk.interaction
         }
 
         /// <summary>
-        /// Dissociates <paramref name="input"/> from <paramref name="tool"/>.
+        /// Dissociates <paramref name="control"/> from <paramref name="tool"/>.
         /// </summary>
         /// <param name="tool"></param>
-        /// <param name="input"></param>
-        public void DissociateInput(AbstractTool tool, AbstractUMI3DInput input)
+        /// <param name="control"></param>
+        public void DissociateControl(AbstractTool tool, AbstractControlEntity control)
         {
             switch (tool)
             {
                 case Interactable interactable:
-                    interactableToolDelegate.DissociateInput(interactable, input);
+                    interactableToolDelegate.DissociateControl(interactable, control);
                     break;
                 case Toolbox toolbox:
-                    toolboxDelegate.DissociateInput(toolbox, input);
+                    toolboxDelegate.DissociateControl(toolbox, control);
                     break;
                 case GlobalTool globalTool:
-                    globalToolDelegate.DissociateInput(globalTool, input);
+                    globalToolDelegate.DissociateControl(globalTool, control);
                     break;
                 default:
                     throw new NoToolFoundException();
@@ -283,18 +283,18 @@ namespace umi3d.cdk.interaction
         /// Dissociates all inputs from <paramref name="tool"/>.
         /// </summary>
         /// <param name="tool"></param>
-        public void DissociateAllInputs(AbstractTool tool)
+        public void DissociateAllControls(AbstractTool tool)
         {
             switch (tool)
             {
                 case Interactable interactable:
-                    interactableToolDelegate.DissociateAllInputs(interactable);
+                    interactableToolDelegate.DissociateAllControls(interactable);
                     break;
                 case Toolbox toolbox:
-                    toolboxDelegate.DissociateAllInputs(toolbox);
+                    toolboxDelegate.DissociateAllControls(toolbox);
                     break;
                 case GlobalTool globalTool:
-                    globalToolDelegate.DissociateAllInputs(globalTool);
+                    globalToolDelegate.DissociateAllControls(globalTool);
                     break;
                 default:
                     throw new NoToolFoundException();

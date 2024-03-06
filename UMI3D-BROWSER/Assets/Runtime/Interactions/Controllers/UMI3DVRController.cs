@@ -28,7 +28,7 @@ namespace umi3d.browserRuntime.interaction
         public UMI3DController controller;
         public UMI3DControlManager controlManager;
         public UMI3DToolManager toolManager;
-        public ProjectionManager projectionManager;
+        public UMI3DProjectionManager projectionManager;
 
         [Header("Hierarchy References")]
         public Tracker bone;

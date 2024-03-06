@@ -44,12 +44,8 @@ namespace umi3d.cdk.interaction
         /// </summary>
         public IProjectionTreeNodeData interactionData;
         /// <summary>
-        /// The input associated with this interaction.
-        /// </summary>
-        public AbstractUMI3DInput input;
-        /// <summary>
         /// The control associated with this interaction.
         /// </summary>
-        public AbstractControlEntity controlId;
+        public AbstractControlEntity control;
     }
 }

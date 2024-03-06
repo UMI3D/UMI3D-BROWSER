@@ -37,6 +37,6 @@ namespace umi3d.cdk.interaction
         /// <summary>
         /// A Tool:[Input] dictionary
         /// </summary>
-        public Dictionary<ulong, AbstractUMI3DInput[]> inputsByTool = new();
+        public Dictionary<ulong, AbstractControlEntity[]> inputsByTool = new();
     }
 }

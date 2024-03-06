@@ -20,20 +20,14 @@ using UnityEngine;
 
 namespace umi3d.cdk.interaction
 {
-    public abstract class AbstractControllerDelegate : SerializableScriptableObject
+    public interface IControllerDelegate
     {
+        Transform Transform { get; }
+        uint BoneType { get; }
+        Transform BoneTransform { get; }
         /// <summary>
-        /// Whether or not <paramref name="tool"/> can be projected on this controller.
+        /// Transform reference to track translation and rotation.
         /// </summary>
-        /// <param name="tool"> The tool to be projected.</param>
-        /// <returns></returns>
-        public abstract bool IsCompatibleWith(AbstractTool tool);
-
-        /// <summary>
-        /// Whether or not <paramref name="tool"/> can be projected now on this controller.
-        /// </summary>
-        /// <param name="tool"></param>
-        /// <returns></returns>
-        public abstract bool IsAvailableFor(AbstractTool tool);
+        Transform ManipulationTransform { get; }
     }
 }

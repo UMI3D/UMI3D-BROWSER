@@ -37,12 +37,95 @@ namespace umi3d.cdk.interaction
         public AbstractControlDelegate<LinkDto> linkDelegate;
         public AbstractControlDelegate<AbstractParameterDto> parameterDelegate;
 
+        /// <summary>
+        /// Init this control manager.<br/>
+        /// <br/>
+        /// Warning: Delegate must be set before calling this method.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="controller"></param>
         public void Init(MonoBehaviour context, UMI3DController controller)
         {
             logger.MainContext = context;
             logger.MainTag = nameof(UMI3DControlManager);
             this.controller = controller;
             model.Init(controls_SO);
+
+            logger.Assert(manipulationDelegate != null, $"{nameof(manipulationDelegate)} is null");
+            logger.Assert(eventDelegate != null, $"{nameof(eventDelegate)} is null");
+            logger.Assert(formDelegate != null, $"{nameof(formDelegate)} is null");
+            logger.Assert(linkDelegate != null, $"{nameof(linkDelegate)} is null");
+            logger.Assert(parameterDelegate != null, $"{nameof(parameterDelegate)} is null");
+        }
+
+        /// <summary>
+        /// Whether or not <paramref name="tool"/> can be projected now on this controller.
+        /// </summary>
+        /// <param name="tool"></param>
+        /// <returns></returns>
+        public bool IsAvailableFor(AbstractTool tool)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        /// <summary>
+        /// Whether or not <paramref name="tool"/> can be projected on this controller.
+        /// </summary>
+        /// <param name="tool"> The tool to be projected.</param>
+        /// <returns></returns>
+        public bool IsCompatibleWith(AbstractTool tool)
+        {
+            return tool.interactionsLoaded.TrueForAll(
+                inter =>
+                {
+                    if (inter is not ManipulationDto manipulation)
+                    {
+                        return true;
+                    }
+
+                    // Return true if control is compatible with each dof in a separation.
+                    System.Predicate<DofGroupOptionDto> controlCompatibleWithSeparation(HasManipulationControlData control)
+                    {
+                        return dofSep =>
+                        {
+                            foreach (var dof in dofSep.separations)
+                            {
+                                if (!control.ManipulationControlData.compatibleDofGroup.Contains(dof.dofs))
+                                {
+                                    return false;
+                                }
+                            }
+                            return true;
+                        };
+                    }
+
+                    // Return true if there is one physical manipulation control that is
+                    // compatible with one dof separation of this interaction.
+                    var compatible = model.controls_SO.physicalManipulationControls.Exists(
+                        control =>
+                        {
+                            return manipulation.dofSeparationOptions.Exists(
+                                controlCompatibleWithSeparation(control)
+                            );
+                        }
+                    );
+                    if (compatible)
+                    {
+                        return true;
+                    }
+
+                    // Return true if there is one ui manipulation control that is
+                    // compatible with one dof separation of this interaction.
+                    return model.controls_SO.uIManipulationControlPrefabs.Exists(
+                        control =>
+                        {
+                            return manipulation.dofSeparationOptions.Exists(
+                                controlCompatibleWithSeparation(control)
+                            );
+                        }
+                    );
+                }
+            );
         }
 
         /// <summary>

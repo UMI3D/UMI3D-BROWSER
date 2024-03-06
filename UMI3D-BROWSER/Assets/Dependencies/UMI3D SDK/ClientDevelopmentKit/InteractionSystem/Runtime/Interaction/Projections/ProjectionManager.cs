@@ -254,7 +254,7 @@ namespace umi3d.cdk.interaction
             ulong hoveredObjectId
         )
         {
-            if (!controller.controllerDelegate.IsCompatibleWith(tool))
+            if (!controlManager.IsCompatibleWith(tool))
             {
                 throw new IncompatibleToolException($"For {tool.GetType().Name}: {tool.name}");
             }

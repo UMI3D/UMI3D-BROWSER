@@ -14,13 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System;
-using umi3d.cdk;
 using umi3d.cdk.interaction;
-using umi3d.common;
-using umi3d.common.interaction;
-using umi3d.common.userCapture;
-using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace umi3d.browserRuntime.interaction

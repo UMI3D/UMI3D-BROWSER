@@ -43,40 +43,49 @@ namespace umi3d.cdk.interaction
         debug.UMI3DLogger logger = new();
 
         public AbstractControllerData_SO controllerData_SO;
-        public AbstractControllerDelegate controllerDelegate;
 
         [HideInInspector] public UMI3DControlManager controlManager;
         MonoBehaviour context;
+        public IControllerDelegate controllerDelegate;
 
         public readonly static List<UMI3DController> activeControllers = new();
 
+        /// <summary>
+        /// Init this controller.<br/>
+        /// <br/>
+        /// Warning: Delegate must be set before calling this method.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="controlManager"></param>
         public void Init(MonoBehaviour context, UMI3DControlManager controlManager)
         {
             logger.MainContext = context;
             logger.MainTag = nameof(UMI3DController);
             this.context = context;
             this.controlManager = controlManager;
+
+            logger.Assert(controllerDelegate != null, $"{nameof(controllerDelegate)} is null");
         }
 
         public Transform Transform
         {
             get
             {
-                return context.transform;
+                return controllerDelegate.Transform;
             }
         }
         public uint BoneType
         {
             get
             {
-                throw new System.NotImplementedException();
+                return controllerDelegate.BoneType;
             }
         }
         public Transform BoneTransform
         {
             get
             {
-                throw new System.NotImplementedException();
+                return controllerDelegate.BoneTransform;
             }
         }
         /// <summary>
@@ -86,7 +95,7 @@ namespace umi3d.cdk.interaction
         {
             get
             {
-                throw new System.NotImplementedException();
+                return controllerDelegate.ManipulationTransform;
             }
         }
 

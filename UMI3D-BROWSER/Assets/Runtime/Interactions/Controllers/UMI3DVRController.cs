@@ -22,7 +22,7 @@ using UnityEngine;
 
 namespace umi3d.browserRuntime.interaction
 {
-    public class UMI3DVRController : MonoBehaviour
+    public class UMI3DVRController : MonoBehaviour, IControllerDelegate
     {
         [Header("Manager")]
         public UMI3DController controller;
@@ -37,8 +37,38 @@ namespace umi3d.browserRuntime.interaction
         /// </summary>
         public Transform manipulationTransform;
 
+        public Transform Transform
+        {
+            get
+            {
+                return transform;
+            }
+        }
+        public uint BoneType
+        {
+            get
+            {
+                return bone.BoneType;
+            }
+        }
+        public Transform BoneTransform
+        {
+            get
+            {
+                return bone.transform;
+            }
+        }
+        public Transform ManipulationTransform
+        {
+            get
+            {
+                return manipulationTransform.transform;
+            }
+        }
+
         private void Awake()
         {
+            controller.controllerDelegate = this;
             controller.Init(
                 this,
                 controlManager

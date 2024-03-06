@@ -3470,7 +3470,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6541731327453399320}
   - component: {fileID: 766844897719399235}
-  - component: {fileID: 151062858336824693}
   m_Layer: 0
   m_Name: AButton
   m_TagString: Untagged
@@ -3516,36 +3515,6 @@ MonoBehaviour:
   onActionUp:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &151062858336824693
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3199323185184791001}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8cce04044b2ce4f42a2c55faf35c9658, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onInputDown:
-    m_PersistentCalls:
-      m_Calls: []
-  onInputUp:
-    m_PersistentCalls:
-      m_Calls: []
-  boneType: 0
-  boneTransform: {fileID: 0}
-  activationButton: {fileID: 766844897719399235}
-  onActivation:
-    m_PersistentCalls:
-      m_Calls: []
-  onDesactivation:
-    m_PersistentCalls:
-      m_Calls: []
-  highlightMat: {fileID: 0}
-  cursor: {fileID: 7395448536371780299}
-  implementedDofs: 01000000020000000300000004000000050000000700000008000000090000000a0000000b0000000c0000000d0000000e0000000f00000010000000110000000600000000000000
 --- !u!1 &3261779112344303466
 GameObject:
   m_ObjectHideFlags: 0
@@ -3921,7 +3890,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3026098980199896064}
   - component: {fileID: 2108295683219707162}
-  - component: {fileID: 680902161392889049}
   m_Layer: 0
   m_Name: IndexTrigger
   m_TagString: Untagged
@@ -3967,36 +3935,6 @@ MonoBehaviour:
   onActionUp:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &680902161392889049
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3517179060133501427}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8cce04044b2ce4f42a2c55faf35c9658, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onInputDown:
-    m_PersistentCalls:
-      m_Calls: []
-  onInputUp:
-    m_PersistentCalls:
-      m_Calls: []
-  boneType: 0
-  boneTransform: {fileID: 0}
-  activationButton: {fileID: 2108295683219707162}
-  onActivation:
-    m_PersistentCalls:
-      m_Calls: []
-  onDesactivation:
-    m_PersistentCalls:
-      m_Calls: []
-  highlightMat: {fileID: 0}
-  cursor: {fileID: 7395448536371780299}
-  implementedDofs: 01000000020000000300000004000000050000000700000008000000090000000a0000000b0000000c0000000d0000000e0000000f00000010000000110000000600000000000000
 --- !u!1 &3533457566793611592
 GameObject:
   m_ObjectHideFlags: 0
@@ -6274,7 +6212,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3324105777713425814}
   - component: {fileID: 4135602394309484734}
-  - component: {fileID: 6589897946876971268}
   m_Layer: 0
   m_Name: IndexTrigger
   m_TagString: Untagged
@@ -6320,36 +6257,6 @@ MonoBehaviour:
   onActionUp:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &6589897946876971268
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4685589946166057372}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8cce04044b2ce4f42a2c55faf35c9658, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onInputDown:
-    m_PersistentCalls:
-      m_Calls: []
-  onInputUp:
-    m_PersistentCalls:
-      m_Calls: []
-  boneType: 0
-  boneTransform: {fileID: 0}
-  activationButton: {fileID: 4135602394309484734}
-  onActivation:
-    m_PersistentCalls:
-      m_Calls: []
-  onDesactivation:
-    m_PersistentCalls:
-      m_Calls: []
-  highlightMat: {fileID: 0}
-  cursor: {fileID: 5105538428608976202}
-  implementedDofs: 01000000020000000300000004000000050000000700000008000000090000000a0000000b0000000c0000000d0000000e0000000f00000010000000110000000600000000000000
 --- !u!1 &4810450382266167283
 GameObject:
   m_ObjectHideFlags: 0
@@ -7008,7 +6915,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1103758340951710491}
   - component: {fileID: 5711717247495984115}
-  - component: {fileID: 7996774855297294779}
   m_Layer: 0
   m_Name: HandGrab
   m_TagString: Untagged
@@ -7054,36 +6960,6 @@ MonoBehaviour:
   onActionUp:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &7996774855297294779
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5179084514104980387}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8cce04044b2ce4f42a2c55faf35c9658, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onInputDown:
-    m_PersistentCalls:
-      m_Calls: []
-  onInputUp:
-    m_PersistentCalls:
-      m_Calls: []
-  boneType: 0
-  boneTransform: {fileID: 0}
-  activationButton: {fileID: 5711717247495984115}
-  onActivation:
-    m_PersistentCalls:
-      m_Calls: []
-  onDesactivation:
-    m_PersistentCalls:
-      m_Calls: []
-  highlightMat: {fileID: 0}
-  cursor: {fileID: 5105538428608976202}
-  implementedDofs: 01000000020000000300000004000000050000000700000008000000090000000a0000000b0000000c0000000d0000000e0000000f00000010000000110000000600000000000000
 --- !u!1 &5190679644766261611
 GameObject:
   m_ObjectHideFlags: 0
@@ -9466,7 +9342,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5649630829009366400}
   - component: {fileID: 9022464393445043107}
-  - component: {fileID: 7774809386747756253}
   m_Layer: 0
   m_Name: AButton
   m_TagString: Untagged
@@ -9512,36 +9387,6 @@ MonoBehaviour:
   onActionUp:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &7774809386747756253
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6457869947227067382}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8cce04044b2ce4f42a2c55faf35c9658, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onInputDown:
-    m_PersistentCalls:
-      m_Calls: []
-  onInputUp:
-    m_PersistentCalls:
-      m_Calls: []
-  boneType: 0
-  boneTransform: {fileID: 0}
-  activationButton: {fileID: 9022464393445043107}
-  onActivation:
-    m_PersistentCalls:
-      m_Calls: []
-  onDesactivation:
-    m_PersistentCalls:
-      m_Calls: []
-  highlightMat: {fileID: 0}
-  cursor: {fileID: 5105538428608976202}
-  implementedDofs: 01000000020000000300000004000000050000000700000008000000090000000a0000000b0000000c0000000d0000000e0000000f00000010000000110000000600000000000000
 --- !u!1 &6549835375918445624
 GameObject:
   m_ObjectHideFlags: 0
@@ -10789,7 +10634,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7709543028485426603}
   - component: {fileID: 3263654056213084274}
-  - component: {fileID: 4642528126735513260}
   m_Layer: 0
   m_Name: HandGrab
   m_TagString: Untagged
@@ -10835,36 +10679,6 @@ MonoBehaviour:
   onActionUp:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &4642528126735513260
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7483410646205766466}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8cce04044b2ce4f42a2c55faf35c9658, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onInputDown:
-    m_PersistentCalls:
-      m_Calls: []
-  onInputUp:
-    m_PersistentCalls:
-      m_Calls: []
-  boneType: 0
-  boneTransform: {fileID: 0}
-  activationButton: {fileID: 3263654056213084274}
-  onActivation:
-    m_PersistentCalls:
-      m_Calls: []
-  onDesactivation:
-    m_PersistentCalls:
-      m_Calls: []
-  highlightMat: {fileID: 0}
-  cursor: {fileID: 7395448536371780299}
-  implementedDofs: 01000000020000000300000004000000050000000700000008000000090000000a0000000b0000000c0000000d0000000e0000000f00000010000000110000000600000000000000
 --- !u!1 &7516651795888111311
 GameObject:
   m_ObjectHideFlags: 0

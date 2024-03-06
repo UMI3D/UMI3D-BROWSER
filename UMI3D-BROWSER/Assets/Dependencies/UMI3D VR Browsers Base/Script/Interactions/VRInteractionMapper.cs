@@ -31,11 +31,6 @@ namespace umi3dVRBrowsersBase.interactions
         #region Fields
 
         /// <summary>
-        /// If an interactable is loaded before its gameobject, the interaction mapper will wait <see cref="interactableLoadTimeout"/> seconds before destroying it.
-        /// </summary>
-        public float interactableLoadTimeout = 60;
-
-        /// <summary>
         /// Last controller used by users in a menu to trigger a UI.
         /// </summary>
         public static ControllerType lastControllerUsedToClick = ControllerType.RightHandController;
@@ -256,21 +251,6 @@ namespace umi3dVRBrowsersBase.interactions
         //    }
         //    return true;
         //}
-
-        /// <summary> 
-        /// Returns <see cref="VRController"/> associated to <paramref name="controller"/>.
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        public VRController GetController(ControllerType controller)
-        {
-            //foreach (AbstractController c in Controllers)
-            //{
-            //    if ((c as VRController)?.type == controller)
-            //        return (c as VRController);
-            //}
-            return null;
-        }
 
         #endregion
     }

@@ -28,19 +28,20 @@ namespace umi3d.cdk.interaction
         debug.UMI3DLogger logger = new();
 
         public Controls_SO controls_SO;
+
+        [HideInInspector] public ControlModel model = new();
+        [HideInInspector] public UMI3DController controller;
         public AbstractManipulationControlDelegate manipulationDelegate;
         public AbstractEventControlDelegate eventDelegate;
         public AbstractControlDelegate<FormDto> formDelegate;
         public AbstractControlDelegate<LinkDto> linkDelegate;
         public AbstractControlDelegate<AbstractParameterDto> parameterDelegate;
 
-        [HideInInspector] public ControlModel model = new();
-        [HideInInspector] public UMI3DController controller;
-
         public void Init(MonoBehaviour context, UMI3DController controller)
         {
             logger.MainContext = context;
             logger.MainTag = nameof(UMI3DControlManager);
+            this.controller = controller;
             model.Init(controls_SO);
         }
 

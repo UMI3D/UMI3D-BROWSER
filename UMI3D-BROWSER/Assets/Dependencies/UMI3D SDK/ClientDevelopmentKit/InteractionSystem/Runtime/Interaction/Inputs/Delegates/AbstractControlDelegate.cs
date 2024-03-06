@@ -23,7 +23,7 @@ using UnityEngine.InputSystem;
 
 namespace umi3d.cdk.interaction
 {
-    public abstract class AbstractControlDelegate<Interaction>: SerializableScriptableObject
+    public abstract class AbstractControlDelegate<Interaction>
         where Interaction: AbstractInteractionDto
     {
         protected abstract bool CanPerform(InputActionPhase phase);

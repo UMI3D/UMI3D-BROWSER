@@ -34,25 +34,24 @@ namespace umi3d.browserRuntime.interaction
             return tool.interactionsLoaded.TrueForAll(
                 inter =>
                 {
-                    if (inter is ManipulationDto manipulation)
-                    {
-                        return manipulation.dofSeparationOptions.Exists(group =>
-                            {
-                                return !group.separations.Exists(
-                                    dof =>
-                                    {
-                                        return (dof.dofs == DofGroupEnum.X_RX) 
-                                        || (dof.dofs == DofGroupEnum.Y_RY) 
-                                        || (dof.dofs == DofGroupEnum.Z_RZ);
-                                    }
-                                );
-                            }
-                        );
-                    }
-                    else
+                    if (inter is not ManipulationDto manipulation)
                     {
                         return true;
                     }
+
+                    return manipulation.dofSeparationOptions.Exists(
+                        group =>
+                        {
+                            return !group.separations.Exists(
+                                dof =>
+                                {
+                                    return (dof.dofs == DofGroupEnum.X_RX)
+                                    || (dof.dofs == DofGroupEnum.Y_RY)
+                                    || (dof.dofs == DofGroupEnum.Z_RZ);
+                                }
+                            );
+                        }
+                    );
                 }
             );
         }

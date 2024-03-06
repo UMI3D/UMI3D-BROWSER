@@ -34,21 +34,18 @@ namespace umi3d.cdk.interaction
         [SerializeField]
         UMI3DLogger logger = new();
 
-        [Header("Inspector Dependency Injection")]
         public ProjectionTree_SO projectionTree_SO;
+        public ProjectionEventSystem eventSystem;
+
+        [HideInInspector] public UMI3DController controller;
+        [HideInInspector] public UMI3DControlManager controlManager;
+        [HideInInspector] public UMI3DToolManager toolManager;
+
         public ProjectionTreeManipulationNodeDelegate ptManipulationNodeDelegate;
         public ProjectionTreeEventNodeDelegate ptEventNodeDelegate;
         public ProjectionTreeFormNodeDelegate ptFormNodeDelegate;
         public ProjectionTreeLinkNodeDelegate ptLinkNodeDelegate;
         public ProjectionTreeParameterNodeDelegate ptParameterNodeDelegate;
-        public ProjectionEventDelegate eventDelegate;
-
-        [HideInInspector]
-        public UMI3DController controller;
-        [HideInInspector]
-        public UMI3DControlManager controlManager;
-        [HideInInspector]
-        public UMI3DToolManager toolManager;
 
         /// <summary>
         /// The root of the tree.
@@ -56,10 +53,19 @@ namespace umi3d.cdk.interaction
         ProjectionTreeNodeData treeRoot;
         ProjectionTreeModel treeModel;
 
+        /// <summary>
+        /// Init this projection manager.<br/>
+        /// <br/>
+        /// Warning: Delegate must be set before calling this method.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="controller"></param>
+        /// <param name="controlManager"></param>
+        /// <param name="toolManager"></param>
         public void Init(
             MonoBehaviour context,
             UMI3DController controller,
-            UMI3DControlManager inputManager,
+            UMI3DControlManager controlManager,
             UMI3DToolManager toolManager
         )
         {
@@ -86,39 +92,40 @@ namespace umi3d.cdk.interaction
             logger.Assert(ptFormNodeDelegate != null, $"{nameof(ptFormNodeDelegate)} is null");
             logger.Assert(ptLinkNodeDelegate != null, $"{nameof(ptLinkNodeDelegate)} is null");
             logger.Assert(ptParameterNodeDelegate != null, $"{nameof(ptParameterNodeDelegate)} is null");
-            logger.Assert(eventDelegate != null, $"{nameof(eventDelegate)} is null");
+            logger.Assert(eventSystem != null, $"{nameof(eventSystem)} is null");
 
-            ptManipulationNodeDelegate.Init(
+            ptManipulationNodeDelegate?.Init(
                 projectionTree_SO,
                 treeId,
-                inputManager
+                controlManager
             );
-            ptEventNodeDelegate.Init(
+            ptEventNodeDelegate?.Init(
                 projectionTree_SO,
                 treeId,
-                inputManager
+                controlManager
             );
-            ptFormNodeDelegate.Init(
+            ptFormNodeDelegate?.Init(
                 projectionTree_SO,
                 treeId,
-                inputManager
+                controlManager
             );
-            ptLinkNodeDelegate.Init(
+            ptLinkNodeDelegate?.Init(
                 projectionTree_SO,
                 treeId,
-                inputManager
+                controlManager
             );
-            ptParameterNodeDelegate.Init(
+            ptParameterNodeDelegate?.Init(
                 projectionTree_SO,
                 treeId,
-                inputManager
+                controlManager
             );
 
-            logger.Assert(inputManager != null, $"{nameof(inputManager)} is null");
+            logger.Assert(controller != null, $"{nameof(controller)} is null");
+            logger.Assert(controlManager != null, $"{nameof(controlManager)} is null");
             logger.Assert(toolManager != null, $"{nameof(toolManager)} is null");
 
             this.controller = controller;
-            this.controlManager = inputManager;
+            this.controlManager = controlManager;
             this.toolManager = toolManager;
         }
 
@@ -252,7 +259,7 @@ namespace umi3d.cdk.interaction
                 throw new IncompatibleToolException($"For {tool.GetType().Name}: {tool.name}");
             }
 
-            if (controller.controllerDelegate.IsAvailableFor(tool))
+            if (toolManager.IsProjected(tool))
             {
                 Release(
                     tool,
@@ -274,7 +281,7 @@ namespace umi3d.cdk.interaction
                     hoveredObjectId
                 );
                 toolManager.AssociateInputs(tool, inputs);
-                eventDelegate.OnProjected(tool);
+                eventSystem.OnProjected(tool);
             }
 
             toolManager.ProjectTool(tool);
@@ -311,7 +318,7 @@ namespace umi3d.cdk.interaction
                     toolManager.tool_SO.currentHoverTool.id
                 );
                 toolManager.AssociateInputs(tool, input);
-                eventDelegate.OnProjected(tool);
+                eventSystem.OnProjected(tool);
             }
         }
 
@@ -324,17 +331,18 @@ namespace umi3d.cdk.interaction
         {
             if (toolManager.ProjectedTools.Count() == 0)
             {
-                // TODO add controller id.
-                throw new NoToolFoundException($"No tool is currently projected on this controller");
+                logger.Error(nameof(Release), $"No tool is currently projected on this controller");
+                return;
             }
             if (!toolManager.IsProjected(tool))
             {
-                throw new System.Exception("This tool is not currently projected on this controller");
+                logger.Error(nameof(Release), $"This tool is not currently projected on this controller");
+                return;
             }
 
             toolManager.DissociateAllInputs(tool);
             toolManager.ReleaseTool(tool);
-            eventDelegate.OnReleased(tool);
+            eventSystem.OnReleased(tool);
         }
 
         /// <summary>
@@ -555,7 +563,7 @@ namespace umi3d.cdk.interaction
             }
 
             chooseProjection(projection.Value);
-            eventDelegate.OnProjected(
+            eventSystem.OnProjected(
                 projection.Value.interactionData.Interaction,
                 projection.Value.input
             );

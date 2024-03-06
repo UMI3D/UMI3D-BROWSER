@@ -744,6 +744,72 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1090631631072059896, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: controlManager.controls_SO
+      value: 
+      objectReference: {fileID: 11400000, guid: eac53400111dbca40bcc969c74acf1dc,
+        type: 2}
+    - target: {fileID: 1090631631072059896, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: controlManager.eventDelegate
+      value: 
+      objectReference: {fileID: 11400000, guid: c858cd30c5323f34f96db666c99ff67a,
+        type: 2}
+    - target: {fileID: 1090631631072059896, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: controller.controllerData_SO
+      value: 
+      objectReference: {fileID: 11400000, guid: 1a092d1771f90c042a94bad3b2fb4dde,
+        type: 2}
+    - target: {fileID: 1090631631072059896, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: projectionManager.eventDelegate
+      value: 
+      objectReference: {fileID: 11400000, guid: dbe7ae0dac0616d4496f156f354fa9e6,
+        type: 2}
+    - target: {fileID: 1090631631072059896, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: controlManager.manipulationDelegate
+      value: 
+      objectReference: {fileID: 11400000, guid: dda077b28c9f81a4ab51fab2b534d39a,
+        type: 2}
+    - target: {fileID: 1090631631072059896, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: projectionManager.projectionTree_SO
+      value: 
+      objectReference: {fileID: 11400000, guid: 4f8ebd7bc1ce3ca4a8617ff740c4a745,
+        type: 2}
+    - target: {fileID: 1090631631072059896, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: projectionManager.ptFormNodeDelegate
+      value: 
+      objectReference: {fileID: 11400000, guid: 623287b95aa59c548944a3c2d9a693a5,
+        type: 2}
+    - target: {fileID: 1090631631072059896, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: projectionManager.ptLinkNodeDelegate
+      value: 
+      objectReference: {fileID: 11400000, guid: db64a8ea92c7ee74db9e0717b4b7e3e7,
+        type: 2}
+    - target: {fileID: 1090631631072059896, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: projectionManager.ptEventNodeDelegate
+      value: 
+      objectReference: {fileID: 11400000, guid: 1d854a6ad8c89664cba4029099d41ce7,
+        type: 2}
+    - target: {fileID: 1090631631072059896, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: projectionManager.ptParameterNodeDelegate
+      value: 
+      objectReference: {fileID: 11400000, guid: 0e545887a59f4244ea0a329531a5ffc3,
+        type: 2}
+    - target: {fileID: 1090631631072059896, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: projectionManager.ptManipulationNodeDelegate
+      value: 
+      objectReference: {fileID: 11400000, guid: 409b597f7531cdc43a37ce6778fcdb14,
+        type: 2}
     - target: {fileID: 4563722139069628583, guid: aa50e35a45eaaed43a950ae34ef532dc,
         type: 3}
       propertyPath: m_LocalPosition.x

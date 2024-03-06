@@ -21,7 +21,7 @@ using UnityEngine;
 
 namespace umi3d.cdk.interaction
 {
-    [CreateAssetMenu(fileName = "UMI3D Projection Tree", menuName = "UMI3D/Data/Interaction/Projection Tree")]
+    [CreateAssetMenu(fileName = "UMI3D Projection Tree", menuName = "UMI3D/Interactions/Projection/Projection Tree")]
     public class ProjectionTree_SO : SerializableScriptableObject
     {
         public List<ProjectionTreeData> trees;

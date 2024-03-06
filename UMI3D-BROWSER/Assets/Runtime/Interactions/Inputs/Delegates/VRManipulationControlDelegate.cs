@@ -22,7 +22,6 @@ using UnityEngine.InputSystem;
 
 namespace umi3d.browserRuntime.interaction
 {
-    [CreateAssetMenu(fileName = "UMI3D VR Manipulation Control Delegate", menuName = "UMI3D/Interactions/Control/Delegates/VR Manipulation")]
     public class VRManipulationControlDelegate : AbstractManipulationControlDelegate
     {
         public override DofGroupOptionDto FindBest(DofGroupOptionDto[] options)

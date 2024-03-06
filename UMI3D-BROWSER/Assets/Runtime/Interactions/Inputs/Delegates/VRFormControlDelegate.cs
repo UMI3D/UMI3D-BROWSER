@@ -22,7 +22,6 @@ using UnityEngine.InputSystem;
 
 namespace umi3d.browserRuntime.interaction
 {
-    [CreateAssetMenu(fileName = "UMI3D VR Form Control Delegate", menuName = "UMI3D/Interactions/Control/Delegates/VR Form")]
     public class VRFormControlDelegate : AbstractControlDelegate<FormDto>
     {
         public override AbstractControlEntity GetControl(UMI3DController controller, FormDto Interaction)

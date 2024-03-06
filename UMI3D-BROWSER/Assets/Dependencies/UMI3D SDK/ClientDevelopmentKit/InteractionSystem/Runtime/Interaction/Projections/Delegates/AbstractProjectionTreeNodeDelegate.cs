@@ -21,7 +21,7 @@ using umi3d.common.interaction;
 
 namespace umi3d.cdk.interaction
 {
-    public abstract class AbstractProjectionTreeNodeDelegate<Dto> : SerializableScriptableObject
+    public abstract class AbstractProjectionTreeNodeDelegate<Dto>
     where Dto : AbstractInteractionDto
     {
         public ProjectionTree_SO projectionTree_SO;

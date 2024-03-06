@@ -21,8 +21,8 @@ using UnityEngine;
 
 namespace umi3d.cdk.interaction
 {
-    [CreateAssetMenu(fileName = "UMI3D Projection Event Delegate", menuName = "UMI3D/Interactions/Projection Delegate/Projection Event Delegate")]
-    public class ProjectionEventDelegate : SerializableScriptableObject
+    [CreateAssetMenu(fileName = "UMI3D Projection Event System", menuName = "UMI3D/Interactions/Projection/Projection Event System")]
+    public class ProjectionEventSystem : SerializableScriptableObject
     {
         public event Action<AbstractInteractionDto, AbstractUMI3DInput> interactionProjected;
         public event Action<AbstractTool> toolProjected;

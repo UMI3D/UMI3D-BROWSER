@@ -25,7 +25,6 @@ using UnityEngine.InputSystem;
 
 namespace umi3d.browserRuntime.interaction
 {
-    [CreateAssetMenu(fileName = "UMI3D VR Event Control Delegate", menuName = "UMI3D/Interactions/Control/Delegates/VR Event")]
     public class VREventControlDelegate : AbstractEventControlDelegate 
     {
         protected override bool CanPerform(InputActionPhase phase)

@@ -268,21 +268,14 @@ namespace umi3d.cdk.interaction
                 );
             }
 
-            if (toolManager.RequiresMenu(tool))
-            {
-                toolManager.CreateInteractionsMenuFor(tool);
-            }
-            else
-            {
-                var controls = Project(
-                    tool.interactionsLoaded, 
-                    tool.environmentId, 
-                    tool.id, 
-                    hoveredObjectId
-                );
-                toolManager.AssociateControls(tool, controls.ToArray());
-                eventSystem.OnProjected(tool);
-            }
+            var controls = Project(
+                tool.interactionsLoaded, 
+                tool.environmentId, 
+                tool.id, 
+                hoveredObjectId
+            );
+            toolManager.AssociateControls(tool, controls.ToArray());
+            eventSystem.OnProjected(tool);
 
             toolManager.ProjectTool(tool);
         }
@@ -305,21 +298,15 @@ namespace umi3d.cdk.interaction
             {
                 throw new System.Exception("This tool is not currently projected on this controller");
             }
-            if (toolManager.RequiresMenu(tool))
-            {
-                toolManager.CreateInteractionsMenuFor(tool);
-            }
-            else
-            {
-                var control = Project(
-                    newInteraction,
-                    tool.environmentId,
-                    tool.id,
-                    toolManager.tool_SO.currentHoverTool.id
-                );
-                toolManager.AssociateControls(tool, control);
-                eventSystem.OnProjected(tool);
-            }
+            
+            var control = Project(
+                newInteraction,
+                tool.environmentId,
+                tool.id,
+                toolManager.tool_SO.currentHoverTool.id
+            );
+            toolManager.AssociateControls(tool, control);
+            eventSystem.OnProjected(tool);
         }
 
         /// <summary>

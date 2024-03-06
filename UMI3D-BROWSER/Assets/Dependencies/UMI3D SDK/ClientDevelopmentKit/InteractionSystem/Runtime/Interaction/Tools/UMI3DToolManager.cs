@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using MathNet.Numerics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,15 +30,9 @@ namespace umi3d.cdk.interaction
         public Tool_SO tool_SO;
         public AbstractToolSelectionDelegate toolSelectionDelegate;
         public AbstractToolUpdateDelegate toolUpdateDelegate;
-        public AbstractToolDelegate<Interactable> interactableToolDelegate;
-        public AbstractToolDelegate<GlobalTool> globalToolDelegate;
-        public AbstractToolDelegate<Toolbox> toolboxDelegate;
 
         public void Init()
         {
-            interactableToolDelegate.tool_SO = tool_SO;
-            globalToolDelegate.tool_SO = tool_SO;
-            toolboxDelegate.tool_SO = tool_SO;
         }
 
         /// <summary>
@@ -57,33 +52,21 @@ namespace umi3d.cdk.interaction
         public bool Exists<Tool>(
             ulong environmentId,
             ulong id
-        )
-            where Tool: AbstractTool
+        ) where Tool: AbstractTool
         {
-            return default(Tool) switch
-            {
-                Interactable => interactableToolDelegate.Exists(environmentId, id),
-                Toolbox => toolboxDelegate.Exists(environmentId, id),
-                GlobalTool => globalToolDelegate.Exists(environmentId, id),
-                _ => throw new NoToolFoundException()
-            };
+            return UMI3DEnvironmentLoader.Instance.TryGetEntity(environmentId, id, out Tool tool);
         }
 
         /// <summary>
         /// Get the tool with the given id (if any).
         /// </summary>
-        public AbstractTool GetTool<Tool>(
+        public Tool GetTool<Tool>(
             ulong environmentId,
             ulong id
-        )
+        ) where Tool: AbstractTool
         {
-            return default(Tool) switch
-            {
-                Interactable => interactableToolDelegate.GetTool(environmentId, id),
-                Toolbox => toolboxDelegate.GetTool(environmentId, id),
-                GlobalTool => globalToolDelegate.GetTool(environmentId, id),
-                _ => throw new NoToolFoundException()
-            };
+            UMI3DEnvironmentLoader.Instance.TryGetEntity(environmentId, id, out Tool tool);
+            return tool;
         }
 
         /// <summary>
@@ -108,61 +91,14 @@ namespace umi3d.cdk.interaction
             return GetTools(t => true);
         }
 
+        /// <summary>
+        /// Whether this tool is projected.
+        /// </summary>
+        /// <param name="tool"></param>
+        /// <returns></returns>
         public bool IsProjected(AbstractTool tool)
         {
-            switch (tool)
-            {
-                case Interactable interactable:
-                    return interactableToolDelegate.IsProjected(interactable);
-                case Toolbox toolbox:
-                    return toolboxDelegate.IsProjected(toolbox);
-                case GlobalTool globalTool:
-                    return globalToolDelegate.IsProjected(globalTool);
-                default:
-                    throw new NoToolFoundException();
-            }
-        }
-
-        /// <summary>
-        /// Whether or not <paramref name="tool"/> requires the generation of a menu to be projected.
-        /// </summary>
-        /// <param name="tool"> The tool to be projected.</param>
-        /// <returns></returns>
-        public bool RequiresMenu(AbstractTool tool)
-        {
-            switch (tool)
-            {
-                case Interactable interactable:
-                    return interactableToolDelegate.RequiresMenu(interactable);
-                case Toolbox toolbox:
-                    return toolboxDelegate.RequiresMenu(toolbox);
-                case GlobalTool globalTool:
-                    return globalToolDelegate.RequiresMenu(globalTool);
-                default:
-                    throw new NoToolFoundException();
-            }
-        }
-
-        /// <summary>
-        /// Create a menu to access each interactions of a tool separately.
-        /// </summary>
-        /// <param name="interactions"></param>
-        public void CreateInteractionsMenuFor(AbstractTool tool)
-        {
-            switch (tool)
-            {
-                case Interactable interactable:
-                    interactableToolDelegate.CreateInteractionsMenuFor(interactable);
-                    break;
-                case Toolbox toolbox:
-                    toolboxDelegate.CreateInteractionsMenuFor(toolbox);
-                    break;
-                case GlobalTool globalTool:
-                    globalToolDelegate.CreateInteractionsMenuFor(globalTool);
-                    break;
-                default:
-                    throw new NoToolFoundException();
-            }
+            return tool_SO.projectedTools.Contains(tool);
         }
 
         /// <summary>
@@ -171,20 +107,12 @@ namespace umi3d.cdk.interaction
         /// <param name="tool"></param>
         public void ProjectTool(AbstractTool tool)
         {
-            switch (tool)
+            if (IsProjected(tool))
             {
-                case Interactable interactable:
-                    interactableToolDelegate.ProjectTool(interactable);
-                    break;
-                case Toolbox toolbox:
-                    toolboxDelegate.ProjectTool(toolbox);
-                    break;
-                case GlobalTool globalTool:
-                    globalToolDelegate.ProjectTool(globalTool);
-                    break;
-                default:
-                    throw new NoToolFoundException();
+                return;
             }
+
+            tool_SO.projectedTools.Add(tool);
         }
 
         /// <summary>
@@ -193,20 +121,7 @@ namespace umi3d.cdk.interaction
         /// <param name="tool"></param>
         public void ReleaseTool(AbstractTool tool)
         {
-            switch (tool)
-            {
-                case Interactable interactable:
-                    interactableToolDelegate.ReleaseTool(interactable);
-                    break;
-                case Toolbox toolbox:
-                    toolboxDelegate.ReleaseTool(toolbox);
-                    break;
-                case GlobalTool globalTool:
-                    globalToolDelegate.ReleaseTool(globalTool);
-                    break;
-                default:
-                    throw new NoToolFoundException();
-            }
+            tool_SO.projectedTools.Remove(tool);
             tool.OnUpdated.RemoveAllListeners();
             tool.OnAdded.RemoveAllListeners();
             tool.OnRemoved.RemoveAllListeners();
@@ -218,19 +133,14 @@ namespace umi3d.cdk.interaction
         /// <param name="tool"></param>
         /// <param name="input"></param>
         /// <returns></returns>
-        public bool IsAssociated(AbstractTool tool, AbstractControlEntity input)
+        public bool IsAssociated(AbstractTool tool, AbstractControlEntity control)
         {
-            switch (tool)
+            if (!tool_SO.controlsByTool.ContainsKey(tool.id))
             {
-                case Interactable interactable:
-                    return interactableToolDelegate.IsAssociated(interactable, input);
-                case Toolbox toolbox:
-                    return toolboxDelegate.IsAssociated(toolbox, input);
-                case GlobalTool globalTool:
-                    return globalToolDelegate.IsAssociated(globalTool, input);
-                default:
-                    throw new NoToolFoundException();
+                return false;
             }
+
+            return tool_SO.controlsByTool[tool.id].Contains(control);
         }
 
         /// <summary>
@@ -240,19 +150,15 @@ namespace umi3d.cdk.interaction
         /// <param name="controls"></param>
         public void AssociateControls(AbstractTool tool, params AbstractControlEntity[] controls)
         {
-            switch (tool)
+            if (!tool_SO.controlsByTool.ContainsKey(tool.id))
             {
-                case Interactable interactable:
-                    interactableToolDelegate.AssociateControls(interactable, controls);
-                    break;
-                case Toolbox toolbox:
-                    toolboxDelegate.AssociateControls(toolbox, controls);
-                    break;
-                case GlobalTool globalTool:
-                    globalToolDelegate.AssociateControls(globalTool, controls);
-                    break;
-                default:
-                    throw new NoToolFoundException();
+                tool_SO.controlsByTool.Add(tool.id, controls);
+            }
+            else
+            {
+                tool_SO.controlsByTool[tool.id] = tool_SO.controlsByTool[tool.id]
+                    .Concat(controls)
+                    .ToArray();
             }
         }
 
@@ -263,20 +169,14 @@ namespace umi3d.cdk.interaction
         /// <param name="control"></param>
         public void DissociateControl(AbstractTool tool, AbstractControlEntity control)
         {
-            switch (tool)
+            if (!tool_SO.controlsByTool.ContainsKey(tool.id))
             {
-                case Interactable interactable:
-                    interactableToolDelegate.DissociateControl(interactable, control);
-                    break;
-                case Toolbox toolbox:
-                    toolboxDelegate.DissociateControl(toolbox, control);
-                    break;
-                case GlobalTool globalTool:
-                    globalToolDelegate.DissociateControl(globalTool, control);
-                    break;
-                default:
-                    throw new NoToolFoundException();
+                return;
             }
+
+            var tmp = new List<AbstractControlEntity>(tool_SO.controlsByTool[tool.id]);
+            tmp.Remove(control);
+            tool_SO.controlsByTool[tool.id] = tmp.ToArray();
         }
 
         /// <summary>
@@ -285,20 +185,12 @@ namespace umi3d.cdk.interaction
         /// <param name="tool"></param>
         public void DissociateAllControls(AbstractTool tool)
         {
-            switch (tool)
+            if (!tool_SO.controlsByTool.ContainsKey(tool.id))
             {
-                case Interactable interactable:
-                    interactableToolDelegate.DissociateAllControls(interactable);
-                    break;
-                case Toolbox toolbox:
-                    toolboxDelegate.DissociateAllControls(toolbox);
-                    break;
-                case GlobalTool globalTool:
-                    globalToolDelegate.DissociateAllControls(globalTool);
-                    break;
-                default:
-                    throw new NoToolFoundException();
+                return;
             }
+
+            tool_SO.controlsByTool.Remove(tool.id);
         }
     }
 }

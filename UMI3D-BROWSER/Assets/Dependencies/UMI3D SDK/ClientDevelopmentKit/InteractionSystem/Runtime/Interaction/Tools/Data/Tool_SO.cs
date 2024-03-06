@@ -35,8 +35,8 @@ namespace umi3d.cdk.interaction
         public List<AbstractTool> projectedTools = new();
 
         /// <summary>
-        /// A Tool:[Input] dictionary
+        /// A Tool:[Control] dictionary
         /// </summary>
-        public Dictionary<ulong, AbstractControlEntity[]> inputsByTool = new();
+        public Dictionary<ulong, AbstractControlEntity[]> controlsByTool = new();
     }
 }

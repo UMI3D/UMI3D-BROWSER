@@ -152,7 +152,8 @@ namespace umi3dVRBrowsersBase.ui.playerMenu
         /// <returns></returns>
         public override bool IsDraggingAllowed()
         {
-            return actionBinding.input is BooleanInput;
+            throw new System.NotImplementedException();
+            //return actionBinding.input is BooleanInput;
         }
 
         /// <summary>

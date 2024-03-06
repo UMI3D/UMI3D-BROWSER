@@ -201,13 +201,7 @@ namespace umi3dVRBrowsersBase.editor
             if (nbControllers != 2)
                 errors.Add("Prefab with " + nbControllers + "AbstractController, generally 2 are required for VR players.");
 
-            //Check Boolean Input
-            if (player.GetComponentsInChildren<BooleanInput>().Length == 0)
-                errors.Add("Warning : Prefab without any BooleanInput");
 
-            //Check ManipulationInput
-            if (player.GetComponentsInChildren<ManipulationInput>().Length == 0)
-                errors.Add("Warning : Prefab without any ManipulationInput");
 
             //Check selectors
             if (player.GetComponentsInChildren<InteractableVRSelector>().Length == 0)

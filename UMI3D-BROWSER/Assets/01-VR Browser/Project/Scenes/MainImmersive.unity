@@ -796,6 +796,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5067655147915799411, guid: aa50e35a45eaaed43a950ae34ef532dc,
         type: 3}
+      propertyPath: boneType
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5067655147915799411, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: boneTransform
+      value: 
+      objectReference: {fileID: 1131452853}
+    - target: {fileID: 5067655147915799411, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
       propertyPath: hoveredObjectId
       value: 18446744073709551578
       objectReference: {fileID: 0}
@@ -817,6 +827,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: dfdeedc5c697ae24ca5ec7449c121587,
         type: 2}
+    - target: {fileID: 5067655147915799411, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: manipulationTransform
+      value: 
+      objectReference: {fileID: 1131452854}
     - target: {fileID: 5067655147915799411, guid: aa50e35a45eaaed43a950ae34ef532dc,
         type: 3}
       propertyPath: inputManager.controls_SO
@@ -992,6 +1007,18 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aa50e35a45eaaed43a950ae34ef532dc, type: 3}
+--- !u!4 &1131452853 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2802874253620683214, guid: aa50e35a45eaaed43a950ae34ef532dc,
+    type: 3}
+  m_PrefabInstance: {fileID: 1131452852}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1131452854 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5105538428608976202, guid: aa50e35a45eaaed43a950ae34ef532dc,
+    type: 3}
+  m_PrefabInstance: {fileID: 1131452852}
+  m_PrefabAsset: {fileID: 0}
 --- !u!20 &1131452855 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 8430962178111685224, guid: aa50e35a45eaaed43a950ae34ef532dc,

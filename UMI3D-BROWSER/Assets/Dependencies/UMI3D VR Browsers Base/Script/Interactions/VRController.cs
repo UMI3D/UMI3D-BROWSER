@@ -51,11 +51,6 @@ namespace umi3dVRBrowsersBase.interactions
             ObjectMenu = Resources.Load<MenuAsset>("ParametersMenu");
 
             UnityEngine.Physics.queriesHitBackfaces = true;
-
-            foreach (AbstractUMI3DInput input in manipulationInputs)
-                input.Init(this);
-            foreach (AbstractUMI3DInput input in booleanInputs)
-                input.Init(this);
         }
 
         #endregion
@@ -88,20 +83,6 @@ namespace umi3dVRBrowsersBase.interactions
             //associatedInputs.Add(tool.id, toolInputs.ToArray());
         }
 
-        ///// <summary>
-        ///// <inheritdoc/>
-        ///// </summary>
-        ///// <param name="tool"></param>
-        ///// <param name="reason"></param>
-        //public override void Release(AbstractTool tool, InteractionMappingReason reason)
-        //{
-        //    base.Release(tool, reason);
-        //    tool.onReleased(bone.BoneType);
-
-        //    PlayerMenuManager.Instance.CtrlToolMenu.ClearBindingList(type);
-        //    PlayerMenuManager.Instance.MenuHeader.DisplayControllerButton(false, type, string.Empty);
-        //}
-
         #endregion
 
         public virtual void Update()
@@ -114,7 +95,7 @@ namespace umi3dVRBrowsersBase.interactions
         [ContextMenu("SWIPE")]
         private void Swipe()
         {
-            ChangeInputMapping(booleanInputs[0], booleanInputs[1]);
+            //ChangeInputMapping(booleanInputs[0], booleanInputs[1]);
         }
 
         /// <summary>

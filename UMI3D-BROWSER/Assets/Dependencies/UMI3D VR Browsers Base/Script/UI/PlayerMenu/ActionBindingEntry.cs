@@ -99,21 +99,21 @@ namespace umi3dVRBrowsersBase.ui.playerMenu
 
             actionNameLabel.text = input.CurrentInteraction()?.name;
 
-            if (input is BooleanInput boolInput)
-            {
-                actionBindingNumber.text = ((int)boolInput.vrInput.action).ToString();
-                inputDisplayer.SetBackground(ActionBindingType.Button);
-            }
-            else if (input is ManipulationInput manipulationInput)
-            {
-                actionBindingNumber.text = ((int)manipulationInput.activationButton.action).ToString();
-                inputDisplayer.SetBackground(ActionBindingType.Button);
-            }
-            else
-            {
-                actionBindingNumber.text = string.Empty;
-                inputDisplayer.SetBackground(ActionBindingType.NotBound);
-            }
+            //if (input is BooleanInput boolInput)
+            //{
+            //    actionBindingNumber.text = ((int)boolInput.vrInput.action).ToString();
+            //    inputDisplayer.SetBackground(ActionBindingType.Button);
+            //}
+            //else if (input is ManipulationInput manipulationInput)
+            //{
+            //    actionBindingNumber.text = ((int)manipulationInput.activationButton.action).ToString();
+            //    inputDisplayer.SetBackground(ActionBindingType.Button);
+            //}
+            //else
+            //{
+            //    actionBindingNumber.text = string.Empty;
+            //    inputDisplayer.SetBackground(ActionBindingType.NotBound);
+            //}
         }
 
         #endregion

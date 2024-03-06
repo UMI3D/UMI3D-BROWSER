@@ -597,7 +597,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4922408594377077326}
   - component: {fileID: 1027417616040475996}
-  - component: {fileID: 7143427504955502047}
   - component: {fileID: 4686872640168271989}
   m_Layer: 0
   m_Name: AButton
@@ -644,33 +643,6 @@ MonoBehaviour:
   onActionUp:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &7143427504955502047
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1016516194466800848}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8c1f2cd95d0ec344bb1c1ed7efd9516d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onInputDown:
-    m_PersistentCalls:
-      m_Calls: []
-  onInputUp:
-    m_PersistentCalls:
-      m_Calls: []
-  boneType: 0
-  boneTransform: {fileID: 0}
-  vrInput: {fileID: 1027417616040475996}
-  onActionUp:
-    m_PersistentCalls:
-      m_Calls: []
-  onActionDown:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &4686872640168271989
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -692,9 +664,6 @@ MonoBehaviour:
   boneType: 0
   boneTransform: {fileID: 0}
   activationButton: {fileID: 1027417616040475996}
-  networkFrameRate: 1
-  translationStrenght: 1
-  rotationStrenght: 200
   onActivation:
     m_PersistentCalls:
       m_Calls: []
@@ -1089,7 +1058,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8690540038892811759}
   - component: {fileID: 7025957356229764317}
-  - component: {fileID: 3000908150638570054}
   - component: {fileID: 3043318620789472127}
   m_Layer: 0
   m_Name: IndexTrigger
@@ -1136,33 +1104,6 @@ MonoBehaviour:
   onActionUp:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &3000908150638570054
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2144006751941075321}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8c1f2cd95d0ec344bb1c1ed7efd9516d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onInputDown:
-    m_PersistentCalls:
-      m_Calls: []
-  onInputUp:
-    m_PersistentCalls:
-      m_Calls: []
-  boneType: 0
-  boneTransform: {fileID: 0}
-  vrInput: {fileID: 7025957356229764317}
-  onActionUp:
-    m_PersistentCalls:
-      m_Calls: []
-  onActionDown:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &3043318620789472127
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1184,9 +1125,6 @@ MonoBehaviour:
   boneType: 0
   boneTransform: {fileID: 0}
   activationButton: {fileID: 7025957356229764317}
-  networkFrameRate: 1
-  translationStrenght: 1
-  rotationStrenght: 200
   onActivation:
     m_PersistentCalls:
       m_Calls: []
@@ -1373,7 +1311,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6577360337259771457}
   - component: {fileID: 9160463598536562701}
-  - component: {fileID: 3521792927150570214}
   m_Layer: 0
   m_Name: BButton
   m_TagString: Untagged
@@ -1417,33 +1354,6 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   onActionUp:
-    m_PersistentCalls:
-      m_Calls: []
---- !u!114 &3521792927150570214
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2490615563436597968}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8c1f2cd95d0ec344bb1c1ed7efd9516d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onInputDown:
-    m_PersistentCalls:
-      m_Calls: []
-  onInputUp:
-    m_PersistentCalls:
-      m_Calls: []
-  boneType: 0
-  boneTransform: {fileID: 0}
-  vrInput: {fileID: 9160463598536562701}
-  onActionUp:
-    m_PersistentCalls:
-      m_Calls: []
-  onActionDown:
     m_PersistentCalls:
       m_Calls: []
 --- !u!1 &2619526021387593813
@@ -1715,7 +1625,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3107715878909924628}
   - component: {fileID: 6726541945900839799}
-  - component: {fileID: 8771678373930091991}
   - component: {fileID: 3173265038954760640}
   m_Layer: 0
   m_Name: AButton
@@ -1762,33 +1671,6 @@ MonoBehaviour:
   onActionUp:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &8771678373930091991
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3112799315690956067}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8c1f2cd95d0ec344bb1c1ed7efd9516d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onInputDown:
-    m_PersistentCalls:
-      m_Calls: []
-  onInputUp:
-    m_PersistentCalls:
-      m_Calls: []
-  boneType: 0
-  boneTransform: {fileID: 0}
-  vrInput: {fileID: 6726541945900839799}
-  onActionUp:
-    m_PersistentCalls:
-      m_Calls: []
-  onActionDown:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &3173265038954760640
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1810,9 +1692,6 @@ MonoBehaviour:
   boneType: 0
   boneTransform: {fileID: 0}
   activationButton: {fileID: 6726541945900839799}
-  networkFrameRate: 1
-  translationStrenght: 1
-  rotationStrenght: 200
   onActivation:
     m_PersistentCalls:
       m_Calls: []
@@ -2319,7 +2198,6 @@ GameObject:
   m_Component:
   - component: {fileID: 75754400788926963}
   - component: {fileID: 5694403863571100454}
-  - component: {fileID: 3436419198475762881}
   - component: {fileID: 2537468726229335135}
   m_Layer: 0
   m_Name: IndexTrigger
@@ -2366,33 +2244,6 @@ MonoBehaviour:
   onActionUp:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &3436419198475762881
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3545289159406819028}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8c1f2cd95d0ec344bb1c1ed7efd9516d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onInputDown:
-    m_PersistentCalls:
-      m_Calls: []
-  onInputUp:
-    m_PersistentCalls:
-      m_Calls: []
-  boneType: 0
-  boneTransform: {fileID: 0}
-  vrInput: {fileID: 5694403863571100454}
-  onActionUp:
-    m_PersistentCalls:
-      m_Calls: []
-  onActionDown:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &2537468726229335135
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2414,9 +2265,6 @@ MonoBehaviour:
   boneType: 0
   boneTransform: {fileID: 0}
   activationButton: {fileID: 5694403863571100454}
-  networkFrameRate: 1
-  translationStrenght: 1
-  rotationStrenght: 200
   onActivation:
     m_PersistentCalls:
       m_Calls: []
@@ -4184,7 +4032,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5649965457029601300}
   - component: {fileID: 8756668999885934682}
-  - component: {fileID: 733550584027614135}
   - component: {fileID: 8641442345726602784}
   m_Layer: 0
   m_Name: HandGrab
@@ -4231,33 +4078,6 @@ MonoBehaviour:
   onActionUp:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &733550584027614135
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5884651096681450071}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8c1f2cd95d0ec344bb1c1ed7efd9516d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onInputDown:
-    m_PersistentCalls:
-      m_Calls: []
-  onInputUp:
-    m_PersistentCalls:
-      m_Calls: []
-  boneType: 0
-  boneTransform: {fileID: 0}
-  vrInput: {fileID: 8756668999885934682}
-  onActionUp:
-    m_PersistentCalls:
-      m_Calls: []
-  onActionDown:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &8641442345726602784
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4279,9 +4099,6 @@ MonoBehaviour:
   boneType: 0
   boneTransform: {fileID: 0}
   activationButton: {fileID: 8756668999885934682}
-  networkFrameRate: 1
-  translationStrenght: 1
-  rotationStrenght: 200
   onActivation:
     m_PersistentCalls:
       m_Calls: []
@@ -5022,7 +4839,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8646668068324001135}
   - component: {fileID: 4724860010234928951}
-  - component: {fileID: 6190136073435996440}
   - component: {fileID: 1810966059419780605}
   m_Layer: 0
   m_Name: HandGrab
@@ -5069,33 +4885,6 @@ MonoBehaviour:
   onActionUp:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &6190136073435996440
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7853232487759035644}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8c1f2cd95d0ec344bb1c1ed7efd9516d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onInputDown:
-    m_PersistentCalls:
-      m_Calls: []
-  onInputUp:
-    m_PersistentCalls:
-      m_Calls: []
-  boneType: 0
-  boneTransform: {fileID: 0}
-  vrInput: {fileID: 4724860010234928951}
-  onActionUp:
-    m_PersistentCalls:
-      m_Calls: []
-  onActionDown:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &1810966059419780605
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5117,9 +4906,6 @@ MonoBehaviour:
   boneType: 0
   boneTransform: {fileID: 0}
   activationButton: {fileID: 4724860010234928951}
-  networkFrameRate: 1
-  translationStrenght: 1
-  rotationStrenght: 200
   onActivation:
     m_PersistentCalls:
       m_Calls: []
@@ -5319,14 +5105,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54e88a5f33eb8724baf007969a9bc812, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputManager:
+  controllerData_SO: {fileID: 0}
+  controllerDelegate: {fileID: 0}
+  controlManager:
+    logger:
+      LogType: 511
+      MainTag: 
+      MainContext: {fileID: 0}
+      IsThreadDisplayed: 0
+    controls_SO: {fileID: 0}
     manipulationDelegate: {fileID: 0}
-    eventInputDelegate: {fileID: 0}
-    formInputDelegate: {fileID: 0}
-    linkInputDelegate: {fileID: 0}
-    parameterInputDelegate: {fileID: 0}
+    eventDelegate: {fileID: 0}
+    formDelegate: {fileID: 0}
+    linkDelegate: {fileID: 0}
+    parameterDelegate: {fileID: 0}
+    controller: {fileID: 0}
   toolManager:
-    toolDelegate: {fileID: 0}
+    tool_SO: {fileID: 0}
+    toolSelectionDelegate: {fileID: 0}
+    toolUpdateDelegate: {fileID: 0}
+    interactableToolDelegate: {fileID: 0}
+    globalToolDelegate: {fileID: 0}
+    toolboxDelegate: {fileID: 0}
   projectionManager:
     logger:
       LogType: 511
@@ -5339,21 +5139,33 @@ MonoBehaviour:
     ptFormNodeDelegate: {fileID: 0}
     ptLinkNodeDelegate: {fileID: 0}
     ptParameterNodeDelegate: {fileID: 0}
+    eventDelegate: {fileID: 0}
+    controllerDelegate: {fileID: 0}
+    controlManager:
+      logger:
+        LogType: 511
+        MainTag: 
+        MainContext: {fileID: 0}
+        IsThreadDisplayed: 0
+      controls_SO: {fileID: 0}
+      manipulationDelegate: {fileID: 0}
+      eventDelegate: {fileID: 0}
+      formDelegate: {fileID: 0}
+      linkDelegate: {fileID: 0}
+      parameterDelegate: {fileID: 0}
+      controller: {fileID: 0}
+    toolManager:
+      tool_SO: {fileID: 0}
+      toolSelectionDelegate: {fileID: 0}
+      toolUpdateDelegate: {fileID: 0}
+      interactableToolDelegate: {fileID: 0}
+      globalToolDelegate: {fileID: 0}
+      toolboxDelegate: {fileID: 0}
+  boneType: 0
+  boneTransform: {fileID: 0}
+  manipulationTransform: {fileID: 0}
   ObjectMenu: {fileID: 0}
   type: 1
-  bone: {fileID: 8035229026326999914}
-  hoveredObjectId: 0
-  IsInputPressed: 0
-  manipulationInputs:
-  - {fileID: 2537468726229335135}
-  - {fileID: 1810966059419780605}
-  - {fileID: 3173265038954760640}
-  booleanInputs:
-  - {fileID: 3436419198475762881}
-  - {fileID: 6190136073435996440}
-  - {fileID: 8771678373930091991}
-  - {fileID: 3521792927150570214}
-  HoldInput: {fileID: 6190136073435996440}
 --- !u!1 &8445245346635736473
 GameObject:
   m_ObjectHideFlags: 0
@@ -5528,14 +5340,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54e88a5f33eb8724baf007969a9bc812, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputManager:
+  controllerData_SO: {fileID: 0}
+  controllerDelegate: {fileID: 0}
+  controlManager:
+    logger:
+      LogType: 511
+      MainTag: 
+      MainContext: {fileID: 0}
+      IsThreadDisplayed: 0
+    controls_SO: {fileID: 0}
     manipulationDelegate: {fileID: 0}
-    eventInputDelegate: {fileID: 0}
-    formInputDelegate: {fileID: 0}
-    linkInputDelegate: {fileID: 0}
-    parameterInputDelegate: {fileID: 0}
+    eventDelegate: {fileID: 0}
+    formDelegate: {fileID: 0}
+    linkDelegate: {fileID: 0}
+    parameterDelegate: {fileID: 0}
+    controller: {fileID: 0}
   toolManager:
-    toolDelegate: {fileID: 0}
+    tool_SO: {fileID: 0}
+    toolSelectionDelegate: {fileID: 0}
+    toolUpdateDelegate: {fileID: 0}
+    interactableToolDelegate: {fileID: 0}
+    globalToolDelegate: {fileID: 0}
+    toolboxDelegate: {fileID: 0}
   projectionManager:
     logger:
       LogType: 511
@@ -5548,21 +5374,33 @@ MonoBehaviour:
     ptFormNodeDelegate: {fileID: 0}
     ptLinkNodeDelegate: {fileID: 0}
     ptParameterNodeDelegate: {fileID: 0}
+    eventDelegate: {fileID: 0}
+    controllerDelegate: {fileID: 0}
+    controlManager:
+      logger:
+        LogType: 511
+        MainTag: 
+        MainContext: {fileID: 0}
+        IsThreadDisplayed: 0
+      controls_SO: {fileID: 0}
+      manipulationDelegate: {fileID: 0}
+      eventDelegate: {fileID: 0}
+      formDelegate: {fileID: 0}
+      linkDelegate: {fileID: 0}
+      parameterDelegate: {fileID: 0}
+      controller: {fileID: 0}
+    toolManager:
+      tool_SO: {fileID: 0}
+      toolSelectionDelegate: {fileID: 0}
+      toolUpdateDelegate: {fileID: 0}
+      interactableToolDelegate: {fileID: 0}
+      globalToolDelegate: {fileID: 0}
+      toolboxDelegate: {fileID: 0}
+  boneType: 0
+  boneTransform: {fileID: 0}
+  manipulationTransform: {fileID: 0}
   ObjectMenu: {fileID: 0}
   type: 0
-  bone: {fileID: 107831871144475988}
-  hoveredObjectId: 0
-  IsInputPressed: 0
-  manipulationInputs:
-  - {fileID: 3043318620789472127}
-  - {fileID: 8641442345726602784}
-  - {fileID: 4686872640168271989}
-  booleanInputs:
-  - {fileID: 3000908150638570054}
-  - {fileID: 733550584027614135}
-  - {fileID: 7143427504955502047}
-  - {fileID: 4872206284621757741}
-  HoldInput: {fileID: 733550584027614135}
 --- !u!1 &9152525145327327562
 GameObject:
   m_ObjectHideFlags: 0
@@ -5573,7 +5411,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4354028148905257976}
   - component: {fileID: 4088291150891701232}
-  - component: {fileID: 4872206284621757741}
   m_Layer: 0
   m_Name: BButton
   m_TagString: Untagged
@@ -5617,33 +5454,6 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   onActionUp:
-    m_PersistentCalls:
-      m_Calls: []
---- !u!114 &4872206284621757741
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9152525145327327562}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8c1f2cd95d0ec344bb1c1ed7efd9516d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onInputDown:
-    m_PersistentCalls:
-      m_Calls: []
-  onInputUp:
-    m_PersistentCalls:
-      m_Calls: []
-  boneType: 0
-  boneTransform: {fileID: 0}
-  vrInput: {fileID: 4088291150891701232}
-  onActionUp:
-    m_PersistentCalls:
-      m_Calls: []
-  onActionDown:
     m_PersistentCalls:
       m_Calls: []
 --- !u!1001 &984417158931641438

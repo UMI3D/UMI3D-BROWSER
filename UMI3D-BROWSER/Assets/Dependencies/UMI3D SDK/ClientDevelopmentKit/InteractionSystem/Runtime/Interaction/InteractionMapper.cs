@@ -95,78 +95,7 @@ namespace umi3d.cdk.interaction
             //return null;
         }
 
-        ///// <inheritdoc/>
-        //public override bool SelectTool(ulong environmentId, ulong toolId, bool releasable, ulong hoveredObjectId, InteractionMappingReason reason = null)
-        //{
-        //    AbstractTool tool = GetTool(environmentId, toolId);
-        //    if (tool == null)
-        //        throw new Exception("tool does not exist");
 
-        //    if (toolIdToController.ContainsKey((tool.environmentId, tool.id)))
-        //    {
-        //        throw new Exception("Tool already projected");
-        //    }
-
-        //    AbstractController controller = GetController(tool);
-        //    if (controller != null)
-        //    {
-        //        if (!controller.toolManager.toolDelegate.IsAvailableFor(tool))
-        //        {
-        //            if (ShouldForceProjection(controller, tool, reason))
-        //            {
-        //                ReleaseTool(environmentId, controller.toolManager.toolDelegate.Tool.id);
-        //            }
-        //            else
-        //            {
-        //                return false;
-        //            }
-        //        }
-
-        //        return SelectTool(tool.environmentId,tool.id, releasable, controller, hoveredObjectId, reason);
-        //    }
-        //    else
-        //    {
-        //        throw new Exception("No controller is compatible with this tool");
-        //    }
-        //}
-
-        /// <summary>
-        /// Request the selection of a Tool for a given controller.
-        /// Be careful, this method could be called before the tool is added for async loading reasons.
-        /// </summary>
-        /// <param name="tool">The tool to select</param>
-        /// <param name="controller">Controller to project the tool on</param>
-        public bool SelectTool(ulong environmentId, ulong toolId, bool releasable, UMI3DController controller, ulong hoveredObjectId, InteractionMappingReason reason = null)
-        {
-            //AbstractTool tool = GetTool(environmentId, toolId);
-            //if (controller.toolManager.toolDelegate.IsCompatibleWith(tool))
-            //{
-            //    if (toolIdToController.ContainsKey((tool.environmentId, tool.id)))
-            //    {
-            //        ReleaseTool(environmentId, tool.id, new SwitchController());
-            //    }
-
-            //    toolIdToController.Add((tool.environmentId, tool.id), controller);
-            //    projectedTools.Add((tool.environmentId, tool.id), reason);
-            //    tool.OnUpdated.AddListener(() => UpdateTools(environmentId, toolId, releasable, reason));
-            //    tool.OnAdded.AddListener(abstractInteractionDto => { UpdateAddOnTools(environmentId, toolId, releasable, abstractInteractionDto, reason); });
-            //    tool.OnRemoved.AddListener(abstractInteractionDto => { UpdateRemoveOnTools(environmentId, toolId, releasable, abstractInteractionDto, reason); });
-
-            //    controller.projectionManager.Project(
-            //        tool, 
-            //        releasable, 
-            //        reason, 
-            //        hoveredObjectId
-            //    );
-
-            //    return true;
-            //}
-            //else
-            //{
-            //    throw new Exception("This controller is not compatible with this tool");
-            //}
-            throw new NotImplementedException();
-        }
 
         ///// <inheritdoc/>
         //public override bool UpdateTools(ulong environmentId, ulong toolId, bool releasable, InteractionMappingReason reason = null)
@@ -247,49 +176,8 @@ namespace umi3d.cdk.interaction
         //    return true;
         //}
 
-        //this function will change/move in the future.
-        protected bool ShouldForceProjection(UMI3DController controller, AbstractTool tool, InteractionMappingReason reason)
-        {
-            throw new System.NotImplementedException();
-            //if (controller.toolManager.toolDelegate.IsAvailableFor(tool))
-            //    return true;
-
-            //if (controller.toolManager.toolDelegate.Tool == null)
-            //    return true; //check here
-
-            //if (projectedTools.TryGetValue((controller.toolManager.toolDelegate.Tool.environmentId, controller.toolManager.toolDelegate.Tool.id), out InteractionMappingReason lastProjectionReason))
-            //{
-            //    //todo : add some intelligence here.
-            //    return !(reason is AutoProjectOnHover);
-            //}
-            //else
-            //{
-            //    throw new Exception("Internal error");
-            //}
-        }
-
-        ///// <inheritdoc/>
-        //public override bool IsToolSelected(ulong environmentId, ulong toolId)
-        //{
-        //    return projectedTools.ContainsKey((environmentId, toolId));
-        //}
-
 
         #region CRUD
-
-        ///// <inheritdoc/>
-        //public override Toolbox GetToolbox(ulong environmentId, ulong id)
-        //{
-        //    if (!ToolboxExists(environmentId, id))
-        //        throw new KeyNotFoundException();
-        //    return UMI3DEnvironmentLoader.GetEntity(environmentId, id)?.Object as Toolbox;
-        //}
-
-        ///// <inheritdoc/>
-        //public override IEnumerable<Toolbox> GetToolboxes(Predicate<Toolbox> condition)
-        //{
-        //    return Toolbox.GetToolboxes().FindAll(condition);
-        //}
 
 
 

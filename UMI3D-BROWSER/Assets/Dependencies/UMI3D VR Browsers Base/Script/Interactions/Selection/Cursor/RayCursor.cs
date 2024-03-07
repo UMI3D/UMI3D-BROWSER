@@ -145,7 +145,7 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
                     controller.BoneType,
                     controller.BoneTransform.position,
                     new Vector4(controller.BoneTransform.rotation.x, controller.BoneTransform.rotation.y, controller.BoneTransform.rotation.z, controller.BoneTransform.rotation.w),
-                    trackingInfo.targetContainer.Interactable.id,
+                    trackingInfo.targetContainer.Interactable.data.dto.id,
                     trackingInfo.targetContainer.transform.InverseTransformPoint(trackingInfo.raycastHit.point),
                     trackingInfo.targetContainer.transform.InverseTransformDirection(trackingInfo.raycastHit.normal),
                     trackingInfo.directionWorld);             
@@ -168,7 +168,7 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
                         controller.BoneType,
                         controller.BoneTransform.position,
                         new Vector4(controller.BoneTransform.rotation.x, controller.BoneTransform.rotation.y, controller.BoneTransform.rotation.z, controller.BoneTransform.rotation.w),
-                        trackingInfo.targetContainer.Interactable.id,
+                        trackingInfo.targetContainer.Interactable.data.dto.id,
                         trackingInfo.targetContainer.transform.InverseTransformPoint(trackingInfo.raycastHit.point),
                         trackingInfo.targetContainer.transform.InverseTransformDirection(trackingInfo.raycastHit.normal),
                         trackingInfo.directionWorld);
@@ -177,8 +177,8 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
                 {
                     var hoverDto = new umi3d.common.interaction.HoverStateChangedDto()
                     {
-                        toolId = trackingInfo.targetContainer.Interactable.id,
-                        hoveredObjectId = trackingInfo.targetContainer.Interactable.id,
+                        toolId = trackingInfo.targetContainer.Interactable.data.dto.id,
+                        hoveredObjectId = trackingInfo.targetContainer.Interactable.data.dto.id,
                         boneType = controller.BoneType,
                         state = false,
                         normal = Vector3.zero.Dto(),
@@ -203,7 +203,7 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
                     controller.BoneType,
                     controller.BoneTransform.position,
                     new Vector4(controller.BoneTransform.rotation.x, controller.BoneTransform.rotation.y, controller.BoneTransform.rotation.z, controller.BoneTransform.rotation.w),
-                    trackingInfo.targetContainer.Interactable.id,
+                    trackingInfo.targetContainer.Interactable.data.dto.id,
                     trackingInfo.targetContainer.transform.InverseTransformPoint(trackingInfo.raycastHit.point),
                     trackingInfo.targetContainer.transform.InverseTransformDirection(trackingInfo.raycastHit.normal),
                     trackingInfo.directionWorld);

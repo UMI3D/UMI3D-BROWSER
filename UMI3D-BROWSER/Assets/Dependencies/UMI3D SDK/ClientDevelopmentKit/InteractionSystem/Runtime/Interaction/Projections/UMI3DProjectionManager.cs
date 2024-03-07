@@ -249,35 +249,29 @@ namespace umi3d.cdk.interaction
         /// <param name="tool"> The ToolDto to be projected.</param>
         /// <see cref="Release(AbstractTool)"/>
         public void Project(
-            AbstractTool tool, 
-            bool releasable, 
-            InteractionMappingReason reason, 
+            AbstractTool tool,
             ulong hoveredObjectId
         )
         {
             if (!controlManager.IsCompatibleWith(tool))
             {
-                throw new IncompatibleToolException($"For {tool.GetType().Name}: {tool.name}");
+                throw new IncompatibleToolException($"For {tool.GetType().Name}: {tool.data.dto.name}");
             }
 
             if (toolManager.IsProjected(tool))
             {
-                Release(
-                    tool,
-                    new ToolNeedToBeUpdated()
-                );
+                Release(tool);
             }
 
-            var controls = Project(
+            List<AbstractControlEntity> controls = Project(
                 tool.interactionsLoaded, 
-                tool.environmentId, 
-                tool.id, 
+                tool.data.environmentId, 
+                tool.data.dto.id, 
                 hoveredObjectId
             );
+            toolManager.ProjectTool(tool);
             toolManager.AssociateControls(tool, controls.ToArray());
             eventSystem.OnProjected(tool);
-
-            toolManager.ProjectTool(tool);
         }
 
         /// <summary>
@@ -301,9 +295,9 @@ namespace umi3d.cdk.interaction
             
             var control = Project(
                 newInteraction,
-                tool.environmentId,
-                tool.id,
-                toolManager.tool_SO.currentHoverTool.id
+                tool.data.environmentId,
+                tool.data.dto.id,
+                toolManager.tool_SO.currentHoverId
             );
             toolManager.AssociateControls(tool, control);
             eventSystem.OnProjected(tool);
@@ -314,13 +308,8 @@ namespace umi3d.cdk.interaction
         /// </summary>
         /// <param name="tool">Tool to release</param>
         /// <see cref="Project(AbstractTool)"/>
-        public void Release(AbstractTool tool, InteractionMappingReason reason)
+        public void Release(AbstractTool tool)
         {
-            if (toolManager.ProjectedTools.Count() == 0)
-            {
-                logger.Error(nameof(Release), $"No tool is currently projected on this controller");
-                return;
-            }
             if (!toolManager.IsProjected(tool))
             {
                 logger.Error(nameof(Release), $"This tool is not currently projected on this controller");

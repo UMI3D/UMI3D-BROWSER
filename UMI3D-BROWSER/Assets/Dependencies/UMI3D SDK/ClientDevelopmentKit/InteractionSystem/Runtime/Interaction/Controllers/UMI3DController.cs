@@ -45,10 +45,19 @@ namespace umi3d.cdk.interaction
         public AbstractControllerData_SO controllerData_SO;
 
         [HideInInspector] public UMI3DControlManager controlManager;
-        MonoBehaviour context;
+        [HideInInspector] public UMI3DToolManager toolManager;
+        [HideInInspector] public MonoBehaviour context;
         public IControllerDelegate controllerDelegate;
 
         public readonly static List<UMI3DController> activeControllers = new();
+        /// <summary>
+        /// The last controller that received an input.
+        /// </summary>
+        public static UMI3DController lastControllerUsed;
+        /// <summary>
+        /// The last controller that hovered a tool.
+        /// </summary>
+        public static UMI3DController lastControllerHovering;
 
         /// <summary>
         /// Init this controller.<br/>
@@ -57,12 +66,17 @@ namespace umi3d.cdk.interaction
         /// </summary>
         /// <param name="context"></param>
         /// <param name="controlManager"></param>
-        public void Init(MonoBehaviour context, UMI3DControlManager controlManager)
+        public void Init(
+            MonoBehaviour context, 
+            UMI3DControlManager controlManager,
+            UMI3DToolManager toolManager
+        )
         {
             logger.MainContext = context;
             logger.MainTag = nameof(UMI3DController);
             this.context = context;
             this.controlManager = controlManager;
+            this.toolManager = toolManager;
 
             logger.Assert(controllerDelegate != null, $"{nameof(controllerDelegate)} is null");
         }

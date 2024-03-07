@@ -75,58 +75,6 @@ namespace umi3dVRBrowsersBase.interactions
         ///// <inheritdoc/>
         ///// </summary>
         ///// <param name="toolId"></param>
-        ///// <param name="releasable"></param>
-        ///// <param name="hoveredObjectId"></param>
-        ///// <param name="reason"></param>
-        ///// <returns></returns>
-        //public override bool SelectTool(ulong environmentId, ulong toolId, bool releasable, ulong hoveredObjectId, InteractionMappingReason reason = null)
-        //{
-        //    AbstractTool tool = GetTool(environmentId, toolId);
-        //    if (tool == null)
-        //        throw new Exception("tool does not exist");
-
-        //    if (toolIdToController.ContainsKey((environmentId, tool.id)))
-        //    {
-        //        throw new Exception("Tool already projected");
-        //    }
-
-        //    AbstractController controller = GetController(tool, reason);
-        //    if (controller != null)
-        //    {
-        //        if (!controller.toolManager.toolDelegate.IsAvailableFor(tool))
-        //        {
-        //            if (ShouldForceProjection(controller, tool, reason) || ShouldForceProjection(controller, reason))
-        //            {
-        //                ReleaseTool(environmentId, controller.toolManager.toolDelegate.Tool.id);
-        //            }
-        //            else
-        //            {
-        //                return false;
-        //            }
-        //        }
-
-        //        if (releasableTools.ContainsKey(tool.id))
-        //            releasableTools[tool.id] = releasable;
-        //        else
-        //            releasableTools.Add(tool.id, releasable);
-
-        //        bool res = SelectTool(environmentId, tool.id, releasable, controller, hoveredObjectId, reason);
-        //        if (res)
-        //        {
-        //            lastReason = reason;
-        //        }
-        //        return res;
-        //    }
-        //    else
-        //    {
-        //        throw new Exception("No controller is compatible with this tool");
-        //    }
-        //}
-
-        ///// <summary>
-        ///// <inheritdoc/>
-        ///// </summary>
-        ///// <param name="toolId"></param>
         ///// <param name="reason"></param>
         //public override void ReleaseTool(ulong environmentId, ulong toolId, InteractionMappingReason reason = null)
         //{
@@ -134,29 +82,6 @@ namespace umi3dVRBrowsersBase.interactions
         //    lastReason = null;
         //}
 
-        private InteractionMappingReason lastReason = null;
-
-        /// <summary>
-        /// To remove in the future, made because InteractionMapper.ShouldForceProjection(AbstractController, AbstractTool, Reason) can be overriden
-        /// </summary>
-        private bool ShouldForceProjection(UMI3DController controller, InteractionMappingReason reason)
-        {
-            bool res = false;
-
-            throw new System.NotImplementedException();
-            //var vrController = controller as VRController;
-            //if (vrController != null)
-            //{
-            //    if (lastReason is AutoProjectOnHover && reason is AutoProjectOnHover)
-            //        res = true;
-            //}
-            //else
-            //{
-            //    Debug.LogError("controller must be an instance of OculusCOntroller");
-            //}
-
-            return res;
-        }
 
         /// <summary>
         /// Select the best compatible controller for a given tool (not necessarily available).
@@ -198,59 +123,6 @@ namespace umi3dVRBrowsersBase.interactions
             return res;
         }
 
-
-        ///// <summary>
-        ///// <inheritdoc/>
-        ///// </summary>
-        ///// <param name="select"></param>
-        ///// <param name="release"></param>
-        ///// <param name="releasable"></param>
-        ///// <param name="hoveredObjectId"></param>
-        ///// <param name="reason"></param>
-        ///// <returns></returns>
-        //public override bool SwitchTools(ulong environmentId, ulong select, ulong release, bool releasable, ulong hoveredObjectId, InteractionMappingReason reason = null)
-        //{
-        //    if (toolIdToController.ContainsKey((environmentId, release)))
-        //    {
-        //        AbstractController controller = toolIdToController[((environmentId, release))];
-        //        ReleaseTool(environmentId, release);
-        //        if (!SelectTool(environmentId, select, releasable, controller, hoveredObjectId, reason))
-        //        {
-        //            if (SelectTool(environmentId, release, releasable, controller, hoveredObjectId))
-        //            {
-        //                lastReason = reason;
-        //                return false;
-        //            }
-        //            else
-        //                throw new Exception("Internal error");
-        //        }
-        //        else
-        //        {
-        //            lastReason = reason;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        foreach (AbstractController c in Controllers)
-        //        {
-        //            if ((c as VRController).type == lastControllerUsedToClick)
-        //            {
-        //                if (SelectTool(environmentId, select, releasable, hoveredObjectId, new RequestedUsingSelector { controller = c }))
-        //                {
-        //                    PlayerMenuManager.Instance.Close();
-        //                    lastReason = new RequestedFromMenu();
-        //                    return true;
-        //                }
-        //            }
-        //        }
-
-        //        if (!SelectTool(environmentId, select, releasable, hoveredObjectId, reason))
-        //        {
-        //            throw new Exception("Internal error");
-        //        }
-        //    }
-        //    return true;
-        //}
 
         #endregion
     }

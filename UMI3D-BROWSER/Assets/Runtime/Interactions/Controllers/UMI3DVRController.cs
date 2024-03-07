@@ -16,6 +16,7 @@ limitations under the License.
 
 using inetum.unityUtils;
 using System;
+using umi3d.cdk.collaboration;
 using umi3d.cdk.interaction;
 using umi3d.cdk.userCapture.tracking;
 using UnityEngine;
@@ -24,6 +25,9 @@ namespace umi3d.browserRuntime.interaction
 {
     public class UMI3DVRController : MonoBehaviour, IControllerDelegate
     {
+        [SerializeField]
+        umi3d.debug.UMI3DLogger logger = new();
+
         [Header("Manager")]
         public UMI3DController controller;
         public UMI3DControlManager controlManager;
@@ -68,10 +72,16 @@ namespace umi3d.browserRuntime.interaction
 
         private void Awake()
         {
+            logger.MainContext = this;
+            logger.MainTag = nameof(UMI3DVRController);
+
+            Initialize();
+
             controller.controllerDelegate = this;
             controller.Init(
                 this,
-                controlManager
+                controlManager,
+                toolManager
             );
 
             controlManager.manipulationDelegate = new VRManipulationControlDelegate();
@@ -81,10 +91,16 @@ namespace umi3d.browserRuntime.interaction
             controlManager.parameterDelegate = new VRParameterControlDelegate();
             controlManager.Init(
                 this,
-                controller
+                controller,
+                toolManager
             );
 
-            toolManager.Init();
+            toolManager.Init(
+                this,
+                controller,
+                controlManager,
+                projectionManager
+            );
 
             projectionManager.ptManipulationNodeDelegate = new ProjectionTreeManipulationNodeDelegate();
             projectionManager.ptEventNodeDelegate = new ProjectionTreeEventNodeDelegate();
@@ -107,6 +123,22 @@ namespace umi3d.browserRuntime.interaction
         private void OnDisable()
         {
             controller.Disable();
+        }
+
+        static bool isInitialized = false;
+        static void Initialize()
+        {
+            if (isInitialized)
+            {
+                return;
+            }
+            else
+            {
+                isInitialized = true;
+            }
+
+            UMI3DCollabLoadingParameters.unknownOperationHandlerDto += UMI3DToolManager.UnknownOperationHandler;
+            UMI3DCollabLoadingParameters.unknownOperationHandlerByte += UMI3DToolManager.UnknownOperationHandler;
         }
     }
 }

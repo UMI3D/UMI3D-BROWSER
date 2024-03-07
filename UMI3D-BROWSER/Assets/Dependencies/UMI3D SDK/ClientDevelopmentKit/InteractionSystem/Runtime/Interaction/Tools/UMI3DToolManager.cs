@@ -14,42 +14,67 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System.Threading.Tasks;
 using MathNet.Numerics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using umi3d.common;
 using umi3d.common.interaction;
 using UnityEngine;
-using UnityEngine.Windows;
 
 namespace umi3d.cdk.interaction
 {
     [Serializable]
     public sealed class UMI3DToolManager 
     {
+        [SerializeField]
+        debug.UMI3DLogger logger = new();
+
         public Tool_SO tool_SO;
-        public AbstractToolSelectionDelegate toolSelectionDelegate;
         public AbstractToolUpdateDelegate toolUpdateDelegate;
 
-        public void Init()
+        [HideInInspector] public MonoBehaviour context;
+        [HideInInspector] public UMI3DController controller;
+        [HideInInspector] public UMI3DControlManager controlManager;
+        [HideInInspector] public UMI3DProjectionManager projectionManager;
+
+        public void Init(
+            MonoBehaviour context,
+            UMI3DController controller,
+            UMI3DControlManager controlManager,
+            UMI3DProjectionManager projectionManager
+        )
         {
+            logger.MainContext = context;
+            logger.MainTag = nameof(UMI3DToolManager);
+            this.context = context;
+            this.controller = controller;
+            this.controlManager = controlManager;
+            this.projectionManager = projectionManager;
         }
 
-        /// <summary>
-        /// The currently projected tools.
-        /// </summary>
-        public IEnumerable<AbstractTool> ProjectedTools
+        public AbstractTool CurrentProjectedTool
         {
             get
             {
-                return tool_SO.projectedTools;
+                if (tool_SO.projectedTools.Count <= tool_SO.currentSelectedToolIndex)
+                {
+                    logger.Exception(
+                        nameof(CurrentProjectedTool),
+                        new IndexOutOfRangeException($"Selected tool index.")
+                    );
+                    return null;
+                }
+
+                return tool_SO.projectedTools[tool_SO.currentSelectedToolIndex];
             }
         }
 
         /// <summary>
         /// Check if a tool with the given id exists.
         /// </summary>
-        public bool Exists<Tool>(
+        public static bool Exists<Tool>(
             ulong environmentId,
             ulong id
         ) where Tool: AbstractTool
@@ -60,7 +85,7 @@ namespace umi3d.cdk.interaction
         /// <summary>
         /// Get the tool with the given id (if any).
         /// </summary>
-        public Tool GetTool<Tool>(
+        public static Tool GetTool<Tool>(
             ulong environmentId,
             ulong id
         ) where Tool: AbstractTool
@@ -72,7 +97,7 @@ namespace umi3d.cdk.interaction
         /// <summary>
         /// Return the tools matching a given condition.
         /// </summary>
-        public IEnumerable<AbstractTool> GetTools(Predicate<AbstractTool> condition)
+        public static IEnumerable<AbstractTool> GetTools(Predicate<AbstractTool> condition)
         {
             return UMI3DEnvironmentLoader
                 .AllEntities()
@@ -86,9 +111,36 @@ namespace umi3d.cdk.interaction
         /// Return all known tools.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<AbstractTool> GetTools()
+        public static IEnumerable<AbstractTool> GetTools()
         {
             return GetTools(t => true);
+        }
+
+        /// <summary>
+        /// Return true if the tool is currently projected on a controller.<br/>
+        /// <br/>
+        /// Set <paramref name="controller"/> with the controller associated with the tool.
+        /// </summary>
+        /// <param name="id">Id of the tool.</param>
+        /// <returns></returns>
+        public static bool IsProjected(ulong environmentId, ulong id, out UMI3DController controller)
+        {
+            try
+            {
+                var kv  = Tool_SO.controllerByTool.First(keyValue =>
+                {
+                    return keyValue.Key.data.environmentId == environmentId
+                    && keyValue.Key.data.dto.id == id;
+                });
+
+                controller = kv.Value;
+                return true;
+            }
+            catch (Exception)
+            {
+                controller = null;
+                return false;
+            }
         }
 
         /// <summary>
@@ -113,6 +165,11 @@ namespace umi3d.cdk.interaction
             }
 
             tool_SO.projectedTools.Add(tool);
+            Tool_SO.controllerByTool.Add(tool, controller);
+            //tool.toolUpdated += toolUpdateDelegate.UpdateTools
+            //tool.interactionAdded.RemoveAllListeners();
+            //tool.interactionRemoved.RemoveAllListeners();
+            tool.onProjected(controller.BoneType);
         }
 
         /// <summary>
@@ -122,9 +179,11 @@ namespace umi3d.cdk.interaction
         public void ReleaseTool(AbstractTool tool)
         {
             tool_SO.projectedTools.Remove(tool);
-            tool.OnUpdated.RemoveAllListeners();
-            tool.OnAdded.RemoveAllListeners();
-            tool.OnRemoved.RemoveAllListeners();
+            Tool_SO.controllerByTool.Remove(tool);
+            //tool.Updated.RemoveAllListeners();
+            //tool.interactionAdded.RemoveAllListeners();
+            //tool.interactionRemoved.RemoveAllListeners();
+            tool.onReleased(controller.BoneType);
         }
 
         /// <summary>
@@ -135,12 +194,12 @@ namespace umi3d.cdk.interaction
         /// <returns></returns>
         public bool IsAssociated(AbstractTool tool, AbstractControlEntity control)
         {
-            if (!tool_SO.controlsByTool.ContainsKey(tool.id))
+            if (!tool_SO.controlsByTool.ContainsKey(tool.data.dto.id))
             {
                 return false;
             }
 
-            return tool_SO.controlsByTool[tool.id].Contains(control);
+            return tool_SO.controlsByTool[tool.data.dto.id].Contains(control);
         }
 
         /// <summary>
@@ -150,13 +209,13 @@ namespace umi3d.cdk.interaction
         /// <param name="controls"></param>
         public void AssociateControls(AbstractTool tool, params AbstractControlEntity[] controls)
         {
-            if (!tool_SO.controlsByTool.ContainsKey(tool.id))
+            if (!tool_SO.controlsByTool.ContainsKey(tool.data.dto.id))
             {
-                tool_SO.controlsByTool.Add(tool.id, controls);
+                tool_SO.controlsByTool.Add(tool.data.dto.id, controls);
             }
             else
             {
-                tool_SO.controlsByTool[tool.id] = tool_SO.controlsByTool[tool.id]
+                tool_SO.controlsByTool[tool.data.dto.id] = tool_SO.controlsByTool[tool.data.dto.id]
                     .Concat(controls)
                     .ToArray();
             }
@@ -169,14 +228,14 @@ namespace umi3d.cdk.interaction
         /// <param name="control"></param>
         public void DissociateControl(AbstractTool tool, AbstractControlEntity control)
         {
-            if (!tool_SO.controlsByTool.ContainsKey(tool.id))
+            if (!tool_SO.controlsByTool.ContainsKey(tool.data.dto.id))
             {
                 return;
             }
 
-            var tmp = new List<AbstractControlEntity>(tool_SO.controlsByTool[tool.id]);
+            var tmp = new List<AbstractControlEntity>(tool_SO.controlsByTool[tool.data.dto.id]);
             tmp.Remove(control);
-            tool_SO.controlsByTool[tool.id] = tmp.ToArray();
+            tool_SO.controlsByTool[tool.data.dto.id] = tmp.ToArray();
         }
 
         /// <summary>
@@ -185,12 +244,247 @@ namespace umi3d.cdk.interaction
         /// <param name="tool"></param>
         public void DissociateAllControls(AbstractTool tool)
         {
-            if (!tool_SO.controlsByTool.ContainsKey(tool.id))
+            if (!tool_SO.controlsByTool.ContainsKey(tool.data.dto.id))
             {
                 return;
             }
 
-            tool_SO.controlsByTool.Remove(tool.id);
+            tool_SO.controlsByTool.Remove(tool.data.dto.id);
+        }
+
+        /// <summary>
+        /// Request the selection of a Tool.<br/>
+        /// <br/>
+        /// Be careful, this method could be called before the tool is added for async loading reasons.
+        /// </summary>
+        /// <param name="toolId">Id of the tool to release.</param>
+        /// <param name="releasable">The selected tool releasable.</param>
+        /// <param name="hoveredObjectId">The id of the hovered object.</param>
+        /// <param name="reason">Interaction mapping reason.</param>
+        /// <returns></returns>
+        public static void SelectTool(
+            ulong environmentId,
+            ulong toolId,
+            bool releasable,
+            ulong hoveredObjectId,
+            InteractionMappingReason reason = null
+        )
+        {
+            if (!Exists<AbstractTool>(environmentId, toolId))
+            {
+                throw new NoToolFoundException($"For toolId: {toolId}, environmentId: {environmentId}");
+            }
+            var tool = GetTool<AbstractTool>(environmentId, toolId);
+
+            UMI3DController controller;
+            switch (reason)
+            {
+                case RequestedFromMenu:
+
+                    controller = UMI3DController.lastControllerUsed;
+                    break;
+
+                case RequestedUsingSelector:
+
+                    controller = UMI3DController.lastControllerHovering;
+                    break;
+
+                default:
+
+                    UMI3DController firstCompatibleController = null;
+                    foreach (var ctrlr in UMI3DController.activeControllers)
+                    {
+                        if (!ctrlr.controlManager.IsCompatibleWith(tool))
+                        {
+                            continue;
+                        }
+                        else if (firstCompatibleController == null)
+                        {
+                            firstCompatibleController = ctrlr;
+                        }
+
+                        if (ctrlr.controlManager.IsAvailableFor(tool))
+                        {
+                            firstCompatibleController = ctrlr;
+                            break;
+                        }
+                    }
+                    controller = firstCompatibleController;
+                    break;
+            }
+
+            UMI3DToolManager toolManager = controller.toolManager;
+
+            if (!toolManager.controlManager.IsCompatibleWith(tool))
+            {
+                toolManager.logger.Exception(
+                    nameof(SelectTool),
+                    new IncompatibleToolException($"For toolId: {toolId}, environmentId: {environmentId}, controller: {controller.context.name}")
+                );
+                return;
+            }
+
+            if (toolManager.IsProjected(tool))
+            {
+                toolManager.logger.Exception(
+                    nameof(SelectTool),
+                    new ToolAlreadyProjectedException($"For toolId: {toolId}, environmentId: {environmentId}, controller: {controller.context.name}")
+                );
+                return;
+            }
+
+            if (!controller.controlManager.IsAvailableFor(tool))
+            {
+                if (reason is not AutoProjectOnHover 
+                    || (toolManager.CurrentProjectedTool?.data.selectionReason is AutoProjectOnHover 
+                    && reason is AutoProjectOnHover))
+                {
+                    toolManager.projectionManager.Release(toolManager.CurrentProjectedTool);
+                }
+                else
+                {
+                    return;
+                }
+            }
+
+            tool.data.releasable = releasable;
+            tool.data.selectionReason = reason;
+
+            //tool.OnUpdated.AddListener(() => UpdateTools(environmentId, toolId, releasable, reason));
+            //tool.OnAdded.AddListener(abstractInteractionDto => { UpdateAddOnTools(environmentId, toolId, releasable, abstractInteractionDto, reason); });
+            //tool.OnRemoved.AddListener(abstractInteractionDto => { UpdateRemoveOnTools(environmentId, toolId, releasable, abstractInteractionDto, reason); });
+            //TODO
+
+            toolManager.projectionManager.Project(tool, hoveredObjectId);
+        }
+
+        /// <summary>
+        /// Request a Tool to be unselected.
+        /// </summary>
+        /// <param name="toolId">Id of the tool to release.</param>
+        /// <param name="reason">Interaction mapping reason.</param>
+        public static void UnselectTool(
+            ulong environmentId,
+            ulong toolId,
+            InteractionMappingReason reason = null
+        )
+        {
+            if (!Exists<AbstractTool>(environmentId, toolId))
+            {
+                throw new NoToolFoundException($"For toolId: {toolId}, environmentId: {environmentId}");
+            }
+            var tool = GetTool<AbstractTool>(environmentId, toolId);
+
+            if (!IsProjected(environmentId, toolId, out UMI3DController controller))
+            {
+                controller.toolManager.logger.Exception(
+                    nameof(UnselectTool),
+                    new ToolNotProjectedException($"For toolId: {toolId}, environmentId: {environmentId}, controller: {controller.context.name}")
+                );
+                return;
+            }
+
+            controller.toolManager.projectionManager.Release(tool);
+        }
+
+        /// <summary>
+        /// Request a Tool to be replaced by another one.
+        /// </summary>
+        /// <param name="selected">Id of the tool to select</param>
+        /// <param name="released">Id of the tool to release</param>
+        /// <param name="releasable">The selected tool releasable.</param>
+        /// <param name="hoveredObjectId">The id of the hovered object.</param>
+        /// <param name="reason">Interaction mapping reason.</param>
+        /// <returns></returns>
+        public static bool SwitchTools(
+            ulong environmentId,
+            ulong selected,
+            ulong released,
+            bool releasable,
+            ulong hoveredObjectId,
+            InteractionMappingReason reason = null
+        )
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public static Task UnknownOperationHandler(DtoContainer operation)
+        {
+            switch (operation.operation)
+            {
+                case SwitchToolDto switchTool:
+                    SwitchTools(
+                        operation.environmentId, 
+                        switchTool.toolId, 
+                        switchTool.replacedToolId, 
+                        switchTool.releasable, 
+                        0, 
+                        new RequestedByEnvironment()
+                    );
+                    break;
+                case ProjectToolDto projection:
+                    SelectTool(
+                        operation.environmentId, 
+                        projection.toolId, 
+                        projection.releasable, 
+                        0, 
+                        new RequestedByEnvironment()
+                    );
+                    break;
+                case ReleaseToolDto release:
+                    UnselectTool(
+                        operation.environmentId, 
+                        release.toolId, 
+                        new RequestedByEnvironment()
+                    );
+                    break;
+            }
+
+            return Task.CompletedTask;
+        }
+
+        public static Task UnknownOperationHandler(uint operationId, ByteContainer container)
+        {
+            ulong id;
+            bool releasable;
+
+            switch (operationId)
+            {
+                case UMI3DOperationKeys.SwitchTool:
+                    id = UMI3DSerializer.Read<ulong>(container);
+                    ulong oldId = UMI3DSerializer.Read<ulong>(container);
+                    releasable = UMI3DSerializer.Read<bool>(container);
+                    SwitchTools(
+                        container.environmentId,
+                        id,
+                        oldId,
+                        releasable,
+                        0,
+                        new RequestedByEnvironment()
+                    );
+                    break;
+                case UMI3DOperationKeys.ProjectTool:
+                    id = UMI3DSerializer.Read<ulong>(container);
+                    releasable = UMI3DSerializer.Read<bool>(container);
+                    SelectTool(
+                        container.environmentId, 
+                        id, 
+                        releasable, 
+                        0, 
+                        new RequestedByEnvironment()
+                    );
+                    break;
+                case UMI3DOperationKeys.ReleaseTool:
+                    id = UMI3DSerializer.Read<ulong>(container);
+                    UnselectTool(
+                        container.environmentId, 
+                        id, 
+                        new RequestedByEnvironment()
+                    );
+                    break;
+            }
+
+            return Task.CompletedTask;
         }
     }
 }

@@ -33,24 +33,6 @@ namespace umi3d.cdk.interaction
         }
 
         /// <summary>
-        /// Request a Tool to be replaced by another one.
-        /// </summary>
-        /// <param name="selected">Id of the tool to select</param>
-        /// <param name="released">Id of the tool to release</param>
-        /// <param name="releasable">The selected tool releasable.</param>
-        /// <param name="hoveredObjectId">The id of the hovered object.</param>
-        /// <param name="reason">Interaction mapping reason.</param>
-        /// <returns></returns>
-        public abstract bool SwitchTools(
-            ulong environmentId,
-            ulong selected,
-            ulong released,
-            bool releasable,
-            ulong hoveredObjectId,
-            InteractionMappingReason reason = null
-        );
-
-        /// <summary>
         /// Request a Tool to be updated.
         /// </summary>
         /// <param name="toolId">Id of the Tool.</param>

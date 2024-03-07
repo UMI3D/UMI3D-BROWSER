@@ -31,6 +31,7 @@ namespace umi3d.cdk.interaction
 
         [HideInInspector] public ControlModel model = new();
         [HideInInspector] public UMI3DController controller;
+        [HideInInspector] public UMI3DToolManager toolManager;
         public AbstractManipulationControlDelegate manipulationDelegate;
         public AbstractEventControlDelegate eventDelegate;
         public AbstractControlDelegate<FormDto> formDelegate;
@@ -44,11 +45,16 @@ namespace umi3d.cdk.interaction
         /// </summary>
         /// <param name="context"></param>
         /// <param name="controller"></param>
-        public void Init(MonoBehaviour context, UMI3DController controller)
+        public void Init(
+            MonoBehaviour context, 
+            UMI3DController controller,
+            UMI3DToolManager toolManager
+        )
         {
             logger.MainContext = context;
             logger.MainTag = nameof(UMI3DControlManager);
             this.controller = controller;
+            this.toolManager = toolManager;
             model.Init(controls_SO);
 
             logger.Assert(manipulationDelegate != null, $"{nameof(manipulationDelegate)} is null");
@@ -65,7 +71,8 @@ namespace umi3d.cdk.interaction
         /// <returns></returns>
         public bool IsAvailableFor(AbstractTool tool)
         {
-            throw new System.NotImplementedException();
+            //TODO Allow multiple projection.
+            return toolManager.CurrentProjectedTool == null || toolManager.CurrentProjectedTool == tool;
         }
 
         /// <summary>

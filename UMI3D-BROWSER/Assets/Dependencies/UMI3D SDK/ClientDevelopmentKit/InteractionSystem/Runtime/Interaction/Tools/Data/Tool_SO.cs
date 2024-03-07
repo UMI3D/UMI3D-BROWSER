@@ -25,18 +25,31 @@ namespace umi3d.cdk.interaction
     public class Tool_SO : SerializableScriptableObject
     {
         /// <summary>
-        /// The currently hovered tool.
+        /// The currently hovered entity.
         /// </summary>
-        public AbstractTool currentHoverTool;
+        public ulong currentHoverId;
 
         /// <summary>
         /// The currently projected tools.
         /// </summary>
         public List<AbstractTool> projectedTools = new();
+        /// <summary>
+        /// The maximum number of projected tools this controller allows.
+        /// </summary>
+        public int maxNumberOfProjectedTools;
+        /// <summary>
+        /// Index of the current selected tool;
+        /// </summary>
+        public int currentSelectedToolIndex;
 
         /// <summary>
         /// A Tool:[Control] dictionary
         /// </summary>
         public Dictionary<ulong, AbstractControlEntity[]> controlsByTool = new();
+
+        /// <summary>
+        /// A Tool:Controller dictionary.
+        /// </summary>
+        public static Dictionary<AbstractTool, UMI3DController> controllerByTool = new();
     }
 }

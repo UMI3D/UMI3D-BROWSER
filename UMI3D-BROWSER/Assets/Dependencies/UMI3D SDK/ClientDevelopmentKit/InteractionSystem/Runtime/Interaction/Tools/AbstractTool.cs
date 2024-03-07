@@ -100,19 +100,19 @@ namespace umi3d.cdk.interaction
             data.environmentId = environmentId;
         }
 
-        public void Updated()
+        public void ToolUpdated()
         {
             toolUpdated?.Invoke(this);
         }
 
-        public void Added(AbstractInteractionDto abstractInteractionDto)
+        public void InteractionAdded(AbstractInteractionDto newInteraction)
         {
-            interactionAdded?.Invoke(abstractInteractionDto);
+            interactionAdded?.Invoke(newInteraction);
         }
 
-        public void Removed(AbstractInteractionDto abstractInteractionDto)
+        public void InteractionRemoved(AbstractInteractionDto oldInteraction)
         {
-            interactionRemoved?.Invoke(abstractInteractionDto);
+            interactionRemoved?.Invoke(oldInteraction);
         }
 
         public void onProjected(uint boneType)

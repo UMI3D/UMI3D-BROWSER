@@ -24,56 +24,10 @@ namespace umi3d.cdk.interaction
 {
     public abstract class AbstractToolUpdateDelegate : SerializableScriptableObject
     {
-        [HideInInspector]
-        public List<Tool_SO> tool_SOs = new();
+        
 
-        public virtual void Init(Tool_SO tool_SO)
-        {
-            tool_SOs.Add(tool_SO);
-        }
+        
 
-        /// <summary>
-        /// Request a Tool to be updated.
-        /// </summary>
-        /// <param name="toolId">Id of the Tool.</param>
-        /// <param name="releasable">Is the tool releasable.</param>
-        /// <param name="reason">Interaction mapping reason.</param>
-        /// <returns></returns>
-        public abstract bool UpdateTools(
-            ulong environmentId,
-            ulong toolId,
-            bool releasable,
-            InteractionMappingReason reason = null
-        );
-
-        /// <summary>
-        /// Request a Tool to be updated when one element was added on the tool.
-        /// </summary>
-        /// <param name="toolId">Id of the Tool.</param>
-        /// <param name="releasable">Is the tool releasable.</param>
-        /// <param name="reason">Interaction mapping reason.</param>
-        /// <returns></returns>
-        public abstract bool UpdateAddOnTools(
-            ulong environmentId,
-            ulong toolId,
-            bool releasable,
-            AbstractInteractionDto abstractInteractionDto,
-            InteractionMappingReason reason = null
-        );
-
-        /// <summary>
-        /// Request a Tool to be updated when one element was removed on the tool.
-        /// </summary>
-        /// <param name="toolId">Id of the Tool.</param>
-        /// <param name="releasable">Is the tool releasable.</param>
-        /// <param name="reason">Interaction mapping reason.</param>
-        /// <returns></returns>
-        public abstract bool UpdateRemoveOnTools(
-            ulong environmentId,
-            ulong toolId,
-            bool releasable,
-            AbstractInteractionDto abstractInteractionDto,
-            InteractionMappingReason reason = null
-        );
+        
     }
 }

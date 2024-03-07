@@ -53,14 +53,6 @@ namespace umi3d.cdk.interaction
             }
         }
 
-
-        /// <summary>
-        /// Reset the InteractionMapper module.
-        /// </summary>
-        public abstract void ResetModule();
-
-
-
         /// <summary>
         /// Check if an interaction with the given id exists.
         /// </summary>
@@ -81,12 +73,5 @@ namespace umi3d.cdk.interaction
         /// </summary>
         /// <returns></returns>
         public virtual IEnumerable<AbstractInteractionDto> GetInteractions() { return GetInteractions(t => true); }
-
-        /// <summary>
-        /// Get the controller onto a given tool has been projected.
-        /// </summary>
-        /// <param name="projectedToolId">Tool's id</param>
-        /// <returns></returns>
-        public abstract UMI3DController GetController(ulong environmentId, ulong projectedToolId);
     }
 }

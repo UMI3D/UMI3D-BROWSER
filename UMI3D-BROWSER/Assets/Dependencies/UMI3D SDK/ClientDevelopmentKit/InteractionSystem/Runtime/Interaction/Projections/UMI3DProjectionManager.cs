@@ -135,7 +135,7 @@ namespace umi3d.cdk.interaction
         /// </summary>
         /// <param name="controller">Controller to project on</param>
         /// <param name="evt">Event dto to project</param>
-        public AbstractControlEntity Project<Dto>(
+        AbstractControlEntity Project<Dto>(
             Dto interaction,
             ulong environmentId,
             ulong toolId,
@@ -162,7 +162,7 @@ namespace umi3d.cdk.interaction
         /// <param name="environmentId"></param>
         /// <param name="toolId"></param>
         /// <param name="hoveredObjectId"></param>
-        public List<AbstractControlEntity> Project(
+        List<AbstractControlEntity> Project(
             IEnumerable<AbstractInteractionDto> interactions, 
             ulong environmentId, 
             ulong toolId, 
@@ -292,7 +292,7 @@ namespace umi3d.cdk.interaction
             {
                 throw new System.Exception("This tool is not currently projected on this controller");
             }
-            
+
             var control = Project(
                 newInteraction,
                 tool.data.environmentId,
@@ -300,7 +300,6 @@ namespace umi3d.cdk.interaction
                 toolManager.tool_SO.currentHoverId
             );
             toolManager.AssociateControls(tool, control);
-            eventSystem.OnProjected(tool);
         }
 
         /// <summary>

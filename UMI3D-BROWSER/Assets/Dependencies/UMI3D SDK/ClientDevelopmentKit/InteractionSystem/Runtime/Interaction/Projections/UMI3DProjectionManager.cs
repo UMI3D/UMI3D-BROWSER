@@ -27,7 +27,7 @@ namespace umi3d.cdk.interaction
     /// <summary>
     /// Manage the links between projected tools and their associated inputs.<br/>
     /// <br/>
-    /// This projection is based on a tree <see cref="ProjectionTreeData"/> constituted of <see cref="ProjectionTreeNodeData"/>.
+    /// This projection is based on a tree constituted of <see cref="ProjectionTreeNodeData"/>.
     /// </summary>
     public sealed class UMI3DProjectionManager
     {
@@ -108,7 +108,7 @@ namespace umi3d.cdk.interaction
         /// </summary>
         /// <param name="controller">Controller to project on</param>
         /// <param name="evt">Event dto to project</param>
-        AbstractControlEntity Project<Dto>(
+        List<AbstractControlEntity> Project<Dto>(
             Dto interaction,
             ulong environmentId,
             ulong toolId,
@@ -117,15 +117,50 @@ namespace umi3d.cdk.interaction
         )
             where Dto : AbstractInteractionDto
         {
-            return ProjectAndUpdateTree(
-                interaction,
-                treeRoot,
-                environmentId,
-                toolId,
-                hoveredObjectId,
-                false,
-                dof
-            ).control;
+            ProjectionTreeNodeData currentNode = treeRoot;
+            List<AbstractControlEntity> selectedControls = new();
+
+            if (interaction is ManipulationDto manipulationDto)
+            {
+                DofGroupOptionDto[] options
+                    = manipulationDto
+                    .dofSeparationOptions
+                    .ToArray();
+                DofGroupOptionDto bestDofGroupOption
+                    = controlManager
+                    .manipulationDelegate
+                    .FindBest(options);
+
+                foreach (DofGroupDto sep in bestDofGroupOption.separations)
+                {
+                    currentNode = ProjectAndUpdateTree(
+                        interaction,
+                        currentNode,
+                        environmentId,
+                        toolId,
+                        hoveredObjectId,
+                        false,
+                        sep
+                    );
+                    selectedControls.Add(currentNode.control);
+                }
+            }
+            else
+            {
+                // TODO maybe check for hold Control.
+                currentNode = ProjectAndUpdateTree(
+                    interaction,
+                    currentNode,
+                    environmentId,
+                    toolId,
+                    hoveredObjectId,
+                    false,
+                    null
+                );
+                selectedControls.Add(currentNode.control);
+            }
+
+            return selectedControls;
         }
 
         /// <summary>
@@ -266,13 +301,13 @@ namespace umi3d.cdk.interaction
                 throw new System.Exception("This tool is not currently projected on this controller");
             }
 
-            var control = Project(
+            var controls = Project(
                 newInteraction,
                 tool.data.environmentId,
                 tool.data.dto.id,
                 toolManager.tool_SO.currentHoverId
             );
-            toolManager.AssociateControls(tool, control);
+            toolManager.AssociateControls(tool, controls.ToArray());
         }
 
         /// <summary>
@@ -291,6 +326,15 @@ namespace umi3d.cdk.interaction
             toolManager.DissociateAllControls(tool);
             toolManager.ReleaseTool(tool);
             eventSystem.OnReleased(tool);
+        }
+
+        public void Release(
+            AbstractTool tool, 
+            AbstractInteractionDto oldInteraction
+        )
+        {
+            var control = controlManager.Dissociate(oldInteraction);
+            toolManager.DissociateControl(tool, control);
         }
 
         /// <summary>

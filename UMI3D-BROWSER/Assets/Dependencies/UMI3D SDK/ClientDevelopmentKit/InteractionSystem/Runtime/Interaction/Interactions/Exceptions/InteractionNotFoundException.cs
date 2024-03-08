@@ -15,26 +15,14 @@ limitations under the License.
 */
 
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace umi3d.cdk.interaction
 {
-    public struct ProjectionTreeData 
+    public class InteractionNotFoundException : System.Exception
     {
-        /// <summary>
-        /// Tree's id.
-        /// </summary>
-        public string treeId;
-
-        /// <summary>
-        /// Root of this tree.
-        /// </summary>
-        public ProjectionTreeNodeData root;
-
-        /// <summary>
-        /// List of all of the nodes.
-        /// </summary>
-        public List<ProjectionTreeNodeData> nodes;
+        public InteractionNotFoundException() { }
+        public InteractionNotFoundException(string message) : base(message) { }
+        public InteractionNotFoundException(string message, System.Exception inner) : base(message, inner) { }
     }
 }

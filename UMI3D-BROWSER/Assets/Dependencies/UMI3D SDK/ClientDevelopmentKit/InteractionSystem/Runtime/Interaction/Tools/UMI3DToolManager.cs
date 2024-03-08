@@ -211,7 +211,8 @@ namespace umi3d.cdk.interaction
             }
             else
             {
-                tool_SO.controlsByTool[tool.data.dto.id] = tool_SO.controlsByTool[tool.data.dto.id]
+                tool_SO.controlsByTool[tool.data.dto.id] 
+                    = tool_SO.controlsByTool[tool.data.dto.id]
                     .Concat(controls)
                     .ToArray();
             }
@@ -226,6 +227,10 @@ namespace umi3d.cdk.interaction
         {
             if (!tool_SO.controlsByTool.ContainsKey(tool.data.dto.id))
             {
+                logger.Exception(
+                    nameof(DissociateControl),
+                    new NoToolFoundException()
+                );
                 return;
             }
 
@@ -575,10 +580,7 @@ namespace umi3d.cdk.interaction
                 return;
             }
 
-            //controller.controlManager.Dissociate
-            //TODO
-            throw new System.NotImplementedException();
-
+            controller.toolManager.projectionManager.Release(tool, oldInteraction);
 
             tool.InteractionRemoved(oldInteraction);
         }

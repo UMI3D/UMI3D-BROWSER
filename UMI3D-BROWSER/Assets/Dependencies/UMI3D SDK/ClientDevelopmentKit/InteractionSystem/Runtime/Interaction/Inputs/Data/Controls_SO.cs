@@ -17,6 +17,7 @@ limitations under the License.
 using inetum.unityUtils.saveSystem;
 using System;
 using System.Collections.Generic;
+using umi3d.common.interaction;
 using UnityEngine;
 
 namespace umi3d.cdk.interaction
@@ -24,6 +25,11 @@ namespace umi3d.cdk.interaction
     [CreateAssetMenu(fileName = "UMI3D [ControllerName] Control Data", menuName = "UMI3D/Interactions/Control/Control Data")]
     public class Controls_SO : SerializableScriptableObject
     {
+        /// <summary>
+        /// A Interaction:Control dictionary.
+        /// </summary>
+        public Dictionary<AbstractInteractionDto, AbstractControlEntity> controlByInteraction = new();
+
         [Header("Buttons")]
         /// <summary>
         /// The physical button type controls for EventDto interactions.<br/>

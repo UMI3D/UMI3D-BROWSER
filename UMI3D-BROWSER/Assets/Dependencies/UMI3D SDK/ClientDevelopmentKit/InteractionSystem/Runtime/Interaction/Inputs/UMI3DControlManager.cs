@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using MathNet.Numerics;
 using System;
 using System.Collections.Generic;
 using umi3d.common.interaction;
@@ -257,15 +258,56 @@ namespace umi3d.cdk.interaction
                 default:
                     throw new System.Exception("Unknown interaction type, can't project !");
             }
+
+            controls_SO.controlByInteraction.Add(interaction, control);
         }
 
-        public void Dissociate(
-            ulong environmentId,
-            ulong toolId,
+        public AbstractControlEntity Dissociate(
             AbstractInteractionDto interaction
         )
         {
+            if (!controls_SO.controlByInteraction.ContainsKey(interaction))
+            {
+                logger.Exception(
+                    nameof(Dissociate),
+                    new InteractionNotFoundException()
+                );
+                return null;
+            }
 
+            AbstractControlEntity control = controls_SO.controlByInteraction[interaction];
+            switch (interaction)
+            {
+                case ManipulationDto manipulation:
+
+                    manipulationDelegate.Dissociate(control);
+                    break;
+
+                case EventDto button:
+
+                    eventDelegate.Dissociate(control);
+                    break;
+
+                case FormDto form:
+
+                    formDelegate.Dissociate(control);
+                    break;
+
+                case LinkDto link:
+
+                    linkDelegate.Dissociate(control);
+                    break;
+
+                case AbstractParameterDto parameter:
+
+                    parameterDelegate.Dissociate(control);
+                    break;
+
+                default:
+                    throw new System.Exception("Unknown interaction type, can't project !");
+            }
+
+            return control;
         }
     }
 }

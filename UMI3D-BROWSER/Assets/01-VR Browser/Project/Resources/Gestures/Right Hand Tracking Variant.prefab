@@ -1034,15 +1034,15 @@ PrefabInstance:
       propertyPath: m_Bones.Array.data[25]
       value: 
       objectReference: {fileID: 943558933407738034}
+    - target: {fileID: 534336232897921520, guid: 67d05fa4e1fbad64b91004ddc620e93f,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.05
+      objectReference: {fileID: 0}
     - target: {fileID: 1002061835554702707, guid: 67d05fa4e1fbad64b91004ddc620e93f,
         type: 3}
       propertyPath: controller
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1021548184830720902, guid: 67d05fa4e1fbad64b91004ddc620e93f,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -0.04
       objectReference: {fileID: 0}
     - target: {fileID: 1072553078559951627, guid: 67d05fa4e1fbad64b91004ddc620e93f,
         type: 3}
@@ -1053,6 +1053,36 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Right Hand Tracking Joints
+      objectReference: {fileID: 0}
+    - target: {fileID: 1836939119653726880, guid: 67d05fa4e1fbad64b91004ddc620e93f,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.2000122
+      objectReference: {fileID: 0}
+    - target: {fileID: 1836939119653726880, guid: 67d05fa4e1fbad64b91004ddc620e93f,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1836939119653726880, guid: 67d05fa4e1fbad64b91004ddc620e93f,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.8660254
+      objectReference: {fileID: 0}
+    - target: {fileID: 1836939119653726880, guid: 67d05fa4e1fbad64b91004ddc620e93f,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1836939119653726880, guid: 67d05fa4e1fbad64b91004ddc620e93f,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1836939119653726880, guid: 67d05fa4e1fbad64b91004ddc620e93f,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 2092881476424907178, guid: 67d05fa4e1fbad64b91004ddc620e93f,
         type: 3}
@@ -1158,21 +1188,6 @@ PrefabInstance:
         type: 3}
       propertyPath: controller
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5325040777910558270, guid: 67d05fa4e1fbad64b91004ddc620e93f,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0.11008472
-      objectReference: {fileID: 0}
-    - target: {fileID: 5325040777910558270, guid: 67d05fa4e1fbad64b91004ddc620e93f,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0.070131704
-      objectReference: {fileID: 0}
-    - target: {fileID: 5325040777910558270, guid: 67d05fa4e1fbad64b91004ddc620e93f,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: -15
       objectReference: {fileID: 0}
     - target: {fileID: 5358607397094515163, guid: 67d05fa4e1fbad64b91004ddc620e93f,
         type: 3}
@@ -1339,6 +1354,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Stabilized Right Hand
       objectReference: {fileID: 0}
+    - target: {fileID: 6250619852205973364, guid: 67d05fa4e1fbad64b91004ddc620e93f,
+        type: 3}
+      propertyPath: m_Target
+      value: 
+      objectReference: {fileID: 1644730303070330319}
     - target: {fileID: 6481465444120621287, guid: 67d05fa4e1fbad64b91004ddc620e93f,
         type: 3}
       propertyPath: m_AimFlagsAction.m_Reference

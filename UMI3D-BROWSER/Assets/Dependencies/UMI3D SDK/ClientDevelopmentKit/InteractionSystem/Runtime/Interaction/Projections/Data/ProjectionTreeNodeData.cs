@@ -20,7 +20,6 @@ using UnityEngine;
 
 namespace umi3d.cdk.interaction
 {
-    [Serializable]
     public struct ProjectionTreeNodeData 
     {
         /// <summary>

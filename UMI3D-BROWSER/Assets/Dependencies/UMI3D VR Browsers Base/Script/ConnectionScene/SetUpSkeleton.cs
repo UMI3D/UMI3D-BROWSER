@@ -108,6 +108,8 @@ namespace umi3dVRBrowsersBase.connection
         /// </summary>
         private float diffY;
 
+        public event System.Action SetupDone;
+
         #endregion
 
         #region Methods
@@ -179,6 +181,7 @@ namespace umi3dVRBrowsersBase.connection
             trackedSkeleton.bones.Add(BoneType.Viewpoint, Viewpoint);
 
             isSetup = true;
+            SetupDone?.Invoke();
         }
 
         public void SwitchTrackerToController()

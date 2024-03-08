@@ -14002,11 +14002,21 @@ PrefabInstance:
       propertyPath: teleportingObject
       value: 
       objectReference: {fileID: 5582060202346245420}
-    - target: {fileID: 4795588733753693682, guid: bbea8cf7c571dce44a1cbc6db1ddb94c,
+    - target: {fileID: 4390819972934618051, guid: bbea8cf7c571dce44a1cbc6db1ddb94c,
         type: 3}
-      propertyPath: m_Parameters.widthMultiplier
-      value: 0.01
-      objectReference: {fileID: 0}
+      propertyPath: setUpSkeleton
+      value: 
+      objectReference: {fileID: 5161054918967749134}
+    - target: {fileID: 4390819972934618051, guid: bbea8cf7c571dce44a1cbc6db1ddb94c,
+        type: 3}
+      propertyPath: elbowTransform
+      value: 
+      objectReference: {fileID: 4123143846538179226}
+    - target: {fileID: 4390819972934618051, guid: bbea8cf7c571dce44a1cbc6db1ddb94c,
+        type: 3}
+      propertyPath: shoulderTransform
+      value: 
+      objectReference: {fileID: 4501185147626481732}
     - target: {fileID: 6469791313041439444, guid: bbea8cf7c571dce44a1cbc6db1ddb94c,
         type: 3}
       propertyPath: m_Layer
@@ -14774,6 +14784,21 @@ PrefabInstance:
       propertyPath: layerToIgnore.m_Bits
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 806045582492909942, guid: 67d05fa4e1fbad64b91004ddc620e93f,
+        type: 3}
+      propertyPath: setUpSkeleton
+      value: 
+      objectReference: {fileID: 5161054918967749134}
+    - target: {fileID: 806045582492909942, guid: 67d05fa4e1fbad64b91004ddc620e93f,
+        type: 3}
+      propertyPath: elbowTransform
+      value: 
+      objectReference: {fileID: 7243539117241864222}
+    - target: {fileID: 806045582492909942, guid: 67d05fa4e1fbad64b91004ddc620e93f,
+        type: 3}
+      propertyPath: shoulderTransform
+      value: 
+      objectReference: {fileID: 7481741140008772300}
     - target: {fileID: 919448659955192156, guid: 67d05fa4e1fbad64b91004ddc620e93f,
         type: 3}
       propertyPath: selectionManager
@@ -14918,6 +14943,16 @@ PrefabInstance:
         type: 3}
       propertyPath: pokeInputs.Array.size
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4215454664114782722, guid: 67d05fa4e1fbad64b91004ddc620e93f,
+        type: 3}
+      propertyPath: m_MinimumHoldTime
+      value: 0.02
+      objectReference: {fileID: 0}
+    - target: {fileID: 4531355883218396162, guid: 67d05fa4e1fbad64b91004ddc620e93f,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -90
       objectReference: {fileID: 0}
     - target: {fileID: 4881277827287384733, guid: 67d05fa4e1fbad64b91004ddc620e93f,
         type: 3}

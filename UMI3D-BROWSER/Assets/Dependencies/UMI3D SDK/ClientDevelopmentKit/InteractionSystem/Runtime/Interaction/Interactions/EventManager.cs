@@ -15,29 +15,25 @@ limitations under the License.
 */
 
 using System;
-using System.Collections.Generic;
 using umi3d.common.interaction;
 using UnityEngine;
 
 namespace umi3d.cdk.interaction
 {
-    [CreateAssetMenu(fileName = "UMI3D PT Manipulation Node Delegate", menuName = "UMI3D/Interactions/Projection Delegate/PT Manipulation Node Delegate")]
-    public class ProjectionTreeManipulationNodeDelegate : AbstractProjectionTreeNodeDelegate<ManipulationDto>
+    public class EventManager : IProjectionTreeNodeDelegate<EventDto>
     {
-        public DofGroupDto dofGroup;
-
-        public override Predicate<ProjectionTreeNodeData> IsNodeCompatible(ManipulationDto interaction)
+        public Predicate<ProjectionTreeNodeData> IsNodeCompatible(EventDto interaction)
         {
-            return  node =>
+            return node =>
             {
-                return node.interactionData is ProjectionTreeManipulationNodeData nodeData
-                && nodeData.interaction is ManipulationDto
-                && nodeData.dofGroup.dofs == dofGroup.dofs;
+                var interactionDto = node.interactionData.Interaction;
+                return interactionDto is EventDto && interactionDto.name.Equals(interaction.name);
             };
         }
 
-        public override Func<ProjectionTreeNodeData> CreateNodeForControl(
-            ManipulationDto interaction,
+        public Func<ProjectionTreeNodeData> CreateNodeForControl(
+            string treeId,
+            EventDto interaction,
             Func<AbstractControlEntity> getControl
         )
         {
@@ -47,7 +43,7 @@ namespace umi3d.cdk.interaction
 
                 if (control == null)
                 {
-                    throw new NoInputFoundException($"For {nameof(ManipulationDto)}: {interaction.name}");
+                    throw new NoInputFoundException($"For {nameof(EventDto)}: {interaction.name}");
                 }
 
                 return new ProjectionTreeNodeData()
@@ -55,17 +51,17 @@ namespace umi3d.cdk.interaction
                     treeId = treeId,
                     id = interaction.id,
                     children = new(),
-                    interactionData = new ProjectionTreeManipulationNodeData()
+                    interactionData = new ProjectionTreeEventNodeData()
                     {
-                        interaction = interaction,
-                        dofGroup = dofGroup
+                        interaction = interaction
                     },
                     control = control
                 };
             };
         }
 
-        public override Action<ProjectionTreeNodeData> ChooseProjection(
+        public Action<ProjectionTreeNodeData> ChooseProjection(
+            UMI3DControlManager controlManager,
             ulong? environmentId = null,
             ulong? toolId = null,
             ulong? hoveredObjectId = null
@@ -80,8 +76,7 @@ namespace umi3d.cdk.interaction
                         environmentId.Value,
                         toolId.Value,
                         node.interactionData.Interaction,
-                        hoveredObjectId.Value,
-                        dofGroup
+                        hoveredObjectId.Value
                     );
                 }
             };

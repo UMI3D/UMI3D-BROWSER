@@ -15,16 +15,14 @@ limitations under the License.
 */
 
 using System;
-using System.Collections.Generic;
 using umi3d.common.interaction;
 using UnityEngine;
 
 namespace umi3d.cdk.interaction
 {
-    [CreateAssetMenu(fileName = "UMI3D PT Link Node Delegate", menuName = "UMI3D/Interactions/Projection Delegate/PT Link Node Delegate")]
-    public class ProjectionTreeLinkNodeDelegate : AbstractProjectionTreeNodeDelegate<LinkDto>
+    public class LinkManager : IProjectionTreeNodeDelegate<LinkDto>
     {
-        public override Predicate<ProjectionTreeNodeData> IsNodeCompatible(LinkDto interaction)
+        public Predicate<ProjectionTreeNodeData> IsNodeCompatible(LinkDto interaction)
         {
             return node =>
             {
@@ -33,7 +31,8 @@ namespace umi3d.cdk.interaction
             };
         }
 
-        public override Func<ProjectionTreeNodeData> CreateNodeForControl(
+        public Func<ProjectionTreeNodeData> CreateNodeForControl(
+            string treeId,
             LinkDto interaction,
             Func<AbstractControlEntity> getControl
         )
@@ -61,7 +60,8 @@ namespace umi3d.cdk.interaction
             };
         }
 
-        public override Action<ProjectionTreeNodeData> ChooseProjection(
+        public Action<ProjectionTreeNodeData> ChooseProjection(
+            UMI3DControlManager controlManager,
             ulong? environmentId = null,
             ulong? toolId = null,
             ulong? hoveredObjectId = null

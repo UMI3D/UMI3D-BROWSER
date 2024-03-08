@@ -14,42 +14,21 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils.saveSystem;
 using System;
-using System.Collections.Generic;
 using umi3d.common.interaction;
+using UnityEngine;
 
 namespace umi3d.cdk.interaction
 {
-    public abstract class AbstractProjectionTreeNodeDelegate<Dto>
+    public interface IProjectionTreeNodeDelegate<Dto>
     where Dto : AbstractInteractionDto
     {
-        public ProjectionTree_SO projectionTree_SO;
-        public string treeId;
-        public UMI3DControlManager controlManager;
-
-        /// <summary>
-        /// Init this object with dependency injection.
-        /// </summary>
-        /// <param name="projectionTree_SO"></param>
-        /// <param name="treeId"></param>
-        public virtual void Init(
-            ProjectionTree_SO projectionTree_SO,
-            string treeId,
-            UMI3DControlManager controlManager
-        )
-        {
-            this.projectionTree_SO = projectionTree_SO;
-            this.treeId = treeId;
-            this.controlManager = controlManager;
-        }
-
         /// <summary>
         /// Return a predicate that is true if the node is compatible with the interaction.
         /// </summary>
         /// <param name="interaction"></param>
         /// <returns></returns>
-        public abstract Predicate<ProjectionTreeNodeData> IsNodeCompatible(Dto interaction);
+        Predicate<ProjectionTreeNodeData> IsNodeCompatible(Dto interaction);
 
         /// <summary>
         /// Return a <see cref="Func{ProjectionTreeNode}"/> that will create a tree node for this control found by <paramref name="getControl"/>.<br/>
@@ -58,7 +37,8 @@ namespace umi3d.cdk.interaction
         /// <param name="interaction"></param>
         /// <param name="getControl"></param>
         /// <returns></returns>
-        public abstract Func<ProjectionTreeNodeData> CreateNodeForControl(
+        Func<ProjectionTreeNodeData> CreateNodeForControl(
+            string treeId,
             Dto interaction,
             Func<AbstractControlEntity> getControl
         );
@@ -72,7 +52,8 @@ namespace umi3d.cdk.interaction
         /// <param name="toolId"></param>
         /// <param name="hoveredObjectId"></param>
         /// <returns></returns>
-        public abstract Action<ProjectionTreeNodeData> ChooseProjection(
+        Action<ProjectionTreeNodeData> ChooseProjection(
+            UMI3DControlManager controlManager,
             ulong? environmentId = null,
             ulong? toolId = null,
             ulong? hoveredObjectId = null

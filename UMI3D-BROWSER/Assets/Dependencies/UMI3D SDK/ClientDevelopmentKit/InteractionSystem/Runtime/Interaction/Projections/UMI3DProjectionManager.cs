@@ -42,12 +42,13 @@ namespace umi3d.cdk.interaction
         [HideInInspector] public UMI3DControlManager controlManager;
         [HideInInspector] public UMI3DToolManager toolManager;
 
-        public ProjectionTreeManipulationNodeDelegate ptManipulationNodeDelegate;
-        public ProjectionTreeEventNodeDelegate ptEventNodeDelegate;
-        public ProjectionTreeFormNodeDelegate ptFormNodeDelegate;
-        public ProjectionTreeLinkNodeDelegate ptLinkNodeDelegate;
-        public ProjectionTreeParameterNodeDelegate ptParameterNodeDelegate;
+        public IProjectionTreeNodeDelegate<ManipulationDto> ptManipulationNodeDelegate;
+        public IProjectionTreeNodeDelegate<EventDto> ptEventNodeDelegate;
+        public IProjectionTreeNodeDelegate<FormDto> ptFormNodeDelegate;
+        public IProjectionTreeNodeDelegate<LinkDto> ptLinkNodeDelegate;
+        public IProjectionTreeNodeDelegate<AbstractParameterDto> ptParameterNodeDelegate;
 
+        string treeId;
         /// <summary>
         /// The root of the tree.
         /// </summary>
@@ -73,7 +74,7 @@ namespace umi3d.cdk.interaction
             logger.MainContext = context;
             logger.MainTag = nameof(UMI3DProjectionManager);
 
-            var treeId = (context.gameObject.GetInstanceID() + UnityEngine.Random.Range(0, 1000)).ToString();
+            treeId = (context.gameObject.GetInstanceID() + UnityEngine.Random.Range(0, 1000)).ToString();
             treeRoot = new ProjectionTreeNodeData()
             {
                 treeId = treeId,
@@ -94,32 +95,6 @@ namespace umi3d.cdk.interaction
             logger.Assert(ptLinkNodeDelegate != null, $"{nameof(ptLinkNodeDelegate)} is null");
             logger.Assert(ptParameterNodeDelegate != null, $"{nameof(ptParameterNodeDelegate)} is null");
             logger.Assert(eventSystem != null, $"{nameof(eventSystem)} is null");
-
-            ptManipulationNodeDelegate?.Init(
-                projectionTree_SO,
-                treeId,
-                controlManager
-            );
-            ptEventNodeDelegate?.Init(
-                projectionTree_SO,
-                treeId,
-                controlManager
-            );
-            ptFormNodeDelegate?.Init(
-                projectionTree_SO,
-                treeId,
-                controlManager
-            );
-            ptLinkNodeDelegate?.Init(
-                projectionTree_SO,
-                treeId,
-                controlManager
-            );
-            ptParameterNodeDelegate?.Init(
-                projectionTree_SO,
-                treeId,
-                controlManager
-            );
 
             logger.Assert(controller != null, $"{nameof(controller)} is null");
             logger.Assert(controlManager != null, $"{nameof(controlManager)} is null");
@@ -354,9 +329,13 @@ namespace umi3d.cdk.interaction
             {
                 case ManipulationDto manipulationDto:
 
-                    ptManipulationNodeDelegate.dofGroup = dof;
+                    if (ptManipulationNodeDelegate is ManipulationManager manipulationManager)
+                    {
+                        manipulationManager.dofGroup = dof;
+                    }
                     adequation = ptManipulationNodeDelegate.IsNodeCompatible(manipulationDto);
                     deepProjectionCreation = ptManipulationNodeDelegate.CreateNodeForControl(
+                        treeId,
                         manipulationDto,
                         () =>
                         {
@@ -367,6 +346,7 @@ namespace umi3d.cdk.interaction
                         }
                     );
                     chooseProjection = ptManipulationNodeDelegate.ChooseProjection(
+                        controlManager,
                         environmentId, 
                         toolId, 
                         hoveredObjectId
@@ -377,6 +357,7 @@ namespace umi3d.cdk.interaction
 
                     adequation = ptEventNodeDelegate.IsNodeCompatible(eventDto);
                     deepProjectionCreation = ptEventNodeDelegate.CreateNodeForControl(
+                        treeId,
                         eventDto,
                         () =>
                         {
@@ -387,6 +368,7 @@ namespace umi3d.cdk.interaction
                         }
                     );
                     chooseProjection = ptEventNodeDelegate.ChooseProjection(
+                        controlManager,
                         environmentId,
                         toolId,
                         hoveredObjectId
@@ -397,6 +379,7 @@ namespace umi3d.cdk.interaction
 
                     adequation = ptFormNodeDelegate.IsNodeCompatible(formDto);
                     deepProjectionCreation = ptFormNodeDelegate.CreateNodeForControl(
+                        treeId,
                         formDto,
                         () =>
                         {
@@ -406,6 +389,7 @@ namespace umi3d.cdk.interaction
                         }
                     );
                     chooseProjection = ptFormNodeDelegate.ChooseProjection(
+                        controlManager,
                         environmentId,
                         toolId,
                         hoveredObjectId
@@ -416,6 +400,7 @@ namespace umi3d.cdk.interaction
 
                     adequation = ptLinkNodeDelegate.IsNodeCompatible(linkDto);
                     deepProjectionCreation = ptLinkNodeDelegate.CreateNodeForControl(
+                        treeId,
                         linkDto,
                         () =>
                         {
@@ -425,6 +410,7 @@ namespace umi3d.cdk.interaction
                         }
                     );
                     chooseProjection = ptLinkNodeDelegate.ChooseProjection(
+                        controlManager,
                         environmentId,
                         toolId,
                         hoveredObjectId
@@ -435,6 +421,7 @@ namespace umi3d.cdk.interaction
 
                     adequation = ptParameterNodeDelegate.IsNodeCompatible(parameterDto);
                     deepProjectionCreation = ptParameterNodeDelegate.CreateNodeForControl(
+                        treeId,
                         parameterDto,
                         () =>
                         {
@@ -444,6 +431,7 @@ namespace umi3d.cdk.interaction
                         }
                     );
                     chooseProjection = ptParameterNodeDelegate.ChooseProjection(
+                        controlManager,
                         environmentId,
                         toolId,
                         hoveredObjectId

@@ -77,6 +77,12 @@ namespace umi3d.browserRuntime.interaction
 
             Initialize();
 
+            var manipulationManager = new ManipulationManager();
+            var eventManager = new EventManager();
+            var formManager = new FormManager();
+            var linkManager = new LinkManager();
+            var parameterManager = new ParameterManager();
+
             controller.controllerDelegate = this;
             controller.Init(
                 this,
@@ -100,11 +106,11 @@ namespace umi3d.browserRuntime.interaction
                 controller
             );
 
-            projectionManager.ptManipulationNodeDelegate = new ProjectionTreeManipulationNodeDelegate();
-            projectionManager.ptEventNodeDelegate = new ProjectionTreeEventNodeDelegate();
-            projectionManager.ptFormNodeDelegate = new ProjectionTreeFormNodeDelegate();
-            projectionManager.ptLinkNodeDelegate = new ProjectionTreeLinkNodeDelegate();
-            projectionManager.ptParameterNodeDelegate = new ProjectionTreeParameterNodeDelegate();
+            projectionManager.ptManipulationNodeDelegate = manipulationManager;
+            projectionManager.ptEventNodeDelegate = eventManager;
+            projectionManager.ptFormNodeDelegate = formManager;
+            projectionManager.ptLinkNodeDelegate = linkManager;
+            projectionManager.ptParameterNodeDelegate = parameterManager;
             projectionManager.Init(
                 this,
                 controller,

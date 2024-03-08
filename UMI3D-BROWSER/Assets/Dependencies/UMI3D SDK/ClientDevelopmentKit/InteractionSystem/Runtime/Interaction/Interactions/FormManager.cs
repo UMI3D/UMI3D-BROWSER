@@ -15,27 +15,25 @@ limitations under the License.
 */
 
 using System;
-using System.Collections.Generic;
 using umi3d.common.interaction;
 using UnityEngine;
 
 namespace umi3d.cdk.interaction
 {
-    [CreateAssetMenu(fileName = "UMI3D PT Parameter Node Delegate", menuName = "UMI3D/Interactions/Projection Delegate/PT Parameter Node Delegate")]
-    public class ProjectionTreeParameterNodeDelegate : AbstractProjectionTreeNodeDelegate<AbstractParameterDto>
+    public class FormManager : IProjectionTreeNodeDelegate<FormDto>
     {
-        public override Predicate<ProjectionTreeNodeData> IsNodeCompatible(AbstractParameterDto interaction)
+        public Predicate<ProjectionTreeNodeData> IsNodeCompatible(FormDto interaction)
         {
             return node =>
             {
                 var interactionDto = node.interactionData.Interaction;
-                return interactionDto is AbstractParameterDto
-                && (interactionDto as AbstractParameterDto).GetType().Equals(interaction.GetType());
+                return interactionDto is FormDto && interactionDto.name.Equals(interaction.name);
             };
         }
 
-        public override Func<ProjectionTreeNodeData> CreateNodeForControl(
-            AbstractParameterDto interaction,
+        public Func<ProjectionTreeNodeData> CreateNodeForControl(
+            string treeId,
+            FormDto interaction,
             Func<AbstractControlEntity> getControl
         )
         {
@@ -45,7 +43,7 @@ namespace umi3d.cdk.interaction
 
                 if (control == null)
                 {
-                    throw new NoInputFoundException($"For {nameof(AbstractParameterDto)}: {interaction.name}");
+                    throw new NoInputFoundException($"For {nameof(FormDto)}: {interaction.name}");
                 }
 
                 return new ProjectionTreeNodeData()
@@ -53,16 +51,17 @@ namespace umi3d.cdk.interaction
                     treeId = treeId,
                     id = interaction.id,
                     children = new(),
-                    interactionData = new ProjectionTreeParameterNodeData()
+                    interactionData = new ProjectionTreeFormNodeData()
                     {
                         interaction = interaction
                     },
-                    control = control
+                    control = control,
                 };
             };
         }
 
-        public override Action<ProjectionTreeNodeData> ChooseProjection(
+        public Action<ProjectionTreeNodeData> ChooseProjection(
+            UMI3DControlManager controlManager,
             ulong? environmentId = null,
             ulong? toolId = null,
             ulong? hoveredObjectId = null

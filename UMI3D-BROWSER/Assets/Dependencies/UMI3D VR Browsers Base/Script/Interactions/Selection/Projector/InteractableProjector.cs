@@ -24,12 +24,12 @@ namespace umi3dBrowsers.interaction.selection.projector
     /// </summary>
     public class InteractableProjector : IProjector<InteractableContainer>
     {
-        ParameterGear parameterGear;
+        //ParameterGear parameterGear;
 
-        public InteractableProjector(ParameterGear parameterGear)
-        {
-            this.parameterGear = parameterGear;
-        }
+        //public InteractableProjector(ParameterGear parameterGear)
+        //{
+        //    this.parameterGear = parameterGear;
+        //}
 
         /// <summary>
         /// Checks whether an interctable has already projected tools
@@ -83,7 +83,7 @@ namespace umi3dBrowsers.interaction.selection.projector
             throw new System.NotImplementedException();
             //controller.projectionManager.Release(interactionTool, new RequestedUsingSelector<AbstractSelector>() { controller = controller });
 
-            parameterGear.HideWithDelay();
+            //parameterGear.HideWithDelay();
         }
 
         /// <inheritdoc/>

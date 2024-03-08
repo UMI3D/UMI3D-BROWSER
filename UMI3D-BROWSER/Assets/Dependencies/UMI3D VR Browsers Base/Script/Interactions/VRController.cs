@@ -30,8 +30,6 @@ namespace umi3dVRBrowsersBase.interactions
 {
     public partial class VRController : MonoBehaviour
     {
-        #region Fields
-
         [HideInInspector]
         public MenuAsset ObjectMenu;
 
@@ -40,22 +38,12 @@ namespace umi3dVRBrowsersBase.interactions
         /// </summary>
         public ControllerType type;
 
-        #endregion Fields
-
-        #region Methods
-
-        #region Monobehaviour Life Cycle
-
         protected virtual void Awake()
         {
             ObjectMenu = Resources.Load<MenuAsset>("ParametersMenu");
 
             UnityEngine.Physics.queriesHitBackfaces = true;
         }
-
-        #endregion
-
-        #region Tool : projection and release
 
         /// <summary>
         /// Projects all parameters on this tool.
@@ -82,8 +70,5 @@ namespace umi3dVRBrowsersBase.interactions
             //toolInputs.AddRange(inputs);
             //associatedInputs.Add(tool.id, toolInputs.ToArray());
         }
-
-        #endregion
-
     }
 }

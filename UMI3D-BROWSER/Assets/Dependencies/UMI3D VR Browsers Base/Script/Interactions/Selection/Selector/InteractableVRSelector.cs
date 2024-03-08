@@ -29,8 +29,8 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
     /// </summary>
     public class InteractableVRSelector : AbstractVRSelector<InteractableContainer>
     {
-        [SerializeField] 
-        ParameterGear parameterGear;
+        //[SerializeField] 
+        //ParameterGear parameterGear;
 
         /// <summary>
         /// Selection Intent Detectors (virtual pointing). In order of decreasing priority.
@@ -48,7 +48,7 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
 
         private InteractableVRSelector() : base()
         {
-            projector = new InteractableProjector(parameterGear);
+            //projector = new InteractableProjector(parameterGear);
         }
 
         /// <inheritdoc/>

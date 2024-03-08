@@ -398,8 +398,8 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
                 else if (LastSelected != null) // the selector was selecting something else before
                 {
                     Deselect(LastSelected);
-                    if (PlayerMenuManager.Instance.parameterGear.IsDisplayed)
-                        PlayerMenuManager.Instance.parameterGear.Hide();
+                    //if (PlayerMenuManager.Instance.parameterGear.IsDisplayed)
+                    //    PlayerMenuManager.Instance.parameterGear.Hide();
                 }
 
             }

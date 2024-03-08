@@ -16,6 +16,7 @@ limitations under the License.
 
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Windows;
 
 namespace umi3d.cdk.interaction
@@ -28,16 +29,15 @@ namespace umi3d.cdk.interaction
         /// <summary>
         /// The input that activates the manipulation.
         /// </summary>
-        public NewInputType activationInput;
+        public InputActionProperty activationInput;
         [Tooltip("The input that tracks the manipulation")]
         /// <summary>
         /// The input that track the manipulation.
         /// </summary>
-        public NewInputType trackingInput;
+        public InputActionProperty trackingInput;
 
         public PhysicalManipulationControlEntity()
         {
-            activationInput.actionPerformed = controlData.ActionPerformed;
             controlData.enableHandler += Enable;
             controlData.disableHandler += Disable;
         }
@@ -59,13 +59,11 @@ namespace umi3d.cdk.interaction
             try
             {
                 activationInput
-                    .inputActionProperty
                     .action
-                    .performed -= activationInput.ActionPerformed;
+                    .performed -= ActionPerformed;
                 trackingInput
-                   .inputActionProperty
                    .action
-                   .performed -= trackingInput.ActionPerformed;
+                   .performed -= TrackingActionPerformed;
             }
             catch (NullReferenceException)
             {
@@ -78,18 +76,26 @@ namespace umi3d.cdk.interaction
             try
             {
                 activationInput
-                    .inputActionProperty
                     .action
-                    .performed += activationInput.ActionPerformed;
+                    .performed += ActionPerformed;
                 trackingInput
-                   .inputActionProperty
                    .action
-                   .performed += trackingInput.ActionPerformed;
+                   .performed += TrackingActionPerformed;
             }
             catch (NullReferenceException)
             {
                 UnityEngine.Debug.LogError($"[UMI3D] Control: new input type action is null");
             }
+        }
+
+        void ActionPerformed(InputAction.CallbackContext ctxt)
+        {
+            controlData.ActionPerformed(ctxt.phase);
+        }
+
+        void TrackingActionPerformed(InputAction.CallbackContext ctxt)
+        {
+            controlData.ActionPerformed(ctxt.phase);
         }
     }
 }

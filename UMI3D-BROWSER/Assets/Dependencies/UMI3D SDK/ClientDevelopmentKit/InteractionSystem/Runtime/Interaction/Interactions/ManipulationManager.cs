@@ -104,7 +104,7 @@ namespace umi3d.cdk.interaction
 
         public DofGroupDto Dof { get; set; }
 
-        public bool CanPerform(InputActionPhase phase)
+        public bool CanPerform(System.Object value)
         {
             throw new System.NotImplementedException();
         }

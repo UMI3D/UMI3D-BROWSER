@@ -32,7 +32,8 @@ namespace umi3dVRBrowsersBase.interactions.input
     /// <typeparam name="InputMenuItem"></typeparam>
     /// <typeparam name="ParameterType"></typeparam>
     /// <typeparam name="ValueType"></typeparam>
-    public abstract class AbstractParameterInput<InputMenuItem, ParameterType, ValueType> : AbstractUMI3DInput
+    public abstract class AbstractParameterInput<InputMenuItem, ParameterType, ValueType> 
+        : AbstractUMI3DInput
         where InputMenuItem : AbstractInputMenuItem<ValueType>, new()
         where ParameterType : AbstractParameterDto<ValueType>, new()
 

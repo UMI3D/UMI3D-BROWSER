@@ -53,7 +53,7 @@ namespace umi3d.browserRuntime.interaction
             eventDelegate.Associate(controller, control, environmentId, interaction, toolId, hoveredObjectId);
         }
 
-        public bool CanPerform(InputActionPhase phase)
+        public bool CanPerform(System.Object value)
         {
             throw new System.NotImplementedException();
         }

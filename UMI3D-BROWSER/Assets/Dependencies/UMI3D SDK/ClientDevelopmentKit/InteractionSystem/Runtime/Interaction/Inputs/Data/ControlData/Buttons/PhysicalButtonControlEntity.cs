@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using System;
+using UnityEngine.InputSystem;
 
 namespace umi3d.cdk.interaction
 {
@@ -22,7 +23,7 @@ namespace umi3d.cdk.interaction
     public class PhysicalButtonControlEntity : AbstractControlEntity, HasButtonControlData
     {
         public ButtonControlData buttonData = new();
-        public NewInputType input = new();
+        public InputActionProperty input = new();
 
         public ButtonControlData ButtonControlData
         {
@@ -38,7 +39,15 @@ namespace umi3d.cdk.interaction
 
         public PhysicalButtonControlEntity()
         {
-            input.actionPerformed = controlData.ActionPerformed;
+            controlData.canDissociateHandler = value =>
+            {
+                if (value is not InputActionPhase phase)
+                {
+                    return true;
+                }
+
+                return phase == InputActionPhase.Canceled;
+            };
             controlData.enableHandler += Enable;
             controlData.disableHandler += Disable;
         }
@@ -47,7 +56,7 @@ namespace umi3d.cdk.interaction
         {
             try
             {
-                input.inputActionProperty.action.performed += input.ActionPerformed;
+                input.action.performed += ActionPerformed;
             }
             catch (NullReferenceException)
             {
@@ -59,12 +68,17 @@ namespace umi3d.cdk.interaction
         {
             try
             {
-                input.inputActionProperty.action.performed -= input.ActionPerformed;
+                input.action.performed -= ActionPerformed;
             }
             catch (NullReferenceException)
             {
                 UnityEngine.Debug.LogError($"[UMI3D] Control: new input type action is null");
             }
+        }
+
+        void ActionPerformed(InputAction.CallbackContext ctxt)
+        {
+            controlData.ActionPerformed(ctxt.phase);
         }
     }
 }

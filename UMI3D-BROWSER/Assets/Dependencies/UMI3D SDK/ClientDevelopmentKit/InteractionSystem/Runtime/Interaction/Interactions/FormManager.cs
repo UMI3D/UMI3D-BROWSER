@@ -96,7 +96,7 @@ namespace umi3d.cdk.interaction
         // *****************************************************
         // *****************************************************
 
-        public bool CanPerform(InputActionPhase phase)
+        public bool CanPerform(System.Object value)
         {
             throw new System.NotImplementedException();
         }

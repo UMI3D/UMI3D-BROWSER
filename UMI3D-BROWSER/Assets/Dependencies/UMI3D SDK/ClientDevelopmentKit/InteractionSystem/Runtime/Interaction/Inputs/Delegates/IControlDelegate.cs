@@ -24,7 +24,7 @@ namespace umi3d.cdk.interaction
     public interface IControlDelegate<Interaction>
         where Interaction : AbstractInteractionDto
     {
-        bool CanPerform(InputActionPhase phase);
+        bool CanPerform(System.Object value);
 
         /// <summary>
         /// Return a control compatible with <paramref name="interaction"/>.<br/> 

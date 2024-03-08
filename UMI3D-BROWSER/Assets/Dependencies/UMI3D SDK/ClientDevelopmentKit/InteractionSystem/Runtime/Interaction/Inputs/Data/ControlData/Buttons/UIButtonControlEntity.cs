@@ -28,6 +28,15 @@ namespace umi3d.cdk.interaction
 
         public UIButtonControlEntity()
         {
+            controlData.canDissociateHandler = value =>
+            {
+                if (value is not InputActionPhase phase)
+                {
+                    return true;
+                }
+
+                return phase == InputActionPhase.Canceled;
+            };
             controlData.enableHandler += Enable;
             controlData.disableHandler += Disable;
         }

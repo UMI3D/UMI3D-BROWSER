@@ -96,7 +96,7 @@ namespace umi3d.cdk.interaction
         // *****************************************************
         // *****************************************************
 
-        public bool CanPerform(InputActionPhase phase)
+        public bool CanPerform(System.Object value)
         {
             throw new System.NotImplementedException();
         }
@@ -118,7 +118,10 @@ namespace umi3d.cdk.interaction
             (this as IControlDelegate<EventDto>).BaseDissociate(control);
         }
 
-        public AbstractControlEntity GetControl(UMI3DController controller, AbstractParameterDto interaction)
+        public AbstractControlEntity GetControl(
+            UMI3DController controller,
+            AbstractParameterDto interaction
+        )
         {
             throw new System.NotImplementedException();
         }

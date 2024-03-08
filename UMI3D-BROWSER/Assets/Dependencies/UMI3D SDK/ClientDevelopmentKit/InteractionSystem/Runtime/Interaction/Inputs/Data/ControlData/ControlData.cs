@@ -52,26 +52,27 @@ namespace umi3d.cdk.interaction
         [HideInInspector] public AbstractInteractionDto interaction;
 
         /// <summary>
-        /// Action phase.
+        /// Current value.
         /// </summary>
-        [HideInInspector] public InputActionPhase phase;
+        [HideInInspector] public System.Object value;
         [HideInInspector] public bool shouldDissociateAsSoonAsPossible;
 
         public Action enableHandler;
         public Action disableHandler;
         public Action dissociateHandler;
-        public Action<InputActionPhase> actionPerformedHandler;
-        public Func<InputActionPhase, bool> canPerformHandler;
+        public Action<System.Object> actionPerformedHandler;
+        public Func<System.Object, bool> canPerformHandler;
+        public Func<System.Object, bool> canDissociateHandler;
 
         public void Dissociate()
         {
-            if (phase != InputActionPhase.Canceled)
+            if (canDissociateHandler?.Invoke(value) ?? true)
             {
-                shouldDissociateAsSoonAsPossible = true;
+                dissociateHandler?.Invoke();
             }
             else
             {
-                dissociateHandler?.Invoke();
+                shouldDissociateAsSoonAsPossible = true;
             }
         }
 
@@ -80,15 +81,15 @@ namespace umi3d.cdk.interaction
         /// See <see cref="actionPerformedHandler"/>.
         /// </summary>
         /// <param name="obj"></param>
-        public void ActionPerformed(InputActionPhase phase)
+        public void ActionPerformed(System.Object value)
         {
-            this.phase = phase;
-            if (canPerformHandler?.Invoke(phase) ?? true)
+            this.value = value;
+            if (canPerformHandler?.Invoke(value) ?? true)
             {
-                actionPerformedHandler?.Invoke(phase);
+                actionPerformedHandler?.Invoke(value);
             }
 
-            if (shouldDissociateAsSoonAsPossible && phase == InputActionPhase.Canceled)
+            if (shouldDissociateAsSoonAsPossible && (canDissociateHandler?.Invoke(value) ?? true))
             {
                 dissociateHandler?.Invoke();
                 shouldDissociateAsSoonAsPossible = false;

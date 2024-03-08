@@ -32,7 +32,6 @@ namespace umi3d.cdk.interaction
         debug.UMI3DLogger logger = new();
 
         public Tool_SO tool_SO;
-        public AbstractToolUpdateDelegate toolUpdateDelegate;
 
         [HideInInspector] public MonoBehaviour context;
         [HideInInspector] public UMI3DController controller;

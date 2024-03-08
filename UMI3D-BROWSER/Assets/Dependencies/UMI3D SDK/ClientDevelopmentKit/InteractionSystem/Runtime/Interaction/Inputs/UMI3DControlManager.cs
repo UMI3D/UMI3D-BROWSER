@@ -32,11 +32,11 @@ namespace umi3d.cdk.interaction
         [HideInInspector] public ControlModel model = new();
         [HideInInspector] public UMI3DController controller;
         [HideInInspector] public UMI3DToolManager toolManager;
-        public AbstractManipulationControlDelegate manipulationDelegate;
-        public AbstractEventControlDelegate eventDelegate;
-        public AbstractControlDelegate<FormDto> formDelegate;
-        public AbstractControlDelegate<LinkDto> linkDelegate;
-        public AbstractControlDelegate<AbstractParameterDto> parameterDelegate;
+        public IControlManipulationDelegate manipulationDelegate;
+        public IControlEventDelegate eventDelegate;
+        public IControlDelegate<FormDto> formDelegate;
+        public IControlDelegate<LinkDto> linkDelegate;
+        public IControlDelegate<AbstractParameterDto> parameterDelegate;
 
         /// <summary>
         /// Init this control manager.<br/>
@@ -153,13 +153,13 @@ namespace umi3d.cdk.interaction
             switch (interaction)
             {
                 case ManipulationDto manipulation:
-                    manipulationDelegate.dof = dof;
+                    manipulationDelegate.Dof = dof;
                     return manipulationDelegate.GetControl(
                         controller,
                         manipulation
                     );
                 case EventDto button:
-                    eventDelegate.tryToFindInputForHoldableEvent = tryToFindInputForHoldableEvent;
+                    eventDelegate.TryToFindInputForHoldableEvent = tryToFindInputForHoldableEvent;
                     return eventDelegate.GetControl(
                         controller,
                         button
@@ -197,7 +197,7 @@ namespace umi3d.cdk.interaction
             {
                 case ManipulationDto manipulation:
 
-                    manipulationDelegate.dof = dof;
+                    manipulationDelegate.Dof = dof;
                     manipulationDelegate.Associate(
                         controller,
                         control,

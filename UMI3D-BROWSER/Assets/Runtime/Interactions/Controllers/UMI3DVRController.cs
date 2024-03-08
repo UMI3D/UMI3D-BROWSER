@@ -91,11 +91,11 @@ namespace umi3d.browserRuntime.interaction
                 projectionManager
             );
 
-            controlManager.manipulationDelegate = new VRManipulationControlDelegate();
-            controlManager.eventDelegate = new VREventControlDelegate();
-            controlManager.formDelegate = new VRFormControlDelegate();
-            controlManager.linkDelegate = new VRLinkControlDelegate();
-            controlManager.parameterDelegate = new VRParameterControlDelegate();
+            controlManager.manipulationDelegate = new VRManipulationControlDelegate(manipulationManager);
+            controlManager.eventDelegate = new VREventControlDelegate(eventManager);
+            controlManager.formDelegate = new VRFormControlDelegate(formManager);
+            controlManager.linkDelegate = new VRLinkControlDelegate(linkManager);
+            controlManager.parameterDelegate = new VRParameterControlDelegate(parameterManager);
             controlManager.Init(
                 this,
                 controller

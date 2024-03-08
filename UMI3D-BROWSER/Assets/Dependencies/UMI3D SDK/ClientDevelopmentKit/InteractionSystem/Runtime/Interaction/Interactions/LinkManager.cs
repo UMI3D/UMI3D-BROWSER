@@ -17,11 +17,18 @@ limitations under the License.
 using System;
 using umi3d.common.interaction;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace umi3d.cdk.interaction
 {
-    public class LinkManager : IProjectionTreeNodeDelegate<LinkDto>
+    public class LinkManager : IProjectionTreeNodeDelegate<LinkDto>, IControlDelegate<LinkDto>
     {
+        // IProjectionTreeNodeDelegate
+        // *****************************************************
+        // *****************************************************
+        // *****************************************************
+        // *****************************************************
+
         public Predicate<ProjectionTreeNodeData> IsNodeCompatible(LinkDto interaction)
         {
             return node =>
@@ -80,6 +87,39 @@ namespace umi3d.cdk.interaction
                     );
                 }
             };
+        }
+
+        // IControlDelegate
+        // *****************************************************
+        // *****************************************************
+        // *****************************************************
+        // *****************************************************
+
+        public bool CanPerform(InputActionPhase phase)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void Associate(
+            UMI3DController controller,
+            AbstractControlEntity control,
+            ulong environmentId,
+            AbstractInteractionDto interaction,
+            ulong toolId,
+            ulong hoveredObjectId
+        )
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void Dissociate(AbstractControlEntity control)
+        {
+            (this as IControlDelegate<EventDto>).BaseDissociate(control);
+        }
+
+        public AbstractControlEntity GetControl(UMI3DController controller, LinkDto interaction)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

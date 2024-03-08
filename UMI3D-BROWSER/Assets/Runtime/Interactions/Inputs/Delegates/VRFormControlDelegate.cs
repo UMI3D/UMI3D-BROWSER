@@ -22,16 +22,33 @@ using UnityEngine.InputSystem;
 
 namespace umi3d.browserRuntime.interaction
 {
-    public class VRFormControlDelegate : AbstractControlDelegate<FormDto>
+    public class VRFormControlDelegate : IControlDelegate<FormDto>
     {
-        public override AbstractControlEntity GetControl(UMI3DController controller, FormDto Interaction)
+        IControlDelegate<FormDto> formDelegate;
+
+        public VRFormControlDelegate(IControlDelegate<FormDto> formDelegate)
         {
-            throw new NotImplementedException();
+            this.formDelegate = formDelegate;
         }
 
-        protected override bool CanPerform(InputActionPhase phase)
+        public void Associate(UMI3DController controller, AbstractControlEntity control, ulong environmentId, AbstractInteractionDto interaction, ulong toolId, ulong hoveredObjectId)
         {
-            throw new NotImplementedException();
+            formDelegate.Associate(controller, control, environmentId, interaction, toolId, hoveredObjectId);
+        }
+
+        public bool CanPerform(InputActionPhase phase)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void Dissociate(AbstractControlEntity control)
+        {
+            formDelegate.Dissociate(control);
+        }
+
+        public AbstractControlEntity GetControl(UMI3DController controller, FormDto interaction)
+        {
+            return formDelegate.GetControl(controller, interaction);
         }
     }
 }

@@ -15,16 +15,57 @@ limitations under the License.
 */
 
 using umi3d.cdk.interaction;
+using umi3d.common.interaction;
 using UnityEngine.InputSystem;
 
 namespace umi3d.browserRuntime.interaction
 {
-    public class VREventControlDelegate : AbstractEventControlDelegate 
+    public class VREventControlDelegate : IControlEventDelegate
     {
-        protected override bool CanPerform(InputActionPhase phase)
+        IControlEventDelegate eventDelegate;
+
+        public VREventControlDelegate(IControlEventDelegate eventDelegate)
         {
-            //TODO
-            return true;
+            this.eventDelegate = eventDelegate;
+        }
+
+        public bool TryToFindInputForHoldableEvent
+        {
+            get
+            {
+                return eventDelegate.TryToFindInputForHoldableEvent;
+            }
+            set
+            {
+                eventDelegate.TryToFindInputForHoldableEvent = value;
+            }
+        }
+
+        public void Associate(
+            UMI3DController controller,
+            AbstractControlEntity control,
+            ulong environmentId,
+            AbstractInteractionDto interaction,
+            ulong toolId,
+            ulong hoveredObjectId
+        )
+        {
+            eventDelegate.Associate(controller, control, environmentId, interaction, toolId, hoveredObjectId);
+        }
+
+        public bool CanPerform(InputActionPhase phase)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void Dissociate(AbstractControlEntity control)
+        {
+            eventDelegate.Dissociate(control);
+        }
+
+        public AbstractControlEntity GetControl(UMI3DController controller, EventDto interaction)
+        {
+            return eventDelegate.GetControl(controller, interaction);
         }
     }
 }

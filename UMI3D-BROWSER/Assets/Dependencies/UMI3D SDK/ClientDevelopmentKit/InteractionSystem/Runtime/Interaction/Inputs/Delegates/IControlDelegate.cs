@@ -14,19 +14,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils.saveSystem;
 using System;
-using System.Collections.Generic;
 using umi3d.common.interaction;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace umi3d.cdk.interaction
 {
-    public abstract class AbstractControlDelegate<Interaction>
-        where Interaction: AbstractInteractionDto
+    public interface IControlDelegate<Interaction>
+        where Interaction : AbstractInteractionDto
     {
-        protected abstract bool CanPerform(InputActionPhase phase);
+        bool CanPerform(InputActionPhase phase);
 
         /// <summary>
         /// Return a control compatible with <paramref name="interaction"/>.<br/> 
@@ -35,12 +33,12 @@ namespace umi3d.cdk.interaction
         /// <param name="interaction"></param>
         /// <param name="unused"></param>
         /// <returns></returns>
-        public abstract AbstractControlEntity GetControl(
-            UMI3DController controller, 
+        AbstractControlEntity GetControl(
+            UMI3DController controller,
             Interaction interaction
         );
 
-        public virtual void Associate(
+        void BaseAssociate(
             UMI3DController controller,
             AbstractControlEntity control,
             ulong environmentId,
@@ -62,7 +60,25 @@ namespace umi3d.cdk.interaction
             control.controlData.enableHandler?.Invoke();
         }
 
-        public virtual void Dissociate(AbstractControlEntity control)
+        /// <summary>
+        /// Associate a control to an interaction.
+        /// </summary>
+        /// <param name="controller"></param>
+        /// <param name="control"></param>
+        /// <param name="environmentId"></param>
+        /// <param name="interaction"></param>
+        /// <param name="toolId"></param>
+        /// <param name="hoveredObjectId"></param>
+        void Associate(
+            UMI3DController controller,
+            AbstractControlEntity control,
+            ulong environmentId,
+            AbstractInteractionDto interaction,
+            ulong toolId,
+            ulong hoveredObjectId
+        );
+
+        void BaseDissociate(AbstractControlEntity control)
         {
             control.controlData.controller = null;
             control.controlData.isUsed = false;
@@ -71,5 +87,11 @@ namespace umi3d.cdk.interaction
             control.controlData.interaction = null;
             control.controlData.disableHandler?.Invoke();
         }
+
+        /// <summary>
+        /// Dissociate this control from its interaction.
+        /// </summary>
+        /// <param name="control"></param>
+        void Dissociate(AbstractControlEntity control);
     }
 }

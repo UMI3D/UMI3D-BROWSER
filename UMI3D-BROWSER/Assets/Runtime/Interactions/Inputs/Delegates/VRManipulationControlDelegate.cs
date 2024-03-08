@@ -22,16 +22,47 @@ using UnityEngine.InputSystem;
 
 namespace umi3d.browserRuntime.interaction
 {
-    public class VRManipulationControlDelegate : AbstractManipulationControlDelegate
+    public class VRManipulationControlDelegate : IControlManipulationDelegate
     {
-        public override DofGroupOptionDto FindBest(DofGroupOptionDto[] options)
+        IControlManipulationDelegate manipulationDelegate;
+
+        public VRManipulationControlDelegate(IControlManipulationDelegate manipulationDelegate)
         {
-            return options[0];
+            this.manipulationDelegate = manipulationDelegate;
         }
 
-        protected override bool CanPerform(InputActionPhase phase)
+        public DofGroupDto Dof { get => manipulationDelegate.Dof; set => manipulationDelegate.Dof = value; }
+
+        public void Associate(
+            UMI3DController controller,
+            AbstractControlEntity control,
+            ulong environmentId,
+            AbstractInteractionDto interaction,
+            ulong toolId,
+            ulong hoveredObjectId
+        )
         {
-            throw new NotImplementedException();
+            manipulationDelegate.Associate(controller, control, environmentId, interaction, toolId, hoveredObjectId);
+        }
+
+        public bool CanPerform(InputActionPhase phase)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void Dissociate(AbstractControlEntity control)
+        {
+            manipulationDelegate.Dissociate(control);
+        }
+
+        public DofGroupOptionDto FindBest(DofGroupOptionDto[] options)
+        {
+            return manipulationDelegate.FindBest(options);
+        }
+
+        public AbstractControlEntity GetControl(UMI3DController controller, ManipulationDto interaction)
+        {
+            return manipulationDelegate.GetControl(controller, interaction);
         }
     }
 }

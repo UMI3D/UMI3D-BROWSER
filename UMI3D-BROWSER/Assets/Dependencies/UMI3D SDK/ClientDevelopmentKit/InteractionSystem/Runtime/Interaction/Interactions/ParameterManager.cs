@@ -17,11 +17,18 @@ limitations under the License.
 using System;
 using umi3d.common.interaction;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace umi3d.cdk.interaction
 {
-    public class ParameterManager : IProjectionTreeNodeDelegate<AbstractParameterDto>
+    public class ParameterManager : IProjectionTreeNodeDelegate<AbstractParameterDto>, IControlDelegate<AbstractParameterDto>
     {
+        // IProjectionTreeNodeDelegate
+        // *****************************************************
+        // *****************************************************
+        // *****************************************************
+        // *****************************************************
+
         public Predicate<ProjectionTreeNodeData> IsNodeCompatible(AbstractParameterDto interaction)
         {
             return node =>
@@ -81,6 +88,39 @@ namespace umi3d.cdk.interaction
                     );
                 }
             };
+        }
+
+        // IControlDelegate
+        // *****************************************************
+        // *****************************************************
+        // *****************************************************
+        // *****************************************************
+
+        public bool CanPerform(InputActionPhase phase)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void Associate(
+            UMI3DController controller,
+            AbstractControlEntity control,
+            ulong environmentId,
+            AbstractInteractionDto interaction,
+            ulong toolId,
+            ulong hoveredObjectId
+        )
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void Dissociate(AbstractControlEntity control)
+        {
+            (this as IControlDelegate<EventDto>).BaseDissociate(control);
+        }
+
+        public AbstractControlEntity GetControl(UMI3DController controller, AbstractParameterDto interaction)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

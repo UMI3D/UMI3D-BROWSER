@@ -14,20 +14,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils.saveSystem;
 using System;
-using System.Collections.Generic;
 using umi3d.common.interaction;
 using UnityEngine;
 
 namespace umi3d.cdk.interaction
 {
-    public abstract class AbstractToolUpdateDelegate : SerializableScriptableObject
+    public interface IControlManipulationDelegate : IControlDelegate<ManipulationDto>
     {
-        
+        DofGroupDto Dof { get; set; }
 
-        
-
-        
+        DofGroupOptionDto FindBest(DofGroupOptionDto[] options);
     }
 }

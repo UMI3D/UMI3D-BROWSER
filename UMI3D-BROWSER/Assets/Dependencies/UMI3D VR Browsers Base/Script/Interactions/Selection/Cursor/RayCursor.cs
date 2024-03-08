@@ -456,8 +456,10 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
         {
             if (fadeCoroutineRunning)
             {
-                StopCoroutine(fadeLaserCoroutine);
-                StopCoroutine(fadeCursorCoroutine);
+                if (fadeLaserCoroutine != null)
+                    StopCoroutine(fadeLaserCoroutine);
+                if (fadeCursorCoroutine != null)
+                    StopCoroutine(fadeCursorCoroutine);
                 fadeCoroutineRunning = false;
             }
 
@@ -471,6 +473,10 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
             {
                 StopCoroutine(fadeLaserCoroutine);
                 StopCoroutine(fadeCursorCoroutine);
+                if (fadeLaserCoroutine != null)
+                    StopCoroutine(fadeLaserCoroutine);
+                if (fadeCursorCoroutine != null)
+                    StopCoroutine(fadeCursorCoroutine);
                 fadeCoroutineRunning = false;
             }
 

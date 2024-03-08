@@ -43,11 +43,13 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
         public GameObject laserObject;
 
         private Renderer laserObjectRenderer;
+        private Material laserObjectRendererMaterial;
 
         [Header("ImpactPoint"), SerializeField, Tooltip("Laser's impact sphere.")]
         private GameObject impactPoint;
 
         private Renderer impactPointRenderer;
+        private Material impactPointRendererMaterial;
 
         [SerializeField]
         private LayerMask _uiMask;
@@ -99,10 +101,10 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
         /// </summary>
         protected readonly float fadeDuration = 0.25f;
 
-        private float savedAlphaDefaultMaterial;
+        private float initialAlphaDefaultMaterial;
         private Coroutine fadeLaserCoroutine;
 
-        private float savedAlphaSelectedMaterial;
+        private float initialAlphaSelectedMaterial;
         private Coroutine fadeCursorCoroutine;
 
         private bool fadeCoroutineRunning;
@@ -132,13 +134,13 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
             impactPointRenderer = impactPoint.GetComponent<Renderer>();
 
             if (impactPointRenderer != null)
-                impactPointRenderer.material = defaultMaterial;
+                impactPointRenderer.material = new Material(defaultMaterial);
 
             if (laserObjectRenderer != null)
             {
-                laserObjectRenderer.material = defaultMaterial;
-                savedAlphaDefaultMaterial = defaultMaterial.color.a;
-                savedAlphaSelectedMaterial = selectionMaterial.color.a;
+                laserObjectRenderer.material = new Material(defaultMaterial);
+                initialAlphaDefaultMaterial = defaultMaterial.color.a;
+                initialAlphaSelectedMaterial = selectionMaterial.color.a;
             }
 
             SetInfinitePoint();
@@ -471,8 +473,6 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
         {
             if (fadeCoroutineRunning)
             {
-                StopCoroutine(fadeLaserCoroutine);
-                StopCoroutine(fadeCursorCoroutine);
                 if (fadeLaserCoroutine != null)
                     StopCoroutine(fadeLaserCoroutine);
                 if (fadeCursorCoroutine != null)
@@ -480,8 +480,8 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
                 fadeCoroutineRunning = false;
             }
 
-            fadeLaserCoroutine = StartCoroutine(FadingCoroutine(fadeDuration, laserObjectRenderer.material, targetAlpha: savedAlphaDefaultMaterial));
-            fadeCursorCoroutine = StartCoroutine(FadingCoroutine(fadeDuration, impactPointRenderer.material, targetAlpha: savedAlphaSelectedMaterial));
+            fadeLaserCoroutine = StartCoroutine(FadingCoroutine(fadeDuration, laserObjectRenderer.material, targetAlpha: initialAlphaDefaultMaterial));
+            fadeCursorCoroutine = StartCoroutine(FadingCoroutine(fadeDuration, impactPointRenderer.material, targetAlpha: initialAlphaSelectedMaterial));
         }
 
         private IEnumerator FadingCoroutine(float duration, Material material, float targetAlpha)
@@ -512,12 +512,12 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
             selectionMaterial.color = new Color(selectionMaterial.color.r,
                                        selectionMaterial.color.g,
                                        selectionMaterial.color.b,
-                                       savedAlphaSelectedMaterial);
+                                       initialAlphaSelectedMaterial);
 
             defaultMaterial.color = new Color(defaultMaterial.color.r,
                                        defaultMaterial.color.g,
                                        defaultMaterial.color.b,
-                                       savedAlphaDefaultMaterial);
+                                       initialAlphaDefaultMaterial);
         }
 
         public Transform GetOrCreateRayOrigin() => throw new NotImplementedException();

@@ -29,6 +29,7 @@ public class HandTrackingRayManager : MonoBehaviour
     void Start()
     {
         selectionManager = selectionManager == null ? GetComponent<VRSelectionManager>() : selectionManager;
+        selectionManager.pointingCursor.Display();
 
         foreach (StaticHandGesture gestureListener in gesturesDisablingRay)
         {

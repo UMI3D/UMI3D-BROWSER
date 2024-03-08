@@ -25,10 +25,8 @@ using UnityEngine;
 
 namespace umi3d.cdk.interaction
 {
-    [Serializable]
     public sealed class UMI3DToolManager 
     {
-        [SerializeField]
         debug.UMI3DLogger logger = new();
 
         public Tool_SO tool_SO;

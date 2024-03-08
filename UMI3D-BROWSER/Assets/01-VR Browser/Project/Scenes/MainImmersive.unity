@@ -461,7 +461,7 @@ PrefabInstance:
     - target: {fileID: 5988314907380347006, guid: 6d8cc188ac4cb49419e2616ed25f607d,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -0.000010747569
+      value: 0.00018996297
       objectReference: {fileID: 0}
     - target: {fileID: 6093459749334264534, guid: 6d8cc188ac4cb49419e2616ed25f607d,
         type: 3}
@@ -744,6 +744,30 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1090631631072059896, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: tool_SO
+      value: 
+      objectReference: {fileID: 11400000, guid: dfdeedc5c697ae24ca5ec7449c121587,
+        type: 2}
+    - target: {fileID: 1090631631072059896, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: controls_SO
+      value: 
+      objectReference: {fileID: 11400000, guid: eac53400111dbca40bcc969c74acf1dc,
+        type: 2}
+    - target: {fileID: 1090631631072059896, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: controllerData_SO
+      value: 
+      objectReference: {fileID: 11400000, guid: 1a092d1771f90c042a94bad3b2fb4dde,
+        type: 2}
+    - target: {fileID: 1090631631072059896, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: projectionTree_SO
+      value: 
+      objectReference: {fileID: 11400000, guid: 4f8ebd7bc1ce3ca4a8617ff740c4a745,
+        type: 2}
     - target: {fileID: 1090631631072059896, guid: aa50e35a45eaaed43a950ae34ef532dc,
         type: 3}
       propertyPath: toolManager.tool_SO

@@ -36,10 +36,8 @@ namespace umi3d.cdk.interaction
     /// For example: A VR headset has 2 controllers with laser to select. A computer as 1 mouse to select (mouse and trackpad can be seen as the same input).
     /// </example>
     /// </summary>
-    [Serializable]
     public class UMI3DController
     {
-        [SerializeField]
         debug.UMI3DLogger logger = new();
 
         public AbstractControllerData_SO controllerData_SO;

@@ -29,10 +29,8 @@ namespace umi3d.cdk.interaction
     /// <br/>
     /// This projection is based on a tree <see cref="ProjectionTreeData"/> constituted of <see cref="ProjectionTreeNodeData"/>.
     /// </summary>
-    [Serializable]
     public sealed class UMI3DProjectionManager
     {
-        [SerializeField]
         UMI3DLogger logger = new();
 
         public ProjectionTree_SO projectionTree_SO;

@@ -25,10 +25,16 @@ namespace umi3d.browserRuntime.interaction
 {
     public class UMI3DVRController : MonoBehaviour, IControllerDelegate
     {
-        [SerializeField]
+        //[SerializeField]
         umi3d.debug.UMI3DLogger logger = new();
 
-        [Header("Manager")]
+        [Header("Manager Data")]
+        public AbstractControllerData_SO controllerData_SO;
+        public Controls_SO controls_SO;
+        public Tool_SO tool_SO;
+        public ProjectionTree_SO projectionTree_SO;
+        public ProjectionEventSystem eventSystem;
+
         public UMI3DController controller;
         public UMI3DControlManager controlManager;
         public UMI3DToolManager toolManager;
@@ -83,6 +89,7 @@ namespace umi3d.browserRuntime.interaction
             var linkManager = new LinkManager();
             var parameterManager = new ParameterManager();
 
+            controller.controllerData_SO = controllerData_SO;
             controller.controllerDelegate = this;
             controller.Init(
                 this,
@@ -91,21 +98,30 @@ namespace umi3d.browserRuntime.interaction
                 projectionManager
             );
 
-            controlManager.manipulationDelegate = new VRManipulationControlDelegate(manipulationManager);
-            controlManager.eventDelegate = new VREventControlDelegate(eventManager);
-            controlManager.formDelegate = new VRFormControlDelegate(formManager);
-            controlManager.linkDelegate = new VRLinkControlDelegate(linkManager);
-            controlManager.parameterDelegate = new VRParameterControlDelegate(parameterManager);
+            controlManager.controls_SO = controls_SO;
+            controlManager.manipulationDelegate 
+                = new VRManipulationControlDelegate(manipulationManager);
+            controlManager.eventDelegate 
+                = new VREventControlDelegate(eventManager);
+            controlManager.formDelegate 
+                = new VRFormControlDelegate(formManager);
+            controlManager.linkDelegate 
+                = new VRLinkControlDelegate(linkManager);
+            controlManager.parameterDelegate 
+                = new VRParameterControlDelegate(parameterManager);
             controlManager.Init(
                 this,
                 controller
             );
 
+            toolManager.tool_SO = tool_SO;
             toolManager.Init(
                 this,
                 controller
             );
 
+            projectionManager.projectionTree_SO = projectionTree_SO;
+            projectionManager.eventSystem = eventSystem;
             projectionManager.ptManipulationNodeDelegate = manipulationManager;
             projectionManager.ptEventNodeDelegate = eventManager;
             projectionManager.ptFormNodeDelegate = formManager;

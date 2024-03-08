@@ -21,10 +21,8 @@ using UnityEngine;
 
 namespace umi3d.cdk.interaction
 {
-    [Serializable]
     public sealed class UMI3DControlManager 
     {
-        [SerializeField]
         debug.UMI3DLogger logger = new();
 
         public Controls_SO controls_SO;

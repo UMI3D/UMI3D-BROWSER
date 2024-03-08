@@ -35,6 +35,7 @@ namespace umi3d.cdk.interaction
         /// Tree's id the node belongs to.
         /// </summary>
         public string treeId;
+        [HideInInspector]
         /// <summary>
         /// Node's children IDs.
         /// </summary>

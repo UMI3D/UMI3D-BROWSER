@@ -74,6 +74,9 @@ public class LaserStabilizer : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
+        if (shoulderTransform == null || elbowTransform == null || wristTransform == null || aimPoint == null)
+            return;
+
         Gizmos.color = Color.gray;
         Gizmos.DrawWireSphere(shoulderTransform.position, 0.0125f);
         Gizmos.DrawWireSphere(wristTransform.position, 0.0125f);

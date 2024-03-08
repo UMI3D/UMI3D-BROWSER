@@ -81,7 +81,8 @@ namespace umi3d.browserRuntime.interaction
             controller.Init(
                 this,
                 controlManager,
-                toolManager
+                toolManager,
+                projectionManager
             );
 
             controlManager.manipulationDelegate = new VRManipulationControlDelegate();
@@ -91,15 +92,12 @@ namespace umi3d.browserRuntime.interaction
             controlManager.parameterDelegate = new VRParameterControlDelegate();
             controlManager.Init(
                 this,
-                controller,
-                toolManager
+                controller
             );
 
             toolManager.Init(
                 this,
-                controller,
-                controlManager,
-                projectionManager
+                controller
             );
 
             projectionManager.ptManipulationNodeDelegate = new ProjectionTreeManipulationNodeDelegate();

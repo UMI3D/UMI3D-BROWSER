@@ -47,14 +47,13 @@ namespace umi3d.cdk.interaction
         /// <param name="controller"></param>
         public void Init(
             MonoBehaviour context, 
-            UMI3DController controller,
-            UMI3DToolManager toolManager
+            UMI3DController controller
         )
         {
             logger.MainContext = context;
             logger.MainTag = nameof(UMI3DControlManager);
             this.controller = controller;
-            this.toolManager = toolManager;
+            this.toolManager = controller.toolManager;
             model.Init(controls_SO);
 
             logger.Assert(manipulationDelegate != null, $"{nameof(manipulationDelegate)} is null");
@@ -197,6 +196,7 @@ namespace umi3d.cdk.interaction
             switch (interaction)
             {
                 case ManipulationDto manipulation:
+
                     manipulationDelegate.dof = dof;
                     manipulationDelegate.Associate(
                         controller,
@@ -207,7 +207,9 @@ namespace umi3d.cdk.interaction
                         hoveredObjectId
                     );
                     break;
+
                 case EventDto button:
+
                     eventDelegate.Associate(
                         controller,
                         control,
@@ -217,7 +219,9 @@ namespace umi3d.cdk.interaction
                         hoveredObjectId
                     );
                     break;
+
                 case FormDto form:
+
                     formDelegate.Associate(
                         controller,
                         control,
@@ -227,7 +231,9 @@ namespace umi3d.cdk.interaction
                         hoveredObjectId
                     );
                     break;
+
                 case LinkDto link:
+
                     linkDelegate.Associate(
                         controller,
                         control,
@@ -237,7 +243,9 @@ namespace umi3d.cdk.interaction
                         hoveredObjectId
                     );
                     break;
+
                 case AbstractParameterDto parameter:
+
                     parameterDelegate.Associate(
                         controller,
                         control,
@@ -247,9 +255,19 @@ namespace umi3d.cdk.interaction
                         hoveredObjectId
                     );
                     break;
+
                 default:
                     throw new System.Exception("Unknown interaction type, can't project !");
             }
+        }
+
+        public void Dissociate(
+            ulong environmentId,
+            ulong toolId,
+            AbstractInteractionDto interaction
+        )
+        {
+
         }
     }
 }

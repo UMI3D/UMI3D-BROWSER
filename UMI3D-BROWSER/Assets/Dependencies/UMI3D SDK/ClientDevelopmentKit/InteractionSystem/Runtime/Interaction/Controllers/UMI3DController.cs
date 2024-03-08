@@ -46,6 +46,7 @@ namespace umi3d.cdk.interaction
 
         [HideInInspector] public UMI3DControlManager controlManager;
         [HideInInspector] public UMI3DToolManager toolManager;
+        [HideInInspector] public UMI3DProjectionManager projectionManager;
         [HideInInspector] public MonoBehaviour context;
         public IControllerDelegate controllerDelegate;
 
@@ -69,7 +70,8 @@ namespace umi3d.cdk.interaction
         public void Init(
             MonoBehaviour context, 
             UMI3DControlManager controlManager,
-            UMI3DToolManager toolManager
+            UMI3DToolManager toolManager,
+            UMI3DProjectionManager projectionManager
         )
         {
             logger.MainContext = context;
@@ -77,6 +79,7 @@ namespace umi3d.cdk.interaction
             this.context = context;
             this.controlManager = controlManager;
             this.toolManager = toolManager;
+            this.projectionManager = projectionManager;
 
             logger.Assert(controllerDelegate != null, $"{nameof(controllerDelegate)} is null");
         }

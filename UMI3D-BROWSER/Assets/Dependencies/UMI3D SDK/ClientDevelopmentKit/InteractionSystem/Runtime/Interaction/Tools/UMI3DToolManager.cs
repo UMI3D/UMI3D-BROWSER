@@ -41,17 +41,15 @@ namespace umi3d.cdk.interaction
 
         public void Init(
             MonoBehaviour context,
-            UMI3DController controller,
-            UMI3DControlManager controlManager,
-            UMI3DProjectionManager projectionManager
+            UMI3DController controller
         )
         {
             logger.MainContext = context;
             logger.MainTag = nameof(UMI3DToolManager);
             this.context = context;
             this.controller = controller;
-            this.controlManager = controlManager;
-            this.projectionManager = projectionManager;
+            this.controlManager = controller.controlManager;
+            this.projectionManager = controller.projectionManager;
         }
 
         public AbstractTool CurrentProjectedTool
@@ -580,11 +578,12 @@ namespace umi3d.cdk.interaction
                 return;
             }
 
+            //controller.controlManager.Dissociate
             //TODO
             throw new System.NotImplementedException();
 
 
-            tool.InteractionAdded(oldInteraction);
+            tool.InteractionRemoved(oldInteraction);
         }
     }
 }

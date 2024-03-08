@@ -16,47 +16,26 @@ limitations under the License.
 
 using System;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace umi3d.cdk.interaction
 {
-    [Serializable]
-    public sealed class UIButtonControlEntity 
-        : AbstractControlEntity, HasButtonControlData, IUIControlEntity
+    public class SliderControlEntity : AbstractControlEntity, IUIControlEntity
     {
-        public ButtonControlData buttonData = new();
         public UIInputType input = new();
 
-        public UIButtonControlEntity()
+        public SliderControlEntity()
         {
             controlData.canDissociateHandler = value =>
             {
-                if (value is not InputActionPhase phase)
-                {
-                    return true;
-                }
-
-                return phase == InputActionPhase.Canceled;
+                return true;
             };
             controlData.enableHandler += (this as IUIControlEntity).Enable;
             controlData.disableHandler += (this as IUIControlEntity).Disable;
         }
 
-        public ButtonControlData ButtonControlData
-        {
-            get
-            {
-                return buttonData;
-            }
-            set
-            {
-                buttonData = value;
-            }
-        }
-
         public UIInputType Input
         {
-            get 
+            get
             {
                 return input;
             }
@@ -64,9 +43,9 @@ namespace umi3d.cdk.interaction
 
         public void UIActionPerformed(System.Object value)
         {
-            if (value is not InputActionPhase _value)
+            if (value is not float _value)
             {
-                throw new Exception($"[UMI3D] Control: ui input value is not InputActionPhase");
+                throw new Exception($"[UMI3D] Control: ui input value is not float");
             }
             controlData.ActionPerformed(_value);
         }

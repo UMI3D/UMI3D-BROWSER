@@ -19,7 +19,7 @@ using UnityEngine;
 
 namespace umi3d
 {
-    public class EnumControlEntity 
+    public class EnumManager 
     {
     }
 }

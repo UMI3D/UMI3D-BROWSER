@@ -30,14 +30,18 @@ namespace umi3d.cdk.interaction
         /// The input that activates the manipulation.
         /// </summary>
         public InputActionProperty activationInput;
-        [Tooltip("The input that tracks the manipulation")]
-        /// <summary>
-        /// The input that track the manipulation.
-        /// </summary>
-        public InputActionProperty trackingInput;
 
         public PhysicalManipulationControlEntity()
         {
+            controlData.canDissociateHandler = value =>
+            {
+                if (value is not InputActionPhase phase)
+                {
+                    return true;
+                }
+
+                return phase == InputActionPhase.Canceled;
+            };
             controlData.enableHandler += Enable;
             controlData.disableHandler += Disable;
         }
@@ -61,9 +65,6 @@ namespace umi3d.cdk.interaction
                 activationInput
                     .action
                     .performed -= ActionPerformed;
-                trackingInput
-                   .action
-                   .performed -= TrackingActionPerformed;
             }
             catch (NullReferenceException)
             {
@@ -78,9 +79,6 @@ namespace umi3d.cdk.interaction
                 activationInput
                     .action
                     .performed += ActionPerformed;
-                trackingInput
-                   .action
-                   .performed += TrackingActionPerformed;
             }
             catch (NullReferenceException)
             {
@@ -89,11 +87,6 @@ namespace umi3d.cdk.interaction
         }
 
         void ActionPerformed(InputAction.CallbackContext ctxt)
-        {
-            controlData.ActionPerformed(ctxt.phase);
-        }
-
-        void TrackingActionPerformed(InputAction.CallbackContext ctxt)
         {
             controlData.ActionPerformed(ctxt.phase);
         }

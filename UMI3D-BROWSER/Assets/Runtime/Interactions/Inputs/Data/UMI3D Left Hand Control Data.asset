@@ -16,33 +16,28 @@ MonoBehaviour:
   physicalButtonControls:
   - controlData:
       isUsed: 0
-      controller: {fileID: 0}
       environmentId: 0
       toolId: 0
-      phase: 0
       shouldDissociateAsSoonAsPossible: 0
     buttonData:
       type: {fileID: 0}
     input:
-      inputActionProperty:
-        m_UseReference: 0
-        m_Action:
-          m_Name: Input Action Property
-          m_Type: 0
-          m_ExpectedControlType: 
-          m_Id: 61334c96-d9d7-4f51-90e6-138745973cea
-          m_Processors: 
-          m_Interactions: 
-          m_SingletonActionBindings: []
-          m_Flags: 0
-        m_Reference: {fileID: 0}
+      m_UseReference: 1
+      m_Action:
+        m_Name: Input
+        m_Type: 0
+        m_ExpectedControlType: 
+        m_Id: e4d75b90-786e-4ac3-991c-4a501ecd5dd8
+        m_Processors: 
+        m_Interactions: 
+        m_SingletonActionBindings: []
+        m_Flags: 0
+      m_Reference: {fileID: 0}
   uIButtonControlPrefabs:
   - controlData:
       isUsed: 0
-      controller: {fileID: 0}
       environmentId: 0
       toolId: 0
-      phase: 0
       shouldDissociateAsSoonAsPossible: 0
     buttonData:
       type: {fileID: 0}
@@ -53,10 +48,8 @@ MonoBehaviour:
   physicalManipulationControls:
   - controlData:
       isUsed: 0
-      controller: {fileID: 0}
       environmentId: 0
       toolId: 0
-      phase: 0
       shouldDissociateAsSoonAsPossible: 0
     manipulationData:
       messageSender:
@@ -68,39 +61,21 @@ MonoBehaviour:
       initialRotation: {x: 0, y: 0, z: 0, w: 0}
       frameOfReference: {fileID: 0}
     activationInput:
-      inputActionProperty:
-        m_UseReference: 1
-        m_Action:
-          m_Name: Input Action Property
-          m_Type: 0
-          m_ExpectedControlType: 
-          m_Id: 05647b4e-8fbe-42c6-8c07-2e047ea174b8
-          m_Processors: 
-          m_Interactions: 
-          m_SingletonActionBindings: []
-          m_Flags: 0
-        m_Reference: {fileID: -5982496924579745919, guid: c348712bda248c246b8c49b3db54643f,
-          type: 3}
-    trackingInput:
-      inputActionProperty:
-        m_UseReference: 1
-        m_Action:
-          m_Name: Input Action Property
-          m_Type: 0
-          m_ExpectedControlType: 
-          m_Id: d86b6ee5-db4d-43ed-9fd6-703403c38cd3
-          m_Processors: 
-          m_Interactions: 
-          m_SingletonActionBindings: []
-          m_Flags: 0
-        m_Reference: {fileID: 684395432459739428, guid: c348712bda248c246b8c49b3db54643f,
-          type: 3}
+      m_UseReference: 1
+      m_Action:
+        m_Name: Activation Input
+        m_Type: 0
+        m_ExpectedControlType: 
+        m_Id: 4877d5b2-480e-4d02-8495-03b572586a71
+        m_Processors: 
+        m_Interactions: 
+        m_SingletonActionBindings: []
+        m_Flags: 0
+      m_Reference: {fileID: 0}
   - controlData:
       isUsed: 0
-      controller: {fileID: 0}
       environmentId: 0
       toolId: 0
-      phase: 0
       shouldDissociateAsSoonAsPossible: 0
     manipulationData:
       messageSender:
@@ -112,33 +87,19 @@ MonoBehaviour:
       initialRotation: {x: 0, y: 0, z: 0, w: 0}
       frameOfReference: {fileID: 0}
     activationInput:
-      inputActionProperty:
-        m_UseReference: 1
-        m_Action:
-          m_Name: Input Action Property
-          m_Type: 0
-          m_ExpectedControlType: 
-          m_Id: 05647b4e-8fbe-42c6-8c07-2e047ea174b8
-          m_Processors: 
-          m_Interactions: 
-          m_SingletonActionBindings: []
-          m_Flags: 0
-        m_Reference: {fileID: -6131295136447488360, guid: c348712bda248c246b8c49b3db54643f,
-          type: 3}
-    trackingInput:
-      inputActionProperty:
-        m_UseReference: 1
-        m_Action:
-          m_Name: Input Action Property
-          m_Type: 0
-          m_ExpectedControlType: 
-          m_Id: d86b6ee5-db4d-43ed-9fd6-703403c38cd3
-          m_Processors: 
-          m_Interactions: 
-          m_SingletonActionBindings: []
-          m_Flags: 0
-        m_Reference: {fileID: 684395432459739428, guid: c348712bda248c246b8c49b3db54643f,
-          type: 3}
+      m_UseReference: 0
+      m_Action:
+        m_Name: Activation Input
+        m_Type: 0
+        m_ExpectedControlType: 
+        m_Id: 4d6b5183-a25c-43db-b8c8-15954d509501
+        m_Processors: 
+        m_Interactions: 
+        m_SingletonActionBindings: []
+        m_Flags: 0
+      m_Reference: {fileID: 0}
   uIManipulationControlPrefabs: []
   uIManipulationControls: []
+  textControlPrefabs: []
+  textControls: []
   shortcuts: []

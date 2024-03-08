@@ -16,13 +16,32 @@ limitations under the License.
 
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.Windows;
 
 namespace umi3d.cdk.interaction
 {
     [Serializable]
-    public class UIManipulationControlEntity : AbstractControlEntity, HasManipulationControlData
+    public class UIManipulationControlEntity 
+        : AbstractControlEntity, HasManipulationControlData, IUIControlEntity
     {
         public ManipulationControlData manipulationData = new();
+        public UIInputType input = new();
+
+        public UIManipulationControlEntity()
+        {
+            controlData.canDissociateHandler = value =>
+            {
+                if (value is not InputActionPhase phase)
+                {
+                    return true;
+                }
+
+                return phase == InputActionPhase.Canceled;
+            };
+            controlData.enableHandler += (this as IUIControlEntity).Enable;
+            controlData.disableHandler += (this as IUIControlEntity).Disable;
+        }
 
         public ManipulationControlData ManipulationControlData
         {
@@ -36,14 +55,21 @@ namespace umi3d.cdk.interaction
             }
         }
 
-        public void Disable()
+        public UIInputType Input
         {
-            throw new NotImplementedException();
+            get
+            {
+                return input;
+            }
         }
 
-        public void Enable()
+        public void UIActionPerformed(System.Object value)
         {
-            throw new NotImplementedException();
+            if (value is not InputActionPhase _value)
+            {
+                throw new Exception($"[UMI3D] Control: ui input value is not InputActionPhase");
+            }
+            controlData.ActionPerformed(_value);
         }
     }
 }

@@ -22,7 +22,7 @@ using UnityEngine.InputSystem;
 
 namespace umi3d.cdk.interaction
 {
-    public class EventManager : IProjectionTreeNodeDelegate<EventDto>, IControlEventDelegate
+    public sealed class EventManager : IProjectionTreeNodeDelegate<EventDto>, IControlEventDelegate
     {
         // IProjectionTreeNodeDelegate
         // *****************************************************

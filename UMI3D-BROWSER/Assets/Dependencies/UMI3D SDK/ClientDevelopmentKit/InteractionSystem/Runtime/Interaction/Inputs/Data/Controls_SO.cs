@@ -30,6 +30,7 @@ namespace umi3d.cdk.interaction
         /// </summary>
         public Dictionary<AbstractInteractionDto, AbstractControlEntity> controlByInteraction = new();
 
+
         [Header("Buttons")]
         /// <summary>
         /// The physical button type controls for EventDto interactions.<br/>
@@ -48,6 +49,7 @@ namespace umi3d.cdk.interaction
         [HideInInspector] 
         public List<UIButtonControlEntity> uIButtonControls = new();
 
+
         [Header("Manipulations")]
         public List<PhysicalManipulationControlEntity> physicalManipulationControls = new();
 
@@ -55,6 +57,20 @@ namespace umi3d.cdk.interaction
         public List<UIManipulationControlEntity> uIManipulationControlPrefabs = new();
         [HideInInspector]
         public List<UIManipulationControlEntity> uIManipulationControls = new();
+
+
+        [Header("Parameters")]
+        public List<TextControlEntity> textControlPrefabs = new();
+        [HideInInspector]
+        public List<TextControlEntity> textControls = new();
+
+        public List<ToggleControlEntity> toggleControlPrefabs = new();
+        [HideInInspector]
+        public List<ToggleControlEntity> toggleControls = new();
+
+        public List<EnumControlEntity> enumControlPrefabs = new();
+        [HideInInspector]
+        public List<EnumControlEntity> enumControls = new();
 
         [Space()]
         /// <summary>

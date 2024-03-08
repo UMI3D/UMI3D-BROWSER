@@ -21,7 +21,7 @@ using UnityEngine.InputSystem;
 
 namespace umi3d.cdk.interaction
 {
-    public class ParameterManager : IProjectionTreeNodeDelegate<AbstractParameterDto>, IControlDelegate<AbstractParameterDto>
+    public sealed class ParameterManager : IProjectionTreeNodeDelegate<AbstractParameterDto>, IControlDelegate<AbstractParameterDto>
     {
         // IProjectionTreeNodeDelegate
         // *****************************************************
@@ -35,7 +35,7 @@ namespace umi3d.cdk.interaction
             {
                 var interactionDto = node.interactionData.Interaction;
                 return interactionDto is AbstractParameterDto
-                && (interactionDto as AbstractParameterDto).GetType().Equals(interaction.GetType());
+                && interactionDto.GetType().Equals(interaction.GetType());
             };
         }
 
@@ -110,12 +110,16 @@ namespace umi3d.cdk.interaction
             ulong hoveredObjectId
         )
         {
-            throw new System.NotImplementedException();
+            if (interaction is not AbstractParameterDto abParam)
+            {
+                throw new Exception($"[UMI3D] Control: Interaction is not an {nameof(AbstractParameterDto)}.");
+            }
+            
         }
 
         public void Dissociate(AbstractControlEntity control)
         {
-            (this as IControlDelegate<EventDto>).BaseDissociate(control);
+            (this as IControlDelegate<AbstractParameterDto>).BaseDissociate(control);
         }
 
         public AbstractControlEntity GetControl(

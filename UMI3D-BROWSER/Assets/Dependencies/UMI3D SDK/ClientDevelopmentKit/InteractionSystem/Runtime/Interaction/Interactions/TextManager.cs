@@ -17,9 +17,9 @@ limitations under the License.
 using System;
 using UnityEngine;
 
-namespace umi3d
+namespace umi3d.cdk.interaction
 {
-    public class ToggleControlEntity 
+    public class TextManager 
     {
     }
 }

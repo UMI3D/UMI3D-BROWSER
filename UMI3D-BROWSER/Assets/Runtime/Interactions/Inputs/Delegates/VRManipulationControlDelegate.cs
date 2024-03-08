@@ -57,7 +57,7 @@ namespace umi3d.browserRuntime.interaction
 
         public DofGroupOptionDto FindBest(DofGroupOptionDto[] options)
         {
-            return manipulationDelegate.FindBest(options);
+            return options[0];
         }
 
         public AbstractControlEntity GetControl(UMI3DController controller, ManipulationDto interaction)

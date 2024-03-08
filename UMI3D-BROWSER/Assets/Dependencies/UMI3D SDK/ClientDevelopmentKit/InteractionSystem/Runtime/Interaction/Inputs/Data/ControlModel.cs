@@ -127,5 +127,7 @@ namespace umi3d.cdk.interaction
             }
             return uiManipulation;
         }
+
+        //public 
     }
 }

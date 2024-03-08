@@ -85,49 +85,5 @@ namespace umi3dVRBrowsersBase.interactions
 
         #endregion
 
-        public virtual void Update()
-        {
-
-        }
-
-        #region Change mapping
-
-        [ContextMenu("SWIPE")]
-        private void Swipe()
-        {
-            //ChangeInputMapping(booleanInputs[0], booleanInputs[1]);
-        }
-
-        /// <summary>
-        /// Swipes the inputs of two interactions.
-        /// </summary>
-        /// <param name="previousInput"></param>
-        /// <param name="targetInput"></param>
-        public void ChangeInputMapping(AbstractVRInput previousInput, AbstractVRInput targetInput)
-        {
-            AbstractInteractionDto inter = null;
-            ulong toolId = 0, objectId = 0;
-
-            if (!targetInput.IsAvailable())
-            {
-                inter = targetInput.CurrentInteraction();
-                toolId = targetInput.GetToolId();
-                objectId = targetInput.GetHoveredObjectId();
-
-                targetInput.Dissociate();
-            }
-
-            targetInput.Associate(UMI3DGlobalID.EnvironmentId, previousInput.CurrentInteraction(), previousInput.GetToolId(), previousInput.GetHoveredObjectId());
-            previousInput.Dissociate();
-
-            if (inter != null)
-            {
-                previousInput.Associate(UMI3DGlobalID.EnvironmentId, inter, toolId, objectId);
-            }
-        }
-
-        #endregion Change mapping
-
-        #endregion Methods
     }
 }

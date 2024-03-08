@@ -78,6 +78,8 @@ namespace umi3d.browserRuntime.interaction
 
         private void Awake()
         {
+            UnityEngine.Physics.queriesHitBackfaces = true;
+
             logger.MainContext = this;
             logger.MainTag = nameof(UMI3DVRController);
 

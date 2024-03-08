@@ -178,7 +178,7 @@ namespace umi3d.cdk.interaction
         )
         {
             bool foundHoldableEvent = false;
-            if (InteractionMapper.Instance.shouldProjectHoldableEventOnSpecificInput)
+            if (true)
             {
                 var temp = new List<AbstractInteractionDto>();
 

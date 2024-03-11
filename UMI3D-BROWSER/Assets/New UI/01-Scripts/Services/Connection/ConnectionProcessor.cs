@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using umi3d.cdk;
 using umi3d.cdk.collaboration;
 using umi3d.common;
 using umi3d.common.interaction;
@@ -14,6 +15,8 @@ namespace umi3dBrowsers.services.connection
         public event Action<VirtualWorldData> OnMediaServerPingSuccess;
         public event Action<string> OnConnectionFailure;
         public event Action<ConnectionFormDto> OnFormReceived;
+        public event Action<List<string>> OnAsksToLoadLibrairies;
+        public event Action OnConnectionSuccess;
 
         [SerializeField,
             Tooltip("In seconds, after this time, if no connection was established, display an error message.")]
@@ -28,11 +31,13 @@ namespace umi3dBrowsers.services.connection
         private string _environmentUrl = "";
         private string _mediaDataServerUrl = "";
         private Action<FormAnswerDto> _formAnswerCallBack;
+        private Action<bool> _shouldDownloadLibrariesCallBack;
 
         private void Start()
         {
             identifier.OnParametersAvailible += HandleParameters;
             identifier.OnLibrairiesAvailible += HandleLibrairies;
+            UMI3DCollaborationEnvironmentLoader.Instance.onEnvironmentLoaded.AddListener(() => OnConnectionSuccess.Invoke());
         }
 
         public async void TryConnectToMediaServer(string url)
@@ -75,6 +80,11 @@ namespace umi3dBrowsers.services.connection
             _formAnswerCallBack?.Invoke(formAnswer);
         }
 
+        public void SendAnswerToLibrariesDownloadAsk(bool canDownload)
+        {
+            _shouldDownloadLibrariesCallBack?.Invoke(canDownload);
+        }
+
         private async Task<MediaDto> GetMediaServer(string url)
         {
             var curentUrl = FormatUrl(url) + UMI3DNetworkingKeys.media;
@@ -95,9 +105,16 @@ namespace umi3dBrowsers.services.connection
             OnFormReceived?.Invoke(dto);
         }
 
-        private void HandleLibrairies(List<string> list, Action<bool> action)
+        private void HandleLibrairies(List<string> ids, Action<bool> action)
         {
-            Debug.Log("Got Librairies");
+            _shouldDownloadLibrariesCallBack = action;
+
+            if (ids.Count == 0)
+            {
+                _shouldDownloadLibrariesCallBack.Invoke(true);
+            }
+            else
+                OnAsksToLoadLibrairies?.Invoke(ids);
         }
 
         protected static string FormatUrl(string url)

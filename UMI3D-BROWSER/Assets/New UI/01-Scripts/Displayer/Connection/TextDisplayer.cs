@@ -48,9 +48,9 @@ namespace umi3dBrowsers.displayer
             this.title.text = title + " :";
         }
 
-        public void SetPlaceHolder(string placeHolder)
+        public void SetPlaceHolder(List<string> placeHolder)
         {
-            this.placeHolder.text = placeHolder;
+            this.placeHolder.text = placeHolder[0];
         }
     }
 }

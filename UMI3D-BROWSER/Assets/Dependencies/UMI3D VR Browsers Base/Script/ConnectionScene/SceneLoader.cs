@@ -43,7 +43,7 @@ namespace umi3dVRBrowsersBase.connection
         private void Start()
         {
             if (debugCamera != null) debugCamera.gameObject.SetActive(false);   
-            if (SceneManager.GetSceneByName(sceneToLoad) != null) return;
+            //if (SceneManager.GetSceneByName(sceneToLoad) != null) return;
 
             if (setNewSceneAsActive)
             {

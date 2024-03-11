@@ -61,9 +61,20 @@ namespace umi3dBrowsers.container
                 };
 
                 _formAnswer.answers.Add(paramRequestDto);
+                //Debug.Log(connectionFormDto.fields[i].GetType());
 
                 switch (connectionFormDto.fields[i])
                 {
+                    case EnumParameterDto<string> paramEnum :
+                        {
+                            GameObject gameObject = Instantiate(dropDownFieldPrefab, contentRoot.transform);
+                            form.Add(gameObject);
+                            IDisplayer displayer = gameObject.GetComponent<IDisplayer>();
+                            formBinding.Add(() => paramRequestDto.parameter = displayer.GetValue(true));
+                            displayer.SetTitle(paramEnum.name);
+                            displayer.SetPlaceHolder(paramEnum.possibleValues);
+                        }
+                        break;
                     case BooleanParameterDto:
 
                         break;
@@ -80,7 +91,7 @@ namespace umi3dBrowsers.container
                             IDisplayer displayer = gameObject.GetComponent<IDisplayer>();
                             formBinding.Add(() => paramRequestDto.parameter = displayer.GetValue(true));
                             displayer.SetTitle(stringParam.name);
-                            displayer.SetPlaceHolder(stringParam.description);
+                            displayer.SetPlaceHolder(new List<string>() { stringParam.description });
                         }                
                         break;
                     default:

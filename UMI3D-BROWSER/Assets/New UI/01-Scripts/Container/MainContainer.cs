@@ -65,6 +65,8 @@ namespace umi3d
         [SerializeField] private UnityEvent backButtonClicked;
         [SerializeField] private UnityEvent standUpButtonClicked;
         [SerializeField] private UnityEvent flagButtonClicked;
+        [Space]
+        [SerializeField] private GameObject backgroundShadder;
 
         [Header("Title")]
         [SerializeField] private TextMeshProUGUI prefixText;
@@ -182,6 +184,8 @@ namespace umi3d
                 HandleContentState(ContentState.dynamicServerContent);
                 dynamicServerContainer.ProcessConnectionFormDto(connectionFormDto);
             };
+            connectionProcessorService.OnAsksToLoadLibrairies += (ids) => connectionProcessorService.SendAnswerToLibrariesDownloadAsk(true);
+            connectionProcessorService.OnConnectionSuccess += () => backgroundShadder.SetActive(false);
         }
 
         private void HandleContentState(ContentState state)

@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -28,10 +29,11 @@ using UnityEngine.UI;
 namespace umi3dBrowsers.displayer
 {
     [RequireComponent(typeof(UIColliderScaller), typeof(UMI3DUI_Button))]
-    public class GridDropDown : MonoBehaviour, ISubDisplayer
+    public class GridDropDown : MonoBehaviour, ISubDisplayer, IDisplayer
     {
         [Header("MainDisplayer")]
         [SerializeField] private TextMeshProUGUI text;
+        [SerializeField] private TextMeshProUGUI title;
 
         [Header("Colors")]
         [SerializeField] private Image thisImage;
@@ -57,6 +59,14 @@ namespace umi3dBrowsers.displayer
         public string GetValue()
         {
             return text.text;
+        }
+
+        public object GetValue(bool trim)
+        {
+            if (trim)
+                return GetValue().Trim();
+            else
+                return GetValue();
         }
 
         public void Init(List<GridDropDownItemCell> cells)
@@ -152,6 +162,24 @@ namespace umi3dBrowsers.displayer
         public void Init(Color normalColor, Color hoverColor, Color selectedColor)
         {
             throw new NotImplementedException();
+        }
+
+        public void SetTitle(string title)
+        {
+            if (this.title == null) return;
+            this.title.text = title + " :";
+        }
+
+        public void SetPlaceHolder(List<string> placeHolder)
+        {
+            List<GridDropDownItemCell> possibleValues = new();
+            placeHolder.ForEach(language =>
+            {
+                GridDropDownItemCell cell = new(language);
+                possibleValues.Add(cell);
+            });
+
+            Init(possibleValues);
         }
     }
 }

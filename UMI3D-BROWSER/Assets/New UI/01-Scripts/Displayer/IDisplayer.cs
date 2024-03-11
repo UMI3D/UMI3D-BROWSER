@@ -7,5 +7,5 @@ public interface IDisplayer
 { 
     public object GetValue(bool trim);
     public void SetTitle(string title);
-    public void SetPlaceHolder(string placeHolder);
+    public void SetPlaceHolder(List<string> placeHolder);
 }

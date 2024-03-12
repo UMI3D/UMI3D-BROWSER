@@ -15,7 +15,6 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
-using System.Collections.Generic;
 using System.Linq;
 
 using umi3d.common;
@@ -29,8 +28,6 @@ namespace umi3d.cdk.userCapture.pose
     public class PoseManager : Singleton<PoseManager>, IPoseManager
     {
         private const DebugScope DEBUG_SCOPE = DebugScope.CDK | DebugScope.UserCapture;
-
-        private Dictionary<PoseClip, PoseAnchorDto> anchoredPoseClips = new();
 
         #region Dependency Injection
 
@@ -66,7 +63,7 @@ namespace umi3d.cdk.userCapture.pose
         /// <inheritdoc/>
         public bool TryActivatePoseAnimator(ulong environmentId, ulong poseAnimatorId)
         {
-            if (!environmentManager.TryGetEntity(environmentId, poseAnimatorId, out PoseAnimator poseAnimator))
+            if (!environmentManager.TryGetEntity(environmentId, poseAnimatorId, out IPoseAnimator poseAnimator))
             {
                 UMI3DLogger.LogWarning($"Unable to try to activate pose animator {environmentId} {poseAnimatorId}. Entity {poseAnimatorId} not found.", DEBUG_SCOPE);
                 return false;
@@ -75,23 +72,24 @@ namespace umi3d.cdk.userCapture.pose
             return poseAnimator.TryActivate();
         }
 
+        public bool TryDeactivatePoseAnimator(ulong environmentId, ulong poseAnimatorId)
+        {
+            if (!environmentManager.TryGetEntity(environmentId, poseAnimatorId, out IPoseAnimator poseAnimator))
+            {
+                UMI3DLogger.LogWarning($"Unable to try to deactivate pose animator {environmentId} {poseAnimatorId}. Entity {poseAnimatorId} not found.", DEBUG_SCOPE);
+                return false;
+            }
+
+            return poseAnimator.TryDeactivate();
+        }
+
         /// <inheritdoc/>
-        public void PlayPoseClip(PoseClip poseClip, PoseAnchorDto anchor = null)
+        public void PlayPoseClip(PoseClip poseClip, PoseAnchorDto anchorToForce = null, ISubskeletonDescriptionInterpolationPlayer.PlayingParameters parameters = null)
         {
             if (poseClip == null)
                 throw new System.ArgumentNullException(nameof(poseClip));
 
-            if (skeletonManager.PersonalSkeleton.PoseSubskeleton.AppliedPoses.Contains(poseClip))
-                return;
-
-            skeletonManager.PersonalSkeleton.PoseSubskeleton.StartPose(poseClip);
-
-            if (anchor != null)
-                skeletonManager.PersonalSkeleton.TrackedSubskeleton.StartTrackerSimulation(anchor);
-            else
-                skeletonManager.PersonalSkeleton.TrackedSubskeleton.StartTrackerSimulation(poseClip.Pose.anchor);
-            
-            anchoredPoseClips.Add(poseClip, anchor);
+            skeletonManager.PersonalSkeleton.PoseSubskeleton.StartPose(poseClip, parameters: parameters, anchorToForce: anchorToForce);
         }
 
         /// <inheritdoc/>
@@ -100,16 +98,13 @@ namespace umi3d.cdk.userCapture.pose
             if (poseClip == null)
                 throw new System.ArgumentNullException(nameof(poseClip));
 
+            if (skeletonManager?.PersonalSkeleton?.PoseSubskeleton == null)
+                return; // skeleton was deleted in the meanwhile
+
             if (!skeletonManager.PersonalSkeleton.PoseSubskeleton.AppliedPoses.Contains(poseClip))
                 return;
 
             skeletonManager.PersonalSkeleton.PoseSubskeleton.StopPose(poseClip);
-
-            if (anchoredPoseClips.TryGetValue(poseClip, out PoseAnchorDto anchor))
-            {
-                skeletonManager.PersonalSkeleton.TrackedSubskeleton.StopTrackerSimulation(anchor);
-                anchoredPoseClips.Remove(poseClip);
-            }
         }
 
         /// <inheritdoc/>

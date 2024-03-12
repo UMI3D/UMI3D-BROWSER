@@ -33,7 +33,7 @@ namespace umi3d.cdk.collaboration
     /// Client for the UMI3D environment server, handles the connection to environments.
     /// </summary>
     /// The Environment Client singlely handles all that is connection and creates 
-    /// an <see cref="umi3d.cdk.collaboration.HttpClient"/> and a <see cref="UMI3DForgeClient"/> to handle other messages.
+    /// an <see cref="umi3d.cdk.collaboration.EnvironmentHttpClient"/> and a <see cref="UMI3DForgeClient"/> to handle other messages.
     public class UMI3DEnvironmentClient
     {
         private const DebugScope scope = DebugScope.CDK | DebugScope.Collaboration | DebugScope.Networking;
@@ -86,7 +86,7 @@ namespace umi3d.cdk.collaboration
         /// <summary>
         /// Handles HTTP requests before connection or to retrieve DTOs.
         /// </summary>
-        public HttpClient HttpClient { get; private set; }
+        public EnvironmentHttpClient HttpClient { get; private set; }
 
         /// <summary>
         /// Handles most of the transaction-related message after connection.
@@ -164,6 +164,7 @@ namespace umi3d.cdk.collaboration
         public class UserInfo
         {
             public ConnectionFormDto formdto;
+            public common.interaction.form.ConnectionFormDto form;
             public UserConnectionAnswerDto answerDto;
 
             public string AudioPassword;
@@ -171,6 +172,7 @@ namespace umi3d.cdk.collaboration
             public UserInfo()
             {
                 formdto = new ConnectionFormDto();
+                form = new();
                 answerDto = new UserConnectionAnswerDto();
                 AudioPassword = null;
 
@@ -178,7 +180,7 @@ namespace umi3d.cdk.collaboration
 
             public void Set(UserConnectionDto dto)
             {
-                FormAnswerDto param = this.answerDto.parameters;
+                common.interaction.FormAnswerDto param = this.answerDto.parameters;
                 this.answerDto = new UserConnectionAnswerDto()
                 {
                     id = dto.id,
@@ -208,6 +210,7 @@ namespace umi3d.cdk.collaboration
                     parameters = param
                 };
                 this.formdto = dto.parameters;
+                this.form = dto.form;
                 this.AudioPassword = dto.audioPassword;
             }
         }
@@ -235,7 +238,7 @@ namespace umi3d.cdk.collaboration
             progress.Add(joinProgress);
 
             lastTokenUpdate = default;
-            HttpClient = new HttpClient(this);
+            HttpClient = new EnvironmentHttpClient(this);
             needToGetFirstConnectionInfo = true;
         }
 
@@ -490,7 +493,7 @@ namespace umi3d.cdk.collaboration
 
                     // UMI3DLogger.Log($"Ask to download Libraries", scope | DebugScope.Connection);
                     bool b = await UMI3DCollaborationClientServer.Instance.Identifier.ShouldDownloadLibraries(
-                        UMI3DResourcesManager.LibrariesToDownload(LibrariesDto)
+                        UMI3DResourcesManager.LibrariesToDownload(LibrariesDto.libraries)
                         );
 
                     if (!b)
@@ -503,7 +506,7 @@ namespace umi3d.cdk.collaboration
                         libraryProgress.SetStatus("Downloading Libraries");
                         try
                         {
-                            await UMI3DResourcesManager.DownloadLibraries(LibrariesDto, worldControllerClient.name, libraryProgress);
+                            await UMI3DResourcesManager.DownloadLibraries(LibrariesDto.libraries, worldControllerClient.name, libraryProgress);
                             librariesUpdated = true;
                         }
                         catch (Exception e)
@@ -522,9 +525,15 @@ namespace umi3d.cdk.collaboration
                 if (Ok)
                 {
                     //UMI3DLogger.Log($"Update Identity parameters {UserDto.formdto} ", scope | DebugScope.Connection);
-                    if (UserDto.formdto != null)
+                    if (UserDto.form != null)
                     {
-                        FormAnswerDto param = await UMI3DCollaborationClientServer.Instance.Identifier.GetParameterDtos(UserDto.formdto);
+                        var param = await UMI3DCollaborationClientServer.Instance.Identifier.GetParameterDtos(UserDto.form);
+                        UserDto.answerDto.formAnswer = param;
+                        await HttpClient.SendPostUpdateIdentity(UserDto.answerDto);
+                    }
+                    else if (UserDto.formdto != null)
+                    {
+                        common.interaction.FormAnswerDto param = await UMI3DCollaborationClientServer.Instance.Identifier.GetParameterDtos(UserDto.formdto);
                         UserDto.answerDto.parameters = param;
                         await HttpClient.SendPostUpdateIdentity(UserDto.answerDto);
                     }

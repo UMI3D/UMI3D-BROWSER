@@ -15,15 +15,12 @@ limitations under the License.
 */
 
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using umi3d.common.collaboration.dto.networking;
 using umi3d.common.collaboration.dto.signaling;
 using umi3d.common.interaction;
-using UnityEngine;
 using UnityEngine.Networking;
 
 namespace umi3d.common.collaboration
@@ -32,11 +29,11 @@ namespace umi3d.common.collaboration
 
 
 
-        /// <summary>
-        /// Send HTTP requests to the environment server.
-        /// </summary>
-        /// Usually used before connection or to retrieve DTOs.
-        public abstract class AbstractHttpClient<T>
+    /// <summary>
+    /// Send HTTP requests to the environment server.
+    /// </summary>
+    /// Usually used before connection or to retrieve DTOs.
+    public abstract partial class AbstractHttpClient<T>
     {
         protected const DebugScope scope = DebugScope.Common | DebugScope.Collaboration | DebugScope.Networking;
 
@@ -111,217 +108,23 @@ namespace umi3d.common.collaboration
                 dto2 = UMI3DDtoSerializer.FromJson<FakePrivateIdentityDto>(text, Newtonsoft.Json.TypeNameHandling.None);
             }
 
-            ConnectionFormDto dto3 = UMI3DDtoSerializer.FromJson<ConnectionFormDto>(text, Newtonsoft.Json.TypeNameHandling.None, new List<JsonConverter>() { new ParameterConverter() });
+            ConnectionFormDto dto3 = UMI3DDtoSerializer.FromJson<ConnectionFormDto>(text, Newtonsoft.Json.TypeNameHandling.None, new List<JsonConverter>() { new Old_ParameterConverter() });
+            interaction.form.ConnectionFormDto dto4 = UMI3DDtoSerializer.FromJson<interaction.form.ConnectionFormDto>(text, Newtonsoft.Json.TypeNameHandling.None, new List<JsonConverter>() { new ParameterConverter() });
 
             if (dto1 != null && dto1?.globalToken != null && dto1?.connectionDto != null)
                 return dto1;
             else if (dto2 != null && dto2?.GlobalToken != null && dto2?.connectionDto != null)
                 return dto2.ToPrivateIdentity();
             else
-                return dto3;
+                return (UMI3DDto)dto3 ?? dto4;
 
-        }
-
-        public class ParameterConverter : Newtonsoft.Json.JsonConverter
-        {
-            public override bool CanRead => true;
-
-            public override bool CanWrite => false;
-
-            public override bool CanConvert(Type objectType)
-            {
-                return objectType == typeof(AbstractParameterDto);
-            }
-
-
-            public AbstractParameterDto ReadObjectArray(JObject obj, JToken tokenA)
-            {
-                switch (ReadObjectValue(obj))
-                {
-                    case Color col:
-                        return new EnumParameterDto<Color>()
-                        {
-                            possibleValues = tokenA.Values<object>().Select(objA => (Color)ReadObjectValue(objA as JObject)).ToList(),
-                            value = col
-                        };
-                    case Vector4 v4:
-                        return new EnumParameterDto<Vector4>()
-                        {
-                            possibleValues = tokenA.Values<object>().Select(objA => (Vector4)ReadObjectValue(objA as JObject)).ToList(),
-                            value = v4
-                        };
-                    case Vector3 v3:
-                        return new EnumParameterDto<Vector3>()
-                        {
-                            possibleValues = tokenA.Values<object>().Select(objA => (Vector3)ReadObjectValue(objA as JObject)).ToList(),
-                            value = v3
-                        };
-                    case Vector2 v2:
-                        return new EnumParameterDto<Vector2>()
-                        {
-                            possibleValues = tokenA.Values<object>().Select(objA => (Vector2)ReadObjectValue(objA as JObject)).ToList(),
-                            value = v2
-                        };
-                }
-                UnityEngine.Debug.LogError($"Missing case. {obj}");
-                return null;
-            }
-
-            public AbstractParameterDto ReadObject(JObject obj)
-            {
-                switch (ReadObjectValue(obj))
-                {
-                    case Color col:
-                        return new ColorParameterDto
-                        {
-                            value = col.Dto()
-                        };
-                    case Vector4 v4:
-                        return new Vector4ParameterDto
-                        {
-                            value = v4.Dto()
-                        };
-                    case Vector3 v3:
-                        return new Vector3ParameterDto
-                        {
-                            value = v3.Dto()
-                        };
-                    case Vector2 v2:
-                        return new Vector2ParameterDto
-                        {
-                            value = v2.Dto()
-                        };
-                }
-                UnityEngine.Debug.LogError($"Missing case. {obj}");
-                return null;
-            }
-
-            public object ReadObjectValue(JObject obj)
-            {
-                if (obj.TryGetValue("R", out JToken tokenR)
-                    && obj.TryGetValue("G", out JToken tokenG)
-                    && obj.TryGetValue("B", out JToken tokenB)
-                    && obj.TryGetValue("A", out JToken tokenA))
-                {
-                    return  new Color(tokenR.ToObject<float>(), tokenG.ToObject<float>(), tokenB.ToObject<float>(), tokenA.ToObject<float>());
-                }
-
-                if (obj.TryGetValue("X", out JToken tokenX)
-                    && obj.TryGetValue("Y", out JToken tokenY))
-                {
-                    if (obj.TryGetValue("Z", out JToken tokenZ))
-                    {
-                        if (obj.TryGetValue("W", out JToken tokenW))
-                            return  new Vector4(tokenX.ToObject<float>(), tokenY.ToObject<float>(), tokenZ.ToObject<float>(), tokenW.ToObject<float>());
-                        return  new Vector3(tokenX.ToObject<float>(), tokenY.ToObject<float>(), tokenZ.ToObject<float>());
-                    }
-                    return  new Vector2(tokenX.ToObject<float>(), tokenY.ToObject<float>());
-                }
-                UnityEngine.Debug.LogError($"Missing case. {obj}");
-                return null;
-            }
-
-
-            public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-            {
-                var jo = JObject.Load(reader);
-                AbstractParameterDto dto = null;
-                bool isArray = false;
-                isArray = jo.TryGetValue("possibleValues", out JToken tokenA);
-
-                if (jo.TryGetValue("value", out JToken token))
-                {
-                    switch (token.Type)
-                    {
-                        case JTokenType.String:
-                            if (isArray)
-                                dto = new EnumParameterDto<string>()
-                                {
-                                    possibleValues = tokenA.Values<string>().ToList(),
-                                    value = token.ToObject<string>()
-                                };
-                            else
-                                dto = new StringParameterDto()
-                                {
-                                    value = token.ToObject<string>()
-                                };
-                            break;
-                        case JTokenType.Boolean:
-                            dto = new BooleanParameterDto()
-                            {
-                                value = token.ToObject<bool>()
-                            };
-                            break;
-                        case JTokenType.Float:
-                            if (isArray)
-                                dto = new EnumParameterDto<float>()
-                                {
-                                    possibleValues = tokenA.Values<float>().ToList(),
-                                    value = token.ToObject<float>()
-                                };
-                            else
-                                dto = new FloatParameterDto()
-                                {
-                                    value = token.ToObject<float>()
-                                };
-                            break;
-                        case JTokenType.Integer:
-                            if (isArray)
-                                dto = new EnumParameterDto<int>()
-                                {
-                                    possibleValues = tokenA.Values<int>().ToList(),
-                                    value = token.ToObject<int>()
-                                };
-                            else
-                                dto = new IntegerParameterDto()
-                                {
-                                    value = token.ToObject<int>()
-                                };
-                            break;
-                        case JTokenType.Object:
-                            var obj = token.ToObject<object>() as JObject;
-                            if (isArray)
-                                dto = ReadObjectArray(obj, tokenA);
-                            else
-                                dto = ReadObject(obj);
-                            break;
-                        default:
-                            UnityEngine.Debug.LogError($"TODO Add Case for Color, Range or Vector 2 3 4. {token.Type}");
-                            break;
-                    }
-                }
-                if (dto == null)
-                    return null;
-
-                if (jo.TryGetValue("privateParameter", out JToken tokenp))
-                    dto.privateParameter = tokenp.ToObject<bool>();
-                if (jo.TryGetValue("isDisplayer", out JToken tokendisp))
-                    dto.isDisplayer = tokendisp.ToObject<bool>();
-                if (jo.TryGetValue("description", out JToken tokend))
-                    dto.description = tokend.ToObject<string>();
-                if (jo.TryGetValue("id", out JToken tokeni))
-                    dto.id = (ulong)tokeni.ToObject<int>();
-                if (jo.TryGetValue("name", out JToken tokenn))
-                    dto.name = tokenn.ToObject<string>();
-                if (jo.TryGetValue("icon2D", out JToken tokenI2))
-                    dto.icon2D = tokenI2.ToObject<ResourceDto>();
-                if (jo.TryGetValue("icon3D", out JToken tokenI3))
-                    dto.icon3D = tokenI3.ToObject<ResourceDto>();
-
-                return dto;
-            }
-
-            public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-            {
-                throw new NotImplementedException();
-            }
         }
 
         private class FakePrivateIdentityDto : IdentityDto
         {
             public string GlobalToken;
             public string connectionDto;
-            public List<LibrariesDto> libraries;
+            public List<AssetLibraryDto> libraries;
 
             public PrivateIdentityDto ToPrivateIdentity()
             {
@@ -372,7 +175,7 @@ namespace umi3d.common.collaboration
                 try
                 {
                     var b = uwr?.downloadHandler.data;
-                    if(b != null)
+                    if (b != null)
                     {
                         result = UMI3DDtoSerializer.FromBson<PendingTransactionDto>(b);
                     }
@@ -696,8 +499,8 @@ namespace umi3d.common.collaboration
 #endif
             {
                 return
-                    await instance?.Sub__GetRequest(www, date, HeaderToken, url, ShouldTryAgain, UseCredential, headers, tryCount) 
-                    ?? throw new Umi3dNetworkingException(www, "Failed to get ");
+                    await (instance?.Sub__GetRequest(www, date, HeaderToken, url, ShouldTryAgain, UseCredential, headers, tryCount)
+                    ?? throw new Umi3dNetworkingException(www, "Failed to get "));
 
             }
             return www;
@@ -705,7 +508,7 @@ namespace umi3d.common.collaboration
 
         protected virtual async Task<UnityWebRequest> Sub__GetRequest(UnityWebRequest www, DateTime date, string HeaderToken, string url, Func<RequestFailedArgument, bool> ShouldTryAgain, bool UseCredential = false, List<(string, string)> headers = null, int tryCount = 0)
         {
-                throw new Umi3dNetworkingException(www, "Failed to get ");
+            throw new Umi3dNetworkingException(www, "Failed to get ");
         }
 
         /// <summary>
@@ -741,8 +544,8 @@ namespace umi3d.common.collaboration
 #endif
             {
                 return
-                    await instance?.Sub_PostRequest(www, date, HeaderToken, url,contentType,bytes, ShouldTryAgain, UseCredential, headers, tryCount)
-                    ?? throw new Umi3dNetworkingException(www, "Failed to get ");
+                    await (instance?.Sub_PostRequest(www, date, HeaderToken, url, contentType, bytes, ShouldTryAgain, UseCredential, headers, tryCount)
+                    ?? throw new Umi3dNetworkingException(www, "Failed to get "));
 
             }
             return www;
@@ -750,8 +553,8 @@ namespace umi3d.common.collaboration
 
         protected virtual async Task<UnityWebRequest> Sub_PostRequest(UnityWebRequest www, DateTime date, string HeaderToken, string url, string contentType, byte[] bytes, Func<RequestFailedArgument, bool> ShouldTryAgain, bool UseCredential = false, List<(string, string)> headers = null, int tryCount = 0)
         {
-                UnityEngine.Debug.Log(System.Text.Encoding.ASCII.GetString(bytes));
-                throw new Umi3dNetworkingException(www, " Failed to post\n" + www.downloadHandler.text);
+            UnityEngine.Debug.Log(System.Text.Encoding.ASCII.GetString(bytes));
+            throw new Umi3dNetworkingException(www, " Failed to post\n" + www.downloadHandler.text);
         }
 
 

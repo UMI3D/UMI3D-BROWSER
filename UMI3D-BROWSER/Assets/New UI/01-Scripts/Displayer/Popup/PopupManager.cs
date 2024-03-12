@@ -50,6 +50,7 @@ public class PopupManager : MonoBehaviour
 
     public void ShowPopup(PopupType type)
     {
+        activePopup = type;
         switch (type)
         {
             case PopupType.CloseApplication:

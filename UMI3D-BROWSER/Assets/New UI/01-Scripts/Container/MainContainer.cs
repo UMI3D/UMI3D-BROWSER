@@ -137,8 +137,7 @@ namespace umi3d
             });
             bugButton?.onClick.AddListener(() => {
                 bugClicked?.Invoke();
-                popupManager.activePopup = PopupManager.PopupType.ReportBug;
-                popupManager.ShowPopup(popupManager.activePopup);
+                popupManager.ShowPopup(PopupManager.PopupType.ReportBug);
             });
             backButton?.OnClick.AddListener(() =>
             {

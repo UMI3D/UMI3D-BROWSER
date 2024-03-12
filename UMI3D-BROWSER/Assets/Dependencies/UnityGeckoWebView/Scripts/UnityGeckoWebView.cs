@@ -1,5 +1,23 @@
+/*
+Copyright 2019 - 2024 Inetum
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using Unity.Collections;
 using Unity.Profiling;
 using UnityEngine;
 using UnityEngine.Events;
@@ -33,6 +51,20 @@ namespace com.inetum.unitygeckowebview
 
         [Space]
 
+        [SerializeField, Tooltip("If true, webview will use a whitelist")]
+        private bool useWhitelist = false;
+
+        [SerializeField, Tooltip("List of domains to whitelist")]
+        private string[] whitelist = new string[0];
+
+        [SerializeField, Tooltip("If true, webview will use a blacklist")]
+        private bool useBlacklist = false;
+
+        [SerializeField, Tooltip("List of domains to blacklist")]
+        private string[] blacklist = new string[0];
+
+        [Space]
+
         [SerializeField, Tooltip("Image which displays the webview")]
         public RawImage image;
 
@@ -59,6 +91,16 @@ namespace com.inetum.unitygeckowebview
         /// Object which can be sent to native plugin.
         /// </summary>
         private UnityGeckoWebViewCallback unityCallback;
+
+        /// <summary>
+        /// Byte buffer used by java plugin to render the texture.
+        /// </summary>
+        private NativeArray<byte> byteBuffer;
+
+        /// <summary>
+        /// <see cref="byteBuffer"/> converted as Java Object.
+        /// </summary>
+        private AndroidJavaObject byteBufferJavaObject;
 
         private bool isInit = false;
 
@@ -111,13 +153,21 @@ namespace com.inetum.unitygeckowebview
 
             try
             {
+                byteBuffer = new NativeArray<byte>(2 * width * height, Allocator.Persistent);
+                byteBufferJavaObject = new AndroidJavaObject(AndroidJNI.NewDirectByteBuffer(byteBuffer));
+
                 texture = new Texture2D(width, height, TextureFormat.RGB565, false);
 
                 unityCallback = new(this);
 
                 using (var baseClass = new AndroidJavaClass("com.inetum.unitygeckowebview.UnityGeckoWebView"))
                 {
-                    webView = baseClass.CallStatic<AndroidJavaObject>("createWebView", width, height, useNativeKeyboard, unityCallback);
+                    webView = baseClass.CallStatic<AndroidJavaObject>("createWebView", width, height, useNativeKeyboard, unityCallback, byteBufferJavaObject);
+
+                    UseWhiteList(useWhitelist);
+                    UseBlackList(useBlacklist);
+                    SetWhiteList(whitelist);
+                    SetBlackList(blacklist);
 
                     if (startRendering)
                         StartRendering();
@@ -144,6 +194,9 @@ namespace com.inetum.unitygeckowebview
         {
             webView?.Call("destroy");
             webView?.Dispose();
+
+            byteBufferJavaObject.Dispose();
+            byteBuffer.Dispose();
         }
 
         private void Update()
@@ -168,13 +221,21 @@ namespace com.inetum.unitygeckowebview
         /// <param name="height"></param>
         public void ChangeTextureSize(int width, int height)
         {
+            // Make the Application crash.
+            return;
             this.width = width;
             this.height = height;
 
             if (isInit)
             {
+                byteBuffer.Dispose();
+                byteBufferJavaObject.Dispose();
+
+                byteBuffer = new NativeArray<byte>(2 * width * height , Allocator.Persistent);
+                byteBufferJavaObject = new AndroidJavaObject(AndroidJNI.NewDirectByteBuffer(byteBuffer));
+
                 texture = new Texture2D(width, height, TextureFormat.RGB565, false);
-                webView?.Call("changeTextureSize", width, height);
+                webView?.Call("changeTextureSize", width, height, byteBufferJavaObject);
             }
         }
 
@@ -184,16 +245,13 @@ namespace com.inetum.unitygeckowebview
         /// <returns></returns>
         private IEnumerator RenderCoroutine()
         {
-            sbyte[] signedBitmap = null;
-            byte[] bitmap = null;
-
             var wait = new WaitForSeconds(1f / fps);
 
             while (true)
             {
                 try
                 {
-                    Render(signedBitmap, bitmap);
+                    Render();
                 }
                 catch (Exception ex)
                 {
@@ -209,30 +267,19 @@ namespace com.inetum.unitygeckowebview
         /// </summary>
         /// <param name="signedBitmap"></param>
         /// <param name="bitmap"></param>
-        private void Render(sbyte[] signedBitmap, byte[] bitmap)
+        private void Render()
         {
             using (profilerNativeRenderCodeMarker.Auto())
             {
-                signedBitmap = webView?.Call<sbyte[]>("render");
+                webView?.Call("render");
             }
 
             using (profileProcessRenderCodeMarker.Auto())
             {
-                if (bitmap == null)
-                    bitmap = new byte[signedBitmap.Length];
+                texture.LoadRawTextureData(byteBuffer);
+                texture.Apply();
 
-                if (bitmap.Length > 0)
-                {
-                    Buffer.BlockCopy(signedBitmap, 0, bitmap, 0, signedBitmap.Length);
-
-                    if (bitmap != null)
-                    {
-                        texture.LoadRawTextureData(bitmap);
-                        texture.Apply();
-
-                        image.texture = texture;
-                    }
-                }
+                image.texture = texture;
             }
         }
 
@@ -332,6 +379,44 @@ namespace com.inetum.unitygeckowebview
         public void Scroll(int scrollX, int scrollY)
         {
             webView?.Call("scroll", scrollX, scrollY);
+        }
+
+        #endregion
+
+        #region Whitelist/Blacklist
+
+        public void UseWhiteList(bool useWhitelist)
+        {
+            webView?.Call("setUseWhiteList", useWhitelist);
+        }
+
+        public void UseBlackList(bool useBlacklist)
+        {
+            webView?.Call("setUseBlackList", useBlacklist);
+        }
+
+        /// <summary>
+        /// Set domains to whitelist.
+        /// </summary>
+        /// <param name="domains"></param>
+        public void SetWhiteList(IEnumerable<string> domains)
+        {
+            if (domains == null)
+                return;
+
+            webView?.Call("setWhiteList", domains.ToArray());
+        }
+
+        /// <summary>
+        /// Set domains to blacklist.
+        /// </summary>
+        /// <param name="domains"></param>
+        public void SetBlackList(IEnumerable<string> domains)
+        {
+            if (domains == null)
+                return;
+
+            webView?.Call("setBlackList", domains.ToArray());
         }
 
         #endregion

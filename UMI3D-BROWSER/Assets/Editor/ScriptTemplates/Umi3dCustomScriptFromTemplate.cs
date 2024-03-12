@@ -14,6 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 using UnityEditor;
+using UnityEditor.Compilation;
+using UnityEngine;
 
 namespace umi3d.browserEditor.utils
 {
@@ -72,6 +74,16 @@ namespace umi3d.browserEditor.utils
                 $"{partialPath}/Umi3dInterfaceTemplate.txt",
                 "Umi3dInterface.cs"
             );
+        }
+
+        [MenuItem(itemName: "Assets/Create/Custom Script/Monobehaviour", isValidateFunction: false, priority: 51)]
+        public static void CreateMonobehaviourTemplate()
+        {
+            ProjectWindowUtil.CreateScriptAssetFromTemplateFile
+           (
+               $"{partialPath}/MonobehaviourTemplate.txt",
+               "NewBehaviourScript.cs"
+           );
         }
     }
 }

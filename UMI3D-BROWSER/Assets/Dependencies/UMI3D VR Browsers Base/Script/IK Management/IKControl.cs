@@ -31,11 +31,11 @@ namespace umi3dVRBrowsersBase.ikManagement
         protected Animator animator;
         public bool feetIkActive
         {
-            get => LeftController.isActif; 
+            get => LeftController.isActive; 
             set
             {
-                LeftController.isActif = value;
-                RightController.isActif = value;
+                LeftController.isActive = value;
+                RightController.isActive = value;
             }
         }
 
@@ -49,8 +49,8 @@ namespace umi3dVRBrowsersBase.ikManagement
 
         private void Start()
         {
-            LeftController.isActif = false;
-            RightController.isActif = false;
+            LeftController.isActive = false;
+            RightController.isActive = false;
 
             LeftController.isOverrider = true;
             RightController.isOverrider = true;
@@ -58,8 +58,8 @@ namespace umi3dVRBrowsersBase.ikManagement
             LeftController.boneType = BoneType.LeftAnkle;
             RightController.boneType = BoneType.RightAnkle;
 
-            trackedSubskeleton.controllers.Add(LeftController);
-            trackedSubskeleton.controllers.Add(RightController);
+            trackedSubskeleton.ReplaceController(LeftController);
+            trackedSubskeleton.ReplaceController(RightController);
         }
 
         private void Update()

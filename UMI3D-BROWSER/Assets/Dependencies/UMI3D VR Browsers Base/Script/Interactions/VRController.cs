@@ -105,7 +105,7 @@ namespace umi3dVRBrowsersBase.interactions
             {
                 PlayerMenuManager.Instance.MenuHeader.DisplayControllerButton(true, type, tool.name);
 
-                tool.onProjected(bone.Bonetype);
+                tool.onProjected(bone.BoneType);
             }
         }
 
@@ -280,7 +280,7 @@ namespace umi3dVRBrowsersBase.interactions
         public override void Release(AbstractTool tool, InteractionMappingReason reason)
         {
             base.Release(tool, reason);
-            tool.onReleased(bone.Bonetype);
+            tool.onReleased(bone.BoneType);
 
             PlayerMenuManager.Instance.CtrlToolMenu.ClearBindingList(type);
             PlayerMenuManager.Instance.MenuHeader.DisplayControllerButton(false, type, string.Empty);

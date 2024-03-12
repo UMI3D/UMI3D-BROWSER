@@ -64,7 +64,7 @@ namespace umi3dVRBrowsersBase.interactions.input
 
             if (controller is VRController vrController)
             {
-                boneType = vrController.bone.Bonetype;
+                boneType = vrController.bone.BoneType;
                 boneTransform = vrController.bone.transform;
             } else
             {

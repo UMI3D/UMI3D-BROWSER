@@ -79,6 +79,7 @@ namespace umi3d
 
         [Header("Services")]
         [SerializeField] private ConnectionProcessor connectionProcessorService;
+        [SerializeField] private PopupManager popupManager;
 
         private void Awake()
         {
@@ -136,7 +137,8 @@ namespace umi3d
             });
             bugButton?.onClick.AddListener(() => {
                 bugClicked?.Invoke();
-
+                popupManager.activePopup = PopupManager.PopupType.ReportBug;
+                popupManager.ShowPopup(popupManager.activePopup);
             });
             backButton?.OnClick.AddListener(() =>
             {

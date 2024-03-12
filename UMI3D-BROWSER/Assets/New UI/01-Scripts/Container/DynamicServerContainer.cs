@@ -75,8 +75,15 @@ namespace umi3dBrowsers.container
                             displayer.SetPlaceHolder(paramEnum.possibleValues);
                         }
                         break;
-                    case BooleanParameterDto:
-
+                    case BooleanParameterDto boolParam:
+                        {
+                            GameObject gameObject = Instantiate(toggleSwitchPrefab, contentRoot.transform);
+                            form.Add(gameObject);
+                            IDisplayer displayer = gameObject.GetComponentInChildren<IDisplayer>();
+                            formBinding.Add(() => paramRequestDto.parameter = displayer.GetValue(true));
+                            displayer.SetTitle(boolParam.name);
+                            displayer.SetPlaceHolder(new List<string>() { boolParam.value ? "1" : "0" });
+                        }
                         break;
                     case ColorParameterDto:
 

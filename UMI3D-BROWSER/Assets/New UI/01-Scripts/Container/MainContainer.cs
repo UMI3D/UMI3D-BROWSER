@@ -53,8 +53,12 @@ namespace umi3d
         // todo : call something like an hint manager hints
         // todo : call something like a pop up manager to open a bug popup
 
-        private enum ContentState { mainContent, storageContent, parametersContent, flagContent, standUpContent, dynamicServerContent };
-        [SerializeField, Tooltip("start content")] private ContentState contentState;   
+        public enum ContentState { mainContent, storageContent, parametersContent, flagContent, standUpContent, dynamicServerContent };
+        [SerializeField, Tooltip("start content")] private ContentState contentState;
+#if UNITY_EDITOR
+        public ContentState _ContentState { get { return contentState; } set { contentState = value; } }
+        public void ToolAccessProcessForm(ConnectionFormDto connectionFormDto) { ProcessForm(connectionFormDto); }
+#endif
 
 
         [Header("Navigation")]
@@ -182,10 +186,15 @@ namespace umi3d
             connectionProcessorService.OnFormReceived += (connectionFormDto) =>
             {
                 HandleContentState(ContentState.dynamicServerContent);
-                dynamicServerContainer.ProcessConnectionFormDto(connectionFormDto);
+                ProcessForm(connectionFormDto);
             };
             connectionProcessorService.OnAsksToLoadLibrairies += (ids) => connectionProcessorService.SendAnswerToLibrariesDownloadAsk(true);
             connectionProcessorService.OnConnectionSuccess += () => backgroundShadder.SetActive(false);
+        }
+
+        private void ProcessForm(ConnectionFormDto connectionFormDto)
+        {
+            dynamicServerContainer.ProcessConnectionFormDto(connectionFormDto);
         }
 
         private void HandleContentState(ContentState state)

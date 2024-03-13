@@ -38,6 +38,6 @@ namespace umi3d.cdk.interaction
         /// <summary>
         /// List of all of the nodes.
         /// </summary>
-        public List<ProjectionTreeNodeData> nodes;
+        public List<ProjectionTreeNodeData> nodes = new();
     }
 }

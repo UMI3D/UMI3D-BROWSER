@@ -35,10 +35,10 @@ namespace umi3d.browserRuntime.interaction
         public ProjectionTree_SO projectionTree_SO;
         public ProjectionEventSystem eventSystem;
 
-        public UMI3DController controller;
-        public UMI3DControlManager controlManager;
-        public UMI3DToolManager toolManager;
-        public UMI3DProjectionManager projectionManager;
+        public UMI3DController controller = new();
+        public UMI3DControlManager controlManager = new();
+        public UMI3DToolManager toolManager = new();
+        public UMI3DProjectionManager projectionManager = new();
 
         [Header("Hierarchy References")]
         public Tracker bone;

@@ -24,6 +24,9 @@ using UnityEngine.UIElements;
 
 namespace form_generator
 {
+    /// <summary>
+    /// This is a service for the FormGeneratorTool responsible of making up some connection forms dto
+    /// </summary>
     public class OldConnectionFormMaker : MonoBehaviour
     {
         private VisualElement root;

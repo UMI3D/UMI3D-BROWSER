@@ -3,6 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// An interface to connect any displayer to the dynamic server container
+/// </summary>
+/// If you want to make a new displayer you need to implement this interface. 
+/// This is intended to be used with the UMI3D form system
 public interface IDisplayer
 { 
     public object GetValue(bool trim);

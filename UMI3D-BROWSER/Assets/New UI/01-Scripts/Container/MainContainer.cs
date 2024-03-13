@@ -248,24 +248,5 @@ namespace umi3d
             flagContent.SetActive(false);
             standUpContent.SetActive(false);
         }
-
-        //public void ConnectToUmi3DEnvironement(string url, string port)
-        //{
-
-        //    StartCoroutine(WaitReady(new AdvancedConnectionPanel.Data() { ip = url, port = port }));
-        //}
-
-        //private IEnumerator WaitReady(AdvancedConnectionPanel.Data data)
-        //{
-        //    while (!Connecting.Exists && !UMI3DEnvironmentLoader.Exists)
-        //        yield return new WaitForEndOfFrame();
-
-        //    Connecting.Instance.Connect(data);
-
-        //    while (!UMI3DEnvironmentLoader.Exists)
-        //        yield return new WaitForEndOfFrame();
-
-        //    UMI3DEnvironmentLoader.Instance.onEnvironmentLoaded.AddListener(() => Debug.Log("environment loaded"));
-        //}
     }
 }

@@ -27,6 +27,13 @@ using UnityEngine.UI;
 
 namespace umi3dBrowsers.container
 {
+    /// <summary>
+    /// This class handles the dispaying of the ConnectionForms
+    /// </summary>
+    /// You should used this monobehaviour on its own panel because its going to instantiate many prefabs. 
+    /// If you wish you can add multiple Synamic server Container in your scene, just make sure they are not on the 
+    /// same gameobject.
+    /// The class uses the OnFormAnswer event to send back the form, you should subscribe to this event.
     public class DynamicServerContainer : MonoBehaviour
     {
         [Header("Displayers")]

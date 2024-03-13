@@ -24,6 +24,9 @@ using UnityEngine.UIElements;
 
 namespace form_generator
 {
+    /// <summary>
+    /// A class responsible for showing the different old form option for the FormGeneratorTool
+    /// </summary>
     public class OldFormListElementsOptions
     {
         const int itemHeight = 16;

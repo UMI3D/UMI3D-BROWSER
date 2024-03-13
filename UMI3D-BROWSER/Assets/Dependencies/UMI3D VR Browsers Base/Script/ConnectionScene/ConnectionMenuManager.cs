@@ -201,21 +201,7 @@ namespace umi3dVRBrowsersBase.connection
         public void DisplayHome()
         {
             HidePreviousNavigationButton();
-            if (AvatarHeightPanel.isSetup)
-            {
-                homePanel.Display();
-            }
-            else
-            {
-                mainCanvas.SetActive(false);
-                avatarHeightPanel.Display(() =>
-                {
-                    mainCanvas.SetActive(true);
-                    homePanel.Display();
-                    Library.SetActive(true);
-                });
-            }
-
+            homePanel.Display();
         }
 
         #endregion

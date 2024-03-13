@@ -72,6 +72,10 @@ namespace umi3d.cdk.interaction
         [HideInInspector]
         public List<EnumControlEntity> enumControls = new();
 
+        public List<SliderControlEntity> sliderControlPrefabs = new();
+        [HideInInspector]
+        public List<SliderControlEntity> sliderControls = new();
+
         [Space()]
         /// <summary>
         /// The button type controls for shortcuts.<br/>

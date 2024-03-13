@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using System;
+using System.Collections.Generic;
 using umi3d.common.interaction;
 using UnityEngine;
 
@@ -45,19 +46,10 @@ namespace umi3d.cdk.interaction
 
         public UIButtonControlEntity GetUIButton()
         {
-            var uiButton = controls_SO
-                .uIButtonControls
-                .Find(
-                    control =>
-                    {
-                        return !control.controlData.isUsed;
-                    }
-                );
-            if (uiButton == null)
-            {
-                uiButton = controls_SO.uIButtonControlPrefabs[0];
-            }
-            return uiButton;
+            return GetUIControl(
+                controls_SO.uIButtonControls,
+                controls_SO.uIButtonControlPrefabs
+            );
         }
 
         public PhysicalManipulationControlEntity GetPhysicalManipulation(DofGroupDto dof)
@@ -128,6 +120,54 @@ namespace umi3d.cdk.interaction
             return uiManipulation;
         }
 
-        //public 
+        public TextControlEntity GetText()
+        {
+            return GetUIControl(
+                controls_SO.textControls,
+                controls_SO.textControlPrefabs
+            );
+        }
+
+        public ToggleControlEntity GetToggle()
+        {
+            return GetUIControl(
+                controls_SO.toggleControls,
+                controls_SO.toggleControlPrefabs
+            );
+        }
+
+        public EnumControlEntity GetEnum()
+        {
+            return GetUIControl(
+                controls_SO.enumControls,
+                controls_SO.enumControlPrefabs
+            );
+        }
+
+        public SliderControlEntity GetSlider()
+        {
+            return GetUIControl(
+                controls_SO.sliderControls,
+                controls_SO.sliderControlPrefabs
+            );
+        }
+
+        Entity GetUIControl<Entity>(List<Entity> controls, List<Entity> prefabs)
+            where Entity: AbstractControlEntity
+        {
+            var control = 
+                controls
+                .Find(
+                    control =>
+                    {
+                        return !control.controlData.isUsed;
+                    }
+                );
+            if (control == null)
+            {
+                control = prefabs[0];
+            }
+            return control;
+        }
     }
 }

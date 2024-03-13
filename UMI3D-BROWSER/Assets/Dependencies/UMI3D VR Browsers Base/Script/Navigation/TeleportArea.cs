@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
 
 namespace umi3dVRBrowsersBase.navigation
 {
@@ -23,7 +24,18 @@ namespace umi3dVRBrowsersBase.navigation
     /// </summary>
     public class TeleportArea : MonoBehaviour
     {
+        public TeleportationArea tpArea;
 
+        private void Start()
+        {
+            tpArea = GetComponent<TeleportationArea>();
+            if (tpArea == null )
+            {
+                tpArea = gameObject.AddComponent<TeleportationArea>();
+            }
+
+            //tpArea.colliders.Add(GetComponent<Collider>());
+        }
     }
 }
 

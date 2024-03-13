@@ -423,7 +423,7 @@ LineRenderer:
   m_Positions: []
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 0.02
+    widthMultiplier: 0.01
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -1604,6 +1604,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 2029230974493433245}
   - {fileID: 534336232897921520}
   m_Father: {fileID: 1836939119653726880}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1625,6 +1626,7 @@ MonoBehaviour:
   intentCoefficient: 0.25
   aimPoint: {fileID: 534336232897921520}
   laserOrigin: {fileID: 3824339228473891759}
+  pinchStabilizationThreshold: 0.025
   setUpSkeleton: {fileID: 0}
 --- !u!1 &2118070244843205454
 GameObject:
@@ -2336,7 +2338,7 @@ Transform:
   m_GameObject: {fileID: 3573776018442724512}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.00067067984, y: 0.0010256439, z: 0.02459195}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3355,6 +3357,7 @@ GameObject:
   - component: {fileID: 4580364636133797154}
   - component: {fileID: 5481086714463530429}
   - component: {fileID: 5386832344109350743}
+  - component: {fileID: 4285821327877449827}
   m_Layer: 0
   m_Name: Left Hand Tracking
   m_TagString: Untagged
@@ -3493,6 +3496,51 @@ MonoBehaviour:
   m_HandMeshRenderer: {fileID: 504247734211059271}
   m_ShowMeshWhenTrackingIsAcquired: 1
   m_HideMeshWhenTrackingIsLost: 1
+--- !u!114 &4285821327877449827
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5358607397094515163}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4912832fb5367b24b8e7d485a8168804, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  handedness: 1
+  filterType: 0
+--- !u!1 &5563264475429462770
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2029230974493433245}
+  m_Layer: 0
+  m_Name: Laser Fix Aim Point
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2029230974493433245
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5563264475429462770}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: 0.000000029802319, w: 1}
+  m_LocalPosition: {x: 0.05, y: -0.06, z: 0.15}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5220785225197749701}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5834921164461702745
 GameObject:
   m_ObjectHideFlags: 0

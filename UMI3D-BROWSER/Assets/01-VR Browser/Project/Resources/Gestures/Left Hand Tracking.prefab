@@ -1583,6 +1583,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5220785225197749701}
+  - component: {fileID: 4631212127246156581}
   - component: {fileID: 806045582492909942}
   m_Layer: 0
   m_Name: Laser
@@ -1608,6 +1609,25 @@ Transform:
   - {fileID: 534336232897921520}
   m_Father: {fileID: 1836939119653726880}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4631212127246156581
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2039850495882291157}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e45bc2d78e9d22647a7fb23831bb2237, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsRunning: 0
+  sourceTransform: {fileID: 2029230974493433245}
+  targetTransform: {fileID: 534336232897921520}
+  transitionDuration: 0.5
+  freq: 60
+  freqCutoffMin: 0.75
+  beta: 0.0001
 --- !u!114 &806045582492909942
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1626,6 +1646,9 @@ MonoBehaviour:
   intentCoefficient: 0.25
   aimPoint: {fileID: 534336232897921520}
   laserOrigin: {fileID: 3824339228473891759}
+  thumbTip: {fileID: 3838044000692981255}
+  indexTip: {fileID: 8402422623252603700}
+  filter: {fileID: 4631212127246156581}
   pinchStabilizationThreshold: 0.025
   setUpSkeleton: {fileID: 0}
 --- !u!1 &2118070244843205454

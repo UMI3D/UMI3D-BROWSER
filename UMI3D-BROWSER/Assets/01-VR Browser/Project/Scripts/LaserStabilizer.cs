@@ -1,3 +1,5 @@
+using umi3d.runtimeBrowser.filter;
+
 using umi3dVRBrowsersBase.connection;
 
 using UnityEngine;
@@ -33,6 +35,22 @@ public class LaserStabilizer : MonoBehaviour
     [SerializeField, Tooltip("Transform rotated by the stabilizer.")]
     private Transform laserOrigin;
 
+    [Header("Pinch stabilization"), SerializeField]
+    private Transform thumbTip;
+
+    [SerializeField]
+    private Transform indexTip;
+
+    [SerializeField]
+    private OneEuroTransformFilter filter;
+
+    /// <summary>
+    /// When tips are close than this distance, the ray start to be stronger stabilized.
+    /// </summary>
+    /// Default value was found empirically.
+    [SerializeField, Tooltip("When tips are close than this distance, the ray start to be stronger stabilized.")]
+    private float pinchStabilizationThreshold = 0.025f;
+
     [Header("Starting event provider"), SerializeField, Tooltip("Provide the event that the skeleton is ready.")]
     private SetUpSkeleton setUpSkeleton;
 
@@ -47,6 +65,9 @@ public class LaserStabilizer : MonoBehaviour
         Assert.IsNotNull(elbowTransform);
         Assert.IsNotNull(wristTransform);
         Assert.IsNotNull(laserOrigin);
+        Assert.IsNotNull(filter);
+
+        filter.IsRunning = false;
 
         setUpSkeleton = setUpSkeleton == null ? UnityEngine.Object.FindObjectOfType<SetUpSkeleton>() : setUpSkeleton;
         setUpSkeleton.SetupDone += () => { isRunning = true; };
@@ -56,6 +77,22 @@ public class LaserStabilizer : MonoBehaviour
     {
         if (!isRunning)
             return;
+
+        float pinchStrength = (indexTip.position - thumbTip.position).magnitude / pinchStabilizationThreshold;
+
+        if (pinchStrength < 1)
+        {
+            if (!filter.IsRunning)
+            {
+                filter.ResetFilter();
+                filter.IsRunning = true;
+            }
+        }
+        else
+        {
+            if (filter.IsRunning)
+                filter.IsRunning = false;
+        }
 
         rayOriginPosition = ComputeRayOriginPosition(intentCoefficient);
 
@@ -74,7 +111,7 @@ public class LaserStabilizer : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        if (shoulderTransform == null || elbowTransform == null || wristTransform == null || aimPoint == null)
+        if (Application.isEditor)
             return;
 
         Gizmos.color = Color.gray;

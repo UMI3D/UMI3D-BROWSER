@@ -3381,6 +3381,7 @@ GameObject:
   - component: {fileID: 5481086714463530429}
   - component: {fileID: 5386832344109350743}
   - component: {fileID: 4285821327877449827}
+  - component: {fileID: 46093847048711985}
   m_Layer: 0
   m_Name: Left Hand Tracking
   m_TagString: Untagged
@@ -3533,6 +3534,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   handedness: 1
   filterType: 0
+--- !u!114 &46093847048711985
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5358607397094515163}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3b43a2c2cff0a54e99f6f374033ba01, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  meshController: {fileID: 5386832344109350743}
 --- !u!1 &5563264475429462770
 GameObject:
   m_ObjectHideFlags: 0

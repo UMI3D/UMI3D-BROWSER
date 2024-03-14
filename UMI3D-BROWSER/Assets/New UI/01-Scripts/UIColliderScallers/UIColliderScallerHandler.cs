@@ -29,7 +29,8 @@ namespace umi3dBrowsers.utils
         {
             if (rescalUIOnStart)
             {
-                ScaleColliders();
+                // ScaleColliders();
+                StartCoroutine(RescalerDelay());
             }
         }
 
@@ -57,6 +58,12 @@ namespace umi3dBrowsers.utils
             {
                 scaller.ScaleCollider();
             }
+        }
+
+        public IEnumerator RescalerDelay()
+        {
+            yield return new WaitForSeconds(1);
+            ScaleColliders();
         }
     }
 }

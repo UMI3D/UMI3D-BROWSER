@@ -94,6 +94,7 @@ namespace umi3d.cdk.collaboration
         /// See <see cref="UserDto.audioUseMumble"/>.
         /// </summary>
         public bool useMumble => dto.audioUseMumble;
+
         /// <summary>
         /// See <see cref="UserDto.audioLogin"/>.
         /// </summary>
@@ -142,6 +143,11 @@ namespace umi3d.cdk.collaboration
         public ulong onStopSpeakingAnimationId => dto.onStopSpeakingAnimationId;
 
         /// <summary>
+        /// See <see cref="UserDto.areTrackedControllersVisible"/>.
+        /// </summary>
+        public bool areTrackedControllersVisible => dto.areTrackedControllersVisible;
+
+        /// <summary>
         /// See <see cref="UserDto.login"/>.
         /// </summary>
         public string login => dto?.login;
@@ -175,6 +181,7 @@ namespace umi3d.cdk.collaboration
             bool serverUpdate = dto.audioServerUrl != user.audioServerUrl;
 
             bool loginUpdate = dto.audioLogin != user.audioLogin;
+            bool areTrackedControllersVisibleUpdate = dto.areTrackedControllersVisible != user.areTrackedControllersVisible;
             bool pswUpdate = false;
 
             dto = user;
@@ -199,6 +206,7 @@ namespace umi3d.cdk.collaboration
             if (channelUpdate) OnUserMicrophoneChannelUpdated.Invoke(this);
             if (serverUpdate) OnUserMicrophoneServerUpdated.Invoke(this);
             if (loginUpdate || pswUpdate) OnUserMicrophoneIdentityUpdated.Invoke(this);
+            if (areTrackedControllersVisibleUpdate) OnAreTrackedControllersVisible.Invoke(this);
         }
 
         public bool UpdateUser(ulong property, object value)
@@ -262,10 +270,14 @@ namespace umi3d.cdk.collaboration
                     dto.userSize = (Vector3Dto)value;
                     return true;
 
+                case UMI3DPropertyKeys.AreTrackedControllersVisible:
+                    dto.areTrackedControllersVisible = (bool)value;
+                    OnAreTrackedControllersVisible.Invoke(this);
+                    return true;
+
                 default:
                     return false;
             }
-            return false;
         }
 
         public void SetMicrophoneStatus(bool microphoneStatus)
@@ -331,6 +343,6 @@ namespace umi3d.cdk.collaboration
         public static UMI3DUserEvent OnUserMicrophoneServerUpdated = new UMI3DUserEvent();
         public static UMI3DUserEvent OnUserMicrophoneChannelUpdated = new UMI3DUserEvent();
         public static UMI3DUserEvent OnUserMicrophoneUseMumbleUpdated = new UMI3DUserEvent();
-
+        public static UMI3DUserEvent OnAreTrackedControllersVisible = new UMI3DUserEvent();
     }
 }

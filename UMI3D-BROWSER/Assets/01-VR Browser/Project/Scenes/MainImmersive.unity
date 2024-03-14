@@ -466,7 +466,7 @@ PrefabInstance:
     - target: {fileID: 5988314907380347006, guid: 6d8cc188ac4cb49419e2616ed25f607d,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0.0009845309
+      value: 0.0005476929
       objectReference: {fileID: 0}
     - target: {fileID: 6093459749334264534, guid: 6d8cc188ac4cb49419e2616ed25f607d,
         type: 3}
@@ -738,6 +738,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 136242414532538547, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: m_System
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 1090631631072059896, guid: aa50e35a45eaaed43a950ae34ef532dc,
         type: 3}
       propertyPath: toolManager.tool_SO
@@ -816,6 +821,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 409b597f7531cdc43a37ce6778fcdb14,
         type: 2}
+    - target: {fileID: 2226021069222256124, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: m_System
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 3325278439223139300, guid: aa50e35a45eaaed43a950ae34ef532dc,
         type: 3}
       propertyPath: m_IsActive
@@ -1092,6 +1102,7 @@ PrefabInstance:
     - {fileID: 6014133757010385626, guid: aa50e35a45eaaed43a950ae34ef532dc, type: 3}
     - {fileID: 8302837342606287033, guid: aa50e35a45eaaed43a950ae34ef532dc, type: 3}
     - {fileID: 3480375292505844209, guid: aa50e35a45eaaed43a950ae34ef532dc, type: 3}
+    - {fileID: 2526228204487302672, guid: aa50e35a45eaaed43a950ae34ef532dc, type: 3}
     m_RemovedGameObjects:
     - {fileID: 4919600431959886191, guid: aa50e35a45eaaed43a950ae34ef532dc, type: 3}
     m_AddedGameObjects: []

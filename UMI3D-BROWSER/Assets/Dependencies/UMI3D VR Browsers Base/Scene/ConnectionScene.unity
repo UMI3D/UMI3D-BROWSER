@@ -19228,8 +19228,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 10, y: 0.001, z: 10}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 10, y: 1, z: 10}
+  m_Center: {x: 0, y: -0.5, z: 0}
 --- !u!4 &336902266440839914
 Transform:
   m_ObjectHideFlags: 0
@@ -19279,7 +19279,7 @@ GameObject:
   - component: {fileID: 336902266440839913}
   - component: {fileID: 336902266440839918}
   - component: {fileID: 336902266440839920}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: TPPlane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19305,7 +19305,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   m_InteractionLayers:
-    m_Bits: 1
+    m_Bits: 2147483648
   m_DistanceCalculationMode: 1
   m_SelectMode: 1
   m_FocusMode: 1
@@ -19391,7 +19391,7 @@ MonoBehaviour:
       m_Calls: []
   m_TeleportationProvider: {fileID: 0}
   m_MatchOrientation: 0
-  m_MatchDirectionalInput: 0
+  m_MatchDirectionalInput: 1
   m_TeleportTrigger: 0
   m_FilterSelectionByHitNormal: 0
   m_UpNormalToleranceDegrees: 30

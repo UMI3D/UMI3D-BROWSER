@@ -16367,6 +16367,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 9058197876967809848}
     m_Modifications:
+    - target: {fileID: 1897015357289832837, guid: 2f04f1c50f02d554eae45a18df40a345,
+        type: 3}
+      propertyPath: controllerTransform
+      value: 
+      objectReference: {fileID: 2574849388862748063}
     - target: {fileID: 2051356391878648268, guid: 2f04f1c50f02d554eae45a18df40a345,
         type: 3}
       propertyPath: m_Layer
@@ -16457,6 +16462,16 @@ PrefabInstance:
       propertyPath: layerToIgnore.m_Bits
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 7403015900618204734, guid: 2f04f1c50f02d554eae45a18df40a345,
+        type: 3}
+      propertyPath: controllerTransform
+      value: 
+      objectReference: {fileID: 2574849388862748063}
+    - target: {fileID: 8728283092380310767, guid: 2f04f1c50f02d554eae45a18df40a345,
+        type: 3}
+      propertyPath: controllerTransform
+      value: 
+      objectReference: {fileID: 2574849388862748063}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -16674,6 +16689,11 @@ PrefabInstance:
       propertyPath: shoulderTransform
       value: 
       objectReference: {fileID: 4501185147626481732}
+    - target: {fileID: 4795588733753693682, guid: bbea8cf7c571dce44a1cbc6db1ddb94c,
+        type: 3}
+      propertyPath: m_Parameters.widthMultiplier
+      value: 0.01
+      objectReference: {fileID: 0}
     - target: {fileID: 6469791313041439444, guid: bbea8cf7c571dce44a1cbc6db1ddb94c,
         type: 3}
       propertyPath: m_Layer
@@ -17259,6 +17279,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2363083834553243286}
     m_Modifications:
+    - target: {fileID: 1897015357289832837, guid: 2f04f1c50f02d554eae45a18df40a345,
+        type: 3}
+      propertyPath: controllerTransform
+      value: 
+      objectReference: {fileID: 2574849388862748063}
     - target: {fileID: 2051356391878648268, guid: 2f04f1c50f02d554eae45a18df40a345,
         type: 3}
       propertyPath: m_Layer
@@ -17349,6 +17374,16 @@ PrefabInstance:
       propertyPath: layerToIgnore.m_Bits
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 7403015900618204734, guid: 2f04f1c50f02d554eae45a18df40a345,
+        type: 3}
+      propertyPath: controllerTransform
+      value: 
+      objectReference: {fileID: 2574849388862748063}
+    - target: {fileID: 8728283092380310767, guid: 2f04f1c50f02d554eae45a18df40a345,
+        type: 3}
+      propertyPath: controllerTransform
+      value: 
+      objectReference: {fileID: 2574849388862748063}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -18795,6 +18830,12 @@ MonoBehaviour:
   isRight: 0
   isThumb: 0
   offset: {x: 0, y: 0, z: 0}
+--- !u!4 &2574849388862748063 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1421632952013827726, guid: 67d05fa4e1fbad64b91004ddc620e93f,
+    type: 3}
+  m_PrefabInstance: {fileID: 3459068270090230545}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2631768510719243719 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1478587810145840854, guid: 67d05fa4e1fbad64b91004ddc620e93f,
@@ -19443,6 +19484,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4561608057577072791}
     m_Modifications:
+    - target: {fileID: 1897015357289832837, guid: 2f04f1c50f02d554eae45a18df40a345,
+        type: 3}
+      propertyPath: controllerTransform
+      value: 
+      objectReference: {fileID: 2574849388862748063}
     - target: {fileID: 2051356391878648268, guid: 2f04f1c50f02d554eae45a18df40a345,
         type: 3}
       propertyPath: m_Layer
@@ -19533,6 +19579,16 @@ PrefabInstance:
       propertyPath: layerToIgnore.m_Bits
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 7403015900618204734, guid: 2f04f1c50f02d554eae45a18df40a345,
+        type: 3}
+      propertyPath: controllerTransform
+      value: 
+      objectReference: {fileID: 2574849388862748063}
+    - target: {fileID: 8728283092380310767, guid: 2f04f1c50f02d554eae45a18df40a345,
+        type: 3}
+      propertyPath: controllerTransform
+      value: 
+      objectReference: {fileID: 2574849388862748063}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -20225,6 +20281,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2350731943645017446}
     m_Modifications:
+    - target: {fileID: 1897015357289832837, guid: 2f04f1c50f02d554eae45a18df40a345,
+        type: 3}
+      propertyPath: controllerTransform
+      value: 
+      objectReference: {fileID: 2574849388862748063}
     - target: {fileID: 2051356391878648268, guid: 2f04f1c50f02d554eae45a18df40a345,
         type: 3}
       propertyPath: m_Layer
@@ -20315,6 +20376,16 @@ PrefabInstance:
       propertyPath: layerToIgnore.m_Bits
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 7403015900618204734, guid: 2f04f1c50f02d554eae45a18df40a345,
+        type: 3}
+      propertyPath: controllerTransform
+      value: 
+      objectReference: {fileID: 2574849388862748063}
+    - target: {fileID: 8728283092380310767, guid: 2f04f1c50f02d554eae45a18df40a345,
+        type: 3}
+      propertyPath: controllerTransform
+      value: 
+      objectReference: {fileID: 2574849388862748063}
     - target: {fileID: 8871773081443622917, guid: 2f04f1c50f02d554eae45a18df40a345,
         type: 3}
       propertyPath: selectionManager

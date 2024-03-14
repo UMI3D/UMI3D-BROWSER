@@ -96,9 +96,9 @@ namespace umi3d.browserEditor.BuildTool
                     ? DisplayStyle.None
                     : DisplayStyle.Flex;
             // Path
-            TF_Path.label = "Build Folder";
+            (TF_Path.labelElement as INotifyValueChanged<string>).SetValueWithoutNotify("Build Folder");
+            TF_Path.SetValueWithoutNotify(GetBuildFolder());
             TF_Path.RegisterValueChangedCallback(PathValueChanged);
-            TF_Path.SetValueWithoutNotify(viewModel[index].BuildFolder);
             B_Browse.clicked += Browse;
 
             // Device target.
@@ -127,6 +127,13 @@ namespace umi3d.browserEditor.BuildTool
             DD_ReleaseCycle.UnregisterValueChangedCallback(ReleaseCycleDDValueChanged);
             B_Apply.clicked -= Apply;
             B_Build.clicked -= Build;
+        }
+
+        string GetBuildFolder()
+        {
+            return (buildToolSettings_SO?.useOneBuildFolder ?? true)
+                    ? viewModel.buildToolTarget_SO.buildFolder
+                    : viewModel[index].BuildFolder;
         }
 
         void PathValueChanged(ChangeEvent<string> value)

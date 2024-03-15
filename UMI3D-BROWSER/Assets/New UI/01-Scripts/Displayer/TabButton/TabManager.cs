@@ -26,6 +26,7 @@ namespace umi3dBrowsers.container
     {
         [Header("Tabs")]
         [SerializeField] private GameObject tabButtonPrefab;
+        [SerializeField] private GameObject containerPrefab;
         [SerializeField] private List<TabToContainerBinder> tabs;
         [Header("Content")]
         [SerializeField] private Transform contentRoot;
@@ -75,14 +76,18 @@ namespace umi3dBrowsers.container
             tabs = null;
         }
 
-        public int AddNewTab(string label)
+        /// <summary>
+        /// Add A new tabs to the tab manager and its coresponding container
+        /// </summary>
+        /// <param name="label"></param>
+        /// <returns>The container of the tab</returns>
+        public GameObject AddNewTab(string label)
         {
             TabToContainerBinder tabBinder = new TabToContainerBinder();
 
             Tab tabButton = Instantiate(tabButtonPrefab, transform).GetComponent<Tab>();
             tabButton.SetLabel(label);
-            GameObject tab = new GameObject(label + "Container");
-            tab.transform.SetParent(contentRoot);
+            GameObject tab = Instantiate(containerPrefab, contentRoot);
 
             tabBinder.SetTabButton(tabButton);
             tabBinder.SetTabContainer(tab);
@@ -101,7 +106,7 @@ namespace umi3dBrowsers.container
             }
             tabs.Add(tabBinder);
 
-            return tabs.Count - 1;
+            return tab;
         }
 
         public Transform GetTabContainerById(int id)

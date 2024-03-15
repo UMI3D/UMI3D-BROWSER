@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using umi3d.common.interaction.form;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace umi3dBrowsers.container.formrenderer
 {
@@ -28,21 +29,23 @@ namespace umi3dBrowsers.container.formrenderer
         private GameObject _contentRoot;
         private FormAnswerDto _answer;
         public event Action<FormAnswerDto> OnFormAnswer;
-        List<GameObject> _notInPageFormParts = new();
+        List<GameObject> allContainers = new();
 
         [Header("UI Containers")]
         [SerializeField] private GameObject tabManagerPrefab;
-        [SerializeField] private GameObject imageContainerPrefab;
+        [SerializeField] private GameObject vignetteContainerPrefab;
+        [SerializeField] private GameObject groupContainerPrefab;
+
         [Space]
         [SerializeField] private TabManager tabManager;
 
         [Header("UI Displayers")]
         [SerializeField] private GameObject labelDisplayerPrefab;
         [SerializeField] private GameObject buttonDisplayerPrefab;
+        [SerializeField] private GameObject imageDisplayerPrefab;
 
         FormDto _form;
 
-        public const string VIGNETTE_NAME = "Vignette";
         public void Init(GameObject contentRoot)
         {
             this._contentRoot = contentRoot;
@@ -54,61 +57,75 @@ namespace umi3dBrowsers.container.formrenderer
             tabManager.Clear();
 
             float delay = 0;
-            for (int i = 0; i < _notInPageFormParts.Count; i++)
+            for (int i = 1; i < allContainers.Count; i++)
             {
+                if (allContainers[i] == null) continue;
 #if UNITY_EDITOR
-                DestroyImmediate(_notInPageFormParts[i]);
+                DestroyImmediate(allContainers[i]);
 #else
                 Destroy(_notInPageFormParts[i], delay)
                 delay += 0.01f;
 #endif
             }
-            _notInPageFormParts = new();
+            allContainers = new();
         }
 
         internal void Handle(ConnectionFormDto connectionFormDto)
         {
-            EvaluateDiv(connectionFormDto, -1);
+            allContainers.Add(_contentRoot);
+            EvaluateDiv(connectionFormDto, 0);
         }
 
-        private void EvaluateDiv(DivDto divParent, int pageId)
+        /// <summary>
+        /// Entry point to parse the connection form dto
+        /// </summary>
+        /// <param name="divParent"></param>
+        /// <param name="parentId"></param>
+        private void EvaluateDiv(DivDto divParent, int parentId)
         {
-            InstantiateDiv(divParent, pageId);
+            InstantiateDiv(divParent, parentId);
         }
 
-        private void InstantiateDiv(DivDto divParent, int pageId)
+        private void InstantiateDiv(DivDto divParent, int parentId)
         {
             switch (divParent)
             {
                 case BaseInputDto inputDto:
-                    HandleInputDto(inputDto, pageId); break;
+                    HandleInputDto(inputDto, parentId); break;
                 case FormDto inputDto:
                     HandleFormDto(inputDto); break;
                 case PageDto pageDto:
                     HandlePageDto(pageDto); break;
                 case LabelDto labelDto: 
-                    HandleLabelDto(labelDto, pageId); break;
+                    HandleLabelDto(labelDto, parentId); break;
                 case ImageDto imageDto:
-                    HandleImageDto(imageDto, pageId); break;
+                    HandleImageDto(imageDto, parentId); break;
             }
         }
 
-        private void HandleInputDto(BaseInputDto inputDto, int pageId)
+        private void HandleInputDto(BaseInputDto inputDto, int parentId)
         {
             switch (inputDto)
             {
                 case GroupDto groupDto:
-                    HandleGroupDto(groupDto, pageId); break;
+                    HandleGroupDto(groupDto, parentId); break;
                 case ButtonDto buttonDto:
-                    HandleButtonDto(buttonDto, pageId); break;
+                    HandleButtonDto(buttonDto, parentId); break;
             }
         }
 
-        private void HandleGroupDto(GroupDto groupDto, int pageId)
+        private void HandleGroupDto(GroupDto groupDto, int parentId)
         {
-
+            GameObject group = Instantiate(groupContainerPrefab, allContainers[parentId].transform);
+            allContainers.Add(group);
+            int currentId = allContainers.Count - 1;
+            foreach (var div in groupDto.FirstChildren)
+            {
+                EvaluateDiv(div, currentId);
+            }
         }
-        private void HandleButtonDto(ButtonDto buttonDto, int pageId)
+
+        private void HandleButtonDto(ButtonDto buttonDto, int parentId)
         {
 
         }
@@ -117,15 +134,16 @@ namespace umi3dBrowsers.container.formrenderer
             _form = formDto;
             foreach(var div in formDto.FirstChildren)
             {
-                EvaluateDiv(div, -1);
+                EvaluateDiv(div, 0);
             }
         }
         private void HandlePageDto(PageDto pageDto)
         {
-            int tabContainerId = tabManager.AddNewTab(pageDto.name);
+            allContainers.Add(tabManager.AddNewTab(pageDto.name));
+            int currentId = allContainers.Count - 1;
             foreach (var div in pageDto.FirstChildren)
             {
-                EvaluateDiv(div, tabContainerId);
+                EvaluateDiv(div, currentId);
             }
         }
         private void HandleLabelDto(LabelDto labelDto, int pageId)
@@ -134,7 +152,14 @@ namespace umi3dBrowsers.container.formrenderer
         }
         private void HandleImageDto(ImageDto imageDto, int pageId)
         {
-
+            if (imageDto.FirstChildren.Count == 0) // Simple image
+            {
+                GameObject imageGO = Instantiate(imageDisplayerPrefab, allContainers[pageId].transform);
+            }
+            else // Vignette
+            {
+                GameObject imageGo = Instantiate(vignetteContainerPrefab, allContainers[pageId].transform);
+            }
         }
 
         private void IniFormAnswer(ulong id)

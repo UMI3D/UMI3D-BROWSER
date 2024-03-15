@@ -47,21 +47,21 @@ namespace umi3dBrowsers.container.formrenderer
 
         private void Start()
         {
-            formParamRenderer.Init(contentRoot);
             formParamRenderer.OnFormAnswer += (formDto) => OnFormAnwser?.Invoke(formDto);
 
-            formDivRenderer.Init(contentRoot);
             formDivRenderer.OnFormAnswer += (formDto) => OnDivformAnswer?.Invoke(formDto);
         }
 
         public void HandleParamForm(ConnectionFormDto connectionFormDto)
         {
+            formParamRenderer.Init(contentRoot);
             formParamRenderer.CleanContent(connectionFormDto.id);
             formParamRenderer.Handle(connectionFormDto);
         }
 
         public void HandleDivForm(umi3d.common.interaction.form.ConnectionFormDto connectionFormDto)
         {
+            formDivRenderer.Init(contentRoot);
             formDivRenderer.CleanContent(connectionFormDto.id);
             formDivRenderer.Handle(connectionFormDto);
         }

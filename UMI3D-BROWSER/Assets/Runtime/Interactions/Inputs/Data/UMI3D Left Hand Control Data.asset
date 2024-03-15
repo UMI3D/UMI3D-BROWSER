@@ -32,7 +32,8 @@ MonoBehaviour:
         m_Interactions: 
         m_SingletonActionBindings: []
         m_Flags: 0
-      m_Reference: {fileID: 0}
+      m_Reference: {fileID: -5982496924579745919, guid: c348712bda248c246b8c49b3db54643f,
+        type: 3}
   uIButtonControlPrefabs:
   - controlData:
       isUsed: 0
@@ -98,8 +99,33 @@ MonoBehaviour:
         m_SingletonActionBindings: []
         m_Flags: 0
       m_Reference: {fileID: 0}
-  uIManipulationControlPrefabs: []
+  uIManipulationControlPrefabs:
+  - controlData:
+      isUsed: 0
+      environmentId: 0
+      toolId: 0
+      shouldDissociateAsSoonAsPossible: 0
+    manipulationData:
+      messageSender:
+        networkFrameRate: 0
+      translationStrength: 0
+      rotationStrength: 0
+      compatibleDofGroup: 
+      initialPosition: {x: 0, y: 0, z: 0}
+      initialRotation: {x: 0, y: 0, z: 0, w: 0}
+      frameOfReference: {fileID: 0}
+    input:
+      prefab: {fileID: 0}
+      uIObject: {fileID: 0}
   uIManipulationControls: []
-  textControlPrefabs: []
+  textControlPrefabs:
+  - controlData:
+      isUsed: 0
+      environmentId: 0
+      toolId: 0
+      shouldDissociateAsSoonAsPossible: 0
+    input:
+      prefab: {fileID: 0}
+      uIObject: {fileID: 0}
   textControls: []
   shortcuts: []

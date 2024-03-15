@@ -14,11 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using form_generator;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using umi3d.common.interaction.form;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace umi3dBrowsers.container.formrenderer
@@ -26,15 +26,23 @@ namespace umi3dBrowsers.container.formrenderer
     public class DivformRenderer : MonoBehaviour
     {
         private GameObject _contentRoot;
-        public event Action<GameObject> OnObjectAddedToRoot;
-        public event Action<FormAnswerDto> OnFormAnwser;
+        private FormAnswerDto _answer;
+        public event Action<FormAnswerDto> OnFormAnswer;
+        List<GameObject> _notInPageFormParts = new();
 
         [Header("UI Containers")]
-        [SerializeField] private GameObject panelManagerContainerPrefab;
+        [SerializeField] private GameObject tabManagerPrefab;
+        [SerializeField] private GameObject imageContainerPrefab;
+        [Space]
+        [SerializeField] private TabManager tabManager;
 
         [Header("UI Displayers")]
         [SerializeField] private GameObject labelDisplayerPrefab;
-        //[SerializeField] private GameObject 
+        [SerializeField] private GameObject buttonDisplayerPrefab;
+
+        FormDto _form;
+
+        public const string VIGNETTE_NAME = "Vignette";
         public void Init(GameObject contentRoot)
         {
             this._contentRoot = contentRoot;
@@ -42,75 +50,101 @@ namespace umi3dBrowsers.container.formrenderer
 
         internal void CleanContent(ulong id)
         {
+            IniFormAnswer(id);
+            tabManager.Clear();
 
+            float delay = 0;
+            for (int i = 0; i < _notInPageFormParts.Count; i++)
+            {
+#if UNITY_EDITOR
+                DestroyImmediate(_notInPageFormParts[i]);
+#else
+                Destroy(_notInPageFormParts[i], delay)
+                delay += 0.01f;
+#endif
+            }
+            _notInPageFormParts = new();
         }
 
         internal void Handle(ConnectionFormDto connectionFormDto)
         {
-            EvaluateDiv(connectionFormDto);
+            EvaluateDiv(connectionFormDto, -1);
         }
 
-        private void EvaluateDiv(DivDto divParent)
+        private void EvaluateDiv(DivDto divParent, int pageId)
         {
-            InstantiateDiv(divParent);
-            foreach (var div in divParent.FirstChildren)
-            {
-                EvaluateDiv(div);
-            }
+            InstantiateDiv(divParent, pageId);
         }
 
-        private void InstantiateDiv(DivDto divParent)
+        private void InstantiateDiv(DivDto divParent, int pageId)
         {
             switch (divParent)
             {
                 case BaseInputDto inputDto:
-                    HandleInputDto(inputDto); break;
+                    HandleInputDto(inputDto, pageId); break;
                 case FormDto inputDto:
                     HandleFormDto(inputDto); break;
                 case PageDto pageDto:
                     HandlePageDto(pageDto); break;
                 case LabelDto labelDto: 
-                    HandleLabelDto(labelDto); break;
+                    HandleLabelDto(labelDto, pageId); break;
                 case ImageDto imageDto:
-                    HandleImageDto(imageDto); break;
+                    HandleImageDto(imageDto, pageId); break;
             }
         }
 
-        private void HandleInputDto(BaseInputDto inputDto)
+        private void HandleInputDto(BaseInputDto inputDto, int pageId)
         {
             switch (inputDto)
             {
                 case GroupDto groupDto:
-                    HandleGroupDto(groupDto); break;
+                    HandleGroupDto(groupDto, pageId); break;
                 case ButtonDto buttonDto:
-                    HandleButtonDto(buttonDto); break;
+                    HandleButtonDto(buttonDto, pageId); break;
             }
         }
 
+        private void HandleGroupDto(GroupDto groupDto, int pageId)
+        {
 
-        private void HandleGroupDto(GroupDto groupDto)
-        {
-            throw new NotImplementedException();
         }
-        private void HandleButtonDto(ButtonDto buttonDto)
+        private void HandleButtonDto(ButtonDto buttonDto, int pageId)
         {
-            throw new NotImplementedException();
+
         }
-        private void HandleFormDto(FormDto inputDto)
+        private void HandleFormDto(FormDto formDto)
         {
-            throw new NotImplementedException();
+            _form = formDto;
+            foreach(var div in formDto.FirstChildren)
+            {
+                EvaluateDiv(div, -1);
+            }
         }
         private void HandlePageDto(PageDto pageDto)
         {
-            throw new NotImplementedException();
+            int tabContainerId = tabManager.AddNewTab(pageDto.name);
+            foreach (var div in pageDto.FirstChildren)
+            {
+                EvaluateDiv(div, tabContainerId);
+            }
         }
-        private void HandleLabelDto(LabelDto labelDto)
+        private void HandleLabelDto(LabelDto labelDto, int pageId)
         {
-            throw new NotImplementedException();
+
         }
-        private void HandleImageDto(ImageDto imageDto)
+        private void HandleImageDto(ImageDto imageDto, int pageId)
         {
-            throw new NotImplementedException();
+
+        }
+
+        private void IniFormAnswer(ulong id)
+        {
+            _answer = new FormAnswerDto()
+            {
+                formId = id,
+
+                inputs = new()
+            };
         }
     }
 }

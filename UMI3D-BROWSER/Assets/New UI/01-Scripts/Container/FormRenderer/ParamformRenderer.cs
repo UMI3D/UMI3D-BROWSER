@@ -33,11 +33,11 @@ namespace umi3dBrowsers.container.formrenderer
         [SerializeField] private GameObject toggleSwitchPrefab;
 
         private GameObject _contentRoot;
+        List<GameObject> form = new();
         List<Action> formBinding = new();
         private FormAnswerDto _formAnswer;
 
-        public event Action<GameObject> OnObjectAddedToRoot;
-        public event Action<FormAnswerDto> OnFormAnwser;
+        public event Action<FormAnswerDto> OnFormAnswer;
         public void Init(GameObject contentRoot)
         {
             this._contentRoot = contentRoot;
@@ -61,7 +61,7 @@ namespace umi3dBrowsers.container.formrenderer
                     case EnumParameterDto<string> paramEnum:
                         {
                             GameObject gameObject = Instantiate(dropDownFieldPrefab, _contentRoot.transform);
-                            OnObjectAddedToRoot?.Invoke(gameObject);
+                            form.Add(gameObject);
                             IDisplayer displayer = gameObject.GetComponent<IDisplayer>();
                             formBinding.Add(() => paramRequestDto.parameter = displayer.GetValue(true));
                             displayer.SetTitle(paramEnum.name);
@@ -71,7 +71,7 @@ namespace umi3dBrowsers.container.formrenderer
                     case BooleanParameterDto boolParam:
                         {
                             GameObject gameObject = Instantiate(toggleSwitchPrefab, _contentRoot.transform);
-                            OnObjectAddedToRoot?.Invoke(gameObject);
+                            form.Add(gameObject);
                             IDisplayer displayer = gameObject.GetComponentInChildren<IDisplayer>();
                             formBinding.Add(() => paramRequestDto.parameter = displayer.GetValue(true));
                             displayer.SetTitle(boolParam.name);
@@ -87,7 +87,7 @@ namespace umi3dBrowsers.container.formrenderer
                     case StringParameterDto stringParam:
                         {
                             GameObject gameObject = Instantiate(textFieldPrefab, _contentRoot.transform);
-                            OnObjectAddedToRoot?.Invoke(gameObject);
+                            form.Add(gameObject);
                             IDisplayer displayer = gameObject.GetComponent<IDisplayer>();
                             formBinding.Add(() => paramRequestDto.parameter = displayer.GetValue(true));
                             displayer.SetTitle(stringParam.name);
@@ -102,14 +102,14 @@ namespace umi3dBrowsers.container.formrenderer
             GameObject go = Instantiate(validationButtonPrefab, _contentRoot.transform);
             SimpleButton simpleButton = go.GetComponent<SimpleButton>();
             simpleButton.OnClick.AddListener(() => ValidateForm());
-            OnObjectAddedToRoot?.Invoke(go);
+            form.Add(go);
         }
 
         [ContextMenu("Validate form ")]
         public void ValidateForm()
         {
             formBinding.ForEach(action => action?.Invoke());
-            OnFormAnwser?.Invoke(_formAnswer);
+            OnFormAnswer?.Invoke(_formAnswer);
         }
 
         private void IniFormAnswer(ulong id)
@@ -128,6 +128,14 @@ namespace umi3dBrowsers.container.formrenderer
         {
             formBinding = new();
             IniFormAnswer(id);
+
+            float delay = 0;
+            for (int i = 0; i < form.Count; i++)
+            {
+                Destroy(form[i], delay);
+                delay += 0.01f;
+            }
+            form = new();
         }
     }
 }

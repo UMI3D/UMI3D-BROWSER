@@ -38,7 +38,6 @@ namespace umi3dBrowsers.container.formrenderer
     {
         [Header("params")]
         [SerializeField] private GameObject contentRoot;
-        List<GameObject> form = new();
 
         [SerializeField] private ParamformRenderer formParamRenderer;
         [SerializeField] private DivformRenderer formDivRenderer;
@@ -49,37 +48,22 @@ namespace umi3dBrowsers.container.formrenderer
         private void Start()
         {
             formParamRenderer.Init(contentRoot);
-            formParamRenderer.OnObjectAddedToRoot += (obj) => form.Add(obj);
-            formParamRenderer.OnFormAnwser += (formDto) => OnFormAnwser?.Invoke(formDto);
+            formParamRenderer.OnFormAnswer += (formDto) => OnFormAnwser?.Invoke(formDto);
 
             formDivRenderer.Init(contentRoot);
-            formDivRenderer.OnObjectAddedToRoot += (obj) => form.Add(obj);
-            formDivRenderer.OnFormAnwser += (formDto) => OnDivformAnswer?.Invoke(formDto);
+            formDivRenderer.OnFormAnswer += (formDto) => OnDivformAnswer?.Invoke(formDto);
         }
 
         public void HandleParamForm(ConnectionFormDto connectionFormDto)
         {
-            CleanContent();
             formParamRenderer.CleanContent(connectionFormDto.id);
             formParamRenderer.Handle(connectionFormDto);
         }
 
         public void HandleDivForm(umi3d.common.interaction.form.ConnectionFormDto connectionFormDto)
         {
-            CleanContent();
             formDivRenderer.CleanContent(connectionFormDto.id);
             formDivRenderer.Handle(connectionFormDto);
-        }
-
-        private void CleanContent()
-        {
-            float delay = 0;
-            for (int i = 0; i < form.Count; i++)
-            {
-                Destroy(form[i], delay);
-                delay += 0.01f;
-            }
-            form = new();
         }
     }
 }

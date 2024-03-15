@@ -11,25 +11,18 @@ Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
-limitations under the License.
+limit
 */
-using UnityEngine;
 
 namespace umi3d.runtimeBrowser.filter
 {
-    /// <summary>
-    /// Base for a Rotation related filter
-    /// </summary>
-    /// <remarks>
-    /// It need a tuple of two <see cref="Vector3"/> representing the forward and up vector of the rotation.
-    /// </remarks>
-    public abstract class FilterAlgoRotation : ScriptableObject
+    public interface IFilter<T>
     {
         /// <summary>
         /// Initialize the filter with a first value
         /// </summary>
         /// <param name="value">First value for the filter</param>
-        public abstract void Initialize((Vector3 forward, Vector3 up) value);
+        void Initialize(T value);
 
         /// <summary>
         /// Filter the value
@@ -37,6 +30,6 @@ namespace umi3d.runtimeBrowser.filter
         /// <param name="value">Value to be add or filter</param>
         /// <param name="deltaTime">DeltaTime to use</param>
         /// <returns>Data filtered</returns>
-        public abstract (Vector3 forward, Vector3 up) Filter((Vector3 forward, Vector3 up) value, float deltaTime);
+        T Filter(T value, float deltaTime);
     }
 }

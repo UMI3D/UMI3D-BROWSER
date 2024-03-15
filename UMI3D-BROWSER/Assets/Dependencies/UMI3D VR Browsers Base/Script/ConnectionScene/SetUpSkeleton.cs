@@ -66,7 +66,7 @@ namespace umi3dVRBrowsersBase.connection
         /// <summary>
         /// Avatar height stored if a player leave an environement to connect to another.
         /// </summary>
-        private static float avatarHeight = -1;
+        private static float skeletonHeight = -1;
 
         /// <summary>
         /// Avatar's neck.
@@ -84,14 +84,9 @@ namespace umi3dVRBrowsersBase.connection
         public float maxAngleBeforeRotating = 50;
 
         /// <summary>
-        /// Avatar scale associated to users heights.
+        /// Skeleton scale associated to users heights.
         /// </summary>
         private static Vector3 sessionScaleFactor = default;
-
-        /// <summary>
-        /// List of <see cref="GameObject"/> to activate when avatar's height is set up.
-        /// </summary>
-        public List<GameObject> objectsToActivate;
 
         /// <summary>
         /// Is avatar's height set up ?
@@ -109,6 +104,7 @@ namespace umi3dVRBrowsersBase.connection
         private float diffY;
 
         public event System.Action SetupDone;
+        public event System.Action SkeletonResized;
 
         #endregion
 
@@ -124,8 +120,7 @@ namespace umi3dVRBrowsersBase.connection
 
         private void Start()
         {
-            if (AvatarHeightPanel.isSetup)
-                StartCoroutine(SetUpAvatar());
+            StartCoroutine(SetupSkeleton());
 
             UMI3DEnvironmentLoader.Instance.onEnvironmentLoaded.AddListener(() =>
             {
@@ -137,7 +132,7 @@ namespace umi3dVRBrowsersBase.connection
         /// <summary>
         /// Check user's height to change avatar size.
         /// </summary>
-        public IEnumerator SetUpAvatar()
+        public IEnumerator SetupSkeleton()
         {
             // Enable the joint and surface for debug.
             //Joint.enabled = true;
@@ -145,42 +140,34 @@ namespace umi3dVRBrowsersBase.connection
             LeftWatch.SetActive(true);
             RightWatch.SetActive(true);
 
-            float height;
-
-            if (AvatarHeightPanel.isSetup)
-            {
-                height = avatarHeight;
-
-                while (OVRAnchor.localPosition.y == 0)
-                    yield return null;
-            }
-            else
-            {
-                height = OVRAnchor.localPosition.y;
-                avatarHeight = height;
-            }
-
-            if (sessionScaleFactor == default)
-            {
-                sessionScaleFactor = Vector3.one * height * 1.05f;
-            }
-
-            skeletonContainer.localScale = sessionScaleFactor;
-
-            neckOffset = new Vector3(0, -0.060f * OVRAnchor.localPosition.y, -0.07f);
-
-            startingVirtualNeckPosition = OVRAnchor.TransformPoint(neckOffset);
-            diffY = startingVirtualNeckPosition.y - skeletonContainer.position.y;
+            while (!TryResizeSkeleton()) //wait for camera to be positioned
+                yield return null;
 
             FootTargetBehavior.SetFootTargets();
-
-            foreach (GameObject obj in objectsToActivate)
-                obj.SetActive(true);
             
             trackers.ForEach(x => trackedSkeleton.ReplaceController(x.distantController));
             trackedSkeleton.bones.Add(BoneType.Viewpoint, Viewpoint);
 
             isSetup = true;
+            SetupDone?.Invoke();
+        }
+
+        public bool TryResizeSkeleton()
+        {
+            if (OVRAnchor.localPosition.y == 0)
+                return false;
+
+            skeletonHeight = OVRAnchor.localPosition.y;
+            sessionScaleFactor = 1.05f * skeletonHeight * Vector3.one;
+            skeletonContainer.localScale = sessionScaleFactor;
+
+            neckOffset = new Vector3(0, -0.060f * OVRAnchor.localPosition.y, -0.07f);
+            startingVirtualNeckPosition = OVRAnchor.TransformPoint(neckOffset);
+            diffY = startingVirtualNeckPosition.y - skeletonContainer.position.y;
+
+            SkeletonResized?.Invoke();
+
+            return true;
             SetupDone?.Invoke();
         }
 

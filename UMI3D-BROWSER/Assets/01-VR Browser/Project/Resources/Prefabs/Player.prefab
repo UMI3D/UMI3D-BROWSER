@@ -10900,7 +10900,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2363286020926254052}
-  - component: {fileID: 6741651820899844942}
   m_Layer: 0
   m_Name: HandTracking
   m_TagString: Untagged
@@ -10926,26 +10925,6 @@ Transform:
   - {fileID: 9145268605288402511}
   m_Father: {fileID: 8430962178163016153}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6741651820899844942
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6129948950877350513}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4912832fb5367b24b8e7d485a8168804, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_LeftHandPositionFilter: {fileID: 11400000, guid: b7f8466fbfab63b4da799a5c999ed64e,
-    type: 2}
-  m_RightHandPositionFilter: {fileID: 11400000, guid: 4bac0aa6a34579a4c9d47b9c5279bef0,
-    type: 2}
-  m_LeftHandRotationFilter: {fileID: 11400000, guid: e585315868d58b3418c1681a5da275d4,
-    type: 2}
-  m_RightHandRotationFilter: {fileID: 11400000, guid: 6b78fd93cf2cefa47853e2c09144c296,
-    type: 2}
 --- !u!1 &6147399470313406180
 GameObject:
   m_ObjectHideFlags: 0

@@ -29,11 +29,11 @@ namespace umi3d.browserEditor.BuildTool
         [SerializeField] private VisualTreeAsset target_VTA = default;
         [SerializeField] private VisualTreeAsset path_VTA = default;
         [SerializeField] private VisualTreeAsset scene_VTA = default;
-        [SerializeField] UMI3DBuildToolKeystore_SO buildToolKeystore_SO;
-        [SerializeField] UMI3DBuildToolVersion_SO buildToolVersion_SO;
-        [SerializeField] UMI3DBuildToolTarget_SO buildToolTarget_SO;
-        [SerializeField] UMI3DBuildToolScene_SO buildToolScene_SO;
-        [SerializeField] UMI3DBuildToolSettings_SO buildToolSettings_SO;
+        UMI3DBuildToolKeystore_SO buildToolKeystore_SO;
+        UMI3DBuildToolVersion_SO buildToolVersion_SO;
+        UMI3DBuildToolTarget_SO buildToolTarget_SO;
+        UMI3DBuildToolScene_SO buildToolScene_SO;
+        UMI3DBuildToolSettings_SO buildToolSettings_SO;
 
         [SerializeField] UMI3DCollabLoadingParameters loadingParameters;
         IBuilToolComponent _uMI3DConfigurator = null;
@@ -63,6 +63,16 @@ namespace umi3d.browserEditor.BuildTool
                 scene_VTA,
                 "[UMI3D] BuildTool: scene_VTA is null."
             );
+
+            UMI3DBuildToolDataCreation.GetPath();
+            UMI3DBuildToolDataCreation.CreateExcludedFolderIfNecessary();
+            UMI3DBuildToolDataCreation.GetFiles();
+            buildToolKeystore_SO = UMI3DBuildToolDataCreation.GetSO<UMI3DBuildToolKeystore_SO>("Keystore");
+            buildToolVersion_SO = UMI3DBuildToolDataCreation.GetSO<UMI3DBuildToolVersion_SO>("Version");
+            buildToolScene_SO = UMI3DBuildToolDataCreation.GetSO<UMI3DBuildToolScene_SO>("Scenes");
+            buildToolTarget_SO = UMI3DBuildToolDataCreation.GetSO<UMI3DBuildToolTarget_SO>("Target");
+            buildToolSettings_SO = UMI3DBuildToolDataCreation.GetSO<UMI3DBuildToolSettings_SO>("Settings");
+            UMI3DBuildToolDataCreation.SaveAndRefresh();
 
             Assert.IsNotNull(
                 buildToolKeystore_SO,

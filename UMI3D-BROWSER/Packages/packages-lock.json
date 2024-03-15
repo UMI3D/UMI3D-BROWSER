@@ -121,11 +121,12 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.pico.livepreview": {
-      "version": "file:PICO%20Unity%20Live%20Preview%20Plugin%20(Experiment)",
+      "version": "file:PICO%20Unity%20LivePreview%20Plugin",
       "depth": 0,
       "source": "embedded",
       "dependencies": {
-        "com.unity.xr.management": "4.0.0"
+        "com.unity.xr.management": "4.0.0",
+        "com.unity.xr.interaction.toolkit": "2.0.0"
       }
     },
     "com.unity.render-pipelines.core": {

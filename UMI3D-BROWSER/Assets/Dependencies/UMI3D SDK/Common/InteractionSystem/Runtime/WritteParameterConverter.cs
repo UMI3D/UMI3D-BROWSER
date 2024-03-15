@@ -61,14 +61,14 @@ namespace umi3d.common.collaboration
 
             if (value is GroupDto group)
             {
-                var tmp = group.children;
-                group.children = null;
-                JObject gjo = JObject.FromObject(value);
-                if (tmp is not null)
-                    gjo["children"] = JToken.FromObject(tmp, serializer); //JsonConvert.SerializeObject(tmp, serializer.Converters.ToArray());
-                gjo["styles"] = JToken.FromObject(group.styles, serializer);
-                group.children = tmp;
-                gjo.WriteTo(writer);
+                //var tmp = group.children;
+                //group.children = null;
+                //JObject gjo = JObject.FromObject(value);
+                //if (tmp is not null)
+                //    gjo["children"] = JToken.FromObject(tmp, serializer); //JsonConvert.SerializeObject(tmp, serializer.Converters.ToArray());
+                //gjo["styles"] = JToken.FromObject(group.styles, serializer);
+                //group.children = tmp;
+                //gjo.WriteTo(writer);
                 return;
             }
 

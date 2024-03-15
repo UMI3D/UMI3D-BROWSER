@@ -14,7 +14,8 @@ namespace umi3dBrowsers.services.connection
     {
         public event Action<VirtualWorldData> OnMediaServerPingSuccess;
         public event Action<string> OnConnectionFailure;
-        public event Action<ConnectionFormDto> OnFormReceived;
+        public event Action<ConnectionFormDto> OnParamFormReceived;
+        public event Action<umi3d.common.interaction.form.ConnectionFormDto> OnDivFormReceived;
         public event Action<List<string>> OnAsksToLoadLibrairies;
         public event Action OnConnectionSuccess;
 
@@ -30,12 +31,14 @@ namespace umi3dBrowsers.services.connection
         AdvancedConnectionPanel.Data _mediaConnectionData = new AdvancedConnectionPanel.Data();
         private string _environmentUrl = "";
         private string _mediaDataServerUrl = "";
-        private Action<FormAnswerDto> _formAnswerCallBack;
+        private Action<FormAnswerDto> _formParamAnswerCallBack;
+        private Action<umi3d.common.interaction.form.FormAnswerDto> _formDivAnswerCallBack;
         private Action<bool> _shouldDownloadLibrariesCallBack;
 
         private void Start()
         {
-            identifier.OnParametersAvailible += HandleParameters;
+            identifier.OnParamFormAvailible += HandleParameters;
+            identifier.OnDivFormAvailible += HandleDivs;
             identifier.OnLibrairiesAvailible += HandleLibrairies;
             UMI3DCollaborationEnvironmentLoader.Instance.onEnvironmentLoaded.AddListener(() => OnConnectionSuccess.Invoke());
         }
@@ -75,11 +78,6 @@ namespace umi3dBrowsers.services.connection
             }
         }
 
-        public void SendFormAnswer(FormAnswerDto formAnswer)
-        {
-            _formAnswerCallBack?.Invoke(formAnswer);
-        }
-
         public void SendAnswerToLibrariesDownloadAsk(bool canDownload)
         {
             _shouldDownloadLibrariesCallBack?.Invoke(canDownload);
@@ -101,8 +99,15 @@ namespace umi3dBrowsers.services.connection
 
         private void HandleParameters(ConnectionFormDto dto, Action<FormAnswerDto> action)
         {
-            _formAnswerCallBack = action;
-            OnFormReceived?.Invoke(dto);
+            _formParamAnswerCallBack = action;
+            OnParamFormReceived?.Invoke(dto);
+        }
+
+        private void HandleDivs(umi3d.common.interaction.form.ConnectionFormDto dto, Action<umi3d.common.interaction.form.FormAnswerDto> action)
+        {
+            _formDivAnswerCallBack = action;
+            OnDivFormReceived?.Invoke(dto);
+
         }
 
         private void HandleLibrairies(List<string> ids, Action<bool> action)
@@ -122,6 +127,17 @@ namespace umi3dBrowsers.services.connection
             if (!url.StartsWith("http://") && !url.StartsWith("https://"))
                 return "http://" + url;
             return url;
+        }
+
+        public void SendFormAnswer(FormAnswerDto formAnswer)
+        {
+            _formParamAnswerCallBack?.Invoke(formAnswer);
+        }
+
+        public void SendFormAnswer(umi3d.common.interaction.form.FormAnswerDto formAnswer)
+        {
+            Debug.Log("Todo :: SendAnswer to server======================================");
+            //_formAnswerCallBack?.Invoke(formAnswer);
         }
     }
 }

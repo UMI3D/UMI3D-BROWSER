@@ -18,6 +18,7 @@ using System;
 using TMPro;
 using umi3d.common.interaction;
 using umi3dBrowsers.container;
+using umi3dBrowsers.container.formrenderer;
 using umi3dBrowsers.services.connection;
 using umi3dVRBrowsersBase.connection;
 using UnityEngine;
@@ -58,6 +59,7 @@ namespace umi3d
 #if UNITY_EDITOR
         public ContentState _ContentState { get { return contentState; } set { contentState = value; } }
         public void ToolAccessProcessForm(ConnectionFormDto connectionFormDto) { ProcessForm(connectionFormDto); }
+        public void ToolAccessProcessForm(umi3d.common.interaction.form.ConnectionFormDto connectionFormDto) { ProcessForm(connectionFormDto); }
 #endif
 
 
@@ -81,7 +83,7 @@ namespace umi3d
 
         [Header("Connection")]
         [SerializeField] private URLDisplayer urlDisplayer;
-        [SerializeField] private DynamicServerContainer dynamicServerContainer;
+        [SerializeField] private FormRendererContainer dynamicServerContainer;
 
         [Header("Services")]
         [SerializeField] private ConnectionProcessor connectionProcessorService;
@@ -100,11 +102,20 @@ namespace umi3d
             HandleContentState(contentState);
         }
 
+        /// <summary>
+        /// Sets the UMI3D version of the browser
+        /// </summary>
+        /// <param name="version"></param>
         public void SetVersion(string version)
         {
             versionText.text = version;
         }
 
+        /// <summary>
+        /// Sets the page title
+        /// </summary>
+        /// <param name="prefix">The first part of the title</param>
+        /// <param name="suffix">The second part of the title</param>
         public void SetTitle(string prefix, string suffix)
         {
             float suffitLength = suffix.Length;
@@ -174,6 +185,7 @@ namespace umi3d
         private void BindFormContainer()
         {
             dynamicServerContainer.OnFormAnwser += (formAnswer) => connectionProcessorService.SendFormAnswer(formAnswer);
+            dynamicServerContainer.OnDivformAnswer += (formAnswer) => connectionProcessorService.SendFormAnswer(formAnswer);
         }
 
         private void BindServices()
@@ -183,7 +195,12 @@ namespace umi3d
             {
                 SetTitle("Connected to", virtualWorldData.worldName);
             };
-            connectionProcessorService.OnFormReceived += (connectionFormDto) =>
+            connectionProcessorService.OnParamFormReceived += (connectionFormDto) =>
+            {
+                HandleContentState(ContentState.dynamicServerContent);
+                ProcessForm(connectionFormDto);
+            };
+            connectionProcessorService.OnDivFormReceived += (connectionFormDto) =>
             {
                 HandleContentState(ContentState.dynamicServerContent);
                 ProcessForm(connectionFormDto);
@@ -194,7 +211,11 @@ namespace umi3d
 
         private void ProcessForm(ConnectionFormDto connectionFormDto)
         {
-            dynamicServerContainer.ProcessConnectionFormDto(connectionFormDto);
+            dynamicServerContainer.HandleParamForm(connectionFormDto);
+        }
+        private void ProcessForm(umi3d.common.interaction.form.ConnectionFormDto connectionFormDto)
+        {
+            dynamicServerContainer.HandleDivForm(connectionFormDto);
         }
 
         private void HandleContentState(ContentState state)

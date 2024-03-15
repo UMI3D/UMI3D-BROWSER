@@ -17,24 +17,12 @@ limitations under the License.
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using umi3d.cdk.collaboration;
-using umi3d.cdk.menu.interaction;
 using umi3d.common.interaction;
-using umi3dVRBrowsersBase.connection;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UI;
 
-namespace umi3dBrowsers.container
+namespace umi3dBrowsers.container.formrenderer 
 {
-    /// <summary>
-    /// This class handles the dispaying of the ConnectionForms
-    /// </summary>
-    /// You should used this monobehaviour on its own panel because its going to instantiate many prefabs. 
-    /// If you wish you can add multiple Synamic server Container in your scene, just make sure they are not on the 
-    /// same gameobject.
-    /// The class uses the OnFormAnswer event to send back the form, you should subscribe to this event.
-    public class DynamicServerContainer : MonoBehaviour
+    public class ParamformRenderer : MonoBehaviour
     {
         [Header("Displayers")]
         [SerializeField] private GameObject textFieldPrefab;
@@ -44,20 +32,19 @@ namespace umi3dBrowsers.container
         [SerializeField] private GameObject validationButtonPrefab;
         [SerializeField] private GameObject toggleSwitchPrefab;
 
-        [Header("params")]
-        [SerializeField] private GameObject contentRoot;
-        List<GameObject> form = new();
+        private GameObject _contentRoot;
         List<Action> formBinding = new();
-
         private FormAnswerDto _formAnswer;
 
+        public event Action<GameObject> OnObjectAddedToRoot;
         public event Action<FormAnswerDto> OnFormAnwser;
-
-        public void ProcessConnectionFormDto(ConnectionFormDto connectionFormDto)
+        public void Init(GameObject contentRoot)
         {
-            IniFormAnswer(connectionFormDto.id);
-            CleanContent();
+            this._contentRoot = contentRoot;
+        }
 
+        internal void Handle(ConnectionFormDto connectionFormDto)
+        {
             for (int i = 0; i < connectionFormDto.fields.Count; i++)
             {
                 ParameterSettingRequestDto paramRequestDto = new ParameterSettingRequestDto()
@@ -68,14 +55,13 @@ namespace umi3dBrowsers.container
                 };
 
                 _formAnswer.answers.Add(paramRequestDto);
-                //Debug.Log(connectionFormDto.fields[i].GetType());
 
                 switch (connectionFormDto.fields[i])
                 {
-                    case EnumParameterDto<string> paramEnum :
+                    case EnumParameterDto<string> paramEnum:
                         {
-                            GameObject gameObject = Instantiate(dropDownFieldPrefab, contentRoot.transform);
-                            form.Add(gameObject);
+                            GameObject gameObject = Instantiate(dropDownFieldPrefab, _contentRoot.transform);
+                            OnObjectAddedToRoot?.Invoke(gameObject);
                             IDisplayer displayer = gameObject.GetComponent<IDisplayer>();
                             formBinding.Add(() => paramRequestDto.parameter = displayer.GetValue(true));
                             displayer.SetTitle(paramEnum.name);
@@ -84,8 +70,8 @@ namespace umi3dBrowsers.container
                         break;
                     case BooleanParameterDto boolParam:
                         {
-                            GameObject gameObject = Instantiate(toggleSwitchPrefab, contentRoot.transform);
-                            form.Add(gameObject);
+                            GameObject gameObject = Instantiate(toggleSwitchPrefab, _contentRoot.transform);
+                            OnObjectAddedToRoot?.Invoke(gameObject);
                             IDisplayer displayer = gameObject.GetComponentInChildren<IDisplayer>();
                             formBinding.Add(() => paramRequestDto.parameter = displayer.GetValue(true));
                             displayer.SetTitle(boolParam.name);
@@ -100,26 +86,26 @@ namespace umi3dBrowsers.container
                         break;
                     case StringParameterDto stringParam:
                         {
-                            GameObject gameObject = Instantiate(textFieldPrefab, contentRoot.transform);
-                            form.Add(gameObject);
+                            GameObject gameObject = Instantiate(textFieldPrefab, _contentRoot.transform);
+                            OnObjectAddedToRoot?.Invoke(gameObject);
                             IDisplayer displayer = gameObject.GetComponent<IDisplayer>();
                             formBinding.Add(() => paramRequestDto.parameter = displayer.GetValue(true));
                             displayer.SetTitle(stringParam.name);
                             displayer.SetPlaceHolder(new List<string>() { stringParam.description });
-                        }                
+                        }
                         break;
                     default:
                         break;
                 }
             }
 
-            GameObject go = Instantiate(validationButtonPrefab, contentRoot.transform);
+            GameObject go = Instantiate(validationButtonPrefab, _contentRoot.transform);
             SimpleButton simpleButton = go.GetComponent<SimpleButton>();
             simpleButton.OnClick.AddListener(() => ValidateForm());
-            form.Add(go);
+            OnObjectAddedToRoot?.Invoke(go);
         }
 
-        [ContextMenu ("Validate form ")]
+        [ContextMenu("Validate form ")]
         public void ValidateForm()
         {
             formBinding.ForEach(action => action?.Invoke());
@@ -138,16 +124,10 @@ namespace umi3dBrowsers.container
             };
         }
 
-        private void CleanContent()
+        internal void CleanContent(ulong id)
         {
-            float delay = 0;
-            for (int i = 0; i < form.Count; i++)
-            {
-                Destroy(form[i], delay);
-                delay += 0.01f;
-            }
-            form = new();
             formBinding = new();
+            IniFormAnswer(id);
         }
     }
 }

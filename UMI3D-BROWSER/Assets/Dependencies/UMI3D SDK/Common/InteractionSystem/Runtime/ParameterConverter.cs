@@ -99,17 +99,17 @@ namespace umi3d.common.collaboration
                             {
                                 if (children is JArray)
                                 {
-                                    _dto.children = children.ToObject<DivDto[]>(serializer).ToList();
+                                    //_dto.children = children.ToObject<DivDto[]>(serializer).ToList();
                                 }
                                 else
                                 {
                                     var s = children.ToObject<string>();
                                     var j = JArray.Parse(s);
-                                    _dto.children = j.ToObject<DivDto[]>(serializer).ToList();
+                                    //_dto.children = j.ToObject<DivDto[]>(serializer).ToList();
                                 }
                             }
                             else
-                                _dto.children = null;
+                                //_dto.children = null;
 
                             if (_dto is GroupScrollViewDto sg && jo.TryGetValue("Mode", out JToken mode))
                                 sg.Mode = mode.ToObject<ScrollViewMode>();

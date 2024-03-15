@@ -15227,7 +15227,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1691802802}
+  - component: {fileID: 1691802804}
   - component: {fileID: 1691802803}
+  - component: {fileID: 1691802805}
   m_Layer: 5
   m_Name: DynamicServerContent
   m_TagString: Untagged
@@ -15264,7 +15266,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1691802801}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 22bf45862a9ecbc4ca7dbf4e1e991f75, type: 3}
+  m_Script: {fileID: 11500000, guid: be8472603d181884ea895ac62a94e37a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   textFieldPrefab: {fileID: 8370930241941166574, guid: 2a5a695f8f75a7e4aa1bff7c94c12ab2,
@@ -15277,7 +15279,33 @@ MonoBehaviour:
     type: 3}
   toggleSwitchPrefab: {fileID: 2800878778052285650, guid: 50199c01893f9c345bbd41b776099493,
     type: 3}
+--- !u!114 &1691802804
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1691802801}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c777dae3d937e9e4bbde417984aa1084, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   contentRoot: {fileID: 1424195259}
+  formParamRenderer: {fileID: 1691802803}
+  formDivRenderer: {fileID: 1691802805}
+--- !u!114 &1691802805
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1691802801}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 859febb1104365b4fa02400f51576863, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &1696703516 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5417303507449339981, guid: 0cc002ea89191184d97762682b3abcde,
@@ -24595,7 +24623,7 @@ MonoBehaviour:
   suffixText: {fileID: 337620222}
   versionText: {fileID: 311872180}
   urlDisplayer: {fileID: 1069399991}
-  dynamicServerContainer: {fileID: 1691802803}
+  dynamicServerContainer: {fileID: 1691802804}
   connectionProcessorService: {fileID: 1143609946}
 --- !u!224 &1189334734306513458
 RectTransform:

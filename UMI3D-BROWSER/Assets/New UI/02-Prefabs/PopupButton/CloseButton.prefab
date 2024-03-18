@@ -13,10 +13,72 @@ PrefabInstance:
       propertyPath: m_text
       value: Close
       objectReference: {fileID: 0}
+    - target: {fileID: 1977235290512352044, guid: 203c2ca3e93e9694b84b6b9fc0c5998e,
+        type: 3}
+      propertyPath: m_fontSize
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 1977235290512352044, guid: 203c2ca3e93e9694b84b6b9fc0c5998e,
+        type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: e103a3ceca28c5844ab95e3e8bf0b3a5,
+        type: 2}
+    - target: {fileID: 1977235290512352044, guid: 203c2ca3e93e9694b84b6b9fc0c5998e,
+        type: 3}
+      propertyPath: m_fontColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1977235290512352044, guid: 203c2ca3e93e9694b84b6b9fc0c5998e,
+        type: 3}
+      propertyPath: m_fontColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1977235290512352044, guid: 203c2ca3e93e9694b84b6b9fc0c5998e,
+        type: 3}
+      propertyPath: m_fontColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1977235290512352044, guid: 203c2ca3e93e9694b84b6b9fc0c5998e,
+        type: 3}
+      propertyPath: m_fontSizeBase
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 1977235290512352044, guid: 203c2ca3e93e9694b84b6b9fc0c5998e,
+        type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: -1059954845473827649, guid: e103a3ceca28c5844ab95e3e8bf0b3a5,
+        type: 2}
+    - target: {fileID: 1977235290512352044, guid: 203c2ca3e93e9694b84b6b9fc0c5998e,
+        type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4294967295
+      objectReference: {fileID: 0}
+    - target: {fileID: 1977235290512352044, guid: 203c2ca3e93e9694b84b6b9fc0c5998e,
+        type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3473510192864361373, guid: 203c2ca3e93e9694b84b6b9fc0c5998e,
         type: 3}
       propertyPath: m_Name
       value: CloseButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 4200408600877155103, guid: 203c2ca3e93e9694b84b6b9fc0c5998e,
+        type: 3}
+      propertyPath: OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4200408600877155103, guid: 203c2ca3e93e9694b84b6b9fc0c5998e,
+        type: 3}
+      propertyPath: OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4200408600877155103, guid: 203c2ca3e93e9694b84b6b9fc0c5998e,
+        type: 3}
+      propertyPath: OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6061673669373692233, guid: 203c2ca3e93e9694b84b6b9fc0c5998e,
         type: 3}
@@ -51,12 +113,12 @@ PrefabInstance:
     - target: {fileID: 6061673669373692233, guid: 203c2ca3e93e9694b84b6b9fc0c5998e,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 120
+      value: 84
       objectReference: {fileID: 0}
     - target: {fileID: 6061673669373692233, guid: 203c2ca3e93e9694b84b6b9fc0c5998e,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 40
+      value: 29
       objectReference: {fileID: 0}
     - target: {fileID: 6061673669373692233, guid: 203c2ca3e93e9694b84b6b9fc0c5998e,
         type: 3}
@@ -117,6 +179,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8365285130865417475, guid: 203c2ca3e93e9694b84b6b9fc0c5998e,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 84
+      objectReference: {fileID: 0}
+    - target: {fileID: 8365285130865417475, guid: 203c2ca3e93e9694b84b6b9fc0c5998e,
+        type: 3}
+      propertyPath: m_Size.y
+      value: 29
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

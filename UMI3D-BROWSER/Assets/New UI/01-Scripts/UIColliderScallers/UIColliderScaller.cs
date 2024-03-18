@@ -33,6 +33,7 @@ namespace umi3dBrowsers.utils
             if (!uiColliderScalers.Contains(this))
             {
                 uiColliderScalers.Add(this);
+                ScaleCollider();
             }
         }
 

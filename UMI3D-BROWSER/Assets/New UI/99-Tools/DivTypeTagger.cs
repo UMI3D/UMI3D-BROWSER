@@ -24,9 +24,13 @@ namespace form_generator
     {
         [Header("DivInfo")]
         [SerializeField] private string name;
+        [SerializeField, TextArea] private string toolTip;
+        [SerializeField, TextArea] private string description;
         [SerializeField] private DivType divType;
         public DivType DivType => divType;
         public string Name => name;
+        public string ToolTip => toolTip;
+        public string Description => description;
 
         /// <summary>
         /// For tool execution only
@@ -37,7 +41,7 @@ namespace form_generator
 
     public enum DivType
     {
-        Form, Page, Group, Button, Enum, Image, Range, Text, Label
+        Form, Page, Group, Button, Enum, Image, Range, Input_Text, Label
     }
 }
 

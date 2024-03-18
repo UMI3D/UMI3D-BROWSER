@@ -113,37 +113,39 @@ namespace form_generator
                 case DivType.Form:
                     ConnectionFormDto form = new ConnectionFormDto();
                     form.name = divTagger.Name;
-                    form.tooltip = divTagger.Name;
+                    form.tooltip = divTagger.ToolTip;
+                    form.description = divTagger.Description;
                     return form;
                 case DivType.Page:
                     PageDto page = new PageDto();
                     page.name = divTagger.Name;
-                    page.tooltip = divTagger.Name;
+                    page.tooltip = divTagger.ToolTip;
                     return page;
                 case DivType.Group:
                     GroupDto group = new GroupDto();
-                    group.tooltip = divTagger.Name;
+                    group.tooltip = divTagger.ToolTip;
+                    group.label = divTagger.Name;
                     return group;
                 case DivType.Button:
                     ButtonDto button = new ButtonDto();
                     button.Name = divTagger.Name;
                     button.Text = divTagger.GetComponent<TextMeshPro>()?.text;
-                    button.tooltip = divTagger.Name;
+                    button.tooltip = divTagger.ToolTip;
                     return button;
                 case DivType.Enum:
                     break;
                 case DivType.Image:
                     ImageDto image = new ImageDto();
-                    image.tooltip = divTagger.Name;
+                    image.tooltip = divTagger.ToolTip;
                     return image;
                 case DivType.Range:
                     break;
-                case DivType.Text:
+                case DivType.Input_Text:
                     break;
                 case DivType.Label:
                     LabelDto label = new LabelDto();
                     label.text = divTagger.GetComponent<TextMeshPro>()?.text;
-                    label.tooltip = divTagger.Name;
+                    label.tooltip = divTagger.ToolTip;
                     return label;
             }
 

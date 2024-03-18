@@ -212,7 +212,7 @@ namespace umi3d
                 ProcessForm(connectionFormDto);
             };
             connectionProcessorService.OnAsksToLoadLibrairies += (ids) => connectionProcessorService.SendAnswerToLibrariesDownloadAsk(true);
-            connectionProcessorService.OnConnectionSuccess += () => backgroundShadder.SetActive(false);
+            connectionProcessorService.OnConnectionSuccess += () => backgroundShadder?.SetActive(false);
         }
 
         private void BindLoaderDisplayer()
@@ -223,7 +223,7 @@ namespace umi3d
                 HandleContentState(ContentState.loadingContent);
                 SetTitle("Loading ... ", "");
             };
-            loadingContainer.OnLoadingFinished += () => gameObject.SetActive(false);
+            loadingContainer.OnLoadingFinished += () => Debug.Log("TODO : Do something ::: Its loaded");// gameObject.SetActive(false);
         }
 
         private void ProcessForm(ConnectionFormDto connectionFormDto)

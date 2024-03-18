@@ -7853,6 +7853,7 @@ RectTransform:
   - {fileID: 749918948}
   - {fileID: 1489218864}
   - {fileID: 528250979}
+  - {fileID: 1780859354}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -17115,14 +17116,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1780859353}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 489, y: -173, z: 4907}
+  m_LocalScale: {x: 100, y: 100, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1143609945}
   - {fileID: 1381235281}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 864270770}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1781533957
 PrefabInstance:
@@ -21875,6 +21876,7 @@ MonoBehaviour:
   flagButtonClicked:
     m_PersistentCalls:
       m_Calls: []
+  backgroundShadder: {fileID: 0}
   prefixText: {fileID: 1697288462651122288}
   suffixText: {fileID: 3725403972333654162}
   versionText: {fileID: 3774924291551784560}
@@ -25815,6 +25817,7 @@ MonoBehaviour:
   flagButtonClicked:
     m_PersistentCalls:
       m_Calls: []
+  backgroundShadder: {fileID: 0}
   prefixText: {fileID: 183398296}
   suffixText: {fileID: 337620222}
   versionText: {fileID: 311872180}
@@ -38180,8 +38183,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 219976245987586346}
   m_HandleRect: {fileID: 6871203127721050916}
   m_Direction: 0
-  m_Value: 0.000000052480793
-  m_Size: 0.23587386
+  m_Value: 0.49999994
+  m_Size: 0.23587385
   m_NumberOfSteps: 1
   m_OnValueChanged:
     m_PersistentCalls:
@@ -43135,11 +43138,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f3257c0b3f26284684701f13efdd42e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  leftTabButton: {fileID: 5308710256030395539}
-  rightTabButton: {fileID: 4684646017791463920}
-  container1: {fileID: 6090892290843114686}
-  container2: {fileID: 2607778396415302248}
-  currentActiveButton: 0
+  tabButtonPrefab: {fileID: 0}
+  containerPrefab: {fileID: 0}
+  tabs: []
+  contentRoot: {fileID: 0}
+  currentActiveButton:
+    tabButton: {fileID: 0}
+    tab: {fileID: 0}
 --- !u!1 &5324142572873539541
 GameObject:
   m_ObjectHideFlags: 0
@@ -51250,11 +51255,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f3257c0b3f26284684701f13efdd42e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  leftTabButton: {fileID: 41382067}
-  rightTabButton: {fileID: 152808502}
-  container1: {fileID: 4701503571925627661}
-  container2: {fileID: 3569272513760368091}
-  currentActiveButton: 0
+  tabButtonPrefab: {fileID: 5256747629347637188, guid: ac1a4f9916a51eb41aab1192e338712c,
+    type: 3}
+  containerPrefab: {fileID: 5178461189047998669, guid: baaf14124e09bc44aa72a110d3fc45bf,
+    type: 3}
+  tabs:
+  - tabButton: {fileID: 41382067}
+    tab: {fileID: 4701503571925627661}
+  - tabButton: {fileID: 152808502}
+    tab: {fileID: 3569272513760368091}
+  contentRoot: {fileID: 478214423261808918}
+  currentActiveButton:
+    tabButton: {fileID: 41382067}
+    tab: {fileID: 4701503571925627661}
 --- !u!114 &6654547852571597567
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -52913,7 +52926,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 1162.9999, y: -0.00024414062}
+  m_AnchoredPosition: {x: 0, y: -0.00024414062}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6986889928101898691
@@ -63866,7 +63879,6 @@ SceneRoots:
   - {fileID: 1920418797}
   - {fileID: 1570994059}
   - {fileID: 864270770}
-  - {fileID: 1780859354}
   - {fileID: 1013922895}
   - {fileID: 949135331}
   - {fileID: 263852484}

@@ -35,6 +35,7 @@ namespace inetum.unityUtils.audio
         {
             if (audioMixer == null) audioMixer = GetAudioMixer();
             if (audioMixer == null) return;
+            if (audioSource == null) return;
             audioSource.outputAudioMixerGroup = audioMixer.FindMatchingGroups(CONVERSATION_GROUP)[0];
         }
 
@@ -42,6 +43,7 @@ namespace inetum.unityUtils.audio
         {
             if (audioMixer == null) audioMixer = GetAudioMixer();
             if (audioMixer == null) return;
+            if (audioSource == null) return;
             audioSource.outputAudioMixerGroup = audioMixer.FindMatchingGroups(ENVIRONMENT_GROUP)[0];
         }
 

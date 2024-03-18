@@ -19,6 +19,7 @@ using TMPro;
 using umi3d.common.interaction;
 using umi3dBrowsers.container;
 using umi3dBrowsers.container.formrenderer;
+using umi3dBrowsers.displayer;
 using umi3dBrowsers.services.connection;
 using umi3dVRBrowsersBase.connection;
 using UnityEngine;
@@ -49,12 +50,13 @@ namespace umi3d
         [SerializeField] private GameObject standUpContent;
         [SerializeField] private GameObject flagContent;
         [SerializeField] private GameObject dynamicServerContent;
+        [SerializeField] private GameObject loadingContent;
         [Space]
         [SerializeField] private GameObject Top;
         // todo : call something like an hint manager hints
         // todo : call something like a pop up manager to open a bug popup
 
-        public enum ContentState { mainContent, storageContent, parametersContent, flagContent, standUpContent, dynamicServerContent };
+        public enum ContentState { mainContent, storageContent, parametersContent, flagContent, standUpContent, dynamicServerContent, loadingContent };
         [SerializeField, Tooltip("start content")] private ContentState contentState;
 #if UNITY_EDITOR
         public ContentState _ContentState { get { return contentState; } set { contentState = value; } }
@@ -88,6 +90,8 @@ namespace umi3d
         [Header("Services")]
         [SerializeField] private ConnectionProcessor connectionProcessorService;
         [SerializeField] private PopupManager popupManager;
+        [SerializeField] private LoadingContainer loadingContainer;
+
 
         private void Awake()
         {
@@ -99,7 +103,8 @@ namespace umi3d
             BindNavigationButtons();
             BindURL();
             BindFormContainer();
-            BindServices();
+            BindConnectionService();
+            BindLoaderDisplayer();
             HandleContentState(contentState);
         }
 
@@ -189,7 +194,7 @@ namespace umi3d
             dynamicServerContainer.OnDivformAnswer += (formAnswer) => connectionProcessorService.SendFormAnswer(formAnswer);
         }
 
-        private void BindServices()
+        private void BindConnectionService()
         {
             connectionProcessorService.OnConnectionFailure += (message) => { Debug.LogError("Failled to conenct"); };
             connectionProcessorService.OnMediaServerPingSuccess += (virtualWorldData) => 
@@ -208,6 +213,17 @@ namespace umi3d
             };
             connectionProcessorService.OnAsksToLoadLibrairies += (ids) => connectionProcessorService.SendAnswerToLibrariesDownloadAsk(true);
             connectionProcessorService.OnConnectionSuccess += () => backgroundShadder.SetActive(false);
+        }
+
+        private void BindLoaderDisplayer()
+        {
+            loadingContainer.Init();
+            loadingContainer.OnLoadingInProgress += () =>
+            {
+                HandleContentState(ContentState.loadingContent);
+                SetTitle("Loading ... ", "");
+            };
+            loadingContainer.OnLoadingFinished += () => gameObject.SetActive(false);
         }
 
         private void ProcessForm(ConnectionFormDto connectionFormDto)
@@ -257,6 +273,11 @@ namespace umi3d
                     Top.SetActive(true);
                     dynamicServerContent.SetActive(true);
                     break;
+                case ContentState.loadingContent:
+                    CloseAllPanels();
+                    Top.SetActive(true);
+                    loadingContent.SetActive(true);
+                    break;
             }
         }
 
@@ -269,6 +290,8 @@ namespace umi3d
             backButton?.gameObject.SetActive(false);
             flagContent.SetActive(false);
             standUpContent.SetActive(false);
+            loadingContent.SetActive(false);
+            dynamicServerContent.SetActive(false);
         }
     }
 }

@@ -98,7 +98,7 @@ namespace umi3d
         {
             BindNavigationButtons();
             BindURL();
-            BindFormContainer();
+            //BindFormContainer();
             BindServices();
             HandleContentState(contentState);
         }

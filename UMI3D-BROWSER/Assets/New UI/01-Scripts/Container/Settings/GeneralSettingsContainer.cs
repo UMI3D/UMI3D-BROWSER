@@ -26,6 +26,7 @@ namespace umi3dBrowsers.container
     public class GeneralSettingsContainer : MonoBehaviour
     {
         [Header("Language")]
+        [SerializeField] private LanguageHandler languageHandler;
         [SerializeField] private SupportedLanguages selectedLanguage;
         [SerializeField] private GridDropDown languageDropdown;
         public event Action<SupportedLanguages> OnLanguageChanged;
@@ -55,6 +56,8 @@ namespace umi3dBrowsers.container
             languageDropdown.OnClick += () =>
             {
                 selectedLanguage = Enum.Parse<SupportedLanguages>(languageDropdown.GetValue());
+                LanguageHandler.currentLanguage = selectedLanguage;
+                languageHandler.ChangeLocale();
             };
         }
 

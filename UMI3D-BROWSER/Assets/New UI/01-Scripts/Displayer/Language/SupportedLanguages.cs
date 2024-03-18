@@ -18,6 +18,6 @@ namespace umi3dBrowsers
 {
     public enum SupportedLanguages 
     {
-        French, German, Japanese, Korean, English, Chinese, Italian, Netherland, Spanish, None
+        English,French,German, Japanese, Korean, Chinese, Italian, Netherland, Spanish, None
     }
 }

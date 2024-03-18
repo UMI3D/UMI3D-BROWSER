@@ -6,17 +6,14 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Dependencies/UMI3D VR Browsers Base/Scene/StartScene.unity
-    guid: d1162b709298a0142a26044a94149e03
-  - enabled: 1
-    path: Assets/Dependencies/UMI3D VR Browsers Base/Scene/ConnectionScene.unity
-    guid: 44aa666eee370bf4a80d4017f9d43047
-  - enabled: 1
-    path: Assets/01-VR Browser/Project/Scenes/MainImmersive.unity
-    guid: 9fc0d4010bbf28b4594072e72b8655ab
+    path: Assets/New UI/03-Scenes/StartScene(new).unity
+    guid: 29e27bc08726cbe4caaaa02e8eb57f6e
   - enabled: 1
     path: Assets/New UI/03-Scenes/MainImmersive(new).unity
     guid: 7978ab7d80caae0489523685e09d3d5c
+  - enabled: 1
+    path: Assets/New UI/03-Scenes/ConnectionScene(new).unity
+    guid: 8dd1ae8f08c299a41a8cb89a111f3f04
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 588cd68c382f2f543b68b5f0adb53c9c,
       type: 2}
@@ -27,6 +24,10 @@ EditorBuildSettings:
     Unity.XR.PXR.Settings: {fileID: 11400000, guid: 2c338872888600546b76f052d0184e8f,
       type: 2}
     com.htc.upm.wave.xrsdk.xrsettings: {fileID: 11400000, guid: a36652fb9eb03db46a85173e861ba4e7,
+      type: 2}
+    com.unity.addressableassets: {fileID: 11400000, guid: 9611371ba14592c4da869e582be1b9b4,
+      type: 2}
+    com.unity.localization.settings: {fileID: 11400000, guid: eac67687cb7c1d54bbbd3823149b2e20,
       type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 05613238e4967ee4eaf7ec16d6b74134,
       type: 2}

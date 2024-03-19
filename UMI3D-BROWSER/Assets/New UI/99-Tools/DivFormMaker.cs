@@ -137,6 +137,7 @@ namespace form_generator
                 case DivType.Image:
                     ImageDto image = new ImageDto();
                     image.tooltip = divTagger.ToolTip;
+                    image.resource = divTagger.GetResourceDto();
                     return image;
                 case DivType.Range:
                     break;

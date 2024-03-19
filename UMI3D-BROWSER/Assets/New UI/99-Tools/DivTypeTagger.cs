@@ -14,8 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using umi3d.common;
 using UnityEngine;
 
 namespace form_generator
@@ -37,6 +40,74 @@ namespace form_generator
         /// </summary>
         [SerializeField] private List<DivTypeTagger> children = new();
         public List<DivTypeTagger> Children => children;
+
+        [Header("Resources")]
+        [SerializeField] List<Resource> resources = new();
+
+        public  ResourceDto GetResourceDto()
+        {
+            if (resources.Count == 0) return null;
+            Debug.Log($"<color=orange>Well if this debug message stills there and you are trying to use this tool to gen some DivForm on the server side its not going to work," +
+                $"the way the resourceDTO is handle here is just for the sake of testing nothing else, you have to handle it like for the variants of the " +
+                $"UMI3DModel</color>");
+
+            ResourceDto resourceDto = new ResourceDto();
+            foreach (var res in resources)
+            {
+                resourceDto.variants.Add(CreateFileDto(res));
+            }
+            return resourceDto;
+        }
+
+        private FileDto CreateFileDto(Resource resource)
+        {
+            var dto = new FileDto
+            {
+                url = GetUrl(resource.path),
+                format = resource.format,
+                extension = resource.extension,
+                metrics = new AssetMetricDto()
+                {
+                    resolution = resource.resolution,
+                    size = resource.size,
+                },
+                pathIfInBundle = resource.isInBundle ? resource.pathIfInBundle : null,
+                libraryKey = null
+            };
+            return dto;
+        }
+
+        public string GetUrl(string path)
+        {
+            path = path.Replace(@"\", "/");
+            if (path != null && path != "" && !path.StartsWith("/") /*|| Path.StartsWith(@"\")*/)
+            {
+                path = "/" + path;
+            }
+            return System.Uri.EscapeUriString(Path.Combine(path));
+        }
+
+        [Serializable]
+        public class Resource
+        {
+            public bool isLocalFile = false;
+            public string domain = "";
+            public string path = "";
+            [ConstEnum(typeof(UMI3DAssetFormat), typeof(string))]
+            public string format;
+            public string extension;
+            public bool isInBundle = false;
+            public string pathIfInBundle = "";
+
+            /// <summary>
+            /// Arbitrary level of resolution from low to higher resolution.
+            /// </summary>
+            public int resolution = 1;
+            /// <summary>
+            /// File size in Mb.
+            /// </summary>
+            public float size  = 0f;
+        }
     }
 
     public enum DivType

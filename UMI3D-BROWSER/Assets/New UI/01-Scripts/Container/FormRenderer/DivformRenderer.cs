@@ -17,6 +17,8 @@ limitations under the License.
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using umi3d.cdk;
 using umi3d.common.interaction.form;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -32,7 +34,6 @@ namespace umi3dBrowsers.container.formrenderer
         List<GameObject> allContainers = new();
 
         [Header("UI Containers")]
-        [SerializeField] private GameObject tabManagerPrefab;
         [SerializeField] private GameObject vignetteContainerPrefab;
         [SerializeField] private GameObject groupContainerPrefab;
 
@@ -51,6 +52,10 @@ namespace umi3dBrowsers.container.formrenderer
             this._contentRoot = contentRoot;
         }
 
+        /// <summary>
+        /// Makes sure that there is no trace of anything left in the form
+        /// </summary>
+        /// <param name="id"></param>
         internal void CleanContent(ulong id)
         {
             IniFormAnswer(id);
@@ -70,6 +75,10 @@ namespace umi3dBrowsers.container.formrenderer
             allContainers = new();
         }
 
+        /// <summary>
+        /// Reads and instantiate the connection form dto 
+        /// </summary>
+        /// <param name="connectionFormDto"></param>
         internal void Handle(ConnectionFormDto connectionFormDto)
         {
             allContainers.Add(_contentRoot);
@@ -78,6 +87,7 @@ namespace umi3dBrowsers.container.formrenderer
 
         /// <summary>
         /// Entry point to parse the connection form dto
+        /// Evaluate each div, one after another
         /// </summary>
         /// <param name="divParent"></param>
         /// <param name="parentId"></param>
@@ -146,19 +156,35 @@ namespace umi3dBrowsers.container.formrenderer
                 EvaluateDiv(div, currentId);
             }
         }
-        private void HandleLabelDto(LabelDto labelDto, int pageId)
+        private void HandleLabelDto(LabelDto labelDto, int parentId)
         {
 
         }
-        private void HandleImageDto(ImageDto imageDto, int pageId)
+        /// <summary>
+        /// Image and loads the resource
+        /// </summary>
+        /// <param name="imageDto"></param>
+        /// <param name="parentId"></param>
+        private async void HandleImageDto(ImageDto imageDto, int parentId)
         {
             if (imageDto.FirstChildren.Count == 0) // Simple image
             {
-                GameObject imageGO = Instantiate(imageDisplayerPrefab, allContainers[pageId].transform);
+                GameObject imageGO = Instantiate(imageDisplayerPrefab, allContainers[parentId].transform);
+                if (imageDto.resource == null) return;
+
+                object spriteTask = await UMI3DResourcesManager.Instance._LoadFile(0, 
+                    imageDto.resource.variants[0],
+                    new ImageDtoLoader()
+                );
+
+                Texture2D texture = spriteTask as Texture2D;
+                imageGO.GetComponent<Image>().sprite = Sprite.Create(texture,
+                    new Rect(0, 0,texture.Size().x, texture.Size().y),
+                    new Vector2());
             }
             else // Vignette
             {
-                GameObject imageGo = Instantiate(vignetteContainerPrefab, allContainers[pageId].transform);
+                GameObject imageGo = Instantiate(vignetteContainerPrefab, allContainers[parentId].transform);
             }
         }
 

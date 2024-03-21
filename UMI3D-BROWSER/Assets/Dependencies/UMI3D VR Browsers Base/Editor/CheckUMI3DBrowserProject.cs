@@ -172,10 +172,6 @@ namespace umi3dVRBrowsersBase.editor
             if (player.GetComponentInChildren<Camera>() == null)
                 errors.Add("Prefab without camera.");
 
-            //Check UMI3DNavigation
-            if (player.GetComponentInChildren<umi3d.cdk.UMI3DNavigation>() == null)
-                errors.Add("Prefab without UMI3DNavigation.");
-
             //Check InteractionMapper
             if (player.GetComponentInChildren<InteractionMapper>() == null)
                 errors.Add("Not mandatory on this prefab but make sur you have an InteractionMapper in your scene.");

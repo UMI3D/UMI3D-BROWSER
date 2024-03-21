@@ -112,8 +112,8 @@ namespace umi3dVRBrowsersBase.connection
 
         private void Awake()
         {
-            Joint.enabled = false;
-            Surface.enabled = false;
+            Joint.enabled = true;
+            Surface.enabled = true;
             LeftWatch.SetActive(false);
             RightWatch.SetActive(false);
         }

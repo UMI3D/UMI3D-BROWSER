@@ -1,5 +1,5 @@
 /*
-Copyright 2019 - 2022 Inetum
+Copyright 2019 - 2024 Inetum
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -13,17 +13,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using umi3d.cdk.collaboration;
-using umi3d.cdk;
-using umi3d.common;
 
-public class SetupNavigationHierarchy : MonoBehaviour
+using System;
+using umi3d.common;
+using UnityEngine;
+
+namespace umi3d.cdk.navigation
 {
-    private void Awake()
+    public struct NavigationData
     {
-        transform.parent = UMI3DCollaborationEnvironmentLoader.Instance.transform;
+        public Vector3Dto speed;
+        public bool grounded;
+        public bool jumping;
+        public bool crouching;
     }
 }

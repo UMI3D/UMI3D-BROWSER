@@ -15,6 +15,10 @@ limitations under the License.
 */
 
 using System;
+using umi3d.browserRuntime.navigation;
+using umi3d.cdk;
+using umi3d.cdk.collaboration.userCapture;
+using umi3d.cdk.navigation;
 using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
@@ -35,15 +39,37 @@ namespace umi3d.browserRuntime.player
         [HideInInspector] public TeleportationProvider teleportationProvider;
         [HideInInspector] public DynamicMoveProvider dynamicMoveProvider;
 
+        [HideInInspector] public UMI3DNavigation navigation = new();
+
         private void Awake()
         {
             logger.MainContext = this;
             logger.MainTag = nameof(UMI3DVRPlayer);
 
-            mainCamera = xrOrigin.Camera;
-            locomotionSystem = xrOrigin.GetComponentInChildren<LocomotionSystem>();
-            teleportationProvider = locomotionSystem.GetComponentInChildren<TeleportationProvider>();
-            dynamicMoveProvider = locomotionSystem.GetComponentInChildren<DynamicMoveProvider>();
+            mainCamera = xrOrigin?.Camera ?? Camera.main;
+            locomotionSystem = xrOrigin?.GetComponentInChildren<LocomotionSystem>();
+            teleportationProvider = locomotionSystem?.GetComponentInChildren<TeleportationProvider>();
+            dynamicMoveProvider = locomotionSystem?.GetComponentInChildren<DynamicMoveProvider>();
+
+            var navigationDelegate = new VRNavigationDelegate();
+            navigationDelegate.Init(
+                this,
+                mainCamera.transform,
+                xrOrigin.transform,
+                personalSkeletonContainer.transform
+            );
+            navigation.Init(navigationDelegate);
+
+            // SKELETON SERVICE
+            CollaborationSkeletonsManager.Instance.navigation = navigationDelegate; //also use to init manager via Instance call
+        }
+
+        private void Start()
+        {
+            personalSkeletonContainer.transform.SetParent(
+                UMI3DLoadingHandler.Instance.transform,
+                true
+            );
         }
     }
 }

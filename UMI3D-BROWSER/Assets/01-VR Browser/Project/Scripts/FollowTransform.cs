@@ -12,21 +12,24 @@ limitations under the License.
 */
 using UnityEngine;
 
-public class FollowTransform : MonoBehaviour
-{
-    [SerializeField] private Transform m_TrackedTransform;
-    [SerializeField] private Vector3 m_RotationOffset;
-
-    private Transform m_Transform;
-
-    private void Awake()
+namespace umi3d.runtimeBrowser.handTracking 
+{ 
+    public class FollowTransform : MonoBehaviour
     {
-        m_Transform = transform;
-    }
+        [SerializeField] private Transform m_TrackedTransform;
+        [SerializeField] private Vector3 m_RotationOffset;
 
-    private void FixedUpdate()
-    {
-        m_Transform.position = m_TrackedTransform.position;
-        m_Transform.rotation = m_TrackedTransform.rotation * Quaternion.Euler(m_RotationOffset);
+        private Transform m_Transform;
+
+        private void Awake()
+        {
+            m_Transform = transform;
+        }
+
+        private void FixedUpdate()
+        {
+            m_Transform.position = m_TrackedTransform.position;
+            m_Transform.rotation = m_TrackedTransform.rotation * Quaternion.Euler(m_RotationOffset);
+        }
     }
 }

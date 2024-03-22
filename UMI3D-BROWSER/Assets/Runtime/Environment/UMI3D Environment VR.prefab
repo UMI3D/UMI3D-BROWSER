@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 463558509969920903}
   m_Layer: 0
-  m_Name: UMI3D Environment
+  m_Name: UMI3D Environment VR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -79,7 +79,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parameters: {fileID: 11400000, guid: c5bc7fe8b07f55e489a8e69c43c04245, type: 2}
-  navigation: {fileID: 0}
 --- !u!1 &7445792736053333432
 GameObject:
   m_ObjectHideFlags: 0
@@ -273,10 +272,6 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 8396103300717615067}
-    - targetCorrespondingSourceObject: {fileID: 5211987855712508909, guid: 92a687f9cab595d44bccc2363f186b75,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 7905563985455979369}
   m_SourcePrefab: {fileID: 100100000, guid: 92a687f9cab595d44bccc2363f186b75, type: 3}
 --- !u!114 &363213117204362207 stripped
 MonoBehaviour:
@@ -320,19 +315,6 @@ MonoBehaviour:
   locomotionSystem: {fileID: 0}
   teleportationProvider: {fileID: 0}
   dynamicMoveProvider: {fileID: 0}
---- !u!114 &7905563985455979369
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 951976580046482841}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c26d0ce8e0d76a4cbe25756a5438d96, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cameraTransform: {fileID: 0}
 --- !u!20 &1536163925738547972 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 5779004542769683824, guid: 92a687f9cab595d44bccc2363f186b75,

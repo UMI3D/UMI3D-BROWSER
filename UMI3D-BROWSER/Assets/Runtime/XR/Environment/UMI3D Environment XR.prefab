@@ -9,8 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 463558509969920903}
+  - component: {fileID: 1203943069285560211}
   m_Layer: 0
-  m_Name: UMI3D Environment VR
+  m_Name: UMI3D Environment XR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -34,6 +35,18 @@ Transform:
   - {fileID: 5848485755869578247}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1203943069285560211
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2223796523145846543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d84adc1622094a29b4ac495436769e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4949717102527613370
 GameObject:
   m_ObjectHideFlags: 0
@@ -186,6 +199,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PersonalSkeleton
       objectReference: {fileID: 0}
+    - target: {fileID: 8573875925099406061, guid: 3d69241fd025e034aa1947ec87717f98,
+        type: 3}
+      propertyPath: OVRAnchor
+      value: 
+      objectReference: {fileID: 5848485755869578247}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -272,6 +290,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 8396103300717615067}
+    - targetCorrespondingSourceObject: {fileID: 5779004542769683830, guid: 92a687f9cab595d44bccc2363f186b75,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7860039292274318258}
   m_SourcePrefab: {fileID: 100100000, guid: 92a687f9cab595d44bccc2363f186b75, type: 3}
 --- !u!114 &363213117204362207 stripped
 MonoBehaviour:
@@ -315,6 +337,56 @@ MonoBehaviour:
   locomotionSystem: {fileID: 0}
   teleportationProvider: {fileID: 0}
   dynamicMoveProvider: {fileID: 0}
+--- !u!1 &1536163925738547970 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5779004542769683830, guid: 92a687f9cab595d44bccc2363f186b75,
+    type: 3}
+  m_PrefabInstance: {fileID: 4999746487480858228}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7860039292274318258
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1536163925738547970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_RenderShadows: 1
+  m_RequiresDepthTextureOption: 2
+  m_RequiresOpaqueTextureOption: 2
+  m_CameraType: 0
+  m_Cameras: []
+  m_RendererIndex: -1
+  m_VolumeLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  m_VolumeTrigger: {fileID: 0}
+  m_VolumeFrameworkUpdateModeOption: 2
+  m_RenderPostProcessing: 0
+  m_Antialiasing: 0
+  m_AntialiasingQuality: 2
+  m_StopNaN: 0
+  m_Dithering: 0
+  m_ClearDepth: 1
+  m_AllowXRRendering: 1
+  m_AllowHDROutput: 1
+  m_UseScreenCoordOverride: 0
+  m_ScreenSizeOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_ScreenCoordScaleBias: {x: 0, y: 0, z: 0, w: 0}
+  m_RequiresDepthTexture: 0
+  m_RequiresColorTexture: 0
+  m_Version: 2
+  m_TaaSettings:
+    quality: 3
+    frameInfluence: 0.1
+    jitterScale: 1
+    mipBias: 0
+    varianceClampScale: 0.9
+    contrastAdaptiveSharpening: 0
 --- !u!20 &1536163925738547972 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 5779004542769683824, guid: 92a687f9cab595d44bccc2363f186b75,

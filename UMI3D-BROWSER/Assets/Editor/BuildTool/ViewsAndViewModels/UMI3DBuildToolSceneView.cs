@@ -35,12 +35,17 @@ namespace umi3d.browserEditor.BuildTool
         public Button B_Browse;
         public EnumFlagsField EFF_Targets = new("Targets", E_Target.Quest);
 
-        public UMI3DBuildToolSceneView(VisualElement root, UMI3DBuildToolScene_SO buildToolScene_SO, int index)
+        public UMI3DBuildToolSceneView(
+            VisualElement root,
+            UMI3DBuildToolScene_SO buildToolScene_SO,
+            int index,
+            Action applyScenes
+        )
         {
             this.root = root;
             this.buildToolScene_SO = buildToolScene_SO;
             this.index = index;
-            this.viewModel = new(buildToolScene_SO);
+            this.viewModel = new(buildToolScene_SO, applyScenes);
         }
 
         public void Bind()

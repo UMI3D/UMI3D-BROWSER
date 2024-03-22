@@ -30,7 +30,7 @@ namespace umi3d.browserEditor.BuildTool
         {
             return scenes.Where(scene =>
             {
-                return scene.targets.HasFlag(target);
+                return scene.enabled && scene.targets.HasFlag(target);
             }).ToArray();
         }
     }

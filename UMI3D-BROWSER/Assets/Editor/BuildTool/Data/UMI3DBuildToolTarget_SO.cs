@@ -30,6 +30,7 @@ namespace umi3d.browserEditor.BuildTool
         public string installer;
         public string license;
         public string buildFolder;
+        public E_Target currentTarget;
         public List<TargetDto> targets = new();
 
 

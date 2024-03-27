@@ -26,16 +26,11 @@ namespace umi3dVRBrowsersBase.ikManagement
 
         public Animator SkeletonAnimator;
 
-        public VirtualObjectBodyInteraction LeftTarget;
-        public VirtualObjectBodyInteraction RightTarget;
-
         public Tracker LeftTracker;
         public Tracker RightTracker;
 
         private void Start()
         {
-            LeftTracker = LeftTracker ?? LeftTarget.GetComponent<Tracker>();
-            RightTracker = RightTracker ?? RightTarget.GetComponent<Tracker>();
             LeftTracker.isActif = false;
             RightTracker.isActif = false;
         }
@@ -48,8 +43,8 @@ namespace umi3dVRBrowsersBase.ikManagement
 
         public void SetFootTargets()
         {
-            LeftTarget.transform.position = SkeletonAnimator.GetBoneTransform(HumanBodyBones.LeftFoot).position;
-            RightTarget.transform.position = SkeletonAnimator.GetBoneTransform(HumanBodyBones.RightFoot).position;
+            LeftTracker.transform.position = SkeletonAnimator.GetBoneTransform(HumanBodyBones.LeftFoot).position;
+            RightTracker.transform.position = SkeletonAnimator.GetBoneTransform(HumanBodyBones.RightFoot).position;
             LeftTracker.isActif = true;
             RightTracker.isActif = true;
         }

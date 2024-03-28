@@ -37,19 +37,8 @@ namespace umi3d.browserEditor.BuildTool
         public Action<TargetDto> applyTargetOptions;
         public Action<TargetDto> buildTarget;
         public Action<TargetDto[]> buildSelectedTarget;
-
-        public UMI3DBuildToolViewModel viewModel;
-        public TemplateContainer T_Installer;
-        public TextField TF_Installer;
-        public Button B_Installer;
-        public TemplateContainer T_License;
-        public TextField TF_License;
-        public Button B_License;
-        public TemplateContainer T_BuildFolder;
-        public TextField TF_BuildFolder;
-        public Button B_BuildFolder;
+        
         public ListView LV_Targets;
-        public ListView LV_Scenes;
 
         public UMI3DBuildToolView(
             VisualElement root,
@@ -82,23 +71,12 @@ namespace umi3d.browserEditor.BuildTool
             this.applyTargetOptions = applyTargetOptions;
             this.buildTarget = buildTarget;
             this.buildSelectedTarget = buildSelectedTarget;
-            this.viewModel = new(buildToolTarget_SO);
         }
 
         public void Bind()
         {
             root.Add(ui.Instantiate());
-            T_Installer = root.Q<TemplateContainer>("T_Installer");
-            TF_Installer = T_Installer.Q<TextField>();
-            B_Installer = T_Installer.Q<Button>();
-            T_License = root.Q<TemplateContainer>("T_License");
-            TF_License = T_License.Q<TextField>();
-            B_License = T_License.Q<Button>();
-            T_BuildFolder = root.Q<TemplateContainer>("T_SingleBuildFolder");
-            TF_BuildFolder = T_BuildFolder.Q<TextField>();
-            B_BuildFolder = T_BuildFolder.Q<Button>();
             LV_Targets = root.Q<ListView>("LV_Targets");
-            LV_Scenes = root.Q<ListView>("LV_Scenes");
         }
 
         public void Set()
@@ -112,77 +90,25 @@ namespace umi3d.browserEditor.BuildTool
             versionView.Set();
 
             // Scenes.
-            LV_Scenes.reorderable = true;
-            LV_Scenes.virtualizationMethod = CollectionVirtualizationMethod.DynamicHeight;
-            LV_Scenes.showFoldoutHeader = true;
-            LV_Scenes.headerTitle = "Scenes";
-            LV_Scenes.showAddRemoveFooter = true;
-            LV_Scenes.reorderMode = ListViewReorderMode.Animated;
-            LV_Scenes.itemsSource = buildToolScene_SO.scenes;
-            LV_Scenes.makeItem = () =>
-            {
-                return scene_VTA.Instantiate(); ;
-            };
-            LV_Scenes.bindItem = (visual, index) =>
-            {
-                UMI3DBuildToolSceneView sceneView = new(
-                    root: visual,
-                    buildToolScene_SO: buildToolScene_SO,
-                    index: index,
+            var scenePanel 
+                = new UMI3DBuildToolScenePanelView(
+                    root,
+                    buildToolScene_SO,
+                    scene_VTA,
                     applyScenes
                 );
-                sceneView.Bind();
-                sceneView.Set();
-                visual.userData = sceneView;
-            };
-            LV_Scenes.unbindItem = (visual, index) =>
-            {
-                (visual?.userData as UMI3DBuildToolSceneView)?.Unbind();
-            };
+            scenePanel.Bind();
+            scenePanel.Set();
 
             // Path
-            (TF_Installer.labelElement as INotifyValueChanged<string>).SetValueWithoutNotify("Installer");
-            TF_Installer.SetValueWithoutNotify(buildToolTarget_SO.installer);
-            TF_Installer.RegisterValueChangedCallback(value =>
-            {
-                viewModel.UpdateInstaller(value.newValue);
-            });
-            B_Installer.clicked += () =>
-            {
-                viewModel.BrowseInstaller(path =>
-                {
-                    TF_Installer.SetValueWithoutNotify(path);
-                });
-            };
-            (TF_License.labelElement as INotifyValueChanged<string>).SetValueWithoutNotify("License");
-            TF_License.SetValueWithoutNotify(buildToolTarget_SO.license);
-            TF_License.RegisterValueChangedCallback(value =>
-            {
-                viewModel.UpdateLicense(value.newValue);
-            });
-            B_License.clicked += () =>
-            {
-                viewModel.BrowseLicense(path =>
-                {
-                    TF_License.SetValueWithoutNotify(path);
-                });
-            };
-            T_BuildFolder.style.display = (buildToolSettings_SO?.useOneBuildFolder ?? true)
-                    ? DisplayStyle.Flex
-                    : DisplayStyle.None;
-            (TF_BuildFolder.labelElement as INotifyValueChanged<string>).SetValueWithoutNotify("Build Folder");
-            TF_BuildFolder.SetValueWithoutNotify(buildToolTarget_SO.buildFolder);
-            TF_BuildFolder.RegisterValueChangedCallback(value =>
-            {
-                viewModel.UpdateBuildFolder(value.newValue);
-            });
-            B_BuildFolder.clicked += () =>
-            {
-                viewModel.BrowseBuildFolder(path =>
-                {
-                    TF_BuildFolder.SetValueWithoutNotify(path);
-                });
-            };
+            var configurationPanel 
+                = new UMI3DBuildToolConfigurationPanelView(
+                root,
+                buildToolTarget_SO,
+                buildToolSettings_SO
+            );
+            configurationPanel.Bind();
+            configurationPanel.Set();
 
             // Targets.
             LV_Targets.reorderable = true;

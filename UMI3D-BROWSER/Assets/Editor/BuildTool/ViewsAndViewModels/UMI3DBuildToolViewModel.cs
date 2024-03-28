@@ -24,7 +24,9 @@ namespace umi3d.browserEditor.BuildTool
     {
         public UMI3DBuildToolTarget_SO buildToolTarget_SO;
 
-        public UMI3DBuildToolViewModel(UMI3DBuildToolTarget_SO buildToolTarget_SO)
+        public UMI3DBuildToolViewModel(
+            UMI3DBuildToolTarget_SO buildToolTarget_SO
+        )
         {
             this.buildToolTarget_SO = buildToolTarget_SO;
         }

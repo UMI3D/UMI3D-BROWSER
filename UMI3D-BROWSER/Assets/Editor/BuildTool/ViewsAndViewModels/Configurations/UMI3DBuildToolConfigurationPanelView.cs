@@ -26,7 +26,7 @@ namespace umi3d.browserEditor.BuildTool
         public UMI3DBuildToolTarget_SO buildToolTarget_SO;
         public UMI3DBuildToolSettings_SO buildToolSettings_SO;
 
-        public UMI3DBuildToolViewModel viewModel;
+        public UMI3DBuildToolConfigurationViewModel viewModel;
         public UMI3DBuildToolPanelView panelView;
         public TemplateContainer T_Installer;
         public TextField TF_Installer;
@@ -129,9 +129,9 @@ namespace umi3d.browserEditor.BuildTool
             };
         }
 
-        public void UnBind()
+        public void Unbind()
         {
-            panelView.UnBind();
+            panelView.Unbind();
         }
     }
 }

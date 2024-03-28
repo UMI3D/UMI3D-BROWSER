@@ -53,7 +53,7 @@ namespace umi3d.browserEditor.BuildTool
             changeTitleHandler += TitleChanged;
         }
 
-        public void UnBind()
+        public void Unbind()
         {
             B_Back.clicked -= backHandler;
             changeTitleHandler -= TitleChanged;

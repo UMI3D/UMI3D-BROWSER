@@ -21,14 +21,13 @@ using UnityEngine.UIElements;
 
 namespace umi3d.browserEditor.BuildTool
 {
-    public class UMI3DBuildToolScenePanelView 
+    public class UMI3DBuildToolScenesContainerView 
     {
         public VisualElement root;
         public UMI3DBuildToolScene_SO buildToolScene_SO;
-        public VisualTreeAsset scene_VTA = default;
+        public VisualTreeAsset scene_VTA;
         public Action applyScenes;
 
-        public UMI3DBuildToolPanelView panelView;
         public EnumFlagsField EFF_Filter 
             = new(
                 "Filter on targets", 
@@ -36,7 +35,7 @@ namespace umi3d.browserEditor.BuildTool
             );
         public ListView LV_Scenes;
 
-        public UMI3DBuildToolScenePanelView(
+        public UMI3DBuildToolScenesContainerView(
             VisualElement root,
             UMI3DBuildToolScene_SO buildToolScene_SO,
             VisualTreeAsset scene_VTA,
@@ -47,24 +46,15 @@ namespace umi3d.browserEditor.BuildTool
             this.buildToolScene_SO = buildToolScene_SO;
             this.scene_VTA = scene_VTA;
             this.applyScenes = applyScenes;
-            panelView = new(root);
         }
 
         public void Bind()
         {
-            panelView.Bind();
             LV_Scenes = root.Q<ListView>("LV_Scenes");
         }
 
         public void Set()
         {
-            panelView.SetTitle("Scene Panel");
-
-            // Todo add a filter.
-            //root.Add(EFF_Filter);
-            //EFF_Filter.SetValueWithoutNotify(viewModel[index].targets);
-            //EFF_Filter.RegisterValueChangedCallback(TargetValueChanged);
-
             LV_Scenes.reorderable = true;
             LV_Scenes.virtualizationMethod = CollectionVirtualizationMethod.DynamicHeight;
             LV_Scenes.showFoldoutHeader = true;
@@ -92,7 +82,6 @@ namespace umi3d.browserEditor.BuildTool
 
         public void Unbind() 
         {
-            panelView.UnBind();
         }
     }
 }

@@ -33,12 +33,10 @@ namespace umi3d.browserEditor.BuildTool
         public UMI3DBuildToolTarget_SO buildToolTarget_SO;
         public UMI3DBuildToolScene_SO buildToolScene_SO;
         public UMI3DBuildToolSettings_SO buildToolSettings_SO;
+        public Action<TargetDto> buildTarget;
         public Action applyScenes;
         public Action<TargetDto> applyTargetOptions;
-        public Action<TargetDto> buildTarget;
         public Action<TargetDto[]> buildSelectedTarget;
-        
-        public ListView LV_Targets;
 
         public UMI3DBuildToolView(
             VisualElement root,
@@ -69,14 +67,13 @@ namespace umi3d.browserEditor.BuildTool
             this.buildToolSettings_SO = buildToolSettings_SO;
             this.applyScenes = applyScenes;
             this.applyTargetOptions = applyTargetOptions;
-            this.buildTarget = buildTarget;
             this.buildSelectedTarget = buildSelectedTarget;
+            this.buildTarget = buildTarget;
         }
 
         public void Bind()
         {
             root.Add(ui.Instantiate());
-            LV_Targets = root.Q<ListView>("LV_Targets");
         }
 
         public void Set()
@@ -91,7 +88,7 @@ namespace umi3d.browserEditor.BuildTool
 
             // Scenes.
             var scenePanel 
-                = new UMI3DBuildToolScenePanelView(
+                = new UMI3DBuildToolScenesContainerView(
                     root,
                     buildToolScene_SO,
                     scene_VTA,
@@ -111,57 +108,18 @@ namespace umi3d.browserEditor.BuildTool
             configurationPanel.Set();
 
             // Targets.
-            LV_Targets.reorderable = true;
-            LV_Targets.virtualizationMethod = CollectionVirtualizationMethod.DynamicHeight;
-            LV_Targets.showFoldoutHeader = true;
-            LV_Targets.headerTitle = "Targets";
-            LV_Targets.showAddRemoveFooter = true;
-            LV_Targets.reorderMode = ListViewReorderMode.Animated;
-            LV_Targets.itemsSource = buildToolTarget_SO.targets;
-            LV_Targets.itemsAdded += indexes =>
-            {
-                foreach (var index in indexes)
-                {
-                    var target = buildToolTarget_SO.targets[index];
-                    target.BuildFolder = buildToolTarget_SO.buildFolder;
-                    target.Target = E_Target.Quest;
-                    buildToolTarget_SO.targets[index] = target;
-                }
-            };
-            LV_Targets.makeItem = () =>
-            {
-                return target_VTA.Instantiate();
-            };
-            LV_Targets.bindItem = (visual, index) =>
-            {
-                UMI3DBuildToolTargetView targetView = new(
-                    root: visual,
-                    buildToolTarget_SO,
-                    buildToolVersion_SO,
-                    buildToolSettings_SO,
-                    index,
-                    applyTargetOptions,
-                    refreshView: index =>
-                    {
-                        for (int i = 0; i < buildToolTarget_SO.targets.Count; i++)
-                        {
-                            if (i != index)
-                            {
-                                LV_Targets.RefreshItem(i);
-                            }
-                        }
-                    },
-                    buildTarget
-                );
-                targetView.Bind();
-                targetView.Set();
-                visual.userData = targetView;
-            };
-            LV_Targets.unbindItem = (visual, index) =>
-            {
-                UMI3DBuildToolTargetView targetView = visual.userData as UMI3DBuildToolTargetView;
-                targetView.Unbind();
-            };
+            var targetsContainer 
+                = new UMI3DBuildToolTargetsContainerView(
+                root,
+                buildToolScene_SO,
+                buildToolTarget_SO,
+                buildToolVersion_SO,
+                buildToolSettings_SO,
+                buildTarget,
+                target_VTA
+            );
+            targetsContainer.Bind();
+            targetsContainer.Set();
 
             UMI3DBuildToolBuildProgressView progressView = new(
                 root,

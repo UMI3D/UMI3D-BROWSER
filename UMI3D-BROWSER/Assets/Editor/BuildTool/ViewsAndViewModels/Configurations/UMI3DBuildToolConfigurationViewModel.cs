@@ -20,11 +20,11 @@ using UnityEngine;
 
 namespace umi3d.browserEditor.BuildTool
 {
-    public class UMI3DBuildToolViewModel 
+    public class UMI3DBuildToolConfigurationViewModel 
     {
         public UMI3DBuildToolTarget_SO buildToolTarget_SO;
 
-        public UMI3DBuildToolViewModel(
+        public UMI3DBuildToolConfigurationViewModel(
             UMI3DBuildToolTarget_SO buildToolTarget_SO
         )
         {

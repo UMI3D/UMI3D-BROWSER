@@ -15,7 +15,7 @@ using umi3d.common.lbe.description;
 using umi3d.common;
 using umi3d.cdk;
 
-public class OculusGuardianManager : MonoBehaviour
+public class GuardianManager : MonoBehaviour
 {
     private GameObject GuardianmeshObject;
     public string filePath;
@@ -26,38 +26,21 @@ public class OculusGuardianManager : MonoBehaviour
     private List<GameObject> guardianAnchors = new List<GameObject>(); // Liste pour stocker toutes les ancres du guardian
 
     public ARAnchorManager anchorManager; // Référence au gestionnaire d'ancres AR
-    public ARAnchorSerializer anchorSerializer; // Référence à l'ARAnchorSerializer
+    //public ARAnchorSerializer anchorSerializer; // Référence à l'ARAnchorSerializer
 
     private UserGuardianDto userGuardianDto;
 
-    [Header("Guardian Manager UI")]
 
-    public Button CreateGuardian;
-    public Button DeleteGuardianJso;
-    public Button LoadGuardianJso;
+
 
     private void Start()
     {
-        filePath = Path.Combine(Application.persistentDataPath, "anchors.json"); //Anchor Json  sauvegardé sur : /storage/emulated/0/Android/data/com.DefaultCompany.AncresSpatiale/files/anchors.json
-
-
-        if (File.Exists(filePath))
-        {
-            CreateGuardian.interactable = false;
-            DeleteGuardianJso.interactable = false;
-            LoadGuardianJso.interactable = true;
-        }
-        else
-        {
-            CreateGuardian.interactable = true;
-            DeleteGuardianJso.interactable = false;
-            LoadGuardianJso.interactable = false;
-        }
+        GetGuardianArea();
     }
 
     public void DeleteGuardianJson()
     {
-        foreach (var anchor in anchorManager.trackables)
+        /*foreach (var anchor in anchorManager.trackables)
         {
             SerializedARAnchor serializedAnchor = anchorSerializer.GetSerializedAnchor(anchor.trackableId.ToString());
 
@@ -67,7 +50,7 @@ public class OculusGuardianManager : MonoBehaviour
                 // Supprimer l'ancre du guardian
                 anchorManager.RemoveAnchor(anchor);
             }
-        }
+        }*/
 
         if (guardianAnchors.Count > 0)
         {
@@ -84,24 +67,10 @@ public class OculusGuardianManager : MonoBehaviour
         {
             // Supprimer le mesh associé
             Destroy(GuardianmeshObject);
-        }
-
-        if (File.Exists(filePath))
-        {
-            File.Delete(filePath);
-            Debug.Log("Fichier JSON supprimé.");
-        }
-        else
-        {
-            Debug.Log("Aucun fichier JSON trouvé.");
-        }
-
-        CreateGuardian.interactable = true;
-        DeleteGuardianJso.interactable = false;
-        LoadGuardianJso.interactable = false;
+        }  
     }
 
-    public void SaveGuardianAndSendToServer(GameObject anchorGameObject)
+    public void SendGuardianInServer(GameObject anchorGameObject)
     {
         // Créer une nouvelle instance de UserGuardianDto
         userGuardianDto = new UserGuardianDto();
@@ -122,14 +91,14 @@ public class OculusGuardianManager : MonoBehaviour
 
     }
 
-
+    //A reprendre pour l'utilisation d'un seconde joueur pour réceptionner le guardian envoyer par le serveur
     public void LoadGuardianJson()
     {
         // Désérialiser les ancres à partir du fichier JSON
-        List<SerializedARAnchor> deserializedAnchors = anchorSerializer.DeserializeAnchorsFromJson(filePath);
+        //List<SerializedARAnchor> deserializedAnchors = anchorSerializer.DeserializeAnchorsFromJson(filePath);
         List<Vector3> anchorForMesh = new List<Vector3>();
 
-        if (deserializedAnchors != null)
+        /*if (deserializedAnchors != null)
         {
             foreach (var serializedAnchor in deserializedAnchors)
             {
@@ -137,7 +106,6 @@ public class OculusGuardianManager : MonoBehaviour
                 Vector3 position = new Vector3(serializedAnchor.pose.position.x, serializedAnchor.pose.position.y, serializedAnchor.pose.position.z);
                 Quaternion rotation = new Quaternion(serializedAnchor.pose.rotation.x, serializedAnchor.pose.rotation.y, serializedAnchor.pose.rotation.z, serializedAnchor.pose.rotation.w);
                 Pose pose = new Pose(position, rotation);
-
 
 
                 anchorForMesh.Add(position);
@@ -150,13 +118,9 @@ public class OculusGuardianManager : MonoBehaviour
         else
         {
             Debug.LogWarning("Aucune ancre n'a été désérialisée à partir du fichier JSON.");
-        }
+        }*/
 
-        CreateMesh(anchorForMesh);
-
-        CreateGuardian.interactable = false;
-        DeleteGuardianJso.interactable = true;
-        LoadGuardianJso.interactable = false;
+        //CreateMesh(anchorForMesh);
     }
 
     public void GetGuardianArea()
@@ -189,7 +153,7 @@ public class OculusGuardianManager : MonoBehaviour
                         UMI3DClientServer.SendRequest(userGuardianDto, reliable: true);
                     }
                     // sérialisation des ancres pour sauvegarde dans le JSON
-                    if (anchorSerializer != null)
+                    /*if (anchorSerializer != null)
                     {
                         List<ARAnchor> serialAnchors = new List<ARAnchor>();
 
@@ -202,7 +166,7 @@ public class OculusGuardianManager : MonoBehaviour
                     else
                     {
                         Debug.LogError("ARAnchorSerializer non défini.");
-                    }
+                    }*/
                 }
                 else
                 {
@@ -215,17 +179,13 @@ public class OculusGuardianManager : MonoBehaviour
                 {
                     anchorForMesh.Add(anchor.transform.position);
                 }
-                CreateMesh(anchorForMesh);
+                //CreateMesh(anchorForMesh);
             }
         }
         else
         {
             Debug.LogError("Aucun sous-système d'entrée XR disponible.");
         }
-
-        CreateGuardian.interactable = false;
-        DeleteGuardianJso.interactable = true;
-        LoadGuardianJso.interactable = false;
     }
 
     private void AddAnchor(GameObject basePoint)
@@ -266,15 +226,17 @@ public class OculusGuardianManager : MonoBehaviour
     public void CreateGuardianLimit(GameObject basePoint)
     {
         AddAnchor(basePoint);
-        SaveGuardianAndSendToServer(basePoint);
+        SendGuardianInServer(basePoint);
 
         GameObject basePointUp = Instantiate(pointAnchor, basePoint.transform.position, Quaternion.identity);
         basePointUp.transform.position = new Vector3(basePoint.transform.position.x, basePoint.transform.position.y + 2f, basePoint.transform.position.z);
 
         AddAnchor(basePointUp);
-        SaveGuardianAndSendToServer(basePointUp);
+        SendGuardianInServer(basePointUp);
     }
 
+
+    //A utiliser seulement sur le serveur pour ensuite l'envoyer à tous les clients
     private void CreateMesh(List<Vector3> points)
     {
          // Créer un nouveau GameObject pour le maillage

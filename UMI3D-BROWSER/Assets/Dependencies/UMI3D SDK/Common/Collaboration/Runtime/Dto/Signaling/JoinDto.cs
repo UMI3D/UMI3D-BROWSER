@@ -16,6 +16,8 @@ limitations under the License.
 
 using System.Collections.Generic;
 using umi3d.common.userCapture.description;
+using umi3d.common.lbe.description;
+
 
 namespace umi3d.common.collaboration.dto.signaling
 {
@@ -49,5 +51,7 @@ namespace umi3d.common.collaboration.dto.signaling
         /// E.g. BoneType.ViewPoint for Desktop, BoneType.LeftHand and BoneType.RightHand for most VR devices.
         /// </summary>
         public List<uint> bonesWithController { get; set; }
+
+        public List<ARAnchorDto> anchorAR { get; set; }
     }
 }

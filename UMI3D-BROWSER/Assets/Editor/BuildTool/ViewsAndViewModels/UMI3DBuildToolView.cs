@@ -18,6 +18,7 @@ using System;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
+using static umi3d.browserEditor.BuildTool.UMI3DBuildTool;
 
 namespace umi3d.browserEditor.BuildTool
 {
@@ -79,6 +80,27 @@ namespace umi3d.browserEditor.BuildTool
             mainPanelView.Set();
 
             configurationPanel.Set();
+        }
+
+        public void ChangePanel(E_BuildToolPanel panel)
+        {
+            switch (panel)
+            {
+                case E_BuildToolPanel.Main:
+                    mainPanelView.root.style.display = DisplayStyle.Flex;
+                    configurationPanel.root.style.display = DisplayStyle.None;
+                    break;
+                case E_BuildToolPanel.Configuration:
+                    mainPanelView.root.style.display = DisplayStyle.None;
+                    configurationPanel.root.style.display = DisplayStyle.Flex;
+                    break;
+                case E_BuildToolPanel.History:
+                    break;
+                case E_BuildToolPanel.Build:
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

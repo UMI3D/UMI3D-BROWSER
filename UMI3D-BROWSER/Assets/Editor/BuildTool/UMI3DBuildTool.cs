@@ -38,12 +38,40 @@ namespace umi3d.browserEditor.BuildTool
         [SerializeField] UMI3DCollabLoadingParameters loadingParameters;
         IBuilToolComponent _uMI3DConfigurator = null;
 
-        [MenuItem("Tools/BuildTool")]
-        public static void OpenWindow()
+        UMI3DBuildToolView buildView;
+
+        public enum E_BuildToolPanel
+        {
+            Main,
+            Configuration,
+            History,
+            Build
+        }
+
+        [MenuItem("Tools/Build Tool")]
+        public static void OpenBuildToolWindow()
         {
             UMI3DBuildTool wnd = GetWindow<UMI3DBuildTool>();
             wnd.titleContent = new GUIContent("UMI3D Build Tool");
+            wnd.buildView.ChangePanel(E_BuildToolPanel.Main);
         }
+
+        [MenuItem("Tools/Build Tool Configuration")]
+        public static void OpenBuildToolConfigurationWindow()
+        {
+            UMI3DBuildTool wnd = GetWindow<UMI3DBuildTool>();
+            wnd.titleContent = new GUIContent("UMI3D Build Tool Config");
+            wnd.buildView.ChangePanel(E_BuildToolPanel.Configuration);
+        }
+
+        // TODO
+        //[MenuItem("Tools/Build Tool History")]
+        //public static void OpenBuildToolHistoryWindow()
+        //{
+        //    UMI3DBuildTool wnd = GetWindow<UMI3DBuildTool>();
+        //    wnd.titleContent = new GUIContent("UMI3D Build Tool History");
+        //    wnd.buildView.ChangePanel(E_BuildToolPanel.History);
+        //}
 
         public void CreateGUI()
         {
@@ -93,7 +121,7 @@ namespace umi3d.browserEditor.BuildTool
             );
             _uMI3DConfigurator = new UMI3DConfigurator(loadingParameters);
 
-            UMI3DBuildToolView buildView = new(
+            buildView = new(
                 rootVisualElement,
                 ui, target_VTA, path_VTA, scene_VTA,
                 buildToolKeystore_SO, buildToolVersion_SO, buildToolTarget_SO, buildToolScene_SO, buildToolSettings_SO,

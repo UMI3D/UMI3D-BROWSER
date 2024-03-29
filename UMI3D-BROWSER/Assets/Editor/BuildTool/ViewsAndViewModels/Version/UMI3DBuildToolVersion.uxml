@@ -4,15 +4,15 @@
             <ui:VisualElement style="flex-grow: 1; flex-direction: row; justify-content: space-around;">
                 <ui:VisualElement name="V_Major" style="flex-grow: 1;">
                     <ui:IntegerField value="42" />
-                    <ui:Button text="Major + 1" parse-escape-sequences="true" display-tooltip-when-elided="true" style="flex-grow: 1;" />
+                    <ui:Button text="Major + 1" parse-escape-sequences="true" display-tooltip-when-elided="true" style="flex-grow: 1; margin-top: 10px; margin-bottom: 10px;" />
                 </ui:VisualElement>
                 <ui:VisualElement name="V_Minor" style="flex-grow: 1;">
                     <ui:IntegerField value="42" />
-                    <ui:Button text="Minor + 1" parse-escape-sequences="true" display-tooltip-when-elided="true" style="flex-grow: 1;" />
+                    <ui:Button text="Minor + 1" parse-escape-sequences="true" display-tooltip-when-elided="true" style="flex-grow: 1; margin-top: 10px; margin-bottom: 10px;" />
                 </ui:VisualElement>
                 <ui:VisualElement name="V_BuildCount" style="flex-grow: 1;">
                     <ui:IntegerField value="42" />
-                    <ui:Button text="Count + 1" parse-escape-sequences="true" display-tooltip-when-elided="true" style="flex-grow: 1;" />
+                    <ui:Button text="Count + 1" parse-escape-sequences="true" display-tooltip-when-elided="true" style="flex-grow: 1; margin-top: 10px; margin-bottom: 10px;" />
                 </ui:VisualElement>
             </ui:VisualElement>
             <ui:TextField picking-mode="Ignore" label="Additional information" value="0.0.2a" name="TF_AdditionalVersion" />

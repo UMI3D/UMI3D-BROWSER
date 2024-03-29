@@ -65,6 +65,7 @@ namespace umi3d.browserEditor.BuildTool
             configurationPanel = new UMI3DBuildToolConfigurationPanelView(
                 root.Q<TemplateContainer>("UMI3DBuildToolConfigurationPanel"),
                 buildToolTarget_SO,
+                buildToolKeystore_SO,
                 buildToolSettings_SO
             );
         }

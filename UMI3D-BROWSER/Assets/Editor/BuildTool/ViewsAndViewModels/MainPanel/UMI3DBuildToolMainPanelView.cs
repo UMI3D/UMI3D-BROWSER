@@ -74,9 +74,7 @@ namespace umi3d.browserEditor.BuildTool
             );
             targetsContainerView = new(
                 root,
-                buildToolScene_SO,
                 buildToolTarget_SO,
-                buildToolVersion_SO,
                 buildToolSettings_SO,
                 target_VTA,
                 applyTargetOptions,

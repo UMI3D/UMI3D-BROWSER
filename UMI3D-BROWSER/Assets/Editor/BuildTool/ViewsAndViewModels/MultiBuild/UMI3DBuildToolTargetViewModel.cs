@@ -90,6 +90,7 @@ namespace umi3d.browserEditor.BuildTool
             var targetDTO = buildToolTarget_SO.targets[index];
             targetDTO.Target = target;
             buildToolTarget_SO.targets[index] = targetDTO;
+            buildToolTarget_SO.SelectedTargetsChanged?.Invoke();
             Save();
         }
 
@@ -98,6 +99,7 @@ namespace umi3d.browserEditor.BuildTool
             var target = buildToolTarget_SO.targets[index];
             target.releaseCycle = releaseCycle;
             buildToolTarget_SO.targets[index] = target;
+            buildToolTarget_SO.SelectedTargetsChanged?.Invoke();
             Save();
         }
 

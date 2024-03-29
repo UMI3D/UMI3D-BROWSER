@@ -9,7 +9,7 @@
     <ui:Instance template="UMI3DBuildToolVersion" name="UMI3DBuildToolVersion" />
     <ui:VisualElement name="Space" style="min-height: 30px;" />
     <ui:ListView focusable="true" name="LV_Scenes" />
-    <ui:VisualElement name="Space" style="min-height: 30px;" />
+    <ui:VisualElement name="Space" style="min-height: 30px; display: none;" />
     <ui:ListView focusable="true" name="LV_Targets" />
     <ui:Button text="Build" parse-escape-sequences="true" display-tooltip-when-elided="true" name="B_Build" />
 </ui:UXML>

@@ -16,6 +16,7 @@ limitations under the License.
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -27,9 +28,7 @@ namespace umi3d.browserEditor.BuildTool
         umi3d.debug.UMI3DLogger logger;
 
         public VisualElement root;
-        public UMI3DBuildToolScene_SO buildToolScene_SO;
         public UMI3DBuildToolTarget_SO buildToolTarget_SO;
-        public UMI3DBuildToolVersion_SO buildToolVersion_SO;
         public UMI3DBuildToolSettings_SO buildToolSettings_SO;
         public VisualTreeAsset target_VTA;
         public Action<E_Target> applyTargetOptions;
@@ -42,9 +41,7 @@ namespace umi3d.browserEditor.BuildTool
 
         public UMI3DBuildToolTargetsContainerView(
             VisualElement root,
-            UMI3DBuildToolScene_SO buildToolScene_SO,
             UMI3DBuildToolTarget_SO buildToolTarget_SO,
-            UMI3DBuildToolVersion_SO buildToolVersion_SO,
             UMI3DBuildToolSettings_SO buildToolSettings_SO,
             VisualTreeAsset target_VTA,
             Action<E_Target> applyTargetOptions,
@@ -54,29 +51,26 @@ namespace umi3d.browserEditor.BuildTool
             logger = new(mainTag: nameof(UMI3DBuildToolTargetsContainerView));
 
             this.root = root;
-            this.buildToolScene_SO = buildToolScene_SO;
             this.buildToolTarget_SO = buildToolTarget_SO;
-            this.buildToolVersion_SO = buildToolVersion_SO;
             this.buildToolSettings_SO = buildToolSettings_SO;
             this.target_VTA = target_VTA;
             this.applyTargetOptions = applyTargetOptions;
             this.buildSelectedTarget = buildSelectedTarget;
 
             logger.Assert(root != null, nameof(UMI3DBuildToolTargetsContainerView));
-            logger.Assert(buildToolScene_SO != null, nameof(UMI3DBuildToolTargetsContainerView));
             logger.Assert(buildToolTarget_SO != null, nameof(UMI3DBuildToolTargetsContainerView));
-            logger.Assert(buildToolVersion_SO != null, nameof(UMI3DBuildToolTargetsContainerView));
             logger.Assert(buildToolSettings_SO != null, nameof(UMI3DBuildToolTargetsContainerView));
             logger.Assert(target_VTA != null, nameof(UMI3DBuildToolTargetsContainerView));
             logger.Assert(buildSelectedTarget != null, nameof(UMI3DBuildToolTargetsContainerView));
-        }
 
-        public void Bind()
-        {
             this.buildToolTarget_SO.SelectedTargetsChanged += () =>
             {
                 OnUpdateTargetSelected(buildToolTarget_SO.SelectedTargets);
             };
+        }
+
+        public void Bind()
+        {
             DD_CurrentTarget = root.Q<DropdownField>("DD_CurrentTarget");
             B_ApplyCurrentTarget = root.Q<Button>("B_ApplyCurrentTarget");
             B_ApplyCurrentTarget.clicked += ApplyTargetOption;
@@ -97,7 +91,6 @@ namespace umi3d.browserEditor.BuildTool
             LV_Targets.reorderable = true;
             LV_Targets.virtualizationMethod = CollectionVirtualizationMethod.DynamicHeight;
             LV_Targets.showFoldoutHeader = true;
-            LV_Targets.headerTitle = "Targets";
             LV_Targets.showAddRemoveFooter = true;
             LV_Targets.reorderMode = ListViewReorderMode.Animated;
             LV_Targets.itemsSource = buildToolTarget_SO.targets;
@@ -110,7 +103,6 @@ namespace umi3d.browserEditor.BuildTool
                 UMI3DBuildToolTargetView targetView = new(
                     root: visual,
                     buildToolTarget_SO,
-                    buildToolVersion_SO,
                     buildToolSettings_SO,
                     index
                 );
@@ -123,16 +115,13 @@ namespace umi3d.browserEditor.BuildTool
                 UMI3DBuildToolTargetView targetView = visual.userData as UMI3DBuildToolTargetView;
                 targetView.Unbind();
             };
+            LV_Targets.Q<Toggle>().value = false;
 
             OnUpdateTargetSelected(buildToolTarget_SO.SelectedTargets);
         }
 
         public void Unbind()
         {
-            this.buildToolTarget_SO.SelectedTargetsChanged -= () =>
-            {
-                OnUpdateTargetSelected(buildToolTarget_SO.SelectedTargets);
-            };
             B_ApplyCurrentTarget.clicked -= ApplyTargetOption;
             B_Build.clicked -= BuildSelectedTarget;
             DD_CurrentTarget.UnregisterValueChangedCallback(CurrentTargetValueChanged);
@@ -164,10 +153,21 @@ namespace umi3d.browserEditor.BuildTool
             }
         }
 
+        void OnUpdateTargetSelected(params TargetDto[] targets)
+        {
+            string[] targetsDesc = targets.Select(
+                target =>
+                {
+                    return $"{target.Target}:{target.releaseCycle}";
+                }
+            ).ToArray();
+            LV_Targets.headerTitle = $"Targets: {string.Join(" - ", targetsDesc)}";
+            B_Build.text = $"BUILD : {targets.Length} selected target(s)";
+            B_Build.SetEnabled(targets.Length != 0);
+        }
+
         void BuildSelectedTarget()
         {
-            //var currentTarget = 
-
             E_ReleaseCycle[] releases = (E_ReleaseCycle[])Enum.GetValues(typeof(E_ReleaseCycle));
             for (int i = releases.Length - 1; i >= 0; i--)
             {
@@ -188,11 +188,6 @@ namespace umi3d.browserEditor.BuildTool
                     )
                 );
             }
-        }
-
-        void OnUpdateTargetSelected(params TargetDto[] targets)
-        {
-            B_Build.text = "BUILD all selected targets";
         }
     }
 }

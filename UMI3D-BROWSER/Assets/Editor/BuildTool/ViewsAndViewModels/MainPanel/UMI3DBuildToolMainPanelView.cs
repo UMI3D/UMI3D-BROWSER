@@ -25,10 +25,6 @@ namespace umi3d.browserEditor.BuildTool
         umi3d.debug.UMI3DLogger logger;
 
         public VisualElement root;
-        public UMI3DBuildToolVersion_SO buildToolVersion_SO;
-        public UMI3DBuildToolScene_SO buildToolScene_SO;
-        public UMI3DBuildToolTarget_SO buildToolTarget_SO;
-        public UMI3DBuildToolSettings_SO buildToolSettings_SO;
 
         public UMI3DBuildToolVersionView versionView;
         public UMI3DBuildToolScenesContainerView sceneContainerView;
@@ -50,10 +46,6 @@ namespace umi3d.browserEditor.BuildTool
             logger = new(mainTag: nameof(UMI3DBuildToolMainPanelView));
 
             this.root = root;
-            this.buildToolVersion_SO = buildToolVersion_SO;
-            this.buildToolScene_SO = buildToolScene_SO;
-            this.buildToolTarget_SO = buildToolTarget_SO;
-            this.buildToolSettings_SO = buildToolSettings_SO;
 
             logger.Assert(root != null, nameof(UMI3DBuildToolMainPanelView));
             logger.Assert(buildToolVersion_SO != null, nameof(UMI3DBuildToolMainPanelView));

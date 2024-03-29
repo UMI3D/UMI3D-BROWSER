@@ -28,11 +28,6 @@ namespace umi3d.browserEditor.BuildTool
         public VisualTreeAsset scene_VTA;
         public Action applyScenes;
 
-        public EnumFlagsField EFF_Filter 
-            = new(
-                "Filter on targets", 
-                E_Target.Quest
-            );
         public ListView LV_Scenes;
 
         public UMI3DBuildToolScenesContainerView(
@@ -64,19 +59,28 @@ namespace umi3d.browserEditor.BuildTool
             LV_Scenes.itemsSource = buildToolScene_SO.scenes;
             LV_Scenes.makeItem = () =>
             {
-                return scene_VTA.Instantiate(); ;
+                var visual = scene_VTA.Instantiate();
+                UMI3DBuildToolSceneView sceneView = new(
+                    buildToolScene_SO: buildToolScene_SO,
+                    applyScenes
+                );
+                visual.userData = sceneView;
+                return visual;
             };
             LV_Scenes.bindItem = (visual, index) =>
             {
-                UMI3DBuildToolSceneView sceneView = new(
-                    root: visual,
-                    buildToolScene_SO: buildToolScene_SO,
-                    index: index,
-                    applyScenes
-                );
+                UMI3DBuildToolSceneView sceneView 
+                    = visual.userData as UMI3DBuildToolSceneView;
+                sceneView.root = visual;
+                sceneView.index = index;
                 sceneView.Bind();
                 sceneView.Set();
-                visual.userData = sceneView;
+            };
+            LV_Scenes.unbindItem = (visual, index) =>
+            {
+                UMI3DBuildToolSceneView sceneView 
+                    = visual.userData as UMI3DBuildToolSceneView;
+                sceneView.Unbind();
             };
             LV_Scenes.Q<Toggle>().value = false;
         }

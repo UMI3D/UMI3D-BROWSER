@@ -25,9 +25,9 @@ namespace umi3d.browserEditor.BuildTool
 {
     public static class PluginHelper 
     {
-        public static void SwitchPlugins(TargetDto target)
+        public static void SwitchPlugins(E_Target target)
         {
-            switch (target.Target)
+            switch (target)
             {
                 case E_Target.Quest:
                 case E_Target.Focus:
@@ -39,7 +39,7 @@ namespace umi3d.browserEditor.BuildTool
                     break;
             }
 
-            switch (target.Target)
+            switch (target)
             {
                 case E_Target.Quest:
                 case E_Target.Focus:

@@ -1,16 +1,15 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <ui:Template name="UMI3DBuildToolVersion" src="project://database/Assets/Editor/BuildTool/ViewsAndViewModels/Version/UMI3DBuildToolVersion.uxml?fileID=9197481963319205126&amp;guid=950c206073b17c24da89bb04d479bdad&amp;type=3#UMI3DBuildToolVersion" />
-    <ui:Template name="UMI3DBuildToolTarget" src="project://database/Assets/Editor/BuildTool/ViewsAndViewModels/MultiBuild/UMI3DBuildToolTarget.uxml?fileID=9197481963319205126&amp;guid=0841ca45a7168ac46948e4f169ab7de2&amp;type=3#UMI3DBuildToolTarget" />
     <ui:VisualElement name="V_CurrentTarget" style="flex-direction: row;">
-        <ui:DropdownField label="Current Target" index="-1" choices="System.Collections.Generic.List`1[System.String]" name="DD_TargetSelection" style="flex-grow: 1;" />
+        <ui:DropdownField label="Current Target" index="-1" choices="System.Collections.Generic.List`1[System.String]" name="DD_CurrentTarget" style="flex-grow: 1;" />
         <ui:VisualElement name="Space" style="min-width: 60px;" />
-        <ui:Button text="Apply Target Options" parse-escape-sequences="true" display-tooltip-when-elided="true" name="B_Apply" />
+        <ui:Button text="Apply Target Options" parse-escape-sequences="true" display-tooltip-when-elided="true" name="B_ApplyCurrentTarget" />
     </ui:VisualElement>
     <ui:VisualElement name="Space" style="min-height: 30px;" />
     <ui:Instance template="UMI3DBuildToolVersion" name="UMI3DBuildToolVersion" />
     <ui:VisualElement name="Space" style="min-height: 30px;" />
     <ui:ListView focusable="true" name="LV_Scenes" />
     <ui:VisualElement name="Space" style="min-height: 30px;" />
-    <ui:Instance template="UMI3DBuildToolTarget" name="UMI3DBuildToolTarget" />
-    <ui:VisualElement name="Space" style="min-height: 30px;" />
+    <ui:ListView focusable="true" name="LV_Targets" />
+    <ui:Button text="Build" parse-escape-sequences="true" display-tooltip-when-elided="true" name="B_Build" />
 </ui:UXML>

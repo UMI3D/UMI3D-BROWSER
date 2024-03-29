@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using PlasticGui;
 using System;
 using UnityEditor;
 using UnityEngine;
@@ -23,8 +24,6 @@ namespace umi3d.browserEditor.BuildTool
     public class UMI3DBuildToolTargetViewModel 
     {
         public UMI3DBuildToolTarget_SO buildToolTarget_SO;
-        Action<TargetDto> applyTargetOptions;
-        public Action<int> refreshView;
 
         public TargetDto this[int index]
         {
@@ -47,43 +46,10 @@ namespace umi3d.browserEditor.BuildTool
         }
 
         public UMI3DBuildToolTargetViewModel(
-            UMI3DBuildToolTarget_SO buildToolTarget_SO,
-            Action<TargetDto> applyTargetOptions,
-            Action<int> refreshView
+            UMI3DBuildToolTarget_SO buildToolTarget_SO
         )
         {
             this.buildToolTarget_SO = buildToolTarget_SO;
-            this.applyTargetOptions = applyTargetOptions;
-            this.refreshView = refreshView;
-        }
-
-        public void ApplyChange(int index, bool isApplied)
-        {
-            void InternalApplyChange(int _index, bool isApplied)
-            {
-                var targetDTO = buildToolTarget_SO.targets[_index];
-                targetDTO.isApplied = isApplied;
-                buildToolTarget_SO.targets[_index] = targetDTO;
-                if (isApplied)
-                {
-                    applyTargetOptions?.Invoke(this[_index]);
-                    refreshView?.Invoke(_index);
-                }
-            }
-            
-            if (isApplied)
-            {
-                for (int i = 0; i < Count; i++)
-                {
-                    if (i != index)
-                    {
-                        InternalApplyChange(i, false);
-                    }
-                }
-            }
-            InternalApplyChange(index, isApplied);
-
-            Save();
         }
 
         public void Select(int index, bool isSelected)

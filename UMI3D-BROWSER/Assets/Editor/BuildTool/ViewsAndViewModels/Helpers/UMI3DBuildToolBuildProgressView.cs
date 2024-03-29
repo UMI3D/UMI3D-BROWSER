@@ -25,11 +25,8 @@ namespace umi3d.browserEditor.BuildTool
     {
         public VisualElement root;
         public UMI3DBuildToolTarget_SO buildToolTarget_SO;
-        public Action<TargetDto[]> buildSelectedTarget;
 
         Button B_BuildAllSelected;
-        Button B_Abort;
-        ProgressBar PB_Progress;
 
         public UMI3DBuildToolBuildProgressView(
             VisualElement root,
@@ -39,58 +36,15 @@ namespace umi3d.browserEditor.BuildTool
         {
             this.root = root;
             this.buildToolTarget_SO = buildToolTarget_SO;
-            this.buildToolTarget_SO.SelectedTargetsChanged += () =>
-            {
-                OnUpdateTargetSelected(buildToolTarget_SO.SelectedTargets);
-            };
-            this.buildSelectedTarget = buildSelectedTarget;
         }
 
         public void Bind()
         {
             B_BuildAllSelected = root.Q<Button>("B_BuildAllSelected");
-            B_Abort = root.Q<Button>("B_Abort");
-            PB_Progress = root.Q<ProgressBar>();
         }
 
         public void Set()
         {
-            B_Abort.SetEnabled(false);
-            OnUpdateTargetSelected(buildToolTarget_SO.SelectedTargets);
-            B_BuildAllSelected.clicked += BuildSelectedTarget;
-        }
-
-        void OnUpdateTargetSelected(params TargetDto[] targets)
-        {
-            B_BuildAllSelected.text = "BUILD all selected targets";
-            PB_Progress.value = 0;
-            PB_Progress.title = $"{targets.Length} target(s) to be built";
-        }
-
-        void BuildSelectedTarget()
-        {
-            //var currentTarget = 
-
-            E_ReleaseCycle[] releases = (E_ReleaseCycle[])Enum.GetValues(typeof(E_ReleaseCycle));
-            for (int i = releases.Length - 1; i >= 0; i--)
-            {
-                buildSelectedTarget?.Invoke(
-                    buildToolTarget_SO.GetSelectedTargets(
-                        BuildTarget.Android,
-                        releases[i]
-                    )
-                );
-            }
-
-            for (int i = releases.Length - 1; i >= 0; i--)
-            {
-                buildSelectedTarget?.Invoke(
-                    buildToolTarget_SO.GetSelectedTargets(
-                        BuildTarget.StandaloneWindows,
-                        releases[i]
-                    )
-                );
-            }
         }
     }
 }

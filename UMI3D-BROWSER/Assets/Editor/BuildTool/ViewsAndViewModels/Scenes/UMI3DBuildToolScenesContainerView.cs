@@ -78,6 +78,7 @@ namespace umi3d.browserEditor.BuildTool
                 sceneView.Set();
                 visual.userData = sceneView;
             };
+            LV_Scenes.Q<Toggle>().value = false;
         }
 
         public void Unbind() 

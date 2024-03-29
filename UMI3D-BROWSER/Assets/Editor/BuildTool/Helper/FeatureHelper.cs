@@ -23,9 +23,9 @@ namespace umi3d.browserEditor.BuildTool
 {
     public static class FeatureHelper
     {
-        public static void SwitchFeatures(TargetDto target)
+        public static void SwitchFeatures(E_Target target)
         {
-            switch (target.Target)
+            switch (target)
             {
                 case E_Target.Quest:
                     DisableAllFeatures(BuildTargetGroup.Android, except: E_Feature.Meta);

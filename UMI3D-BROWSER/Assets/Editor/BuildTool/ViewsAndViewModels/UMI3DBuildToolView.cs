@@ -24,19 +24,9 @@ namespace umi3d.browserEditor.BuildTool
     public class UMI3DBuildToolView
     {
         public VisualElement root;
-        public VisualTreeAsset ui = default;
-        public VisualTreeAsset target_VTA = default;
-        public VisualTreeAsset path_VTA = default;
-        public VisualTreeAsset scene_VTA = default;
-        public UMI3DBuildToolKeystore_SO buildToolKeystore_SO;
-        public UMI3DBuildToolVersion_SO buildToolVersion_SO;
-        public UMI3DBuildToolTarget_SO buildToolTarget_SO;
-        public UMI3DBuildToolScene_SO buildToolScene_SO;
-        public UMI3DBuildToolSettings_SO buildToolSettings_SO;
-        public Action<TargetDto> buildTarget;
-        public Action applyScenes;
-        public Action<TargetDto> applyTargetOptions;
-        public Action<TargetDto[]> buildSelectedTarget;
+
+        public UMI3DBuildToolMainPanelView mainPanelView;
+        public UMI3DBuildToolConfigurationPanelView configurationPanel;
 
         public UMI3DBuildToolView(
             VisualElement root,
@@ -50,84 +40,45 @@ namespace umi3d.browserEditor.BuildTool
             UMI3DBuildToolScene_SO buildToolScene_SO,
             UMI3DBuildToolSettings_SO buildToolSettings_SO,
             Action applyScenes,
-            Action<TargetDto> applyTargetOptions,
-            Action<TargetDto> buildTarget,
+            Action<E_Target> applyTargetOptions,
             Action<TargetDto[]> buildSelectedTarget
         )
         {
             this.root = root;
-            this.ui = ui;
-            this.target_VTA = target_VTA;
-            this.path_VTA = path_VTA;
-            this.scene_VTA = scene_VTA;
-            this.buildToolKeystore_SO = buildToolKeystore_SO;
-            this.buildToolVersion_SO = buildToolVersion_SO;
-            this.buildToolTarget_SO = buildToolTarget_SO;
-            this.buildToolScene_SO = buildToolScene_SO;
-            this.buildToolSettings_SO = buildToolSettings_SO;
-            this.applyScenes = applyScenes;
-            this.applyTargetOptions = applyTargetOptions;
-            this.buildSelectedTarget = buildSelectedTarget;
-            this.buildTarget = buildTarget;
+
+            root.Add(ui.Instantiate());
+
+            mainPanelView = new(
+                root.Q<TemplateContainer>("UMI3DBuildToolMainPanel"),
+                buildToolVersion_SO,
+                buildToolScene_SO,
+                buildToolTarget_SO,
+                buildToolSettings_SO,
+                scene_VTA,
+                applyScenes,
+                target_VTA,
+                applyTargetOptions,
+                buildSelectedTarget
+            );
+
+            configurationPanel = new UMI3DBuildToolConfigurationPanelView(
+                root.Q<TemplateContainer>("UMI3DBuildToolConfigurationPanel"),
+                buildToolTarget_SO,
+                buildToolSettings_SO
+            );
         }
 
         public void Bind()
         {
-            root.Add(ui.Instantiate());
+            mainPanelView.Bind();
+            configurationPanel.Bind();
         }
 
         public void Set()
         {
-            UMI3DBuildToolVersionView versionView = new(
-                root,
-                buildToolVersion_SO,
-                buildToolSettings_SO
-            );
-            versionView.Bind();
-            versionView.Set();
+            mainPanelView.Set();
 
-            // Scenes.
-            var scenePanel 
-                = new UMI3DBuildToolScenesContainerView(
-                    root,
-                    buildToolScene_SO,
-                    scene_VTA,
-                    applyScenes
-                );
-            scenePanel.Bind();
-            scenePanel.Set();
-
-            // Path
-            var configurationPanel 
-                = new UMI3DBuildToolConfigurationPanelView(
-                root,
-                buildToolTarget_SO,
-                buildToolSettings_SO
-            );
-            configurationPanel.Bind();
             configurationPanel.Set();
-
-            // Targets.
-            var targetsContainer 
-                = new UMI3DBuildToolTargetsContainerView(
-                root,
-                buildToolScene_SO,
-                buildToolTarget_SO,
-                buildToolVersion_SO,
-                buildToolSettings_SO,
-                buildTarget,
-                target_VTA
-            );
-            targetsContainer.Bind();
-            targetsContainer.Set();
-
-            UMI3DBuildToolBuildProgressView progressView = new(
-                root,
-                buildToolTarget_SO,
-                buildSelectedTarget
-            );
-            progressView.Bind();
-            progressView.Set();
         }
     }
 }

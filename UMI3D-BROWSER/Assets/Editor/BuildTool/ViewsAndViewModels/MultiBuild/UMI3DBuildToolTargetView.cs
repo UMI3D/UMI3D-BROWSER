@@ -27,8 +27,6 @@ namespace umi3d.browserEditor.BuildTool
         public UMI3DBuildToolVersion_SO buildToolVersion_SO;
         public UMI3DBuildToolSettings_SO buildToolSettings_SO;
         public int index;
-        public Action<TargetDto> applyTargetOptions;
-        public Action<TargetDto> buildTarget;
 
         public UMI3DBuildToolTargetViewModel viewModel;
         public Toggle T_Select;
@@ -37,31 +35,22 @@ namespace umi3d.browserEditor.BuildTool
         public Button B_Browse;
         public DropdownField DD_TargetSelection;
         public DropdownField DD_ReleaseCycle;
-        public Button B_Apply;
-        public Button B_Build;
 
         public UMI3DBuildToolTargetView(
             VisualElement root,
             UMI3DBuildToolTarget_SO buildToolTarget_SO,
             UMI3DBuildToolVersion_SO buildToolVersion_SO,
             UMI3DBuildToolSettings_SO buildToolSettings_SO,
-            int index,
-            Action<TargetDto> applyTargetOptions,
-            Action<int> refreshView,
-            Action<TargetDto> buildTarget
+            int index
         )
         {
             this.root = root;
             this.viewModel = new(
-                buildToolTarget_SO,
-                applyTargetOptions,
-                refreshView
+                buildToolTarget_SO
             );
             this.buildToolVersion_SO = buildToolVersion_SO;
             this.buildToolSettings_SO = buildToolSettings_SO;
             this.index = index;
-            this.applyTargetOptions = applyTargetOptions;
-            this.buildTarget = buildTarget;
 
             var targetDto = viewModel[index];
             if (targetDto.Id.Equals(new())) 
@@ -79,8 +68,6 @@ namespace umi3d.browserEditor.BuildTool
             B_Browse = V_Path.Q<Button>();
             DD_TargetSelection = root.Q<DropdownField>("DD_TargetSelection");
             DD_ReleaseCycle = root.Q<DropdownField>("DD_ReleaseCycle");
-            B_Apply = root.Q<Button>("B_Apply");
-            B_Build = root.Q<Button>("B_Build");
         }
 
         public void Set()
@@ -112,11 +99,6 @@ namespace umi3d.browserEditor.BuildTool
             DD_ReleaseCycle.choices.AddRange(Enum.GetNames(typeof(E_ReleaseCycle)));
             DD_ReleaseCycle.SetValueWithoutNotify(viewModel[index].releaseCycle.ToString());
             DD_ReleaseCycle.RegisterValueChangedCallback(ReleaseCycleDDValueChanged);
-
-            ApplyChangeView(viewModel[index].isApplied);
-            B_Apply.clicked += Apply;
-
-            B_Build.clicked += Build;
         }
 
         public void Unbind()
@@ -125,8 +107,6 @@ namespace umi3d.browserEditor.BuildTool
             TF_Path.RegisterValueChangedCallback(PathValueChanged);
             DD_TargetSelection.UnregisterValueChangedCallback(TargetSelectionValueChanged);
             DD_ReleaseCycle.UnregisterValueChangedCallback(ReleaseCycleDDValueChanged);
-            B_Apply.clicked -= Apply;
-            B_Build.clicked -= Build;
         }
 
         string GetBuildFolder()
@@ -139,13 +119,16 @@ namespace umi3d.browserEditor.BuildTool
         void PathValueChanged(ChangeEvent<string> value)
         {
             viewModel.UpdateBuildFolder(index, value.newValue);
-            ApplyChange(false);
         }
 
         void TargetSelectionValueChanged(ChangeEvent<string> value)
         {
             viewModel.ApplyTarget(index, Enum.Parse<E_Target>(value.newValue));
-            ApplyChange(false);
+        }
+
+        void ReleaseCycleDDValueChanged(ChangeEvent<string> value)
+        {
+            viewModel.ApplyReleaseCycle(index, Enum.Parse<E_ReleaseCycle>(value.newValue));
         }
 
         void Browse()
@@ -157,38 +140,6 @@ namespace umi3d.browserEditor.BuildTool
                     TF_Path.SetValueWithoutNotify(path);
                 }
             );
-        }
-
-        void ReleaseCycleDDValueChanged(ChangeEvent<string> value)
-        {
-            viewModel.ApplyReleaseCycle(index, Enum.Parse<E_ReleaseCycle>(value.newValue));
-            ApplyChange(false);
-        }
-
-        void Apply()
-        {
-            ApplyChange(true);
-        }
-
-        void ApplyChangeView(bool isApplied)
-        {
-            var selectedColor = buildToolSettings_SO?.selectedTargetColor ?? new Color(0.5f, 1, 0);
-            B_Apply.style.backgroundColor = isApplied ? selectedColor : StyleKeyword.Null;
-            B_Build.SetEnabled(isApplied);
-        }
-
-        void ApplyChange(bool isApplied)
-        {
-            ApplyChangeView(isApplied);
-
-            viewModel.ApplyChange(index, isApplied);
-        }
-
-        void Build()
-        {
-            buildToolVersion_SO.UpdateOldVersionWithNewVersion();
-            applyTargetOptions?.Invoke(viewModel[index]);
-            buildTarget?.Invoke(viewModel[index]);
         }
     }
 }

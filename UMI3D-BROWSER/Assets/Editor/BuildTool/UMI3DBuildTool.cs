@@ -99,31 +99,21 @@ namespace umi3d.browserEditor.BuildTool
                 buildToolKeystore_SO, buildToolVersion_SO, buildToolTarget_SO, buildToolScene_SO, buildToolSettings_SO,
                 ApplyScenes,
                 ApplyTargetOptions,
-                BuildTarget,
                 BuildSelectedTargets
             );
             buildView.Bind();
             buildView.Set();
         }
 
-        void ApplyTargetOptions(TargetDto target)
+        void ApplyTargetOptions(E_Target target)
         {
-            buildToolTarget_SO.currentTarget = target.Target;
             ApplyScenes();
 
-            // Update App name, Version and Android.BundleVersion.
-            PlayerSettings.productName = BuildToolHelper.GetApplicationName(target);
-            PlayerSettings.applicationIdentifier = BuildToolHelper.GetPackageName(target);
-            PlayerSettings.bundleVersion = $"{target.releaseCycle.GetReleaseInitial()}_{buildToolVersion_SO.newVersion.VersionFromNow} Sdk: {buildToolVersion_SO.sdkVersion.Version}";
-            PlayerSettings.Android.bundleVersionCode = buildToolVersion_SO.newVersion.BundleVersion;
-
             // Switch target if needed and toggle options.
-            _uMI3DConfigurator.HandleTarget(target.Target);
+            _uMI3DConfigurator.HandleTarget(target);
             BuildTargetHelper.SwitchTarget(target);
             PluginHelper.SwitchPlugins(target);
             FeatureHelper.SwitchFeatures(target);
-
-            BuildToolHelper.SetKeystore(buildToolKeystore_SO.password, buildToolKeystore_SO.path);
         }
 
         void ApplyScenes()
@@ -134,11 +124,6 @@ namespace umi3d.browserEditor.BuildTool
             {
                 return new EditorBuildSettingsScene(scene.path, true);
             }).ToArray();
-        }
-
-        void BuildTarget(TargetDto target)
-        {
-            BuildTarget(target, true);
         }
 
         /// <summary>
@@ -153,6 +138,14 @@ namespace umi3d.browserEditor.BuildTool
         /// <returns></returns>
         int BuildTarget(TargetDto target, bool revealInFinder)
         {
+            // Update App name, Version and Android.BundleVersion.
+            PlayerSettings.productName = BuildToolHelper.GetApplicationName(target);
+            PlayerSettings.applicationIdentifier = BuildToolHelper.GetPackageName(target);
+            PlayerSettings.bundleVersion = $"{target.releaseCycle.GetReleaseInitial()}_{buildToolVersion_SO.newVersion.VersionFromNow} Sdk: {buildToolVersion_SO.sdkVersion.Version}";
+            PlayerSettings.Android.bundleVersionCode = buildToolVersion_SO.newVersion.BundleVersion;
+
+            BuildToolHelper.SetKeystore(buildToolKeystore_SO.password, buildToolKeystore_SO.path);
+
             InstallerHelper.UpdateInstaller(
                 buildToolTarget_SO.installer,
                 buildToolTarget_SO.license,
@@ -183,7 +176,7 @@ namespace umi3d.browserEditor.BuildTool
         {
             for (int i = 0; i < target.Length; i++)
             {
-                ApplyTargetOptions(target[i]);
+                ApplyTargetOptions(target[i].Target);
                 BuildTarget(target[i], i == target.Length - 1);
             }
         }

@@ -22,6 +22,8 @@ namespace umi3d.browserEditor.BuildTool
 {
     public class UMI3DBuildToolMainPanelView 
     {
+        umi3d.debug.UMI3DLogger logger;
+
         public VisualElement root;
         public UMI3DBuildToolVersion_SO buildToolVersion_SO;
         public UMI3DBuildToolScene_SO buildToolScene_SO;
@@ -36,24 +38,39 @@ namespace umi3d.browserEditor.BuildTool
             VisualElement root,
             UMI3DBuildToolVersion_SO buildToolVersion_SO,
             UMI3DBuildToolScene_SO buildToolScene_SO,
-            UMI3DBuildToolTarget_SO buildToolTarget_SO
+            UMI3DBuildToolTarget_SO buildToolTarget_SO,
+            UMI3DBuildToolSettings_SO buildToolSettings_SO,
+            VisualTreeAsset scene_VTA,
+            Action applyScenes,
+            VisualTreeAsset target_VTA,
+            Action<E_Target> applyTargetOptions,
+            Action<TargetDto[]> buildSelectedTarget
         )
         {
+            logger = new(mainTag: nameof(UMI3DBuildToolMainPanelView));
+
             this.root = root;
             this.buildToolVersion_SO = buildToolVersion_SO;
             this.buildToolScene_SO = buildToolScene_SO;
             this.buildToolTarget_SO = buildToolTarget_SO;
+            this.buildToolSettings_SO = buildToolSettings_SO;
+
+            logger.Assert(root != null, nameof(UMI3DBuildToolMainPanelView));
+            logger.Assert(buildToolVersion_SO != null, nameof(UMI3DBuildToolMainPanelView));
+            logger.Assert(buildToolScene_SO != null, nameof(UMI3DBuildToolMainPanelView));
+            logger.Assert(buildToolTarget_SO != null, nameof(UMI3DBuildToolMainPanelView));
+            logger.Assert(buildToolSettings_SO != null, nameof(UMI3DBuildToolMainPanelView));
 
             versionView = new(
-                root,
+                root.Q<TemplateContainer>("UMI3DBuildToolVersion"),
                 buildToolVersion_SO,
                 buildToolSettings_SO
             );
             sceneContainerView = new(
                 root,
                 buildToolScene_SO,
-                null,
-                null
+                scene_VTA,
+                applyScenes
             );
             targetsContainerView = new(
                 root,
@@ -61,8 +78,9 @@ namespace umi3d.browserEditor.BuildTool
                 buildToolTarget_SO,
                 buildToolVersion_SO,
                 buildToolSettings_SO,
-                null,
-                null
+                target_VTA,
+                applyTargetOptions,
+                buildSelectedTarget
             );
         }
 

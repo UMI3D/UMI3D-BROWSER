@@ -48,6 +48,16 @@ namespace umi3d.cdk.userCapture.tracking
                 this.transform.rotation = value;
             }
         }
+        public Vector3 scale
+        {
+            get {
+                return this.transform.localScale;
+            }
+
+            set {
+                this.transform.localScale = value;
+            }
+        }
 
         public bool isActive { get; set; }
 

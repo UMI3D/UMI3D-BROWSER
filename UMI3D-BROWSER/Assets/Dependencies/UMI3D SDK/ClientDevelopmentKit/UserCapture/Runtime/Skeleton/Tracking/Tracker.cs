@@ -47,6 +47,7 @@ namespace umi3d.cdk.userCapture.tracking
                 boneType = boneType,
                 position = transform.position,
                 rotation = transform.rotation,
+                scale = transform.localScale,
                 isActive = isActif,
                 isOverrider = isOverrider
             };
@@ -56,6 +57,7 @@ namespace umi3d.cdk.userCapture.tracking
         {
             distantController.position = transform.position;
             distantController.rotation = transform.rotation;
+            distantController.scale = transform.localScale;
             distantController.isActive = isActif;
             distantController.isOverrider = isOverrider;
         }

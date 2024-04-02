@@ -104,6 +104,7 @@ namespace umi3d.runtimeBrowser.handTracking
             var distanceSkeletonHand = Vector3.Distance(skeletonHand.WristTransform.position, skeletonHand.MiddleTipTransform.position);
 
             var scale = distanceHand / distanceSkeletonHand;
+            hand.WristTransform.localScale = new Vector3(scale, scale, scale);
             skeletonHand.WristTransform.localScale = new Vector3(scale, scale, scale);
         }
     }

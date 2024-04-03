@@ -16,7 +16,7 @@ limitations under the License.
 
 using System.Collections.Generic;
 using umi3d.common.userCapture.description;
-using umi3d.common.lbe.description;
+using umi3d.common.lbe;
 
 
 namespace umi3d.common.collaboration.dto.signaling
@@ -52,6 +52,5 @@ namespace umi3d.common.collaboration.dto.signaling
         /// </summary>
         public List<uint> bonesWithController { get; set; }
 
-        public List<ARAnchorDto> anchorAR { get; set; }
     }
 }

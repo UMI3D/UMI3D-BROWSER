@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using umi3d.common;
-using umi3d.common.lbe.description;
+using umi3d.common.lbe;
 
 
 namespace umi3d.common.lbe.request

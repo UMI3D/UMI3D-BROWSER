@@ -11,14 +11,20 @@ using TMPro;
 using System.IO;
 using UnityEngine.UI;
 using static UnityEngine.XR.ARFoundation.ARAnchorSerializer;
-using umi3d.common.lbe.description;
+using umi3d.common.lbe;
 using umi3d.common;
 using umi3d.cdk;
+using umi3d.common.collaboration.dto.signaling;
+using System;
 
 public class GuardianManager : MonoBehaviour
 {
     private GameObject GuardianmeshObject;
-    public string filePath;
+
+    //public string filePath;
+
+    public GameObject OriginGuardian;
+    public GameObject GuardianParent;  
 
     public GameObject pointAnchor; // Référence au prefab pour la création des ancres du guardian
     public Material Guardian; // Matériau pour le rendu du guardian
@@ -29,13 +35,15 @@ public class GuardianManager : MonoBehaviour
     //public ARAnchorSerializer anchorSerializer; // Référence à l'ARAnchorSerializer
 
     private UserGuardianDto userGuardianDto;
+    private JoinDto joinDto;
 
 
 
-
-    private void Start()
+    public void Start()
     {
-        GetGuardianArea();
+        Debug.Log("Remi : START Getguardian");
+        UMI3DEnvironmentLoader.Instance.onEnvironmentLoaded.AddListener(()=>GetGuardianArea());
+        //GetGuardianArea();
     }
 
     public void DeleteGuardianJson()
@@ -72,22 +80,22 @@ public class GuardianManager : MonoBehaviour
 
     public void SendGuardianInServer(GameObject anchorGameObject)
     {
-        // Créer une nouvelle instance de UserGuardianDto
-        userGuardianDto = new UserGuardianDto();
-
-        // Créer une nouvelle instance de ARAnchorDto pour stocker les données de l'ARAnchor
-        ARAnchorDto arAnchorDto = new ARAnchorDto();
-
-        // Obtenir le composant ARAnchor de l'ancrage
+        Debug.Log("Remi : Stat send serveur");
         ARAnchor arAnchor = anchorGameObject.GetComponent<ARAnchor>();
 
-        // Ajouter les données de l'ARAnchorDto
-        arAnchorDto.trackableId = arAnchor.trackableId.ToString();
-        arAnchorDto.position = new Vector3Dto { X = arAnchor.transform.position.x, Y = arAnchor.transform.position.y, Z = arAnchor.transform.position.z };
-        arAnchorDto.rotation = new Vector4Dto { X = arAnchor.transform.rotation.x, Y = arAnchor.transform.rotation.y, Z = arAnchor.transform.rotation.z, W = arAnchor.transform.rotation.w };
+        string trackIdIn = arAnchor.trackableId.ToString();
 
-        // Ajouter l'ARAnchorDto à UserGuardianDto
-        userGuardianDto.anchorAR.Add(arAnchorDto);
+        if (ulong.TryParse(trackIdIn, out ulong trackIdOut))
+        {
+            userGuardianDto.trackableId = trackIdOut;
+        }
+        
+        userGuardianDto.position = new Vector3Dto { X = arAnchor.transform.position.x, Y = arAnchor.transform.position.y, Z = arAnchor.transform.position.z };
+        userGuardianDto.rotation = new Vector4Dto { X = arAnchor.transform.rotation.x, Y = arAnchor.transform.rotation.y, Z = arAnchor.transform.rotation.z, W = arAnchor.transform.rotation.w };
+
+        Debug.Log("Remi : " + userGuardianDto.trackableId);
+        Debug.Log("Remi : " + userGuardianDto.position);
+        Debug.Log("Remi : " + userGuardianDto.rotation);
 
     }
 
@@ -125,12 +133,20 @@ public class GuardianManager : MonoBehaviour
 
     public void GetGuardianArea()
     {
+
+        GuardianParent = new GameObject("Guardian");
+        GuardianParent.transform.position = Vector3.zero; 
+
+        Debug.Log("Remi : Getguardian");
         List<XRInputSubsystem> inputSubsystems = new List<XRInputSubsystem>();
         SubsystemManager.GetSubsystems<XRInputSubsystem>(inputSubsystems);
 
         if (inputSubsystems.Count > 0)
         {
+            Debug.Log("Remi : Input System");
+
             XRInputSubsystem inputSubsystem = inputSubsystems[0];
+
             if (!inputSubsystem.running)
             {
                 inputSubsystem.Start();
@@ -141,37 +157,32 @@ public class GuardianManager : MonoBehaviour
             {
                 if (anchorManager != null)
                 {
+              
                     foreach (Vector3 point in boundaryPoints)
                     {
                         // Instancier le prefab à la position du point récupéré                   
                         GameObject basePoint;
-                        basePoint = Instantiate(pointAnchor, point, Quaternion.identity);
+                        basePoint = Instantiate(pointAnchor, GuardianParent.transform.position, Quaternion.identity);
+                        basePoint.transform.position = point;
 
-                        CreateGuardianLimit(basePoint);
+                        // Créer une nouvelle instance de UserGuardianDto
+                        userGuardianDto = new UserGuardianDto();
 
-                        // Envoyer la demande UMI3D contenant les données des ancres au serveur
-                        UMI3DClientServer.SendRequest(userGuardianDto, reliable: true);
-                    }
-                    // sérialisation des ancres pour sauvegarde dans le JSON
-                    /*if (anchorSerializer != null)
-                    {
-                        List<ARAnchor> serialAnchors = new List<ARAnchor>();
-
-                        foreach (GameObject anchor in guardianAnchors)
-                        {
-                            serialAnchors.Add(anchor.GetComponent<ARAnchor>());
-                        }
-                        anchorSerializer.SerializeAnchorsToJson(serialAnchors, filePath);
-                    }
-                    else
-                    {
-                        Debug.LogError("ARAnchorSerializer non défini.");
-                    }*/
+                        CreateGuardianLimit(basePoint);                  
+                    }                 
                 }
                 else
                 {
-                    Debug.LogError("AnchorManager non défini !");
+                    Debug.LogError("Remi : AnchorManager non défini !");
                 }
+
+                for (int i = 0; i < guardianAnchors.Count; i++)
+                {
+                    guardianAnchors[i].transform.parent = GuardianParent.transform;
+                }
+
+                GuardianParent.transform.position = OriginGuardian.transform.position;
+                GuardianParent.transform.parent = OriginGuardian.transform;
 
                 List<Vector3> anchorForMesh = new List<Vector3>();
 
@@ -179,17 +190,41 @@ public class GuardianManager : MonoBehaviour
                 {
                     anchorForMesh.Add(anchor.transform.position);
                 }
-                //CreateMesh(anchorForMesh);
+                CreateMesh(anchorForMesh);
+
+
+                if(userGuardianDto != null)
+                {
+                    Debug.Log("Remi : not null");
+                    UMI3DClientServer.SendRequest(userGuardianDto, reliable: true);
+                }
+                
+                // Envoyer la demande UMI3D contenant les données des ancres au serveur
+                //UMI3DClientServer.SendRequest(joinDto, reliable: true);
+
             }
         }
         else
         {
-            Debug.LogError("Aucun sous-système d'entrée XR disponible.");
+            Debug.LogError("Remi : Aucun sous-système d'entrée XR disponible.");
         }
+
+        Debug.Log("Remi : END get guardian");
     }
 
-    private void AddAnchor(GameObject basePoint)
-    { 
+    public void AddAnchorGuardian(GameObject basePoint)
+    {
+        Debug.Log("Remi : Stat add anchor");
+
+        if(anchorManager.enabled == false)
+        {
+            Debug.Log("Remi : Stat anchor manager");
+
+            anchorManager.enabled = true;
+            Debug.Log("Remi : OK anchor manager");
+
+        }
+
         Vector3 basePointPosition = basePoint.transform.position;
         Quaternion basePointRotation = basePoint.transform.rotation;
         Pose basePointPose = new Pose(basePointPosition, basePointRotation);
@@ -197,7 +232,13 @@ public class GuardianManager : MonoBehaviour
         basePoint.AddComponent<ARAnchor>();
 
         guardianAnchors.Add(basePoint);
-        anchorManager.AddAnchor(basePointPose);
+
+        Debug.Log("Remi : Before add anchor");
+
+        //anchorManager.AddAnchor(basePointPose);
+
+        Debug.Log("Remi : After add anchor");
+
 
         Transform BaseText = basePoint.transform.Find("Canvas/Panel/Text (TMP)");
 
@@ -214,35 +255,48 @@ public class GuardianManager : MonoBehaviour
         {
             Debug.LogWarning("Le GameObject \"Text (TMP)\" n'a pas été trouvé dans les enfants de l'objet : " + basePoint.name);
         }
+        Debug.Log("Remi : End add anchor");
+
     }
+
 
     //For SecondPlayer
     public void CreatGuardianLimitJson(GameObject basePoint)
     {
-        AddAnchor(basePoint);
+        AddAnchorGuardian(basePoint);
     }
 
     //For FirstPlayerManagezr
     public void CreateGuardianLimit(GameObject basePoint)
     {
-        AddAnchor(basePoint);
+        Debug.Log("Remi : Start Creata guardian");
+
+        AddAnchorGuardian(basePoint);
         SendGuardianInServer(basePoint);
 
         GameObject basePointUp = Instantiate(pointAnchor, basePoint.transform.position, Quaternion.identity);
         basePointUp.transform.position = new Vector3(basePoint.transform.position.x, basePoint.transform.position.y + 2f, basePoint.transform.position.z);
 
-        AddAnchor(basePointUp);
+        AddAnchorGuardian(basePointUp);
         SendGuardianInServer(basePointUp);
+        Debug.Log("Remi : End Creata guardian");
+
     }
 
 
     //A utiliser seulement sur le serveur pour ensuite l'envoyer à tous les clients
     private void CreateMesh(List<Vector3> points)
     {
-         // Créer un nouveau GameObject pour le maillage
+        Debug.Log("Remi : Start Creat Mesh");
+
+        // Créer un nouveau GameObject pour le maillage
          GuardianmeshObject = new GameObject("GuardianMesh");
+
+        GuardianmeshObject.transform.parent = OriginGuardian.transform;
          GuardianmeshObject.transform.position = Vector3.zero;
          GuardianmeshObject.transform.rotation = Quaternion.identity;
+
+        LogObjectHierarchy(GuardianmeshObject.transform);
          GuardianmeshObject.AddComponent<ARAnchor>();
 
          Mesh mesh = new Mesh();
@@ -296,6 +350,25 @@ public class GuardianManager : MonoBehaviour
          Material material = Guardian;
          meshRenderer.material = material;
          meshFilter.mesh = mesh;
+
+        Debug.Log("Remi : End Creat Mesh");
+
+    }
+
+    void LogObjectHierarchy(Transform objTransform)
+    {
+        // Variable pour stocker la hiérarchie de l'objet
+        string hierarchy = objTransform.name;
+
+        // Parcours de la hiérarchie parentale de l'objet
+        while (objTransform.parent != null)
+        {
+            hierarchy = objTransform.parent.name + "/" + hierarchy;
+            objTransform = objTransform.parent;
+        }
+
+        // Affichage de la hiérarchie dans la console Unity
+        Debug.Log("Remi : Hiérarchie de l'objet " + GuardianmeshObject.name + ": " + hierarchy);
     }
 }
 

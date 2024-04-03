@@ -159,16 +159,7 @@ namespace QuestBrowser.WebView
             }
 
             previousUrl = url;
-
             searchField.text = url;
-
-            var request = new WebViewUrlChangedRequestDto
-            {
-                url = url,
-                webViewId = id
-            };
-
-            UMI3DClientServer.SendRequest(request, true);
         }
 
         public void EnterText(string text)
@@ -195,6 +186,14 @@ namespace QuestBrowser.WebView
             {
                 searchField.text = url;
             }
+
+            var request = new WebViewUrlChangedRequestDto
+            {
+                url = url,
+                webViewId = id
+            };
+
+            UMI3DClientServer.SendRequest(request, true);
         }
 
         public void OnPointerDown(Vector2 pointer)

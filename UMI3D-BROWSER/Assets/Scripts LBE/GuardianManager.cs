@@ -12,6 +12,8 @@ using System.IO;
 using UnityEngine.UI;
 using static UnityEngine.XR.ARFoundation.ARAnchorSerializer;
 using umi3d.common.lbe;
+using umi3d.common.lbe.description;
+
 using umi3d.common;
 using umi3d.cdk;
 using umi3d.common.collaboration.dto.signaling;
@@ -35,6 +37,7 @@ public class GuardianManager : MonoBehaviour
     //public ARAnchorSerializer anchorSerializer; // Référence à l'ARAnchorSerializer
 
     private UserGuardianDto userGuardianDto;
+    private ARAnchorDto anchorAR;
     private JoinDto joinDto;
 
 
@@ -80,60 +83,28 @@ public class GuardianManager : MonoBehaviour
 
     public void SendGuardianInServer(GameObject anchorGameObject)
     {
-        Debug.Log("Remi : Stat send serveur");
         ARAnchor arAnchor = anchorGameObject.GetComponent<ARAnchor>();
+        ARAnchorDto newAnchor = new ARAnchorDto();
 
         string trackIdIn = arAnchor.trackableId.ToString();
 
         if (ulong.TryParse(trackIdIn, out ulong trackIdOut))
         {
-            userGuardianDto.trackableId = trackIdOut;
+            newAnchor.trackableId = trackIdOut;
         }
-        
-        userGuardianDto.position = new Vector3Dto { X = arAnchor.transform.position.x, Y = arAnchor.transform.position.y, Z = arAnchor.transform.position.z };
-        userGuardianDto.rotation = new Vector4Dto { X = arAnchor.transform.rotation.x, Y = arAnchor.transform.rotation.y, Z = arAnchor.transform.rotation.z, W = arAnchor.transform.rotation.w };
 
-        Debug.Log("Remi : " + userGuardianDto.trackableId);
-        Debug.Log("Remi : " + userGuardianDto.position);
-        Debug.Log("Remi : " + userGuardianDto.rotation);
+        newAnchor.position = new Vector3Dto { X = arAnchor.transform.position.x, Y = arAnchor.transform.position.y, Z = arAnchor.transform.position.z };
+        newAnchor.rotation = new Vector4Dto { X = arAnchor.transform.rotation.x, Y = arAnchor.transform.rotation.y, Z = arAnchor.transform.rotation.z, W = arAnchor.transform.rotation.w };
 
-    }
+        userGuardianDto.anchorAR.Add(newAnchor);
 
-    //A reprendre pour l'utilisation d'un seconde joueur pour réceptionner le guardian envoyer par le serveur
-    public void LoadGuardianJson()
-    {
-        // Désérialiser les ancres à partir du fichier JSON
-        //List<SerializedARAnchor> deserializedAnchors = anchorSerializer.DeserializeAnchorsFromJson(filePath);
-        List<Vector3> anchorForMesh = new List<Vector3>();
-
-        /*if (deserializedAnchors != null)
-        {
-            foreach (var serializedAnchor in deserializedAnchors)
-            {
-                // Convertir la pose sérialisée en Pose
-                Vector3 position = new Vector3(serializedAnchor.pose.position.x, serializedAnchor.pose.position.y, serializedAnchor.pose.position.z);
-                Quaternion rotation = new Quaternion(serializedAnchor.pose.rotation.x, serializedAnchor.pose.rotation.y, serializedAnchor.pose.rotation.z, serializedAnchor.pose.rotation.w);
-                Pose pose = new Pose(position, rotation);
-
-
-                anchorForMesh.Add(position);
-
-                GameObject basePoint = Instantiate(pointAnchor, pose.position, pose.rotation);
-
-                CreatGuardianLimitJson(basePoint);
-            }
-        }
-        else
-        {
-            Debug.LogWarning("Aucune ancre n'a été désérialisée à partir du fichier JSON.");
-        }*/
-
-        //CreateMesh(anchorForMesh);
+        Debug.Log("Remi : " + newAnchor.trackableId);
+        Debug.Log("Remi : " + newAnchor.position);
+        Debug.Log("Remi : " + newAnchor.rotation);
     }
 
     public void GetGuardianArea()
     {
-
         GuardianParent = new GameObject("Guardian");
         GuardianParent.transform.position = Vector3.zero; 
 
@@ -167,6 +138,11 @@ public class GuardianManager : MonoBehaviour
 
                         // Créer une nouvelle instance de UserGuardianDto
                         userGuardianDto = new UserGuardianDto();
+                        if (userGuardianDto == null)
+                        {
+                            Debug.Log("Remi : userguardiandto null");
+                        }
+                       
 
                         CreateGuardianLimit(basePoint);                  
                     }                 
@@ -198,10 +174,6 @@ public class GuardianManager : MonoBehaviour
                     Debug.Log("Remi : not null");
                     UMI3DClientServer.SendRequest(userGuardianDto, reliable: true);
                 }
-                
-                // Envoyer la demande UMI3D contenant les données des ancres au serveur
-                //UMI3DClientServer.SendRequest(joinDto, reliable: true);
-
             }
         }
         else
@@ -218,11 +190,7 @@ public class GuardianManager : MonoBehaviour
 
         if(anchorManager.enabled == false)
         {
-            Debug.Log("Remi : Stat anchor manager");
-
             anchorManager.enabled = true;
-            Debug.Log("Remi : OK anchor manager");
-
         }
 
         Vector3 basePointPosition = basePoint.transform.position;
@@ -259,13 +227,6 @@ public class GuardianManager : MonoBehaviour
 
     }
 
-
-    //For SecondPlayer
-    public void CreatGuardianLimitJson(GameObject basePoint)
-    {
-        AddAnchorGuardian(basePoint);
-    }
-
     //For FirstPlayerManagezr
     public void CreateGuardianLimit(GameObject basePoint)
     {
@@ -280,11 +241,8 @@ public class GuardianManager : MonoBehaviour
         AddAnchorGuardian(basePointUp);
         SendGuardianInServer(basePointUp);
         Debug.Log("Remi : End Creata guardian");
-
     }
 
-
-    //A utiliser seulement sur le serveur pour ensuite l'envoyer à tous les clients
     private void CreateMesh(List<Vector3> points)
     {
         Debug.Log("Remi : Start Creat Mesh");

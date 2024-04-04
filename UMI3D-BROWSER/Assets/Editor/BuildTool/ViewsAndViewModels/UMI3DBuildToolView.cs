@@ -33,7 +33,6 @@ namespace umi3d.browserEditor.BuildTool
             VisualElement root,
             VisualTreeAsset ui,
             VisualTreeAsset target_VTA,
-            VisualTreeAsset path_VTA,
             VisualTreeAsset scene_VTA,
             UMI3DBuildToolKeystore_SO buildToolKeystore_SO,
             UMI3DBuildToolVersion_SO buildToolVersion_SO,

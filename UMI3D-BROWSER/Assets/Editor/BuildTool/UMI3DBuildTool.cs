@@ -27,7 +27,6 @@ namespace umi3d.browserEditor.BuildTool
     {
         [SerializeField] private VisualTreeAsset ui = default;
         [SerializeField] private VisualTreeAsset target_VTA = default;
-        [SerializeField] private VisualTreeAsset path_VTA = default;
         [SerializeField] private VisualTreeAsset scene_VTA = default;
         UMI3DBuildToolKeystore_SO buildToolKeystore_SO;
         UMI3DBuildToolVersion_SO buildToolVersion_SO;
@@ -84,10 +83,6 @@ namespace umi3d.browserEditor.BuildTool
                 "[UMI3D] BuildTool: target_VTA is null."
             );
             Assert.IsNotNull(
-                path_VTA,
-                "[UMI3D] BuildTool: path_VTA is null."
-            );
-            Assert.IsNotNull(
                 scene_VTA,
                 "[UMI3D] BuildTool: scene_VTA is null."
             );
@@ -123,7 +118,7 @@ namespace umi3d.browserEditor.BuildTool
 
             buildView = new(
                 rootVisualElement,
-                ui, target_VTA, path_VTA, scene_VTA,
+                ui, target_VTA, scene_VTA,
                 buildToolKeystore_SO, buildToolVersion_SO, buildToolTarget_SO, buildToolScene_SO, buildToolSettings_SO,
                 ApplyScenes,
                 ApplyTargetOptions,

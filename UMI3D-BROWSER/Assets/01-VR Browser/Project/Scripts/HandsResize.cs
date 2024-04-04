@@ -75,6 +75,12 @@ namespace umi3d.runtimeBrowser.handTracking
             m_SetUpSkeleton.SkeletonResized -= HandsResize_SkeletonResized;
         }
 
+        public void ResetSkeletonHandScale()
+        {
+            m_LeftSkeletonHand.WristTransform.localScale = Vector3.one;
+            m_RightSkeletonHand.WristTransform.localScale = Vector3.one;
+        }
+
         private void HandsResize_SkeletonResized()
         {
             if (m_HandSubsystem.leftHand.isTracked)

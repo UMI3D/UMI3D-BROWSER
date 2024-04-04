@@ -236,6 +236,7 @@ namespace umi3d.cdk.userCapture.tracking
             if (!controllers.TryGetValue(boneType, out IController controller))
                 return;
 
+            bones[boneType].transform.localPosition = Vector3.zero;
             DeleteController(controller);
 
             if (savedControllers.TryGetValue(boneType, out Stack<IController> savedControllerStack)

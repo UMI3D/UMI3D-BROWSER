@@ -173,11 +173,21 @@ namespace umi3dVRBrowsersBase.connection
 
         public void SwitchTrackerToController()
         {
+            handsTrackingTrackers.ForEach(x => {
+                if (controllerTrackers.Contains(x))
+                    return;
+                trackedSkeleton.RemoveController(x.distantController.boneType);
+            });
             controllerTrackers.ForEach(x => trackedSkeleton.ReplaceController(x.distantController));
         }
 
         public void SwitchTrackerToHandTracking()
         {
+            controllerTrackers.ForEach(x => {
+                if (handsTrackingTrackers.Contains(x))
+                    return;
+                trackedSkeleton.RemoveController(x.distantController.boneType);
+            });
             handsTrackingTrackers.ForEach(x => trackedSkeleton.ReplaceController(x.distantController));
         }
 

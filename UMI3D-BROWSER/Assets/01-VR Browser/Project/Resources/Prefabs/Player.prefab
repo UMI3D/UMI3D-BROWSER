@@ -11263,6 +11263,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2363286020926254052}
   - component: {fileID: 378536403582587120}
+  - component: {fileID: 2923403823120818143}
   m_Layer: 0
   m_Name: HandTracking
   m_TagString: Untagged
@@ -11335,6 +11336,24 @@ MonoBehaviour:
     - {fileID: 5442120697366657658}
     - {fileID: 2635448671116840497}
     - {fileID: 7650277210382773493}
+--- !u!114 &2923403823120818143
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6129948950877350513}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84be7e2e566f3fa43890d32621a9fb47, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HandVisualizer: {fileID: 1733868375189536654}
+  m_DistanceThreshold: 0.05
+  m_LeftWrist: {fileID: 9202637840319166144}
+  m_RightWrist: {fileID: 182552496008677054}
+  m_LeftSkeletonWrist: {fileID: 376013308071950692}
+  m_RightSkeletonWrist: {fileID: 429149701891641536}
 --- !u!1 &6147399470313406180
 GameObject:
   m_ObjectHideFlags: 0

@@ -34,9 +34,9 @@ namespace umi3d.browserEditor.BuildTool
         /// </summary>
         /// <param name="target"></param>
         /// <returns></returns>
-        public static int SwitchTarget(TargetDto target)
+        public static int SwitchTarget(E_Target target)
         {
-            switch (target.Target)
+            switch (target)
             {
                 case E_Target.Quest:
                 case E_Target.Focus:
@@ -48,7 +48,7 @@ namespace umi3d.browserEditor.BuildTool
                     break;
             }
 
-            switch (target.Target)
+            switch (target)
             {
                 case E_Target.Quest:
                 case E_Target.Focus:

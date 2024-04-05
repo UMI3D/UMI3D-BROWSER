@@ -20,20 +20,18 @@ using UnityEngine;
 
 namespace umi3d.browserEditor.BuildTool
 {
-    public class UMI3DBuildToolViewModel 
+    public class UMI3DBuildToolConfigurationViewModel 
     {
         public UMI3DBuildToolTarget_SO buildToolTarget_SO;
+        public UMI3DBuildToolKeystore_SO buildToolKeystore_SO;
 
-        public UMI3DBuildToolViewModel(UMI3DBuildToolTarget_SO buildToolTarget_SO)
+        public UMI3DBuildToolConfigurationViewModel(
+            UMI3DBuildToolTarget_SO buildToolTarget_SO,
+            UMI3DBuildToolKeystore_SO buildToolKeystore_SO
+        )
         {
             this.buildToolTarget_SO = buildToolTarget_SO;
-        }
-
-        public void UpdateInstaller(string path)
-        {
-            buildToolTarget_SO.installer = path;
-
-            Save();
+            this.buildToolKeystore_SO = buildToolKeystore_SO;
         }
 
         public void UpdateBuildFolder(string path)
@@ -47,7 +45,30 @@ namespace umi3d.browserEditor.BuildTool
                 buildToolTarget_SO.targets[i] = target;
             }
 
-            Save();
+            SaveBuildToolTarget();
+        }
+
+        public void BrowseBuildFolder(Action<string> updateView)
+        {
+            string directory = string.IsNullOrEmpty(buildToolTarget_SO.buildFolder)
+                ? Application.dataPath
+                : buildToolTarget_SO.buildFolder;
+
+            string path = EditorUtility.OpenFolderPanel(
+                    title: "Build Folder",
+                    directory,
+                    defaultName: ""
+                );
+
+            UpdateBuildFolder(path);
+            updateView?.Invoke(path);
+        }
+
+        public void UpdateInstaller(string path)
+        {
+            buildToolTarget_SO.installer = path;
+
+            SaveBuildToolTarget();
         }
 
         public void BrowseInstaller(Action<string> updateView)
@@ -69,7 +90,7 @@ namespace umi3d.browserEditor.BuildTool
         {
             buildToolTarget_SO.license = path;
 
-            Save();
+            SaveBuildToolTarget();
         }
 
         public void BrowseLicense(Action<string> updateView)
@@ -88,25 +109,44 @@ namespace umi3d.browserEditor.BuildTool
             updateView?.Invoke(path);
         }
 
-        public void BrowseBuildFolder(Action<string> updateView)
+        public void SaveBuildToolTarget()
         {
-            string directory = string.IsNullOrEmpty(buildToolTarget_SO.buildFolder)
-                ? Application.dataPath
-                : buildToolTarget_SO.buildFolder;
+            EditorUtility.SetDirty(buildToolTarget_SO);
+        }
 
-            string path = EditorUtility.OpenFolderPanel(
-                    title: "Build Folder",
+        public void UpdateKeystorePath(string path)
+        {
+            buildToolKeystore_SO.path = path;
+
+            SaveBuildToolKeystore();
+        }
+
+        public void BrowseKeystorePath(Action<string> updateView)
+        {
+            string directory = string.IsNullOrEmpty(buildToolKeystore_SO.path)
+                ? Application.dataPath
+                : buildToolKeystore_SO.path;
+
+            string path = EditorUtility.OpenFilePanel(
+                    title: "Keystore Path",
                     directory,
-                    defaultName: ""
+                    extension: "keystore"
                 );
 
-            UpdateBuildFolder(path);
+            UpdateKeystorePath(path);
             updateView?.Invoke(path);
         }
 
-        public void Save()
+        public void UpdateKeystorePassword(string password)
         {
-            EditorUtility.SetDirty(buildToolTarget_SO);
+            buildToolKeystore_SO.password = password;
+
+            SaveBuildToolKeystore();
+        }
+
+        public void SaveBuildToolKeystore()
+        {
+            EditorUtility.SetDirty(buildToolKeystore_SO);
         }
     }
 }

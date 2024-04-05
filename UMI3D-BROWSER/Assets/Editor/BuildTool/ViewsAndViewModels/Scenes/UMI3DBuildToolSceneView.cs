@@ -36,42 +36,41 @@ namespace umi3d.browserEditor.BuildTool
         public EnumFlagsField EFF_Targets = new("Targets", E_Target.Quest);
 
         public UMI3DBuildToolSceneView(
-            VisualElement root,
             UMI3DBuildToolScene_SO buildToolScene_SO,
-            int index,
             Action applyScenes
         )
         {
-            this.root = root;
             this.buildToolScene_SO = buildToolScene_SO;
-            this.index = index;
             this.viewModel = new(buildToolScene_SO, applyScenes);
         }
 
         public void Bind()
         {
             T_Select = root.Q<Toggle>("T_Select");
+            T_Select.RegisterValueChangedCallback(SelectValueChanged);
+
             V_Path = root.Q("V_Path");
             TF_Path = V_Path.Q<TextField>();
+            TF_Path.RegisterValueChangedCallback(PathValueChanged);
+
             B_Browse = V_Path.Q<Button>();
+            B_Browse.clicked += Browse;
+
+            root.Q("V_Container").Add(EFF_Targets);
+            EFF_Targets.RegisterValueChangedCallback(TargetValueChanged);
         }
 
         public void Set()
         {
             // Select
             T_Select.SetValueWithoutNotify(viewModel[index].enabled);
-            T_Select.RegisterValueChangedCallback(SelectValueChanged);
-
+            
             // Path
-            (TF_Path.labelElement as INotifyValueChanged<string>).SetValueWithoutNotify("Scene Path");
-            //TF_Path.label = "Scene Path";
+            (TF_Path.labelElement as INotifyValueChanged<string>)
+                .SetValueWithoutNotify("Scene Path");
             TF_Path.SetValueWithoutNotify(viewModel[index].path);
-            TF_Path.RegisterValueChangedCallback(PathValueChanged);
-            B_Browse.clicked += Browse;
-
-            root.Q("V_Container").Add(EFF_Targets);
+            
             EFF_Targets.SetValueWithoutNotify(viewModel[index].targets);
-            EFF_Targets.RegisterValueChangedCallback(TargetValueChanged);
         }
 
         public void Unbind()

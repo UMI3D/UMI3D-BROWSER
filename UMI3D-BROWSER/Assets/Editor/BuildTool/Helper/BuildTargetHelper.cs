@@ -14,7 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using NUnit.Framework;
 using System.Collections.Generic;
 using umi3d.browserRuntime.conditionalCompilation;
 using UnityEditor;
@@ -23,7 +22,7 @@ namespace umi3d.browserEditor.BuildTool
 {
     public static class BuildTargetHelper 
     {
-        static debug.UMI3DLogger logger 
+        static umi3d.debug.UMI3DLogger logger 
             = new(mainTag: nameof(BuildTargetHelper));
 
         /// <summary>

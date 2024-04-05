@@ -22,6 +22,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using umi3d.cdk.collaboration.userCapture;
 using umi3d.cdk.interaction;
+using umi3d.cdk.navigation;
 using umi3d.cdk.userCapture.pose;
 using umi3d.common;
 using umi3d.common.collaboration;
@@ -675,12 +676,10 @@ namespace umi3d.cdk.collaboration
                     break;
                 case UMI3DOperationKeys.PlayPoseRequest:
                     {
-                        ulong userID = UMI3DSerializer.Read<ulong>(container);
                         ulong poseId = UMI3DSerializer.Read<ulong>(container);
                         bool stopPose = UMI3DSerializer.Read<bool>(container);
                         PlayPoseClipDto playPoseDto = new PlayPoseClipDto
                         {
-                            userID = userID,
                             poseId = poseId,
                             stopPose = stopPose
                         };

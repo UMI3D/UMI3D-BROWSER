@@ -33,7 +33,8 @@ namespace umi3d.browserEditor.BuildTool
         public UMI3DBuildToolTarget_SO buildToolTarget_SO;
         public UMI3DBuildToolScene_SO buildToolScene_SO;
         public UMI3DBuildToolSettings_SO buildToolSettings_SO;
-        Action<TargetDto> applyTargetOptions;
+        public Action applyScenes;
+        public Action<TargetDto> applyTargetOptions;
         public Action<TargetDto> buildTarget;
         public Action<TargetDto[]> buildSelectedTarget;
 
@@ -61,6 +62,7 @@ namespace umi3d.browserEditor.BuildTool
             UMI3DBuildToolTarget_SO buildToolTarget_SO,
             UMI3DBuildToolScene_SO buildToolScene_SO,
             UMI3DBuildToolSettings_SO buildToolSettings_SO,
+            Action applyScenes,
             Action<TargetDto> applyTargetOptions,
             Action<TargetDto> buildTarget,
             Action<TargetDto[]> buildSelectedTarget
@@ -76,6 +78,7 @@ namespace umi3d.browserEditor.BuildTool
             this.buildToolTarget_SO = buildToolTarget_SO;
             this.buildToolScene_SO = buildToolScene_SO;
             this.buildToolSettings_SO = buildToolSettings_SO;
+            this.applyScenes = applyScenes;
             this.applyTargetOptions = applyTargetOptions;
             this.buildTarget = buildTarget;
             this.buildSelectedTarget = buildSelectedTarget;
@@ -125,7 +128,8 @@ namespace umi3d.browserEditor.BuildTool
                 UMI3DBuildToolSceneView sceneView = new(
                     root: visual,
                     buildToolScene_SO: buildToolScene_SO,
-                    index: index
+                    index: index,
+                    applyScenes
                 );
                 sceneView.Bind();
                 sceneView.Set();

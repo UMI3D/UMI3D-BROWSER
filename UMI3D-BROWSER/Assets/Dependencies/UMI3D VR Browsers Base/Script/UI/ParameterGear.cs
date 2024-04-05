@@ -90,14 +90,6 @@ namespace umi3dVRBrowsersBase.ui
         private Sprite defaultSprite;
 
         [SerializeField]
-        [Tooltip("Background for hover feedback")]
-        private Sprite hoverSprite;
-
-        [SerializeField]
-        [Tooltip("Background for press feedback")]
-        private Sprite pressSprite;
-
-        [SerializeField]
         [Tooltip("player needed for distance.")]
         private Transform player;
 
@@ -145,42 +137,6 @@ namespace umi3dVRBrowsersBase.ui
             OnTriggered?.Invoke();
 
             PlayerMenuManager.Instance.OpenParameterMenu(controllerType, menuAsync: true);
-
-            if (gameObject.activeInHierarchy)
-                StartCoroutine(ClickAnimation());
-        }
-
-        /// <summary>
-        /// Displays a click feedback for a certain time.
-        /// </summary>
-        /// <returns></returns>
-        private IEnumerator ClickAnimation()
-        {
-            gearImage.sprite = pressSprite;
-            yield return new WaitForSeconds(.15f);
-
-            if (IsHovered)
-                gearImage.sprite = hoverSprite;
-            else
-                gearImage.sprite = defaultSprite;
-        }
-
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
-        public void HoverEnter()
-        {
-            IsHovered = true;
-            gearImage.sprite = hoverSprite;
-        }
-
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
-        public void HoverExit()
-        {
-            IsHovered = false;
-            gearImage.sprite = defaultSprite;
         }
 
         /// <summary>

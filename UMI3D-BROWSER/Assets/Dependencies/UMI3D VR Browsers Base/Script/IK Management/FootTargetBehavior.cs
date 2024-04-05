@@ -37,14 +37,24 @@ namespace umi3dVRBrowsersBase.ikManagement
 
         private void Update()
         {
-            this.transform.position = new Vector3(FollowedAvatarNode.position.x, OVRRig.position.y, FollowedAvatarNode.position.z);
-            this.transform.rotation = FollowedAvatarNode.rotation;
+            transform.position = new Vector3(
+                FollowedAvatarNode.position.x, 
+                OVRRig.position.y, 
+                FollowedAvatarNode.position.z
+            );
+            transform.rotation = FollowedAvatarNode.rotation;
         }
 
         public void SetFootTargets()
         {
-            LeftTracker.transform.position = SkeletonAnimator.GetBoneTransform(HumanBodyBones.LeftFoot).position;
-            RightTracker.transform.position = SkeletonAnimator.GetBoneTransform(HumanBodyBones.RightFoot).position;
+            LeftTracker.transform.position 
+                = SkeletonAnimator.GetBoneTransform(
+                    HumanBodyBones.LeftFoot
+                ).position;
+            RightTracker.transform.position 
+                = SkeletonAnimator.GetBoneTransform(
+                    HumanBodyBones.RightFoot
+                ).position;
             LeftTracker.isActif = true;
             RightTracker.isActif = true;
         }

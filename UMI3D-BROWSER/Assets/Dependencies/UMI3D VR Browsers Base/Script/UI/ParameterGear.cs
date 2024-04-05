@@ -78,25 +78,12 @@ namespace umi3dVRBrowsersBase.ui
         private InteractableContainer container;
 
         [SerializeField]
-        [Tooltip("Should this gear display on top of every other objects ?")]
-        private bool displayOnTopOfEverything;
-
-        [SerializeField]
         [Tooltip("Gear image")]
         private Image gearImage;
 
         [SerializeField]
-        [Tooltip("Default background")]
-        private Sprite defaultSprite;
-
-        [SerializeField]
         [Tooltip("player needed for distance.")]
         private Transform player;
-
-        /// <summary>
-        /// Name of the shader property which enable or disable Z-depth test.
-        /// </summary>
-        private const string shaderTestMode = "unity_GUIZTestMode";
 
         #endregion
 
@@ -104,28 +91,21 @@ namespace umi3dVRBrowsersBase.ui
 
         private void Start()
         {
-            if (displayOnTopOfEverything)
-                DisplayOnTopOfEverything();
+            // Display on top of everything
+            Material material = gearImage.materialForRendering;
+            if (material != null)
+            {
+                var materialCopy = new Material(material);
+                materialCopy.SetInt(
+                    "unity_GUIZTestMode",
+                    (int)UnityEngine.Rendering.CompareFunction.Always
+                );
+                gearImage.material = materialCopy;
+            }
 
             PlayerMenuManager.Instance.onMenuClose.AddListener(Hide);
 
             Hide();
-        }
-
-        /// <summary>
-        /// Display image on top of everything. 
-        /// </summary>
-        /// Solution found on this thread <see href="https://answers.unity.com/questions/878667/world-space-canvas-on-top-of-everything.html"/>.
-        private void DisplayOnTopOfEverything()
-        {
-            Material material = gearImage.materialForRendering;
-
-            if (material != null)
-            {
-                var materialCopy = new Material(material);
-                materialCopy.SetInt(shaderTestMode, (int)UnityEngine.Rendering.CompareFunction.Always);
-                gearImage.material = materialCopy;
-            }
         }
 
         /// <summary>

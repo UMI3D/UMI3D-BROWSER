@@ -16,7 +16,10 @@ limitations under the License.
 
 using umi3dVRBrowsersBase.connection;
 using UnityEngine;
-
+using System.Collections.Generic;
+using umi3d.cdk;
+using umi3d.common;
+using umi3d.browserRuntime.navigation;
 
 namespace umi3dVRBrowsersBase.navigation
 {
@@ -40,42 +43,57 @@ namespace umi3dVRBrowsersBase.navigation
         /// </summary>
         public TeleportArc arc;
 
+        /// <summary>
+        /// manage teleportation of group.
+        /// </summary>
+        public GroupTeleportation groupTeleportation = new GroupTeleportation();
+
+        //public List<GameObject> otherPlayers; // Liste des autres joueurs pour la téléportation de groupe //////// a recup coté serveur
+
         bool isLoadingScreenDisplayed = false;
 
         protected virtual void Awake()
         {
-            LoadingScreenDisplayer.OnLoadingScreenDislayed.AddListener(() =>
-            {
-                isLoadingScreenDisplayed = true;
-            });
-
-            LoadingScreenDisplayer.OnLoadingScreenHidden.AddListener(() =>
-            {
-                isLoadingScreenDisplayed = false;
-            });
+            LoadingScreenDisplayer.OnLoadingScreenDislayed.AddListener(() => isLoadingScreenDisplayed = true);
+            LoadingScreenDisplayer.OnLoadingScreenHidden.AddListener(() => isLoadingScreenDisplayed = false);
         }
 
-        /// <summary>
-        /// Teleports player.
-        /// </summary>
+        // Téléportation individuelle ou de groupe basée sur le flag isGroupTeleport
         [ContextMenu("Teleport")]
         public void Teleport()
         {
             if (isLoadingScreenDisplayed)
             {
+                Debug.Log("Teleporting.Teleport.isLoadingScreenDisplayed=false");
                 return;
             }
 
             Vector3? position = arc.GetPointedPoint();
-
             if (position.HasValue)
             {
-                Vector3 offset = teleportingObject.transform.rotation * centerEyeAnchor.transform.localPosition;
-                teleportingObject.transform.position = new Vector3(position.Value.x - offset.x,
-                                                                   position.Value.y,
-                                                                   position.Value.z - offset.z);
+                if (GroupTeleportation.isGroupTeleport)
+                {
+                    Debug.Log("Teleporting.Teleport.isGroupTeleport=true");
+                    groupTeleportation.TeleportGroup(position.Value, teleportingObject.transform, centerEyeAnchor.transform);
+                }
+                else
+                {
+                    Debug.Log("Teleporting.Teleport.isGroupTeleport=false");
+                    TeleportIndividual(position.Value);
+                }
             }
         }
+
+        // Méthode de téléportation individuelle
+        private void TeleportIndividual(Vector3 position)
+        {
+            Vector3 offset = teleportingObject.transform.rotation * centerEyeAnchor.transform.localPosition;
+            teleportingObject.transform.position = new Vector3(position.x - offset.x,
+                                                                   position.y,
+                                                                   position.z - offset.z);
+        }
+
+        
 
     }
 }

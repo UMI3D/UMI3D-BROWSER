@@ -18,6 +18,7 @@ using System;
 using umi3d.common.collaboration.dto.networking;
 using umi3d.common.collaboration.dto.voip;
 using umi3d.common.interaction;
+using UnityEngine;
 
 namespace umi3d.common.collaboration
 {
@@ -255,6 +256,39 @@ namespace umi3d.common.collaboration
                     readable = false;
                     return false;
 
+                case true when typeof(T) == typeof(TeleportGroupRequestDto):
+                    {
+                        Debug.Log("tpGroup init");
+                        ulong userId = 0;
+                        Vector3Dto teleportLeaderPosition = null;
+                        Vector3Dto currentLeaderPosition = null;
+
+                        readable = UMI3DSerializer.TryRead<ulong>(container, out userId)
+                                   && UMI3DSerializer.TryRead<Vector3Dto>(container, out teleportLeaderPosition)
+                                   && UMI3DSerializer.TryRead<Vector3Dto>(container, out currentLeaderPosition);
+                        if (readable)
+                        {
+                            Debug.Log("tpGroup readable");
+                            var teleportGroup = new TeleportGroupRequestDto
+                            {
+                                userId = userId,
+                                teleportLeaderPosition = teleportLeaderPosition,
+                                currentLeaderPosition = currentLeaderPosition
+                            };
+
+                            result = (T)Convert.ChangeType(teleportGroup, typeof(T));
+                            Debug.Log("result");
+                            Debug.Log(result);
+                        }
+                        else
+                        {
+                            Debug.Log("tpGroup not readable");
+                            result = default(T);
+                        }
+                        Debug.Log("tpGroup over");
+                        return true;
+                    }
+
                 case true when typeof(T) == typeof(MediaDto):
                     {
                         string name, url;
@@ -419,6 +453,15 @@ namespace umi3d.common.collaboration
                         + UMI3DSerializer.Write(voice.channelName);
                     break;
 
+                case TeleportGroupRequestDto tpGroup:
+                    Debug.Log("tpGroup");
+                    Debug.Log(tpGroup);
+                    bytable = UMI3DSerializer.Write(UMI3DOperationKeys.TeleportGroupRequest)
+                        + UMI3DSerializer.Write(tpGroup.userId)
+                        + UMI3DSerializer.Write(tpGroup.currentLeaderPosition)
+                        + UMI3DSerializer.Write(tpGroup.teleportLeaderPosition);
+                    break;
+
                 default:
                     if (typeof(T) == typeof(ResourceDto))
                     {
@@ -456,6 +499,7 @@ namespace umi3d.common.collaboration
                 true when typeof(T) == typeof(GateDto) => true,
                 true when typeof(T) == typeof(VoiceDto) => true,
                 true when typeof(T) == typeof(ResourceDto) => true,
+                //true when typeof(T) == typeof(TeleportGroupRequestDto) => true,
                 _ => null
             };
         }

@@ -13,16 +13,13 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-using System;
 
-namespace umi3d.common.interaction.form
+using System.Collections.Generic;
+
+namespace umi3d.common.interaction.form.ugui
 {
-    [Flags]
-	public enum DeviceType
-	{
-		Overlay = 1,
-		Vr = 2,
-
-		All = Overlay | Vr,
-	}
+    public class UGUIStyleVariantDto : VariantStyleDto
+    {
+        public List<UGUIStyleItemDto> StyleVariantItems { get; set; }
+    }
 }

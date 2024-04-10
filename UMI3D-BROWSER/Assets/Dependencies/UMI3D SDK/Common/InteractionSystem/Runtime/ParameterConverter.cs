@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using umi3d.common.interaction.form;
+using umi3d.common.interaction.form.ui_toolkit;
 using UnityEngine.UIElements;
 
 namespace umi3d.common.collaboration

@@ -15,9 +15,7 @@ limitations under the License.
 */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using umi3d.cdk;
 using umi3d.common.interaction.form;
 using Unity.VisualScripting;
@@ -172,15 +170,23 @@ namespace umi3dBrowsers.container.formrenderer
                 GameObject imageGO = Instantiate(imageDisplayerPrefab, allContainers[parentId].transform);
                 if (imageDto.resource == null) return;
 
-                object spriteTask = await UMI3DResourcesManager.Instance._LoadFile(0, 
-                    imageDto.resource.variants[0],
-                    new ImageDtoLoader()
-                );
+                try
+                {
+                    object spriteTask = await UMI3DResourcesManager.Instance._LoadFile(0,
+                        imageDto.resource.variants[0],
+                        new ImageDtoLoader()
+                    );
 
-                Texture2D texture = spriteTask as Texture2D;
-                imageGO.GetComponent<Image>().sprite = Sprite.Create(texture,
-                    new Rect(0, 0,texture.Size().x, texture.Size().y),
-                    new Vector2());
+                    Texture2D texture = spriteTask as Texture2D;
+                    imageGO.GetComponent<Image>().sprite = Sprite.Create(texture,
+                        new Rect(0, 0, texture.Size().x, texture.Size().y),
+                        new Vector2());
+                }
+                catch(Exception ex)
+                {
+                    Debug.LogException(new Exception("Make sure you are in play mode to load resource in the form," +
+                        " or that every networking UMI3D behaviours are ready"), this);
+                }
             }
             else // Vignette
             {

@@ -14,11 +14,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-namespace umi3d.common.interaction.form
+namespace umi3d.common.interaction.form.ugui
 {
-    public class SizeStyleDto : VariantStyleDto
+    public enum E_AnchorType
     {
-        public StyleLength width { get; set; }
-        public StyleLength height { get; set; }
+        topLeft,
+        topRight,
+        bottomLeft,
+        bottomRight,
+        middleLeft,
+        middleRight,
+        topMiddle,
+        bottomMiddle,
+        middleMiddle
     }
 }

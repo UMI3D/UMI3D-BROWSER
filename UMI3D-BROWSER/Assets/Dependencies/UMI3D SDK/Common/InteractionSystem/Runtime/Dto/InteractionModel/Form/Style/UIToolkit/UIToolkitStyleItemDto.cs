@@ -1,4 +1,4 @@
-﻿/*
+/*
 Copyright 2019 - 2024 Inetum
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,19 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-namespace umi3d.common.interaction.form
+namespace umi3d.common.interaction.form.ui_toolkit
 {
-    public enum Position
+    /// <summary>
+    /// Just a class to simplify the process of the data structure of the style for UIToolkit
+    /// </summary>
+    public class UIToolkitStyleItemDto
     {
-        //
-        // Summary:
-        //     The element is positioned in relation to its default box as calculated by layout.
-        Relative,
-        //
-        // Summary:
-        //     The element is positioned in relation to its parent box and does not contribute
-        //     to the layout anymore.
-        Absolute
-    }
 
+    }
 }

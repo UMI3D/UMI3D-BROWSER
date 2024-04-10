@@ -1,4 +1,4 @@
-/*
+﻿/*
 Copyright 2019 - 2024 Inetum
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,16 +14,19 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-namespace umi3d.common.interaction.form
+namespace umi3d.common.interaction.form.ui_toolkit
 {
-    public class PositionStyleDto : VariantStyleDto
+    public enum E_Position
     {
-        public Position position { get; set; }
-
-        public StyleLength top { get; set; }
-        public StyleLength bottom { get; set; }
-        public StyleLength right { get; set; }
-        public StyleLength left { get; set; }
+        //
+        // Summary:
+        //     The element is positioned in relation to its default box as calculated by layout.
+        Relative,
+        //
+        // Summary:
+        //     The element is positioned in relation to its parent box and does not contribute
+        //     to the layout anymore.
+        Absolute
     }
 
 }

@@ -14,30 +14,25 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-namespace umi3d.common.interaction.form
+namespace umi3d.common.interaction.form.ui_toolkit
 {
-    public enum StyleKeyword
+    public enum E_FlexDirection
     {
         //
         // Summary:
-        //     Means that there's no keyword defined for that property.
-        Undefined,
+        //     Top to Bottom.
+        Column,
         //
         // Summary:
-        //     Means that an inline style from IStyle has no value or keyword.
-        Null,
+        //     Bottom to Top.
+        ColumnReverse,
         //
         // Summary:
-        //     For style properties accepting auto.
-        Auto,
+        //     Left to Right.
+        Row,
         //
         // Summary:
-        //     For style properties accepting none.
-        None,
-        //
-        // Summary:
-        //     The initial (or default) value of a style property.
-        Initial
+        //     Right to Left.
+        RowReverse
     }
-
 }

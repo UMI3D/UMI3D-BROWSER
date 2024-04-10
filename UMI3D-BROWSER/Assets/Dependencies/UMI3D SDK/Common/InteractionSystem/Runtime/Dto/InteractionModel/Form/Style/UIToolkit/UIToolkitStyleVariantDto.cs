@@ -1,4 +1,4 @@
-﻿/*
+/*
 Copyright 2019 - 2024 Inetum
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,14 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-namespace umi3d.common.interaction.form
-{
-    public enum Unit
-    {
-        Pixel,
-        Percent,
-        Auto,
-        None
-    }
+using System.Collections.Generic;
 
+namespace umi3d.common.interaction.form.ui_toolkit
+{
+    public class UIToolkitStyleVariantDto : VariantStyleDto
+    {
+        public List<UIToolkitStyleItemDto> StyleVariantItems { get; set; }
+    }
 }

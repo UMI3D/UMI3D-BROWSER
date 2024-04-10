@@ -13,16 +13,12 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-using System;
 
-namespace umi3d.common.interaction.form
+namespace umi3d.common.interaction.form.ui_toolkit
 {
-    [Flags]
-	public enum DeviceType
-	{
-		Overlay = 1,
-		Vr = 2,
-
-		All = Overlay | Vr,
-	}
+    public class SizeStyleDto : UIToolkitStyleItemDto
+    {
+        public S_StyleLength width { get; set; }
+        public S_StyleLength height { get; set; }
+    }
 }

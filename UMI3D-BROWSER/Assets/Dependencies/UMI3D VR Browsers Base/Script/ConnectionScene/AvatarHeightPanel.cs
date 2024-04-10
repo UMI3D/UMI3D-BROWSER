@@ -40,6 +40,12 @@ namespace umi3dVRBrowsersBase.connection
         [Tooltip("Text to display while resizing.")]
         private UnityEngine.UI.Text waitText;
 
+        /// <summary>
+        /// Has users set their height.
+        /// </summary>
+        public static bool isSetup = false;
+        System.Action validationCallBack;
+
         #endregion
 
         #region Methods
@@ -64,6 +70,11 @@ namespace umi3dVRBrowsersBase.connection
             {
                 StartCoroutine(WaitResize());
             }
+            if (!isSetup)
+            {
+                validationCallBack?.Invoke();
+                isSetup = true;
+            }
         }
 
         IEnumerator WaitResize()
@@ -80,6 +91,13 @@ namespace umi3dVRBrowsersBase.connection
         /// Displays panel to set up avatar's height.
         /// </summary>
         /// <param name="validationCallBack"></param>
+        public void Display(System.Action validationCallBack)
+        {
+            ConnectionMenuManager.instance.Library.SetActive(false);
+            Display();
+            this.validationCallBack = validationCallBack;
+        }
+
         public void Display()
         {
             panel.SetActive(true);

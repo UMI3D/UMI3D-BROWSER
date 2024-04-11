@@ -78,33 +78,12 @@ namespace umi3dVRBrowsersBase.ui
         private InteractableContainer container;
 
         [SerializeField]
-        [Tooltip("Should this gear display on top of every other objects ?")]
-        private bool displayOnTopOfEverything;
-
-        [SerializeField]
         [Tooltip("Gear image")]
         private Image gearImage;
 
         [SerializeField]
-        [Tooltip("Default background")]
-        private Sprite defaultSprite;
-
-        [SerializeField]
-        [Tooltip("Background for hover feedback")]
-        private Sprite hoverSprite;
-
-        [SerializeField]
-        [Tooltip("Background for press feedback")]
-        private Sprite pressSprite;
-
-        [SerializeField]
         [Tooltip("player needed for distance.")]
         private Transform player;
-
-        /// <summary>
-        /// Name of the shader property which enable or disable Z-depth test.
-        /// </summary>
-        private const string shaderTestMode = "unity_GUIZTestMode";
 
         #endregion
 
@@ -112,28 +91,21 @@ namespace umi3dVRBrowsersBase.ui
 
         private void Start()
         {
-            if (displayOnTopOfEverything)
-                DisplayOnTopOfEverything();
+            // Display on top of everything
+            Material material = gearImage.materialForRendering;
+            if (material != null)
+            {
+                var materialCopy = new Material(material);
+                materialCopy.SetInt(
+                    "unity_GUIZTestMode",
+                    (int)UnityEngine.Rendering.CompareFunction.Always
+                );
+                gearImage.material = materialCopy;
+            }
 
             PlayerMenuManager.Instance.onMenuClose.AddListener(Hide);
 
             Hide();
-        }
-
-        /// <summary>
-        /// Display image on top of everything. 
-        /// </summary>
-        /// Solution found on this thread <see href="https://answers.unity.com/questions/878667/world-space-canvas-on-top-of-everything.html"/>.
-        private void DisplayOnTopOfEverything()
-        {
-            Material material = gearImage.materialForRendering;
-
-            if (material != null)
-            {
-                var materialCopy = new Material(material);
-                materialCopy.SetInt(shaderTestMode, (int)UnityEngine.Rendering.CompareFunction.Always);
-                gearImage.material = materialCopy;
-            }
         }
 
         /// <summary>
@@ -145,42 +117,6 @@ namespace umi3dVRBrowsersBase.ui
             OnTriggered?.Invoke();
 
             PlayerMenuManager.Instance.OpenParameterMenu(controllerType, menuAsync: true);
-
-            if (gameObject.activeInHierarchy)
-                StartCoroutine(ClickAnimation());
-        }
-
-        /// <summary>
-        /// Displays a click feedback for a certain time.
-        /// </summary>
-        /// <returns></returns>
-        private IEnumerator ClickAnimation()
-        {
-            gearImage.sprite = pressSprite;
-            yield return new WaitForSeconds(.15f);
-
-            if (IsHovered)
-                gearImage.sprite = hoverSprite;
-            else
-                gearImage.sprite = defaultSprite;
-        }
-
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
-        public void HoverEnter()
-        {
-            IsHovered = true;
-            gearImage.sprite = hoverSprite;
-        }
-
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
-        public void HoverExit()
-        {
-            IsHovered = false;
-            gearImage.sprite = defaultSprite;
         }
 
         /// <summary>

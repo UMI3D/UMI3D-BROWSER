@@ -33,7 +33,6 @@ namespace umi3d.browserEditor.BuildTool
         public E_Target currentTarget;
         public List<TargetDto> targets = new();
 
-
         public TargetDto[] SelectedTargets
         {
             get

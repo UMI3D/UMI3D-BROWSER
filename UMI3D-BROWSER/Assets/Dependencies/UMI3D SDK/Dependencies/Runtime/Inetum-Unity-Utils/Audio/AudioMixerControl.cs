@@ -33,17 +33,17 @@ namespace inetum.unityUtils.audio
 
         public static void SetConversationGroup(AudioSource audioSource)
         {
+            if (audioSource == null) return;
             if (audioMixer == null) audioMixer = GetAudioMixer();
             if (audioMixer == null) return;
-            if (audioSource == null) return;
             audioSource.outputAudioMixerGroup = audioMixer.FindMatchingGroups(CONVERSATION_GROUP)[0];
         }
 
         public static void SetEnvironmentGroup(AudioSource audioSource)
         {
+            if (audioSource == null) return;
             if (audioMixer == null) audioMixer = GetAudioMixer();
             if (audioMixer == null) return;
-            if (audioSource == null) return;
             audioSource.outputAudioMixerGroup = audioMixer.FindMatchingGroups(ENVIRONMENT_GROUP)[0];
         }
 

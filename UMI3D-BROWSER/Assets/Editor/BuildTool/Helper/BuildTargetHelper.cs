@@ -14,12 +14,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System.Collections.Generic;
+using umi3d.browserRuntime.conditionalCompilation;
 using UnityEditor;
 
 namespace umi3d.browserEditor.BuildTool
 {
     public static class BuildTargetHelper 
     {
+        static umi3d.debug.UMI3DLogger logger 
+            = new(mainTag: nameof(BuildTargetHelper));
+
         /// <summary>
         /// Switch target.<br/>
         /// Return -1 if an error occurred.<br/>
@@ -28,18 +33,77 @@ namespace umi3d.browserEditor.BuildTool
         /// </summary>
         /// <param name="target"></param>
         /// <returns></returns>
-        public static int SwitchTarget(TargetDto target)
+        public static int SwitchTarget(E_Target target)
         {
-            switch (target.Target)
+            switch (target)
             {
                 case E_Target.Quest:
                 case E_Target.Focus:
                 case E_Target.Pico:
-                    return ChangeBuildTarget(BuildTargetGroup.Android, BuildTarget.Android);
                 case E_Target.SteamXR:
-                    return ChangeBuildTarget(BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows64);
+                    ChangeDeviceConditionalCompilation(MultiDevice.XR);
+                    break;
+                default:
+                    break;
+            }
+
+            switch (target)
+            {
+                case E_Target.Quest:
+                case E_Target.Focus:
+                case E_Target.Pico:
+                    return ChangeBuildTarget(
+                        BuildTargetGroup.Android, 
+                        BuildTarget.Android
+                    );
+                case E_Target.SteamXR:
+                    return ChangeBuildTarget(
+                        BuildTargetGroup.Standalone,
+                        BuildTarget.StandaloneWindows64
+                    );
                 default:
                     return -1;
+            }
+        }
+
+        static void ChangeDeviceConditionalCompilation(MultiDevice device)
+        {
+            var deviceSymbols 
+                = MultiDeviceExtensions.GetAllSymbols();
+
+            List<string> newDef = new();
+            bool shouldUpdate;
+
+            var androidDef = PlayerSettings.GetScriptingDefineSymbols(
+                UnityEditor.Build.NamedBuildTarget.Android
+            ).Split(';');
+            shouldUpdate = device.UpdateSymbols(
+                androidDef,
+                deviceSymbols,
+                ref newDef
+            );
+            if (shouldUpdate) 
+            {
+                PlayerSettings.SetScriptingDefineSymbols(
+                    UnityEditor.Build.NamedBuildTarget.Android,
+                    newDef.ToArray()
+                );
+            }
+
+            var standaloneDef = PlayerSettings.GetScriptingDefineSymbols(
+                UnityEditor.Build.NamedBuildTarget.Standalone
+            ).Split(';');
+            shouldUpdate = device.UpdateSymbols(
+                standaloneDef,
+                deviceSymbols,
+                ref newDef
+            );
+            if (shouldUpdate)
+            {
+                PlayerSettings.SetScriptingDefineSymbols(
+                    UnityEditor.Build.NamedBuildTarget.Standalone,
+                    newDef.ToArray()
+                );
             }
         }
 
@@ -59,7 +123,10 @@ namespace umi3d.browserEditor.BuildTool
 
             if (oldTarget == buildTarget && oldTargetGroup == buildTargetGroup)
             {
-                UnityEngine.Debug.Log($"[UMI3D] Current target is {buildTarget}");
+                logger.Default(
+                    nameof(ChangeBuildTarget),
+                    $"[UMI3D] Current target is {buildTarget}"
+                );
                 return 0;
             }
 
@@ -72,12 +139,18 @@ namespace umi3d.browserEditor.BuildTool
 
             if (!result)
             {
-                UnityEngine.Debug.LogError($"[UMI3D] Switching target failed");
+                logger.Error(
+                    nameof(ChangeBuildTarget),
+                    $"[UMI3D] Switching target failed"
+                );
                 return -1;
             }
             else
             {
-                UnityEngine.Debug.Log($"[UMI3D] Target switch from {oldTarget} to {buildTarget}");
+                logger.Default(
+                    nameof(ChangeBuildTarget),
+                    $"[UMI3D] Target switch from {oldTarget} to {buildTarget}"
+                );
                 return 1;
             }
         }

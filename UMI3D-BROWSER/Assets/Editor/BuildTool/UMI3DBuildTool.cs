@@ -27,23 +27,50 @@ namespace umi3d.browserEditor.BuildTool
     {
         [SerializeField] private VisualTreeAsset ui = default;
         [SerializeField] private VisualTreeAsset target_VTA = default;
-        [SerializeField] private VisualTreeAsset path_VTA = default;
         [SerializeField] private VisualTreeAsset scene_VTA = default;
-        [SerializeField] UMI3DBuildToolKeystore_SO buildToolKeystore_SO;
-        [SerializeField] UMI3DBuildToolVersion_SO buildToolVersion_SO;
-        [SerializeField] UMI3DBuildToolTarget_SO buildToolTarget_SO;
-        [SerializeField] UMI3DBuildToolScene_SO buildToolScene_SO;
-        [SerializeField] UMI3DBuildToolSettings_SO buildToolSettings_SO;
+        UMI3DBuildToolKeystore_SO buildToolKeystore_SO;
+        UMI3DBuildToolVersion_SO buildToolVersion_SO;
+        UMI3DBuildToolTarget_SO buildToolTarget_SO;
+        UMI3DBuildToolScene_SO buildToolScene_SO;
+        UMI3DBuildToolSettings_SO buildToolSettings_SO;
 
         [SerializeField] UMI3DCollabLoadingParameters loadingParameters;
         IBuilToolComponent _uMI3DConfigurator = null;
 
-        [MenuItem("Tools/BuildTool")]
-        public static void OpenWindow()
+        UMI3DBuildToolView buildView;
+
+        public enum E_BuildToolPanel
+        {
+            Main,
+            Configuration,
+            History,
+            Build
+        }
+
+        [MenuItem("Tools/Build Tool")]
+        public static void OpenBuildToolWindow()
         {
             UMI3DBuildTool wnd = GetWindow<UMI3DBuildTool>();
             wnd.titleContent = new GUIContent("UMI3D Build Tool");
+            wnd.buildView.ChangePanel(E_BuildToolPanel.Main);
         }
+
+        [MenuItem("Tools/Build Tool Configuration")]
+        public static void OpenBuildToolConfigurationWindow()
+        {
+            UMI3DBuildTool wnd = GetWindow<UMI3DBuildTool>();
+            wnd.titleContent = new GUIContent("UMI3D Build Tool Config");
+            wnd.buildView.ChangePanel(E_BuildToolPanel.Configuration);
+        }
+
+        // TODO
+        //[MenuItem("Tools/Build Tool History")]
+        //public static void OpenBuildToolHistoryWindow()
+        //{
+        //    UMI3DBuildTool wnd = GetWindow<UMI3DBuildTool>();
+        //    wnd.titleContent = new GUIContent("UMI3D Build Tool History");
+        //    wnd.buildView.ChangePanel(E_BuildToolPanel.History);
+        //}
 
         public void CreateGUI()
         {
@@ -56,13 +83,19 @@ namespace umi3d.browserEditor.BuildTool
                 "[UMI3D] BuildTool: target_VTA is null."
             );
             Assert.IsNotNull(
-                path_VTA,
-                "[UMI3D] BuildTool: path_VTA is null."
-            );
-            Assert.IsNotNull(
                 scene_VTA,
                 "[UMI3D] BuildTool: scene_VTA is null."
             );
+
+            UMI3DBuildToolDataCreation.GetPath();
+            UMI3DBuildToolDataCreation.CreateExcludedFolderIfNecessary();
+            UMI3DBuildToolDataCreation.GetFiles();
+            buildToolKeystore_SO = UMI3DBuildToolDataCreation.GetSO<UMI3DBuildToolKeystore_SO>("Keystore");
+            buildToolVersion_SO = UMI3DBuildToolDataCreation.GetSO<UMI3DBuildToolVersion_SO>("Version");
+            buildToolScene_SO = UMI3DBuildToolDataCreation.GetSO<UMI3DBuildToolScene_SO>("Scenes");
+            buildToolTarget_SO = UMI3DBuildToolDataCreation.GetSO<UMI3DBuildToolTarget_SO>("Target");
+            buildToolSettings_SO = UMI3DBuildToolDataCreation.GetSO<UMI3DBuildToolSettings_SO>("Settings");
+            UMI3DBuildToolDataCreation.SaveAndRefresh();
 
             Assert.IsNotNull(
                 buildToolKeystore_SO,
@@ -83,42 +116,37 @@ namespace umi3d.browserEditor.BuildTool
             );
             _uMI3DConfigurator = new UMI3DConfigurator(loadingParameters);
 
-            UMI3DBuildToolView buildView = new(
+            buildView = new(
                 rootVisualElement,
-                ui, target_VTA, path_VTA, scene_VTA,
+                ui, target_VTA, scene_VTA,
                 buildToolKeystore_SO, buildToolVersion_SO, buildToolTarget_SO, buildToolScene_SO, buildToolSettings_SO,
+                ApplyScenes,
                 ApplyTargetOptions,
-                BuildTarget,
                 BuildSelectedTargets
             );
             buildView.Bind();
             buildView.Set();
         }
 
-        void ApplyTargetOptions(TargetDto target)
+        void ApplyTargetOptions(E_Target target)
         {
-            // Update App name, Version and Android.BundleVersion.
-            PlayerSettings.productName = BuildToolHelper.GetApplicationName(target);
-            PlayerSettings.applicationIdentifier = BuildToolHelper.GetPackageName(target);
-            PlayerSettings.bundleVersion = $"{target.releaseCycle.GetReleaseInitial()}_{buildToolVersion_SO.newVersion.VersionFromNow} Sdk: {buildToolVersion_SO.sdkVersion.Version}";
-            PlayerSettings.Android.bundleVersionCode = buildToolVersion_SO.newVersion.BundleVersion;
+            ApplyScenes();
 
             // Switch target if needed and toggle options.
-            _uMI3DConfigurator.HandleTarget(target.Target);
+            _uMI3DConfigurator.HandleTarget(target);
             BuildTargetHelper.SwitchTarget(target);
             PluginHelper.SwitchPlugins(target);
             FeatureHelper.SwitchFeatures(target);
+        }
 
-            EditorBuildSettings.scenes = buildToolScene_SO.GetScenesForTarget(target.Target).Select(scene =>
+        void ApplyScenes()
+        {
+            EditorBuildSettings.scenes = buildToolScene_SO.GetScenesForTarget(
+                buildToolTarget_SO.currentTarget
+            ).Select(scene =>
             {
                 return new EditorBuildSettingsScene(scene.path, true);
             }).ToArray();
-            BuildToolHelper.SetKeystore(buildToolKeystore_SO.password, buildToolKeystore_SO.path);
-        }
-
-        void BuildTarget(TargetDto target)
-        {
-            BuildTarget(target, true);
         }
 
         /// <summary>
@@ -133,6 +161,14 @@ namespace umi3d.browserEditor.BuildTool
         /// <returns></returns>
         int BuildTarget(TargetDto target, bool revealInFinder)
         {
+            // Update App name, Version and Android.BundleVersion.
+            PlayerSettings.productName = BuildToolHelper.GetApplicationName(target);
+            PlayerSettings.applicationIdentifier = BuildToolHelper.GetPackageName(target);
+            PlayerSettings.bundleVersion = $"{target.releaseCycle.GetReleaseInitial()}_{buildToolVersion_SO.newVersion.VersionFromNow} Sdk: {buildToolVersion_SO.sdkVersion.Version}";
+            PlayerSettings.Android.bundleVersionCode = buildToolVersion_SO.newVersion.BundleVersion;
+
+            BuildToolHelper.SetKeystore(buildToolKeystore_SO.password, buildToolKeystore_SO.path);
+
             InstallerHelper.UpdateInstaller(
                 buildToolTarget_SO.installer,
                 buildToolTarget_SO.license,
@@ -163,7 +199,7 @@ namespace umi3d.browserEditor.BuildTool
         {
             for (int i = 0; i < target.Length; i++)
             {
-                ApplyTargetOptions(target[i]);
+                ApplyTargetOptions(target[i].Target);
                 BuildTarget(target[i], i == target.Length - 1);
             }
         }

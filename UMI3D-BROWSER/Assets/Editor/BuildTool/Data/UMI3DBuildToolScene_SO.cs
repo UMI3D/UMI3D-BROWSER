@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using inetum.unityUtils.saveSystem;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -24,13 +25,13 @@ namespace umi3d.browserEditor.BuildTool
     [CreateAssetMenu(fileName = "UMI3D Build Tool Scenes", menuName = "UMI3D/Build Tools/Build Tool Scenes")]
     public class UMI3DBuildToolScene_SO : SerializableScriptableObject
     {
-        public List<SceneDTO> scenes;
+        public List<SceneDTO> scenes = new();
 
         public SceneDTO[] GetScenesForTarget(E_Target target)
         {
             return scenes.Where(scene =>
             {
-                return scene.targets.HasFlag(target);
+                return scene.enabled && scene.targets.HasFlag(target);
             }).ToArray();
         }
     }

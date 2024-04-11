@@ -14,8 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace umi3dVRBrowsersBase.connection
 {
@@ -34,20 +36,9 @@ namespace umi3dVRBrowsersBase.connection
         [Tooltip("Button to confirm avatar's height")]
         private UnityEngine.UI.Button validateButton;
 
-        /// <summary>
-        /// List of <see cref="GameObject"/> to activate when avatar's height is set up.
-        /// </summary>
-        public List<GameObject> objectsToActivate;
-
-        /// <summary>
-        /// Has users set their height.
-        /// </summary>
-        public static bool isSetup = false;
-
-        /// <summary>
-        /// Defines what is done when avatar's height is set up.
-        /// </summary>
-        private System.Action validationCallBack;
+        [SerializeField]
+        [Tooltip("Text to display while resizing.")]
+        private UnityEngine.UI.Text waitText;
 
         #endregion
 
@@ -55,30 +46,43 @@ namespace umi3dVRBrowsersBase.connection
 
         private void Start()
         {
-            validateButton.onClick.AddListener(ValidateButtonClicked);
+            Assert.IsNotNull(panel);
+            Assert.IsNotNull(validateButton);
+            Assert.IsNotNull(waitText);
+
+            validateButton.onClick.AddListener(ResizeSkeleton);
+            waitText.gameObject.SetActive(false);
         }
 
         [ContextMenu("Set Avatar Height")]
-        void ValidateButtonClicked()
+        void ResizeSkeleton()
         {
             SetUpSkeleton setUp = GameObject.FindObjectOfType<SetUpSkeleton>();
             Debug.Assert(setUp != null, "No avatar found to set up height. Should not happen");
-            setUp.objectsToActivate = objectsToActivate;
-            StartCoroutine(setUp.SetUpAvatar());
-            Hide();
-            validationCallBack?.Invoke();
-            isSetup = true;
+            
+            if(setUp.TryResizeSkeleton())
+            {
+                StartCoroutine(WaitResize());
+            }
+        }
+
+        IEnumerator WaitResize()
+        {
+            validateButton.gameObject.SetActive(false);
+            waitText.gameObject.SetActive(true);
+
+            yield return new WaitForSeconds(0.5f);
+            waitText.gameObject.SetActive(false);
+            validateButton.gameObject.SetActive(true);
         }
 
         /// <summary>
         /// Displays panel to set up avatar's height.
         /// </summary>
         /// <param name="validationCallBack"></param>
-        public void Display(System.Action validationCallBack)
+        public void Display()
         {
-            ConnectionMenuManager.instance.Library.SetActive(false);
             panel.SetActive(true);
-            this.validationCallBack = validationCallBack;
         }
 
         /// <summary>

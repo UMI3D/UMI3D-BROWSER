@@ -27,11 +27,20 @@ namespace umi3dBrowsers.displayer
         [SerializeField] private LoadingBarDisplayer loadingBarDisplayer;
         [SerializeField] private LoadingTipDisplayer loadingTipDisplayer;
 
+        [Header("Options")]
+        [SerializeField] private bool autoInit = false;
+
         public event Action OnLoadingInProgress;
         public event Action OnLoadingFinished;
 
         private umi3d.cdk.Progress _currentProgress = null;
         private bool _loadingInProgress = false;
+
+        private void Start()
+        {
+            if (autoInit)
+                Init();
+        }
 
         public void Init()
         {

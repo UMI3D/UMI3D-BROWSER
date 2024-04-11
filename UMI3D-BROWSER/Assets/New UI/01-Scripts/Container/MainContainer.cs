@@ -176,7 +176,7 @@ namespace umi3d
             {
                 standUpButtonClicked?.Invoke();
                 SetUpSkeleton setUp = PlayerDependenciesAccessor.Instance.SetUpSkeleton;
-                StartCoroutine(setUp.SetUpAvatar());
+                StartCoroutine(setUp.SetupSkeleton());
                 HandleContentState(ContentState.mainContent);
             });
         }

@@ -97,17 +97,15 @@ namespace form_generator
 
             divDto.FirstChildren = children;
 
-            //Debug.Log("__Parent____" + divDto.tooltip); 
-            //children.ForEach(child => 
-            //{
-            //    Debug.Log("_____________Child____" + child.tooltip);
-            //});
-
             return divDto;
         }
 
         private DivDto CreateDivInstance(DivTypeTagger divTagger)
         {
+            List<StyleDto> styles = null;
+            DivDto divDto = null;
+            if (divTagger.DivType != DivType.Form)
+                styles = divTagger.GetStyles();
             switch (divTagger.DivType)
             {
                 case DivType.Form:
@@ -115,30 +113,35 @@ namespace form_generator
                     form.name = divTagger.Name;
                     form.tooltip = divTagger.ToolTip;
                     form.description = divTagger.Description;
-                    return form;
+                    divDto = form;
+                    break;
                 case DivType.Page:
                     PageDto page = new PageDto();
                     page.name = divTagger.Name;
                     page.tooltip = divTagger.ToolTip;
-                    return page;
+                    divDto = page;
+                    break;
                 case DivType.Group:
                     GroupDto group = new GroupDto();
                     group.tooltip = divTagger.ToolTip;
                     group.label = divTagger.Name;
-                    return group;
+                    divDto = group;
+                    break;
                 case DivType.Button:
                     ButtonDto button = new ButtonDto();
                     button.Name = divTagger.Name;
                     button.Text = divTagger.GetComponent<TextMeshPro>()?.text;
                     button.tooltip = divTagger.ToolTip;
-                    return button;
+                    divDto = button;
+                    break;
                 case DivType.Enum:
                     break;
                 case DivType.Image:
                     ImageDto image = new ImageDto();
                     image.tooltip = divTagger.ToolTip;
                     image.resource = divTagger.GetResourceDto();
-                    return image;
+                    divDto = image;
+                    break;
                 case DivType.Range:
                     break;
                 case DivType.Input_Text:
@@ -147,10 +150,12 @@ namespace form_generator
                     LabelDto label = new LabelDto();
                     label.text = divTagger.GetComponent<TextMeshPro>()?.text;
                     label.tooltip = divTagger.ToolTip;
-                    return label;
+                    divDto = label;
+                    break;
             }
 
-            return null;
+            divDto.styles = styles;
+            return divDto;
         }
 
         private bool IsChildDivParentOfParentDiv(DivTypeTagger childDiv, DivTypeTagger parentDiv)

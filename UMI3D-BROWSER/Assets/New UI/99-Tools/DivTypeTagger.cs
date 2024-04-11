@@ -18,7 +18,9 @@ using inetum.unityUtils;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using umi3d.common;
+using umi3d.common.interaction.form;
 using UnityEngine;
 
 namespace form_generator
@@ -85,6 +87,25 @@ namespace form_generator
                 path = "/" + path;
             }
             return System.Uri.EscapeUriString(Path.Combine(path));
+        }
+
+        internal List<StyleDto> GetStyles()
+        {
+            List<StyleDto> styleDtos = new();
+
+            List<DivTypeStyler> styles = GetComponents<DivTypeStyler>().ToList();
+            if (styles.Count()  == 0)
+            {
+                DivTypeStyler style = gameObject.AddComponent<DivTypeStyler>();
+                styles.Add(style);
+            }
+
+            for (int i = 0; i< styles.Count(); i++)
+            {
+                styleDtos.Add(styles[i].GetStyle());
+            }
+
+            return styleDtos;
         }
 
         [Serializable]

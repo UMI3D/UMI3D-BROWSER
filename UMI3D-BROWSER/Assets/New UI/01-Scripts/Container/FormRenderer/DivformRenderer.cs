@@ -16,8 +16,10 @@ limitations under the License.
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using umi3d.cdk;
 using umi3d.common.interaction.form;
+using umi3d.common.interaction.form.ugui;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -104,7 +106,7 @@ namespace umi3dBrowsers.container.formrenderer
                     HandleFormDto(inputDto); break;
                 case PageDto pageDto:
                     HandlePageDto(pageDto); break;
-                case LabelDto labelDto: 
+                case LabelDto labelDto:
                     HandleLabelDto(labelDto, parentId); break;
                 case ImageDto imageDto:
                     HandleImageDto(imageDto, parentId); break;
@@ -122,6 +124,17 @@ namespace umi3dBrowsers.container.formrenderer
             }
         }
 
+        private void HandleStyle(List<StyleDto> styles, GameObject go)
+        {
+            if (styles != null && go != null)
+            {
+                for (int i = 0; i < styles.Count; i++)
+                {
+                    ApplyStyle(go, styles[i]);
+                }
+            }
+        }
+
         private void HandleGroupDto(GroupDto groupDto, int parentId)
         {
             GameObject group = Instantiate(groupContainerPrefab, allContainers[parentId].transform);
@@ -131,6 +144,8 @@ namespace umi3dBrowsers.container.formrenderer
             {
                 EvaluateDiv(div, currentId);
             }
+
+            HandleStyle(groupDto.styles, group);
         }
 
         private void HandleButtonDto(ButtonDto buttonDto, int parentId)
@@ -144,6 +159,8 @@ namespace umi3dBrowsers.container.formrenderer
             {
                 EvaluateDiv(div, 0);
             }
+
+            HandleStyle(formDto.styles, null);
         }
         private void HandlePageDto(PageDto pageDto)
         {
@@ -153,6 +170,8 @@ namespace umi3dBrowsers.container.formrenderer
             {
                 EvaluateDiv(div, currentId);
             }
+
+            HandleStyle(pageDto.styles, null);
         }
         private void HandleLabelDto(LabelDto labelDto, int parentId)
         {
@@ -163,11 +182,12 @@ namespace umi3dBrowsers.container.formrenderer
         /// </summary>
         /// <param name="imageDto"></param>
         /// <param name="parentId"></param>
-        private async void HandleImageDto(ImageDto imageDto, int parentId)
+        private async Task HandleImageDto(ImageDto imageDto, int parentId)
         {
+            GameObject imageGO = null;
             if (imageDto.FirstChildren.Count == 0) // Simple image
             {
-                GameObject imageGO = Instantiate(imageDisplayerPrefab, allContainers[parentId].transform);
+                imageGO = Instantiate(imageDisplayerPrefab, allContainers[parentId].transform);
                 if (imageDto.resource == null) return;
 
                 try
@@ -190,8 +210,10 @@ namespace umi3dBrowsers.container.formrenderer
             }
             else // Vignette
             {
-                GameObject imageGo = Instantiate(vignetteContainerPrefab, allContainers[parentId].transform);
+                imageGO = Instantiate(vignetteContainerPrefab, allContainers[parentId].transform);
             }
+
+            HandleStyle(imageDto.styles, imageGO);
         }
 
         private void IniFormAnswer(ulong id)
@@ -202,6 +224,58 @@ namespace umi3dBrowsers.container.formrenderer
 
                 inputs = new()
             };
+        }
+
+        private void ApplyStyle(GameObject go, StyleDto styleDto)
+        {
+            if (styleDto.variants != null)
+            {
+                UGUIStyleVariantDto styleVariant = null;
+                for (int i = 0; i < styleDto.variants.Count;  i++)
+                {
+                    if (styleDto.variants[i] is UGUIStyleVariantDto style)
+                    {
+                        styleVariant = style;
+                        break;
+                    }
+                }
+
+                if (styleVariant != null)
+                {
+                    for (int i = 0; i < styleVariant.StyleVariantItems.Count; i++)
+                    {
+                        switch (styleVariant.StyleVariantItems[i]) 
+                        { 
+                            case PositionStyleDto positionStyleVariant :
+                                {
+                                    RectTransform rect = go.GetComponent<RectTransform>();
+                                    Vector2 rectPos = new Vector2(positionStyleVariant.posX, positionStyleVariant.posY);
+                                    rect.anchoredPosition = rectPos;
+                                    break;
+                                }
+                            case SizeStyleDto sizeStyleVariant :
+                                {
+                                    RectTransform rect = go.GetComponent<RectTransform>();
+                                    Vector2 size = new Vector2(sizeStyleVariant.width, sizeStyleVariant.height);
+                                    rect.sizeDelta = size;  
+                                    break;
+                                }
+                            case AnchorStyleDto anchorStyleVariant :
+                                {
+                                    RectTransform rect = go.GetComponent<RectTransform>();
+                                    Vector2 anchorMax = new Vector2(anchorStyleVariant.maxX, anchorStyleVariant.maxY);
+                                    Vector2 anchorMin = new Vector2(anchorStyleVariant.minX, anchorStyleVariant.minY);
+                                    Vector2 pivot = new Vector2(anchorStyleVariant.pivotX, anchorStyleVariant.pivotY);
+
+                                    rect.anchorMax = anchorMax;
+                                    rect.anchorMin = anchorMin;
+                                    rect.pivot = pivot;
+                                    break;
+                                }
+                        }
+                    }
+                }
+            }
         }
     }
 }

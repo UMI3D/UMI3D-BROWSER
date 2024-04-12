@@ -63,7 +63,7 @@ namespace form_generator
             }
             if (trackAnchor)
             {
-                AnchorStyleDto anchorStyle = GetAnchorStylee();
+                AnchorStyleDto anchorStyle = GetAnchorStyle();
                 if (anchorStyle != null)
                     style.StyleVariantItems.Add(anchorStyle);
             }
@@ -94,7 +94,7 @@ namespace form_generator
             return style;
         }
 
-        private AnchorStyleDto GetAnchorStylee()
+        private AnchorStyleDto GetAnchorStyle()
         {
             AnchorStyleDto anchorStyle = new();
             RectTransform rect = GetComponent<RectTransform>();

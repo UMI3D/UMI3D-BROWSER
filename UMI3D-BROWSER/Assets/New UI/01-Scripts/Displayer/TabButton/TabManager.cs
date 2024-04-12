@@ -33,8 +33,12 @@ namespace umi3dBrowsers.container
 
         public TabToContainerBinder currentActiveButton;
 
+        [Header("Option")]
+        [SerializeField] private bool autoInit = true;
+
         private void Start()
         {
+            if (!autoInit) return;
             foreach(var tab in tabs)
             {
                 tab.Bind();

@@ -18,8 +18,10 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using umi3d.cdk;
+using umi3d.common;
 using umi3d.common.interaction.form;
 using umi3d.common.interaction.form.ugui;
+using umi3dBrowsers.displayer;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -188,6 +190,8 @@ namespace umi3dBrowsers.container.formrenderer
             if (imageDto.FirstChildren.Count == 0) // Simple image
             {
                 imageGO = Instantiate(imageDisplayerPrefab, allContainers[parentId].transform);
+                ImageDisplayer displayer = imageGO.GetComponent<ImageDisplayer>();
+                displayer.SetColor(GetColor(imageDto.color));
                 if (imageDto.resource == null) return;
 
                 try
@@ -198,9 +202,11 @@ namespace umi3dBrowsers.container.formrenderer
                     );
 
                     Texture2D texture = spriteTask as Texture2D;
-                    imageGO.GetComponent<Image>().sprite = Sprite.Create(texture,
-                        new Rect(0, 0, texture.Size().x, texture.Size().y),
-                        new Vector2());
+                    displayer.SetSprite(
+                        Sprite.Create(texture,
+                            new Rect(0, 0, texture.Size().x, texture.Size().y),
+                            new Vector2())
+                    );
                 }
                 catch(Exception ex)
                 {
@@ -276,6 +282,19 @@ namespace umi3dBrowsers.container.formrenderer
                     }
                 }
             }
+        }
+
+        private Color GetColor(ColorDto color)
+        {
+            Color _color = new Color()
+            {
+                a = color.A, 
+                b = color.B, 
+                g = color.G,
+                r = color.R,
+            };
+
+            return _color;
         }
     }
 }

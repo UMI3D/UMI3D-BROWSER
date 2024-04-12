@@ -52,7 +52,7 @@ namespace umi3d.common.lbe.guardian
                 Debug.Log("Remi : anchor Write 2");
 
                 // Ecriture de la liste anchorAR
-                bytable = UMI3DSerializer.Write(UMI3DOperationKeys.ARAnchorRequest)
+                bytable = UMI3DSerializer.Write(UMI3DOperationKeys.ARAnchorBrowserRequest)
                     + UMI3DSerializer.Write(c.trackableId)
                     + UMI3DSerializer.Write(c.position)
                     + UMI3DSerializer.Write(c.rotation);

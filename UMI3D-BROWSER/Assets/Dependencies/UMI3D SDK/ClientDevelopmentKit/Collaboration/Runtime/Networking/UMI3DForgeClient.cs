@@ -29,6 +29,8 @@ using umi3d.common.collaboration;
 using umi3d.common.collaboration.dto.networking;
 using umi3d.common.collaboration.dto.signaling;
 using umi3d.common.collaboration.dto.voip;
+using umi3d.common.lbe;
+using umi3d.common.lbe.description;
 using umi3d.common.userCapture.pose;
 using umi3d.common.userCapture.tracking;
 using UnityEngine;
@@ -385,7 +387,7 @@ namespace umi3d.cdk.collaboration
             if (useDto)
             {
                 var dto = UMI3DDtoSerializer.FromBson(frame.StreamData.byteArr);
-
+   
                 switch (dto)
                 {
                     case TransactionDto transaction:
@@ -548,6 +550,28 @@ namespace umi3d.cdk.collaboration
                     {
                         PoseManager.Instance.ChangeEnvironmentPoseCondition(operation.environmentId, validateEnvironmentPoseCondition.Id, validateEnvironmentPoseCondition.ShouldBeValidated);
                     });
+                    break;
+                case SendGuardianRequestDto guardianRequestDto:
+                    MainThreadManager.Run(() =>
+                    {
+                        /*Debug.Log("Remi : Get transaction dto !! ");
+                        var guardianData = guardianRequestDto.guardianData;
+
+                        // Obtenez une référence au script GuardianManager depuis le GameObject GuardianManagerObject
+                        GuardianManager guardianManager = GuardianManagerObject.GetComponent<GuardianManager>();
+
+                        // Appelez la méthode CreatGuardianServer en passant les données nécessaires
+                        if (guardianManager != null)
+                        {
+                            guardianManager.CreatGuardianServer(guardianData);
+                        }
+                        else
+                        {
+                            Debug.LogError("GuardianManager script not found on GuardianManagerObject.");
+                        }*/
+
+                    });
+
                     break;
                 default:
                     return false;

@@ -93,8 +93,10 @@ namespace umi3d.common
         public const uint NotificationCallback = 10014;
         public const uint BoardedVehicleRequest = 10015;
         public const uint UserTrackingBone = 10016;
-        public const uint GuardianRequest = 10018;
-        public const uint ARAnchorRequest = 10019;
+        public const uint GuardianBrowserRequest = 10018;
+        public const uint ARAnchorBrowserRequest = 10019;
+        public const uint SetGuardianRequest = 10020;
+
 
         public const uint EmoteRequest = 10020;
 

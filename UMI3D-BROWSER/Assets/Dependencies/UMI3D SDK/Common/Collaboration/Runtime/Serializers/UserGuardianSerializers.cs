@@ -51,7 +51,7 @@ namespace umi3d.common.lbe.guardian
                 Debug.Log("Remi : Write 2");
 
                 // Ecriture de la liste anchorAR
-                bytable = UMI3DSerializer.Write(UMI3DOperationKeys.GuardianRequest)
+                bytable = UMI3DSerializer.Write(UMI3DOperationKeys.GuardianBrowserRequest)
                     + UMI3DSerializer.WriteCollection(c.anchorAR);
                 return true;
             }

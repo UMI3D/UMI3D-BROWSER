@@ -24,7 +24,7 @@ using UnityEngine.UI;
 
 namespace umi3dBrowsers.displayer
 {
-    public class TextDisplayer : MonoBehaviour, IDisplayer
+    public class InputFieldDispayer : MonoBehaviour, IDisplayer
     {
         [Header("Form")]
         [SerializeField] private TMP_UMI3DUIInputField textInputField;

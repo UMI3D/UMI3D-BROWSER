@@ -140,7 +140,6 @@ namespace form_generator
                     ImageDto image = new ImageDto();
                     image.tooltip = divTagger.ToolTip;
                     image.resource = divTagger.GetResourceDto();
-                    image.color = divTagger.GetColor();
                     divDto = image;
                     break;
                 case DivType.Range:

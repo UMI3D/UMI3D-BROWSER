@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using MainThreadDispatcher;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -126,13 +127,13 @@ namespace umi3dBrowsers.container.formrenderer
             }
         }
 
-        private void HandleStyle(List<StyleDto> styles, GameObject go)
+        private void HandleStyle(List<StyleDto> styles, GameObject go, IDisplayer displayer)
         {
             if (styles != null && go != null)
             {
                 for (int i = 0; i < styles.Count; i++)
                 {
-                    ApplyStyle(go, styles[i]);
+                    ApplyStyle(go, styles[i], displayer);
                 }
             }
         }
@@ -147,7 +148,7 @@ namespace umi3dBrowsers.container.formrenderer
                 EvaluateDiv(div, currentId);
             }
 
-            HandleStyle(groupDto.styles, group);
+            HandleStyle(groupDto.styles, group, null);
         }
 
         private void HandleButtonDto(ButtonDto buttonDto, int parentId)
@@ -162,7 +163,7 @@ namespace umi3dBrowsers.container.formrenderer
                 EvaluateDiv(div, 0);
             }
 
-            HandleStyle(formDto.styles, null);
+            HandleStyle(formDto.styles, null, null);
         }
         private void HandlePageDto(PageDto pageDto)
         {
@@ -173,7 +174,7 @@ namespace umi3dBrowsers.container.formrenderer
                 EvaluateDiv(div, currentId);
             }
 
-            HandleStyle(pageDto.styles, null);
+            HandleStyle(pageDto.styles, null, null);
         }
         private void HandleLabelDto(LabelDto labelDto, int parentId)
         {
@@ -187,39 +188,38 @@ namespace umi3dBrowsers.container.formrenderer
         private async Task HandleImageDto(ImageDto imageDto, int parentId)
         {
             GameObject imageGO = null;
+            IDisplayer displayer = null;
             if (imageDto.FirstChildren.Count == 0) // Simple image
             {
                 imageGO = Instantiate(imageDisplayerPrefab, allContainers[parentId].transform);
-                ImageDisplayer displayer = imageGO.GetComponent<ImageDisplayer>();
-                displayer.SetColor(GetColor(imageDto.color));
-                if (imageDto.resource == null) return;
+                displayer = imageGO.GetComponent<IDisplayer>();
+                if (imageDto.resource != null) 
+                    try
+                    {
+                        object spriteTask = await UMI3DResourcesManager.Instance._LoadFile(0,
+                            imageDto.resource.variants[0],
+                            new ImageDtoLoader()
+                        );
 
-                try
-                {
-                    object spriteTask = await UMI3DResourcesManager.Instance._LoadFile(0,
-                        imageDto.resource.variants[0],
-                        new ImageDtoLoader()
-                    );
-
-                    Texture2D texture = spriteTask as Texture2D;
-                    displayer.SetSprite(
-                        Sprite.Create(texture,
-                            new Rect(0, 0, texture.Size().x, texture.Size().y),
-                            new Vector2())
-                    );
-                }
-                catch(Exception ex)
-                {
-                    Debug.LogException(new Exception("Make sure you are in play mode to load resource in the form," +
-                        " or that every networking UMI3D behaviours are ready"), this);
-                }
+                        Texture2D texture = spriteTask as Texture2D;
+                        displayer.SetResource(
+                            Sprite.Create(texture,
+                                new Rect(0, 0, texture.Size().x, texture.Size().y),
+                                new Vector2())
+                        );
+                    }
+                    catch(Exception ex)
+                    {
+                        Debug.LogException(new Exception("Make sure you are in play mode to load resource in the form," +
+                            " or that every networking UMI3D behaviours are ready"), this);
+                    }
             }
             else // Vignette
             {
                 imageGO = Instantiate(vignetteContainerPrefab, allContainers[parentId].transform);
             }
 
-            HandleStyle(imageDto.styles, imageGO);
+            HandleStyle(imageDto.styles, imageGO, displayer);
         }
 
         private void IniFormAnswer(ulong id)
@@ -232,7 +232,7 @@ namespace umi3dBrowsers.container.formrenderer
             };
         }
 
-        private void ApplyStyle(GameObject go, StyleDto styleDto)
+        private void ApplyStyle(GameObject go, StyleDto styleDto, IDisplayer displayer)
         {
             if (styleDto.variants != null)
             {
@@ -278,23 +278,29 @@ namespace umi3dBrowsers.container.formrenderer
                                     rect.pivot = pivot;
                                     break;
                                 }
+                            case ColorStyleDto colorStyleVariant :
+                                {
+                                    if (displayer == null)
+                                    {
+                                        Debug.LogWarning("Should not try to set the color of a container");
+                                    }
+
+                                    Color _color = new Color()
+                                    {
+                                        a = colorStyleVariant.color.A,
+                                        b = colorStyleVariant.color.B,
+                                        g = colorStyleVariant.color.G,
+                                        r = colorStyleVariant.color.R,
+                                    };
+
+                                    displayer.SetColor(_color);
+
+                                    break;
+                                }
                         }
                     }
                 }
             }
-        }
-
-        private Color GetColor(ColorDto color)
-        {
-            Color _color = new Color()
-            {
-                a = color.A, 
-                b = color.B, 
-                g = color.G,
-                r = color.R,
-            };
-
-            return _color;
         }
     }
 }

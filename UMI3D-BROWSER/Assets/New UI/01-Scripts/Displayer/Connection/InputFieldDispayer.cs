@@ -52,5 +52,15 @@ namespace umi3dBrowsers.displayer
         {
             this.placeHolder.text = placeHolder[0];
         }
+
+        public void SetColor(Color color)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetResource(object resource)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

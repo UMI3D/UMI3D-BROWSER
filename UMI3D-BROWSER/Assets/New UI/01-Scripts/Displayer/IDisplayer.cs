@@ -13,4 +13,6 @@ public interface IDisplayer
     public object GetValue(bool trim);
     public void SetTitle(string title);
     public void SetPlaceHolder(List<string> placeHolder);
+    public void SetColor(Color color);
+    public void SetResource(object resource);
 }

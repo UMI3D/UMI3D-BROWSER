@@ -35,6 +35,11 @@ namespace form_generator
         [Header("Use anchors at your own risks (In dev)")]
         [SerializeField] private bool trackAnchor = false;
 
+        [Header("Color")]
+        [SerializeField] private bool useColor = false;
+        [SerializeField] private Color color = Color.white;
+
+
         internal StyleDto GetStyle()
         {
             StyleDto style = new();
@@ -66,6 +71,12 @@ namespace form_generator
                 AnchorStyleDto anchorStyle = GetAnchorStyle();
                 if (anchorStyle != null)
                     style.StyleVariantItems.Add(anchorStyle);
+            }
+            if (useColor)
+            {
+                ColorStyleDto colorStyle = GetColorStyle();
+                if (colorStyle != null)
+                    style.StyleVariantItems.Add(colorStyle);
             }
 
             return style;
@@ -107,6 +118,19 @@ namespace form_generator
             anchorStyle.pivotY = rect.pivot.y;
 
             return anchorStyle;
+        }
+
+        private ColorStyleDto GetColorStyle()
+        {
+            ColorStyleDto colorStyle = new();
+            colorStyle.color = new ColorDto();
+
+            colorStyle.color.A = color.a;
+            colorStyle.color.R = color.r;
+            colorStyle.color.G = color.g;
+            colorStyle.color.B = color.b;
+
+            return colorStyle;
         }
     }
 }

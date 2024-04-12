@@ -229,6 +229,16 @@ namespace umi3dBrowsers.displayer
                 Toggle();
                 
         }
+
+        public void SetColor(Color color)
+        {
+
+        }
+
+        public void SetResource(object resource)
+        {
+
+        }
     }
 }
 

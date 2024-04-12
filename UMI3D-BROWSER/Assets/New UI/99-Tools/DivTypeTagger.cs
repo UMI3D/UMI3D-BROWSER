@@ -33,21 +33,10 @@ namespace form_generator
         [SerializeField, TextArea] private string toolTip;
         [SerializeField, TextArea] private string description;
         [SerializeField] private DivType divType;
-        [SerializeField] private Color color;
         public DivType DivType => divType;
         public string Name => name;
         public string ToolTip => toolTip;
         public string Description => description;
-
-        public ColorDto GetColor()
-        {
-            ColorDto color = new ColorDto();
-            color.A = this.color.a;
-            color.R = this.color.r;
-            color.G = this.color.g;
-            color.B = this.color.b;
-            return color;               
-        }
 
         /// <summary>
         /// For tool execution only

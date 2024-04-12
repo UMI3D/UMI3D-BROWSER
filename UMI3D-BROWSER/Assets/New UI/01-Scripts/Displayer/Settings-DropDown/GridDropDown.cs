@@ -181,6 +181,16 @@ namespace umi3dBrowsers.displayer
 
             Init(possibleValues);
         }
+
+        public void SetColor(Color color)
+        {
+
+        }
+
+        public void SetResource(object resource)
+        {
+
+        }
     }
 }
 

@@ -148,7 +148,7 @@ namespace form_generator
                     break;
                 case DivType.Label:
                     LabelDto label = new LabelDto();
-                    label.text = divTagger.GetComponent<TextMeshPro>()?.text;
+                    label.text = divTagger.GetComponent<TextMeshProUGUI>()?.text;
                     label.tooltip = divTagger.ToolTip;
                     divDto = label;
                     break;

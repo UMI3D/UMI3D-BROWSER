@@ -178,7 +178,15 @@ namespace umi3dBrowsers.container.formrenderer
         }
         private void HandleLabelDto(LabelDto labelDto, int parentId)
         {
+            GameObject labelGo = null;
+            IDisplayer displayer = null;
 
+            labelGo = Instantiate(labelDisplayerPrefab, allContainers[parentId].transform);
+            displayer = labelGo.GetComponent<IDisplayer>();
+
+            displayer.SetTitle(labelDto.text);
+
+            HandleStyle(labelDto?.styles, labelGo, displayer);
         }
         /// <summary>
         /// Image and loads the resource
@@ -297,6 +305,11 @@ namespace umi3dBrowsers.container.formrenderer
 
                                     break;
                                 }
+                            case TextStyleDto textStyleVariant :
+                                {
+                                    displayer.SetResource(textStyleVariant);
+                                }
+                                break;
                         }
                     }
                 }

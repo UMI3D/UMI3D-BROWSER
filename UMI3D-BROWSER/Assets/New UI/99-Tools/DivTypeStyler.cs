@@ -15,9 +15,11 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
+using MathNet.Numerics.Optimization.LineSearch;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using umi3d.common;
 using umi3d.common.interaction.form;
 using umi3d.common.interaction.form.ugui;
@@ -38,6 +40,16 @@ namespace form_generator
         [Header("Color")]
         [SerializeField] private bool useColor = false;
         [SerializeField] private Color color = Color.white;
+
+        //font
+        private bool m_useFont = false;
+        private TextMeshProUGUI _text = null;
+
+        private void Awake()
+        {
+            _text = GetComponent<TextMeshProUGUI>();
+            if (_text != null) m_useFont = true;
+        }
 
 
         internal StyleDto GetStyle()
@@ -77,6 +89,12 @@ namespace form_generator
                 ColorStyleDto colorStyle = GetColorStyle();
                 if (colorStyle != null)
                     style.StyleVariantItems.Add(colorStyle);
+            }
+            if (m_useFont)
+            {
+                TextStyleDto textStyle = GetTextStyle();
+                if (textStyle != null)
+                    style.StyleVariantItems.Add(textStyle);
             }
 
             return style;
@@ -122,6 +140,8 @@ namespace form_generator
 
         private ColorStyleDto GetColorStyle()
         {
+            if (m_useFont) color = _text.color;
+
             ColorStyleDto colorStyle = new();
             colorStyle.color = new ColorDto();
 
@@ -131,6 +151,198 @@ namespace form_generator
             colorStyle.color.B = color.b;
 
             return colorStyle;
+        }
+
+        private TextStyleDto GetTextStyle()
+        {
+            TextStyleDto textStyle = new();
+
+            textStyle.fontSize = _text.fontSize;
+            textStyle.fontAlignments = GetCorrespondingFontAllignement(_text.alignment);
+            textStyle.fontStyles = GetCorrespondingFontStyle(_text.fontStyle);
+            return textStyle;
+        }
+
+        private List<E_FontAlignment> GetCorrespondingFontAllignement(TextAlignmentOptions options)
+        {
+            List<E_FontAlignment> allignements = new();
+            switch (options)
+            {
+                case TextAlignmentOptions.TopLeft:
+                    allignements.Add(E_FontAlignment.Top);
+                    allignements.Add(E_FontAlignment.Left);
+                    break;
+                case TextAlignmentOptions.Top:
+                    allignements.Add(E_FontAlignment.Top);
+                    break;
+                case TextAlignmentOptions.TopRight:
+                    allignements.Add(E_FontAlignment.Top);
+                    allignements.Add(E_FontAlignment.Right);
+                    break;
+                case TextAlignmentOptions.TopJustified:
+                    allignements.Add(E_FontAlignment.Top);
+                    allignements.Add(E_FontAlignment.Justified);
+                    break;
+                case TextAlignmentOptions.TopFlush:
+                    allignements.Add(E_FontAlignment.Top);
+                    allignements.Add(E_FontAlignment.Flush);
+                    break;
+                case TextAlignmentOptions.TopGeoAligned:
+                    allignements.Add(E_FontAlignment.Top);
+                    allignements.Add(E_FontAlignment.GeometryCenter);
+                    break;
+                case TextAlignmentOptions.Left:
+                    allignements.Add(E_FontAlignment.Left);
+                    break;
+                case TextAlignmentOptions.Center:
+                    allignements.Add(E_FontAlignment.Center);
+                    break;
+                case TextAlignmentOptions.Right:
+                    allignements.Add(E_FontAlignment.Right);
+                    break;
+                case TextAlignmentOptions.Justified:
+                    allignements.Add(E_FontAlignment.Justified);
+                    break;
+                case TextAlignmentOptions.Flush:
+                    allignements.Add(E_FontAlignment.Flush);
+                    break;
+                case TextAlignmentOptions.CenterGeoAligned:
+                    allignements.Add(E_FontAlignment.GeometryCenter);
+                    allignements.Add(E_FontAlignment.Center);
+                    break;
+                case TextAlignmentOptions.BottomLeft:
+                    allignements.Add(E_FontAlignment.Left);
+                    allignements.Add(E_FontAlignment.Bottom);
+                    break;
+                case TextAlignmentOptions.Bottom:
+                    allignements.Add(E_FontAlignment.Bottom);
+                    break;
+                case TextAlignmentOptions.BottomRight:
+                    allignements.Add(E_FontAlignment.Right);
+                    allignements.Add(E_FontAlignment.Bottom);
+                    break;
+                case TextAlignmentOptions.BottomJustified:
+                    allignements.Add(E_FontAlignment.Justified);
+                    allignements.Add(E_FontAlignment.Bottom);
+                    break;
+                case TextAlignmentOptions.BottomFlush:
+                    allignements.Add(E_FontAlignment.Flush);
+                    allignements.Add(E_FontAlignment.Bottom);
+                    break;
+                case TextAlignmentOptions.BottomGeoAligned:
+                    allignements.Add(E_FontAlignment.GeometryCenter);
+                    allignements.Add(E_FontAlignment.Bottom);
+                    break;
+                case TextAlignmentOptions.BaselineLeft:
+                    allignements.Add(E_FontAlignment.Left);
+                    allignements.Add(E_FontAlignment.Baseline);
+                    break;
+                case TextAlignmentOptions.Baseline:
+                    allignements.Add(E_FontAlignment.Baseline);
+                    break;
+                case TextAlignmentOptions.BaselineRight:
+                    allignements.Add(E_FontAlignment.Right);
+                    allignements.Add(E_FontAlignment.Baseline);
+                    break;
+                case TextAlignmentOptions.BaselineJustified:
+                    allignements.Add(E_FontAlignment.Justified);
+                    allignements.Add(E_FontAlignment.Baseline);
+                    break;
+                case TextAlignmentOptions.BaselineFlush:
+                    allignements.Add(E_FontAlignment.Flush);
+                    allignements.Add(E_FontAlignment.Baseline);
+                    break;
+                case TextAlignmentOptions.BaselineGeoAligned:
+                    allignements.Add(E_FontAlignment.GeometryCenter);
+                    allignements.Add(E_FontAlignment.Baseline);
+                    break;
+                case TextAlignmentOptions.MidlineLeft:
+                    allignements.Add(E_FontAlignment.Left);
+                    allignements.Add(E_FontAlignment.Midline);
+                    break;
+                case TextAlignmentOptions.Midline:
+                    allignements.Add(E_FontAlignment.Midline);
+                    break;
+                case TextAlignmentOptions.MidlineRight:
+                    allignements.Add(E_FontAlignment.Right);
+                    allignements.Add(E_FontAlignment.Midline);
+                    break;
+                case TextAlignmentOptions.MidlineJustified:
+                    allignements.Add(E_FontAlignment.Justified);
+                    allignements.Add(E_FontAlignment.Midline);
+                    break;
+                case TextAlignmentOptions.MidlineFlush:
+                    allignements.Add(E_FontAlignment.Flush);
+                    allignements.Add(E_FontAlignment.Midline);
+                    break;
+                case TextAlignmentOptions.MidlineGeoAligned:
+                    allignements.Add(E_FontAlignment.Midline);
+                    allignements.Add(E_FontAlignment.GeometryCenter);
+                    break;
+                case TextAlignmentOptions.CaplineLeft:
+                    allignements.Add(E_FontAlignment.Left);
+                    allignements.Add(E_FontAlignment.Capline);
+                    break;
+                case TextAlignmentOptions.Capline:
+                    allignements.Add(E_FontAlignment.Capline);
+                    break;
+                case TextAlignmentOptions.CaplineRight:
+                    allignements.Add(E_FontAlignment.Right);
+                    allignements.Add(E_FontAlignment.Capline);
+                    break;
+                case TextAlignmentOptions.CaplineJustified:
+                    allignements.Add(E_FontAlignment.Justified);
+                    allignements.Add(E_FontAlignment.Capline);
+                    break;
+                case TextAlignmentOptions.CaplineFlush:
+                    allignements.Add(E_FontAlignment.Flush);
+                    allignements.Add(E_FontAlignment.Capline);
+                    break;
+                case TextAlignmentOptions.CaplineGeoAligned:
+                    allignements.Add(E_FontAlignment.GeometryCenter);
+                    allignements.Add(E_FontAlignment.Capline);
+                    break;
+                case TextAlignmentOptions.Converted:
+                    break;
+            }
+            return allignements;
+        }
+        private List<E_FontStyle> GetCorrespondingFontStyle(FontStyles fontStyle)
+        {
+            List<E_FontStyle> styles = new();
+            switch (fontStyle)
+            {
+                case FontStyles.Normal:
+                    break;
+                case FontStyles.Bold:
+                    styles.Add(E_FontStyle.Bold);
+                    break;
+                case FontStyles.Italic:
+                    styles.Add(E_FontStyle.Italic);
+                    break;
+                case FontStyles.Underline:
+                    styles.Add(E_FontStyle.Underline);
+                    break;
+                case FontStyles.LowerCase:
+                    styles.Add(E_FontStyle.Lowercase);
+                    break;
+                case FontStyles.UpperCase:
+                    styles.Add(E_FontStyle.Uppercase);
+                    break;
+                case FontStyles.SmallCaps:
+                    styles.Add(E_FontStyle.Smallcaps);
+                    break;
+                case FontStyles.Strikethrough:
+                    styles.Add(E_FontStyle.Strikethrough);
+                    break;
+                case FontStyles.Superscript:
+                    break;
+                case FontStyles.Subscript:
+                    break;
+                case FontStyles.Highlight:
+                    break;
+            }
+            return styles;
         }
     }
 }

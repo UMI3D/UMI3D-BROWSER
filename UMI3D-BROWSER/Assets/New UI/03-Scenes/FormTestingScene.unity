@@ -1090,7 +1090,7 @@ MonoBehaviour:
   trackPosition: 1
   trackSize: 1
   trackAnchor: 0
-  useColor: 0
+  useColor: 1
   color: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &717804327
 GameObject:
@@ -3136,7 +3136,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 62.615, y: 12.999996}
+  m_AnchoredPosition: {x: 62, y: 12.999996}
   m_SizeDelta: {x: 64.771, y: 17.814}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1249482572
@@ -3270,7 +3270,7 @@ MonoBehaviour:
   trackPosition: 1
   trackSize: 1
   trackAnchor: 0
-  useColor: 0
+  useColor: 1
   color: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &1319002097
 GameObject:
@@ -3442,7 +3442,7 @@ MonoBehaviour:
   trackPosition: 1
   trackSize: 1
   trackAnchor: 0
-  useColor: 0
+  useColor: 1
   color: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &1324280542
 GameObject:
@@ -4059,7 +4059,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.00008392334, y: 0}
+  m_AnchoredPosition: {x: -162.00003, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1604098834
@@ -4234,7 +4234,8 @@ MonoBehaviour:
   groupContainerPrefab: {fileID: 5178461189047998669, guid: baaf14124e09bc44aa72a110d3fc45bf,
     type: 3}
   tabManager: {fileID: 1324280544}
-  labelDisplayerPrefab: {fileID: 0}
+  labelDisplayerPrefab: {fileID: 8370930241941166574, guid: 7b0e1ee21e3402f4a9cc9c3cea232b6e,
+    type: 3}
   buttonDisplayerPrefab: {fileID: 0}
   imageDisplayerPrefab: {fileID: 4526573573664236330, guid: be214ef4d4f77e345b0639159c9ecde8,
     type: 3}

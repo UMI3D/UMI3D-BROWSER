@@ -26,7 +26,7 @@ namespace umi3dBrowsers.interaction.selection.intentdetector
         /// <summary>
         /// Transform associated with the pointing device
         /// </summary>
-        protected Transform controllerTransform;
+        public Transform controllerTransform;
 
         /// <summary>
         /// True is the detector is currently looking for selection intent
@@ -36,7 +36,7 @@ namespace umi3dBrowsers.interaction.selection.intentdetector
 
         protected virtual void Awake()
         {
-            controllerTransform = GetComponentInParent<AbstractController>().transform;
+            controllerTransform = controllerTransform == null ? GetComponentInParent<AbstractController>().transform : controllerTransform;
         }
     }
 
@@ -54,8 +54,8 @@ namespace umi3dBrowsers.interaction.selection.intentdetector
         public virtual void Init(AbstractController controller)
         {
             SetDetectionMethod();
-            detectionMethod.Init(controller);
-            controllerTransform = controller.transform;
+            controllerTransform = controllerTransform == null ? controller.transform : controllerTransform;
+            detectionMethod.Init(controller, controllerTransform);
             isRunning = true;
         }
 

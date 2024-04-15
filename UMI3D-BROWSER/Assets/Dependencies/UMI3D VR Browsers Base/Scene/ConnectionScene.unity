@@ -10839,6 +10839,42 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d784afb37a5eb4042a86206a3e3b8d7b, type: 3}
+--- !u!1 &1082800123 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1051322154319561526, guid: d784afb37a5eb4042a86206a3e3b8d7b,
+    type: 3}
+  m_PrefabInstance: {fileID: 1082800122}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1082800124 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9058681668986682761, guid: d784afb37a5eb4042a86206a3e3b8d7b,
+    type: 3}
+  m_PrefabInstance: {fileID: 1082800122}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1082800125 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9058681669530717035, guid: d784afb37a5eb4042a86206a3e3b8d7b,
+    type: 3}
+  m_PrefabInstance: {fileID: 1082800122}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1082800126 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1051322153970317228, guid: d784afb37a5eb4042a86206a3e3b8d7b,
+    type: 3}
+  m_PrefabInstance: {fileID: 1082800122}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1082800127 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1051322154124762157, guid: d784afb37a5eb4042a86206a3e3b8d7b,
+    type: 3}
+  m_PrefabInstance: {fileID: 1082800122}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1082800128 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9058681669954262671, guid: d784afb37a5eb4042a86206a3e3b8d7b,
+    type: 3}
+  m_PrefabInstance: {fileID: 1082800122}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1099818250
 GameObject:
   m_ObjectHideFlags: 0
@@ -15337,10 +15373,15 @@ MonoBehaviour:
   panel: {fileID: 1839090193}
   message: {fileID: 506970489}
   objectsToHide:
-  - {fileID: 0}
   - {fileID: 408117372}
   - {fileID: 1619832314}
   - {fileID: 2105915454}
+  - {fileID: 1082800128}
+  - {fileID: 1082800127}
+  - {fileID: 1082800126}
+  - {fileID: 1082800125}
+  - {fileID: 1082800124}
+  - {fileID: 1082800123}
 --- !u!1 &1619832314
 GameObject:
   m_ObjectHideFlags: 0
@@ -15950,7 +15991,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1630384234}
   m_HandleRect: {fileID: 1630384233}
   m_Direction: 0
-  m_Value: -1.0622009
+  m_Value: -2.6291866
   m_Size: 0.9999802
   m_NumberOfSteps: 0
   m_OnValueChanged:

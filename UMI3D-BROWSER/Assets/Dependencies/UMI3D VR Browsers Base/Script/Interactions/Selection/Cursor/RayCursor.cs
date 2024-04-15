@@ -26,34 +26,43 @@ using umi3dVRBrowsersBase.ui;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using UnityEngine.XR.Interaction.Toolkit;
 
 namespace umi3dVRBrowsersBase.interactions.selection.cursor
 {
     /// <summary>
     /// Display a laser using a cylinder (has to be configured directly in the scene).
     /// </summary>
-    public class RayCursor : AbstractPointingCursor
+    public class RayCursor : AbstractPointingCursor, IXRRayProvider
     {
+
+        [Tooltip("Controller associated to the laser."), SerializeField]
+        private VRController controller;
 
         [Header("Laser"), SerializeField, Tooltip("Laser's cylindric part.")]
         public GameObject laserObject;
 
         private Renderer laserObjectRenderer;
+        private Material laserObjectRendererMaterial;
 
         [Header("ImpactPoint"), SerializeField, Tooltip("Laser's impact sphere.")]
         private GameObject impactPoint;
 
+        private Renderer impactPointRenderer;
+        private Material impactPointRendererMaterial;
+
         [SerializeField]
         private LayerMask _uiMask;
 
-        private Renderer impactPointRenderer;
-
-        private VRController controller;
 
         /// <summary>
         /// True if the laser is currently displayed
         /// </summary>
         public bool IsDisplayed { get => _isDisplayed; }
+
+        public Vector3 rayEndPoint => impactPoint.transform.position;
+
+        public Transform rayEndTransform => impactPoint.transform;
 
         private bool _isDisplayed = false;
 
@@ -92,11 +101,11 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
         /// </summary>
         protected readonly float fadeDuration = 0.25f;
 
-        private float savedAlphaDefaultMaterial;
-        private Coroutine fadeDefaultMaterialCoroutine;
+        private float initialAlphaDefaultMaterial;
+        private Coroutine fadeLaserCoroutine;
 
-        private float savedAlphaSelectedMaterial;
-        private Coroutine fadeSelectedMaterialCoroutine;
+        private float initialAlphaSelectedMaterial;
+        private Coroutine fadeCursorCoroutine;
 
         private bool fadeCoroutineRunning;
 
@@ -120,18 +129,18 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
 
         protected virtual void Awake()
         {
-            controller = GetComponentInParent<VRController>();
+            controller = controller == null ? GetComponentInParent<VRController>(): controller;
             laserObjectRenderer = laserObject.GetComponent<Renderer>();
             impactPointRenderer = impactPoint.GetComponent<Renderer>();
 
             if (impactPointRenderer != null)
-                impactPointRenderer.material = defaultMaterial;
+                impactPointRenderer.material = new Material(defaultMaterial);
 
             if (laserObjectRenderer != null)
             {
-                laserObjectRenderer.material = defaultMaterial;
-                savedAlphaDefaultMaterial = defaultMaterial.color.a;
-                savedAlphaSelectedMaterial = selectionMaterial.color.a;
+                laserObjectRenderer.material = new Material(defaultMaterial);
+                initialAlphaDefaultMaterial = defaultMaterial.color.a;
+                initialAlphaSelectedMaterial = selectionMaterial.color.a;
             }
 
             SetInfinitePoint();
@@ -449,26 +458,30 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
         {
             if (fadeCoroutineRunning)
             {
-                StopCoroutine(fadeDefaultMaterialCoroutine);
-                StopCoroutine(fadeSelectedMaterialCoroutine);
+                if (fadeLaserCoroutine != null)
+                    StopCoroutine(fadeLaserCoroutine);
+                if (fadeCursorCoroutine != null)
+                    StopCoroutine(fadeCursorCoroutine);
                 fadeCoroutineRunning = false;
             }
 
-            fadeDefaultMaterialCoroutine = StartCoroutine(FadingCoroutine(fadeDuration, defaultMaterial, targetAlpha: 0f));
-            fadeSelectedMaterialCoroutine = StartCoroutine(FadingCoroutine(fadeDuration, selectionMaterial, targetAlpha: 0f));
+            fadeLaserCoroutine = StartCoroutine(FadingCoroutine(fadeDuration, laserObjectRenderer.material, targetAlpha: 0f));
+            fadeCursorCoroutine = StartCoroutine(FadingCoroutine(fadeDuration, impactPointRenderer.material, targetAlpha: 0f));
         }
 
         private void FadeIn()
         {
             if (fadeCoroutineRunning)
             {
-                StopCoroutine(fadeDefaultMaterialCoroutine);
-                StopCoroutine(fadeSelectedMaterialCoroutine);
+                if (fadeLaserCoroutine != null)
+                    StopCoroutine(fadeLaserCoroutine);
+                if (fadeCursorCoroutine != null)
+                    StopCoroutine(fadeCursorCoroutine);
                 fadeCoroutineRunning = false;
             }
 
-            fadeDefaultMaterialCoroutine = StartCoroutine(FadingCoroutine(fadeDuration, defaultMaterial, targetAlpha: savedAlphaDefaultMaterial));
-            fadeSelectedMaterialCoroutine = StartCoroutine(FadingCoroutine(fadeDuration, selectionMaterial, targetAlpha: savedAlphaSelectedMaterial));
+            fadeLaserCoroutine = StartCoroutine(FadingCoroutine(fadeDuration, laserObjectRenderer.material, targetAlpha: initialAlphaDefaultMaterial));
+            fadeCursorCoroutine = StartCoroutine(FadingCoroutine(fadeDuration, impactPointRenderer.material, targetAlpha: initialAlphaSelectedMaterial));
         }
 
         private IEnumerator FadingCoroutine(float duration, Material material, float targetAlpha)
@@ -499,12 +512,17 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
             selectionMaterial.color = new Color(selectionMaterial.color.r,
                                        selectionMaterial.color.g,
                                        selectionMaterial.color.b,
-                                       savedAlphaSelectedMaterial);
+                                       initialAlphaSelectedMaterial);
 
             defaultMaterial.color = new Color(defaultMaterial.color.r,
                                        defaultMaterial.color.g,
                                        defaultMaterial.color.b,
-                                       savedAlphaDefaultMaterial);
+                                       initialAlphaDefaultMaterial);
         }
+
+        public Transform GetOrCreateRayOrigin() => throw new NotImplementedException();
+        public Transform GetOrCreateAttachTransform() => throw new NotImplementedException();
+        public void SetRayOrigin(Transform newOrigin) => throw new NotImplementedException();
+        public void SetAttachTransform(Transform newAttach) => throw new NotImplementedException();
     }
 }

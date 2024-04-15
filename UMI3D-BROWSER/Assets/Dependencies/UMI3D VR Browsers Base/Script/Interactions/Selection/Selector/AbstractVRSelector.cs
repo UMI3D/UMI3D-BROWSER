@@ -12,6 +12,8 @@ limitations under the License.
 */
 
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+
 using umi3d.cdk.collaboration;
 using umi3d.cdk.interaction;
 using umi3dBrowsers.interaction.selection;
@@ -20,6 +22,9 @@ using umi3dBrowsers.interaction.selection.intentdetector;
 using umi3dBrowsers.interaction.selection.projector;
 using umi3dBrowsers.interaction.selection.selector;
 using umi3dVRBrowsersBase.ui.playerMenu;
+
+using UnityEditor;
+
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -118,6 +123,15 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
 
         private List<AbstractDetector<T>> _pointingDetectors;
 
+        public enum SelectionParadigm
+        {
+            ALL,
+            POINTING_ONLY,
+            PROXIMITY_ONLY
+        }
+
+        public SelectionParadigm SelectionParadigmMode = SelectionParadigm.ALL;
+
         /// <summary>
         /// Selection Intent Detector (virtual hand). In order of decreasing priority.
         /// </summary>
@@ -148,12 +162,15 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
 
         private void OnEnable()
         {
+            return;
             if (UMI3DCollaborationClientServer.Exists)
                 UMI3DCollaborationClientServer.Instance.OnRedirection.AddListener(OnEnvironmentLeave);
         }
 
         private void OnDisable()
         {
+            return;
+
             if (UMI3DCollaborationClientServer.Exists)
                 UMI3DCollaborationClientServer.Instance.OnRedirection.RemoveListener(OnEnvironmentLeave);
         }
@@ -334,7 +351,7 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
         {
             foreach (var detector in ProximityDetectors) // priority for proximity
             {
-                if (!detector.isRunning)
+                if (!detector.isRunning || SelectionParadigmMode is SelectionParadigm.POINTING_ONLY)
                     continue;
 
                 var objToSelectProximity = detector.PredictTarget();
@@ -346,7 +363,7 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
 
             foreach (var detector in PointingDetectors)
             {
-                if (!detector.isRunning)
+                if (!detector.isRunning || SelectionParadigmMode is SelectionParadigm.PROXIMITY_ONLY)
                     continue;
 
                 var objToSelectPointed = detector.PredictTarget();

@@ -236,6 +236,7 @@ namespace umi3d.cdk.userCapture.tracking
             if (!controllers.TryGetValue(boneType, out IController controller))
                 return;
 
+            bones[boneType].transform.localPosition = Vector3.zero;
             DeleteController(controller);
 
             if (savedControllers.TryGetValue(boneType, out Stack<IController> savedControllerStack)
@@ -285,6 +286,9 @@ namespace umi3d.cdk.userCapture.tracking
         /// <param name="saveOldController">If true the removed controlled is saved and will be used when the replacing controller will be deleted.</param>
         public void ReplaceController(IController newController, bool saveOldController = false)
         {
+            if (newController == null)
+                return;
+
             if (saveOldController && controllers.TryGetValue(newController.boneType, out IController oldController))
             {
                 oldController.isActive = false;

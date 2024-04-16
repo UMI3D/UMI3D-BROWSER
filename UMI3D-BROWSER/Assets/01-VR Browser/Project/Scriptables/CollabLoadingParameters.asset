@@ -22,13 +22,12 @@ MonoBehaviour:
   maximumResolution: 0
   notificationLoader: {fileID: 11400000, guid: 0547a6e5311adf04b9592ef5488099fb, type: 2}
   defaultMat: {fileID: 2100000, guid: 05469e08cff52964c98239a779d41da9, type: 2}
-  _skyboxDefaultMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000,
-    type: 0}
-  _skyboxMaterial: {fileID: 2100000, guid: 451e66909f2f9174598fd2e5ea650cf3, type: 2}
-  _skyboxEquirectangularMaterial: {fileID: 2100000, guid: 550ddc5eab91acd47adeb9d3fd1b2ff8,
-    type: 2}
+  _skyboxDefaultMaterial: {fileID: 0}
+  _skyboxMaterial: {fileID: 0}
+  _skyboxEquirectangularMaterial: {fileID: 0}
   hasImmersiveDevice: 0
   hasHeadMountedDisplay: 1
+  browserType: 1
   skeletonHierarchyDefinition: {fileID: 11400000, guid: e4facea53a30b4c40aa447fc608d5c8a,
     type: 2}
   clientPoses: []

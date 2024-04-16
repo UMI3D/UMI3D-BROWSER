@@ -120,6 +120,10 @@ namespace umi3d.cdk
         private bool hasHeadMountedDisplay;
         public bool HasHeadMountedDisplay => hasHeadMountedDisplay;
 
+        [EditorReadOnly, SerializeField, ConstEnum(typeof(XRBrowserTypes), typeof(uint))]
+        private uint browserType;
+        public uint BrowserType => browserType;
+
         public virtual void Init()
         {
             nodeLoader = new UMI3DNodeLoader();

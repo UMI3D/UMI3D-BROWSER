@@ -24,6 +24,7 @@ using umi3dBrowsers.services.connection;
 using umi3dVRBrowsersBase.connection;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Localization.Components;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -122,6 +123,9 @@ namespace umi3d
         /// <param name="suffix">The second part of the title</param>
         public void SetTitle(string prefix, string suffix)
         {
+            LocalizeStringEvent a = GetComponent<LocalizeStringEvent>();
+            a.SetTable
+
             float suffitLength = suffix.Length;
             float prefixLength = prefix.Length;
             Rect suffitRectTransform = suffixText.rectTransform.rect;

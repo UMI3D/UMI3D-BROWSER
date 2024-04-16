@@ -73,8 +73,6 @@ namespace umi3d
         [SerializeField] private UnityEvent backButtonClicked;
         [SerializeField] private UnityEvent standUpButtonClicked;
         [SerializeField] private UnityEvent flagButtonClicked;
-        [Space]
-        [SerializeField] private GameObject backgroundShadder;
 
         [Header("Title")]
         [SerializeField] private TextMeshProUGUI prefixText;
@@ -212,7 +210,7 @@ namespace umi3d
                 ProcessForm(connectionFormDto);
             };
             connectionProcessorService.OnAsksToLoadLibrairies += (ids) => connectionProcessorService.SendAnswerToLibrariesDownloadAsk(true);
-            connectionProcessorService.OnConnectionSuccess += () => backgroundShadder?.SetActive(false);
+            connectionProcessorService.OnConnectionSuccess += () => Debug.Log("____Connection success____");
         }
 
         private void BindLoaderDisplayer()

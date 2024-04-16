@@ -20,7 +20,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-namespace umi3d
+namespace umi3dBrowsers
 {
     public class URLDisplayer : MonoBehaviour
     {

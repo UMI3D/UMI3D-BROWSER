@@ -16,8 +16,8 @@ limitations under the License.
 
 using System;
 using System.Collections.Generic;
-using umi3d;
 using umi3d.common.interaction;
+using umi3dBrowsers;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;

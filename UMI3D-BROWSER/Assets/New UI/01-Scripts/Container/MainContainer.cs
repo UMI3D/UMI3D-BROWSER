@@ -16,6 +16,7 @@ limitations under the License.
 
 using System;
 using TMPro;
+using umi3d;
 using umi3d.common.interaction;
 using umi3dBrowsers.container;
 using umi3dBrowsers.container.formrenderer;
@@ -28,7 +29,7 @@ using UnityEngine.Localization.Components;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-namespace umi3d
+namespace umi3dBrowsers
 {
     public class MainContainer : MonoBehaviour
     {
@@ -45,13 +46,13 @@ namespace umi3d
         [SerializeField] private UnityEvent hintClicked;
         [SerializeField] private UnityEvent bugClicked;
         [Space]
-        [SerializeField] private GameObject parametersContent;
-        [SerializeField] private GameObject storageContent;
-        [SerializeField] private GameObject mainContent;
-        [SerializeField] private GameObject standUpContent;
-        [SerializeField] private GameObject flagContent;
-        [SerializeField] private GameObject dynamicServerContent;
-        [SerializeField] private GameObject loadingContent;
+        [SerializeField] private ContentContainer parametersContent;
+        [SerializeField] private ContentContainer storageContent;
+        [SerializeField] private ContentContainer mainContent;
+        [SerializeField] private ContentContainer standUpContent;
+        [SerializeField] private ContentContainer flagContent;
+        [SerializeField] private ContentContainer dynamicServerContent;
+        [SerializeField] private ContentContainer loadingContent;
         [Space]
         [SerializeField] private GameObject Top;
         // todo : call something like an hint manager hints
@@ -76,8 +77,7 @@ namespace umi3d
         [SerializeField] private UnityEvent flagButtonClicked;
 
         [Header("Title")]
-        [SerializeField] private TextMeshProUGUI prefixText;
-        [SerializeField] private TextMeshProUGUI suffixText;
+        [SerializeField] private MainMessageContainer title;
 
         [Header("Version")]
         [SerializeField] private TextMeshProUGUI versionText;
@@ -114,29 +114,6 @@ namespace umi3d
         public void SetVersion(string version)
         {
             versionText.text = version;
-        }
-
-        /// <summary>
-        /// Sets the page title
-        /// </summary>
-        /// <param name="prefix">The first part of the title</param>
-        /// <param name="suffix">The second part of the title</param>
-        public void SetTitle(string prefix, string suffix)
-        {
-            LocalizeStringEvent a = GetComponent<LocalizeStringEvent>();
-            a.SetTable
-
-            float suffitLength = suffix.Length;
-            float prefixLength = prefix.Length;
-            Rect suffitRectTransform = suffixText.rectTransform.rect;
-            Rect prefixRectTransform = prefixText.rectTransform.rect;
-
-            prefixText.text = prefix;
-            suffixText.text = suffix;
-            suffitRectTransform.width = suffitLength * 12.5f;
-            prefixRectTransform.width = prefixLength * 10f;
-            suffixText.rectTransform.sizeDelta = new Vector2(suffitRectTransform.width, suffitRectTransform.height);
-            prefixText.rectTransform.sizeDelta = new Vector2(prefixRectTransform.width, prefixRectTransform.height);
         }
 
         private void BindNavigationButtons()
@@ -201,7 +178,7 @@ namespace umi3d
             connectionProcessorService.OnConnectionFailure += (message) => { Debug.LogError("Failled to conenct"); };
             connectionProcessorService.OnMediaServerPingSuccess += (virtualWorldData) => 
             {
-                SetTitle("Connected to", virtualWorldData.worldName);
+                title.SetTitle("Connected to", virtualWorldData.worldName, true , true);
             };
             connectionProcessorService.OnParamFormReceived += (connectionFormDto) =>
             {
@@ -223,7 +200,7 @@ namespace umi3d
             loadingContainer.OnLoadingInProgress += () =>
             {
                 HandleContentState(ContentState.loadingContent);
-                SetTitle("Loading ... ", "");
+                title.SetTitle("Loading ... ", "");
             };
             loadingContainer.OnLoadingFinished += () => Debug.Log("TODO : Do something ::: Its loaded");// gameObject.SetActive(false);
         }
@@ -245,40 +222,41 @@ namespace umi3d
                 case ContentState.mainContent:
                     CloseAllPanels();
                     Top.SetActive(true);
-                    mainContent.SetActive(true);
-                    SetTitle("Connect to an", "Intraverse Portal");
+                    mainContent.gameObject.SetActive(true);
+                    title.SetTitle(mainContent.PrefixTitleKey, mainContent.SuffixTitleKey);
                     break;
                 case ContentState.storageContent:
                     CloseAllPanels();
                     Top.SetActive(true);
-                    storageContent.SetActive(true);
+                    storageContent.gameObject.SetActive(true);
                     backButton?.gameObject.SetActive(true);
                     break;
                 case ContentState.parametersContent:
                     CloseAllPanels();
                     Top.SetActive(true);
-                    parametersContent.SetActive(true);
+                    parametersContent.gameObject.SetActive(true);
                     backButton?.gameObject.SetActive(true);
-                    SetTitle("", "Settings");
+                    title.SetTitle(parametersContent.PrefixTitleKey, parametersContent.SuffixTitleKey);
                     break;
                 case ContentState.flagContent:
                     CloseAllPanels();
-                    flagContent.SetActive(true);
-                    SetTitle("Choose your", "language");
+                    flagContent.gameObject.SetActive(true);
+                    title.SetTitle(flagContent.PrefixTitleKey, flagContent.SuffixTitleKey);
                     break;
                 case ContentState.standUpContent:
                     CloseAllPanels();
-                    standUpContent.SetActive(true);
+                    standUpContent.gameObject.SetActive(true);
                     break;
                 case ContentState.dynamicServerContent:
                     CloseAllPanels();
                     Top.SetActive(true);
-                    dynamicServerContent.SetActive(true);
+                    dynamicServerContent.gameObject.SetActive(true);
                     break;
                 case ContentState.loadingContent:
                     CloseAllPanels();
                     Top.SetActive(true);
-                    loadingContent.SetActive(true);
+                    loadingContent.gameObject.SetActive(true);
+                    title.SetTitle(loadingContent.PrefixTitleKey, loadingContent.SuffixTitleKey);
                     break;
             }
         }
@@ -286,14 +264,14 @@ namespace umi3d
         private void CloseAllPanels()
         {
             Top.SetActive(false);
-            parametersContent.SetActive(false);
-            storageContent.SetActive(false);
-            mainContent.SetActive(false);
+            parametersContent.gameObject.SetActive(false);
+            storageContent.gameObject.SetActive(false);
+            mainContent.gameObject.SetActive(false);
             backButton?.gameObject.SetActive(false);
-            flagContent.SetActive(false);
-            standUpContent.SetActive(false);
-            loadingContent.SetActive(false);
-            dynamicServerContent.SetActive(false);
+            flagContent.gameObject.SetActive(false);
+            standUpContent.gameObject.SetActive(false);
+            loadingContent.gameObject.SetActive(false);
+            dynamicServerContent.gameObject.SetActive(false);
         }
     }
 }

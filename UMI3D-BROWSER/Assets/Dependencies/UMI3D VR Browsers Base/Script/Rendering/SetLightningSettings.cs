@@ -53,34 +53,34 @@ namespace umi3dVRBrowsersBase.rendering
         private void Start()
         {
             instance = this;
-            SetConnectionSceneSettings();
+            //SetConnectionSceneSettings();
         }
 
         /// <summary>
         /// Resets environements which were added for the connection scene to match with the default server desktop scene.
         /// </summary>
-        public static void ResetLightningSettings()
-        {
-            RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Skybox;
-            RenderSettings.ambientIntensity = 1;
+//        public static void ResetLightningSettings()
+//        {
+//            RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Skybox;
+//            RenderSettings.ambientIntensity = 1;
 
-#if PLATFORM_ANDROID
-            RenderSettings.reflectionIntensity = 0;
-#endif
-            RenderSettings.fog = false;
-            RenderSettings.skybox = instance?.defaultSkyboxMat;
-        }
+//#if PLATFORM_ANDROID
+//            RenderSettings.reflectionIntensity = 0;
+//#endif
+//            RenderSettings.fog = false;
+//            RenderSettings.skybox = instance?.defaultSkyboxMat;
+//        }
 
-        /// <summary>
-        /// Sets lightning settings for connection scene.
-        /// </summary>
-        private void SetConnectionSceneSettings()
-        {
-            RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Flat;
-            RenderSettings.ambientLight = connectionAmbientColor;
-            RenderSettings.fog = true;
-            RenderSettings.skybox = instance?.connectionSkyboxMat;
-        }
+//        /// <summary>
+//        /// Sets lightning settings for connection scene.
+//        /// </summary>
+//        private void SetConnectionSceneSettings()
+//        {
+//            RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Flat;
+//            RenderSettings.ambientLight = connectionAmbientColor;
+//            RenderSettings.fog = true;
+//            RenderSettings.skybox = instance?.connectionSkyboxMat;
+//        }
 
         #endregion
     }

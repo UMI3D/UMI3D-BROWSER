@@ -48,8 +48,6 @@ namespace umi3dVRBrowsersBase.navigation
         /// </summary>
         public GroupTeleportation groupTeleportation = new GroupTeleportation();
 
-        //public List<GameObject> otherPlayers; // Liste des autres joueurs pour la téléportation de groupe //////// a recup coté serveur
-
         bool isLoadingScreenDisplayed = false;
 
         protected virtual void Awake()
@@ -58,7 +56,7 @@ namespace umi3dVRBrowsersBase.navigation
             LoadingScreenDisplayer.OnLoadingScreenHidden.AddListener(() => isLoadingScreenDisplayed = false);
         }
 
-        // Téléportation individuelle ou de groupe basée sur le flag isGroupTeleport
+        // Individual or group teleportation based on the isGroupTeleport flag
         [ContextMenu("Teleport")]
         public void Teleport()
         {
@@ -84,7 +82,7 @@ namespace umi3dVRBrowsersBase.navigation
             }
         }
 
-        // Méthode de téléportation individuelle
+        // Function of individual teleportation
         private void TeleportIndividual(Vector3 position)
         {
             Vector3 offset = teleportingObject.transform.rotation * centerEyeAnchor.transform.localPosition;

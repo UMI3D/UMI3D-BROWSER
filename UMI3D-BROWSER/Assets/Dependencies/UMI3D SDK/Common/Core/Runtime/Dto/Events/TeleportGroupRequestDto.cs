@@ -17,15 +17,10 @@ limitations under the License.
 namespace umi3d.common
 {
     /// <summary>
-    /// DTO to confirm the onboarding in a vehicle.
+    /// DTO to teleport users in relative position next to the leader user who start a teleportation group.
     /// </summary>
     public class TeleportGroupRequestDto : AbstractBrowserRequestDto
     {
-        /// <summary>
-        /// User id of the user in the Frame.
-        /// </summary>
-        public ulong userId { get; set; }
-
         /// <summary>
         /// Target teleportation of the leader user.
         /// </summary>

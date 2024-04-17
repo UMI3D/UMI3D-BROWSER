@@ -259,19 +259,16 @@ namespace umi3d.common.collaboration
                 case true when typeof(T) == typeof(TeleportGroupRequestDto):
                     {
                         Debug.Log("tpGroup init");
-                        ulong userId = 0;
                         Vector3Dto teleportLeaderPosition = null;
                         Vector3Dto currentLeaderPosition = null;
 
-                        readable = UMI3DSerializer.TryRead<ulong>(container, out userId)
-                                   && UMI3DSerializer.TryRead<Vector3Dto>(container, out teleportLeaderPosition)
+                        readable = UMI3DSerializer.TryRead<Vector3Dto>(container, out teleportLeaderPosition)
                                    && UMI3DSerializer.TryRead<Vector3Dto>(container, out currentLeaderPosition);
                         if (readable)
                         {
                             Debug.Log("tpGroup readable");
                             var teleportGroup = new TeleportGroupRequestDto
                             {
-                                userId = userId,
                                 teleportLeaderPosition = teleportLeaderPosition,
                                 currentLeaderPosition = currentLeaderPosition
                             };
@@ -454,12 +451,9 @@ namespace umi3d.common.collaboration
                     break;
 
                 case TeleportGroupRequestDto tpGroup:
-                    Debug.Log("tpGroup");
-                    Debug.Log(tpGroup);
                     bytable = UMI3DSerializer.Write(UMI3DOperationKeys.TeleportGroupRequest)
-                        + UMI3DSerializer.Write(tpGroup.userId)
-                        + UMI3DSerializer.Write(tpGroup.currentLeaderPosition)
-                        + UMI3DSerializer.Write(tpGroup.teleportLeaderPosition);
+                        + UMI3DSerializer.Write(tpGroup.teleportLeaderPosition)
+                        + UMI3DSerializer.Write(tpGroup.currentLeaderPosition);
                     break;
 
                 default:
@@ -499,7 +493,7 @@ namespace umi3d.common.collaboration
                 true when typeof(T) == typeof(GateDto) => true,
                 true when typeof(T) == typeof(VoiceDto) => true,
                 true when typeof(T) == typeof(ResourceDto) => true,
-                //true when typeof(T) == typeof(TeleportGroupRequestDto) => true,
+                true when typeof(T) == typeof(TeleportGroupRequestDto) => true,
                 _ => null
             };
         }

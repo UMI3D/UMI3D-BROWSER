@@ -34,6 +34,9 @@ namespace ClientLBE
         public ARAnchorManager anchorManager; // Référence au gestionnaire d'ancres AR
                                               //public ARAnchorSerializer anchorSerializer; // Référence à l'ARAnchorSerializer
 
+        public ARPointCloudManager pointCloudManager;
+
+        
         private UserGuardianDto userGuardianDto;
         private ARAnchorDto anchorAR;
         private JoinDto joinDto;
@@ -46,21 +49,41 @@ namespace ClientLBE
             Debug.Log("Remi : START Getguardian");
 
             UMI3DEnvironmentLoader.Instance.onEnvironmentLoaded.AddListener(() => GetGuardianArea());
+
+
+            // Evénement pour écouter les mises à jour du nuage de points
+            pointCloudManager.pointCloudsChanged += OnPointCloudsChanged;
+
+        }
+
+        void OnPointCloudsChanged(ARPointCloudChangedEventArgs obj)
+        {
+
+            Debug.Log("Remi : POINT obj -> " + obj);
+
+            List<Vector3> addedpoints = new List<Vector3>();
+            foreach(ARPointCloud pointCloud in obj.added)
+            {
+                Debug.Log("Remi : POINT pointCloud -> " + pointCloud);
+
+                foreach (Vector3 pos in pointCloud.positions)
+                {
+                    Debug.Log("Remi : POINT CLOUD -> " + pos);
+                    addedpoints.Add(pos);
+                }
+            }
         }
 
         void OnEnable()
         {
-            // S'abonner à l'événement ImportantEventOccurred
             UMI3DForgeClient.ImportantEventOccurred += HandleImportantEvent;
         }
 
         void OnDisable()
         {
-            // Se désabonner de l'événement ImportantEventOccurred pour éviter les fuites de mémoire
             UMI3DForgeClient.ImportantEventOccurred -= HandleImportantEvent;
         }
 
-        // Méthode pour gérer l'événement important
         void HandleImportantEvent(UserGuardianDto userGuardianDto)
         {
             Debug.Log("Remi : An important event occurred!");
@@ -131,6 +154,8 @@ namespace ClientLBE
                             basePoint.transform.position = point;
 
                             CreateGuardianLimit(basePoint);
+
+
                         }
                     }
                     else
@@ -257,8 +282,6 @@ namespace ClientLBE
             Pose basePointPose = new Pose(basePointPosition, basePointRotation);
 
             basePoint.AddComponent<ARAnchor>();
-
-            
 
             guardianAnchors.Add(basePoint);
 

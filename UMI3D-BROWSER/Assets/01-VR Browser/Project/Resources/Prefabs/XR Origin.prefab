@@ -2463,6 +2463,9 @@ GameObject:
   - component: {fileID: 5051064084671288346}
   - component: {fileID: 5051064084671288345}
   - component: {fileID: 5051064084671288344}
+  - component: {fileID: 1967790127012337217}
+  - component: {fileID: 5684722505109590389}
+  - component: {fileID: 3799771570161897762}
   m_Layer: 0
   m_Name: XR Origin
   m_TagString: Untagged
@@ -2518,6 +2521,52 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ActionAssets:
   - {fileID: -944628639613478452, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+--- !u!114 &1967790127012337217
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5051064084671288343}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 728ad7fae8e460a4ba41265c7308d757, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AnchorPrefab: {fileID: 0}
+--- !u!114 &5684722505109590389
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5051064084671288343}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ab0e80cee9cc1d44928bfe488dd1e2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_PointCloudPrefab: {fileID: 7242367367292156985, guid: d7fc84fc83bc78045b92c7b300e3abdb,
+    type: 3}
+--- !u!114 &3799771570161897762
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5051064084671288343}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d028af21d4933f04492005d052464cf0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OriginGuardian: {fileID: 3118920980334219023}
+  GuardianParent: {fileID: 0}
+  pointAnchor: {fileID: 2348787935028910363, guid: 3844bcd7c5357e24aa505776ab9185c2,
+    type: 3}
+  Guardian: {fileID: 2100000, guid: b2144e83fd14d8c40b3cb1b51ebb5f37, type: 2}
+  anchorManager: {fileID: 1967790127012337217}
+  pointCloudManager: {fileID: 5684722505109590389}
 --- !u!1 &5373660663191619787
 GameObject:
   m_ObjectHideFlags: 0
@@ -3599,6 +3648,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5051064084671288346}
     m_Modifications:
+    - target: {fileID: 551383708175167367, guid: f0df432810288804fa22e8d51977f5d9,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1383679749848300520, guid: f0df432810288804fa22e8d51977f5d9,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2414672215852013813, guid: f0df432810288804fa22e8d51977f5d9,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2414672215852013813, guid: f0df432810288804fa22e8d51977f5d9,
         type: 3}
       propertyPath: OriginGuardian
@@ -3608,6 +3672,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: GuardianManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 5092155593866270080, guid: f0df432810288804fa22e8d51977f5d9,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5805840865021961681, guid: f0df432810288804fa22e8d51977f5d9,
         type: 3}

@@ -23,10 +23,15 @@ namespace umi3d.browserEditor.BuildTool
     public class UMI3DBuildToolSceneViewModel
     {
         public UMI3DBuildToolScene_SO buildToolScene_SO;
+        public Action applyScenes;
 
-        public UMI3DBuildToolSceneViewModel(UMI3DBuildToolScene_SO buildToolScene_SO)
+        public UMI3DBuildToolSceneViewModel(
+            UMI3DBuildToolScene_SO buildToolScene_SO,
+            Action applyScenes
+        )
         {
             this.buildToolScene_SO = buildToolScene_SO;
+            this.applyScenes = applyScenes;
         }
 
         public SceneDTO this[int index]
@@ -88,6 +93,7 @@ namespace umi3d.browserEditor.BuildTool
 
         public void Save()
         {
+            applyScenes?.Invoke();
             EditorUtility.SetDirty(buildToolScene_SO);
         }
     }

@@ -111,7 +111,7 @@ namespace umi3dVRBrowsersBase.connection
             ConnectionMenuManager.instance.HideNextNavigationButton();
             ConnectionMenuManager.instance.HidePreviousNavigationButton();
 
-            SetLightningSettings.ResetLightningSettings();
+            //SetLightningSettings.ResetLightningSettings();
             LoadingScreenDisplayer.Instance.Display();
             foreach (GameObject o in objectsToHide)
                 o.SetActive(false);

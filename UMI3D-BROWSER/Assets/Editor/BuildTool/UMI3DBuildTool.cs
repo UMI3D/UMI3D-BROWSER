@@ -97,6 +97,7 @@ namespace umi3d.browserEditor.BuildTool
                 rootVisualElement,
                 ui, target_VTA, path_VTA, scene_VTA,
                 buildToolKeystore_SO, buildToolVersion_SO, buildToolTarget_SO, buildToolScene_SO, buildToolSettings_SO,
+                ApplyScenes,
                 ApplyTargetOptions,
                 BuildTarget,
                 BuildSelectedTargets
@@ -107,6 +108,9 @@ namespace umi3d.browserEditor.BuildTool
 
         void ApplyTargetOptions(TargetDto target)
         {
+            buildToolTarget_SO.currentTarget = target.Target;
+            ApplyScenes();
+
             // Update App name, Version and Android.BundleVersion.
             PlayerSettings.productName = BuildToolHelper.GetApplicationName(target);
             PlayerSettings.applicationIdentifier = BuildToolHelper.GetPackageName(target);
@@ -119,11 +123,17 @@ namespace umi3d.browserEditor.BuildTool
             PluginHelper.SwitchPlugins(target);
             FeatureHelper.SwitchFeatures(target);
 
-            EditorBuildSettings.scenes = buildToolScene_SO.GetScenesForTarget(target.Target).Select(scene =>
+            BuildToolHelper.SetKeystore(buildToolKeystore_SO.password, buildToolKeystore_SO.path);
+        }
+
+        void ApplyScenes()
+        {
+            EditorBuildSettings.scenes = buildToolScene_SO.GetScenesForTarget(
+                buildToolTarget_SO.currentTarget
+            ).Select(scene =>
             {
                 return new EditorBuildSettingsScene(scene.path, true);
             }).ToArray();
-            BuildToolHelper.SetKeystore(buildToolKeystore_SO.password, buildToolKeystore_SO.path);
         }
 
         void BuildTarget(TargetDto target)

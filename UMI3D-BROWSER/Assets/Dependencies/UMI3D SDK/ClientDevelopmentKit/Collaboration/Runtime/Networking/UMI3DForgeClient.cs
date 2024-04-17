@@ -29,9 +29,12 @@ using umi3d.common.collaboration;
 using umi3d.common.collaboration.dto.networking;
 using umi3d.common.collaboration.dto.signaling;
 using umi3d.common.collaboration.dto.voip;
+using umi3d.common.lbe;
+using umi3d.common.lbe.description;
 using umi3d.common.userCapture.pose;
 using umi3d.common.userCapture.tracking;
 using UnityEngine;
+
 
 namespace umi3d.cdk.collaboration
 {
@@ -51,6 +54,12 @@ namespace umi3d.cdk.collaboration
 
         private bool pingReceived = false;
         private bool CheckForBandWidthRunning = false;
+
+        // Définir un événement pour signaler un événement important
+        public delegate void OnImportantEvent(UserGuardianDto guardianData);
+        public static event OnImportantEvent ImportantEventOccurred;
+
+        //private GuardianManager guardianManager;
 
         private UMI3DUser GetUserByNetWorkId(uint nid)
         {
@@ -385,7 +394,7 @@ namespace umi3d.cdk.collaboration
             if (useDto)
             {
                 var dto = UMI3DDtoSerializer.FromBson(frame.StreamData.byteArr);
-
+   
                 switch (dto)
                 {
                     case TransactionDto transaction:
@@ -548,6 +557,18 @@ namespace umi3d.cdk.collaboration
                     {
                         PoseManager.Instance.ChangeEnvironmentPoseCondition(operation.environmentId, validateEnvironmentPoseCondition.Id, validateEnvironmentPoseCondition.ShouldBeValidated);
                     });
+                    break;
+                case SendGuardianRequestDto guardianRequestDto:
+                    MainThreadManager.Run(() =>
+                    {
+                        Debug.Log("Remi : Get transaction dto !! ");
+                        UserGuardianDto guardianData = guardianRequestDto.guardianData;
+
+                        // Simuler un événement important
+                        if (ImportantEventOccurred != null)
+                            ImportantEventOccurred(guardianData);
+                    });
+
                     break;
                 default:
                     return false;

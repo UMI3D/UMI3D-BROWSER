@@ -88,6 +88,11 @@ namespace umi3dBrowsers.displayer
             trashButton.OnClick += onRemove;
         }
 
+        public void SetupRenameButton(Action<string> onRename)
+        {
+            inputFieldBackground.InputField.OnTextChanged += onRename;
+        }
+
         public void HoverEnter(PointerEventData eventData)
         {
             DisableSubComponents();

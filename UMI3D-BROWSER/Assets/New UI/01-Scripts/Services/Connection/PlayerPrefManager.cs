@@ -114,6 +114,21 @@ namespace umi3dBrowsers.services.connection
 
         #endregion
 
+        #region Localisation
+
+        public static readonly string LocalisationSet = "umi3d-localisation-set";
+
+        public static bool HasLocalisationBeenSet()
+        {
+            return PlayerPrefs.GetInt(LocalisationSet) != 0;
+        }
+
+        public static void SaveLocalisationSet(bool isSet)
+        {
+            PlayerPrefs.SetInt(LocalisationSet, isSet ? 1 : 0);
+        }
+
+        #endregion
 
         /// <summary>
         /// Contains : environment name, ip and port.

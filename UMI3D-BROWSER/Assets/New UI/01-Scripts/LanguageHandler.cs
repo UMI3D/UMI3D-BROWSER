@@ -1,6 +1,7 @@
 using System.Collections;
 using umi3dBrowsers;
 using umi3dBrowsers.container;
+using umi3dBrowsers.services.connection;
 using UnityEngine;
 using UnityEngine.Localization.Settings;
 
@@ -55,6 +56,7 @@ public class LanguageHandler : MonoBehaviour
         if (localeID != -1)
         {
             StartCoroutine(SetLocale(localeID));
+            PlayerPrefsManager.SaveLocalisationSet(true);
         }
         else
         {

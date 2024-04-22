@@ -104,6 +104,10 @@ namespace umi3dBrowsers
             BindFormContainer();
             BindConnectionService();
             BindLoaderDisplayer();
+
+            Debug.Log($"============ {services.connection.PlayerPrefsManager.HasLocalisationBeenSet()}");
+            if (contentState == ContentState.flagContent && services.connection.PlayerPrefsManager.HasLocalisationBeenSet())
+                contentState = ContentState.standUpContent;
             HandleContentState(contentState);
         }
 

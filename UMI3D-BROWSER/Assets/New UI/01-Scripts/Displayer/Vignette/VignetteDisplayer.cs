@@ -83,6 +83,11 @@ namespace umi3dBrowsers.displayer
             likeButton.OnClick += onFavorite;
         }
 
+        public void SetupRemoveButton(Action onRemove)
+        {
+            trashButton.OnClick += onRemove;
+        }
+
         public void HoverEnter(PointerEventData eventData)
         {
             DisableSubComponents();

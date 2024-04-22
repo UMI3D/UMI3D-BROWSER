@@ -120,6 +120,7 @@ namespace umi3dBrowsers.container
             var vignette = Instantiate(vignettePrefab, gridLayout.transform).GetComponent<VignetteDisplayer>();
             vignette.SetupDisplay(pWorldData.worldName);
             vignette.SetupFavoriteButton(() => { pVirtualWorlds.ToggleWorldFavorite(pWorldData); OnReset?.Invoke(); });
+            vignette.SetupRemoveButton(() => { pVirtualWorlds.RemoveWorld(pWorldData); OnReset?.Invoke(); });
 
             return vignette;
         }

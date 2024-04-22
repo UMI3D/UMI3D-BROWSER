@@ -176,6 +176,12 @@ namespace umi3dBrowsers.services.connection
             PlayerPrefsManager.SaveVirtualWorld(this);
         }
 
+        public void RemoveWorld(VirtualWorldData world)
+        {
+            worlds.Remove(world);
+            PlayerPrefsManager.SaveVirtualWorld(this);
+        }
+
         public void UpdateWorld(VirtualWorldData world)
         {
             var storedWorld = worlds.Find(_world => _world.worldUrl == world.worldUrl);

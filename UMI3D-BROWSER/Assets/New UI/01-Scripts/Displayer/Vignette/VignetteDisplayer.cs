@@ -71,6 +71,13 @@ namespace umi3dBrowsers.displayer
             inputFieldBackground.OnDisabled += () => DisableSubComponents();
         }
 
+        public void SetupDisplay(string pName, Image pImage = null)
+        {
+            inputFieldBackground.Text = pName;
+            if (pImage != null)
+                vignetteImage = pImage;
+        }
+
         public void HoverEnter(PointerEventData eventData)
         {
             DisableSubComponents();

@@ -60,9 +60,9 @@ namespace umi3dBrowsers.services.connection
                 virtualWorldData.worldUrl = url;
                 virtualWorldData.worldName = media.name;
                 virtualWorldData.isFavorite = false;
-                virtualWorldData.dateFirstConnection = DateTime.UtcNow.ToString();
-                virtualWorldData.dateLastConnection = DateTime.UtcNow.ToString();
-
+                virtualWorldData.dateFirstConnection = DateTime.UtcNow.ToFileTime();
+                virtualWorldData.dateLastConnection = DateTime.UtcNow.ToFileTime();
+                
                 OnMediaServerPingSuccess?.Invoke(virtualWorldData);
 
                 UMI3DCollaborationClientServer.Instance.Identifier = identifier;

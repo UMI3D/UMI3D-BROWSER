@@ -37,6 +37,8 @@ namespace umi3dBrowsers.displayer
         [SerializeField] private GameObject backGround;
         public GameObject Background => backGround;
 
+        public string Text { get => inputField.text; set => inputField.text = value; }
+
         public event Action OnClick;
         public event Action OnDisabled;
         public event Action OnHover;

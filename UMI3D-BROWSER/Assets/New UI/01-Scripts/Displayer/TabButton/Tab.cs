@@ -94,7 +94,7 @@ namespace umi3dBrowsers.displayer
             }
         }
 
-        internal void SetLabel(string label)
+        public void SetLabel(string label)
         {
             this.label.text = label.Trim();
         }

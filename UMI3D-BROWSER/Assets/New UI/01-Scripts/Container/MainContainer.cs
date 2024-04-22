@@ -230,6 +230,7 @@ namespace umi3dBrowsers
                     Top.SetActive(true);
                     storageContent.gameObject.SetActive(true);
                     backButton?.gameObject.SetActive(true);
+                    title.SetTitle(storageContent.PrefixTitleKey, storageContent.SuffixTitleKey);
                     break;
                 case ContentState.parametersContent:
                     CloseAllPanels();

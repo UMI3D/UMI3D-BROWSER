@@ -25,16 +25,19 @@ namespace umi3dBrowsers.container
     public class TabManager : MonoBehaviour
     {
         [Header("Tabs")]
+        [SerializeField] private Transform navigationRoot;
         [SerializeField] private GameObject tabButtonPrefab;
         [SerializeField] private GameObject containerPrefab;
-        [SerializeField] private List<TabToContainerBinder> tabs;
+        [SerializeField, Tooltip("To bind existing tabs ith existing container")] 
+        private List<TabToContainerBinder> tabs;
         [Header("Content")]
         [SerializeField] private Transform contentRoot;
 
         public TabToContainerBinder currentActiveButton;
 
         [Header("Option")]
-        [SerializeField] private bool autoInit = true;
+        [SerializeField, Tooltip("Enables the binding of the tabs on start : [Don't use if you are creating dynamic panel tab menu]")] 
+        private bool autoInit = true;
 
         private void Start()
         {
@@ -51,7 +54,7 @@ namespace umi3dBrowsers.container
             InitSelectedButton();
         }
 
-        private void InitSelectedButton()
+        public void InitSelectedButton()
         {
             foreach (var tab in tabs)
             {
@@ -83,15 +86,20 @@ namespace umi3dBrowsers.container
         /// <summary>
         /// Add A new tabs to the tab manager and its coresponding container
         /// </summary>
-        /// <param name="label"></param>
+        /// <param name="label">The name of the new tab</param>
+        /// <param name="container">the container you wish to associate with the new tab</param>
+        /// <param name="useLocalization">Should the name of the that depend on the localization</param>
         /// <returns>The container of the tab</returns>
-        public GameObject AddNewTab(string label)
+        public GameObject AddNewTab(string label, bool useLocalization = false, GameObject container = null)
         {
             TabToContainerBinder tabBinder = new TabToContainerBinder();
 
-            Tab tabButton = Instantiate(tabButtonPrefab, transform).GetComponent<Tab>();
-            tabButton.SetLabel(label);
-            GameObject tab = Instantiate(containerPrefab, contentRoot);
+            Tab tabButton = Instantiate(tabButtonPrefab, navigationRoot).GetComponent<Tab>();
+            tabButton.SetLabel(label, useLocalization);
+            GameObject tab = container;
+
+            if (tab == null) // Instantiate a container if none are given
+                tab = Instantiate(containerPrefab, contentRoot);
 
             tabBinder.SetTabButton(tabButton);
             tabBinder.SetTabContainer(tab);

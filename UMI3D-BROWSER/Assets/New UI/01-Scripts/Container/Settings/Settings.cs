@@ -14,6 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using umi3dBrowsers.containere;
@@ -22,6 +24,15 @@ using UnityEngine;
 
 namespace umi3dBrowsers.container
 {
+    [Serializable]
+    public class settingPanel
+    {
+        [SerializeField] private GameObject panel;
+        public GameObject Panel => panel;
+        [SerializeField] private string panelName;
+        public string PanelName => panelName;
+    }
+
     public class Settings : MonoBehaviour
     {
         [Header("General")]
@@ -46,14 +57,14 @@ namespace umi3dBrowsers.container
         [SerializeField] private ComfortSettings comfortSettingsContainer;
 
         [Header("Navigation")]
-        [SerializeField] private RadioButtonGroup navigationRadioButton;
+        [SerializeField] private TabManager tabManager;
         [SerializeField] private int startPanelIndex;
-
-        public List<GameObject> settingPanels = new();
+        [Space]
+        [SerializeField] private List<settingPanel> settingPanels = new();
+        [SerializeField] private bool useLocalization;
 
         private void Awake()
         {
-            settingPanels.Add(generalSettingsContainer.gameObject);
             generalSettingsContainer.OnLanguageChanged += (language) => this.selectedLanguage = language;
             generalSettingsContainer.OnThemeChanged += (theme) => this.selectedTheme = theme;
 
@@ -67,40 +78,17 @@ namespace umi3dBrowsers.container
             comfortSettingsContainer.OnRiorientFadingChanged += (value) => isFadingWhenReorient = value;
             comfortSettingsContainer.OnFadingValueChanged += (value) => fadingSpeedWhenReorient = value;
 
-            OpenGeneralSettings();
+            SetTabs();
         }
 
-        public void OpenGeneralSettings()
+        private void SetTabs()
         {
-            HideAll();
-            generalSettingsContainer.gameObject.SetActive(true);
-            navigationRadioButton.ActivateButtonWithId(0);
-        }
-
-        public void OpenAudioSettings()
-        {
-            HideAll();
-            audioSettingsContainer.gameObject.SetActive(true);
-        }
-
-        public void OpenGraphicSettings()
-        {
-            HideAll();
-            graphicsSettingsContainer.gameObject.SetActive(true);
-        }
-
-        public void OpenComfortSettings()
-        {
-            HideAll();
-            comfortSettingsContainer.gameObject.SetActive(true);
-        }
-
-        private void HideAll()
-        {
-            foreach (GameObject panel in settingPanels)
+            for(int i = 0; i<settingPanels.Count; i++)
             {
-                panel.SetActive(false);
+                tabManager.AddNewTab(settingPanels[i].PanelName, useLocalization, settingPanels[i].Panel);
             }
+
+            tabManager.InitSelectedButton();
         }
     }
 }

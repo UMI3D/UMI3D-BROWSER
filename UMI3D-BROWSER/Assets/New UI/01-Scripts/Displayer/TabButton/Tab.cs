@@ -20,12 +20,14 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using UnityEngine.Localization.Components;
 using UnityEngine.UI;
 
 namespace umi3dBrowsers.displayer
 {
     public class Tab : Selectable
     {
+        [SerializeField] private LocalizeStringEvent localizeString;
         public UnityEvent OnClick;
 
         public Image hoverBar;
@@ -94,9 +96,12 @@ namespace umi3dBrowsers.displayer
             }
         }
 
-        public void SetLabel(string label)
+        public void SetLabel(string label, bool useLocalization = false)
         {
-            this.label.text = label.Trim();
+            if (useLocalization)
+                localizeString.SetEntry(label);
+            else
+                this.label.text = label.Trim();
         }
     }
 }

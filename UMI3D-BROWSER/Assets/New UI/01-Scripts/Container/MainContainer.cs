@@ -105,6 +105,7 @@ namespace umi3dBrowsers
             BindConnectionService();
             BindLoaderDisplayer();
             HandleContentState(contentState);
+            SetVersion(UMI3DVersion.version);
         }
 
         /// <summary>

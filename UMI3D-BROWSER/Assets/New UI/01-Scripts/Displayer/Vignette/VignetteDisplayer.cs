@@ -78,6 +78,11 @@ namespace umi3dBrowsers.displayer
                 vignetteImage = pImage;
         }
 
+        public void SetupFavoriteButton(Action onFavorite)
+        {
+            likeButton.OnClick += onFavorite;
+        }
+
         public void HoverEnter(PointerEventData eventData)
         {
             DisableSubComponents();

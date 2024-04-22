@@ -184,22 +184,27 @@ namespace umi3dBrowsers.services.connection
                 Debug.LogError($"world is not stored.");
                 return;
             }
-            SetWorldFavoriteWorlds(world, world.isFavorite);
+            SetWorldFavorite(world, world.isFavorite);
 
             storedWorld.dateLastConnection = world.dateLastConnection;
             PlayerPrefsManager.SaveVirtualWorld(this);
         }
 
-        public void SetWorldFavoriteWorlds(VirtualWorldData world, bool favorite)
+        public void SetWorldFavorite(VirtualWorldData world, bool isFavorite)
         {
-            world.isFavorite = favorite;
+            world.isFavorite = isFavorite;
             PlayerPrefsManager.SaveVirtualWorld(this);
         }
 
-        public void SetWorldFavoriteWorlds(string url, bool favorite)
+        public void ToggleWorldFavorite(VirtualWorldData world)
         {
-            worlds.Find(_world => _world.worldUrl == url).isFavorite = false;
+            world.isFavorite = !world.isFavorite;
             PlayerPrefsManager.SaveVirtualWorld(this);
+        }
+
+        public void SetWorldFavoriteWorlds(string url)
+        {
+            ToggleWorldFavorite(worlds.Find(_world => _world.worldUrl == url));
         }
     }
 }

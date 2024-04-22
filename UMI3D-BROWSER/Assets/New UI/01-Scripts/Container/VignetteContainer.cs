@@ -64,14 +64,11 @@ namespace umi3dBrowsers.container
 
         [SerializeField] private VignetteMode vignetteMode;
 
+        public event Action OnReset;
+
         private void Awake()
         {
-            for (var i = gridLayout.transform.childCount - 1; i >= 0; i--)
-                Destroy(gridLayout.transform.GetChild(i).gameObject);
-
-            vignetteDisplayers = PlayerPrefsManager.HasVirtualWorldsStored()
-                    ? CreateVignettes(PlayerPrefsManager.GetVirtualWorlds())
-                    : new();
+            ResetVignettes();
         }
 
         private void Start()
@@ -113,17 +110,28 @@ namespace umi3dBrowsers.container
             var lstWorldDatas = isFavorite ? pVirtualWorlds.FavoriteWorlds : pVirtualWorlds.worlds;
             var lstWorldDatasOrdered = lstWorldDatas.OrderBy(w => new DateTime(w.dateLastConnection)).Reverse().ToList();
             foreach (var worldData in lstWorldDatasOrdered)
-                lstVignettes.Add(CreateVignette(worldData));
+                lstVignettes.Add(CreateVignette(pVirtualWorlds, worldData));
 
             return lstVignettes;
         }
 
-        private VignetteDisplayer CreateVignette(VirtualWorldData pWorldData)
+        private VignetteDisplayer CreateVignette(VirtualWorlds pVirtualWorlds, VirtualWorldData pWorldData)
         {
             var vignette = Instantiate(vignettePrefab, gridLayout.transform).GetComponent<VignetteDisplayer>();
             vignette.SetupDisplay(pWorldData.worldName);
+            vignette.SetupFavoriteButton(() => { pVirtualWorlds.ToggleWorldFavorite(pWorldData); OnReset?.Invoke(); });
 
             return vignette;
+        }
+
+        public void ResetVignettes()
+        {
+            for (var i = gridLayout.transform.childCount - 1; i >= 0; i--)
+                Destroy(gridLayout.transform.GetChild(i).gameObject);
+
+            vignetteDisplayers = PlayerPrefsManager.HasVirtualWorldsStored()
+                    ? CreateVignettes(PlayerPrefsManager.GetVirtualWorlds())
+                    : new();
         }
 
         private void SetGridLayout(Vector2 vignetteSize, int vignetteRowAmount, Vector2 vignetteSpace)

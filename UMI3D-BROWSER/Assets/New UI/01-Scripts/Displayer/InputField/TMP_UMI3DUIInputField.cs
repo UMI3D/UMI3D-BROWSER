@@ -31,6 +31,8 @@ namespace umi3dBrowsers.displayer
         Action<PointerEventData> hoverEnterCallBack;
         Action<PointerEventData> hoverExitCallBack;
 
+        public event Action<string> OnTextChanged;
+
         protected override void Awake()
         {
             keyboard = Keyboard.Instance;
@@ -84,6 +86,7 @@ namespace umi3dBrowsers.displayer
             keyboard.OpenKeyboard(this, res =>
             {
                 text = res;
+                OnTextChanged?.Invoke(res);
             });
         }
     }

@@ -14,13 +14,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
+using Newtonsoft.Json.Bson;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using umi3dBrowsers.displayer;
+using umi3dBrowsers.services.connection;
 using umi3dBrowsers.utils;
 using Unity.VisualScripting;
+using UnityEditor.Localization.Plugins.XLIFF.V12;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -43,6 +47,7 @@ namespace umi3dBrowsers.container
         [SerializeField] private Vector2 smallVignetteSpace;
 
         [Header("Layout")]
+        [SerializeField] private bool isFavorite;
         [SerializeField] private GridLayoutGroup gridLayout;
         [SerializeField] private int largeVignetteRowAmount;
         [SerializeField] private int smallVignetteRowAmount;
@@ -59,9 +64,11 @@ namespace umi3dBrowsers.container
 
         [SerializeField] private VignetteMode vignetteMode;
 
+        public event Action OnReset;
+
         private void Awake()
         {
-            vignetteDisplayers = GetComponentsInChildren<VignetteDisplayer>().ToList();
+            ResetVignettes();
         }
 
         private void Start()
@@ -96,6 +103,49 @@ namespace umi3dBrowsers.container
             }
         }
 
+        private List<VignetteDisplayer> CreateVignettes(VirtualWorlds pVirtualWorlds)
+        {
+            var lstVignettes = new List<VignetteDisplayer>();
+
+            var lstWorldDatas = isFavorite ? pVirtualWorlds.FavoriteWorlds : pVirtualWorlds.worlds;
+            var lstWorldDatasOrdered = lstWorldDatas.OrderBy(w => new DateTime(w.dateLastConnection)).Reverse().ToList();
+            foreach (var worldData in lstWorldDatasOrdered)
+                lstVignettes.Add(CreateVignette(pVirtualWorlds, worldData));
+
+            return lstVignettes;
+        }
+
+        private VignetteDisplayer CreateVignette(VirtualWorlds pVirtualWorlds, VirtualWorldData pWorldData)
+        {
+            var vignette = Instantiate(vignettePrefab, gridLayout.transform).GetComponent<VignetteDisplayer>();
+            vignette.SetupDisplay(pWorldData.worldName);
+            vignette.SetupFavoriteButton(() => { 
+                pVirtualWorlds.ToggleWorldFavorite(pWorldData); 
+                OnReset?.Invoke(); 
+            });
+            vignette.SetupRemoveButton(() => {
+                pVirtualWorlds.RemoveWorld(pWorldData); 
+                OnReset?.Invoke(); 
+            });
+            vignette.SetupRenameButton(newName => { 
+                pWorldData.worldName = newName; 
+                pVirtualWorlds.UpdateWorld(pWorldData);
+                OnReset?.Invoke(); 
+            });
+
+            return vignette;
+        }
+
+        public void ResetVignettes()
+        {
+            for (var i = gridLayout.transform.childCount - 1; i >= 0; i--)
+                Destroy(gridLayout.transform.GetChild(i).gameObject);
+
+            vignetteDisplayers = PlayerPrefsManager.HasVirtualWorldsStored()
+                    ? CreateVignettes(PlayerPrefsManager.GetVirtualWorlds())
+                    : new();
+        }
+
         private void SetGridLayout(Vector2 vignetteSize, int vignetteRowAmount, Vector2 vignetteSpace)
         {
             gridLayout.cellSize = vignetteSize;
@@ -127,6 +177,16 @@ namespace umi3dBrowsers.container
             yield return new WaitForSeconds(0.35f);
             scaller.ScaleColliders();
         }
+
+#if UNITY_EDITOR
+        [SerializeField] private VirtualWorlds virtualWorlds;
+
+        [Button("CreateVirtualWorldsDataTest")]
+        public void ReplaceVirtualWorldsDataTest()
+        {
+            PlayerPrefsManager.SaveVirtualWorld(virtualWorlds);
+        }
+#endif
     }
 }
 

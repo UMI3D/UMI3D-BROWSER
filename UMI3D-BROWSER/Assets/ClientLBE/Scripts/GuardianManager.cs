@@ -18,61 +18,75 @@ namespace ClientLBE
 {
     public class GuardianManager : MonoBehaviour
     {
-        private GameObject GuardianmeshObject;
-
-        //public string filePath;
+        private GameObject GuardianMesh; //Référence pour stocker le mesh du guardian
 
         public GameObject OriginGuardian;
         public GameObject GuardianParent;
 
         public GameObject pointAnchor; // Référence au prefab pour la création des ancres du guardian
-        public Material Guardian; // Matériau pour le rendu du guardian
+        public Material MatGuardian; // Matériau pour le rendu du guardian
 
         private List<GameObject> guardianAnchors = new List<GameObject>(); // Liste pour stocker toutes les ancres du guardian
-        private List<ARAnchor> aRAnchors = new List<ARAnchor>(); // Liste pour stocker toutes les ancres du guardian
 
         public ARAnchorManager anchorManager; // Référence au gestionnaire d'ancres AR
-                                              //public ARAnchorSerializer anchorSerializer; // Référence à l'ARAnchorSerializer
-
-        public ARPointCloudManager pointCloudManager;
-
         
         private UserGuardianDto userGuardianDto;
-        private ARAnchorDto anchorAR;
-        private JoinDto joinDto;
 
-
-
+        public GameObject Player;
+        private GameObject Scene;
+        public GameObject Calibreur;
 
         public void Start()
         {
-            Debug.Log("Remi : START Getguardian");
-
             UMI3DEnvironmentLoader.Instance.onEnvironmentLoaded.AddListener(() => GetGuardianArea());
-
-
-            // Evénement pour écouter les mises à jour du nuage de points
-            pointCloudManager.pointCloudsChanged += OnPointCloudsChanged;
-
+            UMI3DEnvironmentLoader.Instance.onEnvironmentLoaded.AddListener(() => StartCoroutine(CalibrationScene()));
         }
 
-        void OnPointCloudsChanged(ARPointCloudChangedEventArgs obj)
+        IEnumerator CalibrationScene()
         {
+            yield return new WaitForSeconds(3f);
 
-            Debug.Log("Remi : POINT obj -> " + obj);
-
-            List<Vector3> addedpoints = new List<Vector3>();
-            foreach(ARPointCloud pointCloud in obj.added)
+            if (Player != null)
             {
-                Debug.Log("Remi : POINT pointCloud -> " + pointCloud);
+                // Obtenir le parent du GameObject Player (Scene)
+                Transform parent = Player.transform.parent;
 
-                foreach (Vector3 pos in pointCloud.positions)
+                if (parent != null)
                 {
-                    Debug.Log("Remi : POINT CLOUD -> " + pos);
-                    addedpoints.Add(pos);
+                    Debug.Log("Remi : " + Player.name + " a un parent : " + parent.name);
+
+                    Scene = parent.gameObject;
+
+                    // Détacher le Player de son parent (Scene)
+                    Player.transform.parent = null;
+
+                    // Définir le parent "Scene" comme enfant de Player
+                    Scene.transform.SetParent(Player.transform);
+
+                    // Définir la position de "Scene" en fonction du Calibreur
+                    Scene.transform.position = new Vector3(Calibreur.transform.position.x, 0.0f, Calibreur.transform.position.z);
+
+                    // Définir la rotation de "Scene" en fonction du Calibreur
+                    Scene.transform.rotation = new Quaternion(Scene.transform.rotation.x, Calibreur.transform.rotation.y, Scene.transform.rotation.z, Scene.transform.rotation.w);
+
+                    // Détacher "Scene" de son parent (Player)
+                    Scene.transform.SetParent(null);
+
+                    // Réattacher le Player à son parent initial
+                    Player.transform.parent = parent;
+                }
+                else
+                {
+                    Debug.Log("Remi : " + Player.name + " n'a pas de parent.");
                 }
             }
+            else
+            {
+                Debug.LogWarning("Remi : Aucun GameObject à vérifier n'est assigné !");
+            }
         }
+
+
 
         void OnEnable()
         {
@@ -86,33 +100,29 @@ namespace ClientLBE
 
         void HandleImportantEvent(UserGuardianDto userGuardianDto)
         {
-            Debug.Log("Remi : An important event occurred!");
+            //Création du guardian à partir des données du serveur
             CreatGuardianServer(userGuardianDto);
         }
 
+        //Envoyer les data de chaque ancres au serveur
         public void SendGuardianInServer(GameObject anchorGameObject)
         {
-            Debug.Log("Remi : Before SendGuardianInServer -> " + userGuardianDto.anchorAR.Count);
+            // Récupérer le composant ARAnchor du GameObject passé en paramètre
             ARAnchor arAnchor = anchorGameObject.GetComponent<ARAnchor>();
             ARAnchorDto newAnchor = new ARAnchorDto();
-
             string trackIdIn = arAnchor.trackableId.ToString();
+
 
             if (ulong.TryParse(trackIdIn, out ulong trackIdOut))
             {
                 newAnchor.trackableId = trackIdOut;
             }
 
+            // Assigner la position et la rotation de l'ancre AR au nouvel objet
             newAnchor.position = new Vector3Dto { X = arAnchor.transform.position.x, Y = arAnchor.transform.position.y, Z = arAnchor.transform.position.z };
             newAnchor.rotation = new Vector4Dto { X = arAnchor.transform.rotation.x, Y = arAnchor.transform.rotation.y, Z = arAnchor.transform.rotation.z, W = arAnchor.transform.rotation.w };
 
-            Debug.Log("Remi : newAnchor -> " + newAnchor);
-
-
             userGuardianDto.anchorAR.Add(newAnchor);
-
-            Debug.Log("Remi : After SendGuardianInServer -> " + userGuardianDto.anchorAR.Count);
-
         }
 
         public void GetGuardianArea()
@@ -122,7 +132,6 @@ namespace ClientLBE
 
             if (userGuardianDto == null)
             {
-                Debug.Log("Remi : Create new UserGuardianDto");
                 // Créer une nouvelle instance de UserGuardianDto
                 userGuardianDto = new UserGuardianDto();
                 userGuardianDto.anchorAR = new List<ARAnchorDto>();
@@ -141,11 +150,11 @@ namespace ClientLBE
                 }
                 List<Vector3> boundaryPoints = new List<Vector3>();
 
+                //Récupération des 4 points de la play area fournis par le guardian du casque
                 if (inputSubsystem.TryGetBoundaryPoints(boundaryPoints))
                 {
                     if (anchorManager != null)
                     {
-
                         foreach (Vector3 point in boundaryPoints)
                         {
                             // Instancier le prefab à la position du point récupéré                   
@@ -154,8 +163,6 @@ namespace ClientLBE
                             basePoint.transform.position = point;
 
                             CreateGuardianLimit(basePoint);
-
-
                         }
                     }
                     else
@@ -163,6 +170,7 @@ namespace ClientLBE
                         Debug.LogError("Remi : AnchorManager non défini !");
                     }
 
+                    //Mise en enfant des ancres sous le même GameObject GuardianParent
                     for (int i = 0; i < guardianAnchors.Count; i++)
                     {
                         guardianAnchors[i].transform.parent = GuardianParent.transform;
@@ -173,13 +181,14 @@ namespace ClientLBE
 
                     List<Vector3> anchorForMesh = new List<Vector3>();
 
+                    //Création du mesh pour symboliser les limite du guardian dans la scène
                     foreach (GameObject anchor in guardianAnchors)
                     {
                         anchorForMesh.Add(anchor.transform.position);
                     }
-                    CreateMesh(anchorForMesh);
+                    CreateGuardianMesh(anchorForMesh);
 
-
+                    //Envoi des data du guardian au serveur
                     if (userGuardianDto != null)
                     {
                         Debug.Log("Remi : Count userGuardianDto -> " + userGuardianDto.anchorAR.Count);
@@ -204,10 +213,10 @@ namespace ClientLBE
         {
             //Clean data guardian connection
             Debug.Log("Remi : CreatGuardianServer");
-            if (GuardianmeshObject != null)
+            if (GuardianMesh != null)
             {
                 Debug.Log("Remi : Destroy first local guardian");
-                Destroy(GuardianmeshObject);
+                Destroy(GuardianMesh);
             }
 
             if (guardianAnchors != null)
@@ -235,13 +244,13 @@ namespace ClientLBE
                     CreateGuardianLimitServer(basePoint);
                 }
 
-               /* for (int i = 0; i < guardianAnchors.Count; i++)
+                for (int i = 0; i < guardianAnchors.Count; i++)
                 {
                     guardianAnchors[i].transform.parent = GuardianParent.transform;
                 }
 
                 GuardianParent.transform.position = OriginGuardian.transform.position;
-                GuardianParent.transform.parent = OriginGuardian.transform;*/
+                GuardianParent.transform.parent = OriginGuardian.transform;
 
                 List<Vector3> anchorForMesh = new List<Vector3>();
 
@@ -249,7 +258,7 @@ namespace ClientLBE
                 {
                     anchorForMesh.Add(anchor.transform.position);
                 }
-                CreateMesh(anchorForMesh);
+                CreateGuardianMesh(anchorForMesh);
             }
         }
 
@@ -263,6 +272,7 @@ namespace ClientLBE
             AddAnchorGuardian(basePoint);
             SendGuardianInServer(basePoint);
 
+            //Duplication des ancres  à y+2
             GameObject basePointUp = Instantiate(pointAnchor, basePoint.transform.position, Quaternion.identity);
             basePointUp.transform.position = new Vector3(basePoint.transform.position.x, basePoint.transform.position.y + 2f, basePoint.transform.position.z);
 
@@ -270,8 +280,10 @@ namespace ClientLBE
             SendGuardianInServer(basePointUp);
         }
 
+
         public void AddAnchorGuardian(GameObject basePoint)
         {
+            //Définir les objets instancier représentant le guardian en ancres
             if (anchorManager.enabled == false)
             {
                 anchorManager.enabled = true;
@@ -285,14 +297,7 @@ namespace ClientLBE
 
             guardianAnchors.Add(basePoint);
 
-            /* var Anchors = anchorManager.AddAnchor(basePointPose);
-
-            if(Anchors == null)
-            {
-                Debug.Log("Remi : Echec de la création de l'ancre");
-            }*/
-
-            //Ajouter les coordonées sur le panel de l'ancre
+            //Ajouter les coordonées sur le panel de l'ancre pour les rendre visible dans la scène
             Transform BaseText = basePoint.transform.Find("Canvas/Panel/Text (TMP)");
 
             if (BaseText != null)
@@ -301,7 +306,7 @@ namespace ClientLBE
 
                 if (text != null)
                 {
-                    text.text = "X: " + basePoint.transform.position.x + ", Y: " + basePoint.transform.position.y + ", Z: " + basePoint.transform.position.z;
+                    text.text = "X : " + basePoint.transform.position.x + ", Y : " + basePoint.transform.position.y + ", Z : " + basePoint.transform.position.z;
                 }
             }
             else
@@ -311,19 +316,19 @@ namespace ClientLBE
         }
 
 
-
-        private void CreateMesh(List<Vector3> points)
+        //Création d'un mesh pour symbolier les limite du guardian à partir des ancres
+        private void CreateGuardianMesh(List<Vector3> points)
         {
             Debug.Log("Remi : Start Creat Mesh");
 
             // Créer un nouveau GameObject pour le maillage
-            GuardianmeshObject = new GameObject("GuardianMesh");
+            GuardianMesh = new GameObject("GuardianMesh");
 
-            GuardianmeshObject.transform.parent = OriginGuardian.transform;
-            GuardianmeshObject.transform.position = Vector3.zero;
-            GuardianmeshObject.transform.rotation = Quaternion.identity;
+            GuardianMesh.transform.parent = OriginGuardian.transform;
+            GuardianMesh.transform.position = Vector3.zero;
+            GuardianMesh.transform.rotation = Quaternion.identity;
 
-            GuardianmeshObject.AddComponent<ARAnchor>();
+            GuardianMesh.AddComponent<ARAnchor>();
 
             Mesh mesh = new Mesh();
 
@@ -369,11 +374,11 @@ namespace ClientLBE
             mesh.uv = uvs;
 
             // création du mesh renderer et filter
-            MeshFilter meshFilter = GuardianmeshObject.AddComponent<MeshFilter>();
-            MeshRenderer meshRenderer = GuardianmeshObject.AddComponent<MeshRenderer>();
+            MeshFilter meshFilter = GuardianMesh.AddComponent<MeshFilter>();
+            MeshRenderer meshRenderer = GuardianMesh.AddComponent<MeshRenderer>();
 
             // assigné le matérial
-            Material material = Guardian;
+            Material material = MatGuardian;
             meshRenderer.material = material;
             meshFilter.mesh = mesh;
 

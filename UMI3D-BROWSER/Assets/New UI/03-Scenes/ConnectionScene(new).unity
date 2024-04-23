@@ -7457,11 +7457,14 @@ MonoBehaviour:
   largeVignetteSpace: {x: 24, y: 0}
   smallVignetteSize: {x: 169, y: 111}
   smallVignetteSpace: {x: 11, y: 25}
+  isFavorite: 0
   gridLayout: {fileID: 5324724685129720941}
   largeVignetteRowAmount: 1
   smallVignetteRowAmount: 2
   scrollbar: {fileID: 3867476461450510408}
   vignetteMode: 1
+  virtualWorlds:
+    worlds: []
 --- !u!1001 &4857492397505455108
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7563,6 +7566,7 @@ GameObject:
   m_Component:
   - component: {fileID: 478214423261808918}
   - component: {fileID: 5106079627583710607}
+  - component: {fileID: 5106079627583710608}
   m_Layer: 5
   m_Name: Content
   m_TagString: Untagged
@@ -7876,6 +7880,21 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &5106079627583710608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4927462702431025011}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 434de76e7c830b845932356b9f3177f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lstVignetteContainers:
+  - {fileID: 4715338565123778907}
+  - {fileID: 6017217788553793161}
 --- !u!222 &5220093396206171512
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8530,6 +8549,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5302419438018580643, guid: 5658573cbd718f247a830647cd4a6a97,
         type: 3}
+      propertyPath: isFavorite
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5302419438018580643, guid: 5658573cbd718f247a830647cd4a6a97,
+        type: 3}
       propertyPath: largeVignetteSize.x
       value: 347
       objectReference: {fileID: 0}
@@ -8542,6 +8566,11 @@ PrefabInstance:
         type: 3}
       propertyPath: largeVignetteSpace.x
       value: 24
+      objectReference: {fileID: 0}
+    - target: {fileID: 5302419438018580643, guid: 5658573cbd718f247a830647cd4a6a97,
+        type: 3}
+      propertyPath: virtualWorlds.worlds.Array.size
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5504610162102487412, guid: 5658573cbd718f247a830647cd4a6a97,
         type: 3}
@@ -8893,6 +8922,18 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5658573cbd718f247a830647cd4a6a97, type: 3}
+--- !u!114 &6017217788553793161 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5302419438018580643, guid: 5658573cbd718f247a830647cd4a6a97,
+    type: 3}
+  m_PrefabInstance: {fileID: 6017217788553793160}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e080908f1f0a9b4c8659d1e8116269e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!65 &6073826219514710820
 BoxCollider:
   m_ObjectHideFlags: 0

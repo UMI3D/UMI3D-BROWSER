@@ -91,6 +91,9 @@ namespace umi3dBrowsers
         [SerializeField] private PopupManager popupManager;
         [SerializeField] private LoadingContainer loadingContainer;
 
+        [Header("Options")]
+        [SerializeField] private bool forceFlagContent;
+
 
         private void Awake()
         {
@@ -105,8 +108,7 @@ namespace umi3dBrowsers
             BindConnectionService();
             BindLoaderDisplayer();
 
-            Debug.Log($"============ {services.connection.PlayerPrefsManager.HasLocalisationBeenSet()}");
-            if (contentState == ContentState.flagContent && services.connection.PlayerPrefsManager.HasLocalisationBeenSet())
+            if (contentState == ContentState.flagContent && services.connection.PlayerPrefsManager.HasLocalisationBeenSet() && !forceFlagContent)
                 contentState = ContentState.standUpContent;
             HandleContentState(contentState);
             SetVersion(UMI3DVersion.version);

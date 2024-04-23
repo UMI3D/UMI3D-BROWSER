@@ -55,8 +55,8 @@ namespace umi3d.cdk.userCapture
         {
             var frame = new UserTrackingFrameDto()
             {
-                position = transform.position.Dto(),
-                rotation = transform.rotation.Dto(),
+                position = (transform.position - UMI3DLoadingHandler.Instance.transform.position).Dto(),
+                rotation = (transform.rotation * Quaternion.Inverse(UMI3DLoadingHandler.Instance.transform.rotation)).Dto(),
             };
 
             lock (SubskeletonsLock)

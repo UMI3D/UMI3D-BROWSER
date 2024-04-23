@@ -69,7 +69,7 @@ namespace umi3d.browserRuntime.navigation
                 return;
             }
 
-            personalSkeletonContainer.position = data.position.Struct();
+            personalSkeletonContainer.position = data.position.Struct() - UMI3DLoadingHandler.Instance.transform.position;
             if (cameraTransform != null)
             {
                 Vector3 translation = Vector3.ProjectOnPlane(
@@ -79,7 +79,7 @@ namespace umi3d.browserRuntime.navigation
                 personalSkeletonContainer.Translate(translation, Space.World);
             }
 
-            personalSkeletonContainer.rotation = data.rotation.Quaternion();
+            personalSkeletonContainer.rotation = data.rotation.Quaternion() * Quaternion.Inverse(UMI3DLoadingHandler.Instance.transform.rotation);
             if (cameraTransform != null)
             {
                 float angle = Vector3.SignedAngle(

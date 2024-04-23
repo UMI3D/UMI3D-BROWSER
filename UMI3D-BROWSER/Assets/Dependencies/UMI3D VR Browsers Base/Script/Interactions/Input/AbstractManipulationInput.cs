@@ -222,8 +222,7 @@ namespace umi3dVRBrowsersBase.interactions.input
         /// </summary>
         protected virtual void ActivationButton_onStateUp()
         {
-            if (PlayerMenuManager.Instance.parameterGear.IsHovered 
-                || PlayerMenuManager.Instance.IsMenuHovered)
+            if (PlayerMenuManager.Instance.IsMenuHovered)
                 return;
 
             if (messageSenderCoroutine != null)
@@ -242,8 +241,7 @@ namespace umi3dVRBrowsersBase.interactions.input
         /// </summary>
         protected virtual void ActivationButton_onStateDown()
         {
-            if (PlayerMenuManager.Instance.parameterGear.IsHovered 
-                || PlayerMenuManager.Instance.IsMenuHovered)
+            if (PlayerMenuManager.Instance.IsMenuHovered)
                 return;
 
             if (messageSenderCoroutine != null)

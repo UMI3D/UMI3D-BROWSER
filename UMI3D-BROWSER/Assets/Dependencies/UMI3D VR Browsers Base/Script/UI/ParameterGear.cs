@@ -15,10 +15,8 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
-using MathNet.Numerics;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using umi3d.cdk.interaction;
@@ -26,7 +24,6 @@ using umi3dVRBrowsersBase.interactions;
 using umi3dVRBrowsersBase.ui.playerMenu;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.UI;
 using WebSocketSharp;
 
 namespace umi3dVRBrowsersBase.ui
@@ -42,13 +39,6 @@ namespace umi3dVRBrowsersBase.ui
         /// <inheritdoc/>
         /// </summary>
         public UnityEvent OnTriggered { get; private set; } = new UnityEvent();
-
-        /// <summary>
-        /// Is the gear currently hovered ?
-        /// </summary>
-        public bool IsHovered { get; private set; } = false;
-
-        public bool IsDisplayed => isActiveAndEnabled;
 
         /// <summary>
         /// <see cref="Interactable"/> which contains the parameters.
@@ -78,15 +68,22 @@ namespace umi3dVRBrowsersBase.ui
         /// </summary>
         private InteractableContainer container;
 
-        [SerializeField]
-        [Tooltip("Gear image")]
-        private Image gearImage;
-
-        public TMP_Text text;
+        public TMP_Text label;
 
         [SerializeField]
         [Tooltip("player needed for distance.")]
         private Transform player;
+
+
+        public float delayBeforeHiding = 1f;
+        [Tooltip("Used for gear scale.")]
+        public float minDistance = 2f;
+        [Tooltip("Used for gear scale.")]
+        public float maxDistance = 6f;
+        [Tooltip("Used for gear scale.")]
+        public float minScale = 0.15f;
+        [Tooltip("Used for gear scale.")]
+        public float maxScale = .5f;
 
         #endregion
 
@@ -94,18 +91,6 @@ namespace umi3dVRBrowsersBase.ui
 
         private void Start()
         {
-            // Display on top of everything
-            Material material = gearImage.materialForRendering;
-            if (material != null)
-            {
-                var materialCopy = new Material(material);
-                materialCopy.SetInt(
-                    "unity_GUIZTestMode",
-                    (int)UnityEngine.Rendering.CompareFunction.Always
-                );
-                gearImage.material = materialCopy;
-            }
-
             PlayerMenuManager.Instance.onMenuClose.AddListener(Hide);
 
             Hide();
@@ -130,16 +115,14 @@ namespace umi3dVRBrowsersBase.ui
         /// <param name="normal">World normal of the gear</param>
         public void Display(Interactable interactable, Vector3 position, Vector3 normal)
         {
-            isInteractableSelected = true;
-
             gameObject.SetActive(true);
 
-            this.CurrentAssociatedInteractable = interactable;
+            CurrentAssociatedInteractable = interactable;
 
-            this.transform.position = position;
-            this.transform.rotation = Quaternion.LookRotation(-normal, Vector3.up);
+            transform.position = position;
+            transform.rotation = Quaternion.LookRotation(-normal, Vector3.up);
 
-            text.text = interactable.name;
+            label.text = interactable.name;
         }
 
         /// <summary>
@@ -149,18 +132,12 @@ namespace umi3dVRBrowsersBase.ui
         /// <param name="lookAtPoint">World position of the point the object is looked at.</param>
         public void Display(InteractableContainer interactableContainer, Vector3 lookAtPoint)
         {
-            UnityEngine.Debug.Log($"[PG] Display container");
-
-            isInteractableSelected = true;
-
             Vector3 rootPosition;
             Vector3 normal;
-            Vector3 rayDirection;
             if (interactableContainer.TryGetComponent(out MeshCollider collider) && collider.convex)
             {
                 rootPosition = collider.ClosestPoint(lookAtPoint);
-                rayDirection = (rootPosition - lookAtPoint).normalized;
-                normal = -rayDirection;
+                normal = -(rootPosition - lookAtPoint).normalized;
             }
             else
             {
@@ -170,8 +147,7 @@ namespace umi3dVRBrowsersBase.ui
                 if (hitsInfo.hitCount == 0) // happens if the center of the object is outside of the mesh
                 {
                     rootPosition = interactableContainer.transform.position;
-                    rayDirection = (rootPosition - lookAtPoint).normalized;
-                    normal = -rayDirection;
+                    normal = -(rootPosition - lookAtPoint).normalized;
                 }
                 else
                 {
@@ -188,10 +164,8 @@ namespace umi3dVRBrowsersBase.ui
                     catch
                     {
                         rootPosition = interactableContainer.transform.position;
-                        normal = (lookAtPoint - rootPosition).normalized;
+                        normal = -(rootPosition - lookAtPoint).normalized;
                     }
-
-                    rayDirection = (rootPosition - lookAtPoint).normalized;
                 }
             }
 
@@ -204,33 +178,33 @@ namespace umi3dVRBrowsersBase.ui
         public void Hide()
         {
             gameObject.SetActive(false);
-            this.CurrentAssociatedInteractable = null;
-            isInteractableSelected = false;
+            CurrentAssociatedInteractable = null;
         }
 
-        public float delayBeforeHiding = 1f;
-        public bool isInteractableSelected;
 
         public void HideWithDelay()
         {
-            isInteractableSelected = false;
             float time = 0f;
             IEnumerator HideCoroutine()
             {
+                while (isSelected)
+                {
+                    yield return null;
+                }
+
                 while (time < delayBeforeHiding)
                 {
                     time += Time.deltaTime;
                     yield return null;
                 }
 
-                if (!isInteractableSelected)
+                if (!isSelected)
                 {
                     Hide();
                 }
             }
 
             CoroutineManager.Instance.AttachCoroutine(HideCoroutine());
-            //StartCoroutine(HideCoroutine());
         }
 
         public override void Select(VRController controller)
@@ -243,17 +217,6 @@ namespace umi3dVRBrowsersBase.ui
             isSelected = false;
         }
 
-        [Tooltip("Used for gear scale.")]
-        public float minDistance = 2f;
-        [Tooltip("Used for gear scale.")]
-        public float maxDistance = 6f;
-        [Tooltip("Used for gear scale.")]
-        public float minScale = 0.15f;
-        [Tooltip("Used for gear scale.")]
-        public float maxScale = .5f;
-
-        
-
         private void Update()
         {
             if (container == null && gameObject.activeInHierarchy)
@@ -261,7 +224,7 @@ namespace umi3dVRBrowsersBase.ui
                 Hide();
             }
 
-            if (IsDisplayed)
+            if (isActiveAndEnabled)
             {
                 var distance = Vector3.Distance(transform.position, player.position);
                 var scale = Mathf.Lerp(minScale, maxScale, Mathf.InverseLerp(minDistance, maxDistance, distance));

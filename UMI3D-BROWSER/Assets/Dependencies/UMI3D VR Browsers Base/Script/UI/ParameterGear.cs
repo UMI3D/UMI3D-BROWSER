@@ -20,6 +20,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using umi3d.cdk.interaction;
 using umi3dVRBrowsersBase.interactions;
 using umi3dVRBrowsersBase.ui.playerMenu;
@@ -81,6 +82,8 @@ namespace umi3dVRBrowsersBase.ui
         [Tooltip("Gear image")]
         private Image gearImage;
 
+        public TMP_Text text;
+
         [SerializeField]
         [Tooltip("player needed for distance.")]
         private Transform player;
@@ -125,7 +128,7 @@ namespace umi3dVRBrowsersBase.ui
         /// <param name="interactable"></param>
         /// <param name="position">World position of the gear</param>
         /// <param name="normal">World normal of the gear</param>
-        public void Display(Interactable interactable, Vector3 position, Vector3 normal, Vector2 rayDirection)
+        public void Display(Interactable interactable, Vector3 position, Vector3 normal)
         {
             isInteractableSelected = true;
 
@@ -134,8 +137,9 @@ namespace umi3dVRBrowsersBase.ui
             this.CurrentAssociatedInteractable = interactable;
 
             this.transform.position = position;
-            this.transform.rotation = Quaternion.LookRotation(normal, Vector3.up);
-            this.transform.localRotation *= Quaternion.Euler(0, 0, Vector3.SignedAngle(transform.up, -rayDirection, transform.forward));
+            this.transform.rotation = Quaternion.LookRotation(-normal, Vector3.up);
+
+            text.text = interactable.name;
         }
 
         /// <summary>
@@ -145,6 +149,8 @@ namespace umi3dVRBrowsersBase.ui
         /// <param name="lookAtPoint">World position of the point the object is looked at.</param>
         public void Display(InteractableContainer interactableContainer, Vector3 lookAtPoint)
         {
+            UnityEngine.Debug.Log($"[PG] Display container");
+
             isInteractableSelected = true;
 
             Vector3 rootPosition;
@@ -161,7 +167,7 @@ namespace umi3dVRBrowsersBase.ui
                 Ray ray = new Ray(lookAtPoint, interactableContainer.transform.position - lookAtPoint);
                 (RaycastHit[] hits, int hitCount) hitsInfo = umi3d.common.Physics.RaycastAll(ray);
 
-                if (hitsInfo.hitCount == 0) // happens is the center of the object is outside of the mesh
+                if (hitsInfo.hitCount == 0) // happens if the center of the object is outside of the mesh
                 {
                     rootPosition = interactableContainer.transform.position;
                     rayDirection = (rootPosition - lookAtPoint).normalized;
@@ -189,7 +195,7 @@ namespace umi3dVRBrowsersBase.ui
                 }
             }
 
-            Display(interactableContainer.Interactable, rootPosition, normal, rayDirection);
+            Display(interactableContainer.Interactable, rootPosition, normal);
         }
 
         /// <summary>

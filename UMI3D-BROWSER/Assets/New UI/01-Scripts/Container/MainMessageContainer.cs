@@ -57,9 +57,8 @@ namespace umi3dBrowsers
             else suffixEvent.SetEntry(suffix);
 
             float prefixLength = prefixText.text.Length;
-            Debug.Log("prefix length = " + prefixLength); 
             float suffixLength = suffixText.text.Length;
-            Debug.Log("suffix length = " + suffixLength);
+            Debug.Log(suffixText.text + " length:: " + suffixLength);
 
             suffixRectTransform.width = suffixLength * suffixCharSize;
             prefixRectTransform.width = prefixLength * prefixCharSize;

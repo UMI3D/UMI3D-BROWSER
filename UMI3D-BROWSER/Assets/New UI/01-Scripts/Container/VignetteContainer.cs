@@ -15,7 +15,6 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
-using Newtonsoft.Json.Bson;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -23,8 +22,6 @@ using System.Linq;
 using umi3dBrowsers.displayer;
 using umi3dBrowsers.services.connection;
 using umi3dBrowsers.utils;
-using Unity.VisualScripting;
-using UnityEditor.Localization.Plugins.XLIFF.V12;
 using UnityEngine;
 using UnityEngine.UI;
 

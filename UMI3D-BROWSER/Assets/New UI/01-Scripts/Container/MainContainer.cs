@@ -38,6 +38,7 @@ namespace umi3dBrowsers
         [SerializeField] private Button storageButton;
         [SerializeField] private Button hintButton;
         [SerializeField] private Button bugButton;
+        [SerializeField] private GameObject navBar;
         [Space]
         [SerializeField] private ColorBlock navBarButtonsColors = new ColorBlock();
         [Space]
@@ -250,6 +251,8 @@ namespace umi3dBrowsers
                 case ContentState.flagContent:
                     CloseAllPanels();
                     flagContent.gameObject.SetActive(true);
+                    Top.SetActive(true);
+                    navBar.SetActive(false);
                     title.SetTitle(flagContent.PrefixTitleKey, flagContent.SuffixTitleKey);
                     break;
                 case ContentState.standUpContent:
@@ -281,6 +284,7 @@ namespace umi3dBrowsers
             standUpContent.gameObject.SetActive(false);
             loadingContent.gameObject.SetActive(false);
             dynamicServerContent.gameObject.SetActive(false);
+            navBar.SetActive(true);
         }
     }
 }

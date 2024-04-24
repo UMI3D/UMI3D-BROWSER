@@ -123,6 +123,7 @@ namespace umi3dVRBrowsersBase.ui
             transform.rotation = Quaternion.LookRotation(-normal, Vector3.up);
 
             label.text = interactable.name;
+            UnityEngine.Debug.Log($"[PG] name = {interactable.name}, {interactable.dto.name}, {interactable.description}");
         }
 
         /// <summary>

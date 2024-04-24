@@ -28,6 +28,7 @@ namespace umi3dBrowsers.container
         [SerializeField] private Transform navigationRoot;
         [SerializeField] private GameObject tabButtonPrefab;
         [SerializeField] private GameObject containerPrefab;
+        [SerializeField] private GameObject paramFormContainerPrefab;
         [SerializeField, Tooltip("To bind existing tabs ith existing container")] 
         private List<TabToContainerBinder> tabs;
         [Header("Content")]
@@ -51,18 +52,18 @@ namespace umi3dBrowsers.container
                     UpdateTabsVisual();
                 };
             }
-            InitSelectedButton();
+            InitSelectedButtonById();
         }
 
-        public void InitSelectedButton()
+        public void InitSelectedButtonById(int id = 0)
         {
             foreach (var tab in tabs)
             {
                 tab.SetActive(false);
             }
 
-            tabs[0].SetActive(true);
-            currentActiveButton = tabs[0];
+            tabs[id].SetActive(true);
+            currentActiveButton = tabs[id];
         }
 
         private void UpdateTabsVisual()
@@ -119,6 +120,12 @@ namespace umi3dBrowsers.container
             tabs.Add(tabBinder);
 
             return tab;
+        }
+
+        public GameObject AddNewTabForParamForm(string label)
+        {
+            GameObject tabContainer = Instantiate(paramFormContainerPrefab, contentRoot);
+            return AddNewTab(label, false, tabContainer);
         }
 
         public Transform GetTabContainerById(int id)

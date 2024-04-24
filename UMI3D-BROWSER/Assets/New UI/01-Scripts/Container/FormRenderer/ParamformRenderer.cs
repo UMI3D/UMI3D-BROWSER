@@ -19,6 +19,7 @@ using System.Collections;
 using System.Collections.Generic;
 using umi3d.common.interaction;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace umi3dBrowsers.container.formrenderer 
 {
@@ -32,8 +33,14 @@ namespace umi3dBrowsers.container.formrenderer
         [SerializeField] private GameObject validationButtonPrefab;
         [SerializeField] private GameObject toggleSwitchPrefab;
 
+        [Header("Roots")]
+        [SerializeField] private TabManager tabManager;
+
         private GameObject _contentRoot;
-        List<GameObject> form = new();
+
+        /// <summary>
+        /// List of callbacks for every parts of the form to build the answer dto
+        /// </summary>
         List<Action> formBinding = new();
         private FormAnswerDto _formAnswer;
 
@@ -45,6 +52,9 @@ namespace umi3dBrowsers.container.formrenderer
 
         internal void Handle(ConnectionFormDto connectionFormDto)
         {
+            GameObject container = tabManager.AddNewTabForParamForm(connectionFormDto.fields[0].name);
+            IDisplayer displayer = null;
+
             for (int i = 0; i < connectionFormDto.fields.Count; i++)
             {
                 ParameterSettingRequestDto paramRequestDto = new ParameterSettingRequestDto()
@@ -60,9 +70,8 @@ namespace umi3dBrowsers.container.formrenderer
                 {
                     case EnumParameterDto<string> paramEnum:
                         {
-                            GameObject gameObject = Instantiate(dropDownFieldPrefab, _contentRoot.transform);
-                            form.Add(gameObject);
-                            IDisplayer displayer = gameObject.GetComponent<IDisplayer>();
+                            GameObject gameObject = Instantiate(dropDownFieldPrefab, container.transform);
+                            displayer = gameObject.GetComponent<IDisplayer>();
                             formBinding.Add(() => paramRequestDto.parameter = displayer.GetValue(true));
                             displayer.SetTitle(paramEnum.name);
                             displayer.SetPlaceHolder(paramEnum.possibleValues);
@@ -70,9 +79,8 @@ namespace umi3dBrowsers.container.formrenderer
                         break;
                     case BooleanParameterDto boolParam:
                         {
-                            GameObject gameObject = Instantiate(toggleSwitchPrefab, _contentRoot.transform);
-                            form.Add(gameObject);
-                            IDisplayer displayer = gameObject.GetComponentInChildren<IDisplayer>();
+                            GameObject gameObject = Instantiate(toggleSwitchPrefab, container.transform);
+                            displayer = gameObject.GetComponentInChildren<IDisplayer>();
                             formBinding.Add(() => paramRequestDto.parameter = displayer.GetValue(true));
                             displayer.SetTitle(boolParam.name);
                             displayer.SetPlaceHolder(new List<string>() { boolParam.value ? "1" : "0" });
@@ -86,9 +94,8 @@ namespace umi3dBrowsers.container.formrenderer
                         break;
                     case StringParameterDto stringParam:
                         {
-                            GameObject gameObject = Instantiate(textFieldPrefab, _contentRoot.transform);
-                            form.Add(gameObject);
-                            IDisplayer displayer = gameObject.GetComponent<IDisplayer>();
+                            GameObject gameObject = Instantiate(textFieldPrefab, container.transform);
+                            displayer = gameObject.GetComponent<IDisplayer>();
                             formBinding.Add(() => paramRequestDto.parameter = displayer.GetValue(true));
                             displayer.SetTitle(stringParam.name);
                             displayer.SetPlaceHolder(new List<string>() { stringParam.description });
@@ -97,12 +104,24 @@ namespace umi3dBrowsers.container.formrenderer
                     default:
                         break;
                 }
+
+                if (connectionFormDto.fields[i].name == "OR")
+                {
+                    InstantiateValidationButton(container);
+                    displayer?.SetTitle("Password");
+                    container = tabManager.AddNewTabForParamForm(connectionFormDto.fields[i + 1].name);
+                }
             }
 
-            GameObject go = Instantiate(validationButtonPrefab, _contentRoot.transform);
+            InstantiateValidationButton(container);
+            tabManager.InitSelectedButtonById(0);
+        }
+
+        private void InstantiateValidationButton(GameObject container)
+        {
+            GameObject go = Instantiate(validationButtonPrefab, container.transform);
             SimpleButton simpleButton = go.GetComponent<SimpleButton>();
             simpleButton.OnClick.AddListener(() => ValidateForm());
-            form.Add(go);
         }
 
         [ContextMenu("Validate form ")]
@@ -112,7 +131,7 @@ namespace umi3dBrowsers.container.formrenderer
             OnFormAnswer?.Invoke(_formAnswer);
         }
 
-        private void IniFormAnswer(ulong id)
+        private void InitFormAnswer(ulong id)
         {
             _formAnswer = new FormAnswerDto()
             {
@@ -127,15 +146,9 @@ namespace umi3dBrowsers.container.formrenderer
         internal void CleanContent(ulong id)
         {
             formBinding = new();
-            IniFormAnswer(id);
+            InitFormAnswer(id);
 
-            float delay = 0;
-            for (int i = 0; i < form.Count; i++)
-            {
-                Destroy(form[i], delay);
-                delay += 0.01f;
-            }
-            form = new();
+            tabManager.Clear();
         }
     }
 }

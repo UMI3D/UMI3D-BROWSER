@@ -191,6 +191,7 @@ namespace umi3dBrowsers
             {
                 HandleContentState(ContentState.dynamicServerContent);
                 ProcessForm(connectionFormDto);
+                title.SetTitle("", connectionFormDto?.name, true, true);
             };
             connectionProcessorService.OnDivFormReceived += (connectionFormDto) =>
             {

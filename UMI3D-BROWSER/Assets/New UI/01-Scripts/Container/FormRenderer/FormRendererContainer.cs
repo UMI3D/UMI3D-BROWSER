@@ -38,6 +38,7 @@ namespace umi3dBrowsers.container.formrenderer
     {
         [Header("params")]
         [SerializeField] private GameObject contentRoot;
+        [SerializeField] private GameObject paramRoot;
 
         [SerializeField] private ParamformRenderer formParamRenderer;
         [SerializeField] private DivformRenderer formDivRenderer;
@@ -54,7 +55,7 @@ namespace umi3dBrowsers.container.formrenderer
 
         public void HandleParamForm(ConnectionFormDto connectionFormDto)
         {
-            formParamRenderer.Init(contentRoot);
+            formParamRenderer.Init(paramRoot);
             formParamRenderer.CleanContent(connectionFormDto.id);
             formParamRenderer.Handle(connectionFormDto);
         }

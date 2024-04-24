@@ -88,7 +88,7 @@ namespace umi3dBrowsers.container
                 tabManager.AddNewTab(settingPanels[i].PanelName, useLocalization, settingPanels[i].Panel);
             }
 
-            tabManager.InitSelectedButton();
+            tabManager.InitSelectedButtonById();
         }
     }
 }

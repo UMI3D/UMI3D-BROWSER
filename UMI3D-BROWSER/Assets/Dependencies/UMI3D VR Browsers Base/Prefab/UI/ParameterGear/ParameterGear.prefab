@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6158249943569500864}
   - component: {fileID: 5225349250490698050}
+  - component: {fileID: 3716950535654356333}
   m_Layer: 6
   m_Name: ParameterGear
   m_TagString: Untagged
@@ -52,6 +53,21 @@ MonoBehaviour:
   maxDistance: 6
   minScale: 0.15
   maxScale: 0.5
+--- !u!114 &3716950535654356333
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5865551193575093365}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a87f1d813b97927489ef52cd71750db9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  addRemoveWhenActivationChange: 1
+  variables:
+  - {fileID: 5225349250490698050}
 --- !u!1 &5867908569552119169
 GameObject:
   m_ObjectHideFlags: 0

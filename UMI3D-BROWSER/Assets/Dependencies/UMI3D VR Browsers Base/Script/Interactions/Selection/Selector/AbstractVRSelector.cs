@@ -11,6 +11,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
+using System;
 using System.Collections.Generic;
 using umi3d.cdk.collaboration;
 using umi3d.cdk.interaction;
@@ -19,6 +21,7 @@ using umi3dBrowsers.interaction.selection.feedback;
 using umi3dBrowsers.interaction.selection.intentdetector;
 using umi3dBrowsers.interaction.selection.projector;
 using umi3dBrowsers.interaction.selection.selector;
+using umi3dVRBrowsersBase.ui;
 using umi3dVRBrowsersBase.ui.playerMenu;
 using UnityEngine;
 using UnityEngine.Events;
@@ -136,6 +139,8 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
 
         private List<AbstractDetector<T>> _proximityDetectors;
 
+        public ParameterGear selectedInteractableInfo;
+
         #endregion fields
 
         #region lifecycle
@@ -144,6 +149,11 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
         {
             controller = GetComponentInParent<VRSelectionManager>().controller; //controller is required before awake
             base.Awake();
+        }
+
+        protected virtual void Start()
+        {
+            Global.Get(out selectedInteractableInfo);
         }
 
         private void OnEnable()
@@ -397,7 +407,7 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
                 else if (LastSelected != null) // the selector was selecting something else before
                 {
                     Deselect(LastSelected);
-                    PlayerMenuManager.Instance.parameterGear.Hide();
+                    selectedInteractableInfo.Hide();
                 }
 
             }

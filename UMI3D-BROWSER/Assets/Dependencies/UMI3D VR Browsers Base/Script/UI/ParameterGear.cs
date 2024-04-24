@@ -19,6 +19,7 @@ using System;
 using System.Collections;
 using System.Linq;
 using TMPro;
+using umi3d.browserRuntime.player;
 using umi3d.cdk.interaction;
 using umi3dVRBrowsersBase.interactions;
 using umi3dVRBrowsersBase.ui.playerMenu;
@@ -70,11 +71,6 @@ namespace umi3dVRBrowsersBase.ui
 
         public TMP_Text label;
 
-        [SerializeField]
-        [Tooltip("player needed for distance.")]
-        private Transform player;
-
-
         public float delayBeforeHiding = 1f;
         [Tooltip("Used for gear scale.")]
         public float minDistance = 2f;
@@ -85,12 +81,17 @@ namespace umi3dVRBrowsersBase.ui
         [Tooltip("Used for gear scale.")]
         public float maxScale = .5f;
 
+        Transform playerTransform;
+
         #endregion
 
         #region Methods
 
         private void Start()
         {
+            Global.Get(out UMI3DVRPlayer player);
+            playerTransform = player.transform;
+
             PlayerMenuManager.Instance.onMenuClose.AddListener(Hide);
 
             Hide();
@@ -227,7 +228,7 @@ namespace umi3dVRBrowsersBase.ui
 
             if (isActiveAndEnabled)
             {
-                var distance = Vector3.Distance(transform.position, player.position);
+                var distance = Vector3.Distance(transform.position, playerTransform.position);
                 var scale = Mathf.Lerp(minScale, maxScale, Mathf.InverseLerp(minDistance, maxDistance, distance));
                 transform.localScale = new Vector3(scale, scale, scale);
             }

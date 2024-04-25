@@ -18,6 +18,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using umi3d.common.interaction;
+using UnityEditor.PackageManager.UI;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -30,11 +31,11 @@ namespace umi3dBrowsers.container.formrenderer
         [SerializeField] private GameObject vectorFieldPrefab;
         [SerializeField] private GameObject dropDownFieldPrefab;
         [SerializeField] private GameObject sliderPrefab;
-        [SerializeField] private GameObject validationButtonPrefab;
         [SerializeField] private GameObject toggleSwitchPrefab;
 
         [Header("Roots")]
         [SerializeField] private TabManager tabManager;
+        [SerializeField] private SimpleButton validationButton;
 
         private GameObject _contentRoot;
 
@@ -48,6 +49,8 @@ namespace umi3dBrowsers.container.formrenderer
         public void Init(GameObject contentRoot)
         {
             this._contentRoot = contentRoot;
+
+            validationButton.OnClick.AddListener(() => ValidateForm());
         }
 
         internal void Handle(ConnectionFormDto connectionFormDto)
@@ -107,21 +110,12 @@ namespace umi3dBrowsers.container.formrenderer
 
                 if (connectionFormDto.fields[i].name == "OR")
                 {
-                    InstantiateValidationButton(container);
                     displayer?.SetTitle("Password");
                     container = tabManager.AddNewTabForParamForm(connectionFormDto.fields[i + 1].name);
                 }
             }
 
-            InstantiateValidationButton(container);
             tabManager.InitSelectedButtonById(0);
-        }
-
-        private void InstantiateValidationButton(GameObject container)
-        {
-            GameObject go = Instantiate(validationButtonPrefab, container.transform);
-            SimpleButton simpleButton = go.GetComponent<SimpleButton>();
-            simpleButton.OnClick.AddListener(() => ValidateForm());
         }
 
         [ContextMenu("Validate form ")]

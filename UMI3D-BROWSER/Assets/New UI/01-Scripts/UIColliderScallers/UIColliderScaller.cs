@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -28,6 +29,11 @@ namespace umi3dBrowsers.utils
 
         public static List<UIColliderScaller> uiColliderScalers = new();
 
+        [Header("UptadeToChildRT")]
+        [SerializeField] private bool scaleHorizontalRT = false;
+        [SerializeField] private RectTransform childRT;
+        private bool hasResized = false;
+
         private void OnEnable()
         {
             if (!uiColliderScalers.Contains(this))
@@ -35,11 +41,16 @@ namespace umi3dBrowsers.utils
                 uiColliderScalers.Add(this);
                 ScaleCollider();
             }
+
+            hasResized = false;
+            HandleRT();
         }
 
         private void OnValidate()
         {
             ScaleCollider();
+            hasResized = false;
+            HandleRT();
         }
 
         private void OnDisable()
@@ -56,6 +67,16 @@ namespace umi3dBrowsers.utils
             _transform = GetComponent<RectTransform>();
         }
 
+        private void HandleRT()
+        {
+            if (scaleHorizontalRT)
+            {
+                RectTransform rectTransform = transform as RectTransform;
+                if (childRT != null)
+                    rectTransform.sizeDelta = new Vector2(childRT.sizeDelta.x, rectTransform.sizeDelta.y);
+            }
+        }
+
         [ContextMenu("ScaleCollider")]
         public void ScaleCollider()
         {
@@ -64,6 +85,15 @@ namespace umi3dBrowsers.utils
 
             Vector3 size = new Vector3(_transform.rect.width, _transform.rect.height, 0.01f);
             _collider.size = size;
+        }
+
+        private void LateUpdate()
+        {
+            if (!hasResized)
+            {
+                hasResized = true;
+                HandleRT();
+            }
         }
     }
 }

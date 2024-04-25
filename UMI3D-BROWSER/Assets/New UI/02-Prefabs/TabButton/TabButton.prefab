@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 8207654785842453916}
   - component: {fileID: 6228867922666851532}
   - component: {fileID: 4489565934932031524}
-  - component: {fileID: 2741955196918809660}
+  - component: {fileID: 8820358383892393575}
   m_Layer: 5
   m_Name: TabButton
   m_TagString: Untagged
@@ -40,7 +40,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 32.54, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5844644974715727587
 CanvasRenderer:
@@ -69,7 +69,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0, y: 0, z: 0.01}
+  m_Size: {x: 32.54, y: 0, z: 0.01}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8207654785842453916
 MonoBehaviour:
@@ -83,7 +83,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54201f7897bbda644b218cb41fa75e97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scaleHorizontalRT: 1
+  scaleHorizontalRT: 0
   childRT: {fileID: 8461160948971041536}
 --- !u!114 &6228867922666851532
 MonoBehaviour:
@@ -176,7 +176,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds: []
---- !u!114 &2741955196918809660
+--- !u!114 &8820358383892393575
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -185,11 +185,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 5256747629347637188}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
+  m_Script: {fileID: 11500000, guid: e5ff637a8b00b0646aed80f70bd8aa56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_HorizontalFit: 2
-  m_VerticalFit: 0
+  BadgeText: {fileID: 6881837115150107110}
+  textTransform: {fileID: 8461160948971041536}
+  backgroundTransform: {fileID: 3596850212133020282}
+  padding: 15
 --- !u!1 &7015280044433140162
 GameObject:
   m_ObjectHideFlags: 0

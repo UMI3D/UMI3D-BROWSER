@@ -161,9 +161,12 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 12694495050862592
-    m_Localized: 'Trying to connect to :'
+    m_Localized: 'Trying to connect to : {url}
+
+      It may take some time.'
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 2971575680132972557
   - m_Id: 12694711418228736
     m_Localized: It may take some time.
     m_Metadata:
@@ -185,13 +188,16 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 12940733908766720
-    m_Localized: assets library are required
+    m_Localized: '{libCount:p:{} library|{} libraries} are required'
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 2971575680132972557
   - m_Id: 12941132921294848
-    m_Localized: Download library and connect to the server ?
+    m_Localized: Download {libCount:plural:{} library|{} libraries} and connect to
+      the server ?
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 2971575680132972557
   - m_Id: 12942352343879680
     m_Localized: Accept
     m_Metadata:
@@ -245,10 +251,26 @@ MonoBehaviour:
     m_Localized: The world took too long to respond.
     m_Metadata:
       m_Items: []
+  - m_Id: 12987291855024128
+    m_Localized: Please enter an URL.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13695049655283712
+    m_Localized: Url mismatch.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13695580083744768
+    m_Localized: No Intance of UMI3DCollaborationServer.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13695937836904448
+    m_Localized: Redirection already in progress.
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:
     - rid: 2971575680132972557
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_Entries: 00001b2c06000000
+        m_Entries: 00001b2c0600000000d0c36787f92d0000d0c34ee4f92d0000101c7493192d00

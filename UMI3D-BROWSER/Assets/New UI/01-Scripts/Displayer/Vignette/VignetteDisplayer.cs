@@ -58,9 +58,7 @@ namespace umi3dBrowsers.displayer
         private void Awake()
         {
             transprentColor.a = 0;
-            likeButton.gameObject.SetActive(false);
-            trashButton.gameObject.SetActive(false);
-            inputFieldBackground.gameObject.SetActive(false);
+            DisableSubComponents();
 
             likeButton.OnHover += () => vignetteState = VignetteState.HoveringSubElement;
             trashButton.OnHover += () => vignetteState = VignetteState.HoveringSubElement;
@@ -101,8 +99,9 @@ namespace umi3dBrowsers.displayer
 
             likeButton.gameObject.SetActive(true);
             trashButton.gameObject.SetActive(true);
-            inputFieldBackground.gameObject.SetActive(true);
-           
+            pen.gameObject.SetActive(true);
+            IF_background.enabled = true;
+
         }
 
         public void HoverExit(PointerEventData eventData)
@@ -124,7 +123,8 @@ namespace umi3dBrowsers.displayer
         {
             likeButton.gameObject.SetActive(false);
             trashButton.gameObject.SetActive(false);
-            inputFieldBackground.gameObject.SetActive(false);
+            pen.gameObject.SetActive(false);
+            IF_background.enabled = false;
         }
 
         private IEnumerator HoverDelay()
@@ -135,7 +135,6 @@ namespace umi3dBrowsers.displayer
             {
                 likeButton.Disable();
                 trashButton.Disable();
-                inputFieldBackground.Disable();
             }
         }
 

@@ -10839,6 +10839,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d784afb37a5eb4042a86206a3e3b8d7b, type: 3}
+--- !u!1 &1082800123 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1051322153514420337, guid: d784afb37a5eb4042a86206a3e3b8d7b,
+    type: 3}
+  m_PrefabInstance: {fileID: 1082800122}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1099818250
 GameObject:
   m_ObjectHideFlags: 0
@@ -15337,7 +15343,7 @@ MonoBehaviour:
   panel: {fileID: 1839090193}
   message: {fileID: 506970489}
   objectsToHide:
-  - {fileID: 0}
+  - {fileID: 1082800123}
   - {fileID: 408117372}
   - {fileID: 1619832314}
   - {fileID: 2105915454}

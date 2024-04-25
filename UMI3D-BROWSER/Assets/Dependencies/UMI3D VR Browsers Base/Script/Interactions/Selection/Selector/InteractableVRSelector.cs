@@ -14,7 +14,6 @@ limitations under the License.
 using System;
 using System.Collections.Generic;
 using umi3d.cdk.interaction;
-using umi3d.cdk.userCapture.pose;
 using umi3d.common;
 using umi3dBrowsers.interaction.selection;
 using umi3dBrowsers.interaction.selection.intentdetector;
@@ -42,11 +41,6 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
 
         #region constructors
 
-        private InteractableVRSelector() : base()
-        {
-            projector = new InteractableProjector();
-        }
-
         /// <inheritdoc/>
         [HideInInspector]
         public class InteractableSelectionData : SelectionIntentData<InteractableContainer>
@@ -60,6 +54,16 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
         #endregion constructors
 
         #region lifecycle
+
+        protected override void Start()
+        {
+            base.Start();
+
+            projector = new InteractableProjector()
+            {
+                selectedInteractableManager = selectedInteractableManager
+            };
+        }
 
         protected override void Update()
         {

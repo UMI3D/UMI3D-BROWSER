@@ -12,6 +12,8 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
+using System;
+using umi3d.browserRuntime.player;
 using umi3d.cdk.menu;
 using umi3dVRBrowsersBase.interactions;
 using UnityEngine;
@@ -93,7 +95,7 @@ namespace umi3dVRBrowsersBase.ui.playerMenu
 
     public partial class PlayerMenuManager : SingleBehaviour<PlayerMenuManager>
     {
-        public ParameterGear parameterGear;
+        SelectedInteractableManager selectedInteractableManager;
 
         #region Player Menu
 
@@ -112,7 +114,7 @@ namespace umi3dVRBrowsersBase.ui.playerMenu
             transform.RotateAround(playerCameraPosition, Vector3.up, playerCameraRotation.eulerAngles.y);
             m_playerMenuCanvas.SetActive(true);
             m_menuCollider.enabled = true;
-            parameterGear.Hide();
+            selectedInteractableManager.Hide();
 
             ToolboxesMenu.Open();
             CloseSubWindow();
@@ -177,19 +179,19 @@ namespace umi3dVRBrowsersBase.ui.playerMenu
             base.Awake();
             Debug.Assert(m_playerCamera != null, "Player Camera is null in Player Menu Manager");
             m_menuCollider = GetComponent<BoxCollider>();
-            //gear  =
             Close(true);
         }
 
         private void Start()
         {
+            Global.Get(out selectedInteractableManager);
             gameObject.AddComponent<SelectablePlayerMenu>();
             MenuHeader.Initialize();
         }
     }
 
     /// <summary>
-    /// Only to prevent users from selecting Interactable behing the menu.
+    /// Only to prevent users from selecting Interactable behind the menu.
     /// </summary>
     public class SelectablePlayerMenu : UnityEngine.UI.Selectable
     {

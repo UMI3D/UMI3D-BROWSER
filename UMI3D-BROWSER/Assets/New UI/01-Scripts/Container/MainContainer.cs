@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using System;
+using System.Collections.Generic;
 using TMPro;
 using umi3d;
 using umi3d.common.interaction;
@@ -26,6 +27,8 @@ using umi3dVRBrowsersBase.connection;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Localization.Components;
+using UnityEngine.Localization.Settings;
+using UnityEngine.Localization.SmartFormat.PersistentVariables;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -146,7 +149,7 @@ namespace umi3dBrowsers
             });
             bugButton?.onClick.AddListener(() => {
                 bugClicked?.Invoke();
-                popupManager.ShowPopup(PopupManager.PopupType.ReportBug);
+                popupManager.ShowPopup(PopupManager.PopupType.ReportBug, "", "");
             });
             backButton?.OnClick.AddListener(() =>
             {
@@ -183,7 +186,16 @@ namespace umi3dBrowsers
 
         private void BindConnectionService()
         {
-            connectionProcessorService.OnConnectionFailure += (message) => { Debug.LogError("Failled to conenct"); };
+            connectionProcessorService.OnTryToConnect += (url) => {
+                popupManager.SetArguments(PopupManager.PopupType.Info, new Dictionary<string, object>() { { "url", url } });
+                popupManager.ShowPopup(PopupManager.PopupType.Info, "popup_connection_server", "popup_trying_connect");
+            };
+            connectionProcessorService.OnConnectionFailure += (message) => { 
+                Debug.LogError("Failed to connect");
+                popupManager.SetArguments(PopupManager.PopupType.Error, new Dictionary<string, object>() { { "libCount", 2 } });
+                popupManager.ShowPopup(PopupManager.PopupType.Error, "popup_fail_connect", message, 
+                    ("popup_close", () => { popupManager.ClosePopUp(); }) );
+            };
             connectionProcessorService.OnMediaServerPingSuccess += (virtualWorldData) => 
             {
                 title.SetTitle("Connected to", virtualWorldData.worldName, true , true);

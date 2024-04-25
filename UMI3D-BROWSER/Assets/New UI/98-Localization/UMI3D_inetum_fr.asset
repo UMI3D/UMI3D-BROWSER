@@ -162,9 +162,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 12694495050862592
-    m_Localized: "Tentative de connection \xE0 :"
+    m_Localized: "Tentative de connection \xE0 : {url}\nCela peut prendre un certain
+      temps."
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 2971575680132972558
   - m_Id: 12694711418228736
     m_Localized: Cela peut prendre quelques instants
     m_Metadata:
@@ -186,13 +188,16 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 12940733908766720
-    m_Localized: librairies d'assets requisent
+    m_Localized: '{libCount:p:{} librarie|{} libraries} requise'
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 2971575680132972558
   - m_Id: 12941132921294848
-    m_Localized: "T\xE9l\xE9charger les librairies et se connecter au serveur"
+    m_Localized: "T\xE9l\xE9charger {libCount:plural:{} la librarie|{} les libraries}
+      et se connecter au serveur"
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 2971575680132972558
   - m_Id: 12942352343879680
     m_Localized: Accepter
     m_Metadata:
@@ -247,10 +252,26 @@ MonoBehaviour:
     m_Localized: "Le monde \xE0 mis trop de temps \xE0 r\xE9pondre"
     m_Metadata:
       m_Items: []
+  - m_Id: 12987291855024128
+    m_Localized: Veuillez saisir une URL.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13695049655283712
+    m_Localized: "Incoh\xE9rence d'URL."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13695580083744768
+    m_Localized: Aucune instance de UMI3DCollaborationServer.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13695937836904448
+    m_Localized: "Redirection d\xE9j\xE0 en cours."
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:
     - rid: 2971575680132972558
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_Entries: 00001b2c06000000
+        m_Entries: 00001b2c0600000000d0c36787f92d0000d0c34ee4f92d0000101c7493192d00

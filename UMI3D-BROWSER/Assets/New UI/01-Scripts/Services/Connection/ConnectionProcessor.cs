@@ -13,6 +13,7 @@ namespace umi3dBrowsers.services.connection
     public class ConnectionProcessor : MonoBehaviour
     {
         public event Action<VirtualWorldData> OnMediaServerPingSuccess;
+        public event Action<string> OnTryToConnect;
         public event Action<string> OnConnectionFailure;
         public event Action<ConnectionFormDto> OnParamFormReceived;
         public event Action<umi3d.common.interaction.form.ConnectionFormDto> OnDivFormReceived;
@@ -46,11 +47,12 @@ namespace umi3dBrowsers.services.connection
         public async void TryConnectToMediaServer(string url)
         {
             VirtualWorldData virtualWorldData = new VirtualWorldData();
+            OnTryToConnect?.Invoke(url);
 
             url.Trim();
             if (string.IsNullOrEmpty(url))
             {
-                OnConnectionFailure?.Invoke("Please enter an URL");
+                OnConnectionFailure?.Invoke("enter_url");
                 return;
             }
 
@@ -73,7 +75,7 @@ namespace umi3dBrowsers.services.connection
             }
             else
             {
-                OnConnectionFailure?.Invoke("URL mismatch");
+                OnConnectionFailure?.Invoke("url_mismatch");
                 return;
             }
         }

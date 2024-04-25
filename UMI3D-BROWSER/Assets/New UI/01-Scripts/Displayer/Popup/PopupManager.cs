@@ -14,93 +14,106 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System.Collections;
+using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.Localization.Components;
 
-public class PopupManager : MonoBehaviour
+namespace umi3dBrowsers.displayer
 {
-    [Header("Pop up list")]
-    [SerializeField] GameObject closeApplication;
-    [SerializeField] GameObject connectionToServer;
-    [SerializeField] GameObject deleteLibrary;
-    [SerializeField] GameObject downloadLibrary;
-    [SerializeField] GameObject error;
-    [SerializeField] GameObject failedToConnect;
-    [SerializeField] GameObject reportBug;
-    [SerializeField] GameObject tookLongResponse;
-    [SerializeField] GameObject unableDeleteLibrary;
-    [SerializeField] GameObject worldNotRespond;
-
-    public PopupType activePopup;
-
-    public enum PopupType
+    public class PopupManager : MonoBehaviour
     {
-        CloseApplication,
-        ConnectionToServer,
-        DeleteLibrary,
-        DownloadLibrary,
-        Error,
-        FailedToConnect,
-        ReportBug,
-        TookLongResponse,
-        UnableDeleteLibrary,
-        WorldNotRespond
-    }
+        [Header("Pop up list")]
+        [SerializeField] PopupDisplayer error;
+        [SerializeField] PopupDisplayer warn;
+        [SerializeField] PopupDisplayer info;
+        [SerializeField] PopupDisplayer reportBug;
 
-    public void ShowPopup(PopupType type)
-    {
-        activePopup = type;
-        switch (type)
+        public PopupType ActivePopup;
+
+        public enum PopupType
         {
-            case PopupType.CloseApplication:
-                ActivatePopup(closeApplication);
-                break;
-            case PopupType.ConnectionToServer:
-                ActivatePopup(connectionToServer);
-                break;
-            case PopupType.DeleteLibrary:
-                ActivatePopup(deleteLibrary);
-                break;
-            case PopupType.DownloadLibrary:
-                ActivatePopup(downloadLibrary);
-                break;
-            case PopupType.Error:
-                ActivatePopup(error);
-                break;
-            case PopupType.FailedToConnect:
-                ActivatePopup(failedToConnect);
-                break;
-            case PopupType.ReportBug:
-                ActivatePopup(reportBug);
-                break;
-            case PopupType.TookLongResponse:
-                ActivatePopup(tookLongResponse);
-                break;
-            case PopupType.UnableDeleteLibrary:
-                ActivatePopup(unableDeleteLibrary);
-                break;
-            case PopupType.WorldNotRespond:
-                ActivatePopup(worldNotRespond);
-                break;
-            default:
-                Debug.LogWarning("Unknown popup type: " + type);
-                break;
-        }
-    }
-
-    private void ActivatePopup(GameObject popup)
-    {
-        GameObject[] allPopups = { closeApplication, connectionToServer, deleteLibrary,
-                                downloadLibrary, error, failedToConnect, reportBug,
-                                tookLongResponse, unableDeleteLibrary, worldNotRespond };
-
-        foreach (GameObject p in allPopups)
-        {
-            p.SetActive(false);
+            Error,
+            Warning,
+            Info,
+            ReportBug,
         }
 
-        popup.SetActive(true);
+        /// <param name="type"></param>
+        /// <param name="title">Key for localization</param>
+        /// <param name="description">Key for localization</param>
+        /// <param name="buttons">Key for localization and action onClick</param>
+        public void ShowPopup(PopupType type, string title, string description, params (string, Action)[] buttons)
+        {
+            ActivePopup = type;
+            switch (type)
+            {
+                case PopupType.Error:
+                    ActivatePopup(error, title, description, buttons);
+                    break;
+                case PopupType.Warning:
+                    ActivatePopup(warn, title, description, buttons);
+                    break;
+                case PopupType.Info:
+                    ActivatePopup(info, title, description, buttons);
+                    break;
+                default:
+                    Debug.LogWarning("Unknown popup type: " + type);
+                    break;
+            }
+        }
+
+        /// <remarks> Must be called before ShowPopup </remarks>
+        public void SetArguments(PopupType type, Dictionary<string, object> arguments)
+        {
+            ActivePopup = type;
+            switch (type)
+            {
+                case PopupType.Error:
+                    SetArguments(error, arguments);
+                    break;
+                case PopupType.Warning:
+                    SetArguments(warn, arguments);
+                    break;
+                case PopupType.Info:
+                    SetArguments(info, arguments);
+                    break;
+                default:
+                    Debug.LogWarning("Unknown popup type: " + type);
+                    break;
+            }
+        }
+
+        public void ClosePopUp()
+        {
+            HideAllPopup();
+        }
+
+        private void SetArguments(PopupDisplayer popup, Dictionary<string, object> arguments)
+        {
+            popup.SetArguments(arguments);
+        }
+
+        private void ActivatePopup(PopupDisplayer popup, string title, string description, params (string, Action)[] buttons)
+        {
+            HideAllPopup();
+
+            popup.Title = title;
+            popup.Description = description;
+            popup.SetButtons(buttons);
+
+            popup.gameObject.SetActive(true);
+        }
+
+        private void HideAllPopup()
+        {
+            GameObject[] allPopups = { error.gameObject, warn.gameObject, info.gameObject };
+
+            foreach (GameObject p in allPopups)
+                p.SetActive(false);
+        }
     }
 
 }

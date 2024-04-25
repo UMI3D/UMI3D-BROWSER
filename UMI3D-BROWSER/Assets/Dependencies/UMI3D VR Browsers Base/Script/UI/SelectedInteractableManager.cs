@@ -21,6 +21,7 @@ using System.Linq;
 using TMPro;
 using umi3d.browserRuntime.player;
 using umi3d.cdk.interaction;
+using umi3d.common.interaction;
 using umi3dVRBrowsersBase.interactions;
 using umi3dVRBrowsersBase.ui.playerMenu;
 using UnityEngine;
@@ -48,7 +49,7 @@ namespace umi3dVRBrowsersBase.ui
         public event Action triggerHandler;
 
         [HideInInspector]
-        public Interactable currentAssociatedInteractable;
+        public Interactable interactable;
         [HideInInspector]
         public Transform playerTransform;
 
@@ -58,14 +59,12 @@ namespace umi3dVRBrowsersBase.ui
             Global.Get(out UMI3DVRPlayer player);
             playerTransform = player.transform;
 
-            PlayerMenuManager.Instance.onMenuClose.AddListener(Hide);
-
             Hide();
         }
 
         private void Update()
         {
-            if (currentAssociatedInteractable == null && gameObject.activeInHierarchy)
+            if (interactable == null && gameObject.activeInHierarchy)
             {
                 Hide();
             }
@@ -73,7 +72,11 @@ namespace umi3dVRBrowsersBase.ui
             if (isActiveAndEnabled)
             {
                 var distance = Vector3.Distance(transform.position, playerTransform.position);
-                var scale = Mathf.Lerp(minScale, maxScale, Mathf.InverseLerp(minDistance, maxDistance, distance));
+                var scale = Mathf.Lerp(
+                    minScale,
+                    maxScale,
+                    Mathf.InverseLerp(minDistance, maxDistance, distance)
+                );
                 transform.localScale = new Vector3(scale, scale, scale);
             }
         }
@@ -82,7 +85,13 @@ namespace umi3dVRBrowsersBase.ui
         {
             triggerHandler?.Invoke();
 
-            PlayerMenuManager.Instance.OpenParameterMenu(controllerType, menuAsync: true);
+            var parameters = interactable
+                .interactions
+                .FindAll(i => i.Result is AbstractParameterDto);
+            if (parameters.Count > 0)
+            {
+                PlayerMenuManager.Instance.OpenParameterMenu(controllerType, menuAsync: true);
+            }
         }
 
         /// <summary>
@@ -95,7 +104,7 @@ namespace umi3dVRBrowsersBase.ui
         {
             gameObject.SetActive(true);
 
-            currentAssociatedInteractable = interactable;
+            this.interactable = interactable;
 
             transform.position = position;
             transform.rotation = Quaternion.LookRotation(-normal, Vector3.up);
@@ -158,7 +167,7 @@ namespace umi3dVRBrowsersBase.ui
         public void Hide()
         {
             gameObject.SetActive(false);
-            currentAssociatedInteractable = null;
+            interactable = null;
         }
 
         public void HideWithDelay()

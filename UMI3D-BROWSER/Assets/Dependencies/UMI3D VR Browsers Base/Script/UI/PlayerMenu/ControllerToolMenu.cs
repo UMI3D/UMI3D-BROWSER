@@ -32,24 +32,7 @@ namespace umi3dVRBrowsersBase.ui.playerMenu
         [Tooltip("Main gameobject of the panel")]
         private GameObject root;
 
-        [SerializeField]
-        [Tooltip("Button to switch to edit parameter menu")]
-        private Button editParametersButton;
-
-        [SerializeField]
-        [Tooltip("Image associated to editParametersButton")]
-        private Image editParametersButtonBck;
-
-        [SerializeField]
-        [Tooltip("Background used for editParametersButton when it is not selected")]
-        private Sprite editParametersButtonDefaultBck;
-
-        [SerializeField]
-        [Tooltip("Background used for editParametersButton when it is selected")]
-        private Sprite editParametersButtonActiveBck;
-
         [Header("Menu")]
-
         [Tooltip("Class which handle parameter edition")]
         [SerializeField]
         public ToolParametersMenu toolParametersMenu;
@@ -78,14 +61,6 @@ namespace umi3dVRBrowsersBase.ui.playerMenu
         private void Awake()
         {
             Hide();
-        }
-
-        private void Start()
-        {
-            editParametersButton.onClick.AddListener(() =>
-            {
-                DisplayParameterMenu(CurrentController);
-            });
         }
 
         /// <summary>
@@ -162,7 +137,6 @@ namespace umi3dVRBrowsersBase.ui.playerMenu
             root.SetActive(true);
 
             toolParametersMenu.gameObject.SetActive(true);
-            editParametersButtonBck.sprite = editParametersButtonActiveBck;
 
             CurrentController = controller;
             toolParametersMenu.Display(controller, isAsync: menuAsync);

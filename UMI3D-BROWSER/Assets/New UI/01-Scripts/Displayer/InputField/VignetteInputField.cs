@@ -27,15 +27,12 @@ namespace umi3dBrowsers.displayer
     {
         [Header("Animation")]
         [SerializeField] private float animationDuration = 0.5f;
-        [SerializeField] private CanvasGroup backGroundCanvasGroup;
         [SerializeField] private float _animationValue;
         [SerializeField] private AnimationCurve _animationCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
         private Coroutine _easeInOutCoroutine;
 
         [Header("obj")]
         [SerializeField] private TMP_UMI3DUIInputField inputField;
-        [SerializeField] private GameObject backGround;
-        public GameObject Background => backGround;
 
         public string Text { get => inputField.text; set => inputField.text = value; }
         public TMP_UMI3DUIInputField InputField => inputField;
@@ -77,7 +74,7 @@ namespace umi3dBrowsers.displayer
         public void Click()
         {
             OnClick?.Invoke();
-            backGroundCanvasGroup.alpha = 0;
+            //backGroundCanvasGroup.alpha = 0;
         }
 
         public void Disable()
@@ -106,7 +103,7 @@ namespace umi3dBrowsers.displayer
 
         private void InputFieldDeselected(string arg0)
         {
-            backGroundCanvasGroup.alpha = 1f;
+            //backGroundCanvasGroup.alpha = 1f;
         }
 
         private IEnumerator EaseInOut(bool isEnabeling)
@@ -124,7 +121,7 @@ namespace umi3dBrowsers.displayer
                     float lerpFactor = _animationCurve.Evaluate(time / animationDuration);
                     float currentValue = _animationValue = Mathf.Lerp(startValue, endValue, lerpFactor);
 
-                    backGroundCanvasGroup.alpha = currentValue;
+                    //backGroundCanvasGroup.alpha = currentValue;
 
                     yield return null;
                 }

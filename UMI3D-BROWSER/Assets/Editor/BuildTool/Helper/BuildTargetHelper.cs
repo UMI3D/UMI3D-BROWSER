@@ -14,7 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using NUnit.Framework;
 using System.Collections.Generic;
 using umi3d.browserRuntime.conditionalCompilation;
 using UnityEditor;
@@ -23,7 +22,7 @@ namespace umi3d.browserEditor.BuildTool
 {
     public static class BuildTargetHelper 
     {
-        static debug.UMI3DLogger logger 
+        static umi3d.debug.UMI3DLogger logger 
             = new(mainTag: nameof(BuildTargetHelper));
 
         /// <summary>
@@ -34,9 +33,9 @@ namespace umi3d.browserEditor.BuildTool
         /// </summary>
         /// <param name="target"></param>
         /// <returns></returns>
-        public static int SwitchTarget(TargetDto target)
+        public static int SwitchTarget(E_Target target)
         {
-            switch (target.Target)
+            switch (target)
             {
                 case E_Target.Quest:
                 case E_Target.Focus:
@@ -48,7 +47,7 @@ namespace umi3d.browserEditor.BuildTool
                     break;
             }
 
-            switch (target.Target)
+            switch (target)
             {
                 case E_Target.Quest:
                 case E_Target.Focus:

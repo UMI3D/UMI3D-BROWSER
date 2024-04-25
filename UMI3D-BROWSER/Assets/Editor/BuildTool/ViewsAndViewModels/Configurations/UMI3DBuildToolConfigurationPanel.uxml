@@ -1,0 +1,13 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:Template name="UMI3DBuildToolPath" src="project://database/Assets/Editor/BuildTool/ViewsAndViewModels/Helpers/UMI3DBuildToolPath.uxml?fileID=9197481963319205126&amp;guid=2a2426c927a341145822e1e97b4fab7e&amp;type=3#UMI3DBuildToolPath" />
+    <ui:Instance template="UMI3DBuildToolPath" name="T_SingleBuildFolder" />
+    <ui:Toggle label="Single Build Folder" name="T_SBF" />
+    <ui:VisualElement name="space" style="min-height: 30px;" />
+    <ui:Label tabindex="-1" text="PC Build Configuration" parse-escape-sequences="true" display-tooltip-when-elided="true" name="section" style="-unity-font-style: bold;" />
+    <ui:Instance template="UMI3DBuildToolPath" name="T_Installer" />
+    <ui:Instance template="UMI3DBuildToolPath" name="T_License" />
+    <ui:VisualElement name="space" style="min-height: 30px;" />
+    <ui:Label tabindex="-1" text="Android Build Configuration" parse-escape-sequences="true" display-tooltip-when-elided="true" name="section" style="-unity-font-style: bold;" />
+    <ui:Instance template="UMI3DBuildToolPath" name="T_Keystore" />
+    <ui:TextField picking-mode="Ignore" label="Keystore Password" value="filler text" name="TF_KeystorePW" />
+</ui:UXML>

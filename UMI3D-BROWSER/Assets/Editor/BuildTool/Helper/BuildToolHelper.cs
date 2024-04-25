@@ -28,17 +28,27 @@ namespace umi3d.browserEditor.BuildTool
     {
         public static string GetApplicationName(TargetDto target)
         {
-            string name = $"UMI3D {target.Target}";
+            string name = $"UMI3D Browser";
 
+            // To differentiate the XR version.
+            switch (target.Target)
+            {
+                case E_Target.Quest:
+                case E_Target.Focus:
+                case E_Target.Pico:
+                case E_Target.SteamXR:
+                    name += $" XR";
+                    break;
+                default:
+                    break;
+            }
+
+            // To differentiate the alpha, beta and production version.
             switch (target.releaseCycle)
             {
                 case E_ReleaseCycle.Alpha:
-                    name += $" {target.releaseCycle}";
-                    break;
                 case E_ReleaseCycle.Beta:
                     name += $" {target.releaseCycle}";
-                    break;
-                case E_ReleaseCycle.Production:
                     break;
                 default:
                     break;
@@ -54,16 +64,49 @@ namespace umi3d.browserEditor.BuildTool
         /// <returns></returns>
         public static string GetPackageName(TargetDto target)
         {
-            return target.Target switch
+            // currently the quest has a custom package name due to 
+            // applab old version.
+            var packageName = target.Target switch
             {
                 E_Target.Quest => "com.inetum.OculusQuestBrowser",
                 _ => "com.inetum.umi3d_browser"
             };
+
+            // To differentiate the XR version.
+            switch (target.Target)
+            {
+                case E_Target.Focus:
+                case E_Target.Pico:
+                case E_Target.SteamXR:
+                    packageName += $"_xr";
+                    break;
+                // Todo: tmp due to applab old version.
+                case E_Target.Quest:
+                default:
+                    break;
+            }
+
+            switch (target.releaseCycle)
+            {
+                case E_ReleaseCycle.Alpha:
+                case E_ReleaseCycle.Beta:
+                    packageName += $".{target.releaseCycle}";
+                    break;
+                default:
+                    break;
+            }
+
+            return packageName;
         }
 
         public static string GetExeName(TargetDto target, VersionDTO version, bool withExtension)
         {
-            string name = $"UMI3D_{target.Target}_Browser_{version.VersionFromNow}";
+            string name 
+                = $"UMI3D" +
+                $"_{target.Target}" +
+                $"_Browser" +
+                $"_{target.releaseCycle.GetReleaseInitial()}" +
+                $"_{version.VersionFromNow}";
             if (withExtension)
             {
                 switch (target.Target)

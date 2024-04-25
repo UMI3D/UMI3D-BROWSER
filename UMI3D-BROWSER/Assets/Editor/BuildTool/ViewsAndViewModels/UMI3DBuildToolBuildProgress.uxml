@@ -1,7 +1,0 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <ui:VisualElement style="flex-direction: row;">
-        <ui:Button text="BUILD all the selected targets" parse-escape-sequences="true" display-tooltip-when-elided="true" name="B_BuildAllSelected" style="flex-grow: 1;" />
-        <ui:Button text="Abort" parse-escape-sequences="true" display-tooltip-when-elided="true" name="B_Abort" style="flex-grow: 0.5;" />
-    </ui:VisualElement>
-    <ui:ProgressBar value="22" title="my-progress" />
-</ui:UXML>

@@ -36,6 +36,8 @@ namespace umi3dVRBrowsersBase.connection
         public TrackedSubskeleton trackedSkeleton;
 
         public List<Tracker> trackers = new List<Tracker>();
+        public List<Tracker> controllerTrackers = new List<Tracker>();
+        public List<Tracker> handsTrackingTrackers = new List<Tracker>();
 
         public SkinnedMeshRenderer Joint, Surface;
         public TrackedSubskeletonBone Viewpoint;
@@ -110,8 +112,8 @@ namespace umi3dVRBrowsersBase.connection
 
         private void Awake()
         {
-            Joint.enabled = false;
-            Surface.enabled = false;
+            Joint.enabled = true;
+            Surface.enabled = true;
             LeftWatch.SetActive(false);
             RightWatch.SetActive(false);
         }
@@ -166,6 +168,27 @@ namespace umi3dVRBrowsersBase.connection
             SkeletonResized?.Invoke();
 
             return true;
+            SetupDone?.Invoke();
+        }
+
+        public void SwitchTrackerToController()
+        {
+            handsTrackingTrackers.ForEach(x => {
+                if (controllerTrackers.Contains(x))
+                    return;
+                trackedSkeleton.RemoveController(x.distantController.boneType);
+            });
+            controllerTrackers.ForEach(x => trackedSkeleton.ReplaceController(x.distantController));
+        }
+
+        public void SwitchTrackerToHandTracking()
+        {
+            controllerTrackers.ForEach(x => {
+                if (handsTrackingTrackers.Contains(x))
+                    return;
+                trackedSkeleton.RemoveController(x.distantController.boneType);
+            });
+            handsTrackingTrackers.ForEach(x => trackedSkeleton.ReplaceController(x.distantController));
         }
 
         /// <summary>

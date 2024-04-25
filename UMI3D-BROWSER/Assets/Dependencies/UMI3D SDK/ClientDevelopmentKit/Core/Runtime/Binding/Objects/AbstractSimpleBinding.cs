@@ -57,7 +57,7 @@ namespace umi3d.cdk.binding
         /// <summary>
         /// See <see cref="AbstractSimpleBindingDataDto.offSetScale"/>.
         /// </summary>
-        public Vector3 OffSetScale => SimpleBindingData.offSetRotation.Struct();
+        public Vector3 OffSetScale => SimpleBindingData.offSetScale.Struct();
 
         /// <summary>
         /// See <see cref="AbstractSimpleBindingDataDto.anchorPosition"/>.
@@ -94,7 +94,9 @@ namespace umi3d.cdk.binding
                 boundTransform.rotation = parentTransform.rotation * originalRotationOffset * OffSetRotation;
             }
             if (SyncScale)
+            {
                 boundTransform.localScale = Vector3.Scale(parentTransform.scale, OffSetScale);
+            }
         }
     }
 }

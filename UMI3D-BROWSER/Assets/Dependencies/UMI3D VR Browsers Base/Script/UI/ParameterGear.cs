@@ -36,10 +36,7 @@ namespace umi3dVRBrowsersBase.ui
     {
         #region Fields
 
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
-        public UnityEvent OnTriggered { get; private set; } = new UnityEvent();
+        public event Action triggerHandler;
 
         /// <summary>
         /// <see cref="Interactable"/> which contains the parameters.
@@ -97,13 +94,9 @@ namespace umi3dVRBrowsersBase.ui
             Hide();
         }
 
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
-        /// <param name="controller"></param>
         public void Trigger(ControllerType controllerType)
         {
-            OnTriggered?.Invoke();
+            triggerHandler?.Invoke();
 
             PlayerMenuManager.Instance.OpenParameterMenu(controllerType, menuAsync: true);
         }

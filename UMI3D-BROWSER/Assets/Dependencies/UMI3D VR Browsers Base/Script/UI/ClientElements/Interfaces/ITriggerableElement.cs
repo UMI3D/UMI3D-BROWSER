@@ -14,8 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System;
 using umi3dVRBrowsersBase.interactions;
-using UnityEngine.Events;
 
 namespace umi3dVRBrowsersBase.ui
 {
@@ -27,10 +27,10 @@ namespace umi3dVRBrowsersBase.ui
         /// <summary>
         /// Event raised when <see cref="Trigger"/> is called.
         /// </summary>
-        UnityEvent OnTriggered { get; }
+        event Action triggerHandler;
 
         /// <summary>
-        /// Raises an event when this element is triggered/clicked.
+        /// Raises <see cref="triggerHandler"/> when this element is triggered/clicked.
         /// </summary>
         /// <param name="controller">Controller used to click</param>
         void Trigger(ControllerType controller);

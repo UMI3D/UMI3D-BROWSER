@@ -266,7 +266,7 @@ namespace umi3dBrowsers
                     break;
                 case ContentState.loadingContent:
                     CloseAllPanels();
-                    Top.SetActive(true);
+                    //Top.SetActive(true);
                     loadingContent.gameObject.SetActive(true);
                     title.SetTitle(loadingContent.PrefixTitleKey, loadingContent.SuffixTitleKey);
                     break;

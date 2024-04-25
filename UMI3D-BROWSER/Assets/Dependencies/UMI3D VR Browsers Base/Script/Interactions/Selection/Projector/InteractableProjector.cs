@@ -24,7 +24,7 @@ namespace umi3dBrowsers.interaction.selection.projector
     /// </summary>
     public class InteractableProjector : IProjector<InteractableContainer>
     {
-        public ParameterGear selectedInteractableInfo;
+        public SelectedInteractableManager selectedInteractableManager;
 
         /// <summary>
         /// Checks whether an interctable has already projected tools
@@ -49,7 +49,7 @@ namespace umi3dBrowsers.interaction.selection.projector
             // display the parameter gear if it is required to access the interactions
             if (interactable.Interactable.interactions.FindAll(i => i.Result is AbstractParameterDto).Count > 0)
             {
-                selectedInteractableInfo.Display(interactable, controller.transform.position);
+                selectedInteractableManager.Display(interactable, controller.transform.position);
                 PlayerMenuManager.Instance.CtrlToolMenu.RememberParameters();
             }
         }
@@ -74,7 +74,7 @@ namespace umi3dBrowsers.interaction.selection.projector
         {
             controller.Release(interactionTool, new RequestedUsingSelector<AbstractSelector>() { controller = controller });
 
-            selectedInteractableInfo.HideWithDelay();
+            selectedInteractableManager.HideWithDelay();
         }
 
         /// <inheritdoc/>
@@ -82,7 +82,7 @@ namespace umi3dBrowsers.interaction.selection.projector
         {
             controller.Release(AbstractInteractionMapper.Instance.GetTool(UMI3DGlobalID.EnvironmentId, interactable.Interactable.dto.id), new RequestedUsingSelector<AbstractSelector>() { controller = controller });
 
-            selectedInteractableInfo.HideWithDelay();
+            selectedInteractableManager.HideWithDelay();
         }
     }
 }

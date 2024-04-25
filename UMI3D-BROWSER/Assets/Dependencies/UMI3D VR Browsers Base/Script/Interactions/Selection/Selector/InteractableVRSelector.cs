@@ -61,7 +61,7 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
 
             projector = new InteractableProjector()
             {
-                selectedInteractableInfo = selectedInteractableInfo
+                selectedInteractableManager = selectedInteractableManager
             };
         }
 

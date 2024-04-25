@@ -95,7 +95,7 @@ namespace umi3dVRBrowsersBase.ui.playerMenu
 
     public partial class PlayerMenuManager : SingleBehaviour<PlayerMenuManager>
     {
-        ParameterGear parameterGear;
+        SelectedInteractableManager selectedInteractableManager;
 
         #region Player Menu
 
@@ -114,7 +114,7 @@ namespace umi3dVRBrowsersBase.ui.playerMenu
             transform.RotateAround(playerCameraPosition, Vector3.up, playerCameraRotation.eulerAngles.y);
             m_playerMenuCanvas.SetActive(true);
             m_menuCollider.enabled = true;
-            parameterGear.Hide();
+            selectedInteractableManager.Hide();
 
             ToolboxesMenu.Open();
             CloseSubWindow();
@@ -184,7 +184,7 @@ namespace umi3dVRBrowsersBase.ui.playerMenu
 
         private void Start()
         {
-            Global.Get(out parameterGear);
+            Global.Get(out selectedInteractableManager);
             gameObject.AddComponent<SelectablePlayerMenu>();
             MenuHeader.Initialize();
         }

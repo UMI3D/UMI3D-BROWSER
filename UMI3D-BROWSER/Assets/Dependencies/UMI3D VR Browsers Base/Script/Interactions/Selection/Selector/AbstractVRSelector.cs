@@ -139,7 +139,7 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
 
         private List<AbstractDetector<T>> _proximityDetectors;
 
-        public ParameterGear selectedInteractableInfo;
+        public SelectedInteractableManager selectedInteractableManager;
 
         #endregion fields
 
@@ -153,7 +153,7 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
 
         protected virtual void Start()
         {
-            Global.Get(out selectedInteractableInfo);
+            Global.Get(out selectedInteractableManager);
         }
 
         private void OnEnable()
@@ -407,7 +407,7 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
                 else if (LastSelected != null) // the selector was selecting something else before
                 {
                     Deselect(LastSelected);
-                    selectedInteractableInfo.Hide();
+                    selectedInteractableManager.Hide();
                 }
 
             }

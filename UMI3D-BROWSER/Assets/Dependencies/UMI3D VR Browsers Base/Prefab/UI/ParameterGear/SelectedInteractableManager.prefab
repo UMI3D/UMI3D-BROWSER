@@ -9,10 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6158249943569500864}
-  - component: {fileID: 5225349250490698050}
+  - component: {fileID: 5166028106639957159}
   - component: {fileID: 3716950535654356333}
   m_Layer: 6
-  m_Name: ParameterGear
+  m_Name: SelectedInteractableManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -34,7 +34,7 @@ Transform:
   - {fileID: 3424979248917215443}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5225349250490698050
+--- !u!114 &5166028106639957159
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -43,7 +43,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5865551193575093365}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6943e7b394a0d094a9229032b3c7ad1b, type: 3}
+  m_Script: {fileID: 11500000, guid: 882590ab39e4e70469148514cc0b920a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   label: {fileID: 6955289447807756795}
@@ -52,6 +52,7 @@ MonoBehaviour:
   maxDistance: 6
   minScale: 0.15
   maxScale: 0.5
+  playerTransform: {fileID: 0}
 --- !u!114 &3716950535654356333
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -66,7 +67,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   addRemoveWhenActivationChange: 1
   variables:
-  - {fileID: 5225349250490698050}
+  - {fileID: 5166028106639957159}
 --- !u!1 &5867908569552119169
 GameObject:
   m_ObjectHideFlags: 0

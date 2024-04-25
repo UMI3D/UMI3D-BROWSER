@@ -1,5 +1,5 @@
 ﻿/*
-Copyright 2019 - 2022 Inetum
+Copyright 2019 - 2024 Inetum
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -24,48 +24,15 @@ using umi3d.cdk.interaction;
 using umi3dVRBrowsersBase.interactions;
 using umi3dVRBrowsersBase.ui.playerMenu;
 using UnityEngine;
-using UnityEngine.Events;
 using WebSocketSharp;
 
 namespace umi3dVRBrowsersBase.ui
 {
     /// <summary>
-    /// 3D Object to show users its associated UMI3D Entity has UMI3D Parameters, by clicking on this gear, opens <see cref="playerMenu.PlayerMenuManager"/> to edit them.
+    /// Manage the information to of the selected interactable.
     /// </summary>
-    public class ParameterGear : AbstractClientInteractableElement, ITriggerableElement
+    public class SelectedInteractableManager : AbstractClientInteractableElement, ITriggerableElement
     {
-        #region Fields
-
-        public event Action triggerHandler;
-
-        /// <summary>
-        /// <see cref="Interactable"/> which contains the parameters.
-        /// </summary>
-        private Interactable currentAssociatedInteractable;
-        public Interactable CurrentAssociatedInteractable
-        {
-            get => currentAssociatedInteractable;
-            set
-            {
-                currentAssociatedInteractable = value;
-
-                if (value == null)
-                {
-                    container = null;
-                }
-                else
-                {
-                    container = InteractableContainer.containers.Find(c => c.Interactable == currentAssociatedInteractable);
-                    Debug.Assert(container != null, "No container found for an Interactable, should not happen.");
-                }
-            }
-        }
-
-        /// <summary>
-        /// Container associated to <see cref="CurrentAssociatedInteractable"/>.
-        /// </summary>
-        private InteractableContainer container;
-
         public TMP_Text label;
 
         public float delayBeforeHiding = 1f;
@@ -78,11 +45,13 @@ namespace umi3dVRBrowsersBase.ui
         [Tooltip("Used for gear scale.")]
         public float maxScale = .5f;
 
-        Transform playerTransform;
+        public event Action triggerHandler;
 
-        #endregion
+        [HideInInspector]
+        public Interactable currentAssociatedInteractable;
+        [HideInInspector]
+        public Transform playerTransform;
 
-        #region Methods
 
         private void Start()
         {
@@ -94,6 +63,21 @@ namespace umi3dVRBrowsersBase.ui
             Hide();
         }
 
+        private void Update()
+        {
+            if (currentAssociatedInteractable == null && gameObject.activeInHierarchy)
+            {
+                Hide();
+            }
+
+            if (isActiveAndEnabled)
+            {
+                var distance = Vector3.Distance(transform.position, playerTransform.position);
+                var scale = Mathf.Lerp(minScale, maxScale, Mathf.InverseLerp(minDistance, maxDistance, distance));
+                transform.localScale = new Vector3(scale, scale, scale);
+            }
+        }
+
         public void Trigger(ControllerType controllerType)
         {
             triggerHandler?.Invoke();
@@ -102,7 +86,7 @@ namespace umi3dVRBrowsersBase.ui
         }
 
         /// <summary>
-        /// Displays the parameter gear for an interactable.
+        /// Displays the interactable information.
         /// </summary>
         /// <param name="interactable"></param>
         /// <param name="position">World position of the gear</param>
@@ -111,7 +95,7 @@ namespace umi3dVRBrowsersBase.ui
         {
             gameObject.SetActive(true);
 
-            CurrentAssociatedInteractable = interactable;
+            currentAssociatedInteractable = interactable;
 
             transform.position = position;
             transform.rotation = Quaternion.LookRotation(-normal, Vector3.up);
@@ -121,7 +105,8 @@ namespace umi3dVRBrowsersBase.ui
         }
 
         /// <summary>
-        /// Displays the parameter gear for an interactable. Use an interactable container and a look at point and compute the adequate position.
+        /// Displays the interactable information.<br/> 
+        /// Use an interactable container and a look at point and compute the adequate position.
         /// </summary>
         /// <param name="interactableContainer"></param>
         /// <param name="lookAtPoint">World position of the point the object is looked at.</param>
@@ -168,14 +153,13 @@ namespace umi3dVRBrowsersBase.ui
         }
 
         /// <summary>
-        /// Hides the parameter gear.
+        /// Hides the interactable information.
         /// </summary>
         public void Hide()
         {
             gameObject.SetActive(false);
-            CurrentAssociatedInteractable = null;
+            currentAssociatedInteractable = null;
         }
-
 
         public void HideWithDelay()
         {
@@ -211,23 +195,6 @@ namespace umi3dVRBrowsersBase.ui
         {
             isSelected = false;
         }
-
-        private void Update()
-        {
-            if (container == null && gameObject.activeInHierarchy)
-            {
-                Hide();
-            }
-
-            if (isActiveAndEnabled)
-            {
-                var distance = Vector3.Distance(transform.position, playerTransform.position);
-                var scale = Mathf.Lerp(minScale, maxScale, Mathf.InverseLerp(minDistance, maxDistance, distance));
-                transform.localScale = new Vector3(scale, scale, scale);
-            }
-        }
-
-        #endregion
     }
 }
 

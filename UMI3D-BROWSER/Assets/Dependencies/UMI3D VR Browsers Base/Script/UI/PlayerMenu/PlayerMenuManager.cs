@@ -153,12 +153,6 @@ namespace umi3dVRBrowsersBase.ui.playerMenu
             CtrlToolMenu.DisplayParameterMenu(controller, menuAsync: true);
         }
 
-        public void DisplayActionBinding(ControllerType controller)
-        {
-            Open(true);
-            CtrlToolMenu.DisplayBindingMenu(controller);
-        }
-
         public void DisplayParameterInToolbox(AbstractMenu menu)
         {
             Open(true);

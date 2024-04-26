@@ -199,6 +199,7 @@ namespace umi3dBrowsers
             connectionProcessorService.OnMediaServerPingSuccess += (virtualWorldData) => 
             {
                 title.SetTitle("Connected to", virtualWorldData.worldName, true , true);
+                popupManager.ClosePopUp();
             };
             connectionProcessorService.OnParamFormReceived += (connectionFormDto) =>
             {

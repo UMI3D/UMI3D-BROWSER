@@ -26,8 +26,6 @@ namespace umi3dBrowsers.services.librairies
     /// </summary>
     public class LibraryManager : MonoBehaviour
     {
-        #region Fields
-
         /// <summary>
         /// Prefab used to represent a library in the menu.
         /// 
@@ -54,9 +52,10 @@ namespace umi3dBrowsers.services.librairies
         /// </summary>
         private int indexOfCurrentTopEntryDisplayed = 0;
 
-        #endregion
-
-        #region Methods
+        private void Start()
+        {
+            UpdateContent();
+        }
 
         /// <summary>
         /// Updates the content of the library list.
@@ -105,9 +104,9 @@ namespace umi3dBrowsers.services.librairies
                         //{
                         //    if (b)
                         //    {
-                        //        lib.applications.Remove(app.Key);
-                        //        UMI3DResourcesManager.RemoveLibrary(lib.library);
-                        //        UpdateContent();
+                        lib.applications.Remove(app.Key);
+                        UMI3DResourcesManager.RemoveLibrary(lib.library);
+                        UpdateContent();
                         //    }
                         //});
                     });
@@ -155,7 +154,5 @@ namespace umi3dBrowsers.services.librairies
                 currentEntries[i].gameObject.SetActive(display);
             }
         }
-
-        #endregion
     }
 }

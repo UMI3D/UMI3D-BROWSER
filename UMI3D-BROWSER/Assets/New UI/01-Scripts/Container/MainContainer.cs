@@ -23,14 +23,9 @@ using umi3dBrowsers.container;
 using umi3dBrowsers.container.formrenderer;
 using umi3dBrowsers.displayer;
 using umi3dBrowsers.services.connection;
-using umi3dBrowsers.services.librairies;
 using umi3dVRBrowsersBase.connection;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Localization.Components;
-using UnityEngine.Localization.Settings;
-using UnityEngine.Localization.SmartFormat.PersistentVariables;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace umi3dBrowsers
@@ -202,6 +197,7 @@ namespace umi3dBrowsers
             {
                 title.SetTitle("Connected to", virtualWorldData.worldName, true , true);
                 popupManager.ClosePopUp();
+                services.connection.PlayerPrefsManager.GetVirtualWorlds().AddWorld(virtualWorldData);
             };
             connectionProcessorService.OnParamFormReceived += (connectionFormDto) =>
             {

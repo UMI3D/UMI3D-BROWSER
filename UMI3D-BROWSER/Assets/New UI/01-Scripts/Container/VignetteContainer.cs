@@ -34,6 +34,7 @@ namespace umi3dBrowsers.container
         [Space]
         [SerializeField] private GameObject vignettePrefab;
         [SerializeField] private GameObject emptyVignettePrefab;
+        [SerializeField] private GameObject smallVignettePrefab;
         [SerializeField] private List<VignetteDisplayer> vignetteDisplayers;
 
         [Header("Sizes")]
@@ -62,6 +63,7 @@ namespace umi3dBrowsers.container
         [SerializeField] private VignetteMode vignetteMode;
 
         public event Action OnReset;
+        public event Action<VignetteMode> OnChangeMode;
 
         private void Awake()
         {
@@ -78,10 +80,10 @@ namespace umi3dBrowsers.container
         {
             if (vignetteMode == VignetteMode.None) return;
 
-            if (vignetteMode == VignetteMode.Large) 
-                ChangeVignetteMode(VignetteMode.Small);
-            else if (vignetteMode == VignetteMode.Small) 
-                ChangeVignetteMode(VignetteMode.Large);
+            if (vignetteMode == VignetteMode.Large)
+                OnChangeMode?.Invoke(VignetteMode.Small);
+            else if (vignetteMode == VignetteMode.Small)
+                OnChangeMode?.Invoke(VignetteMode.Large);
         }
 
         public void ChangeVignetteMode(VignetteMode mode)
@@ -114,7 +116,7 @@ namespace umi3dBrowsers.container
 
         private VignetteDisplayer CreateVignette(VirtualWorlds pVirtualWorlds, VirtualWorldData pWorldData)
         {
-            var vignette = Instantiate(vignettePrefab, gridLayout.transform).GetComponent<VignetteDisplayer>();
+            var vignette = Instantiate(vignetteMode == VignetteMode.Small ? smallVignettePrefab : vignettePrefab, gridLayout.transform).GetComponent<VignetteDisplayer>();
             vignette.SetupDisplay(pWorldData.worldName);
             vignette.SetupFavoriteButton(() => { 
                 pVirtualWorlds.ToggleWorldFavorite(pWorldData); 

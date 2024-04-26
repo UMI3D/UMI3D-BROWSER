@@ -17,6 +17,7 @@ limitations under the License.
 using inetum.unityUtils;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using umi3d.browserRuntime.player;
@@ -25,6 +26,7 @@ using umi3d.common.interaction;
 using umi3dVRBrowsersBase.interactions;
 using umi3dVRBrowsersBase.ui.playerMenu;
 using UnityEngine;
+using UnityEngine.UI;
 using WebSocketSharp;
 
 namespace umi3dVRBrowsersBase.ui
@@ -35,6 +37,8 @@ namespace umi3dVRBrowsersBase.ui
     public class SelectedInteractableManager : AbstractClientInteractableElement, ITriggerableElement
     {
         public TMP_Text label;
+        public Image background;
+        public new BoxCollider collider;
 
         public float delayBeforeHiding = 1f;
         [Tooltip("Used for gear scale.")]
@@ -50,6 +54,12 @@ namespace umi3dVRBrowsersBase.ui
 
         [HideInInspector]
         public Interactable interactable;
+        [HideInInspector]
+        public List<AbstractInteractionDto> interactions;
+        [HideInInspector]
+        public List<EventDto> events;
+        [HideInInspector]
+        public List<AbstractParameterDto> parameters;
         [HideInInspector]
         public Transform playerTransform;
 
@@ -84,11 +94,8 @@ namespace umi3dVRBrowsersBase.ui
         public void Trigger(ControllerType controllerType)
         {
             triggerHandler?.Invoke();
-
-            var parameters = interactable
-                .interactions
-                .FindAll(i => i.Result is AbstractParameterDto);
-            if (parameters.Count > 0)
+            
+            if (interactions.Count > 0)
             {
                 PlayerMenuManager.Instance.OpenParameterMenu(controllerType, menuAsync: true);
             }
@@ -105,12 +112,63 @@ namespace umi3dVRBrowsersBase.ui
             gameObject.SetActive(true);
 
             this.interactable = interactable;
+            interactions = interactable
+                .interactions
+                .Select(i => i.Result)
+                .ToList();
+            events = interactions
+                .FindAll(i => i is EventDto)
+                .Select(i => i as EventDto)
+                .ToList();
+            parameters = interactions
+                .FindAll(i => i is AbstractParameterDto)
+                .Select(i => i as AbstractParameterDto)
+                .ToList();
+
+            background.enabled = true;
+            if (interactions.Count == 0)
+            {
+                collider.enabled = false;
+                label.text = "";
+                background.enabled = false;
+            }
+            else if (interactions.Count == 1)
+            {
+                if (interactions[0] is EventDto || interactions[0] is ManipulationDto)
+                {
+                    
+                    string _label = interactions[0].name;
+                    if (string.IsNullOrEmpty(_label) || _label == "new tool")
+                    {
+                        _label = interactable.name;
+                    }
+                    if (string.IsNullOrEmpty(_label) || _label == "new tool")
+                    {
+                        _label = "To Trigger";
+                    }
+                    label.text = _label;
+                }
+                else if (interactions[0] is StringParameterDto)
+                {
+                    collider.enabled = true;
+                    label.text = $"Edit text";
+                    PlayerMenuManager.Instance.CtrlToolMenu.RememberParameters();
+                }
+                else
+                {
+                    label.text = interactions[0].name;
+                    UnityEngine.Debug.LogError($"[Selected Interactable] Unhandled case");
+                }
+            }
+            else
+            {
+                label.text = interactable.name;
+                PlayerMenuManager.Instance.CtrlToolMenu.RememberParameters();
+                UnityEngine.Debug.LogError($"[Selected Interactable] Unhandled case");
+            }
 
             transform.position = position;
             transform.rotation = Quaternion.LookRotation(-normal, Vector3.up);
-
-            label.text = interactable.name;
-            UnityEngine.Debug.Log($"[PG] name = {interactable.name}, {interactable.dto.name}, {interactable.description}");
         }
 
         /// <summary>
@@ -166,8 +224,12 @@ namespace umi3dVRBrowsersBase.ui
         /// </summary>
         public void Hide()
         {
-            gameObject.SetActive(false);
             interactable = null;
+            interactions = null;
+            events = null;
+            parameters = null;
+            collider.enabled = false;
+            gameObject.SetActive(false);
         }
 
         public void HideWithDelay()

@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using Pico.Platform;
 using System.Collections.Generic;
 using umi3d.cdk;
 using UnityEngine;
@@ -52,11 +53,6 @@ namespace umi3dBrowsers.services.librairies
         /// </summary>
         private int indexOfCurrentTopEntryDisplayed = 0;
 
-        private void Start()
-        {
-            UpdateContent();
-        }
-
         /// <summary>
         /// Updates the content of the library list.
         /// </summary>
@@ -67,6 +63,8 @@ namespace umi3dBrowsers.services.librairies
             currentEntries.Clear();
 
             var libs = new Dictionary<string, List<UMI3DResourcesManager.DataFile>>();
+            Debug.Log($"<color=cyan> {UMI3DResourcesManager.Libraries.Count} </color>");
+
             foreach (UMI3DResourcesManager.DataFile lib in UMI3DResourcesManager.Libraries)
             {
                 if (lib.applications != null)
@@ -87,7 +85,7 @@ namespace umi3dBrowsers.services.librairies
                         throw new System.ArgumentException("libraryItemPrefab must have a LibraryManagerEntry script");
 
                     entry.gameObject.name = "LibraryItem_" + lib.key;
-                    entry.libLabel.text = lib.key;
+                    entry.LibLabel.text = lib.key;
 
                     //2. Display environments which use this lib
                     //Could be done with lib.applications if needed;
@@ -96,7 +94,7 @@ namespace umi3dBrowsers.services.librairies
                     //Could be done with lib.path if needed
 
                     //4.Bind the button to unistall this lib
-                    entry.deleteButton.onClick.AddListener(() =>
+                    entry.DeleteButton.onClick.AddListener(() =>
                     {
                         //if (DialogBox.Instance.IsDisplayed)
                         //    return;

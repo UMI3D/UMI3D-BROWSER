@@ -23,6 +23,7 @@ using umi3dBrowsers.container;
 using umi3dBrowsers.container.formrenderer;
 using umi3dBrowsers.displayer;
 using umi3dBrowsers.services.connection;
+using umi3dBrowsers.services.librairies;
 using umi3dVRBrowsersBase.connection;
 using UnityEngine;
 using UnityEngine.Events;
@@ -94,6 +95,7 @@ namespace umi3dBrowsers
         [SerializeField] private ConnectionProcessor connectionProcessorService;
         [SerializeField] private PopupManager popupManager;
         [SerializeField] private LoadingContainer loadingContainer;
+        [SerializeField] private umi3dBrowsers.services.librairies.LibraryManager libraryManager;
 
         [Header("Options")]
         [SerializeField] private bool forceFlagContent;
@@ -253,6 +255,7 @@ namespace umi3dBrowsers
                     storageContent.gameObject.SetActive(true);
                     backButton?.gameObject.SetActive(true);
                     title.SetTitle(storageContent.PrefixTitleKey, storageContent.SuffixTitleKey);
+                    libraryManager.UpdateContent();
                     break;
                 case ContentState.parametersContent:
                     CloseAllPanels();

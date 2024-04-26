@@ -133,12 +133,17 @@ namespace umi3dBrowsers.container
             return vignette;
         }
 
-        public void ResetVignettes()
+        public void ResetVignettes(bool runtime = true)
         {
             for (var i = gridLayout.transform.childCount - 1; i >= 0; i--)
-                Destroy(gridLayout.transform.GetChild(i).gameObject);
+            {
+                if (runtime)
+                    Destroy(gridLayout.transform.GetChild(i).gameObject);
+                else
+                    DestroyImmediate(gridLayout.transform.GetChild(i).gameObject);
+            }
 
-            vignetteDisplayers = PlayerPrefsManager.HasVirtualWorldsStored()
+                vignetteDisplayers = PlayerPrefsManager.HasVirtualWorldsStored()
                     ? CreateVignettes(PlayerPrefsManager.GetVirtualWorlds())
                     : new();
 
@@ -152,7 +157,7 @@ namespace umi3dBrowsers.container
                 Instantiate(emptyVignettePrefab, gridLayout.transform);
         }
 
-        private void SetGridLayout(Vector2 vignetteSize, int vignetteRowAmount, Vector2 vignetteSpace)
+        private void SetGridLayout(Vector2 vignetteSize, int vignetteRowAmount, Vector2 vignetteSpace, bool runtime = true)
         {
             gridLayout.cellSize = vignetteSize;
             gridLayout.constraintCount = vignetteRowAmount;
@@ -162,22 +167,22 @@ namespace umi3dBrowsers.container
             if (gameObject.activeSelf && isActiveAndEnabled)
                 StartCoroutine(ScaleColliders());
 
-            ResetVignettes();
+            ResetVignettes(runtime);
         }
 
         private void OnValidate()
         {
-            switch (vignetteMode)
-            {
-                case VignetteMode.None:
-                    break;
-                case VignetteMode.Large:
-                    SetGridLayout(largeVignetteSize, largeVignetteRowAmount, largeVignetteSpace);
-                    break;
-                case VignetteMode.Small:
-                    SetGridLayout(smallVignetteSize, smallVignetteRowAmount, smallVignetteSpace);
-                    break;
-            }
+            //switch (vignetteMode)
+            //{
+            //    case VignetteMode.None:
+            //        break;
+            //    case VignetteMode.Large:
+            //        SetGridLayout(largeVignetteSize, largeVignetteRowAmount, largeVignetteSpace, false);
+            //        break;
+            //    case VignetteMode.Small:
+            //        SetGridLayout(smallVignetteSize, smallVignetteRowAmount, smallVignetteSpace, false);
+            //        break;
+            //}
         }
 
         IEnumerator ScaleColliders()

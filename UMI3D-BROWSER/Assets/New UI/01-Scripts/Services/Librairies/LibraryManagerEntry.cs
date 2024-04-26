@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -21,8 +22,10 @@ namespace umi3dBrowsers.services.librairies
 {
     public class LibraryManagerEntry : MonoBehaviour
     {
-        public Button deleteButton;
+        [SerializeField] private Button deleteButton;
+        [SerializeField] private TextMeshProUGUI libLabel;
 
-        public Text libLabel;
+        public Button DeleteButton => deleteButton;
+        public TextMeshProUGUI LibLabel => libLabel;
     }
 }

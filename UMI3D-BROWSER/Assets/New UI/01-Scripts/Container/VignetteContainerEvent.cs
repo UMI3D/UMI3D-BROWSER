@@ -28,7 +28,7 @@ namespace umi3dBrowsers.container
             {
                 foreach (var container2 in lstVignetteContainers)
                 {
-                    container.OnReset += container2.ResetVignettes;
+                    container.OnReset += () => container2.ResetVignettes();
                 }
             }
         }

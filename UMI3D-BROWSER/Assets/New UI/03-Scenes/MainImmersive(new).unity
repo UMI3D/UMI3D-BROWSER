@@ -1211,6 +1211,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -20
       objectReference: {fileID: 0}
+    - target: {fileID: 2836392884092577362, guid: 6d8cc188ac4cb49419e2616ed25f607d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2878363732268927165, guid: 6d8cc188ac4cb49419e2616ed25f607d,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -2190,7 +2195,7 @@ PrefabInstance:
         type: 3}
       propertyPath: navigation
       value: 
-      objectReference: {fileID: 782628376}
+      objectReference: {fileID: 0}
     - target: {fileID: 5245316208483751605, guid: 6d8cc188ac4cb49419e2616ed25f607d,
         type: 3}
       propertyPath: parameters
@@ -2421,7 +2426,7 @@ PrefabInstance:
     - target: {fileID: 5988314907380347006, guid: 6d8cc188ac4cb49419e2616ed25f607d,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0.000018320514
+      value: 0.000966256
       objectReference: {fileID: 0}
     - target: {fileID: 6067120591277828882, guid: 6d8cc188ac4cb49419e2616ed25f607d,
         type: 3}
@@ -2607,6 +2612,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -20
+      objectReference: {fileID: 0}
+    - target: {fileID: 6451300367320068560, guid: 6d8cc188ac4cb49419e2616ed25f607d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6469110533251615537, guid: 6d8cc188ac4cb49419e2616ed25f607d,
         type: 3}
@@ -2988,6 +2998,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -72
       objectReference: {fileID: 0}
+    - target: {fileID: 8023717800747520498, guid: 6d8cc188ac4cb49419e2616ed25f607d,
+        type: 3}
+      propertyPath: skyBoxHomeMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 3aff617d6068c2f4591f654c318b2441, type: 2}
     - target: {fileID: 8173154209218192607, guid: 6d8cc188ac4cb49419e2616ed25f607d,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -3463,18 +3478,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &782628376 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4431763457759361986, guid: aa50e35a45eaaed43a950ae34ef532dc,
-    type: 3}
-  m_PrefabInstance: {fileID: 1131452852}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c26d0ce8e0d76a4cbe25756a5438d96, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1131452852
 PrefabInstance:
   m_ObjectHideFlags: 0

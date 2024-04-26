@@ -37,7 +37,7 @@ namespace umi3dBrowsers
         private void Awake()
         {
             prefixEvent = prefixText.GetComponent<LocalizeStringEvent>();
-            suffixEvent = suffixText.GetComponent<LocalizeStringEvent>();
+            suffixEvent = suffixText?.GetComponent<LocalizeStringEvent>();
         }
 
         /// <summary>
@@ -63,6 +63,12 @@ namespace umi3dBrowsers
             prefixRectTransform.width = prefixLength * prefixCharSize;
             suffixText.rectTransform.sizeDelta = new Vector2(suffixRectTransform.width, suffixRectTransform.height);
             prefixText.rectTransform.sizeDelta = new Vector2(prefixRectTransform.width, prefixRectTransform.height);
+        }
+
+        public void SetPrefix(string prefix, bool prefixOverride = false)
+        {
+            if (prefixOverride) prefixText.text = prefix;
+            else prefixEvent.SetEntry(prefix);
         }
     }
 }

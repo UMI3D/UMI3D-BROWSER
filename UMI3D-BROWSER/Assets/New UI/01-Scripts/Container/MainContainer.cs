@@ -23,6 +23,7 @@ using umi3dBrowsers.container;
 using umi3dBrowsers.container.formrenderer;
 using umi3dBrowsers.displayer;
 using umi3dBrowsers.services.connection;
+using umi3dBrowsers.services.title;
 using umi3dVRBrowsersBase.connection;
 using UnityEngine;
 using UnityEngine.Events;
@@ -77,7 +78,7 @@ namespace umi3dBrowsers
         [SerializeField] private UnityEvent flagButtonClicked;
 
         [Header("Title")]
-        [SerializeField] private MainMessageContainer title;
+        [SerializeField] private TitleManager title;
 
         [Header("Version")]
         [SerializeField] private TextMeshProUGUI versionText;
@@ -195,7 +196,7 @@ namespace umi3dBrowsers
             };
             connectionProcessorService.OnMediaServerPingSuccess += (virtualWorldData) => 
             {
-                title.SetTitle("Connected to", virtualWorldData.worldName, true , true);
+                title.SetTitle(TitleType.connectionTitle,"Connected to", virtualWorldData.worldName, true , true);
                 popupManager.ClosePopUp();
                 services.connection.PlayerPrefsManager.GetVirtualWorlds().AddWorld(virtualWorldData);
             };
@@ -203,7 +204,7 @@ namespace umi3dBrowsers
             {
                 HandleContentState(ContentState.dynamicServerContent);
                 ProcessForm(connectionFormDto);
-                title.SetTitle("", connectionFormDto?.name, true, true);
+                title.SetTitle(TitleType.connectionTitle,"", connectionFormDto?.name, true, true);
             };
             connectionProcessorService.OnDivFormReceived += (connectionFormDto) =>
             {
@@ -220,7 +221,7 @@ namespace umi3dBrowsers
             loadingContainer.OnLoadingInProgress += () =>
             {
                 HandleContentState(ContentState.loadingContent);
-                title.SetTitle("Loading ... ", "");
+                title.SetTitle(TitleType.mainTitle,"Loading ... ", "");
             };
             loadingContainer.OnLoadingFinished += () => Debug.Log("TODO : Do something ::: Its loaded");// gameObject.SetActive(false);
         }
@@ -243,14 +244,14 @@ namespace umi3dBrowsers
                     CloseAllPanels();
                     Top.SetActive(true);
                     mainContent.gameObject.SetActive(true);
-                    title.SetTitle(mainContent.PrefixTitleKey, mainContent.SuffixTitleKey);
+                    title.SetTitle(TitleType.mainTitle,mainContent.PrefixTitleKey, mainContent.SuffixTitleKey);
                     break;
                 case ContentState.storageContent:
                     CloseAllPanels();
                     Top.SetActive(true);
                     storageContent.gameObject.SetActive(true);
                     backButton?.gameObject.SetActive(true);
-                    title.SetTitle(storageContent.PrefixTitleKey, storageContent.SuffixTitleKey);
+                    title.SetTitle(TitleType.subTitle, storageContent.PrefixTitleKey, storageContent.SuffixTitleKey);
                     libraryManager.UpdateContent();
                     break;
                 case ContentState.parametersContent:
@@ -258,14 +259,14 @@ namespace umi3dBrowsers
                     Top.SetActive(true);
                     parametersContent.gameObject.SetActive(true);
                     backButton?.gameObject.SetActive(true);
-                    title.SetTitle(parametersContent.PrefixTitleKey, parametersContent.SuffixTitleKey);
+                    title.SetTitle(TitleType.subTitle, parametersContent.PrefixTitleKey, parametersContent.SuffixTitleKey);
                     break;
                 case ContentState.flagContent:
                     CloseAllPanels();
                     flagContent.gameObject.SetActive(true);
                     Top.SetActive(true);
                     navBar.SetActive(false);
-                    title.SetTitle(flagContent.PrefixTitleKey, flagContent.SuffixTitleKey);
+                    title.SetTitle(TitleType.mainTitle, flagContent.PrefixTitleKey, flagContent.SuffixTitleKey);
                     break;
                 case ContentState.standUpContent:
                     CloseAllPanels();
@@ -280,7 +281,7 @@ namespace umi3dBrowsers
                     CloseAllPanels();
                     //Top.SetActive(true);
                     loadingContent.gameObject.SetActive(true);
-                    title.SetTitle(loadingContent.PrefixTitleKey, loadingContent.SuffixTitleKey);
+                    title.SetTitle(TitleType.mainTitle, loadingContent.PrefixTitleKey, loadingContent.SuffixTitleKey);
                     break;
             }
         }

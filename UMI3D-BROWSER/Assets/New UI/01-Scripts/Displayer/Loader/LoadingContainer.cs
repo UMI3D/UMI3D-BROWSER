@@ -17,6 +17,7 @@ limitations under the License.
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using umi3dBrowsers.services.environment;
 using UnityEngine;
 
 namespace umi3dBrowsers.displayer
@@ -80,6 +81,7 @@ namespace umi3dBrowsers.displayer
                 if (_loadingInProgress == false) // Notify that a loading is in progress
                 {
                     OnLoadingInProgress?.Invoke();
+                    LoadingEnvironmentHandler.Instance.Display();
                     loadingTipDisplayer.DisplayTips();
                     _loadingInProgress = true;
                 }
@@ -90,6 +92,7 @@ namespace umi3dBrowsers.displayer
                 {
                     OnLoadingFinished?.Invoke();
                     loadingTipDisplayer.StopDisplayTips();
+                    LoadingEnvironmentHandler.Instance.StopDisplay();
                     _loadingInProgress = false;
                 }
             }

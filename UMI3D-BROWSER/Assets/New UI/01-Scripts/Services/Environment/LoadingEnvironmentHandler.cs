@@ -48,13 +48,13 @@ namespace umi3dBrowsers.services.environment
 
             defaultCullingMask = cam.cullingMask;
 
-            Stop();
+            StopDisplay();
         }
 
         /// <summary>
         /// Displays loading screen
         /// </summary>
-        public void IsLoading()
+        public void Display()
         {
             cam.cullingMask = loadingCullingMask.value;
             cam.clearFlags = CameraClearFlags.Skybox;
@@ -64,7 +64,7 @@ namespace umi3dBrowsers.services.environment
         /// <summary>
         /// Hides loading screen
         /// </summary>
-        public void Stop()
+        public void StopDisplay()
         {
             cam.cullingMask = defaultCullingMask;
             cam.clearFlags = CameraClearFlags.Skybox;

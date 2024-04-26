@@ -14,6 +14,7 @@ limitations under the License.
 using umi3d.cdk.interaction;
 using umi3d.common;
 using umi3d.common.interaction;
+using umi3dVRBrowsersBase.ui;
 using umi3dVRBrowsersBase.ui.playerMenu;
 
 namespace umi3dBrowsers.interaction.selection.projector
@@ -23,6 +24,8 @@ namespace umi3dBrowsers.interaction.selection.projector
     /// </summary>
     public class InteractableProjector : IProjector<InteractableContainer>
     {
+        public SelectedInteractableManager selectedInteractableManager;
+
         /// <summary>
         /// Checks whether an interctable has already projected tools
         /// </summary>
@@ -46,7 +49,7 @@ namespace umi3dBrowsers.interaction.selection.projector
             // display the parameter gear if it is required to access the interactions
             if (interactable.Interactable.interactions.FindAll(i => i.Result is AbstractParameterDto).Count > 0)
             {
-                PlayerMenuManager.Instance.parameterGear.Display(interactable, controller.transform.position);
+                selectedInteractableManager.Display(interactable, controller.transform.position);
                 PlayerMenuManager.Instance.CtrlToolMenu.RememberParameters();
             }
         }
@@ -71,7 +74,7 @@ namespace umi3dBrowsers.interaction.selection.projector
         {
             controller.Release(interactionTool, new RequestedUsingSelector<AbstractSelector>() { controller = controller });
 
-            PlayerMenuManager.Instance.parameterGear.HideWithDelay();
+            selectedInteractableManager.HideWithDelay();
         }
 
         /// <inheritdoc/>
@@ -79,7 +82,7 @@ namespace umi3dBrowsers.interaction.selection.projector
         {
             controller.Release(AbstractInteractionMapper.Instance.GetTool(UMI3DGlobalID.EnvironmentId, interactable.Interactable.dto.id), new RequestedUsingSelector<AbstractSelector>() { controller = controller });
 
-            PlayerMenuManager.Instance.parameterGear.HideWithDelay();
+            selectedInteractableManager.HideWithDelay();
         }
     }
 }

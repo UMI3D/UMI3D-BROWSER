@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System;
 using System.Collections;
 using umi3dVRBrowsersBase.interactions;
 using UnityEngine;
@@ -35,8 +36,6 @@ namespace umi3dVRBrowsersBase.ui
         private UnityEvent onHoverEnter = new UnityEvent();
         private UnityEvent onHoverExit = new UnityEvent();
 
-        /// <inheritdoc/>
-        public UnityEvent OnTriggered { get => onClicked; }
         /// <inheritdoc/>
         public UnityEvent OnHoverEnter => onHoverEnter;
         /// <inheritdoc/>
@@ -67,7 +66,14 @@ namespace umi3dVRBrowsersBase.ui
         /// </summary>
         private bool isHovered = false;
 
+        public event Action triggerHandler;
+
         #endregion Fields
+
+        private void Awake()
+        {
+            triggerHandler += () => onClicked?.Invoke();
+        }
 
         protected void OnEnable()
         {
@@ -83,7 +89,7 @@ namespace umi3dVRBrowsersBase.ui
         /// <param name="controller"></param>
         public virtual void Trigger(ControllerType controllerType)
         {
-            onClicked?.Invoke();
+            triggerHandler?.Invoke();
 
             if (btnRenderer != null && pressedMaterial != null && isActiveAndEnabled)
             {

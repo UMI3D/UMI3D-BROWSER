@@ -63,7 +63,6 @@ namespace umi3dBrowsers.services.librairies
             currentEntries.Clear();
 
             var libs = new Dictionary<string, List<UMI3DResourcesManager.DataFile>>();
-            Debug.Log($"<color=cyan> {UMI3DResourcesManager.Libraries.Count} </color>");
 
             foreach (UMI3DResourcesManager.DataFile lib in UMI3DResourcesManager.Libraries)
             {

@@ -141,6 +141,15 @@ namespace umi3dBrowsers.container
             vignetteDisplayers = PlayerPrefsManager.HasVirtualWorldsStored()
                     ? CreateVignettes(PlayerPrefsManager.GetVirtualWorlds())
                     : new();
+
+            FillWithEmptyVignettes();
+        }
+
+        private void FillWithEmptyVignettes()
+        {
+            var nbrVignetteTotal = vignetteMode == VignetteMode.Small ? 8 : 2;
+            for (var i = vignetteDisplayers.Count - nbrVignetteTotal; i < 0; i++)
+                Instantiate(emptyVignettePrefab, gridLayout.transform);
         }
 
         private void SetGridLayout(Vector2 vignetteSize, int vignetteRowAmount, Vector2 vignetteSpace)
@@ -152,6 +161,8 @@ namespace umi3dBrowsers.container
             scrollbar.value = 0;
             if (gameObject.activeSelf && isActiveAndEnabled)
                 StartCoroutine(ScaleColliders());
+
+            ResetVignettes();
         }
 
         private void OnValidate()

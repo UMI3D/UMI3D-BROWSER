@@ -190,8 +190,8 @@ namespace umi3dBrowsers
             };
             connectionProcessorService.OnConnectionFailure += (message) => { 
                 Debug.LogError("Failed to connect");
-                popupManager.SetArguments(PopupManager.PopupType.Error, new Dictionary<string, object>() { { "libCount", 2 } });
-                popupManager.ShowPopup(PopupManager.PopupType.Error, "popup_fail_connect", message, 
+                popupManager.SetArguments(PopupManager.PopupType.Error, new Dictionary<string, object>() { { "error", message } });
+                popupManager.ShowPopup(PopupManager.PopupType.Error, "popup_fail_connect", "error_msg", 
                     ("popup_close", () => { popupManager.ClosePopUp(); }) );
             };
             connectionProcessorService.OnMediaServerPingSuccess += (virtualWorldData) => 
@@ -214,6 +214,11 @@ namespace umi3dBrowsers
             };
             connectionProcessorService.OnAsksToLoadLibrairies += (ids) => connectionProcessorService.SendAnswerToLibrariesDownloadAsk(true);
             connectionProcessorService.OnConnectionSuccess += () => Debug.Log("____Connection success____");
+            connectionProcessorService.OnAnswerFailed += () => {
+                popupManager.ShowPopup(PopupManager.PopupType.Error, "popup_answer_failed_title", "popup_answer_failed_description",
+                    ("popup_close", () => { popupManager.ClosePopUp(); }
+                ));
+            };
         }
 
         private void BindLoaderDisplayer()

@@ -19,6 +19,10 @@ namespace umi3dBrowsers.services.connection
         public event Action<umi3d.common.interaction.form.ConnectionFormDto> OnDivFormReceived;
         public event Action<List<string>> OnAsksToLoadLibrairies;
         public event Action OnConnectionSuccess;
+        public event Action OnAnswerFailed {
+            add { identifier.OnAnswerFailed += value; } 
+            remove { identifier.OnAnswerFailed -= value; }
+        }
 
         [SerializeField,
             Tooltip("In seconds, after this time, if no connection was established, display an error message.")]

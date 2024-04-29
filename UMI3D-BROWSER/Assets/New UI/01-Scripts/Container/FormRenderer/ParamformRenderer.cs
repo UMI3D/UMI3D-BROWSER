@@ -55,10 +55,11 @@ namespace umi3dBrowsers.container.formrenderer
         internal void Handle(ConnectionFormDto connectionFormDto)
         {
             GameObject container = tabManager.AddNewTabForParamForm(connectionFormDto.fields[0].name);
-            IDisplayer displayer = null;
 
             for (int i = 0; i < connectionFormDto.fields.Count; i++)
             {
+                IDisplayer displayer = null;
+
                 ParameterSettingRequestDto paramRequestDto = new ParameterSettingRequestDto()
                 {
                     toolId = connectionFormDto.fields[i].id,

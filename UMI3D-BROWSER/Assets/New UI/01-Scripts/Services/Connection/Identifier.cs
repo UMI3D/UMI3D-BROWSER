@@ -41,7 +41,7 @@ namespace umi3dBrowsers.services.connection
         /// <param name="callback"></param>
         public override async Task<FormAnswerDto> GetParameterDtos(ConnectionFormDto parameter)
         {
-            if (_connectionFormDto?.name == parameter.name)
+            if (AreConnectionFormEqual(parameter, _connectionFormDto))
                 OnAnswerFailed?.Invoke();
             _connectionFormDto = parameter;
 
@@ -84,6 +84,23 @@ namespace umi3dBrowsers.services.connection
             while (b)
                 await Task.Yield();
             return form;
+        }
+
+        private static bool AreConnectionFormEqual(ConnectionFormDto form1, ConnectionFormDto form2)
+        {
+            if (form1 == null || form2 == null)
+                return false;
+            if (form1.fields.Count != form2.fields.Count)
+                return false;
+            for (var i = 0; i < form1.fields.Count; i++)
+            {
+                var field = form1.fields[i];
+                var oldField = form2?.fields[i];
+                if (field.name != oldField.name)
+                    return false;
+            }
+
+            return true;
         }
     }
 }

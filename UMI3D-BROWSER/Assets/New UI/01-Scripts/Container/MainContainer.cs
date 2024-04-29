@@ -197,6 +197,7 @@ namespace umi3dBrowsers
             connectionProcessorService.OnMediaServerPingSuccess += (virtualWorldData) => 
             {
                 title.SetTitle(TitleType.connectionTitle,"Connected to", virtualWorldData.worldName, true , true);
+
                 popupManager.ClosePopUp();
                 services.connection.PlayerPrefsManager.GetVirtualWorlds().AddWorld(virtualWorldData);
             };

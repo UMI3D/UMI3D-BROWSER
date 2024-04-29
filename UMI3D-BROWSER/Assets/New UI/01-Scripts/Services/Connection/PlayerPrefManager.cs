@@ -98,7 +98,7 @@ namespace umi3dBrowsers.services.connection
         {
             return PlayerPrefs.HasKey(Umi3dVirtualWorlds)
                 ? JsonUtility.FromJson<VirtualWorlds>(PlayerPrefs.GetString(Umi3dVirtualWorlds))
-                : null;
+                : new VirtualWorlds();
         }
 
         /// <summary>

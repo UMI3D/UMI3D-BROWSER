@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using umi3dBrowsers.utils;
 
 public class Badge : MonoBehaviour
 {
@@ -8,6 +9,8 @@ public class Badge : MonoBehaviour
     [SerializeField] RectTransform textTransform;
     [SerializeField] RectTransform backgroundTransform;
     [SerializeField] float padding = 10f;
+
+    private UIColliderScaller scaller;
 
     private void Awake()
     {
@@ -23,10 +26,13 @@ public class Badge : MonoBehaviour
         {
             backgroundTransform = GetComponentInChildren<Image>().transform as RectTransform;
         }
+
+        scaller = GetComponent<UIColliderScaller>();
     }
 
     private void OnGUI()
     {
-        backgroundTransform.sizeDelta = new Vector2(textTransform.sizeDelta.x + 2f * padding, backgroundTransform.sizeDelta.y);
+        backgroundTransform.sizeDelta = new Vector2(textTransform.sizeDelta.x + 2f * padding, textTransform.sizeDelta.y + padding);
+        scaller?.ScaleCollider();
     }
 }

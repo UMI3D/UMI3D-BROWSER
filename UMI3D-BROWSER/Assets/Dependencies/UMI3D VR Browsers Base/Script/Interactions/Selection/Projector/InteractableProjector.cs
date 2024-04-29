@@ -46,12 +46,7 @@ namespace umi3dBrowsers.interaction.selection.projector
             var interactionTool = AbstractInteractionMapper.Instance.GetTool(UMI3DGlobalID.EnvironmentId, interactable.Interactable.dto.id);
             Project(interactionTool, interactable.Interactable.dto.nodeId, controller);
 
-            // display the parameter gear if it is required to access the interactions
-            if (interactable.Interactable.interactions.FindAll(i => i.Result is AbstractParameterDto).Count > 0)
-            {
-                selectedInteractableManager.Display(interactable, controller.transform.position);
-                PlayerMenuManager.Instance.CtrlToolMenu.RememberParameters();
-            }
+            selectedInteractableManager.Display(interactable, controller.transform.position);
         }
 
         /// <summary>

@@ -45,14 +45,6 @@ namespace umi3dVRBrowsersBase.ui.playerMenu
         [SerializeField]
         [Header("Buttons")]
         private Button m_toolbox = null;
-        [SerializeField]
-        private Button m_ctrlLeftBindings = null;
-        [SerializeField]
-        private TextMeshProUGUI m_ctrlLeftBindingsLabel = null;
-        [SerializeField]
-        private Button m_ctrlRightBindings = null;
-        [SerializeField]
-        private TextMeshProUGUI m_ctrlRightBindingsLabel = null;
 
         [Space]
         [SerializeField]
@@ -134,19 +126,6 @@ namespace umi3dVRBrowsersBase.ui.playerMenu
         /// </summary>
         private void BindControllerButtons()
         {
-            m_ctrlLeftBindings.onClick.AddListener(() =>
-            {
-                PlayerMenuManager.Instance.DisplayActionBinding(ControllerType.LeftHandController);
-            });
-
-            m_ctrlRightBindings.onClick.AddListener(() =>
-            {
-                PlayerMenuManager.Instance.DisplayActionBinding(ControllerType.RightHandController);
-            });
-
-            m_ctrlLeftBindings.gameObject.SetActive(false);
-            m_ctrlRightBindings.gameObject.SetActive(false);
-
             m_closeButton.onClick.AddListener(() => PlayerMenuManager.Instance.Close(true));
         }
 
@@ -185,29 +164,6 @@ namespace umi3dVRBrowsersBase.ui.playerMenu
 
             string title = EnvironmentSettings.Instance.IsEnvironmentLoaded ? "Go back to main menu" : "Close application";
             DialogBox.Instance.Display(title, "Are you sure you want to leave ?", "Yes", leaveCallback);
-        }
-
-        /// <summary>
-        /// Active the [controller] binding button.
-        /// </summary>
-        /// <param name="display"></param>
-        /// <param name="controller"></param>
-        /// <param name="toolName"></param>
-        public void DisplayControllerButton(bool display, ControllerType controller, string toolName)
-        {
-            switch (controller)
-            {
-                case ControllerType.LeftHandController:
-                    m_ctrlLeftBindings.gameObject.SetActive(display);
-                    m_ctrlLeftBindingsLabel.text = toolName;
-                    break;
-                case ControllerType.RightHandController:
-                    m_ctrlRightBindings.gameObject.SetActive(display);
-                    m_ctrlRightBindingsLabel.text = toolName;
-                    break;
-                default:
-                    break;
-            }
         }
     }
 }

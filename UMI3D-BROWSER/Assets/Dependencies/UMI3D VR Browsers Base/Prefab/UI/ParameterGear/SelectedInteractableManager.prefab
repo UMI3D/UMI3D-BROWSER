@@ -47,11 +47,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   label: {fileID: 6955289447807756795}
+  background: {fileID: 4294739627830650444}
+  collider: {fileID: 6480795320666331513}
   delayBeforeHiding: 1
   minDistance: 2
   maxDistance: 6
   minScale: 0.15
   maxScale: 0.5
+  events: []
   playerTransform: {fileID: 0}
 --- !u!114 &3716950535654356333
 MonoBehaviour:

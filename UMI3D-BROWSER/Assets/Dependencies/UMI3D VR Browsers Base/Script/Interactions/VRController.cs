@@ -103,8 +103,6 @@ namespace umi3dVRBrowsersBase.interactions
 
             if (currentTool == tool) // It means projection succedded
             {
-                PlayerMenuManager.Instance.MenuHeader.DisplayControllerButton(true, type, tool.name);
-
                 tool.onProjected(bone.BoneType);
             }
         }
@@ -281,9 +279,6 @@ namespace umi3dVRBrowsersBase.interactions
         {
             base.Release(tool, reason);
             tool.onReleased(bone.BoneType);
-
-            PlayerMenuManager.Instance.CtrlToolMenu.ClearBindingList(type);
-            PlayerMenuManager.Instance.MenuHeader.DisplayControllerButton(false, type, string.Empty);
         }
 
         #endregion

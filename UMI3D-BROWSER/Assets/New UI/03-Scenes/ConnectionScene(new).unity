@@ -36300,6 +36300,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e080908f1f0a9b4c8659d1e8116269e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  connectionProcessorService: {fileID: 1143609946}
   scaller: {fileID: 410201727053946076}
   vignettePrefab: {fileID: 1842928581106226447, guid: 17c625999e5935348843c7ec1c90bfc1,
     type: 3}
@@ -37422,6 +37423,11 @@ PrefabInstance:
       propertyPath: smallVignetteSpace.y
       value: 30
       objectReference: {fileID: 0}
+    - target: {fileID: 5302419438018580643, guid: 5658573cbd718f247a830647cd4a6a97,
+        type: 3}
+      propertyPath: connectionProcessorService
+      value: 
+      objectReference: {fileID: 1143609946}
     - target: {fileID: 5302419438018580643, guid: 5658573cbd718f247a830647cd4a6a97,
         type: 3}
       propertyPath: vignetteDisplayers.Array.size

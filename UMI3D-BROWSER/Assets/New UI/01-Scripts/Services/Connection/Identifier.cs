@@ -14,14 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using Castle.Core.Logging;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using umi3d.cdk.collaboration;
-using umi3d.common.collaboration;
 using umi3d.common.interaction;
-using Unity.Burst.Intrinsics;
 using UnityEngine;
 
 namespace umi3dBrowsers.services.connection
@@ -33,6 +30,10 @@ namespace umi3dBrowsers.services.connection
         public Action<umi3d.common.interaction.form.ConnectionFormDto, Action<umi3d.common.interaction.form.FormAnswerDto>> OnDivFormAvailible;
         public Action<ConnectionFormDto, Action<FormAnswerDto>> OnParamFormAvailible;
 
+        public Action OnAnswerFailed;
+
+        private ConnectionFormDto _connectionFormDto;
+
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
@@ -40,6 +41,10 @@ namespace umi3dBrowsers.services.connection
         /// <param name="callback"></param>
         public override async Task<FormAnswerDto> GetParameterDtos(ConnectionFormDto parameter)
         {
+            if (_connectionFormDto?.name == parameter.name)
+                OnAnswerFailed?.Invoke();
+            _connectionFormDto = parameter;
+
             bool isWaiting = true;
             FormAnswerDto form = null;
 

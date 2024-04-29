@@ -98,7 +98,7 @@ namespace umi3dBrowsers.container.formrenderer
                         {
                             GameObject gameObject = null;
                             if (connectionFormDto.fields[i].name == "OR")
-                                formBinding.Add(() => paramRequestDto.parameter = "");
+                                formBinding.Add(() => paramRequestDto.parameter = null);
                             else
                             {
                                 gameObject = Instantiate(textFieldPrefab, container.transform);

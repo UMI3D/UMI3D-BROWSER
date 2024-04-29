@@ -14,10 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils.audio;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using umi3d.cdk.collaboration;
 using umi3dBrowsers.containere;
 using umi3dBrowsers.displayer;
 using UnityEngine;
@@ -68,9 +70,9 @@ namespace umi3dBrowsers.container
             generalSettingsContainer.OnLanguageChanged += (language) => this.selectedLanguage = language;
             generalSettingsContainer.OnThemeChanged += (theme) => this.selectedTheme = theme;
 
-            audioSettingsContainer.OnConversationVolumenChanged += (value) => this.conversationVolume = value;
-            audioSettingsContainer.OnEnvironmentVolumeChanged += (value) => this.environmentVolume = value;
-            audioSettingsContainer.OnIsMicOnChanged += (value) => this.isMicOn = value;
+            audioSettingsContainer.OnConversationVolumenChanged += (value) => { this.conversationVolume = value; AudioMixerControl.SetVolume(AudioMixerControl.Group.Conversation, value); };
+            audioSettingsContainer.OnEnvironmentVolumeChanged += (value) => { this.environmentVolume = value; AudioMixerControl.SetVolume(AudioMixerControl.Group.Environment, value); };
+            audioSettingsContainer.OnIsMicOnChanged += (value) => { this.isMicOn = value; MicrophoneListener.mute = !value; };
 
             graphicsSettingsContainer.OnQualityLevelChange += (value) => quality = value;
 

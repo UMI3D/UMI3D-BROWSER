@@ -16,17 +16,15 @@ limitations under the License.
 
 using System.Collections;
 using System.Collections.Generic;
-using umi3d;
 using UnityEngine;
 using umi3d.common.interaction.form;
 using System.Linq;
-using System;
 using TMPro;
-using UnityEditor.Build.Utilities;
 using umi3dBrowsers;
 
 namespace form_generator
 {
+#if UNITY_EDITOR
     public class DivFormMaker : MonoBehaviour
     {
         [Header("Form reader")]
@@ -166,5 +164,6 @@ namespace form_generator
             return false;          
         }
     }
+#endif
 }
 

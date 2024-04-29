@@ -14,15 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using MainThreadDispatcher;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using umi3d.cdk;
-using umi3d.common;
 using umi3d.common.interaction.form;
 using umi3d.common.interaction.form.ugui;
-using umi3dBrowsers.displayer;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -71,7 +68,7 @@ namespace umi3dBrowsers.container.formrenderer
 #if UNITY_EDITOR
                 DestroyImmediate(allContainers[i]);
 #else
-                Destroy(_notInPageFormParts[i], delay)
+                Destroy(allContainers[i], delay);
                 delay += 0.01f;
 #endif
             }
@@ -212,7 +209,7 @@ namespace umi3dBrowsers.container.formrenderer
                         Texture2D texture = spriteTask as Texture2D;
                         displayer.SetResource(
                             Sprite.Create(texture,
-                                new Rect(0, 0, texture.Size().x, texture.Size().y),
+                                new Rect(0, 0, texture.texelSize.x, texture.texelSize.y),
                                 new Vector2())
                         );
                     }

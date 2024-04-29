@@ -19,6 +19,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Localization.Components;
 using UnityEngine.UI;
 
 namespace umi3dBrowsers.displayer
@@ -27,14 +28,23 @@ namespace umi3dBrowsers.displayer
     {
         [Header("Data")]
         [SerializeField] private float tipDuration;
-        [SerializeField] private List<LoadingTipData> loadingTipDatas;
+        [SerializeField] private List<Tips> loadingTip;
 
         [Header("Elements")]
         [SerializeField] private Image tipImage;
-        [SerializeField] private TextMeshProUGUI tipText;
+        [SerializeField] private LocalizeStringEvent tipText;
+
+        private List<Tips.Data> loadingTipDatas;
 
         private Coroutine _coroutine;
-        private LoadingTipData _selectedLoadingTipData;
+        private Tips.Data _selectedLoadingTipData;
+
+        private void Awake()
+        {
+            loadingTipDatas = new List<Tips.Data>();
+            foreach (var tip in loadingTip)
+                loadingTipDatas.AddRange(tip.LoadingTips);
+        }
 
         private void Start()
         {
@@ -96,18 +106,10 @@ namespace umi3dBrowsers.displayer
         private void SetTip()
         {
             tipImage.sprite = _selectedLoadingTipData.Sprite;
-            tipText.text = _selectedLoadingTipData.Tip;
+            tipText.SetEntry(_selectedLoadingTipData.Tip);
         }
 
-        [Serializable]
-        public class LoadingTipData
-        {
-            [SerializeField, TextArea] private string tip;
-            [SerializeField] private Sprite sprite;
-
-            public string Tip => tip;
-            public Sprite Sprite => sprite;
-        }
+        
     }
 }
 

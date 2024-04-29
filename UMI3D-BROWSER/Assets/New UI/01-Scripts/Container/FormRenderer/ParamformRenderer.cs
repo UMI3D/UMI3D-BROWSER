@@ -73,7 +73,7 @@ namespace umi3dBrowsers.container.formrenderer
                     case EnumParameterDto<string> paramEnum:
                         {
                             GameObject gameObject = Instantiate(dropDownFieldPrefab, container.transform);
-                            displayer = gameObject.GetComponent<IDisplayer>();
+                            displayer = gameObject.GetComponentInChildren<IDisplayer>();
                             formBinding.Add(() => paramRequestDto.parameter = displayer.GetValue(true));
                             displayer.SetTitle(paramEnum.name);
                             displayer.SetPlaceHolder(paramEnum.possibleValues);
@@ -96,11 +96,17 @@ namespace umi3dBrowsers.container.formrenderer
                         break;
                     case StringParameterDto stringParam:
                         {
-                            GameObject gameObject = Instantiate(textFieldPrefab, container.transform);
-                            displayer = gameObject.GetComponent<IDisplayer>();
-                            formBinding.Add(() => paramRequestDto.parameter = displayer.GetValue(true));
-                            displayer.SetTitle(stringParam.name);
-                            displayer.SetPlaceHolder(new List<string>() { stringParam.description });
+                            GameObject gameObject = null;
+                            if (connectionFormDto.fields[i].name == "OR")
+                                formBinding.Add(() => paramRequestDto.parameter = "");
+                            else
+                            {
+                                gameObject = Instantiate(textFieldPrefab, container.transform);
+                                displayer = gameObject?.GetComponentInChildren<IDisplayer>();
+                                formBinding.Add(() => paramRequestDto.parameter = displayer?.GetValue(true));
+                                displayer?.SetTitle(stringParam.name);
+                                displayer?.SetPlaceHolder(new List<string>() { stringParam.description });
+                            }
                         }
                         break;
                     default:
@@ -109,7 +115,6 @@ namespace umi3dBrowsers.container.formrenderer
 
                 if (connectionFormDto.fields[i].name == "OR")
                 {
-                    displayer?.SetTitle("Password");
                     container = tabManager.AddNewTabForParamForm(connectionFormDto.fields[i + 1].name);
                 }
             }

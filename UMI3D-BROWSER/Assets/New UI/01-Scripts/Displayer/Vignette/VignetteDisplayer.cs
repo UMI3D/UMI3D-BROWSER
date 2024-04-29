@@ -113,6 +113,7 @@ namespace umi3dBrowsers.displayer
         public void Click()
         {
             onVignetteClicked?.Invoke();
+            OnClick?.Invoke();
             likeButton.Disable();
             trashButton.Disable();
             inputFieldBackground.Disable();

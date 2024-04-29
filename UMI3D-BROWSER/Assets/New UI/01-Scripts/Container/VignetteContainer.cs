@@ -19,6 +19,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using umi3dBrowsers.displayer;
 using umi3dBrowsers.services.connection;
 using umi3dBrowsers.utils;
@@ -29,6 +30,7 @@ namespace umi3dBrowsers.container
 {
     public class VignetteContainer : MonoBehaviour
     {
+        [SerializeField] private ConnectionProcessor connectionProcessorService;
         [Header("Vignette")]
         [SerializeField] private UIColliderScallerHandler scaller;
         [Space]
@@ -131,6 +133,9 @@ namespace umi3dBrowsers.container
                 pVirtualWorlds.UpdateWorld(pWorldData);
                 OnReset?.Invoke(); 
             });
+            vignette.OnClick += () => {
+                connectionProcessorService.TryConnectToMediaServer(pWorldData.worldUrl);
+            };
 
             return vignette;
         }

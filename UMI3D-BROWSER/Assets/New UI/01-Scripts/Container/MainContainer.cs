@@ -14,7 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System;
 using System.Collections.Generic;
 using TMPro;
 using umi3d;
@@ -112,10 +111,6 @@ namespace umi3dBrowsers
 
             HandleContentState(contentState);
             SetVersion(UMI3DVersion.version);
-
-            PlayerDependenciesAccessor.Instance.SetUpSkeleton.SkeletonResized += () => {
-                transform.position = new Vector3(transform.position.x, Camera.main.transform.position.y, transform.position.z);
-            };
         }
 
         /// <summary>
@@ -161,6 +156,7 @@ namespace umi3dBrowsers
                 SetUpSkeleton setUp = PlayerDependenciesAccessor.Instance.SetUpSkeleton;
                 StartCoroutine(setUp.SetupSkeleton());
                 HandleContentState(ContentState.mainContent);
+                transform.position = new Vector3(transform.position.x, Camera.main.transform.position.y, transform.position.z);
             });
         }
 

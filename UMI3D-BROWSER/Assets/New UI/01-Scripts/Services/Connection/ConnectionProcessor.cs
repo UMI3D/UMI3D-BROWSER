@@ -17,7 +17,6 @@ limitations under the License.
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using umi3d.cdk;
 using umi3d.cdk.collaboration;
 using umi3d.common;
 using umi3d.common.interaction;

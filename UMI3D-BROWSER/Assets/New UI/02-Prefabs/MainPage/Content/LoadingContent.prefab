@@ -900,11 +900,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9fcea9ab7887e4942ad86a3d445bfdbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tipDuration: 1
-  loadingTipDatas:
-  - tip: C'est tip est vraiment important
-    sprite: {fileID: 21300000, guid: bf09492fc7259dd4fbb9593c69a5ea8f, type: 3}
-  - tip: Ce tip n'est pas important
-    sprite: {fileID: 21300000, guid: 3ce55d725a08f614d842443e60857107, type: 3}
+  tipDuration: 10
+  loadingTip: []
   tipImage: {fileID: 2826422989096127104}
-  tipText: {fileID: 845375304374793189}
+  tipText: {fileID: 0}

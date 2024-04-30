@@ -31,6 +31,7 @@ namespace umi3dBrowsers.container
     public class VignetteContainer : MonoBehaviour
     {
         [SerializeField] private ConnectionProcessor connectionProcessorService;
+        [SerializeField] private PopupManager popupManager;
         [Header("Vignette")]
         [SerializeField] private UIColliderScallerHandler scaller;
         [Space]
@@ -125,8 +126,15 @@ namespace umi3dBrowsers.container
                 OnReset?.Invoke(); 
             });
             vignette.SetupRemoveButton(() => {
-                pVirtualWorlds.RemoveWorld(pWorldData); 
-                OnReset?.Invoke(); 
+                popupManager.SetArguments(PopupManager.PopupType.Warning, new() { { "worldName", pWorldData.worldName } });
+                popupManager.ShowPopup(PopupManager.PopupType.Warning, "empty", "popup_deleteWorld_description",
+                    ("popup_cancel", () => popupManager.ClosePopUp()),
+                    ("popup_yes", () => {
+                        pVirtualWorlds.RemoveWorld(pWorldData);
+                        OnReset?.Invoke();
+                        popupManager.ClosePopUp();
+                    })
+                );
             });
             vignette.SetupRenameButton(newName => { 
                 pWorldData.worldName = newName; 

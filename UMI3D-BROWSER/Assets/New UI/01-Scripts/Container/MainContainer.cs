@@ -112,6 +112,10 @@ namespace umi3dBrowsers
 
             HandleContentState(contentState);
             SetVersion(UMI3DVersion.version);
+
+            PlayerDependenciesAccessor.Instance.SetUpSkeleton.SkeletonResized += () => {
+                transform.position = new Vector3(transform.position.x, Camera.main.transform.position.y, transform.position.z);
+            };
         }
 
         /// <summary>

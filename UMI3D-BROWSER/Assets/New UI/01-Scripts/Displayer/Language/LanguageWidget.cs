@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Localization.Settings;
 
 namespace umi3dBrowsers.displayer
 {
@@ -23,8 +24,11 @@ namespace umi3dBrowsers.displayer
 
         public UnityEvent<UnityEngine.Localization.Locale> OnSupportedLanguageValidated;
 
-        private void Awake()
+        private void Start()
         {
+            selectedLanguage = LocalizationSettings.SelectedLocale;
+
+            LanguageSelectionField baseField = null;
             for (int i = 0; i < languageAssociations.Count; i++)
             {
                 LanguageAssociation currentAsso = languageAssociations[i];
@@ -52,7 +56,11 @@ namespace umi3dBrowsers.displayer
                     if (currentField.Params.SupportedLanguages == selectedLanguage)
                         selectedLanguage = null;
                 };
+
+                if (selectedLanguage == currentAsso.languageParams.SupportedLanguages)
+                    baseField = currentField;
             }
+            baseField.Click();
         }
 
         public void ValidateSelection()

@@ -104,10 +104,8 @@ namespace umi3dBrowsers
 
             var local = services.connection.PlayerPrefsManager.GetLocalisationLocal();
             if (contentState == ContentState.flagContent && local != null && !forceFlagContent)
-            {
                 contentState = ContentState.standUpContent;
-                LocalizationSettings.SelectedLocale = local;
-            }
+            LocalizationSettings.SelectedLocale = local ?? LocalizationSettings.ProjectLocale;
         }
 
         private void Start()

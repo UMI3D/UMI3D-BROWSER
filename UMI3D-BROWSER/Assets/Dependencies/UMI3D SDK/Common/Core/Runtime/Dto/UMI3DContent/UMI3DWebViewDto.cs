@@ -16,20 +16,22 @@ using System.Collections.Generic;
 namespace umi3d.common
 {
     /// <summary>
-    /// Describes a Webview
+    /// Describes a WebView
     /// </summary>
     [System.Serializable]
     public class UMI3DWebViewDto : UMI3DNodeDto, IEntity
     {
+        public bool isAdmin { get; set; }
+
         /// <summary>
         /// Can users interact with the webview .
         /// </summary>
         public bool canInteract { get; set; }
 
-        /// Webview size.
+        /// WebView size.
         public Vector2Dto size { get; set; }
 
-        /// Webview texture dimensions.
+        /// WebView texture dimensions.
         public Vector2Dto textureSize { get; set; }
 
         /// <summary>
@@ -37,6 +39,11 @@ namespace umi3d.common
         /// Url to load on clients.
         /// </summary>
         public string url { get; set; }
+
+        /// <summary>
+        /// Vertical scroll offset.
+        /// </summary>
+        public int scrollOffset { get; set; }
 
         /// <summary>
         /// If set to false, when <see cref="url"/> is set, the value will be ignored by the browser.

@@ -69,12 +69,12 @@ namespace umi3dBrowsers.displayer
                 return GetValue();
         }
 
-        public void Init(List<GridDropDownItemCell> cells)
+        public void Init(List<GridDropDownItemCell> cells, int indexCurrent = 0)
         {
             this.cells = cells;
             thisImage.color = thisColor;
 
-            text.text = cells[0].ItemText;
+            text.text = cells[indexCurrent].ItemText;
             InitAllCells();
         }
 

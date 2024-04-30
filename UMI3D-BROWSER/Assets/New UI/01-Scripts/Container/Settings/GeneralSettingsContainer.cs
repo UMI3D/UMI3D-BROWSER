@@ -20,23 +20,27 @@ using umi3dBrowsers.displayer;
 using UnityEngine;
 using System.Linq;
 using inetum.unityUtils;
+using UnityEngine.Localization.Settings;
+using Unity.VisualScripting;
+using System.Collections;
+using UnityEngine.SocialPlatforms;
+using umi3dBrowsers.services.connection;
 
 namespace umi3dBrowsers.container
 {
     public class GeneralSettingsContainer : MonoBehaviour
     {
         [Header("Language")]
-        [SerializeField] private LanguageHandler languageHandler;
-        [SerializeField] private SupportedLanguages selectedLanguage;
+        [SerializeField] private UnityEngine.Localization.Locale selectedLanguage;
         [SerializeField] private GridDropDown languageDropdown;
-        public event Action<SupportedLanguages> OnLanguageChanged;
+        public event Action<UnityEngine.Localization.Locale> OnLanguageChanged;
 
         [Header("Theme")]
         [SerializeField] private AvailibleThemes selectedThemes;
         [SerializeField] private GridDropDown themeDropDown;
         public event Action<AvailibleThemes> OnThemeChanged;
 
-        private void Awake()
+        private void Start()
         {
             SetLanguageDropDown();
             SetThemeDropDown();
@@ -44,20 +48,32 @@ namespace umi3dBrowsers.container
 
         private void SetLanguageDropDown()
         {
+            selectedLanguage = LocalizationSettings.SelectedLocale;
+
             List<GridDropDownItemCell> languages = new();
-            Enum.GetNames(typeof(SupportedLanguages)).ForEach(language =>
+
+            var i = 0;
+            var indexCurrent = 0;
+            LocalizationSettings.AvailableLocales.Locales.ForEach(language =>
             {
-                GridDropDownItemCell cell = new(language);
+                GridDropDownItemCell cell = new(language.Identifier.CultureInfo.NativeName.FirstCharacterToUpper());
                 languages.Add(cell);
+                if (language == selectedLanguage)
+                    indexCurrent = i;
+
+                i++;
             });
 
-            languageDropdown.Init(languages);
+            languageDropdown.Init(languages, indexCurrent);
 
             languageDropdown.OnClick += () =>
             {
-                selectedLanguage = Enum.Parse<SupportedLanguages>(languageDropdown.GetValue());
-                LanguageHandler.currentLanguage = selectedLanguage;
-                languageHandler.ChangeLocale();
+                
+                selectedLanguage = LocalizationSettings.AvailableLocales.Locales.Find(language => language.Identifier.CultureInfo.NativeName.FirstCharacterToUpper() == languageDropdown.GetValue());
+                LocalizationSettings.SelectedLocale = selectedLanguage;
+                PlayerPrefsManager.SaveLocalisationSet(selectedLanguage);
+
+                OnLanguageChanged?.Invoke(selectedLanguage);
             };
         }
 

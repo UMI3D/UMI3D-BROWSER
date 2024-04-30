@@ -38,7 +38,7 @@ namespace umi3dBrowsers.container
     public class Settings : MonoBehaviour
     {
         [Header("General")]
-        [SerializeField] private SupportedLanguages selectedLanguage;
+        [SerializeField] private UnityEngine.Localization.Locale selectedLanguage;
         [SerializeField] private AvailibleThemes selectedTheme;
         [SerializeField] private GeneralSettingsContainer generalSettingsContainer;
 

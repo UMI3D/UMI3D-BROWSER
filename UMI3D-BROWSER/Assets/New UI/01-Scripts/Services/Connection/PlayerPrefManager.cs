@@ -16,7 +16,9 @@ limitations under the License.
 
 using System.Collections.Generic;
 using System.Linq;
+using umi3d.debug;
 using UnityEngine;
+using UnityEngine.Localization.Settings;
 
 namespace umi3dBrowsers.services.connection
 {
@@ -118,14 +120,14 @@ namespace umi3dBrowsers.services.connection
 
         public static readonly string LocalisationSet = "umi3d-localisation-set";
 
-        public static bool HasLocalisationBeenSet()
+        public static UnityEngine.Localization.Locale GetLocalisationLocal()
         {
-            return PlayerPrefs.GetInt(LocalisationSet) != 0;
+            return LocalizationSettings.AvailableLocales.Locales.Find(l => l.Identifier.Code == PlayerPrefs.GetString(LocalisationSet));
         }
 
-        public static void SaveLocalisationSet(bool isSet)
+        public static void SaveLocalisationSet(UnityEngine.Localization.Locale pLocal)
         {
-            PlayerPrefs.SetInt(LocalisationSet, isSet ? 1 : 0);
+            PlayerPrefs.SetString(LocalisationSet, pLocal.Identifier.Code);
         }
 
         #endregion

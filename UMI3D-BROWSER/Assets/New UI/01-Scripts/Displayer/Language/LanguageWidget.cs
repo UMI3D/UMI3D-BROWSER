@@ -18,10 +18,10 @@ namespace umi3dBrowsers.displayer
 
         [SerializeField] private List<LanguageAssociation> languageAssociations = new();
 
-        [SerializeField, ReadOnly] private SupportedLanguages selectedLanguage = SupportedLanguages.French;
+        [SerializeField, ReadOnly] private UnityEngine.Localization.Locale selectedLanguage;
         [SerializeField] private GameObject languagePrefab;
 
-        public UnityEvent<SupportedLanguages> OnSupportedLanguageValidated;
+        public UnityEvent<UnityEngine.Localization.Locale> OnSupportedLanguageValidated;
 
         private void Awake()
         {
@@ -50,14 +50,14 @@ namespace umi3dBrowsers.displayer
                 currentField.OnDisabled += () =>
                 {
                     if (currentField.Params.SupportedLanguages == selectedLanguage)
-                        selectedLanguage = SupportedLanguages.None;
+                        selectedLanguage = null;
                 };
             }
         }
 
         public void ValidateSelection()
         {
-            if (selectedLanguage == SupportedLanguages.None)
+            if (selectedLanguage == null)
                 return;
             OnSupportedLanguageValidated?.Invoke(selectedLanguage);
         }

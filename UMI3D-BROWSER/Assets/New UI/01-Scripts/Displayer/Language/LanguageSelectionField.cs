@@ -20,9 +20,12 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using umi3dBrowsers.displayer;
+using umi3dBrowsers.services.connection;
 using umi3dBrowsers.utils;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Localization.Settings;
 using UnityEngine.UI;
 
 namespace umi3dBrowsers.displayer
@@ -36,9 +39,7 @@ namespace umi3dBrowsers.displayer
         [Serializable]
         public struct LanguageParams
         {
-            [SerializeField] public SupportedLanguages SupportedLanguages;
-            [SerializeField] public string languageDual;
-            [SerializeField] public string language;
+            [SerializeField] public UnityEngine.Localization.Locale SupportedLanguages;
             [SerializeField] public Sprite languageFlag;
         }
 
@@ -64,8 +65,8 @@ namespace umi3dBrowsers.displayer
             this._params = param;
             BackgroundImage.color = normalBGColor;
             flagImage.sprite = _params.languageFlag;
-            dualText.text = _params.languageDual;
-            languageText.text = _params.language;
+            dualText.text = _params.SupportedLanguages.Identifier.Code.ToUpper();
+            languageText.text = _params.SupportedLanguages.Identifier.CultureInfo.NativeName.FirstCharacterToUpper();
         }
 
         public void Click()
@@ -79,8 +80,8 @@ namespace umi3dBrowsers.displayer
                 BackgroundImage.color = selectedBG;
                 _isSelected = true;
                 OnClick?.Invoke();
-                LanguageHandler.currentLanguage = Params.SupportedLanguages;
-                Debug.Log(LanguageHandler.currentLanguage);
+                LocalizationSettings.SelectedLocale = Params.SupportedLanguages;
+                PlayerPrefsManager.SaveLocalisationSet(Params.SupportedLanguages);
             }
         }
 

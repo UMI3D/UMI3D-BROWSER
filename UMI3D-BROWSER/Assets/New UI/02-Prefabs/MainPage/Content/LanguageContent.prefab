@@ -16,7 +16,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2857729180616213546
 RectTransform:
   m_ObjectHideFlags: 0
@@ -289,17 +289,17 @@ PrefabInstance:
     - target: {fileID: 1183159700527832187, guid: 4bd7cd6e0fc5e004e9ff354eec387265,
         type: 3}
       propertyPath: m_Size.x
-      value: 0
+      value: 213
       objectReference: {fileID: 0}
     - target: {fileID: 1183159700527832187, guid: 4bd7cd6e0fc5e004e9ff354eec387265,
         type: 3}
       propertyPath: m_Size.y
-      value: 0
+      value: 45
       objectReference: {fileID: 0}
     - target: {fileID: 2114549109471123185, guid: 4bd7cd6e0fc5e004e9ff354eec387265,
         type: 3}
       propertyPath: _params.SupportedLanguages
-      value: 1
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 2475501223755920172, guid: 4bd7cd6e0fc5e004e9ff354eec387265,
         type: 3}
@@ -324,7 +324,7 @@ PrefabInstance:
     - target: {fileID: 4862535602382639990, guid: 4bd7cd6e0fc5e004e9ff354eec387265,
         type: 3}
       propertyPath: languageAssociations.Array.size
-      value: 7
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4862535602382639990, guid: 4bd7cd6e0fc5e004e9ff354eec387265,
         type: 3}
@@ -409,13 +409,15 @@ PrefabInstance:
     - target: {fileID: 4862535602382639990, guid: 4bd7cd6e0fc5e004e9ff354eec387265,
         type: 3}
       propertyPath: languageAssociations.Array.data[0].languageParams.SupportedLanguages
-      value: 1
-      objectReference: {fileID: 0}
+      value: 
+      objectReference: {fileID: 11400000, guid: e4e1b824f549ed84394732fcb0999b49,
+        type: 2}
     - target: {fileID: 4862535602382639990, guid: 4bd7cd6e0fc5e004e9ff354eec387265,
         type: 3}
       propertyPath: languageAssociations.Array.data[1].languageParams.SupportedLanguages
-      value: 0
-      objectReference: {fileID: 0}
+      value: 
+      objectReference: {fileID: 11400000, guid: 02d27805034265045865ebee67b29ccd,
+        type: 2}
     - target: {fileID: 4862535602382639990, guid: 4bd7cd6e0fc5e004e9ff354eec387265,
         type: 3}
       propertyPath: languageAssociations.Array.data[2].languageParams.SupportedLanguages
@@ -474,7 +476,7 @@ PrefabInstance:
     - target: {fileID: 5496810393059787620, guid: 4bd7cd6e0fc5e004e9ff354eec387265,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: -450.61
       objectReference: {fileID: 0}
     - target: {fileID: 5496810393059787620, guid: 4bd7cd6e0fc5e004e9ff354eec387265,
         type: 3}
@@ -544,32 +546,32 @@ PrefabInstance:
     - target: {fileID: 9053684721132119558, guid: 4bd7cd6e0fc5e004e9ff354eec387265,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9053684721132119558, guid: 4bd7cd6e0fc5e004e9ff354eec387265,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9053684721132119558, guid: 4bd7cd6e0fc5e004e9ff354eec387265,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 213
       objectReference: {fileID: 0}
     - target: {fileID: 9053684721132119558, guid: 4bd7cd6e0fc5e004e9ff354eec387265,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 45
       objectReference: {fileID: 0}
     - target: {fileID: 9053684721132119558, guid: 4bd7cd6e0fc5e004e9ff354eec387265,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 106.5
       objectReference: {fileID: 0}
     - target: {fileID: 9053684721132119558, guid: 4bd7cd6e0fc5e004e9ff354eec387265,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -22.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

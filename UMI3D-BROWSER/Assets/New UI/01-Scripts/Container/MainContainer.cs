@@ -27,6 +27,7 @@ using umi3dBrowsers.services.title;
 using umi3dVRBrowsersBase.connection;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Localization.Settings;
 using UnityEngine.UI;
 
 namespace umi3dBrowsers
@@ -100,6 +101,13 @@ namespace umi3dBrowsers
         private void Awake()
         {
             navBarButtonsColors.colorMultiplier = 1.0f;
+
+            var local = services.connection.PlayerPrefsManager.GetLocalisationLocal();
+            if (contentState == ContentState.flagContent && local != null && !forceFlagContent)
+            {
+                contentState = ContentState.standUpContent;
+                LocalizationSettings.SelectedLocale = local;
+            }
         }
 
         private void Start()
@@ -110,8 +118,6 @@ namespace umi3dBrowsers
             BindConnectionService();
             BindLoaderDisplayer();
 
-            if (contentState == ContentState.flagContent && services.connection.PlayerPrefsManager.HasLocalisationBeenSet() && !forceFlagContent)
-                contentState = ContentState.standUpContent;
             HandleContentState(contentState);
             SetVersion(UMI3DVersion.version);
         }

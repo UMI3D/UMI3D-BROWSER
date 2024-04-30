@@ -26,9 +26,9 @@ using umi3dBrowsers.services.connection;
 using umi3dBrowsers.services.title;
 using umi3dVRBrowsersBase.connection;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.Localization.Settings;
 using UnityEngine.UI;
+using utils.tweens;
 
 namespace umi3dBrowsers
 {
@@ -42,11 +42,6 @@ namespace umi3dBrowsers
         [SerializeField] private GameObject navBar;
         [Space]
         [SerializeField] private ColorBlock navBarButtonsColors = new ColorBlock();
-        [Space]
-        [SerializeField] private UnityEvent parametersClicked;
-        [SerializeField] private UnityEvent storageClicked;
-        [SerializeField] private UnityEvent hintClicked;
-        [SerializeField] private UnityEvent bugClicked;
         [Space]
         [SerializeField] private ContentContainer parametersContent;
         [SerializeField] private ContentContainer storageContent;
@@ -73,10 +68,6 @@ namespace umi3dBrowsers
         [SerializeField] private SimpleButton backButton;
         [SerializeField] private SimpleButton standUpButton;
         [SerializeField] private SimpleButton flagButton;
-        [Space]
-        [SerializeField] private UnityEvent backButtonClicked;
-        [SerializeField] private UnityEvent standUpButtonClicked;
-        [SerializeField] private UnityEvent flagButtonClicked;
 
         [Header("Title")]
         [SerializeField] private TitleManager title;
@@ -93,10 +84,10 @@ namespace umi3dBrowsers
         [SerializeField] private PopupManager popupManager;
         [SerializeField] private LoadingContainer loadingContainer;
         [SerializeField] private umi3dBrowsers.services.librairies.LibraryManager libraryManager;
+        [SerializeField] private UITweens tween;
 
         [Header("Options")]
         [SerializeField] private bool forceFlagContent;
-
 
         private void Awake()
         {
@@ -115,6 +106,9 @@ namespace umi3dBrowsers
             BindFormContainer();
             BindConnectionService();
             BindLoaderDisplayer();
+
+            popupManager.OnPopUpOpen += () => tween.TweenTo();
+            popupManager.OnPopUpClose += () => tween.Rewind();
 
             HandleContentState(contentState);
             SetVersion(UMI3DVersion.version);
@@ -138,35 +132,28 @@ namespace umi3dBrowsers
 
             parameterButton?.onClick.AddListener(() =>
             {
-                parametersClicked?.Invoke();
                 HandleContentState(ContentState.parametersContent);
             });
             storageButton?.onClick.AddListener(() => {
-                storageClicked?.Invoke();
                 HandleContentState(ContentState.storageContent);
             });
             hintButton?.onClick.AddListener(() => {
-                hintClicked?.Invoke();
 
             });
             bugButton?.onClick.AddListener(() => {
-                bugClicked?.Invoke();
                 popupManager.ShowPopup(PopupManager.PopupType.ReportBug, "", "");
             });
             backButton?.OnClick.AddListener(() =>
             {
-                backButtonClicked?.Invoke();
                 if (contentState == ContentState.parametersContent || contentState == ContentState.storageContent)
                     HandleContentState(ContentState.mainContent);
             });
             flagButton?.OnClick.AddListener(() =>
             {
-                flagButtonClicked?.Invoke();
                 HandleContentState(ContentState.standUpContent);
             });
             standUpButton?.OnClick.AddListener(() =>
             {
-                standUpButtonClicked?.Invoke();
                 SetUpSkeleton setUp = PlayerDependenciesAccessor.Instance.SetUpSkeleton;
                 StartCoroutine(setUp.SetupSkeleton());
                 HandleContentState(ContentState.mainContent);

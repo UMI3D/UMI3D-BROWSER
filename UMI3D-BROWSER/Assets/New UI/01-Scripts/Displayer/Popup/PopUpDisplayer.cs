@@ -30,6 +30,7 @@ namespace umi3dBrowsers.displayer
 
         [Header("Prefabs")]
         [SerializeField] private GameObject buttonPrefab;
+        public event Action OnDisabled;
 
         /// <remarks> Key for localisation </remarks>
         public string Title { set => title.SetEntry(value); }
@@ -40,6 +41,11 @@ namespace umi3dBrowsers.displayer
         {
             title.StringReference.Arguments = new object[] { arguments };
             description.StringReference.Arguments = new object[] { arguments };
+        }
+
+        public void CancelButtonBinding()
+        {
+            OnDisabled?.Invoke();
         }
 
         public void SetButtons(params (string, Action)[] buttons)

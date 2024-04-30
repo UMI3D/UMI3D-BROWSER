@@ -31,7 +31,12 @@ namespace umi3dBrowsers.displayer
         [SerializeField] PopupDisplayer info;
         [SerializeField] PopupDisplayer reportBug;
 
+        public event Action OnPopUpOpen;
+        public event Action OnPopUpClose;
+
         public PopupType ActivePopup;
+
+        private List<PopupDisplayer> activePopUps = new();
 
         public enum PopupType
         {
@@ -41,12 +46,21 @@ namespace umi3dBrowsers.displayer
             ReportBug,
         }
 
+        private void Awake()
+        {
+            error.OnDisabled += () => OnPopUpClose?.Invoke();
+            warn.OnDisabled += () => OnPopUpClose?.Invoke();
+            info.OnDisabled += () => OnPopUpClose?.Invoke();
+            //reportBug.OnDisabled += () => OnPopUpClose?.Invoke();
+        }
+
         /// <param name="type"></param>
         /// <param name="title">Key for localization</param>
         /// <param name="description">Key for localization</param>
         /// <param name="buttons">Key for localization and action onClick</param>
         public void ShowPopup(PopupType type, string title, string description, params (string, Action)[] buttons)
         {
+            OnPopUpOpen?.Invoke();
             ActivePopup = type;
             switch (type)
             {
@@ -88,6 +102,7 @@ namespace umi3dBrowsers.displayer
 
         public void ClosePopUp()
         {
+            OnPopUpClose?.Invoke();
             HideAllPopup();
         }
 
@@ -105,14 +120,22 @@ namespace umi3dBrowsers.displayer
             popup.SetButtons(buttons);
 
             popup.gameObject.SetActive(true);
+
+            activePopUps.Add(popup);
         }
 
         private void HideAllPopup()
         {
-            GameObject[] allPopups = { error.gameObject, warn.gameObject, info.gameObject };
+            foreach(var p in activePopUps)
+                p.gameObject.SetActive(false);
 
-            foreach (GameObject p in allPopups)
-                p.SetActive(false);
+            activePopUps.Clear();
+
+
+            //GameObject[] allPopups = { error.gameObject, warn.gameObject, info.gameObject };
+
+            //foreach (GameObject p in allPopups)
+            //    p.SetActive(false);
         }
     }
 

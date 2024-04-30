@@ -33,6 +33,9 @@ namespace umi3dBrowsers
 {
     public class MainContainer : MonoBehaviour
     {
+        [Header("Parent")]
+        [SerializeField] private Transform parentTransform;
+
         [Header("Navigation-navbar")]
         [SerializeField] private Button parameterButton;
         [SerializeField] private Button storageButton;
@@ -156,7 +159,7 @@ namespace umi3dBrowsers
                 SetUpSkeleton setUp = PlayerDependenciesAccessor.Instance.SetUpSkeleton;
                 StartCoroutine(setUp.SetupSkeleton());
                 HandleContentState(ContentState.mainContent);
-                transform.position = new Vector3(transform.position.x, Camera.main.transform.position.y, transform.position.z);
+                parentTransform.position = new Vector3(parentTransform.position.x, Camera.main.transform.position.y, parentTransform.position.z);
             });
         }
 

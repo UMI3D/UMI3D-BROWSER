@@ -1,3 +1,16 @@
+/*
+Copyright 2019 - 2024 Inetum
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
 using System;
 using System.Collections;
 using Unity.Collections;
@@ -343,14 +356,19 @@ namespace com.inetum.unitygeckowebview
             webView?.Call("scroll", scrollX, scrollY);
         }
 
-        public void SetScrollY(int scrollY)
+        public void SetScroll(int scrollX, int scrollY)
         {
-            webView?.Call("setVerticalScroll", scrollY);
+            webView?.Call("setScroll", scrollX, scrollY);
         }
 
         public int GetScrollY()
         {
-            return webView?.Call<int>("getScroll") ?? 0;
+            return webView?.Call<int>("getScrollY") ?? 0;
+        }
+
+        public int GetScrollX()
+        {
+            return webView?.Call<int>("getScrollX") ?? 0;
         }
 
         #endregion

@@ -88,7 +88,7 @@ namespace QuestBrowser.WebView
             }
         }
 
-        private int currentScrollPosition;
+        private int currentScrollXPosition, currentScrollYPosition;
 
         private bool useSearchInput = false;
 
@@ -132,17 +132,19 @@ namespace QuestBrowser.WebView
             while (true)
             {
 
-                int scroll = webView.GetScrollY();
+                int scrollY = webView.GetScrollY();
+                int scrollX = webView.GetScrollX();
 
-                if (currentScrollPosition != scroll)
+                if (currentScrollXPosition != scrollX || currentScrollYPosition != scrollY)
                 {
-                    currentScrollPosition = scroll;
+                    currentScrollXPosition = scrollX;
+                    currentScrollYPosition = scrollY;
 
                     var request = new WebViewUrlChangedRequestDto
                     {
                         url = previousUrl,
                         webViewId = id,
-                        scrollOffset = currentScrollPosition
+                        scrollOffset = new() { X = scrollX, Y = scrollY },
                     };
 
                     UMI3DClientServer.SendRequest(request, true);
@@ -235,11 +237,11 @@ namespace QuestBrowser.WebView
             searchField.text = url;
         }
 
-        protected override async void OnScrollOffsetChanged(int scroll)
+        protected override async void OnScrollOffsetChanged(Vector2 scroll)
         {
             try
             {
-                webView.SetScrollY(scroll);
+                webView.SetScroll((int)scroll.x, (int)scroll.y);
             }
             catch (Exception ex)
             {

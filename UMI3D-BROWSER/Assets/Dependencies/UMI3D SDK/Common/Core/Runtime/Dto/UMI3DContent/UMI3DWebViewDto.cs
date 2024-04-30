@@ -21,10 +21,13 @@ namespace umi3d.common
     [System.Serializable]
     public class UMI3DWebViewDto : UMI3DNodeDto, IEntity
     {
+        /// <summary>
+        /// Define if user is an admin or not. Admin are allowed to sync their content.
+        /// </summary>
         public bool isAdmin { get; set; }
 
         /// <summary>
-        /// Can users interact with the webview .
+        /// Can users interact with the webView .
         /// </summary>
         public bool canInteract { get; set; }
 
@@ -41,9 +44,9 @@ namespace umi3d.common
         public string url { get; set; }
 
         /// <summary>
-        /// Vertical scroll offset.
+        /// Scroll offset.
         /// </summary>
-        public int scrollOffset { get; set; }
+        public Vector2Dto scrollOffset { get; set; }
 
         /// <summary>
         /// If set to false, when <see cref="url"/> is set, the value will be ignored by the browser.

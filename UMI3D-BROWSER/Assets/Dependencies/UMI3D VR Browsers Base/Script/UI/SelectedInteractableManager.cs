@@ -63,6 +63,7 @@ namespace umi3dVRBrowsersBase.ui
         [HideInInspector]
         public Transform playerTransform;
 
+        Coroutine hideCoroutine;
 
         private void Start()
         {
@@ -109,6 +110,13 @@ namespace umi3dVRBrowsersBase.ui
         /// <param name="normal">World normal of the gear</param>
         public void Display(Interactable interactable, Vector3 position, Vector3 normal)
         {
+            Rest();
+            if (hideCoroutine != null)
+            {
+                StopCoroutine(hideCoroutine);
+                hideCoroutine = null;
+            }
+
             gameObject.SetActive(true);
 
             this.interactable = interactable;
@@ -224,16 +232,17 @@ namespace umi3dVRBrowsersBase.ui
         /// </summary>
         public void Hide()
         {
-            interactable = null;
-            interactions = null;
-            events = null;
-            parameters = null;
-            collider.enabled = false;
+            Rest();
             gameObject.SetActive(false);
         }
 
         public void HideWithDelay()
         {
+            if (hideCoroutine != null)
+            {
+                return;
+            }
+
             float time = 0f;
             IEnumerator HideCoroutine()
             {
@@ -252,9 +261,11 @@ namespace umi3dVRBrowsersBase.ui
                 {
                     Hide();
                 }
+
+                hideCoroutine = null;
             }
 
-            CoroutineManager.Instance.AttachCoroutine(HideCoroutine());
+            hideCoroutine = CoroutineManager.Instance.AttachCoroutine(HideCoroutine());
         }
 
         public override void Select(VRController controller)
@@ -265,6 +276,15 @@ namespace umi3dVRBrowsersBase.ui
         public override void Deselect(VRController controller)
         {
             isSelected = false;
+        }
+
+        public void Rest()
+        {
+            interactable = null;
+            interactions = null;
+            events = null;
+            parameters = null;
+            collider.enabled = false;
         }
     }
 }

@@ -18,13 +18,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using umi3d;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace umi3dBrowsers.displayer
 {
-    public class InputFieldDispayer : MonoBehaviour, IDisplayer
+    public class InputFieldDispayer : MonoBehaviour, IInputFieldDisplayer
     {
         [Header("Form")]
         [SerializeField] private TMP_UMI3DUIInputField textInputField;
@@ -61,6 +62,12 @@ namespace umi3dBrowsers.displayer
         public void SetResource(object resource)
         {
             throw new NotImplementedException();
+        }
+
+        public void SetPrivateParam(bool privateParameter)
+        {
+            if (privateParameter == true)
+                textInputField.contentType = TMP_InputField.ContentType.Password;
         }
     }
 }

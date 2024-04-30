@@ -17,6 +17,7 @@ limitations under the License.
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using umi3d;
 using umi3d.common.interaction;
 using UnityEngine;
 using UnityEngine.UI;
@@ -98,15 +99,17 @@ namespace umi3dBrowsers.container.formrenderer
                     case StringParameterDto stringParam:
                         {
                             GameObject gameObject = null;
-                            if (connectionFormDto.fields[i].name == "OR")
+                            if (connectionFormDto.fields[i].name == "OR" && connectionFormDto.fields[i].tag == null)
                                 formBinding.Add(() => paramRequestDto.parameter = null);
                             else
                             {
                                 gameObject = Instantiate(textFieldPrefab, container.transform);
-                                displayer = gameObject?.GetComponentInChildren<IDisplayer>();
+                                IInputFieldDisplayer inputFieldDisplayer = gameObject?.GetComponentInChildren<IInputFieldDisplayer>();
+                                displayer = inputFieldDisplayer;
                                 formBinding.Add(() => paramRequestDto.parameter = displayer?.GetValue(true));
                                 displayer?.SetTitle(stringParam.name);
                                 displayer?.SetPlaceHolder(new List<string>() { stringParam.description });
+                                inputFieldDisplayer?.SetPrivateParam(connectionFormDto.fields[i].privateParameter);
                             }
                         }
                         break;
@@ -114,7 +117,7 @@ namespace umi3dBrowsers.container.formrenderer
                         break;
                 }
 
-                if (connectionFormDto.fields[i].name == "OR")
+                if (connectionFormDto.fields[i].name == "OR" && connectionFormDto.fields[i].tag == null)
                 {
                     container = tabManager.AddNewTabForParamForm(connectionFormDto.fields[i + 1].name);
                 }

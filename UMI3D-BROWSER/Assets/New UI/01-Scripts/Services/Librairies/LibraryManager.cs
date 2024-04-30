@@ -17,6 +17,7 @@ limitations under the License.
 using Pico.Platform;
 using System.Collections.Generic;
 using umi3d.cdk;
+using umi3dBrowsers.displayer;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -27,6 +28,8 @@ namespace umi3dBrowsers.services.librairies
     /// </summary>
     public class LibraryManager : MonoBehaviour
     {
+        [SerializeField] private PopupManager popupManager;
+
         /// <summary>
         /// Prefab used to represent a library in the menu.
         /// 
@@ -95,17 +98,17 @@ namespace umi3dBrowsers.services.librairies
                     //4.Bind the button to unistall this lib
                     entry.DeleteButton.onClick.AddListener(() =>
                     {
-                        //if (DialogBox.Instance.IsDisplayed)
-                        //    return;
-                        //DialogBox.Instance.Display("Are you sure ... ?", "This library is required for environment " + app.Key, "Yes", (b) =>
-                        //{
-                        //    if (b)
-                        //    {
-                        lib.applications.Remove(app.Key);
-                        UMI3DResourcesManager.RemoveLibrary(lib.library);
-                        UpdateContent();
-                        //    }
-                        //});
+                        popupManager.SetArguments(PopupManager.PopupType.Warning, new() { { "libName", lib.key } });
+                        popupManager.ShowPopup(PopupManager.PopupType.Warning, "empty", "popup_deleteLib_description",
+                            ("popup_cancel", () => popupManager.ClosePopUp()),
+                            ("popup_yes", () => {
+                                lib.applications.Remove(app.Key);
+                                UMI3DResourcesManager.RemoveLibrary(lib.library);
+                                UpdateContent();
+                                popupManager.ClosePopUp();
+                            }
+                        )
+                        );
                     });
 
                     currentEntries.Add(entry);

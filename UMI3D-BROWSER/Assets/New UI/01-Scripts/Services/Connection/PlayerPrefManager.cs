@@ -187,6 +187,9 @@ namespace umi3dBrowsers.services.connection
 
         public void AddWorld(VirtualWorldData world)
         {
+            foreach (var w in worlds)
+                if (w.worldUrl == world.worldUrl)
+                    return;
             worlds.Add(world);
             PlayerPrefsManager.SaveVirtualWorld(this);
         }

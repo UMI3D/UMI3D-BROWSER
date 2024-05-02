@@ -91,6 +91,8 @@ namespace umi3dBrowsers
         [Header("Options")]
         [SerializeField] private bool forceFlagContent;
 
+        private ContentState _oldState;
+
         private void Awake()
         {
             navBarButtonsColors.colorMultiplier = 1.0f;
@@ -148,7 +150,7 @@ namespace umi3dBrowsers
             backButton?.OnClick.AddListener(() =>
             {
                 if (contentState == ContentState.parametersContent || contentState == ContentState.storageContent)
-                    HandleContentState(ContentState.mainContent);
+                    HandleContentState(_oldState);
             });
             flagButton?.OnClick.AddListener(() =>
             {
@@ -237,6 +239,7 @@ namespace umi3dBrowsers
 
         private void HandleContentState(ContentState state)
         {
+            _oldState = contentState;
             contentState = state;
             switch (state)
             {

@@ -125,7 +125,7 @@ namespace umi3dBrowsers.container
         public GameObject AddNewTabForParamForm(string label)
         {
             GameObject tabContainer = Instantiate(paramFormContainerPrefab, contentRoot);
-            return AddNewTab(label, false, tabContainer);
+            return AddNewTab(label, true, tabContainer);
         }
 
         public Transform GetTabContainerById(int id)

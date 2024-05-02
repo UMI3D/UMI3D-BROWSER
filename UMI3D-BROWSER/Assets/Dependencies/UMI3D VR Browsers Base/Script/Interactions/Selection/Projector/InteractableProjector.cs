@@ -57,6 +57,11 @@ namespace umi3dBrowsers.interaction.selection.projector
         /// <param name="controller"></param>
         public void Project(AbstractTool interactionTool, ulong selectedObjectId, AbstractController controller)
         {
+            // This method doesn't use InteractionMapper.SelectTool so we need to listen tool events.
+            interactionTool.OnUpdated.AddListener(() => UpdateTools(interactionTool, controller));
+            interactionTool.OnAdded.AddListener(abstractInteractionDto => { UpdateAddOnTools(interactionTool, controller, abstractInteractionDto); });
+            interactionTool.OnRemoved.AddListener(abstractInteractionDto => { UpdateRemoveOnTools(interactionTool, controller, abstractInteractionDto); });
+
             controller.Project(interactionTool, true, new RequestedUsingSelector<AbstractSelector>() { controller = controller }, selectedObjectId);
         }
 
@@ -67,6 +72,8 @@ namespace umi3dBrowsers.interaction.selection.projector
         /// <param name="controller"></param>
         public void Release(AbstractTool interactionTool, AbstractController controller)
         {
+            UnregisterToToolUpdate(interactionTool);
+
             controller.Release(interactionTool, new RequestedUsingSelector<AbstractSelector>() { controller = controller });
 
             selectedInteractableManager.HideWithDelay();
@@ -75,9 +82,43 @@ namespace umi3dBrowsers.interaction.selection.projector
         /// <inheritdoc/>
         public void Release(InteractableContainer interactable, AbstractController controller)
         {
-            controller.Release(AbstractInteractionMapper.Instance.GetTool(UMI3DGlobalID.EnvironmentId, interactable.Interactable.dto.id), new RequestedUsingSelector<AbstractSelector>() { controller = controller });
+            AbstractTool tool = AbstractInteractionMapper.Instance.GetTool(UMI3DGlobalID.EnvironmentId, interactable.Interactable.dto.id);
+            UnregisterToToolUpdate(tool);
+
+            controller.Release(tool, new RequestedUsingSelector<AbstractSelector>() { controller = controller });
 
             selectedInteractableManager.HideWithDelay();
+        }
+
+        private void UnregisterToToolUpdate(AbstractTool interactionTool)
+        {
+            interactionTool.OnAdded.RemoveAllListeners();
+            interactionTool.OnUpdated.RemoveAllListeners();
+            interactionTool.OnRemoved.RemoveAllListeners();
+        }
+
+        private void UpdateTools(AbstractTool tool, AbstractController controller)
+        {
+            if (tool.interactionsId.Count <= 0)
+                Release(tool, controller);
+            else
+                controller.Update(tool, true, null);
+        }
+
+        private void UpdateAddOnTools(AbstractTool tool, AbstractController controller, AbstractInteractionDto abstractInteractionDto)
+        {
+            controller.AddUpdate(tool, true, abstractInteractionDto, null);
+        }
+
+        private void UpdateRemoveOnTools(AbstractTool tool, AbstractController controller, AbstractInteractionDto abstractInteractionDto)
+        {
+            foreach (AbstractUMI3DInput input in controller.inputs)
+            {
+                if (input != null && !input.IsAvailable() && input.CurrentInteraction().id == abstractInteractionDto.id)
+                {
+                    input.Dissociate();
+                }
+            }
         }
     }
 }

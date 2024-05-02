@@ -46,7 +46,7 @@ namespace umi3dBrowsers.interaction.selection.projector
             var interactionTool = AbstractInteractionMapper.Instance.GetTool(UMI3DGlobalID.EnvironmentId, interactable.Interactable.dto.id);
             Project(interactionTool, interactable.Interactable.dto.nodeId, controller);
 
-            selectedInteractableManager.Display(interactable, controller.transform.position);
+            selectedInteractableManager.Display(interactable);
         }
 
         /// <summary>

@@ -62,13 +62,21 @@ namespace umi3dVRBrowsersBase.ui
         public List<AbstractParameterDto> parameters;
         [HideInInspector]
         public Transform playerTransform;
+        [HideInInspector]
+        public Transform cameraTransform;
 
         Coroutine hideCoroutine;
+
+#if UNITY_EDITOR
+
+
+#endif
 
         private void Start()
         {
             Global.Get(out UMI3DVRPlayer player);
             playerTransform = player.transform;
+            cameraTransform = player.mainCamera.transform;
 
             Hide();
         }
@@ -137,7 +145,7 @@ namespace umi3dVRBrowsersBase.ui
             if (interactions.Count == 0)
             {
                 collider.enabled = false;
-                label.text = "";
+                label.text += "";
                 background.enabled = false;
             }
             else if (interactions.Count == 1)
@@ -152,31 +160,35 @@ namespace umi3dVRBrowsersBase.ui
                     }
                     if (string.IsNullOrEmpty(_label) || _label == "new tool")
                     {
-                        _label = "To Trigger";
+                        _label = "Interact";
                     }
-                    label.text = _label;
+                    label.text += _label;
                 }
                 else if (interactions[0] is StringParameterDto)
                 {
                     collider.enabled = true;
-                    label.text = $"Edit text";
+                    label.text += $"Edit text";
                     PlayerMenuManager.Instance.CtrlToolMenu.RememberParameters();
                 }
                 else
                 {
-                    label.text = interactions[0].name;
+                    label.text += interactions[0].name;
                     UnityEngine.Debug.LogError($"[Selected Interactable] Unhandled case");
                 }
             }
             else
             {
-                label.text = interactable.name;
+                label.text += interactable.name;
                 PlayerMenuManager.Instance.CtrlToolMenu.RememberParameters();
                 UnityEngine.Debug.LogError($"[Selected Interactable] Unhandled case");
             }
 
             transform.position = position;
-            transform.rotation = Quaternion.LookRotation(-normal, Vector3.up);
+            //transform.rotation = Quaternion.LookRotation(position - cameraTransform.position, Vector3.up);
+            //transform.rotation = Quaternion.LookRotation(position - cameraTransform.position);
+            //transform.rotation = Quaternion.LookRotation(-normal, Vector3.up);
+            var offset = transform.position - cameraTransform.position;
+            transform.LookAt(transform.position + offset);
         }
 
         /// <summary>
@@ -185,42 +197,52 @@ namespace umi3dVRBrowsersBase.ui
         /// </summary>
         /// <param name="interactableContainer"></param>
         /// <param name="lookAtPoint">World position of the point the object is looked at.</param>
-        public void Display(InteractableContainer interactableContainer, Vector3 lookAtPoint)
+        public void Display(InteractableContainer interactableContainer)
         {
+#if UNITY_EDITOR
+
+#endif
+            label.text = "";
             Vector3 rootPosition;
-            Vector3 normal;
+            Vector3 normal = Vector3.zero;
+
             if (interactableContainer.TryGetComponent(out MeshCollider collider) && collider.convex)
             {
-                rootPosition = collider.ClosestPoint(lookAtPoint);
-                normal = -(rootPosition - lookAtPoint).normalized;
+                label.text = "meshCollider";
+                rootPosition = collider.ClosestPoint(playerTransform.position);
+                //normal = -(rootPosition - lookAtPoint).normalized;
+                Display(interactableContainer.Interactable, rootPosition, normal);
+                return;
+            }
+
+
+            Ray ray = new Ray(playerTransform.position, interactableContainer.transform.position - playerTransform.position);
+            (RaycastHit[] hits, int hitCount) hitsInfo = umi3d.common.Physics.RaycastAll(ray);
+
+            if (hitsInfo.hitCount == 0) // happens if the center of the object is outside of the mesh
+            {
+                label.text = "hitCount = 0";
+                rootPosition = interactableContainer.transform.position;
+                //normal = -(rootPosition - lookAtPoint).normalized;
             }
             else
             {
-                Ray ray = new Ray(lookAtPoint, interactableContainer.transform.position - lookAtPoint);
-                (RaycastHit[] hits, int hitCount) hitsInfo = umi3d.common.Physics.RaycastAll(ray);
-
-                if (hitsInfo.hitCount == 0) // happens if the center of the object is outside of the mesh
+                //TODO : remove try catch later for a better test
+                try
                 {
-                    rootPosition = interactableContainer.transform.position;
-                    normal = -(rootPosition - lookAtPoint).normalized;
+                    Collider icCollider = interactableContainer.GetComponentInChildren<Collider>();
+                    RaycastHit[] hits = hitsInfo.hits.SubArray(0, hitsInfo.hitCount);
+                    float closestDist = hits.Where(x => x.collider == icCollider).Min(x => x.distance);
+                    RaycastHit closest = Array.Find(hits, x => x.distance == closestDist);
+                    rootPosition = closest.point;
+                    normal = closest.normal;
+                    label.text = "try";
                 }
-                else
+                catch
                 {
-                    //TODO : remove try catch later for a better test
-                    try
-                    {
-                        Collider icCollider = interactableContainer.GetComponentInChildren<Collider>();
-                        RaycastHit[] hits = hitsInfo.hits.SubArray(0, hitsInfo.hitCount);
-                        float closestDist = hits.Where(x => x.collider == icCollider).Min(x => x.distance);
-                        RaycastHit closest = Array.Find(hits, x => x.distance == closestDist);
-                        rootPosition = closest.point;
-                        normal = closest.normal;
-                    }
-                    catch
-                    {
-                        rootPosition = interactableContainer.transform.position;
-                        normal = -(rootPosition - lookAtPoint).normalized;
-                    }
+                    label.text = "catch";
+                    rootPosition = interactableContainer.transform.position;
+                    //normal = -(rootPosition - lookAtPoint).normalized;
                 }
             }
 
@@ -286,6 +308,14 @@ namespace umi3dVRBrowsersBase.ui
             parameters = null;
             collider.enabled = false;
         }
+
+#if UNITY_EDITOR
+        private void OnDrawGizmosSelected()
+        {
+            //Gizmos.color = Color.red;
+            //Gizmos.DrawSphere(lookAtPoint, .05f);
+        }
+#endif
     }
 }
 

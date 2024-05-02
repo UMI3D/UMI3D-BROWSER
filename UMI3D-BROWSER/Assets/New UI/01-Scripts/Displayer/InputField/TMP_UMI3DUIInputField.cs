@@ -38,6 +38,11 @@ namespace umi3dBrowsers.displayer
             keyboard = Keyboard.Instance;
         }
 
+        protected override void OnDisable()
+        {
+            keyboard?.CancelAndClose();
+        }
+
         public void SetCallBacks(Action<PointerEventData> hoverEnterCallBack, Action<PointerEventData> hoverExitCallBack)
         {
             this.hoverEnterCallBack = hoverEnterCallBack;

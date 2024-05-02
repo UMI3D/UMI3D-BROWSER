@@ -72,5 +72,10 @@ namespace umi3d.cdk.collaboration
         {
             return await Task.FromResult(true);
         }
+
+        public virtual void Reset()
+        {
+
+        }
     }
 }

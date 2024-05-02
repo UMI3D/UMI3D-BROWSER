@@ -86,6 +86,11 @@ namespace umi3dBrowsers.services.connection
             return form;
         }
 
+        public override void Reset()
+        {
+            _connectionFormDto = null;
+        }
+
         private static bool AreConnectionFormEqual(ConnectionFormDto form1, ConnectionFormDto form2)
         {
             if (form1 == null || form2 == null)

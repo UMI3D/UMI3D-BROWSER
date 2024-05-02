@@ -17,6 +17,7 @@ limitations under the License.
 using System.Collections.Generic;
 using TMPro;
 using umi3d;
+using umi3d.cdk.collaboration;
 using umi3d.common.interaction;
 using umi3dBrowsers.container;
 using umi3dBrowsers.container.formrenderer;
@@ -68,6 +69,7 @@ namespace umi3dBrowsers
 
         [Header("Navigation")]
         [SerializeField] private SimpleButton backButton;
+        [SerializeField] private SimpleButton cancelConnectionButton;
         [SerializeField] private SimpleButton standUpButton;
         [SerializeField] private SimpleButton flagButton;
 
@@ -152,6 +154,9 @@ namespace umi3dBrowsers
                 if (contentState == ContentState.parametersContent || contentState == ContentState.storageContent)
                     HandleContentState(_oldState);
             });
+            cancelConnectionButton?.OnClick.AddListener(() => {
+                UMI3DCollaborationClientServer.Logout();
+            });
             flagButton?.OnClick.AddListener(() =>
             {
                 HandleContentState(ContentState.standUpContent);
@@ -215,6 +220,10 @@ namespace umi3dBrowsers
                     ("popup_close", () => { popupManager.ClosePopUp(); }
                 ));
             };
+            UMI3DCollaborationClientServer.Instance.OnLeavingEnvironment.AddListener(() => {
+                UMI3DCollaborationClientServer.Instance.Identifier.Reset();
+                HandleContentState(ContentState.mainContent);
+            });
         }
 
         private void BindLoaderDisplayer()
@@ -278,6 +287,7 @@ namespace umi3dBrowsers
                 case ContentState.dynamicServerContent:
                     CloseAllPanels();
                     Top.SetActive(true);
+                    cancelConnectionButton?.gameObject.SetActive(true);
                     dynamicServerContent.gameObject.SetActive(true);
                     break;
                 case ContentState.loadingContent:
@@ -296,6 +306,7 @@ namespace umi3dBrowsers
             storageContent.gameObject.SetActive(false);
             mainContent.gameObject.SetActive(false);
             backButton?.gameObject.SetActive(false);
+            cancelConnectionButton?.gameObject.SetActive(false);
             flagContent.gameObject.SetActive(false);
             standUpContent.gameObject.SetActive(false);
             loadingContent.gameObject.SetActive(false);

@@ -55,6 +55,9 @@ namespace umi3dBrowsers.container
 
         [Header("Scrolling")]
         [SerializeField] private Scrollbar scrollbar;
+        [SerializeField] private Button buttonLeft;
+        [SerializeField] private Button buttonRight;
+        [SerializeField] private float scrollButtonSpeed = 1.0f;
 
         public enum VignetteMode
         {
@@ -76,6 +79,13 @@ namespace umi3dBrowsers.container
         private void Start()
         {           
             scrollbar.value = 0;
+
+            buttonLeft.onClick.AddListener(() => {
+                scrollbar.value -= scrollButtonSpeed / vignetteDisplayers.Count;
+            });
+            buttonRight.onClick.AddListener(() => {
+                scrollbar.value += scrollButtonSpeed / vignetteDisplayers.Count;
+            });
         }
 
         [ContextMenu("Toggle vignette mode")]

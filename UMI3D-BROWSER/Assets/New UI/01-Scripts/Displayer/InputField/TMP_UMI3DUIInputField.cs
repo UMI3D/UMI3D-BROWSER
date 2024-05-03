@@ -33,7 +33,7 @@ namespace umi3dBrowsers.displayer
 
         public event Action<string> OnTextChanged;
 
-        protected override void Awake()
+        protected override void Start()
         {
             keyboard = Keyboard.Instance;
         }

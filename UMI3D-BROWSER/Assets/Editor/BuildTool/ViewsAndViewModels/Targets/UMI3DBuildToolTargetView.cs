@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
 using System;
 using UnityEditor;
 using UnityEngine;
@@ -23,10 +24,12 @@ namespace umi3d.browserEditor.BuildTool
 {
     public class UMI3DBuildToolTargetView 
     {
+        SubGlobal subGlobal = new("BuildTool");
+
         public VisualElement root;
-        public UMI3DBuildToolSettings_SO buildToolSettings_SO;
         public int index;
 
+        public UMI3DBuildToolSettings_SO buildToolSettings_SO;
         public UMI3DBuildToolTargetViewModel viewModel;
         public Toggle T_Select;
         public VisualElement V_Path;
@@ -37,18 +40,14 @@ namespace umi3d.browserEditor.BuildTool
 
         public UMI3DBuildToolTargetView(
             VisualElement root,
-            UMI3DBuildToolTarget_SO buildToolTarget_SO,
-            UMI3DBuildToolSettings_SO buildToolSettings_SO,
             int index
         )
         {
             this.root = root;
-            this.viewModel = new(
-                buildToolTarget_SO
-            );
-            this.buildToolSettings_SO = buildToolSettings_SO;
             this.index = index;
 
+            this.viewModel = new();
+            subGlobal.TryGet(out buildToolSettings_SO);
             var targetDto = viewModel[index];
             if (targetDto.Id.Equals(new())) 
             {

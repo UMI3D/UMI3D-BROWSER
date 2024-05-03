@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
 using System;
 using UnityEditor;
 using UnityEngine;
@@ -22,15 +23,14 @@ namespace umi3d.browserEditor.BuildTool
 {
     public class UMI3DBuildToolSceneViewModel
     {
+        SubGlobal subGlobal = new("BuildTool");
+
         public UMI3DBuildToolScene_SO buildToolScene_SO;
         public Action applyScenes;
 
-        public UMI3DBuildToolSceneViewModel(
-            UMI3DBuildToolScene_SO buildToolScene_SO,
-            Action applyScenes
-        )
+        public UMI3DBuildToolSceneViewModel(Action applyScenes)
         {
-            this.buildToolScene_SO = buildToolScene_SO;
+            subGlobal.TryGet(out buildToolScene_SO);
             this.applyScenes = applyScenes;
         }
 

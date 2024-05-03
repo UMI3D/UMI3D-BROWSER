@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
 using System;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -23,6 +24,8 @@ namespace umi3d.browserEditor.BuildTool
 {
     public class UMI3DBuildToolScenesContainerView 
     {
+        SubGlobal subGlobal = new("BuildTool");
+
         public VisualElement root;
         public UMI3DBuildToolScene_SO buildToolScene_SO;
         public VisualTreeAsset scene_VTA;
@@ -32,15 +35,15 @@ namespace umi3d.browserEditor.BuildTool
 
         public UMI3DBuildToolScenesContainerView(
             VisualElement root,
-            UMI3DBuildToolScene_SO buildToolScene_SO,
             VisualTreeAsset scene_VTA,
             Action applyScenes
         )
         {
             this.root = root;
-            this.buildToolScene_SO = buildToolScene_SO;
             this.scene_VTA = scene_VTA;
             this.applyScenes = applyScenes;
+
+            subGlobal.TryGet(out buildToolScene_SO);
         }
 
         public void Bind()
@@ -60,10 +63,7 @@ namespace umi3d.browserEditor.BuildTool
             LV_Scenes.makeItem = () =>
             {
                 var visual = scene_VTA.Instantiate();
-                UMI3DBuildToolSceneView sceneView = new(
-                    buildToolScene_SO: buildToolScene_SO,
-                    applyScenes
-                );
+                UMI3DBuildToolSceneView sceneView = new(applyScenes);
                 visual.userData = sceneView;
                 return visual;
             };

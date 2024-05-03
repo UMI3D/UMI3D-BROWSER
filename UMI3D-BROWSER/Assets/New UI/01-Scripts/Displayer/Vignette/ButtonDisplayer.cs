@@ -49,6 +49,13 @@ namespace umi3dBrowsers.displayer
         [SerializeField] private bool stayClicked;
         [SerializeField] private bool canUnclick;
 
+        public Color NormalColor { get => normalColor; set => normalColor = value; }
+        public Color HoverColor { get => hoverColor; set => hoverColor = value; }
+
+        public Sprite NormalIcon { get => normalIcon; set => normalIcon = value; }
+        public Sprite HoverIcon { get => hoverIcon; set => hoverIcon = value; }
+        public Sprite ClickIcon { get => clickIcon; set => clickIcon = value; }
+
         private void Awake()
         {
             backGround.color = backgroundNormalColor;

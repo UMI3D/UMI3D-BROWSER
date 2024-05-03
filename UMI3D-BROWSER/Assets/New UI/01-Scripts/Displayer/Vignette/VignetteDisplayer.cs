@@ -30,8 +30,18 @@ namespace umi3dBrowsers.displayer
         [SerializeField] private Image vignetteImage;
 
         [Header("buttons")]
-        [SerializeField] ButtonDisplayer likeButton;
-        [SerializeField] ButtonDisplayer trashButton;
+        [SerializeField] private ButtonDisplayer likeButton;
+        [SerializeField] private Image likeImage;
+        [SerializeField] private Sprite normalLikeIcon;
+        [SerializeField] private Color normalLikeColor;
+        [SerializeField] private Sprite normaHoverLikeIcon;
+        [SerializeField] private Color normalHoverLikeColor;
+        [SerializeField] private Sprite selectedLikeIcon;
+        [SerializeField] private Color selectedLikeColor;
+        [SerializeField] private Sprite selectedHoverLikeIcon;
+        [SerializeField] private Color selectedHoverLikeColor;
+        [Space]
+        [SerializeField] private ButtonDisplayer trashButton;
         [Space]
         [SerializeField] VignetteInputField inputFieldBackground;
 
@@ -75,9 +85,16 @@ namespace umi3dBrowsers.displayer
                 vignetteImage = pImage;
         }
 
-        public void SetupFavoriteButton(Action onFavorite)
+        public void SetupFavoriteButton(Action onFavorite, bool isFavorite = false)
         {
             likeButton.OnClick += onFavorite;
+
+            likeImage.sprite = isFavorite ? selectedLikeIcon : normalLikeIcon;
+            likeImage.color = isFavorite ? selectedLikeColor : normalLikeColor;
+            likeButton.NormalColor = isFavorite ? selectedLikeColor : normalLikeColor;
+            likeButton.HoverColor = isFavorite ? selectedHoverLikeColor : normalHoverLikeColor;
+            likeButton.NormalIcon = isFavorite ? selectedLikeIcon : normalLikeIcon;
+            likeButton.HoverIcon = isFavorite ? selectedHoverLikeIcon : normaHoverLikeIcon;
         }
 
         public void SetupRemoveButton(Action onRemove)

@@ -124,7 +124,7 @@ namespace umi3dBrowsers.container
             vignette.SetupFavoriteButton(() => { 
                 pVirtualWorlds.ToggleWorldFavorite(pWorldData); 
                 OnReset?.Invoke(); 
-            });
+            }, pWorldData.isFavorite);
             vignette.SetupRemoveButton(() => {
                 popupManager.SetArguments(PopupManager.PopupType.Warning, new() { { "worldName", pWorldData.worldName } });
                 popupManager.ShowPopup(PopupManager.PopupType.Warning, "empty", "popup_deleteWorld_description",

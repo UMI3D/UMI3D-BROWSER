@@ -15,10 +15,12 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
+using inetum.unityUtils.async;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using TMPro;
 using umi3d.browserRuntime.player;
 using umi3d.cdk.interaction;
@@ -61,14 +63,17 @@ namespace umi3dVRBrowsersBase.ui
         [HideInInspector]
         public List<AbstractParameterDto> parameters;
         [HideInInspector]
-        public Transform playerTransform;
+        public Task<Transform> playerTransform;
 
         Coroutine hideCoroutine;
 
         private void Start()
         {
-            Global.Get(out UMI3DVRPlayer player);
-            playerTransform = player.transform;
+            var player = Global.GetAsync<UMI3DVRPlayer>();
+            playerTransform = player.ContinueWith(task =>
+            {
+                return task.Result.transform;
+            });
 
             Hide();
         }
@@ -82,7 +87,12 @@ namespace umi3dVRBrowsersBase.ui
 
             if (isActiveAndEnabled)
             {
-                var distance = Vector3.Distance(transform.position, playerTransform.position);
+                Vector3 playerPosition = Vector3.zero;
+                playerTransform.IfCompleted(pt =>
+                {
+                    playerPosition = pt.position;
+                });
+                var distance = Vector3.Distance(transform.position, playerPosition);
                 var scale = Mathf.Lerp(
                     minScale,
                     maxScale,

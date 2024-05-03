@@ -11,6 +11,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils.async;
+using System.Threading.Tasks;
 using umi3d.cdk.interaction;
 using umi3d.common;
 using umi3d.common.interaction;
@@ -24,7 +26,7 @@ namespace umi3dBrowsers.interaction.selection.projector
     /// </summary>
     public class InteractableProjector : IProjector<InteractableContainer>
     {
-        public SelectedInteractableManager selectedInteractableManager;
+        public Task<SelectedInteractableManager> selectedInteractableManager;
 
         /// <summary>
         /// Checks whether an interctable has already projected tools
@@ -46,7 +48,13 @@ namespace umi3dBrowsers.interaction.selection.projector
             var interactionTool = AbstractInteractionMapper.Instance.GetTool(UMI3DGlobalID.EnvironmentId, interactable.Interactable.dto.id);
             Project(interactionTool, interactable.Interactable.dto.nodeId, controller);
 
-            selectedInteractableManager.Display(interactable, controller.transform.position);
+            selectedInteractableManager.IfCompleted(sim =>
+            {
+                sim.Display(
+                    interactable,
+                    controller.transform.position
+                );
+            });
         }
 
         /// <summary>
@@ -69,7 +77,10 @@ namespace umi3dBrowsers.interaction.selection.projector
         {
             controller.Release(interactionTool, new RequestedUsingSelector<AbstractSelector>() { controller = controller });
 
-            selectedInteractableManager.HideWithDelay();
+            selectedInteractableManager.IfCompleted(sim =>
+            {
+                sim.HideWithDelay();
+            });
         }
 
         /// <inheritdoc/>
@@ -77,7 +88,10 @@ namespace umi3dBrowsers.interaction.selection.projector
         {
             controller.Release(AbstractInteractionMapper.Instance.GetTool(UMI3DGlobalID.EnvironmentId, interactable.Interactable.dto.id), new RequestedUsingSelector<AbstractSelector>() { controller = controller });
 
-            selectedInteractableManager.HideWithDelay();
+            selectedInteractableManager.IfCompleted(sim =>
+            {
+                sim.HideWithDelay();
+            });
         }
     }
 }

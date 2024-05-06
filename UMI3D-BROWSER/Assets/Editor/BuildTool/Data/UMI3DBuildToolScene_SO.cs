@@ -23,7 +23,7 @@ using UnityEngine;
 namespace umi3d.browserEditor.BuildTool
 {
     [CreateAssetMenu(fileName = "UMI3D Build Tool Scenes", menuName = "UMI3D/Build Tools/Build Tool Scenes")]
-    public class UMI3DBuildToolScene_SO : SerializableScriptableObject
+    public class UMI3DBuildToolScene_SO : PersistentScriptableModel
     {
         public List<SceneDTO> scenes = new();
 

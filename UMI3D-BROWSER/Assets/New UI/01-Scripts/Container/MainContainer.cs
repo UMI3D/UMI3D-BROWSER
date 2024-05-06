@@ -93,7 +93,7 @@ namespace umi3dBrowsers
         [Header("Options")]
         [SerializeField] private bool forceFlagContent;
 
-        private ContentState _oldState;
+        private ContentState _returnState;
 
         private void Awake()
         {
@@ -152,7 +152,7 @@ namespace umi3dBrowsers
             backButton?.OnClick.AddListener(() =>
             {
                 if (contentState == ContentState.parametersContent || contentState == ContentState.storageContent)
-                    HandleContentState(_oldState);
+                    HandleContentState(_returnState);
             });
             cancelConnectionButton?.OnClick.AddListener(() => {
                 UMI3DCollaborationClientServer.Logout();
@@ -248,7 +248,8 @@ namespace umi3dBrowsers
 
         private void HandleContentState(ContentState state)
         {
-            _oldState = contentState;
+            if (contentState is not (ContentState.storageContent or ContentState.parametersContent))
+                _returnState = contentState;
             contentState = state;
             switch (state)
             {

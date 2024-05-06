@@ -69,7 +69,7 @@ public static class UMI3DAsyncManager
                 throw new UMI3DAsyncManagerException("Application is not playing");
             }
         }
-        catch(UnityException e)
+        catch (UnityException e)
         {
             UnityEngine.Debug.LogException(e);
         }

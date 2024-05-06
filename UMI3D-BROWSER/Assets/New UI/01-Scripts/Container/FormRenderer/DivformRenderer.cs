@@ -209,7 +209,7 @@ namespace umi3dBrowsers.container.formrenderer
                         Texture2D texture = spriteTask as Texture2D;
                         displayer.SetResource(
                             Sprite.Create(texture,
-                                new Rect(0, 0, texture.texelSize.x, texture.texelSize.y),
+                                new Rect(0, 0, texture.Size().x, texture.Size().y),
                                 new Vector2())
                         );
                     }

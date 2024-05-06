@@ -25,7 +25,6 @@ namespace umi3d.browserEditor.BuildTool
     public class UMI3DBuildToolSceneView 
     {
         public VisualElement root;
-        public UMI3DBuildToolScene_SO buildToolScene_SO;
         public int index;
 
         public UMI3DBuildToolSceneViewModel viewModel;
@@ -35,13 +34,9 @@ namespace umi3d.browserEditor.BuildTool
         public Button B_Browse;
         public EnumFlagsField EFF_Targets = new("Targets", E_Target.Quest);
 
-        public UMI3DBuildToolSceneView(
-            UMI3DBuildToolScene_SO buildToolScene_SO,
-            Action applyScenes
-        )
+        public UMI3DBuildToolSceneView(Action applyScenes)
         {
-            this.buildToolScene_SO = buildToolScene_SO;
-            this.viewModel = new(buildToolScene_SO, applyScenes);
+            this.viewModel = new(applyScenes);
         }
 
         public void Bind()

@@ -32,10 +32,6 @@ namespace umi3d.browserEditor.BuildTool
 
         public UMI3DBuildToolMainPanelView(
             VisualElement root,
-            UMI3DBuildToolVersion_SO buildToolVersion_SO,
-            UMI3DBuildToolScene_SO buildToolScene_SO,
-            UMI3DBuildToolTarget_SO buildToolTarget_SO,
-            UMI3DBuildToolSettings_SO buildToolSettings_SO,
             VisualTreeAsset scene_VTA,
             Action applyScenes,
             VisualTreeAsset target_VTA,
@@ -48,26 +44,17 @@ namespace umi3d.browserEditor.BuildTool
             this.root = root;
 
             logger.Assert(root != null, nameof(UMI3DBuildToolMainPanelView));
-            logger.Assert(buildToolVersion_SO != null, nameof(UMI3DBuildToolMainPanelView));
-            logger.Assert(buildToolScene_SO != null, nameof(UMI3DBuildToolMainPanelView));
-            logger.Assert(buildToolTarget_SO != null, nameof(UMI3DBuildToolMainPanelView));
-            logger.Assert(buildToolSettings_SO != null, nameof(UMI3DBuildToolMainPanelView));
 
             versionView = new(
-                root.Q<TemplateContainer>("UMI3DBuildToolVersion"),
-                buildToolVersion_SO,
-                buildToolSettings_SO
+                root.Q<TemplateContainer>("UMI3DBuildToolVersion")
             );
             sceneContainerView = new(
                 root,
-                buildToolScene_SO,
                 scene_VTA,
                 applyScenes
             );
             targetsContainerView = new(
                 root,
-                buildToolTarget_SO,
-                buildToolSettings_SO,
                 target_VTA,
                 applyTargetOptions,
                 buildSelectedTarget

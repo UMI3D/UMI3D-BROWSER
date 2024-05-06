@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
 using System;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -22,9 +23,11 @@ namespace umi3d.browserEditor.BuildTool
 {
     public class UMI3DBuildToolVersionView 
     {
-        public VisualElement root;
-        public UMI3DBuildToolSettings_SO buildToolSettings_SO;
+        SubGlobal subGlobal = new("BuildTool");
 
+        public VisualElement root;
+
+        public UMI3DBuildToolSettings_SO buildToolSettings_SO;
         public UMI3DBuildToolVersionViewModel viewModel;
         public VisualElement V_Major;
         public IntegerField IF_Major;
@@ -40,16 +43,12 @@ namespace umi3d.browserEditor.BuildTool
         public Label L_OldVersion;
         public Label L_Version;
 
-        public UMI3DBuildToolVersionView(
-            VisualElement root, 
-            UMI3DBuildToolVersion_SO buildToolVersion_SO,
-            UMI3DBuildToolSettings_SO buildToolSettings_SO
-        )
+        public UMI3DBuildToolVersionView(VisualElement root)
         {
             this.root = root;
-            this.buildToolSettings_SO = buildToolSettings_SO;
+
+            subGlobal.TryGet(out buildToolSettings_SO);
             this.viewModel = new(
-                buildToolVersion_SO, 
                 updateVersion: version =>
                 {
                     UpdateVersionView();

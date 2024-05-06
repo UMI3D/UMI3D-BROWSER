@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
 using PlasticGui;
 using System;
 using UnityEditor;
@@ -23,6 +24,8 @@ namespace umi3d.browserEditor.BuildTool
 {
     public class UMI3DBuildToolTargetViewModel 
     {
+        SubGlobal subGlobal = new("BuildTool");
+
         public UMI3DBuildToolTarget_SO buildToolTarget_SO;
 
         public TargetDto this[int index]
@@ -45,11 +48,9 @@ namespace umi3d.browserEditor.BuildTool
             }
         }
 
-        public UMI3DBuildToolTargetViewModel(
-            UMI3DBuildToolTarget_SO buildToolTarget_SO
-        )
+        public UMI3DBuildToolTargetViewModel()
         {
-            this.buildToolTarget_SO = buildToolTarget_SO;
+            subGlobal.TryGet(out buildToolTarget_SO);
         }
 
         public void Select(int index, bool isSelected)

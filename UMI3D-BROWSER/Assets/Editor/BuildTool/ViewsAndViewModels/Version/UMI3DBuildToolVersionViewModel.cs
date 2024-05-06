@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
 using System;
 using UnityEditor;
 using UnityEngine;
@@ -22,12 +23,14 @@ namespace umi3d.browserEditor.BuildTool
 {
     public class UMI3DBuildToolVersionViewModel 
     {
+        SubGlobal subGlobal = new("BuildTool");
+
         public UMI3DBuildToolVersion_SO buildToolVersion_SO;
         public Action<VersionDTO> updateVersion;
 
-        public UMI3DBuildToolVersionViewModel(UMI3DBuildToolVersion_SO buildToolVersion_SO, Action<VersionDTO> updateVersion)
+        public UMI3DBuildToolVersionViewModel(Action<VersionDTO> updateVersion)
         {
-            this.buildToolVersion_SO = buildToolVersion_SO;
+            subGlobal.TryGet(out buildToolVersion_SO);
             this.updateVersion = updateVersion;
         }
 

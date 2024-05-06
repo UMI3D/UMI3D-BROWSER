@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
 using System;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -22,11 +23,13 @@ namespace umi3d.browserEditor.BuildTool
 {
     public class UMI3DBuildToolConfigurationPanelView 
     {
+        SubGlobal subGlobal = new("BuildTool");
+
         public VisualElement root;
+
         public UMI3DBuildToolTarget_SO buildToolTarget_SO;
         public UMI3DBuildToolKeystore_SO buildToolKeystore_SO;
         public UMI3DBuildToolSettings_SO buildToolSettings_SO;
-
         public UMI3DBuildToolConfigurationViewModel viewModel;
 
         public TemplateContainer T_BuildFolder;
@@ -48,21 +51,14 @@ namespace umi3d.browserEditor.BuildTool
         public Button B_Keystore;
         public TextField TF_KeystorePW;
 
-        public UMI3DBuildToolConfigurationPanelView(
-            VisualElement root,
-            UMI3DBuildToolTarget_SO buildToolTarget_SO,
-            UMI3DBuildToolKeystore_SO buildToolKeystore_SO,
-            UMI3DBuildToolSettings_SO buildToolSettings_SO
-        )
+        public UMI3DBuildToolConfigurationPanelView(VisualElement root)
         {
             this.root = root;
-            this.buildToolTarget_SO = buildToolTarget_SO;
-            this.buildToolKeystore_SO = buildToolKeystore_SO;
-            this.buildToolSettings_SO = buildToolSettings_SO;
-            viewModel = new(
-                buildToolTarget_SO,
-                buildToolKeystore_SO
-            );
+
+            subGlobal.TryGet(out buildToolTarget_SO);
+            subGlobal.TryGet(out buildToolKeystore_SO);
+            subGlobal.TryGet(out buildToolSettings_SO);
+            viewModel = new();
         }
 
         public void Bind()

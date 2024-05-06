@@ -118,7 +118,7 @@ namespace umi3dVRBrowsersBase.connection
 
         private void Start()
         {
-            StartCoroutine(SetupSkeleton());
+            //StartCoroutine(SetupSkeleton());
 
             UMI3DEnvironmentLoader.Instance.onEnvironmentLoaded.AddListener(() =>
             {

@@ -28,10 +28,11 @@ namespace umi3dBrowsers.container.formrenderer
 {
     public class DivformRenderer : MonoBehaviour
     {
-        private GameObject _contentRoot;
+        private FormContainer _contentRoot;
         private FormAnswerDto _answer;
         public event Action<FormAnswerDto> OnFormAnswer;
-        List<GameObject> allContainers = new();
+
+        List<FormContainer> allContainers = new();
 
         [Header("UI Containers")]
         [SerializeField] private GameObject vignetteContainerPrefab;
@@ -49,7 +50,9 @@ namespace umi3dBrowsers.container.formrenderer
 
         public void Init(GameObject contentRoot)
         {
-            this._contentRoot = contentRoot;
+            FormContainer container = new FormContainer();
+            container.container = contentRoot;
+            this._contentRoot = container;
         }
 
         /// <summary>
@@ -66,9 +69,9 @@ namespace umi3dBrowsers.container.formrenderer
             {
                 if (allContainers[i] == null) continue;
 #if UNITY_EDITOR
-                DestroyImmediate(allContainers[i]);
+                DestroyImmediate(allContainers[i].container);
 #else
-                Destroy(allContainers[i], delay);
+                Destroy(allContainers[i].container, delay);
                 delay += 0.01f;
 #endif
             }
@@ -82,7 +85,7 @@ namespace umi3dBrowsers.container.formrenderer
         internal void Handle(ConnectionFormDto connectionFormDto)
         {
             allContainers.Add(_contentRoot);
-            EvaluateDiv(connectionFormDto, 0);
+            InstantiateDiv(connectionFormDto, _contentRoot);
         }
 
         /// <summary>
@@ -91,36 +94,31 @@ namespace umi3dBrowsers.container.formrenderer
         /// </summary>
         /// <param name="divParent"></param>
         /// <param name="parentId"></param>
-        private void EvaluateDiv(DivDto divParent, int parentId)
-        {
-            InstantiateDiv(divParent, parentId);
-        }
-
-        private void InstantiateDiv(DivDto divParent, int parentId)
+        private void InstantiateDiv(DivDto divParent, FormContainer parentContainer)
         {
             switch (divParent)
             {
                 case BaseInputDto inputDto:
-                    HandleInputDto(inputDto, parentId); break;
+                    HandleInputDto(inputDto, parentContainer); break;
                 case FormDto inputDto:
-                    HandleFormDto(inputDto); break;
+                    HandleFormDto(inputDto, parentContainer); break;
                 case PageDto pageDto:
-                    HandlePageDto(pageDto); break;
+                    HandlePageDto(pageDto, parentContainer); break;
                 case LabelDto labelDto:
-                    HandleLabelDto(labelDto, parentId); break;
+                    HandleLabelDto(labelDto, parentContainer); break;
                 case ImageDto imageDto:
-                    HandleImageDto(imageDto, parentId); break;
+                    HandleImageDto(imageDto, parentContainer); break;
             }
         }
 
-        private void HandleInputDto(BaseInputDto inputDto, int parentId)
+        private void HandleInputDto(BaseInputDto inputDto, FormContainer parentContainer)
         {
             switch (inputDto)
             {
                 case GroupDto groupDto:
-                    HandleGroupDto(groupDto, parentId); break;
+                    HandleGroupDto(groupDto, parentContainer); break;
                 case ButtonDto buttonDto:
-                    HandleButtonDto(buttonDto, parentId); break;
+                    HandleButtonDto(buttonDto, parentContainer); break;
             }
         }
 
@@ -135,50 +133,55 @@ namespace umi3dBrowsers.container.formrenderer
             }
         }
 
-        private void HandleGroupDto(GroupDto groupDto, int parentId)
+        private void HandleGroupDto(GroupDto groupDto, FormContainer parentContainer)
         {
-            GameObject group = Instantiate(groupContainerPrefab, allContainers[parentId].transform);
-            allContainers.Add(group);
-            int currentId = allContainers.Count - 1;
+            GameObject group = Instantiate(groupContainerPrefab, parentContainer.container.transform);
+            FormContainer container = parentContainer.GetNextFormContainer(group);
+            allContainers.Add(container);
+
             foreach (var div in groupDto.FirstChildren)
             {
-                EvaluateDiv(div, currentId);
+                InstantiateDiv(div, container);
             }
 
             HandleStyle(groupDto.styles, group, null);
         }
 
-        private void HandleButtonDto(ButtonDto buttonDto, int parentId)
+        private void HandleButtonDto(ButtonDto buttonDto, FormContainer parentContainer)
         {
 
         }
-        private void HandleFormDto(FormDto formDto)
+        private void HandleFormDto(FormDto formDto, FormContainer parentContainer)
         {
             _form = formDto;
             foreach(var div in formDto.FirstChildren)
             {
-                EvaluateDiv(div, 0);
+                InstantiateDiv(div, parentContainer);
             }
 
             HandleStyle(formDto.styles, null, null);
         }
-        private void HandlePageDto(PageDto pageDto)
+        private void HandlePageDto(PageDto pageDto, FormContainer parentContainer)
         {
-            allContainers.Add(tabManager.AddNewTab(pageDto.name));
+            FormContainer container = parentContainer.GetNextFormContainer(tabManager.AddNewTab(pageDto.name));
+            allContainers.Add(container);
+
             int currentId = allContainers.Count - 1;
             foreach (var div in pageDto.FirstChildren)
             {
-                EvaluateDiv(div, currentId);
+                InstantiateDiv(div, container);
             }
 
             HandleStyle(pageDto.styles, null, null);
         }
-        private void HandleLabelDto(LabelDto labelDto, int parentId)
+        private void HandleLabelDto(LabelDto labelDto, FormContainer parentContainer)
         {
             GameObject labelGo = null;
             IDisplayer displayer = null;
 
-            labelGo = Instantiate(labelDisplayerPrefab, allContainers[parentId].transform);
+            labelGo = Instantiate(labelDisplayerPrefab, parentContainer.container.transform);
+            parentContainer.contents.Add(labelGo);
+
             displayer = labelGo.GetComponent<IDisplayer>();
 
             displayer.SetTitle(labelDto.text);
@@ -190,13 +193,16 @@ namespace umi3dBrowsers.container.formrenderer
         /// </summary>
         /// <param name="imageDto"></param>
         /// <param name="parentId"></param>
-        private async Task HandleImageDto(ImageDto imageDto, int parentId)
+        private async Task HandleImageDto(ImageDto imageDto, FormContainer parentContainer)
         {
             GameObject imageGO = null;
             IDisplayer displayer = null;
+
             if (imageDto.FirstChildren.Count == 0) // Simple image
             {
-                imageGO = Instantiate(imageDisplayerPrefab, allContainers[parentId].transform);
+                imageGO = Instantiate(imageDisplayerPrefab, parentContainer.container.transform);
+                parentContainer.contents.Add(imageGO);
+
                 displayer = imageGO.GetComponent<IDisplayer>();
                 if (imageDto.resource != null) 
                     try
@@ -221,7 +227,18 @@ namespace umi3dBrowsers.container.formrenderer
             }
             else // Vignette
             {
-                imageGO = Instantiate(vignetteContainerPrefab, allContainers[parentId].transform);
+                VignetteContainer vignetteContainer = parentContainer.container.GetComponent<VignetteContainer>();
+                if (vignetteContainer == null)
+                {
+                    FormContainer newParent = parentContainer.ReplaceContainerWithPrefab(vignetteContainerPrefab);
+                    vignetteContainer = newParent.container.GetComponent<VignetteContainer>();
+                }
+
+                //Add vignette
+                //imageGO = vignetteContainer
+                //parentContainer.contents.Add(imageGO);
+
+                // set the reste of the vignette
             }
 
             HandleStyle(imageDto.styles, imageGO, displayer);

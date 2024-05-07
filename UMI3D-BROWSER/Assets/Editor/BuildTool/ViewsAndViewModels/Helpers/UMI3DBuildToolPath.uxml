@@ -1,6 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <ui:VisualElement name="V_Path" style="flex-grow: 1; flex-direction: row;">
         <ui:TextField picking-mode="Ignore" label="Text Field" value="path" style="flex-grow: 1;" />
-        <ui:Button text="Browse" parse-escape-sequences="true" display-tooltip-when-elided="true" name="B_Browse" style="min-width: 150px;" />
+        <ui:Button text="Browse" parse-escape-sequences="true" display-tooltip-when-elided="true" name="B_Browse" style="min-width: 95px; flex-shrink: 1;" />
     </ui:VisualElement>
 </ui:UXML>

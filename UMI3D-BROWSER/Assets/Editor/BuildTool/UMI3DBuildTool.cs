@@ -58,6 +58,8 @@ namespace umi3d.browserEditor.BuildTool
             UMI3DBuildTool wnd = GetWindow<UMI3DBuildTool>();
             wnd.titleContent = new GUIContent("UMI3D Build Tool");
             wnd.buildView.ChangePanel(E_BuildToolPanel.Main);
+            wnd.maxSize = new(1000f, 300f);
+            wnd.minSize = new(1000f, 300f);
         }
 
         [MenuItem("Tools/Build Tool Configuration")]
@@ -66,6 +68,8 @@ namespace umi3d.browserEditor.BuildTool
             UMI3DBuildTool wnd = GetWindow<UMI3DBuildTool>();
             wnd.titleContent = new GUIContent("UMI3D Build Tool Config");
             wnd.buildView.ChangePanel(E_BuildToolPanel.Configuration);
+            wnd.maxSize = new(1000f, 300f);
+            wnd.minSize = new(1000f, 300f);
         }
 
         // TODO
@@ -215,6 +219,7 @@ namespace umi3d.browserEditor.BuildTool
 
         void BuildSelectedTargets(params TargetDto[] target)
         {
+            versionModel.UpdateOldVersion();
             for (int i = 0; i < target.Length; i++)
             {
                 ApplyTargetOptions(target[i].Target);

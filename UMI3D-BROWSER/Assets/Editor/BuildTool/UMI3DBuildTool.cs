@@ -21,6 +21,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.UIElements;
+using DataCreation = umi3d.browserEditor.BuildTool.UMI3DBuildToolDataCreation;
 
 namespace umi3d.browserEditor.BuildTool
 {
@@ -29,14 +30,15 @@ namespace umi3d.browserEditor.BuildTool
         [SerializeField] private VisualTreeAsset ui = default;
         [SerializeField] private VisualTreeAsset target_VTA = default;
         [SerializeField] private VisualTreeAsset scene_VTA = default;
-        UMI3DBuildToolKeystore_SO buildToolKeystore_SO;
-        UMI3DBuildToolVersion_SO buildToolVersion_SO;
-        UMI3DBuildToolTarget_SO buildToolTarget_SO;
-        UMI3DBuildToolScene_SO buildToolScene_SO;
-        UMI3DBuildToolSettings_SO buildToolSettings_SO;
+
+        UMI3DBuildToolVersion_SO versionModel;
+        UMI3DBuildToolTarget_SO targetModel;
+        UMI3DBuildToolScene_SO sceneModel;
+        UMI3DBuildToolKeystore_SO keystoreModel;
+        UMI3DBuildToolSettings_SO settingModel;
 
         [SerializeField] UMI3DCollabLoadingParameters loadingParameters;
-        IBuilToolComponent _uMI3DConfigurator = null;
+        UMI3DConfigurator _uMI3DConfigurator = null;
 
         UMI3DBuildToolView buildView;
 
@@ -90,51 +92,55 @@ namespace umi3d.browserEditor.BuildTool
                 "[UMI3D] BuildTool: scene_VTA is null."
             );
 
-            UMI3DBuildToolDataCreation.GetPath();
-            UMI3DBuildToolDataCreation.CreateExcludedFolderIfNecessary();
-            UMI3DBuildToolDataCreation.GetFiles();
-            buildToolVersion_SO = UMI3DBuildToolDataCreation.GetSO<UMI3DBuildToolVersion_SO>("Version");
-            buildToolScene_SO = UMI3DBuildToolDataCreation.GetSO<UMI3DBuildToolScene_SO>("Scenes");
-            buildToolTarget_SO = UMI3DBuildToolDataCreation.GetSO<UMI3DBuildToolTarget_SO>("Target");
-            buildToolKeystore_SO = UMI3DBuildToolDataCreation.GetSO<UMI3DBuildToolKeystore_SO>("Keystore");
-            buildToolSettings_SO = UMI3DBuildToolDataCreation.GetSO<UMI3DBuildToolSettings_SO>("Settings");
-            UMI3DBuildToolDataCreation.SaveAndRefresh();
+            DataCreation.GetPath();
+            DataCreation.CreateExcludedFolderIfNecessary();
+            DataCreation.GetFiles();
+            versionModel = DataCreation.GetSO<UMI3DBuildToolVersion_SO>("Version");
+            sceneModel = DataCreation.GetSO<UMI3DBuildToolScene_SO>("Scenes");
+            targetModel = DataCreation.GetSO<UMI3DBuildToolTarget_SO>("Target");
+            keystoreModel = DataCreation.GetSO<UMI3DBuildToolKeystore_SO>("Keystore");
+            settingModel = DataCreation.GetSO<UMI3DBuildToolSettings_SO>("Settings");
+            DataCreation.SaveAndRefresh();
 
             Assert.IsNotNull(
-                buildToolVersion_SO,
+                versionModel,
                 "[UMI3D] BuildTool: versionModel is null."
             );
             Assert.IsNotNull(
-                buildToolTarget_SO,
-                "[UMI3D] BuildTool: buildToolTarget_SO is null."
+                targetModel,
+                "[UMI3D] BuildTool: targetModel is null."
             );
             Assert.IsNotNull(
-                buildToolScene_SO,
-                "[UMI3D] BuildTool: buildToolScene_SO is null."
+                sceneModel,
+                "[UMI3D] BuildTool: sceneModel is null."
             );
             Assert.IsNotNull(
-                buildToolKeystore_SO,
-                "[UMI3D] BuildTool: buildToolKeystore_SO is null.\n" +
+                keystoreModel,
+                "[UMI3D] BuildTool: keystoreModel is null.\n" +
                 "Create a [Build Tool Keystore] scriptable object in an EXCLUDED folder that is excluded from git."
             );
             Assert.IsNotNull(
-                buildToolSettings_SO,
+                settingModel,
                 "[UMI3D] BuildTool: settingModel is null."
             );
             _uMI3DConfigurator = new UMI3DConfigurator(loadingParameters);
 
-            subGlobal.Add(buildToolVersion_SO);
-            subGlobal.Add(buildToolTarget_SO);
-            subGlobal.Add(buildToolScene_SO);
-            subGlobal.Add(buildToolKeystore_SO);
-            subGlobal.Add(buildToolSettings_SO);
+            targetModel.applyTargetOptionsHandler += ApplyTargetOptions;
+            targetModel.buildSelectedTargetHandler += BuildSelectedTargets;
+            targetModel.target_VTA = target_VTA;
+
+            sceneModel.SelectedScenesChanged += ApplyScenes;
+            sceneModel.scene_VTA = scene_VTA;
+
+            subGlobal.Add(versionModel);
+            subGlobal.Add(targetModel);
+            subGlobal.Add(sceneModel);
+            subGlobal.Add(keystoreModel);
+            subGlobal.Add(settingModel);
 
             buildView = new(
                 rootVisualElement,
-                ui, target_VTA, scene_VTA,
-                ApplyScenes,
-                ApplyTargetOptions,
-                BuildSelectedTargets
+                ui
             );
             buildView.Bind();
             buildView.Set();
@@ -153,8 +159,8 @@ namespace umi3d.browserEditor.BuildTool
 
         void ApplyScenes()
         {
-            EditorBuildSettings.scenes = buildToolScene_SO.GetScenesForTarget(
-                buildToolTarget_SO.currentTarget
+            EditorBuildSettings.scenes = sceneModel.GetScenesForTarget(
+                targetModel.currentTarget
             ).Select(scene =>
             {
                 return new EditorBuildSettingsScene(scene.path, true);
@@ -176,21 +182,21 @@ namespace umi3d.browserEditor.BuildTool
             // Update App name, Version and Android.BundleVersion.
             PlayerSettings.productName = BuildToolHelper.GetApplicationName(target);
             PlayerSettings.applicationIdentifier = BuildToolHelper.GetPackageName(target);
-            PlayerSettings.bundleVersion = $"{target.releaseCycle.GetReleaseInitial()}_{buildToolVersion_SO.newVersion.VersionFromNow} Sdk: {buildToolVersion_SO.sdkVersion.Version}";
-            PlayerSettings.Android.bundleVersionCode = buildToolVersion_SO.newVersion.BundleVersion;
+            PlayerSettings.bundleVersion = $"{target.releaseCycle.GetReleaseInitial()}_{versionModel.newVersion.VersionFromNow} Sdk: {versionModel.sdkVersion.Version}";
+            PlayerSettings.Android.bundleVersionCode = versionModel.newVersion.BundleVersion;
 
-            BuildToolHelper.SetKeystore(buildToolKeystore_SO.password, buildToolKeystore_SO.path);
+            BuildToolHelper.SetKeystore(keystoreModel.password, keystoreModel.path);
 
             InstallerHelper.UpdateInstaller(
-                buildToolTarget_SO.installer,
-                buildToolTarget_SO.license,
-                buildToolVersion_SO.newVersion,
-                buildToolVersion_SO.sdkVersion,
+                targetModel.installer,
+                targetModel.license,
+                versionModel.newVersion,
+                versionModel.sdkVersion,
                 target
             );
             var report = BuildToolHelper.BuildPlayer(
-                buildToolVersion_SO.newVersion,
-                buildToolVersion_SO.sdkVersion,
+                versionModel.newVersion,
+                versionModel.sdkVersion,
                 target
             );
             BuildToolHelper.DeleteBurstDebugInformationFolder(report);
@@ -198,9 +204,9 @@ namespace umi3d.browserEditor.BuildTool
             if (reportInt == 1)
             {
                 BuildToolHelper.CopyLicense(
-                    buildToolTarget_SO.license,
-                    buildToolVersion_SO.newVersion,
-                    buildToolVersion_SO.sdkVersion,
+                    targetModel.license,
+                    versionModel.newVersion,
+                    versionModel.sdkVersion,
                     target
                 );
             }

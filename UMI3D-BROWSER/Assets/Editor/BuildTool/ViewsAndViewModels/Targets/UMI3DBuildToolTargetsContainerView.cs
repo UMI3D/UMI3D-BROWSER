@@ -30,39 +30,24 @@ namespace umi3d.browserEditor.BuildTool
         SubGlobal subGlobal = new("BuildTool");
 
         public VisualElement root;
-        public UMI3DBuildToolTarget_SO buildToolTarget_SO;
-        public VisualTreeAsset target_VTA;
-        public Action<E_Target> applyTargetOptions;
-        public Action<TargetDto[]> buildSelectedTarget;
+
+        public UMI3DBuildToolTarget_SO targetModel;
 
         public DropdownField DD_CurrentTarget;
         public Button B_ApplyCurrentTarget;
         public ListView LV_Targets;
         public Button B_Build;
 
-        public UMI3DBuildToolTargetsContainerView(
-            VisualElement root,
-            VisualTreeAsset target_VTA,
-            Action<E_Target> applyTargetOptions,
-            Action<TargetDto[]> buildSelectedTarget
-        )
+        public UMI3DBuildToolTargetsContainerView(VisualElement root)
         {
             logger = new(mainTag: nameof(UMI3DBuildToolTargetsContainerView));
 
             this.root = root;
-            this.target_VTA = target_VTA;
-            this.applyTargetOptions = applyTargetOptions;
-            this.buildSelectedTarget = buildSelectedTarget;
 
             logger.Assert(root != null, nameof(UMI3DBuildToolTargetsContainerView));
-            logger.Assert(target_VTA != null, nameof(UMI3DBuildToolTargetsContainerView));
-            logger.Assert(buildSelectedTarget != null, nameof(UMI3DBuildToolTargetsContainerView));
 
-            subGlobal.TryGet(out buildToolTarget_SO);
-            this.buildToolTarget_SO.SelectedTargetsChanged += () =>
-            {
-                OnUpdateTargetSelected(buildToolTarget_SO.SelectedTargets);
-            };
+            subGlobal.TryGet(out targetModel);
+            targetModel.selectedTargetsChanged += OnUpdateTargetSelected;
         }
 
         public void Bind()
@@ -81,7 +66,7 @@ namespace umi3d.browserEditor.BuildTool
         {
             DD_CurrentTarget.choices.Clear();
             DD_CurrentTarget.choices.AddRange(Enum.GetNames(typeof(E_Target)));
-            DD_CurrentTarget.SetValueWithoutNotify(buildToolTarget_SO.currentTarget.ToString());
+            DD_CurrentTarget.SetValueWithoutNotify(targetModel.currentTarget.ToString());
             ApplyTargetOption();
 
             LV_Targets.reorderable = true;
@@ -89,10 +74,10 @@ namespace umi3d.browserEditor.BuildTool
             LV_Targets.showFoldoutHeader = true;
             LV_Targets.showAddRemoveFooter = true;
             LV_Targets.reorderMode = ListViewReorderMode.Animated;
-            LV_Targets.itemsSource = buildToolTarget_SO.targets;
+            LV_Targets.itemsSource = targetModel.targets;
             LV_Targets.makeItem = () =>
             {
-                return target_VTA.Instantiate();
+                return targetModel.target_VTA.Instantiate();
             };
             LV_Targets.bindItem = (visual, index) =>
             {
@@ -111,7 +96,7 @@ namespace umi3d.browserEditor.BuildTool
             };
             LV_Targets.Q<Toggle>().value = false;
 
-            OnUpdateTargetSelected(buildToolTarget_SO.SelectedTargets);
+            OnUpdateTargetSelected();
         }
 
         public void Unbind()
@@ -130,25 +115,25 @@ namespace umi3d.browserEditor.BuildTool
         void ApplyTargetOption()
         {
             E_Target target = Enum.Parse<E_Target>(DD_CurrentTarget.value);
-            buildToolTarget_SO.currentTarget = target;
-            applyTargetOptions?.Invoke(target);
-
-            EditorUtility.SetDirty(buildToolTarget_SO);
+            targetModel.ApplyCurrentTarget(target);
         }
 
         void TargetItemAdded(IEnumerable<int> indexes)
         {
             foreach (var index in indexes)
             {
-                var target = buildToolTarget_SO.targets[index];
-                target.BuildFolder = buildToolTarget_SO.buildFolder;
-                target.Target = E_Target.Quest;
-                buildToolTarget_SO.targets[index] = target;
+                targetModel.UpdateTarget(index, target =>
+                {
+                    target.BuildFolder = targetModel.buildFolder;
+                    target.Target = E_Target.Quest;
+                    return target;
+                });
             }
         }
 
-        void OnUpdateTargetSelected(params TargetDto[] targets)
+        void OnUpdateTargetSelected()
         {
+            TargetDto[] targets = targetModel.SelectedTargets;
             string[] targetsDesc = targets.Select(
                 target =>
                 {
@@ -162,26 +147,7 @@ namespace umi3d.browserEditor.BuildTool
 
         void BuildSelectedTarget()
         {
-            E_ReleaseCycle[] releases = (E_ReleaseCycle[])Enum.GetValues(typeof(E_ReleaseCycle));
-            for (int i = releases.Length - 1; i >= 0; i--)
-            {
-                buildSelectedTarget?.Invoke(
-                    buildToolTarget_SO.GetSelectedTargets(
-                        BuildTarget.Android,
-                        releases[i]
-                    )
-                );
-            }
-
-            for (int i = releases.Length - 1; i >= 0; i--)
-            {
-                buildSelectedTarget?.Invoke(
-                    buildToolTarget_SO.GetSelectedTargets(
-                        BuildTarget.StandaloneWindows,
-                        releases[i]
-                    )
-                );
-            }
+            targetModel.BuildSelectedTargets();
         }
     }
 }

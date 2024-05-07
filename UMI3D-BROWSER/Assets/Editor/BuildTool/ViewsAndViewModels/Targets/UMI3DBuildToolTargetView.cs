@@ -16,7 +16,6 @@ limitations under the License.
 
 using inetum.unityUtils;
 using System;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -29,8 +28,9 @@ namespace umi3d.browserEditor.BuildTool
         public VisualElement root;
         public int index;
 
-        public UMI3DBuildToolSettings_SO buildToolSettings_SO;
-        public UMI3DBuildToolTargetViewModel viewModel;
+        public UMI3DBuildToolTarget_SO targetModel;
+        public UMI3DBuildToolSettings_SO settingModel;
+
         public Toggle T_Select;
         public VisualElement V_Path;
         public TextField TF_Path;
@@ -46,14 +46,8 @@ namespace umi3d.browserEditor.BuildTool
             this.root = root;
             this.index = index;
 
-            this.viewModel = new();
-            subGlobal.TryGet(out buildToolSettings_SO);
-            var targetDto = viewModel[index];
-            if (targetDto.Id.Equals(new())) 
-            {
-                targetDto.Id = Guid.NewGuid();
-                viewModel[index] = targetDto;
-            }
+            subGlobal.TryGet(out targetModel);
+            subGlobal.TryGet(out settingModel);
         }
 
         public void Bind()
@@ -78,9 +72,9 @@ namespace umi3d.browserEditor.BuildTool
         public void Set()
         {
             // Select
-            T_Select.SetValueWithoutNotify(viewModel[index].IsTargetEnabled);
+            T_Select.SetValueWithoutNotify(targetModel[index].IsTargetEnabled);
 
-            V_Path.style.display = (buildToolSettings_SO?.useOneBuildFolder ?? true)
+            V_Path.style.display = (settingModel?.useOneBuildFolder ?? true)
                     ? DisplayStyle.None
                     : DisplayStyle.Flex;
             // Path
@@ -90,12 +84,12 @@ namespace umi3d.browserEditor.BuildTool
             // Device target.
             DD_TargetSelection.choices.Clear();
             DD_TargetSelection.choices.AddRange(Enum.GetNames(typeof(E_Target)));
-            DD_TargetSelection.SetValueWithoutNotify(viewModel[index].Target.ToString());
+            DD_TargetSelection.SetValueWithoutNotify(targetModel[index].Target.ToString());
 
             // Release cycle.
             DD_ReleaseCycle.choices.Clear();
             DD_ReleaseCycle.choices.AddRange(Enum.GetNames(typeof(E_ReleaseCycle)));
-            DD_ReleaseCycle.SetValueWithoutNotify(viewModel[index].releaseCycle.ToString());
+            DD_ReleaseCycle.SetValueWithoutNotify(targetModel[index].releaseCycle.ToString());
             DD_ReleaseCycle.tooltip 
                 = "Alpha: Dev Build + More logs.\n" +
                 "Beta: More logs.\n" +
@@ -113,34 +107,34 @@ namespace umi3d.browserEditor.BuildTool
 
         string GetBuildFolder()
         {
-            return (buildToolSettings_SO?.useOneBuildFolder ?? true)
-                    ? viewModel.buildToolTarget_SO.buildFolder
-                    : viewModel[index].BuildFolder;
+            return (settingModel?.useOneBuildFolder ?? true)
+                    ? targetModel.buildFolder
+                    : targetModel[index].BuildFolder;
         }
 
         void SelectionValueChanged(ChangeEvent<bool> value)
         {
-            viewModel.Select(index, value.newValue);
+            targetModel.Select(index, value.newValue);
         }
 
         void PathValueChanged(ChangeEvent<string> value)
         {
-            viewModel.UpdateBuildFolder(index, value.newValue);
+            targetModel.UpdateBuildFolder(index, value.newValue);
         }
 
         void TargetSelectionValueChanged(ChangeEvent<string> value)
         {
-            viewModel.ApplyTarget(index, Enum.Parse<E_Target>(value.newValue));
+            targetModel.ApplyTarget(index, Enum.Parse<E_Target>(value.newValue));
         }
 
         void ReleaseCycleDDValueChanged(ChangeEvent<string> value)
         {
-            viewModel.ApplyReleaseCycle(index, Enum.Parse<E_ReleaseCycle>(value.newValue));
+            targetModel.ApplyReleaseCycle(index, Enum.Parse<E_ReleaseCycle>(value.newValue));
         }
 
         void Browse()
         {
-            viewModel.BrowseBuildFolder(
+            targetModel.BrowseBuildFolder(
                 index,
                 updateView: path =>
                 {

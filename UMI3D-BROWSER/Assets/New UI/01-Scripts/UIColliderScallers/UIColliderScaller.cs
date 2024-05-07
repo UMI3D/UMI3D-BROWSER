@@ -34,6 +34,8 @@ namespace umi3dBrowsers.utils
         [SerializeField] private RectTransform childRT;
         private bool hasResized = false;
 
+        [Header("GUI")]
+        [SerializeField] private bool updateOnGUI;
         private void OnEnable()
         {
             if (!uiColliderScalers.Contains(this))
@@ -94,6 +96,11 @@ namespace umi3dBrowsers.utils
                 hasResized = true;
                 HandleRT();
             }
+        }
+        private void OnGUI()
+        {
+            if (updateOnGUI)
+                ScaleCollider();
         }
     }
 }

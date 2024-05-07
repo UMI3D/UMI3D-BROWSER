@@ -81,10 +81,12 @@ namespace umi3dBrowsers.container
             scrollbar.value = 0;
 
             buttonLeft.onClick.AddListener(() => {
-                scrollbar.value -= scrollButtonSpeed / vignetteDisplayers.Count;
+                if (vignetteDisplayers.Count != 0)
+                    scrollbar.value -= scrollButtonSpeed / vignetteDisplayers.Count;
             });
             buttonRight.onClick.AddListener(() => {
-                scrollbar.value += scrollButtonSpeed / vignetteDisplayers.Count;
+                if(vignetteDisplayers.Count !=0)
+                    scrollbar.value += scrollButtonSpeed / vignetteDisplayers.Count;
             });
         }
 

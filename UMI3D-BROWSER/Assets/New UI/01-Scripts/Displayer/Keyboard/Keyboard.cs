@@ -477,7 +477,8 @@ namespace umi3dBrowsers.keyboard
             setCaretPosition = false;
 
             WasClosedLastFrame = true;
-            StartCoroutine(ResetWasClosedLastFrame());
+            if (Application.isPlaying) 
+                StartCoroutine(ResetWasClosedLastFrame());
         }
 
         /// <summary>

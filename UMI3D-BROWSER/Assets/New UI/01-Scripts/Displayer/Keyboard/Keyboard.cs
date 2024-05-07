@@ -473,7 +473,7 @@ namespace umi3dBrowsers.keyboard
         /// </summary>
         public void Hide()
         {
-            root.SetActive(false);
+            root?.SetActive(false);
             setCaretPosition = false;
 
             WasClosedLastFrame = true;

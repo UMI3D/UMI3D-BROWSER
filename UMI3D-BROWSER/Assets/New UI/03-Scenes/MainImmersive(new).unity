@@ -267,18 +267,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2fe94ff0e1453e4689e30b2a6316e14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1131452854 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5161054918967749134, guid: aa50e35a45eaaed43a950ae34ef532dc,
-    type: 3}
-  m_PrefabInstance: {fileID: 1131452852}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 813c4fa37e44fdb42a809e34bb536a3f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!20 &1131452855 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 8430962178111685224, guid: aa50e35a45eaaed43a950ae34ef532dc,
@@ -436,13 +424,8 @@ PrefabInstance:
     - target: {fileID: 5365882361262844315, guid: 503d8cf448de25647a3f6a39ab0d9bd9,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0.000016162783
+      value: 0.0001766948
       objectReference: {fileID: 0}
-    - target: {fileID: 5764710016777574839, guid: 503d8cf448de25647a3f6a39ab0d9bd9,
-        type: 3}
-      propertyPath: setUpSkeleton
-      value: 
-      objectReference: {fileID: 1131452854}
     - target: {fileID: 8400808290273360780, guid: 503d8cf448de25647a3f6a39ab0d9bd9,
         type: 3}
       propertyPath: m_AnchorMax.x

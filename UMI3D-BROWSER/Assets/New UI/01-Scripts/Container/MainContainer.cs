@@ -19,12 +19,13 @@ using TMPro;
 using umi3d;
 using umi3d.cdk.collaboration;
 using umi3d.common.interaction;
+using umi3dBrowsers.connection;
 using umi3dBrowsers.container;
 using umi3dBrowsers.container.formrenderer;
 using umi3dBrowsers.displayer;
+using umi3dBrowsers.linker;
 using umi3dBrowsers.services.connection;
 using umi3dBrowsers.services.title;
-using umi3dVRBrowsersBase.connection;
 using UnityEngine;
 using UnityEngine.Localization.Settings;
 using UnityEngine.UI;
@@ -92,6 +93,9 @@ namespace umi3dBrowsers
 
         [Header("Options")]
         [SerializeField] private bool forceFlagContent;
+
+        [Header("Linker")]
+        [SerializeField] private ConnectionToImmersiveLinker connectionToImmersiveLinker;
 
         private ContentState _returnState;
 
@@ -163,8 +167,8 @@ namespace umi3dBrowsers
             });
             standUpButton?.OnClick.AddListener(() =>
             {
-                SetUpSkeleton setUp = PlayerDependenciesAccessor.Instance.SetUpSkeleton;
-                StartCoroutine(setUp.SetupSkeleton());
+                SetUpSkeleton setup =  connectionToImmersiveLinker.SetUpSkeleton;
+                StartCoroutine(setup.SetupSkeleton());
                 HandleContentState(ContentState.mainContent);
                 parentTransform.position = new Vector3(parentTransform.position.x, Camera.main.transform.position.y, parentTransform.position.z);
             });

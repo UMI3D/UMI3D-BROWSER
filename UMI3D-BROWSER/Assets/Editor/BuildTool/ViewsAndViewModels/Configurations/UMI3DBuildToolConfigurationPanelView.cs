@@ -27,10 +27,9 @@ namespace umi3d.browserEditor.BuildTool
 
         public VisualElement root;
 
-        public UMI3DBuildToolTarget_SO buildToolTarget_SO;
-        public UMI3DBuildToolKeystore_SO buildToolKeystore_SO;
-        public UMI3DBuildToolSettings_SO buildToolSettings_SO;
-        public UMI3DBuildToolConfigurationViewModel viewModel;
+        public UMI3DBuildToolTarget_SO targetModel;
+        public UMI3DBuildToolKeystore_SO keystoreModel;
+        public UMI3DBuildToolSettings_SO settingModel;
 
         public TemplateContainer T_BuildFolder;
         public TextField TF_BuildFolder;
@@ -55,10 +54,9 @@ namespace umi3d.browserEditor.BuildTool
         {
             this.root = root;
 
-            subGlobal.TryGet(out buildToolTarget_SO);
-            subGlobal.TryGet(out buildToolKeystore_SO);
-            subGlobal.TryGet(out buildToolSettings_SO);
-            viewModel = new();
+            subGlobal.TryGet(out targetModel);
+            subGlobal.TryGet(out keystoreModel);
+            subGlobal.TryGet(out settingModel);
         }
 
         public void Bind()
@@ -95,32 +93,32 @@ namespace umi3d.browserEditor.BuildTool
         public void Set()
         {
             T_BuildFolder.style.display
-               = (buildToolSettings_SO?.useOneBuildFolder ?? true)
+               = (settingModel?.useOneBuildFolder ?? true)
                    ? DisplayStyle.Flex
                    : DisplayStyle.None;
             (TF_BuildFolder.labelElement as INotifyValueChanged<string>)
                 .SetValueWithoutNotify("Build Folder");
             TF_BuildFolder
-                .SetValueWithoutNotify(buildToolTarget_SO.buildFolder);
+                .SetValueWithoutNotify(targetModel.buildFolder);
            
-            T_SBF.SetValueWithoutNotify(buildToolSettings_SO.useOneBuildFolder);
+            T_SBF.SetValueWithoutNotify(settingModel.useOneBuildFolder);
 
             (TF_Installer.labelElement as INotifyValueChanged<string>)
                 .SetValueWithoutNotify("Installer");
             TF_Installer
-                .SetValueWithoutNotify(buildToolTarget_SO.installer);
+                .SetValueWithoutNotify(targetModel.installer);
 
             (TF_License.labelElement as INotifyValueChanged<string>)
                 .SetValueWithoutNotify("License");
             TF_License
-                .SetValueWithoutNotify(buildToolTarget_SO.license);
+                .SetValueWithoutNotify(targetModel.license);
 
             (TF_Keystore.labelElement as INotifyValueChanged<string>)
                 .SetValueWithoutNotify("Keystore");
             TF_Keystore
-                .SetValueWithoutNotify(buildToolKeystore_SO.path);
+                .SetValueWithoutNotify(keystoreModel.path);
             TF_KeystorePW
-                .SetValueWithoutNotify(buildToolKeystore_SO.password);
+                .SetValueWithoutNotify(keystoreModel.password);
         }
 
         public void Unbind()
@@ -138,12 +136,12 @@ namespace umi3d.browserEditor.BuildTool
 
         void BuildFolderValueChanged(ChangeEvent<string> value)
         {
-            viewModel.UpdateBuildFolder(value.newValue);
+            targetModel.UpdateBuildFolder(value.newValue);
         }
 
         void BrowseBuildFolder()
         {
-            viewModel.BrowseBuildFolder(path =>
+            targetModel.BrowseBuildFolder(path =>
             {
                 TF_BuildFolder.SetValueWithoutNotify(path);
             });
@@ -151,12 +149,12 @@ namespace umi3d.browserEditor.BuildTool
 
         void InstallerFolderValueChanged(ChangeEvent<string> value)
         {
-            viewModel.UpdateInstaller(value.newValue);
+            targetModel.UpdateInstaller(value.newValue);
         }
 
         void BrowseInstallerFolder()
         {
-            viewModel.BrowseInstaller(path =>
+            targetModel.BrowseInstaller(path =>
             {
                 TF_Installer.SetValueWithoutNotify(path);
             });
@@ -164,12 +162,12 @@ namespace umi3d.browserEditor.BuildTool
 
         void LicenseFolderValueChanged(ChangeEvent<string> value)
         {
-            viewModel.UpdateLicense(value.newValue);
+            targetModel.UpdateLicense(value.newValue);
         }
 
         void BrowseLicenseFolder()
         {
-            viewModel.BrowseLicense(path =>
+            targetModel.BrowseLicense(path =>
             {
                 TF_License.SetValueWithoutNotify(path);
             });
@@ -177,12 +175,12 @@ namespace umi3d.browserEditor.BuildTool
 
         void KeystoreFolderValueChanged(ChangeEvent<string> value)
         {
-            viewModel.UpdateKeystorePath(value.newValue);
+            keystoreModel.UpdateKeystorePath(value.newValue);
         }
 
         void BrowseKeystoreFolder()
         {
-            viewModel.BrowseKeystorePath(path =>
+            keystoreModel.BrowseKeystorePath(path =>
             {
                 TF_Keystore.SetValueWithoutNotify(path);
             });
@@ -190,7 +188,7 @@ namespace umi3d.browserEditor.BuildTool
 
         void KeystorePasswordValueChanged(ChangeEvent<string> value)
         {
-            viewModel.UpdateKeystorePassword(value.newValue);
+            keystoreModel.UpdateKeystorePassword(value.newValue);
         }
     }
 }

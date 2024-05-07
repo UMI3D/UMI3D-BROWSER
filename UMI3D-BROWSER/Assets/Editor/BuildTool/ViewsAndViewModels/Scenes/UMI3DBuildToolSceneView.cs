@@ -14,8 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
 using System;
-using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -24,19 +24,22 @@ namespace umi3d.browserEditor.BuildTool
 {
     public class UMI3DBuildToolSceneView 
     {
+        SubGlobal subGlobal = new("BuildTool");
+
         public VisualElement root;
         public int index;
 
-        public UMI3DBuildToolSceneViewModel viewModel;
+        public UMI3DBuildToolScene_SO sceneModel;
+
         public Toggle T_Select;
         public VisualElement V_Path;
         public TextField TF_Path;
         public Button B_Browse;
         public EnumFlagsField EFF_Targets = new("Targets", E_Target.Quest);
 
-        public UMI3DBuildToolSceneView(Action applyScenes)
+        public UMI3DBuildToolSceneView()
         {
-            this.viewModel = new(applyScenes);
+            subGlobal.TryGet(out sceneModel);
         }
 
         public void Bind()
@@ -58,14 +61,14 @@ namespace umi3d.browserEditor.BuildTool
         public void Set()
         {
             // Select
-            T_Select.SetValueWithoutNotify(viewModel[index].enabled);
+            T_Select.SetValueWithoutNotify(sceneModel[index].enabled);
             
             // Path
             (TF_Path.labelElement as INotifyValueChanged<string>)
                 .SetValueWithoutNotify("Scene Path");
-            TF_Path.SetValueWithoutNotify(viewModel[index].path);
+            TF_Path.SetValueWithoutNotify(sceneModel[index].path);
             
-            EFF_Targets.SetValueWithoutNotify(viewModel[index].targets);
+            EFF_Targets.SetValueWithoutNotify(sceneModel[index].targets);
         }
 
         public void Unbind()
@@ -79,30 +82,28 @@ namespace umi3d.browserEditor.BuildTool
 
         void SelectValueChanged(ChangeEvent<bool> value)
         {
-            viewModel.Select(index, value.newValue);
+            sceneModel.Select(index, value.newValue);
         }
         
         void PathValueChanged(ChangeEvent<string> value)
         {
-            viewModel.UpdatedScenePath(index, value.newValue);
-        }
-
-        void TargetValueChanged(ChangeEvent<Enum> value)
-        {
-            var sceneDTO = viewModel[index];
-            sceneDTO.targets = (E_Target)value.newValue;
-            viewModel[index] = sceneDTO;
+            sceneModel.UpdatedScenePath(index, value.newValue);
         }
 
         public void Browse()
         {
-            viewModel.BrowseScenePath(
+            sceneModel.BrowseScenePath(
                 index,
                 path =>
                 {
                     TF_Path.SetValueWithoutNotify(path);
                 }
             );
+        }
+
+        void TargetValueChanged(ChangeEvent<Enum> value)
+        {
+            sceneModel.UpdatedTarget(index, (E_Target)value.newValue);
         }
     }
 }

@@ -30,14 +30,7 @@ namespace umi3d.browserEditor.BuildTool
         public UMI3DBuildToolScenesContainerView sceneContainerView;
         public UMI3DBuildToolTargetsContainerView targetsContainerView;
 
-        public UMI3DBuildToolMainPanelView(
-            VisualElement root,
-            VisualTreeAsset scene_VTA,
-            Action applyScenes,
-            VisualTreeAsset target_VTA,
-            Action<E_Target> applyTargetOptions,
-            Action<TargetDto[]> buildSelectedTarget
-        )
+        public UMI3DBuildToolMainPanelView(VisualElement root)
         {
             logger = new(mainTag: nameof(UMI3DBuildToolMainPanelView));
 
@@ -48,17 +41,8 @@ namespace umi3d.browserEditor.BuildTool
             versionView = new(
                 root.Q<TemplateContainer>("UMI3DBuildToolVersion")
             );
-            sceneContainerView = new(
-                root,
-                scene_VTA,
-                applyScenes
-            );
-            targetsContainerView = new(
-                root,
-                target_VTA,
-                applyTargetOptions,
-                buildSelectedTarget
-            );
+            sceneContainerView = new(root);
+            targetsContainerView = new(root);
         }
 
         public void Bind()

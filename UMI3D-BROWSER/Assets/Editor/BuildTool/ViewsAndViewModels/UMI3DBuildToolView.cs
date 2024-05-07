@@ -31,12 +31,7 @@ namespace umi3d.browserEditor.BuildTool
 
         public UMI3DBuildToolView(
             VisualElement root,
-            VisualTreeAsset ui,
-            VisualTreeAsset target_VTA,
-            VisualTreeAsset scene_VTA,
-            Action applyScenes,
-            Action<E_Target> applyTargetOptions,
-            Action<TargetDto[]> buildSelectedTarget
+            VisualTreeAsset ui
         )
         {
             this.root = root;
@@ -44,12 +39,7 @@ namespace umi3d.browserEditor.BuildTool
             root.Add(ui.Instantiate());
 
             mainPanelView = new(
-                root.Q<TemplateContainer>("UMI3DBuildToolMainPanel"),
-                scene_VTA,
-                applyScenes,
-                target_VTA,
-                applyTargetOptions,
-                buildSelectedTarget
+                root.Q<TemplateContainer>("UMI3DBuildToolMainPanel")
             );
 
             configurationPanel = new UMI3DBuildToolConfigurationPanelView(

@@ -15,6 +15,8 @@ limitations under the License.
 */
 
 using inetum.unityUtils.saveSystem;
+using System;
+using UnityEditor;
 using UnityEngine;
 
 namespace umi3d.browserEditor.BuildTool
@@ -28,5 +30,39 @@ namespace umi3d.browserEditor.BuildTool
     {
         public string password;
         public string path;
+
+        #region Path
+
+        public void UpdateKeystorePath(string path)
+        {
+            this.path = path;
+
+            Save(editorOnly: true);
+        }
+
+        public void BrowseKeystorePath(Action<string> updateView)
+        {
+            string directory = string.IsNullOrEmpty(this.path)
+                ? Application.dataPath
+                : this.path;
+
+            string path = EditorUtility.OpenFilePanel(
+                    title: "Keystore Path",
+                    directory,
+                    extension: "keystore"
+                );
+
+            UpdateKeystorePath(path);
+            updateView?.Invoke(path);
+        }
+
+        #endregion
+
+        public void UpdateKeystorePassword(string password)
+        {
+            this.password = password;
+
+            Save(editorOnly: true);
+        }
     }
 }

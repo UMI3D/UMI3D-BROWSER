@@ -241,6 +241,8 @@ namespace umi3dBrowsers
             {
                 HandleContentState(ContentState.loadingContent);
                 title.SetTitle(TitleType.mainTitle,"Loading ... ", "");
+                spawner.RepositionPlayer();
+                ShowUI();
             };
             loadingContainer.OnLoadingFinished += () => Debug.Log("TODO : Do something ::: Its loaded");// gameObject.SetActive(false);
         }
@@ -325,6 +327,11 @@ namespace umi3dBrowsers
         private void HideUI()
         {
             parentTransform.gameObject.SetActive(false);
+        }
+
+        private void ShowUI()
+        {
+            parentTransform.gameObject.SetActive(true);
         }
     }
 }

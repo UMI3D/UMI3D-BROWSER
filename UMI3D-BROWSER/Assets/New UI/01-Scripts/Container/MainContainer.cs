@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System;
 using System.Collections.Generic;
 using TMPro;
 using umi3d;
@@ -90,6 +91,7 @@ namespace umi3dBrowsers
         [SerializeField] private LoadingContainer loadingContainer;
         [SerializeField] private umi3dBrowsers.services.librairies.LibraryManager libraryManager;
         [SerializeField] private UITweens tween;
+        [SerializeField] private PlayerSpawner spawner;
 
         [Header("Options")]
         [SerializeField] private bool forceFlagContent;
@@ -111,6 +113,8 @@ namespace umi3dBrowsers
 
         private void Start()
         {
+            spawner.Init(connectionToImmersiveLinker);
+
             BindNavigationButtons();
             BindURL();
             BindFormContainer();
@@ -218,7 +222,7 @@ namespace umi3dBrowsers
                 ProcessForm(connectionFormDto);
             };
             connectionProcessorService.OnAsksToLoadLibrairies += (ids) => connectionProcessorService.SendAnswerToLibrariesDownloadAsk(true);
-            connectionProcessorService.OnConnectionSuccess += () => Debug.Log("____Connection success____");
+            connectionProcessorService.OnConnectionSuccess += () => HideUI();
             connectionProcessorService.OnAnswerFailed += () => {
                 popupManager.ShowPopup(PopupManager.PopupType.Error, "popup_answer_failed_title", "popup_answer_failed_description",
                     ("popup_close", () => { popupManager.ClosePopUp(); }
@@ -232,7 +236,7 @@ namespace umi3dBrowsers
 
         private void BindLoaderDisplayer()
         {
-            loadingContainer.Init();
+            loadingContainer.Init(connectionToImmersiveLinker);
             loadingContainer.OnLoadingInProgress += () =>
             {
                 HandleContentState(ContentState.loadingContent);
@@ -317,6 +321,10 @@ namespace umi3dBrowsers
             loadingContent.gameObject.SetActive(false);
             dynamicServerContent.gameObject.SetActive(false);
             navBar.SetActive(true);
+        }
+        private void HideUI()
+        {
+            parentTransform.gameObject.SetActive(false);
         }
     }
 }

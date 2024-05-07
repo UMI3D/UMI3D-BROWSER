@@ -15,6 +15,7 @@ limitations under the License.
 */
 using inetum.unityUtils;
 using umi3d.cdk;
+using umi3dBrowsers.linker;
 using umi3dVRBrowsersBase.ui.playerMenu;
 using UnityEngine;
 using UnityEngine.Events;
@@ -22,8 +23,10 @@ using UnityEngine.UI;
 
 namespace umi3dBrowsers.services.environment
 {
-    public class LoadingEnvironmentHandler : PersistentSingleBehaviour<LoadingEnvironmentHandler>
+    public class LoadingEnvironmentHandler : MonoBehaviour
     {
+        [Header("Linkers")]
+        [SerializeField] private ConnectionToImmersiveLinker linker;
         private Camera cam;
 
         [SerializeField] private LayerMask loadingCullingMask;      
@@ -40,6 +43,13 @@ namespace umi3dBrowsers.services.environment
         /// Event raised when loading screen is hidden.
         /// </summary>
         public static UnityEvent OnLoadingScreenHidden = new UnityEvent();
+
+        private void Awake()
+        {
+            DontDestroyOnLoad(this);
+            linker.OnDisplayEnvironmentHandler += () => Display();
+            linker.OnStopDisplayEnvironmentHandler += () => StopDisplay();
+        }
 
         private void Start()
         {

@@ -22,6 +22,7 @@ using umi3d.cdk;
 using umi3dBrowsers.displayer;
 using UnityEngine;
 using UnityEngine.Localization.Components;
+using UnityEngine.UI;
 
 namespace umi3dBrowsers.services.librairies
 {
@@ -65,6 +66,7 @@ namespace umi3dBrowsers.services.librairies
         [Header("Libs")]
         [SerializeField] private GameObject content;
         [SerializeField] private GameObject worldStoragePrefab;
+        [SerializeField] private Toggle selectAll;
 
         [Header("Total Info")]
         [SerializeField] private LocalizeStringEvent placeTakenText;
@@ -72,6 +74,8 @@ namespace umi3dBrowsers.services.librairies
 
         [Header("Services")]
         [SerializeField] private PopupManager popupManager;
+
+        private List<WorldStorageDisplayer> worldStorageDisplayers;
 
         /// <summary>
         /// Updates the content of the library list.
@@ -83,10 +87,22 @@ namespace umi3dBrowsers.services.librairies
             foreach (Transform child in content.transform)
                 Destroy(child);
 
+            worldStorageDisplayers = new List<WorldStorageDisplayer>();
             foreach (var world in worldsLibs)
-                Instantiate(worldStoragePrefab, content.transform).GetComponent<WorldStorageDisplayer>().SetWorld(world, totalSize);
+            {
+                var worldStorageDisplayer = Instantiate(worldStoragePrefab, content.transform).GetComponent<WorldStorageDisplayer>();
+                worldStorageDisplayer.SetWorld(world, totalSize);
+                worldStorageDisplayers.Add(worldStorageDisplayer);
+            }
+
+            selectAll.onValueChanged.AddListener((isOn) => {
+                foreach (var worldStorageDisplayer in worldStorageDisplayers)
+                    worldStorageDisplayer.Select(isOn);
+            });
 
             SetupTotalInfo(worldsLibs, totalSize);
+
+            selectAll.isOn = false;
         }
 
         private void SetupTotalInfo(List<WorldLibs> worldsLibs, long totalSize)

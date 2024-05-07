@@ -19,11 +19,14 @@ using umi3dBrowsers.services.librairies;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Localization.Components;
+using UnityEngine.UI;
 
 namespace umi3dBrowsers.displayer
 {
     public class WorldStorageDisplayer : MonoBehaviour
     {
+        [SerializeField] private Toggle toggle;
+        [Space]
         [SerializeField] private TMP_Text worldNameText;
         [Space]
         [SerializeField] private LocalizeStringEvent placeTakenText;
@@ -32,6 +35,13 @@ namespace umi3dBrowsers.displayer
         [Space]
         [SerializeField] private ProgressBar uniqueProgressBar;
         [SerializeField] private ProgressBar commonProgressBar;
+
+        public bool isSelected => toggle.isOn;
+
+        public void Select(bool isSelected)
+        {
+            toggle.isOn = isSelected;
+        }
 
         public void SetWorld(LibraryManager.WorldLibs worldLibs, long totalSize)
         {

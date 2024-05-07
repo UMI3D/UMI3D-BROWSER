@@ -28,6 +28,7 @@ using umi3dBrowsers.linker;
 using umi3dBrowsers.services.connection;
 using umi3dBrowsers.services.title;
 using UnityEngine;
+using UnityEngine.Experimental.GlobalIllumination;
 using UnityEngine.Localization.Settings;
 using UnityEngine.UI;
 using utils.tweens;
@@ -38,6 +39,9 @@ namespace umi3dBrowsers
     {
         [Header("Parent")]
         [SerializeField] private Transform parentTransform;
+
+        [Header("Light")]
+        [SerializeField] private Light directionalLight;
 
         [Header("Navigation-navbar")]
         [SerializeField] private Button parameterButton;
@@ -327,11 +331,13 @@ namespace umi3dBrowsers
         private void HideUI()
         {
             parentTransform.gameObject.SetActive(false);
+            directionalLight.gameObject.SetActive(false);
         }
 
         private void ShowUI()
         {
             parentTransform.gameObject.SetActive(true);
+            directionalLight.gameObject.SetActive(true);
         }
     }
 }

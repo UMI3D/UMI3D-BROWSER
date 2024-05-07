@@ -14,12 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using Pico.Platform;
+using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using umi3d.cdk;
 using umi3dBrowsers.displayer;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.Localization.Components;
 
 namespace umi3dBrowsers.services.librairies
 {
@@ -28,131 +30,118 @@ namespace umi3dBrowsers.services.librairies
     /// </summary>
     public class LibraryManager : MonoBehaviour
     {
+        public struct Library
+        {
+            public string Name;
+            public string Path;
+            public long Size;
+
+            public Library(string name, string path, long size)
+            {
+                Name = name;
+                Path = path;
+                Size = size;
+            }
+        }
+
+        public class WorldLibs
+        {
+            public string Name;
+            public List<Library> Libraries;
+            public long TotalSize;
+            public long UniqueSize;
+
+            public WorldLibs(string name)
+            {
+                Name = name;
+                Libraries = new ();
+                TotalSize = 0;
+                UniqueSize = 0;
+            }
+
+            public long CommonSize => TotalSize - UniqueSize;
+        }
+
+        [Header("Libs")]
+        [SerializeField] private GameObject content;
+        [SerializeField] private GameObject worldStoragePrefab;
+
+        [Header("Total Info")]
+        [SerializeField] private LocalizeStringEvent placeTakenText;
+        [SerializeField] private LocalizeStringEvent numberWorldText;
+
+        [Header("Services")]
         [SerializeField] private PopupManager popupManager;
-
-        /// <summary>
-        /// Prefab used to represent a library in the menu.
-        /// 
-        /// Must have a LibraryManagerEntry script.
-        /// </summary>
-        public GameObject libraryItemPrefab;
-
-        /// <summary>
-        /// Library list.
-        /// </summary>
-        public VerticalLayoutGroup container;
-
-        [SerializeField]
-        [Tooltip("Maximum number of libraries visible at the same time")]
-        private int nbLibraryDisplayedAtSameTime = 5;
-
-        /// <summary>
-        /// List of all current <see cref="LibraryManagerEntry"/>
-        /// </summary>
-        private List<LibraryManagerEntry> currentEntries = new List<LibraryManagerEntry>();
-
-        /// <summary>
-        /// Index of the first <see cref="LibraryManagerEntry"/>
-        /// </summary>
-        private int indexOfCurrentTopEntryDisplayed = 0;
 
         /// <summary>
         /// Updates the content of the library list.
         /// </summary>
         public void UpdateContent()
         {
-            foreach (LibraryManagerEntry entry in currentEntries)
-                Destroy(entry.gameObject);
-            currentEntries.Clear();
+            var (worldsLibs, totalSize) = GetWorldsLibs();
 
-            var libs = new Dictionary<string, List<UMI3DResourcesManager.DataFile>>();
+            foreach (Transform child in content.transform)
+                Destroy(child);
 
+            foreach (var world in worldsLibs)
+                Instantiate(worldStoragePrefab, content.transform).GetComponent<WorldStorageDisplayer>().SetWorld(world, totalSize);
+
+            SetupTotalInfo(worldsLibs, totalSize);
+        }
+
+        private void SetupTotalInfo(List<WorldLibs> worldsLibs, long totalSize)
+        {
+            var totalInfoArguments = new Dictionary<string, object>() {
+                { "worldCount", worldsLibs.Count } ,
+                { "placeTaken", totalSize }
+            };
+            placeTakenText.StringReference.Arguments = new object[] { totalInfoArguments };
+            numberWorldText.StringReference.Arguments = new object[] { totalInfoArguments };
+        }
+
+        private (List<WorldLibs>, long) GetWorldsLibs()
+        {
+            var worldsLibs = new List<WorldLibs>();
+            long totalSize = 0;
             foreach (UMI3DResourcesManager.DataFile lib in UMI3DResourcesManager.Libraries)
             {
-                if (lib.applications != null)
-                    foreach (string app in lib.applications)
-                    {
-                        if (!libs.ContainsKey(app)) libs[app] = new List<UMI3DResourcesManager.DataFile>();
-                        libs[app].Add(lib);
-                    }
-            }
+                if (lib.applications == null) // TODO : Unknown Worlds
+                    continue;
 
-            foreach (KeyValuePair<string, List<UMI3DResourcesManager.DataFile>> app in libs)
-            {
-                foreach (UMI3DResourcesManager.DataFile lib in app.Value)
+                var libSize = DirectorySize(new DirectoryInfo(lib.path));
+                totalSize += libSize;
+                foreach (string app in lib.applications)
                 {
-                    // 1. Diplay lib name
-                    LibraryManagerEntry entry = Instantiate(libraryItemPrefab, container.transform).GetComponent<LibraryManagerEntry>();
-                    if (entry == null)
-                        throw new System.ArgumentException("libraryItemPrefab must have a LibraryManagerEntry script");
+                    if (!worldsLibs.Any(worldLibs => worldLibs.Name == app))
+                        worldsLibs.Add(new WorldLibs(app));
 
-                    entry.gameObject.name = "LibraryItem_" + lib.key;
-                    entry.LibLabel.text = lib.key;
-
-                    //2. Display environments which use this lib
-                    //Could be done with lib.applications if needed;
-
-                    //3. Display lib size
-                    //Could be done with lib.path if needed
-
-                    //4.Bind the button to unistall this lib
-                    entry.DeleteButton.onClick.AddListener(() =>
-                    {
-                        popupManager.SetArguments(PopupManager.PopupType.Warning, new() { { "libName", lib.key } });
-                        popupManager.ShowPopup(PopupManager.PopupType.Warning, "empty", "popup_deleteLib_description",
-                            ("popup_cancel", () => popupManager.ClosePopUp()),
-                            ("popup_yes", () => {
-                                lib.applications.Remove(app.Key);
-                                UMI3DResourcesManager.RemoveLibrary(lib.library);
-                                UpdateContent();
-                                popupManager.ClosePopUp();
-                            }
-                        )
-                        );
-                    });
-
-                    currentEntries.Add(entry);
+                    var worldLib = worldsLibs.Find(worldLibs => worldLibs.Name == app);
+                    worldLib.Libraries.Add(new Library(lib.key, lib.path, libSize));
+                    worldLib.TotalSize += libSize;
+                    if (lib.applications.Count == 1)
+                        worldLib.UniqueSize += libSize;
                 }
             }
 
-            indexOfCurrentTopEntryDisplayed = 0;
-            UpdateDisplay();
+            return (worldsLibs, totalSize);
         }
 
-        /// <summary>
-        /// Navigates up in the library list.
-        /// </summary>
-        public void NavigateUp()
+        private static long DirectorySize(DirectoryInfo directoryInfo)
         {
-            if (indexOfCurrentTopEntryDisplayed > 0)
+            long size = 0;
+            // Add file sizes.
+            FileInfo[] fis = directoryInfo.GetFiles();
+            foreach (FileInfo fi in fis)
             {
-                indexOfCurrentTopEntryDisplayed--;
-                UpdateDisplay();
+                size += fi.Length;
             }
-        }
-
-        /// <summary>
-        /// Navigates down in the library list.
-        /// </summary>
-        public void NavigateDown()
-        {
-            if ((indexOfCurrentTopEntryDisplayed + nbLibraryDisplayedAtSameTime < currentEntries.Count - 1))
+            // Add subdirectory sizes.
+            DirectoryInfo[] dis = directoryInfo.GetDirectories();
+            foreach (DirectoryInfo di in dis)
             {
-                indexOfCurrentTopEntryDisplayed++;
-                UpdateDisplay();
+                size += DirectorySize(di);
             }
-        }
-
-        /// <summary>
-        /// Displays the libraries which have an index between [indexOfCurrentTopEntryDisplayed; indexOfCurrentTopEntryDisplayed + nbLibraryDisplayedAtSameTime].
-        /// </summary>
-        private void UpdateDisplay()
-        {
-            for (int i = 0; i < currentEntries.Count; i++)
-            {
-                bool display = (i >= indexOfCurrentTopEntryDisplayed) && (i <= indexOfCurrentTopEntryDisplayed + nbLibraryDisplayedAtSameTime);
-                currentEntries[i].gameObject.SetActive(display);
-            }
+            return size;
         }
     }
 }

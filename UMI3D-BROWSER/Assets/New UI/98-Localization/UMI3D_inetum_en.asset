@@ -335,10 +335,41 @@ MonoBehaviour:
     m_Localized: Password
     m_Metadata:
       m_Items: []
+  - m_Id: 17737324932788224
+    m_Localized: for<br>{worldCount:p:{} world|{} worlds}
+    m_Metadata:
+      m_Items:
+      - rid: 2971575680132972557
+  - m_Id: 17739330552492032
+    m_Localized: '{placeTaken:byte()}'
+    m_Metadata:
+      m_Items:
+      - rid: 2971575680132972557
+  - m_Id: 18044640311439360
+    m_Localized: Select All
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18047423211171840
+    m_Localized: Delete Selected
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18053728172830720
+    m_Localized: '{worldSize:byte()}/{totalSize:byte()} used'
+    m_Metadata:
+      m_Items:
+      - rid: 2971575680132972557
+  - m_Id: 18056038584217600
+    m_Localized: in common
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18055987606646784
+    m_Localized: used by world
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:
     - rid: 2971575680132972557
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_Entries: 00001b2c0600000000d0c36787f92d0000d0c34ee4f92d0000101c7493192d000070e2fae3fc35000070220e2afd36000070623404083700
+        m_Entries: 00001b2c0600000000d0c36787f92d0000d0c34ee4f92d0000101c7493192d000070e2fae3fc35000070220e2afd360000706234040837000070e2c700043f00007022c0d3053f0000f09c26c5234000

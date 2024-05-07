@@ -102,6 +102,7 @@ MonoBehaviour:
         - rid: 1119494573252149269
         - rid: 1119494573252149270
         - rid: 1119494573252149271
+        - rid: 3861086957230358539
     - rid: 1119494573252149255
       type: {class: SmartSettings, ns: UnityEngine.Localization.SmartFormat.Core.Settings,
         asm: Unity.Localization}
@@ -231,3 +232,8 @@ MonoBehaviour:
       data:
         m_LocaleId:
           m_Code: fr
+    - rid: 3861086957230358539
+      type: {class: ByteFormatter, ns: , asm: Assembly-CSharp}
+      data:
+        m_Names:
+        - byte

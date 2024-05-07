@@ -102,7 +102,7 @@ namespace umi3d.browserEditor.BuildTool
 
             Assert.IsNotNull(
                 buildToolVersion_SO,
-                "[UMI3D] BuildTool: buildToolVersion_SO is null."
+                "[UMI3D] BuildTool: versionModel is null."
             );
             Assert.IsNotNull(
                 buildToolTarget_SO,
@@ -119,7 +119,7 @@ namespace umi3d.browserEditor.BuildTool
             );
             Assert.IsNotNull(
                 buildToolSettings_SO,
-                "[UMI3D] BuildTool: buildToolSettings_SO is null."
+                "[UMI3D] BuildTool: settingModel is null."
             );
             _uMI3DConfigurator = new UMI3DConfigurator(loadingParameters);
 

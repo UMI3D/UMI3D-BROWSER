@@ -20,11 +20,52 @@ using UnityEngine;
 namespace umi3d.browserEditor.BuildTool
 {
     [CreateAssetMenu(fileName = "UMI3D Build Tool Version", menuName = "UMI3D/Build Tools/Build Tool Version")]
-    public class UMI3DBuildToolVersion_SO : SerializableScriptableObject
+    public class UMI3DBuildToolVersion_SO : PersistentScriptableModel
     {
+        public Action<VersionDTO> updateVersion;
+
         public VersionDTO newVersion;
         public VersionDTO oldVersion;
         public VersionDTO sdkVersion;
+
+        public void ApplyMajorVersion(int value)
+        {
+            newVersion.majorVersion = value;
+            OnNewVersionUpdated();
+        }
+
+        public void ApplyMinorVersion(int value)
+        {
+            newVersion.minorVersion = value;
+            OnNewVersionUpdated();
+        }
+
+        public void ApplyBuildCountVersion(int value)
+        {
+            newVersion.buildCountVersion = value;
+            OnNewVersionUpdated();
+        }
+
+        public void ApplyAdditionalVersion(string value)
+        {
+            newVersion.additionalVersion = value;
+            OnNewVersionUpdated();
+        }
+
+        void OnNewVersionUpdated()
+        {
+            newVersion.date = DateTime.Now.ToString("yyMMdd");
+
+            sdkVersion.additionalVersion = UMI3DVersion.status;
+            sdkVersion.majorVersion = int.Parse(UMI3DVersion.major);
+            sdkVersion.minorVersion = int.Parse(UMI3DVersion.minor);
+            sdkVersion.buildCountVersion = 0;
+            sdkVersion.date = UMI3DVersion.date;
+
+            updateVersion?.Invoke(newVersion);
+
+            Save(editorOnly: true);
+        }
 
         public void UpdateOldVersionWithNewVersion()
         {

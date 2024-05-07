@@ -24,7 +24,7 @@ namespace umi3d.browserEditor.BuildTool
     /// Create a [Build Tool Keystore] scriptable object in an EXCLUDED folder that is excluded from git.
     /// </summary>
     [CreateAssetMenu(fileName = "UMI3D Build Tool Keystore", menuName = "UMI3D/Build Tools/Build Tool Keystore")]
-    public class UMI3DBuildToolKeystore_SO : SerializableScriptableObject
+    public class UMI3DBuildToolKeystore_SO : PersistentScriptableModel
     {
         public string password;
         public string path;

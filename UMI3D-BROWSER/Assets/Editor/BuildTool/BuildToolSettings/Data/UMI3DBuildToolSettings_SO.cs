@@ -21,7 +21,7 @@ using UnityEngine;
 namespace umi3d.browserEditor.BuildTool
 {
     [CreateAssetMenu(fileName = "UMI3D Build Tool Settings", menuName = "UMI3D/Build Tools/Build Tool Settings")]
-    public class UMI3DBuildToolSettings_SO : SerializableScriptableObject
+    public class UMI3DBuildToolSettings_SO : PersistentScriptableModel
     {
         public bool useOneBuildFolder = true;
         public Color sdkColor = Color.yellow;

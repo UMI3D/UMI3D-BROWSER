@@ -15,6 +15,8 @@ limitations under the License.
 */
 
 using inetum.unityUtils.saveSystem;
+using System;
+using UnityEditor;
 using UnityEngine;
 
 namespace umi3d.browserEditor.BuildTool
@@ -24,9 +26,43 @@ namespace umi3d.browserEditor.BuildTool
     /// Create a [Build Tool Keystore] scriptable object in an EXCLUDED folder that is excluded from git.
     /// </summary>
     [CreateAssetMenu(fileName = "UMI3D Build Tool Keystore", menuName = "UMI3D/Build Tools/Build Tool Keystore")]
-    public class UMI3DBuildToolKeystore_SO : SerializableScriptableObject
+    public class UMI3DBuildToolKeystore_SO : PersistentScriptableModel
     {
         public string password;
         public string path;
+
+        #region Path
+
+        public void UpdateKeystorePath(string path)
+        {
+            this.path = path;
+
+            Save(editorOnly: true);
+        }
+
+        public void BrowseKeystorePath(Action<string> updateView)
+        {
+            string directory = string.IsNullOrEmpty(this.path)
+                ? Application.dataPath
+                : this.path;
+
+            string path = EditorUtility.OpenFilePanel(
+                    title: "Keystore Path",
+                    directory,
+                    extension: "keystore"
+                );
+
+            UpdateKeystorePath(path);
+            updateView?.Invoke(path);
+        }
+
+        #endregion
+
+        public void UpdateKeystorePassword(string password)
+        {
+            this.password = password;
+
+            Save(editorOnly: true);
+        }
     }
 }

@@ -57,7 +57,7 @@ namespace umi3dBrowsers.displayer
         /// <param name="type"></param>
         /// <param name="title">Key for localization</param>
         /// <param name="description">Key for localization</param>
-        /// <param name="buttons">Key for localization and action onClick</param>
+        /// <param name="buttons">Key for localization and action onClick (spawns on button per entry)</param>
         public void ShowPopup(PopupType type, string title, string description, params (string, Action)[] buttons)
         {
             OnPopUpOpen?.Invoke();

@@ -18,14 +18,39 @@ using inetum.unityUtils.saveSystem;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace umi3d.browserEditor.BuildTool
 {
     [CreateAssetMenu(fileName = "UMI3D Build Tool Scenes", menuName = "UMI3D/Build Tools/Build Tool Scenes")]
-    public class UMI3DBuildToolScene_SO : SerializableScriptableObject
+    public class UMI3DBuildToolScene_SO : PersistentScriptableModel
     {
+        public Action SelectedScenesChanged;
+
         public List<SceneDTO> scenes = new();
+        public VisualTreeAsset scene_VTA;
+
+        public SceneDTO this[int index]
+        {
+            get
+            {
+                return scenes[index];
+            }
+            set
+            {
+                scenes[index] = value;
+            }
+        }
+
+        public int Count
+        {
+            get
+            {
+                return scenes.Count;
+            }
+        }
 
         public SceneDTO[] GetScenesForTarget(E_Target target)
         {
@@ -33,6 +58,65 @@ namespace umi3d.browserEditor.BuildTool
             {
                 return scene.enabled && scene.targets.HasFlag(target);
             }).ToArray();
+        }
+
+        #region path
+
+        public void UpdatedScenePath(int index, string path)
+        {
+            var indexOfAsset = path.IndexOf("Asset");
+            if (indexOfAsset > 0)
+            {
+                path = path.Substring(indexOfAsset);
+            }
+            UpdateScene(index, scene =>
+            {
+                scene.path = path;
+                return scene;
+            });
+        }
+
+        public void BrowseScenePath(int index, Action<string> updateView)
+        {
+            string directory = string.IsNullOrEmpty(scenes[index].path)
+                ? Application.dataPath
+                : scenes[index].path;
+
+            string path = EditorUtility.OpenFilePanel(
+                title: "Scene Path",
+                directory,
+                extension: "unity"
+            );
+
+            UpdatedScenePath(index, path);
+            updateView?.Invoke(path);
+        }
+
+        #endregion
+
+        public void UpdatedTarget(int index, E_Target targets)
+        {
+            UpdateScene(index, scene =>
+            {
+                scene.targets = targets;
+                return scene;
+            });
+        }
+
+        public void Select(int index, bool isSelected)
+        {
+            UpdateScene(index, scene =>
+            {
+                scene.enabled = isSelected;
+                return scene;
+            });
+        }
+
+        public void UpdateScene(int index, Func<SceneDTO, SceneDTO> change)
+        {
+            scenes[index] = change(scenes[index]);
+            SelectedScenesChanged?.Invoke();
+            Save(editorOnly: true);
         }
     }
 }

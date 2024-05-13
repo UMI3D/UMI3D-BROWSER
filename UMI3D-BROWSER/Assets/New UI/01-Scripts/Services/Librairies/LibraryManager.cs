@@ -21,6 +21,7 @@ using System.IO;
 using System.Linq;
 using umi3d.cdk;
 using umi3dBrowsers.displayer;
+using UnityEditor.Localization.Plugins.XLIFF.V12;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Localization.Components;
@@ -111,6 +112,7 @@ namespace umi3dBrowsers.services.librairies
                 Destroy(child.gameObject);
 
             worldStorageDisplayers = new List<WorldStorageDisplayer>();
+
             foreach (var world in worldsLibs)
             {
                 var worldStorageDisplayer = Instantiate(worldStoragePrefab, content.transform).GetComponent<WorldStorageDisplayer>();
@@ -149,8 +151,10 @@ namespace umi3dBrowsers.services.librairies
                     })
                 );
             });
-
             SetupTotalInfo(worldsLibs, totalSize);
+
+            scrollUpButton.interactable = worldStorageDisplayers.Count > 3;
+            scrollDownButton.interactable = worldStorageDisplayers.Count > 3;
 
             selectAll.isOn = false;
         }

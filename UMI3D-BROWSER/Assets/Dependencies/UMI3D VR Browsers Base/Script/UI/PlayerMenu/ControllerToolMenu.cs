@@ -32,48 +32,10 @@ namespace umi3dVRBrowsersBase.ui.playerMenu
         [Tooltip("Main gameobject of the panel")]
         private GameObject root;
 
-        [Header("Header")]
-        [SerializeField]
-        [Tooltip("Button to switch to editBindingMenu")]
-        private Button editBindingButton;
-
-        [SerializeField]
-        [Tooltip("Text associated to editBindingButton")]
-        private Image editBindingButtonBck;
-
-        [SerializeField]
-        [Tooltip("Background for editBindingButton when it is not selected")]
-        private Sprite editBindingButtonDefaultBck;
-
-        [SerializeField]
-        [Tooltip("Background for editBindingButton when it is selected")]
-        private Sprite editBindingButtonActiveBck;
-
-        [SerializeField]
-        [Tooltip("Button to switch to edit parameter menu")]
-        private Button editParametersButton;
-
-        [SerializeField]
-        [Tooltip("Image associated to editParametersButton")]
-        private Image editParametersButtonBck;
-
-        [SerializeField]
-        [Tooltip("Background used for editParametersButton when it is not selected")]
-        private Sprite editParametersButtonDefaultBck;
-
-        [SerializeField]
-        [Tooltip("Background used for editParametersButton when it is selected")]
-        private Sprite editParametersButtonActiveBck;
-
         [Header("Menu")]
-
         [Tooltip("Class which handle parameter edition")]
         [SerializeField]
         public ToolParametersMenu toolParametersMenu;
-
-        [Tooltip("Class which handle action bindings")]
-        [SerializeField]
-        private ActionBindingMenu actionBindingMenu;
 
         /// <summary>
         /// Is the menu currently displayed ?
@@ -99,19 +61,6 @@ namespace umi3dVRBrowsersBase.ui.playerMenu
         private void Awake()
         {
             Hide();
-        }
-
-        private void Start()
-        {
-            editBindingButton.onClick.AddListener(() =>
-            {
-                DisplayBindingMenu(CurrentController);
-            });
-
-            editParametersButton.onClick.AddListener(() =>
-            {
-                DisplayParameterMenu(CurrentController);
-            });
         }
 
         /// <summary>
@@ -148,48 +97,6 @@ namespace umi3dVRBrowsersBase.ui.playerMenu
             await UMI3DAsyncManager.Yield();
             root.SetActive(IsOpen);
         }
-
-        #region Binding Menu
-
-        /// <summary>
-        /// Displays the binding menu with all events bound to <paramref name="controller"/>.
-        /// </summary>
-        /// <param name="controller"></param>
-        public void DisplayBindingMenu(ControllerType controller)
-        {
-            IsOpen = true;
-            root.SetActive(true);
-
-            actionBindingMenu.gameObject.SetActive(true);
-            editBindingButtonBck.sprite = editBindingButtonActiveBck;
-
-            toolParametersMenu.gameObject.SetActive(false);
-            editParametersButtonBck.sprite = editParametersButtonDefaultBck;
-
-            CurrentController = controller;
-            actionBindingMenu.DisplayCurrentBinding(controller);
-        }
-
-
-        /// <summary>
-        /// Adds a new <see cref="ActionBindingEntry"/> to represent <paramref name="input"/>.
-        /// </summary>
-        /// <param name="input"></param>
-        public void AddBinding(AbstractVRInput input)
-        {
-            actionBindingMenu.AddToList(input);
-        }
-
-        /// <summary>
-        /// Clears all bindings added previously.
-        /// </summary>
-        /// <param name="type"></param>
-        public void ClearBindingList(ControllerType type)
-        {
-            actionBindingMenu.ClearList(type);
-        }
-
-        #endregion
 
         #region Parameter Menu
 
@@ -229,11 +136,7 @@ namespace umi3dVRBrowsersBase.ui.playerMenu
 
             root.SetActive(true);
 
-            actionBindingMenu.gameObject.SetActive(false);
-            editBindingButtonBck.sprite = editBindingButtonDefaultBck;
-
             toolParametersMenu.gameObject.SetActive(true);
-            editParametersButtonBck.sprite = editParametersButtonActiveBck;
 
             CurrentController = controller;
             toolParametersMenu.Display(controller, isAsync: menuAsync);

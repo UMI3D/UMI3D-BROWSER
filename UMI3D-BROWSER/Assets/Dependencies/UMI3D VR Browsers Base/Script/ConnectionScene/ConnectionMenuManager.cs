@@ -68,6 +68,8 @@ namespace umi3dVRBrowsersBase.connection
         public ConnectionErrorPanel errorPanel;
         [Tooltip("Panel to ask users their heights")]
         public AvatarHeightPanel avatarHeightPanel;
+        [Tooltip("Panel to ask users their heights")]
+        public AvatarHeightPanel avatarHeightPanelLeftSide;
         public GameObject Library;
 
         [Header("Navigation")]
@@ -201,7 +203,25 @@ namespace umi3dVRBrowsersBase.connection
         public void DisplayHome()
         {
             HidePreviousNavigationButton();
-            homePanel.Display();
+            if (AvatarHeightPanel.isSetup)
+            {
+                homePanel.Display();
+                avatarHeightPanelLeftSide.Display();
+                avatarHeightPanel.Hide();
+            }
+            else
+            {
+                mainCanvas.SetActive(false);
+                avatarHeightPanelLeftSide.Hide();
+                avatarHeightPanel.Display(() =>
+                {
+                    mainCanvas.SetActive(true);
+                    homePanel.Display();
+                    Library.SetActive(true);
+                    avatarHeightPanel.Hide();
+                    avatarHeightPanelLeftSide.Display();
+                });
+            }
         }
 
         #endregion

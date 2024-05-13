@@ -77,10 +77,28 @@ namespace umi3dBrowsers.services.librairies
         [SerializeField] private LocalizeStringEvent placeTakenText;
         [SerializeField] private LocalizeStringEvent numberWorldText;
 
+        [Header("Scrolling")]
+        [SerializeField] private Scrollbar scrollbar;
+        [SerializeField] private Button scrollUpButton;
+        [SerializeField] private Button scrollDownButton;
+        [SerializeField] private float scrollButtonSpeed = 1.0f;
+
         [Header("Services")]
         [SerializeField] private PopupManager popupManager;
 
         private List<WorldStorageDisplayer> worldStorageDisplayers;
+
+        private void Start()
+        {
+            scrollUpButton.onClick.AddListener(() => {
+                if (worldStorageDisplayers.Count != 0)
+                    scrollbar.value += scrollButtonSpeed / worldStorageDisplayers.Count;
+            });
+            scrollDownButton.onClick.AddListener(() => {
+                if (worldStorageDisplayers.Count != 0)
+                    scrollbar.value -= scrollButtonSpeed / worldStorageDisplayers.Count;
+            });
+        }
 
         /// <summary>
         /// Updates the content of the library list.

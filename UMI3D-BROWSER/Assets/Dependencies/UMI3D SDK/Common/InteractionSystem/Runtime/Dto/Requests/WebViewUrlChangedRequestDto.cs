@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
 namespace umi3d.common.interaction
 {
     /// <summary>
@@ -21,7 +22,7 @@ namespace umi3d.common.interaction
     public class WebViewUrlChangedRequestDto : AbstractBrowserRequestDto
     {
         /// <summary>
-        /// Id of the webview which was modified.
+        /// Id of the webView which was modified.
         /// </summary>
         public ulong webViewId { get; set; }
 
@@ -29,5 +30,10 @@ namespace umi3d.common.interaction
         /// Url set by the user
         /// </summary>
         public string url { get; set; }
+
+        /// <summary>
+        /// Scroll offset.
+        /// </summary>
+        public Vector2Dto scrollOffset { get; set; }
     }
 }

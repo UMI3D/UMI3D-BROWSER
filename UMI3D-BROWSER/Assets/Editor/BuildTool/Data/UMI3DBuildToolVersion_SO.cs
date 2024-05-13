@@ -20,16 +20,70 @@ using UnityEngine;
 namespace umi3d.browserEditor.BuildTool
 {
     [CreateAssetMenu(fileName = "UMI3D Build Tool Version", menuName = "UMI3D/Build Tools/Build Tool Version")]
-    public class UMI3DBuildToolVersion_SO : SerializableScriptableObject
+    public class UMI3DBuildToolVersion_SO : PersistentScriptableModel
     {
+        public Action<VersionDTO> updateNewVersionHandler;
+        public Action<VersionDTO> updateOldVersionHandler;
+        public Action<VersionDTO> updateSDKVersionHandler;
+
         public VersionDTO newVersion;
         public VersionDTO oldVersion;
         public VersionDTO sdkVersion;
 
-        public void UpdateOldVersionWithNewVersion()
+        public void ApplyMajorVersion(int value)
+        {
+            newVersion.majorVersion = value;
+            UpdateNewVersion();
+        }
+
+        public void ApplyMinorVersion(int value)
+        {
+            newVersion.minorVersion = value;
+            UpdateNewVersion();
+        }
+
+        public void ApplyBuildCountVersion(int value)
+        {
+            newVersion.buildCountVersion = value;
+            UpdateNewVersion();
+        }
+
+        public void ApplyAdditionalVersion(string value)
+        {
+            newVersion.additionalVersion = value;
+            UpdateNewVersion();
+        }
+
+        public void UpdateNewVersion()
+        {
+            newVersion.date = DateTime.Now.ToString("yyMMdd");
+
+            updateNewVersionHandler?.Invoke(newVersion);
+
+            Save(editorOnly: true);
+        }
+
+        public void UpdateOldVersion()
         {
             oldVersion = newVersion;
             oldVersion.date = DateTime.Now.ToString("yyMMdd");
+
+            updateOldVersionHandler?.Invoke(oldVersion);
+
+            Save(editorOnly: true);
+        }
+
+        public void UpdateSDKVersion()
+        {
+            sdkVersion.additionalVersion = UMI3DVersion.status;
+            sdkVersion.majorVersion = int.Parse(UMI3DVersion.major);
+            sdkVersion.minorVersion = int.Parse(UMI3DVersion.minor);
+            sdkVersion.buildCountVersion = 0;
+            sdkVersion.date = UMI3DVersion.date;
+
+            updateSDKVersionHandler?.Invoke(sdkVersion);
+
+            Save(editorOnly: true);
         }
     }
 }

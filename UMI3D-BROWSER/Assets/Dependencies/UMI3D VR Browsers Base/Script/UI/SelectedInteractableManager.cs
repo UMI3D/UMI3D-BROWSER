@@ -15,15 +15,20 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
+using inetum.unityUtils.async;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using TMPro;
 using umi3d.browserRuntime.player;
 using umi3d.cdk.interaction;
+using umi3d.common.interaction;
 using umi3dVRBrowsersBase.interactions;
 using umi3dVRBrowsersBase.ui.playerMenu;
 using UnityEngine;
+using UnityEngine.UI;
 using WebSocketSharp;
 
 namespace umi3dVRBrowsersBase.ui
@@ -34,6 +39,8 @@ namespace umi3dVRBrowsersBase.ui
     public class SelectedInteractableManager : AbstractClientInteractableElement, ITriggerableElement
     {
         public TMP_Text label;
+        public Image background;
+        public new BoxCollider collider;
 
         public float delayBeforeHiding = 1f;
         [Tooltip("Used for gear scale.")]
@@ -48,32 +55,49 @@ namespace umi3dVRBrowsersBase.ui
         public event Action triggerHandler;
 
         [HideInInspector]
-        public Interactable currentAssociatedInteractable;
+        public Interactable interactable;
         [HideInInspector]
-        public Transform playerTransform;
+        public List<AbstractInteractionDto> interactions;
+        [HideInInspector]
+        public List<EventDto> events;
+        [HideInInspector]
+        public List<AbstractParameterDto> parameters;
+        [HideInInspector]
+        public Task<Transform> playerTransform;
 
+        Coroutine hideCoroutine;
 
         private void Start()
         {
-            Global.Get(out UMI3DVRPlayer player);
-            playerTransform = player.transform;
-
-            PlayerMenuManager.Instance.onMenuClose.AddListener(Hide);
+            var player = Global.GetAsync<UMI3DVRPlayer>();
+            playerTransform = player.ContinueWith(task =>
+            {
+                return task.Result.transform;
+            });
 
             Hide();
         }
 
         private void Update()
         {
-            if (currentAssociatedInteractable == null && gameObject.activeInHierarchy)
+            if (interactable == null && gameObject.activeInHierarchy)
             {
                 Hide();
             }
 
             if (isActiveAndEnabled)
             {
-                var distance = Vector3.Distance(transform.position, playerTransform.position);
-                var scale = Mathf.Lerp(minScale, maxScale, Mathf.InverseLerp(minDistance, maxDistance, distance));
+                Vector3 playerPosition = Vector3.zero;
+                playerTransform.IfCompleted(pt =>
+                {
+                    playerPosition = pt.position;
+                });
+                var distance = Vector3.Distance(transform.position, playerPosition);
+                var scale = Mathf.Lerp(
+                    minScale,
+                    maxScale,
+                    Mathf.InverseLerp(minDistance, maxDistance, distance)
+                );
                 transform.localScale = new Vector3(scale, scale, scale);
             }
         }
@@ -81,8 +105,11 @@ namespace umi3dVRBrowsersBase.ui
         public void Trigger(ControllerType controllerType)
         {
             triggerHandler?.Invoke();
-
-            PlayerMenuManager.Instance.OpenParameterMenu(controllerType, menuAsync: true);
+            
+            if (interactions.Count > 0)
+            {
+                PlayerMenuManager.Instance.OpenParameterMenu(controllerType, menuAsync: true);
+            }
         }
 
         /// <summary>
@@ -93,15 +120,73 @@ namespace umi3dVRBrowsersBase.ui
         /// <param name="normal">World normal of the gear</param>
         public void Display(Interactable interactable, Vector3 position, Vector3 normal)
         {
+            Rest();
+            if (hideCoroutine != null)
+            {
+                StopCoroutine(hideCoroutine);
+                hideCoroutine = null;
+            }
+
             gameObject.SetActive(true);
 
-            currentAssociatedInteractable = interactable;
+            this.interactable = interactable;
+            interactions = interactable
+                .interactions
+                .Select(i => i.Result)
+                .ToList();
+            events = interactions
+                .FindAll(i => i is EventDto)
+                .Select(i => i as EventDto)
+                .ToList();
+            parameters = interactions
+                .FindAll(i => i is AbstractParameterDto)
+                .Select(i => i as AbstractParameterDto)
+                .ToList();
+
+            background.enabled = true;
+            if (interactions.Count == 0)
+            {
+                collider.enabled = false;
+                label.text = "";
+                background.enabled = false;
+            }
+            else if (interactions.Count == 1)
+            {
+                if (interactions[0] is EventDto || interactions[0] is ManipulationDto)
+                {
+                    
+                    string _label = interactions[0].name;
+                    if (string.IsNullOrEmpty(_label) || _label == "new tool")
+                    {
+                        _label = interactable.name;
+                    }
+                    if (string.IsNullOrEmpty(_label) || _label == "new tool")
+                    {
+                        _label = "To Trigger";
+                    }
+                    label.text = _label;
+                }
+                else if (interactions[0] is StringParameterDto)
+                {
+                    collider.enabled = true;
+                    label.text = $"Edit text";
+                    PlayerMenuManager.Instance.CtrlToolMenu.RememberParameters();
+                }
+                else
+                {
+                    label.text = interactions[0].name;
+                    UnityEngine.Debug.LogError($"[Selected Interactable] Unhandled case");
+                }
+            }
+            else
+            {
+                label.text = interactable.name;
+                PlayerMenuManager.Instance.CtrlToolMenu.RememberParameters();
+                UnityEngine.Debug.LogError($"[Selected Interactable] Unhandled case");
+            }
 
             transform.position = position;
             transform.rotation = Quaternion.LookRotation(-normal, Vector3.up);
-
-            label.text = interactable.name;
-            UnityEngine.Debug.Log($"[PG] name = {interactable.name}, {interactable.dto.name}, {interactable.description}");
         }
 
         /// <summary>
@@ -157,12 +242,17 @@ namespace umi3dVRBrowsersBase.ui
         /// </summary>
         public void Hide()
         {
+            Rest();
             gameObject.SetActive(false);
-            currentAssociatedInteractable = null;
         }
 
         public void HideWithDelay()
         {
+            if (hideCoroutine != null)
+            {
+                return;
+            }
+
             float time = 0f;
             IEnumerator HideCoroutine()
             {
@@ -181,9 +271,11 @@ namespace umi3dVRBrowsersBase.ui
                 {
                     Hide();
                 }
+
+                hideCoroutine = null;
             }
 
-            CoroutineManager.Instance.AttachCoroutine(HideCoroutine());
+            hideCoroutine = CoroutineManager.Instance.AttachCoroutine(HideCoroutine());
         }
 
         public override void Select(VRController controller)
@@ -194,6 +286,15 @@ namespace umi3dVRBrowsersBase.ui
         public override void Deselect(VRController controller)
         {
             isSelected = false;
+        }
+
+        public void Rest()
+        {
+            interactable = null;
+            interactions = null;
+            events = null;
+            parameters = null;
+            collider.enabled = false;
         }
     }
 }

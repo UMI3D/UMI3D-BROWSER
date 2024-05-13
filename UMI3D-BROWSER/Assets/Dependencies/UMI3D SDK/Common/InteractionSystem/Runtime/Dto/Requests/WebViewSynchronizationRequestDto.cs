@@ -1,4 +1,4 @@
-﻿/*
+/*
 Copyright 2019 - 2024 Inetum
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,10 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-namespace umi3d.browserEditor.BuildTool
+namespace umi3d.common.interaction
 {
-    public interface IBuilToolComponent
+    public class WebViewSynchronizationRequestDto : AbstractBrowserRequestDto
     {
-        void HandleTarget(E_Target selectedTarget);
+        /// <summary>
+        /// Id of the webView which was modified.
+        /// </summary>
+        public ulong webViewId { get; set; }
     }
 }

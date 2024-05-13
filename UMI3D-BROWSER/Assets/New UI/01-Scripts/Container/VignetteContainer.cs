@@ -23,6 +23,7 @@ using System.Security.Policy;
 using umi3dBrowsers.displayer;
 using umi3dBrowsers.services.connection;
 using umi3dBrowsers.utils;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -56,20 +57,28 @@ namespace umi3dBrowsers.container
         [Header("Scrolling")]
         [SerializeField] private Scrollbar scrollbar;
         [SerializeField] private Button buttonLeft;
+        [SerializeField] private Image leftImage;
         [SerializeField] private Button buttonRight;
+        [SerializeField] private Image rightImage;
         [SerializeField] private float scrollButtonSpeed = 1.0f;
 
-        public enum VignetteMode
+        [Header("Navigation")]
+        [Header("Activated Navigation Color")]
+        [SerializeField] private ColorBlock enabledNavigationColor;
+        [Header("Deactivated Navigation Color")]
+        [SerializeField] private ColorBlock disableNavigationColor;
+
+        public enum VignetteScale
         {
             None = 0,
-            Large = 1,
-            Small = 2
+            Large = 2,
+            Small = 8
         }
 
-        [SerializeField] private VignetteMode vignetteMode;
+        [SerializeField] private VignetteScale vignetteMode;
 
         public event Action OnReset;
-        public event Action<VignetteMode> OnChangeMode;
+        public event Action<VignetteScale> OnChangeMode;
 
         private void Awake()
         {
@@ -81,11 +90,11 @@ namespace umi3dBrowsers.container
             scrollbar.value = 0;
 
             buttonLeft.onClick.AddListener(() => {
-                if (vignetteDisplayers.Count != 0)
+                if (vignetteDisplayers.Count > (int)vignetteMode)
                     scrollbar.value -= scrollButtonSpeed / vignetteDisplayers.Count;
             });
             buttonRight.onClick.AddListener(() => {
-                if(vignetteDisplayers.Count !=0)
+                if(vignetteDisplayers.Count > (int)vignetteMode)
                     scrollbar.value += scrollButtonSpeed / vignetteDisplayers.Count;
             });
         }
@@ -93,26 +102,28 @@ namespace umi3dBrowsers.container
         [ContextMenu("Toggle vignette mode")]
         public void ToggleVignette()
         {
-            if (vignetteMode == VignetteMode.None) return;
+            if (vignetteMode == VignetteScale.None) return;
 
-            if (vignetteMode == VignetteMode.Large)
-                OnChangeMode?.Invoke(VignetteMode.Small);
-            else if (vignetteMode == VignetteMode.Small)
-                OnChangeMode?.Invoke(VignetteMode.Large);
+            if (vignetteMode == VignetteScale.Large)
+                OnChangeMode?.Invoke(VignetteScale.Small);
+            else if (vignetteMode == VignetteScale.Small)
+                OnChangeMode?.Invoke(VignetteScale.Large);
         }
 
-        public void ChangeVignetteMode(VignetteMode mode)
+        public void ChangeVignetteMode(VignetteScale mode)
         {
             vignetteMode = mode;
             switch (mode)
             {
-                case VignetteMode.None:
+                case VignetteScale.None:
                     break;
-                case VignetteMode.Large:
+                case VignetteScale.Large:
                     SetGridLayout(largeVignetteSize, largeVignetteRowAmount, largeVignetteSpace);
+                    UpdateNavigation();
                     break;
-                case VignetteMode.Small:
+                case VignetteScale.Small:
                     SetGridLayout(smallVignetteSize, smallVignetteRowAmount, smallVignetteSpace);
+                    UpdateNavigation();
                     break;
             }
         }
@@ -126,12 +137,12 @@ namespace umi3dBrowsers.container
             foreach (var worldData in lstWorldDatasOrdered)
                 lstVignettes.Add(CreateVignette(pVirtualWorlds, worldData));
 
-            return lstVignettes;
+            return lstVignettes;    
         }
 
         private VignetteDisplayer CreateVignette(VirtualWorlds pVirtualWorlds, VirtualWorldData pWorldData)
         {
-            var vignette = Instantiate(vignetteMode == VignetteMode.Small ? smallVignettePrefab : vignettePrefab, gridLayout.transform).GetComponent<VignetteDisplayer>();
+            var vignette = Instantiate(vignetteMode == VignetteScale.Small ? smallVignettePrefab : vignettePrefab, gridLayout.transform).GetComponent<VignetteDisplayer>();
             vignette.SetupDisplay(pWorldData.worldName);
             vignette.SetupFavoriteButton(() => { 
                 pVirtualWorlds.ToggleWorldFavorite(pWorldData); 
@@ -170,16 +181,17 @@ namespace umi3dBrowsers.container
                     DestroyImmediate(gridLayout.transform.GetChild(i).gameObject);
             }
 
-                vignetteDisplayers = PlayerPrefsManager.HasVirtualWorldsStored()
-                    ? CreateVignettes(PlayerPrefsManager.GetVirtualWorlds())
-                    : new();
+            vignetteDisplayers = PlayerPrefsManager.HasVirtualWorldsStored()
+                ? CreateVignettes(PlayerPrefsManager.GetVirtualWorlds())
+                : new();
 
             FillWithEmptyVignettes();
+            UpdateNavigation();
         }
 
         private void FillWithEmptyVignettes()
         {
-            var nbrVignetteTotal = vignetteMode == VignetteMode.Small ? 8 : 2;
+            var nbrVignetteTotal = vignetteMode == VignetteScale.Small ? 8 : 2;
             for (var i = vignetteDisplayers.Count - nbrVignetteTotal; i < 0; i++)
                 Instantiate(emptyVignettePrefab, gridLayout.transform);
         }
@@ -197,25 +209,32 @@ namespace umi3dBrowsers.container
             ResetVignettes(runtime);
         }
 
-        private void OnValidate()
-        {
-            //switch (vignetteMode)
-            //{
-            //    case VignetteMode.None:
-            //        break;
-            //    case VignetteMode.Large:
-            //        SetGridLayout(largeVignetteSize, largeVignetteRowAmount, largeVignetteSpace, false);
-            //        break;
-            //    case VignetteMode.Small:
-            //        SetGridLayout(smallVignetteSize, smallVignetteRowAmount, smallVignetteSpace, false);
-            //        break;
-            //}
-        }
-
         IEnumerator ScaleColliders()
         {
             yield return new WaitForSeconds(0.35f);
             scaller.ScaleColliders();
+        }
+
+        private void UpdateNavigation()
+        {
+            if ((int)vignetteMode < vignetteDisplayers.Count) // cyan
+            {
+                buttonLeft.colors = enabledNavigationColor;
+                buttonRight.colors = enabledNavigationColor;
+                buttonLeft.enabled = true;
+                buttonRight.enabled = true;
+                rightImage.color = enabledNavigationColor.normalColor;
+                leftImage.color = enabledNavigationColor.normalColor;
+            }
+            else // grey
+            {
+                buttonLeft.colors = disableNavigationColor;
+                buttonRight.colors = disableNavigationColor;
+                buttonLeft.enabled = false;
+                buttonRight.enabled = false;
+                rightImage.color = disableNavigationColor.normalColor;
+                leftImage.color = disableNavigationColor.normalColor;
+            }
         }
 
 #if UNITY_EDITOR

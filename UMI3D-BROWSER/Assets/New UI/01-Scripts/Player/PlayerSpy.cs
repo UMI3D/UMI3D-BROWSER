@@ -10,7 +10,6 @@ namespace umi3dBrowsers
         [SerializeField] private ConnectionToImmersiveLinker linker;
         private void Start()
         {
-            Debug.Log("Cerise");
             linker.PlayerLoaded(transform);
         }
     }

@@ -122,14 +122,15 @@ namespace umi3dBrowsers
             BindNavigationButtons();
             BindURL();
             BindFormContainer();
-            BindConnectionService();
-            BindLoaderDisplayer();
 
             popupManager.OnPopUpOpen += () => tween.TweenTo();
             popupManager.OnPopUpClose += () => tween.Rewind();
 
             HandleContentState(contentState);
             SetVersion(UMI3DVersion.version);
+            BindConnectionService();
+            BindLoaderDisplayer();
+
         }
 
         /// <summary>

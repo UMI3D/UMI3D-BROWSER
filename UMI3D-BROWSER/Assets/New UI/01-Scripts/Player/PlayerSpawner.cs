@@ -12,11 +12,9 @@ namespace umi3dBrowsers
         private Transform playerTransform;
         public void Init(ConnectionToImmersiveLinker linker)
         {
-            Debug.Log("Prune");
             m_linker = linker;
             m_linker.OnPlayerLoaded += pt =>
             {
-                Debug.Log("Hey");
                 playerTransform = pt;
                 RepositionPlayer();
             };

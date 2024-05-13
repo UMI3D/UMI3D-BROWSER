@@ -315,7 +315,8 @@ MonoBehaviour:
       m_Items:
       - rid: 2971575680132972557
   - m_Id: 15489937870843904
-    m_Localized: 'Are you sure you want to delete : {libName}'
+    m_Localized: 'Are you sure you want to delete the worlds below : \n\n{libs:list:-
+      {}|\n|\n}\n\n Data that is shared by other world will not be deleted.'
     m_Metadata:
       m_Items:
       - rid: 2971575680132972557

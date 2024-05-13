@@ -20,6 +20,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Localization.Components;
 using UnityEngine.UI;
+using static umi3dBrowsers.services.librairies.LibraryManager;
 
 namespace umi3dBrowsers.displayer
 {
@@ -37,6 +38,7 @@ namespace umi3dBrowsers.displayer
         [SerializeField] private ProgressBar commonProgressBar;
 
         public bool isSelected => toggle.isOn;
+        public LibraryManager.WorldLibs WorldLibs { get; private set; }
 
         public void Select(bool isSelected)
         {
@@ -46,6 +48,7 @@ namespace umi3dBrowsers.displayer
         public void SetWorld(LibraryManager.WorldLibs worldLibs, long totalSize)
         {
             worldNameText.text = worldLibs.Name;
+            WorldLibs = worldLibs;
 
             placeTakenText.StringReference.Arguments = new object[] { 
                 new Dictionary<string, long>() {

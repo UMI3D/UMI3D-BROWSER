@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using Pico.Platform;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -21,6 +22,7 @@ using System.Linq;
 using umi3d.cdk;
 using umi3dBrowsers.displayer;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Localization.Components;
 using UnityEngine.UI;
 
@@ -35,12 +37,14 @@ namespace umi3dBrowsers.services.librairies
         {
             public string Name;
             public string Path;
+            public UMI3DResourcesManager.Library RessourceLib;
             public long Size;
 
-            public Library(string name, string path, long size)
+            public Library(string name, string path, UMI3DResourcesManager.Library ressourceLib, long size)
             {
                 Name = name;
                 Path = path;
+                RessourceLib = ressourceLib;
                 Size = size;
             }
         }
@@ -67,6 +71,7 @@ namespace umi3dBrowsers.services.librairies
         [SerializeField] private GameObject content;
         [SerializeField] private GameObject worldStoragePrefab;
         [SerializeField] private Toggle selectAll;
+        [SerializeField] private Button deleteButton;
 
         [Header("Total Info")]
         [SerializeField] private LocalizeStringEvent placeTakenText;
@@ -85,7 +90,7 @@ namespace umi3dBrowsers.services.librairies
             var (worldsLibs, totalSize) = GetWorldsLibs();
 
             foreach (Transform child in content.transform)
-                Destroy(child);
+                Destroy(child.gameObject);
 
             worldStorageDisplayers = new List<WorldStorageDisplayer>();
             foreach (var world in worldsLibs)
@@ -100,6 +105,33 @@ namespace umi3dBrowsers.services.librairies
                     worldStorageDisplayer.Select(isOn);
             });
 
+            deleteButton.onClick.AddListener(() => {
+                var libs = new List<UMI3DResourcesManager.Library>();
+                var names = new List<string>();
+                foreach (var worldStorageDisplayer in worldStorageDisplayers)
+                {
+                    if (!worldStorageDisplayer.isSelected)
+                        continue;
+                    names.Add(worldStorageDisplayer.WorldLibs.Name);
+                    foreach (var lib in worldStorageDisplayer.WorldLibs.Libraries)
+                    {
+                        libs.Add(lib.RessourceLib);
+                    }
+                }
+                if (libs.Count == 0)
+                    return;
+                popupManager.SetArguments(PopupManager.PopupType.Warning, new() { { "libs", names } });
+                popupManager.ShowPopup(PopupManager.PopupType.Warning, "empty", "popup_deleteLib_description",
+                    ("popup_cancel", () => popupManager.ClosePopUp()),
+                    ("popup_yes", () => {
+                        foreach (var lib in libs)
+                            UMI3DResourcesManager.RemoveLibrary(lib);
+                        UpdateContent();
+                        popupManager.ClosePopUp();
+                    })
+                );
+            });
+
             SetupTotalInfo(worldsLibs, totalSize);
 
             selectAll.isOn = false;
@@ -112,7 +144,9 @@ namespace umi3dBrowsers.services.librairies
                 { "placeTaken", totalSize }
             };
             placeTakenText.StringReference.Arguments = new object[] { totalInfoArguments };
+            placeTakenText.StringReference.RefreshString();
             numberWorldText.StringReference.Arguments = new object[] { totalInfoArguments };
+            numberWorldText.StringReference.RefreshString();
         }
 
         private (List<WorldLibs>, long) GetWorldsLibs()
@@ -132,7 +166,7 @@ namespace umi3dBrowsers.services.librairies
                         worldsLibs.Add(new WorldLibs(app));
 
                     var worldLib = worldsLibs.Find(worldLibs => worldLibs.Name == app);
-                    worldLib.Libraries.Add(new Library(lib.key, lib.path, libSize));
+                    worldLib.Libraries.Add(new Library(lib.key, lib.path, lib.library, libSize));
                     worldLib.TotalSize += libSize;
                     if (lib.applications.Count == 1)
                         worldLib.UniqueSize += libSize;

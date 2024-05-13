@@ -113,6 +113,14 @@ namespace umi3dBrowsers
             if (contentState == ContentState.flagContent && local != null && !forceFlagContent)
                 contentState = ContentState.standUpContent;
             LocalizationSettings.SelectedLocale = local ?? LocalizationSettings.ProjectLocale;
+
+            connectionToImmersiveLinker.OnLeave += () =>
+            {
+                ShowUI();
+                HandleContentState(ContentState.mainContent);
+                spawner.RepositionPlayer();
+                connectionProcessorService.Disconnect();
+            };
         }
 
         private void Start()

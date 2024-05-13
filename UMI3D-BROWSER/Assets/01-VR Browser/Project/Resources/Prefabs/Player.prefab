@@ -2014,6 +2014,7 @@ GameObject:
   - component: {fileID: 6157534024615910020}
   - component: {fileID: 3480375292505844209}
   - component: {fileID: 2319626088986524064}
+  - component: {fileID: 3639340363937469212}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -2120,6 +2121,19 @@ MonoBehaviour:
   locomotionSystem: {fileID: 0}
   teleportationProvider: {fileID: 0}
   dynamicMoveProvider: {fileID: 0}
+--- !u!114 &3639340363937469212
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5582060202346245420}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cfa542cd55b5a84797e13529426d799, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  linker: {fileID: 11400000, guid: 68ff1a90a5151924e867698a4e1d3a2d, type: 2}
 --- !u!1 &5680181672583857967
 GameObject:
   m_ObjectHideFlags: 0
@@ -3668,6 +3682,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: PersonalSkeleton
       objectReference: {fileID: 0}
+    - target: {fileID: 5411572366268182620, guid: 3d69241fd025e034aa1947ec87717f98,
+        type: 3}
+      propertyPath: linker
+      value: 
+      objectReference: {fileID: 11400000, guid: 68ff1a90a5151924e867698a4e1d3a2d,
+        type: 2}
+    - target: {fileID: 6306864101918098934, guid: 3d69241fd025e034aa1947ec87717f98,
+        type: 3}
+      propertyPath: linker
+      value: 
+      objectReference: {fileID: 11400000, guid: 68ff1a90a5151924e867698a4e1d3a2d,
+        type: 2}
     - target: {fileID: 6942374478926416421, guid: 3d69241fd025e034aa1947ec87717f98,
         type: 3}
       propertyPath: OVRRig

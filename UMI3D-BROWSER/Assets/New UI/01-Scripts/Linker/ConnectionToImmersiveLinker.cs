@@ -18,11 +18,14 @@ namespace umi3dBrowsers.linker
         public event Action OnStopDisplayEnvironmentHandler;
         public void StopDisplayEnvironmentHandler() { OnStopDisplayEnvironmentHandler?.Invoke(); }
 
-        public Action<Transform> OnPlayerLoaded;
+        public event Action<Transform> OnPlayerLoaded;
         public void PlayerLoaded(Transform playerTransform)
         { 
             OnPlayerLoaded?.Invoke(playerTransform);
         }
+
+        public event Action OnLeave;
+        public void Leave() { OnLeave?.Invoke(); }  
     }
 }
 

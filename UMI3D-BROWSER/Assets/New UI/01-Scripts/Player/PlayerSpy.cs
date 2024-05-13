@@ -8,6 +8,7 @@ namespace umi3dBrowsers
     public class PlayerSpy : MonoBehaviour
     {
         [SerializeField] private ConnectionToImmersiveLinker linker;
+        [SerializeField] private Transform parentTransform;
         private void Start()
         {
             linker.PlayerLoaded(transform);

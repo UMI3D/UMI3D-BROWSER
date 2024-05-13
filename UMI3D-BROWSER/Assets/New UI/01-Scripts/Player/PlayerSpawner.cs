@@ -10,17 +10,19 @@ namespace umi3dBrowsers
     {
         private ConnectionToImmersiveLinker m_linker;
         private Transform playerTransform;
+        private Transform parentTransform;
         public void Init(ConnectionToImmersiveLinker linker)
         {
             m_linker = linker;
-            m_linker.OnPlayerLoaded += pt =>
+            m_linker.OnPlayerLoaded += (pT) =>
             {
-                playerTransform = pt;
+                playerTransform = pT;
                 RepositionPlayer();
             };
         }
         public void RepositionPlayer()
         {
+            playerTransform.SetParent(null);
             playerTransform.position = transform.position;
             playerTransform.rotation = transform.rotation;  
         }

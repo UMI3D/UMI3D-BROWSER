@@ -469,7 +469,7 @@ MonoBehaviour:
   largeVignetteSpace: {x: 24, y: 0}
   smallVignetteSize: {x: 169, y: 111}
   smallVignetteSpace: {x: 11, y: 30}
-  isFavorite: 1
+  isFavorite: 0
   gridLayout: {fileID: 4684022820558560661}
   largeVignetteRowAmount: 1
   smallVignetteRowAmount: 2
@@ -488,16 +488,41 @@ MonoBehaviour:
     m_ColorMultiplier: 0
     m_FadeDuration: 0
   disableNavigationColor:
-    m_NormalColor: {r: 0.74509805, g: 0.74509805, b: 0.74509805, a: 1}
-    m_HighlightedColor: {r: 0.74509805, g: 0.74509805, b: 0.74509805, a: 1}
-    m_PressedColor: {r: 0.74509805, g: 0.74509805, b: 0.74509805, a: 1}
-    m_SelectedColor: {r: 0.74509805, g: 0.74509805, b: 0.74509805, a: 1}
-    m_DisabledColor: {r: 0.74509805, g: 0.74509805, b: 0.74509805, a: 1}
+    m_NormalColor: {r: 0.3962264, g: 0.3962264, b: 0.3962264, a: 1}
+    m_HighlightedColor: {r: 0.39607847, g: 0.39607847, b: 0.39607847, a: 1}
+    m_PressedColor: {r: 0.39607847, g: 0.39607847, b: 0.39607847, a: 1}
+    m_SelectedColor: {r: 0.39607847, g: 0.39607847, b: 0.39607847, a: 1}
+    m_DisabledColor: {r: 0.39607847, g: 0.39607847, b: 0.39607847, a: 1}
     m_ColorMultiplier: 0
     m_FadeDuration: 0
-  vignetteMode: 1
+  vignetteMode: 2
   virtualWorlds:
-    worlds: []
+    worlds:
+    - worldName: sqc
+      worldUrl: fe
+      isFavorite: 0
+      dateFirstConnection: 0
+      dateLastConnection: 0
+    - worldName: ddqsf
+      worldUrl: qfdsqsd
+      isFavorite: 0
+      dateFirstConnection: 0
+      dateLastConnection: 0
+    - worldName: dsfqqsdf
+      worldUrl: qsdfqsdfqsdf
+      isFavorite: 0
+      dateFirstConnection: 0
+      dateLastConnection: 0
+    - worldName: qsfqsdgqsdh
+      worldUrl: sdqsdf<w
+      isFavorite: 0
+      dateFirstConnection: 0
+      dateLastConnection: 0
+    - worldName: azfq<sdf
+      worldUrl: fghkhgkd
+      isFavorite: 0
+      dateFirstConnection: 0
+      dateLastConnection: 0
 --- !u!114 &960552460556117284
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -698,7 +723,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 0
   m_Colors:
     m_NormalColor: {r: 0.2784314, g: 0.61960787, b: 0.70980394, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -1095,7 +1120,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 0
   m_Colors:
     m_NormalColor: {r: 0.2784314, g: 0.61960787, b: 0.70980394, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}

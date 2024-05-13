@@ -22,7 +22,7 @@ namespace umi3dBrowsers
         }
         public void RepositionPlayer()
         {
-            playerTransform.SetParent(null);
+            //playerTransform.SetParent(null);
             playerTransform.position = transform.position;
             playerTransform.rotation = transform.rotation;  
         }

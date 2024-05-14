@@ -2134,6 +2134,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   linker: {fileID: 11400000, guid: 68ff1a90a5151924e867698a4e1d3a2d, type: 2}
+  parentTransform: {fileID: 0}
 --- !u!1 &5680181672583857967
 GameObject:
   m_ObjectHideFlags: 0
@@ -3298,6 +3299,12 @@ MonoBehaviour:
     duration: 0.15
     frequency: 1
     amplitude: 0.1
+--- !u!1 &9083302870738299818 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9190828823993865064, guid: 9a2489c3820349e49b50c24c500d47e8,
+    type: 3}
+  m_PrefabInstance: {fileID: 108717283772676290}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &438640570887569333
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3306,6 +3313,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8430962178111685220}
     m_Modifications:
+    - target: {fileID: 7675430841397464009, guid: 3af1ad08cb6f5dd46ba849178ac3e4ab,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7675430841589379749, guid: 3af1ad08cb6f5dd46ba849178ac3e4ab,
         type: 3}
       propertyPath: cam
@@ -3315,12 +3327,12 @@ PrefabInstance:
         type: 3}
       propertyPath: lasers.Array.data[0]
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 9083302870738299818}
     - target: {fileID: 7675430841589379749, guid: 3af1ad08cb6f5dd46ba849178ac3e4ab,
         type: 3}
       propertyPath: lasers.Array.data[1]
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 7166298967593879034}
     - target: {fileID: 7675430841589379750, guid: 3af1ad08cb6f5dd46ba849178ac3e4ab,
         type: 3}
       propertyPath: m_Pivot.x
@@ -3434,13 +3446,25 @@ PrefabInstance:
     - target: {fileID: 7675430841589379751, guid: 3af1ad08cb6f5dd46ba849178ac3e4ab,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3af1ad08cb6f5dd46ba849178ac3e4ab, type: 3}
+--- !u!114 &7823534208215731472 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7675430841589379749, guid: 3af1ad08cb6f5dd46ba849178ac3e4ab,
+    type: 3}
+  m_PrefabInstance: {fileID: 438640570887569333}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1e9261d62c8da74d85cdf60d9692fa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &7823534208215731475 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7675430841589379750, guid: 3af1ad08cb6f5dd46ba849178ac3e4ab,
@@ -3619,6 +3643,12 @@ MonoBehaviour:
     duration: 0.15
     frequency: 1
     amplitude: 0.1
+--- !u!1 &7166298967593879034 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9190828823993865064, guid: 9a2489c3820349e49b50c24c500d47e8,
+    type: 3}
+  m_PrefabInstance: {fileID: 2089578898650945170}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3558765785852152035
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3688,12 +3718,22 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 68ff1a90a5151924e867698a4e1d3a2d,
         type: 2}
+    - target: {fileID: 5411572366268182620, guid: 3d69241fd025e034aa1947ec87717f98,
+        type: 3}
+      propertyPath: dialogBox
+      value: 
+      objectReference: {fileID: 7823534208215731472}
     - target: {fileID: 6306864101918098934, guid: 3d69241fd025e034aa1947ec87717f98,
         type: 3}
       propertyPath: linker
       value: 
       objectReference: {fileID: 11400000, guid: 68ff1a90a5151924e867698a4e1d3a2d,
         type: 2}
+    - target: {fileID: 6306864101918098934, guid: 3d69241fd025e034aa1947ec87717f98,
+        type: 3}
+      propertyPath: dialogBox
+      value: 
+      objectReference: {fileID: 7823534208215731472}
     - target: {fileID: 6942374478926416421, guid: 3d69241fd025e034aa1947ec87717f98,
         type: 3}
       propertyPath: OVRRig

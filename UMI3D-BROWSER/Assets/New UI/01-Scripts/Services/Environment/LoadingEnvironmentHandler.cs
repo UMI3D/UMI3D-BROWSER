@@ -27,7 +27,6 @@ namespace umi3dBrowsers.services.environment
     {
         [Header("Linkers")]
         [SerializeField] private ConnectionToImmersiveLinker linker;
-        private Camera cam;
 
         [SerializeField] private LayerMask loadingCullingMask;      
         private int defaultCullingMask;
@@ -53,10 +52,9 @@ namespace umi3dBrowsers.services.environment
 
         private void Start()
         {
-            cam = Camera.main;
-            Debug.Assert(cam != null, "Impossible to find a camera");
+            Debug.Assert(Camera.main != null, "Impossible to find a camera");
 
-            defaultCullingMask = cam.cullingMask;
+            defaultCullingMask = Camera.main.cullingMask;
 
             StopDisplay();
         }
@@ -66,8 +64,8 @@ namespace umi3dBrowsers.services.environment
         /// </summary>
         public void Display()
         {
-            cam.cullingMask = loadingCullingMask.value;
-            cam.clearFlags = CameraClearFlags.Skybox;
+            Camera.main.cullingMask = loadingCullingMask.value;
+            Camera.main.clearFlags = CameraClearFlags.Skybox;
             RenderSettings.skybox = skyBoxHomeMaterial;
         }
 
@@ -76,8 +74,8 @@ namespace umi3dBrowsers.services.environment
         /// </summary>
         public void StopDisplay()
         {
-            cam.cullingMask = defaultCullingMask;
-            cam.clearFlags = CameraClearFlags.Skybox;
+            Camera.main.cullingMask = defaultCullingMask;
+            Camera.main.clearFlags = CameraClearFlags.Skybox;
 
             OnLoadingScreenHidden?.Invoke();
         }

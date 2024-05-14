@@ -118,8 +118,9 @@ namespace umi3dBrowsers
             {
                 ShowUI();
                 HandleContentState(ContentState.mainContent);
-                spawner.RepositionPlayer();
+                //spawner.RepositionPlayer();
                 connectionProcessorService.Disconnect();
+                spawner.SpawnPlayer();
             };
         }
 

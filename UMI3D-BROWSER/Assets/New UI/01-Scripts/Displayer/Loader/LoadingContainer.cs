@@ -17,6 +17,7 @@ limitations under the License.
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using umi3d.cdk.collaboration;
 using umi3dBrowsers.linker;
 using umi3dBrowsers.services.environment;
 using UnityEngine;
@@ -39,6 +40,18 @@ namespace umi3dBrowsers.displayer
         private bool _loadingInProgress = false;
 
         private ConnectionToImmersiveLinker m_linker;
+
+        private void Awake()
+        {
+            m_linker.OnLeave += () => _loadingInProgress = false;
+            UMI3DEnvironmentClient.EnvironementJoinned.AddListener(() =>
+            {
+                OnLoadingFinished?.Invoke();
+                loadingTipDisplayer.StopDisplayTips();
+                m_linker.StopDisplayEnvironmentHandler();
+                _loadingInProgress = false;
+            });
+        }
 
         private void Start()
         {
@@ -79,6 +92,7 @@ namespace umi3dBrowsers.displayer
 
         private void OnProgressChange(float val)
         {
+            Debug.Log("Loading ::: " + val);
             if (val >= 0 && val < 1)
             {
                 if (_loadingInProgress == false) // Notify that a loading is in progress

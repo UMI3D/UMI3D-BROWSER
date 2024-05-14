@@ -2209,7 +2209,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   linker: {fileID: 11400000, guid: 68ff1a90a5151924e867698a4e1d3a2d, type: 2}
-  parentTransform: {fileID: 0}
 --- !u!1 &4989430032758259270
 GameObject:
   m_ObjectHideFlags: 0
@@ -3856,6 +3855,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 8106707341193653421}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2104813120138942355 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7905228026459241278, guid: 3d69241fd025e034aa1947ec87717f98,
+    type: 3}
+  m_PrefabInstance: {fileID: 8106707341193653421}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2398088241439281024}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 302751d2934e0024782140895b91035e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2398088241439281024 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5892810496740008749, guid: 3d69241fd025e034aa1947ec87717f98,
@@ -3874,7 +3885,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78c727b25bdee8c44a431b1eed1fa460, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  menuDisplayManager: {fileID: 0}
+  menuDisplayManager: {fileID: 2104813120138942355}
   associatedController: 0
   pinMenuButton: {fileID: 7348158052981972042}
   playerMenuButton: {fileID: 689609665310133726}

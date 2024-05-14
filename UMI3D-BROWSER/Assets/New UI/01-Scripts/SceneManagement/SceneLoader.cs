@@ -78,6 +78,8 @@ namespace umi3dBrowsers.sceneManagement
 
             indicator = SceneManager.LoadSceneAsync(sceneToLoad, loadSceneMode);
 
+            yield return new WaitUntil(() => indicator.isDone);
+
             SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneToLoad));
         }
     }

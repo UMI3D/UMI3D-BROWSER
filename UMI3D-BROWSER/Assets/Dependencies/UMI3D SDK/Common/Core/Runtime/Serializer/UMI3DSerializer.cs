@@ -142,14 +142,22 @@ namespace umi3d.common
         /// <exception cref="Exception">Not a known collection type.</exception>
         public static List<T> ReadList<T>(ByteContainer container)
         {
+            UnityEngine.Debug.Log("Remi : ReadList 0");
+
             byte listType = UMI3DSerializer.Read<byte>(container);
+
+            UnityEngine.Debug.Log("Remi : ReadList 1");
+
             switch (listType)
             {
                 case UMI3DObjectKeys.CountArray:
+                    UnityEngine.Debug.Log("Remi : ReadList 2");
                     return ReadCountList<T>(container);
                 case UMI3DObjectKeys.IndexesArray:
+                    UnityEngine.Debug.Log("Remi : ReadList 3");
                     return ReadIndexesList<T>(container);
                 default:
+                    UnityEngine.Debug.Log($"Remi : ReadList 4 {container}");
                     throw new Exception($"Not a known collection type {container}");
             }
         }

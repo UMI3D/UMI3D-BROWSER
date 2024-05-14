@@ -463,6 +463,9 @@ namespace umi3d.cdk.collaboration
 
         public async Task<bool> PerformOperation(DtoContainer operation)
         {
+
+            Debug.Log("Remi : Operation DTO");
+
             switch (operation.operation)
             {
                 case NavigationModeRequestDto navigationMode:
@@ -578,6 +581,10 @@ namespace umi3d.cdk.collaboration
 
         public async Task<bool> PerformOperation(uint operationId, ByteContainer container)
         {
+
+
+            Debug.Log("Remi : Operation ID" + operationId);
+
             switch (operationId)
             {
                 case UMI3DOperationKeys.FlyingNavigationMode:
@@ -740,6 +747,37 @@ namespace umi3d.cdk.collaboration
                         });
                         break;
                     }
+                case UMI3DOperationKeys.SetGuardianRequest:
+                    MainThreadManager.Run(() =>
+                    {
+                        Debug.Log("Remi : Get transaction NO dto SetGuardianRequest !! ");
+
+                        SendGuardianRequestDto userGuardianDto = UMI3DSerializer.Read<SendGuardianRequestDto>(container);
+
+                        Debug.Log("Remi : Received SendGuardianRequestDto");
+                        Debug.Log("Remi : Number of anchor DTOs received: " + userGuardianDto.guardianData.anchorAR.Count);
+
+                        foreach (ARAnchorDto anchor in userGuardianDto.guardianData.anchorAR)
+                        {
+                            Debug.Log("Remi : -> ANCHOR : " + anchor.position + " + " + anchor.position + " + " + anchor.trackableId);
+                        }
+
+                        var userguardian = new UserGuardianDto
+                        {
+                            anchorAR = userGuardianDto.guardianData.anchorAR
+                        };
+
+                        if (ImportantEventOccurred != null)
+                            ImportantEventOccurred(userguardian);
+                    });
+                    break;
+
+                case UMI3DOperationKeys.ARAnchorBrowserRequest:
+                    MainThreadManager.Run(() =>
+                    {
+                        
+                    });
+                    break;
 
                 default:
                     return false;

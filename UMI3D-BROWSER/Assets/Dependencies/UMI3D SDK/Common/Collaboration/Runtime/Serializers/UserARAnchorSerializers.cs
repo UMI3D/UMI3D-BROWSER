@@ -11,13 +11,11 @@ namespace umi3d.common.lbe.guardian
     {
         public bool? IsCountable<T>()
         {
-            Debug.Log("Remi : anchor Countable");
             return typeof(T) == typeof(ARAnchorDto) ? true : null;
         }
 
         public bool Read<T>(ByteContainer container, out bool readable, out T result)
         {
-            Debug.Log("Remi : anchor Read 1");
 
             if (typeof(T) == typeof(ARAnchorDto))
             {
@@ -45,15 +43,10 @@ namespace umi3d.common.lbe.guardian
 
         public bool Write<T>(T value, out Bytable bytable, params object[] parameters)
         {
-            Debug.Log("Remi : anchor Write 1");
-
             if (value is ARAnchorDto c)
             {
-                Debug.Log("Remi : anchor Write 2");
-
                 // Ecriture de la liste anchorAR
-                bytable = UMI3DSerializer.Write(UMI3DOperationKeys.ARAnchorBrowserRequest)
-                    + UMI3DSerializer.Write(c.trackableId)
+                bytable = UMI3DSerializer.Write(c.trackableId)
                     + UMI3DSerializer.Write(c.position)
                     + UMI3DSerializer.Write(c.rotation);
                 return true;
@@ -61,6 +54,5 @@ namespace umi3d.common.lbe.guardian
             bytable = null;
             return false;
         }
-
     }
 }

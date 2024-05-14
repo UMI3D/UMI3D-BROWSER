@@ -68,10 +68,21 @@ namespace umi3dBrowsers.displayer
         {
             transprentColor.a = 0;
             DisableSubComponents();
+            pen.gameObject.SetActive(false);
+            IF_background.enabled = false;
 
             likeButton.OnHover += () => vignetteState = VignetteState.HoveringSubElement;
             trashButton.OnHover += () => vignetteState = VignetteState.HoveringSubElement;
-            inputFieldBackground.OnHover += () => vignetteState = VignetteState.HoveringSubElement;
+            inputFieldBackground.OnHover += () => {
+                vignetteState = VignetteState.HoveringSubElement;
+
+                pen.gameObject.SetActive(true);
+                IF_background.enabled = true;
+            };
+            inputFieldBackground.OnHoverExit += () => {
+                pen.gameObject.SetActive(false);
+                IF_background.enabled = false;
+            };
 
             likeButton.OnDisabled += () => DisableSubComponents();
             trashButton.OnDisabled += () => DisableSubComponents();
@@ -115,8 +126,6 @@ namespace umi3dBrowsers.displayer
 
             likeButton.gameObject.SetActive(true);
             trashButton.gameObject.SetActive(true);
-            pen.gameObject.SetActive(true);
-            IF_background.enabled = true;
 
         }
 
@@ -140,8 +149,6 @@ namespace umi3dBrowsers.displayer
         {
             likeButton.gameObject.SetActive(false);
             trashButton.gameObject.SetActive(false);
-            pen.gameObject.SetActive(false);
-            IF_background.enabled = false;
         }
 
         private IEnumerator HoverDelay()

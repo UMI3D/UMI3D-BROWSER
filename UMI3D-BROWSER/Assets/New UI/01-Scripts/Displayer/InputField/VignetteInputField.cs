@@ -33,6 +33,7 @@ namespace umi3dBrowsers.displayer
 
         [Header("obj")]
         [SerializeField] private TMP_UMI3DUIInputField inputField;
+        [SerializeField] private ImageButtonDisplayer ImageButtonDisplayer;
 
         public string Text { get => inputField.text; set => inputField.text = value; }
         public TMP_UMI3DUIInputField InputField => inputField;
@@ -40,15 +41,20 @@ namespace umi3dBrowsers.displayer
         public event Action OnClick;
         public event Action OnDisabled;
         public event Action OnHover;
+        public event Action OnHoverExit;
 
         private void Awake()
         {
             inputField.onSelect.AddListener((a) => Click());
             inputField.onDeselect.AddListener(InputFieldDeselected);
-            inputField.SetCallBacks(
-                (a) => HoverEnter(a),
-                (a) => HoverExit(a)
-            );
+            
+
+            if (ImageButtonDisplayer)
+            {
+                ImageButtonDisplayer.OnHoverEnter += (a) => HoverEnter(a);
+                ImageButtonDisplayer.OnHoverExit += (a) => HoverExit(a);
+                ImageButtonDisplayer.OnClick.AddListener(Click);
+            }
         }
 
         private void OnEnable()
@@ -98,7 +104,7 @@ namespace umi3dBrowsers.displayer
 
         public void HoverExit(PointerEventData eventData)
         {
-            
+            OnHoverExit?.Invoke();
         }
 
         private void InputFieldDeselected(string arg0)

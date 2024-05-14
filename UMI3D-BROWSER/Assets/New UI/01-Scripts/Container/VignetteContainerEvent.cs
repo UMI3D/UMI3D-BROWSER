@@ -13,13 +13,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 namespace umi3dBrowsers.container
 {
-    public class VignetteContainerEvent : MonoBehaviour
+    [CreateAssetMenu(menuName = "Vignette/Event")]
+    public class VignetteContainerEvent : ScriptableObject
     {
+        public Action OnVignetteReset;
+        public Action<VignetteContainer.VignetteScale> OnVignetteChangeMode;
+
+        /*
         [SerializeField] private List<VignetteContainer> lstVignetteContainers;
 
         private void Awake()
@@ -32,6 +37,6 @@ namespace umi3dBrowsers.container
                     container.OnChangeMode += mode => container2.ChangeVignetteMode(mode);
                 }
             }
-        }
+        }*/
     }
 }

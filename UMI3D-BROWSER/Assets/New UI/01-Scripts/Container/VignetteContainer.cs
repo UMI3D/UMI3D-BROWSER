@@ -76,13 +76,12 @@ namespace umi3dBrowsers.container
         }
 
         [SerializeField] private VignetteScale vignetteMode;
-
-        public event Action OnReset;
-        public event Action<VignetteScale> OnChangeMode;
+        [SerializeField] private VignetteContainerEvent vignetteContainerEvent;
 
         private void Awake()
         {
-            ResetVignettes();
+            vignetteContainerEvent.OnVignetteReset += ResetVignettes;
+            vignetteContainerEvent.OnVignetteChangeMode += ChangeVignetteMode;
         }
 
         private void Start()
@@ -97,6 +96,14 @@ namespace umi3dBrowsers.container
                 if(vignetteDisplayers.Count > (int)vignetteMode)
                     scrollbar.value += scrollButtonSpeed / vignetteDisplayers.Count;
             });
+
+            vignetteContainerEvent.OnVignetteReset?.Invoke();
+        }
+
+        private void OnDestroy()
+        {
+            vignetteContainerEvent.OnVignetteReset -= ResetVignettes;
+            vignetteContainerEvent.OnVignetteChangeMode -= ChangeVignetteMode;
         }
 
         [ContextMenu("Toggle vignette mode")]
@@ -105,9 +112,9 @@ namespace umi3dBrowsers.container
             if (vignetteMode == VignetteScale.None) return;
 
             if (vignetteMode == VignetteScale.Large)
-                OnChangeMode?.Invoke(VignetteScale.Small);
+                vignetteContainerEvent.OnVignetteChangeMode?.Invoke(VignetteScale.Small);
             else if (vignetteMode == VignetteScale.Small)
-                OnChangeMode?.Invoke(VignetteScale.Large);
+                vignetteContainerEvent.OnVignetteChangeMode?.Invoke(VignetteScale.Large);
         }
 
         public void ChangeVignetteMode(VignetteScale mode)
@@ -145,8 +152,8 @@ namespace umi3dBrowsers.container
             var vignette = Instantiate(vignetteMode == VignetteScale.Small ? smallVignettePrefab : vignettePrefab, gridLayout.transform).GetComponent<VignetteDisplayer>();
             vignette.SetupDisplay(pWorldData.worldName);
             vignette.SetupFavoriteButton(() => { 
-                pVirtualWorlds.ToggleWorldFavorite(pWorldData); 
-                OnReset?.Invoke(); 
+                pVirtualWorlds.ToggleWorldFavorite(pWorldData);
+                vignetteContainerEvent.OnVignetteReset?.Invoke(); 
             }, pWorldData.isFavorite);
             vignette.SetupRemoveButton(() => {
                 popupManager.SetArguments(PopupManager.PopupType.Warning, new() { { "worldName", pWorldData.worldName } });
@@ -154,7 +161,7 @@ namespace umi3dBrowsers.container
                     ("popup_cancel", () => popupManager.ClosePopUp()),
                     ("popup_yes", () => {
                         pVirtualWorlds.RemoveWorld(pWorldData);
-                        OnReset?.Invoke();
+                        vignetteContainerEvent.OnVignetteReset?.Invoke();
                         popupManager.ClosePopUp();
                     })
                 );
@@ -162,7 +169,7 @@ namespace umi3dBrowsers.container
             vignette.SetupRenameButton(newName => { 
                 pWorldData.worldName = newName; 
                 pVirtualWorlds.UpdateWorld(pWorldData);
-                OnReset?.Invoke(); 
+                vignetteContainerEvent.OnVignetteReset?.Invoke(); 
             });
             vignette.OnClick += () => {
                 connectionProcessorService.TryConnectToMediaServer(pWorldData.worldUrl);
@@ -171,7 +178,9 @@ namespace umi3dBrowsers.container
             return vignette;
         }
 
-        public void ResetVignettes(bool runtime = true)
+        public void ResetVignettes() => ResetVignettes(true);
+
+        public void ResetVignettes(bool runtime)
         {
             for (var i = gridLayout.transform.childCount - 1; i >= 0; i--)
             {

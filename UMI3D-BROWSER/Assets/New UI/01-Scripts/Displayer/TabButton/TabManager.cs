@@ -168,7 +168,7 @@ namespace umi3dBrowsers.container
                 }
                 else
                 {
-                    tabButton.label.color = tabButton.labelBaseColor;
+                    tabButton.label.color = tabButton.interactable ? tabButton.labelBaseColor : tabButton.labelDisabledColor;
                     tabButton.hoverBar.color = new Color(tabButton.hoverBar.color.r, tabButton.hoverBar.color.g, tabButton.hoverBar.color.b, 0);
                 }
 

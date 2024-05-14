@@ -22,10 +22,11 @@ using umi3dBrowsers.linker;
 using umi3dVRBrowsersBase.connection;
 using umi3dVRBrowsersBase.interactions;
 using umi3dVRBrowsersBase.settings;
+using umi3dVRBrowsersBase.ui;
 using umi3dVRBrowsersBase.ui.playerMenu;
 using UnityEngine;
 
-namespace umi3dVRBrowsersBase.ui.watchMenu
+namespace umi3dBrowsers.player
 {
     /// <summary>
     /// This class manages the display and items of all UMI3DWatches.
@@ -115,6 +116,10 @@ namespace umi3dVRBrowsersBase.ui.watchMenu
         [Header("Notification")]
         [Tooltip("Where all local notifications will be instanciated")]
         public Transform notificationContainer;
+
+        [Header("Linkers")]
+        [SerializeField] private ConnectionToImmersiveLinker linker;
+        [SerializeField] private DialogBox dialogBox;
 
         /// <summary>
         /// Transform of the player camera.
@@ -290,7 +295,8 @@ namespace umi3dVRBrowsersBase.ui.watchMenu
                 {
                     if (EnvironmentSettings.Instance.IsEnvironmentLoaded)
                     {
-                        Connecting.Instance.Leave();
+                        //Connecting.Instance.Leave();
+                        linker.Leave();
                     }
                     else
                         Application.Quit();
@@ -298,7 +304,7 @@ namespace umi3dVRBrowsersBase.ui.watchMenu
             };
 
             string title = EnvironmentSettings.Instance.IsEnvironmentLoaded ? "Go back to main menu" : "Close application";
-            DialogBox.Instance.Display(title, "Are you sure you want to leave ?", "Yes", leaveCallback);
+            dialogBox.Display(title, "Are you sure you want to leave ?", "Yes", leaveCallback);
         }
 
         /// <summary>

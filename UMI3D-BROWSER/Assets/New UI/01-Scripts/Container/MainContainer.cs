@@ -25,6 +25,7 @@ using umi3dBrowsers.container;
 using umi3dBrowsers.container.formrenderer;
 using umi3dBrowsers.displayer;
 using umi3dBrowsers.linker;
+using umi3dBrowsers.sceneManagement;
 using umi3dBrowsers.services.connection;
 using umi3dBrowsers.services.title;
 using UnityEngine;
@@ -96,6 +97,7 @@ namespace umi3dBrowsers
         [SerializeField] private umi3dBrowsers.services.librairies.LibraryManager libraryManager;
         [SerializeField] private UITweens tween;
         [SerializeField] private PlayerSpawner spawner;
+        [SerializeField] private SceneLoader sceneLoader;
 
         [Header("Options")]
         [SerializeField] private bool forceFlagContent;
@@ -118,9 +120,8 @@ namespace umi3dBrowsers
             {
                 ShowUI();
                 HandleContentState(ContentState.mainContent);
-                //spawner.RepositionPlayer();
                 connectionProcessorService.Disconnect();
-                spawner.SpawnPlayer();
+                sceneLoader.ReloadScene();
             };
         }
 

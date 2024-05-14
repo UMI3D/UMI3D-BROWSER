@@ -10,8 +10,6 @@ namespace umi3dBrowsers
     {
         private ConnectionToImmersiveLinker m_linker;
         private Transform playerTransform;
-        private Transform parentTransform;
-        [SerializeField] private GameObject playerPrefab;
 
         public void Init(ConnectionToImmersiveLinker linker)
         {
@@ -26,11 +24,6 @@ namespace umi3dBrowsers
         {
             playerTransform.position = transform.position;
             playerTransform.rotation = transform.rotation;  
-        }
-
-        public void SpawnPlayer()
-        {
-            Instantiate(playerPrefab, transform.position, transform.rotation);
         }
     }
 }

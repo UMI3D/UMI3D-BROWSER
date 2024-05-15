@@ -219,12 +219,13 @@ namespace umi3d.browserEditor.BuildTool
 
         void BuildSelectedTargets(params TargetDto[] target)
         {
-            versionModel.UpdateOldVersion();
-            for (int i = 0; i < target.Length; i++)
-            {
-                ApplyTargetOptions(target[i].Target);
-                BuildTarget(target[i], i == target.Length - 1);
-            }
+            //versionModel.UpdateOldVersion();
+            //for (int i = 0; i < target.Length; i++)
+            //{
+            //    ApplyTargetOptions(target[i].Target);
+            //    BuildTarget(target[i], i == target.Length - 1);
+            //}
+            UMI3DBuildToolConfirmationWindow.OpenConfirmationWindow();
         }
     }
 }

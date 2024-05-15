@@ -1,4 +1,4 @@
-﻿/*
+/*
 Copyright 2019 - 2021 Inetum
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -59,11 +59,6 @@ public static class UMI3DAsyncManager
 
     private static void ErrorIfQuitting(List<CancellationToken> tokens, bool isMainThread = true)
     {
-#if UNITY_2022_1_OR_NEWER
-            UnityEngine.Debug.LogError("Add Application.exitToken");
-            if (QuittingManager.ApplicationIsQuitting)
-                throw new UMI3DAsyncManagerException("Application is quitting");
-#else
         if (QuittingManager.ApplicationIsQuitting)
                 throw new UMI3DAsyncManagerException("Application is quitting");
     #if UNITY_EDITOR
@@ -79,7 +74,6 @@ public static class UMI3DAsyncManager
                 UnityEngine.Debug.LogException(e);
             }
     #endif
-#endif
         TestTokens(tokens);
     }
 }

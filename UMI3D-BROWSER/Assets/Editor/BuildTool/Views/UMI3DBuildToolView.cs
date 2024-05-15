@@ -18,7 +18,7 @@ using System;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
-using static umi3d.browserEditor.BuildTool.UMI3DBuildTool;
+using static umi3d.browserEditor.BuildTool.UMI3DBuildToolWindow;
 
 namespace umi3d.browserEditor.BuildTool
 {

@@ -25,7 +25,7 @@ using DataCreation = umi3d.browserEditor.BuildTool.UMI3DBuildToolDataCreation;
 
 namespace umi3d.browserEditor.BuildTool
 {
-    public class UMI3DBuildTool : EditorWindow
+    public class UMI3DBuildToolWindow : EditorWindow
     {
         [SerializeField] private VisualTreeAsset ui = default;
         [SerializeField] private VisualTreeAsset target_VTA = default;
@@ -55,7 +55,7 @@ namespace umi3d.browserEditor.BuildTool
         [MenuItem("Tools/Build Tool")]
         public static void OpenBuildToolWindow()
         {
-            UMI3DBuildTool wnd = GetWindow<UMI3DBuildTool>();
+            UMI3DBuildToolWindow wnd = GetWindow<UMI3DBuildToolWindow>();
             wnd.titleContent = new GUIContent("UMI3D Build Tool");
             wnd.buildView.ChangePanel(E_BuildToolPanel.Main);
             wnd.maxSize = new(1000f, 300f);
@@ -65,7 +65,7 @@ namespace umi3d.browserEditor.BuildTool
         [MenuItem("Tools/Build Tool Configuration")]
         public static void OpenBuildToolConfigurationWindow()
         {
-            UMI3DBuildTool wnd = GetWindow<UMI3DBuildTool>();
+            UMI3DBuildToolWindow wnd = GetWindow<UMI3DBuildToolWindow>();
             wnd.titleContent = new GUIContent("UMI3D Build Tool Config");
             wnd.buildView.ChangePanel(E_BuildToolPanel.Configuration);
             wnd.maxSize = new(1000f, 300f);
@@ -76,7 +76,7 @@ namespace umi3d.browserEditor.BuildTool
         //[MenuItem("Tools/Build Tool History")]
         //public static void OpenBuildToolHistoryWindow()
         //{
-        //    UMI3DBuildTool wnd = GetWindow<UMI3DBuildTool>();
+        //    UMI3DBuildToolWindow wnd = GetWindow<UMI3DBuildToolWindow>();
         //    wnd.titleContent = new GUIContent("UMI3D Build Tool History");
         //    wnd.buildView.ChangePanel(E_BuildToolPanel.History);
         //}

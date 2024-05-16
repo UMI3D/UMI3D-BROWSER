@@ -16,6 +16,7 @@ limitations under the License.
 
 using System;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -28,6 +29,8 @@ namespace umi3dBrowsers.displayer
         [SerializeField] private Color transprentColor = Color.gray;
         [Header("Vignette main Image")]
         [SerializeField] private Image vignetteImage;
+        [SerializeField] private Color normalImageColor;
+        [SerializeField] private Color hoverImageColor;
 
         [Header("buttons")]
         [SerializeField] private ButtonDisplayer likeButton;
@@ -64,8 +67,12 @@ namespace umi3dBrowsers.displayer
         public event Action OnDisabled;
         public event Action OnHover;
 
+        private TMP_Text inputFieldText;
+
         private void Awake()
         {
+            inputFieldText = inputFieldBackground.GetComponentInChildren<TMP_Text>();
+
             transprentColor.a = 0;
             DisableSubComponents();
             pen.gameObject.SetActive(false);
@@ -94,6 +101,9 @@ namespace umi3dBrowsers.displayer
             inputFieldBackground.Text = pName;
             if (pImage != null)
                 vignetteImage = pImage;
+
+            vignetteImage.color = normalImageColor;
+            inputFieldText.color = normalImageColor;
         }
 
         public void SetupFavoriteButton(Action onFavorite, bool isFavorite = false)
@@ -124,9 +134,11 @@ namespace umi3dBrowsers.displayer
 
             vignetteState = VignetteState.Hovering;
 
+            vignetteImage.color = hoverImageColor;
+            inputFieldText.color = hoverImageColor;
+
             likeButton.gameObject.SetActive(true);
             trashButton.gameObject.SetActive(true);
-
         }
 
         public void HoverExit(PointerEventData eventData)
@@ -134,6 +146,9 @@ namespace umi3dBrowsers.displayer
             vignetteState = VignetteState.notHovering;
             if (gameObject.activeInHierarchy)
                 StartCoroutine(HoverDelay());
+
+            vignetteImage.color = normalImageColor;
+            inputFieldText.color = normalImageColor;
         }
 
         public void Click()

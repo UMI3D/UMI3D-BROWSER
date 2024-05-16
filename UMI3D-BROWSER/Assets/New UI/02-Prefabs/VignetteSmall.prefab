@@ -598,6 +598,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   transprentColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   vignetteImage: {fileID: 344009632092012096}
+  normalImageColor: {r: 0.4392157, g: 0.4392157, b: 0.4392157, a: 1}
+  hoverImageColor: {r: 1, g: 1, b: 1, a: 1}
   likeButton: {fileID: 3995020310514069545}
   likeImage: {fileID: 7902515993194549043}
   normalLikeIcon: {fileID: 21300000, guid: 40e731205ffd34744a4f701d9ac35b44, type: 3}
@@ -927,6 +929,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   inputField: {fileID: 4943612793382040763}
+  ImageButtonDisplayer: {fileID: 0}
 --- !u!114 &6295683158826162854
 MonoBehaviour:
   m_ObjectHideFlags: 0

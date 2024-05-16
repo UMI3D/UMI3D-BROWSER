@@ -6201,6 +6201,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: SettingsContent
       objectReference: {fileID: 0}
+    - target: {fileID: 1808870448261405348, guid: 9cebe07ec29d0434da7f218566d311e0,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2039263116565596550, guid: 9cebe07ec29d0434da7f218566d311e0,
+        type: 3}
+      propertyPath: settingPanels.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5027394167800674402, guid: 9cebe07ec29d0434da7f218566d311e0,
         type: 3}
       propertyPath: m_Pivot.x
@@ -6299,6 +6309,11 @@ PrefabInstance:
     - target: {fileID: 5027394167800674402, guid: 9cebe07ec29d0434da7f218566d311e0,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5098707433704280108, guid: 9cebe07ec29d0434da7f218566d311e0,
+        type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

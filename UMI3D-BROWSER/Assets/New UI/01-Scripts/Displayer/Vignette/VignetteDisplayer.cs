@@ -59,8 +59,8 @@ namespace umi3dBrowsers.displayer
         Coroutine cadeInOutCoroutine;
 
         [SerializeField] private UnityEvent onVignetteClicked;
-        
-        enum VignetteState { notHovering, Hovering, HoveringSubElement}
+
+        enum VignetteState { notHovering, Hovering, HoveringSubElement }
         VignetteState vignetteState;
 
         public event Action OnClick;
@@ -68,11 +68,16 @@ namespace umi3dBrowsers.displayer
         public event Action OnHover;
 
         private TMP_Text inputFieldText;
+        public TMP_Text InputFieldText {
+            get {
+                if (inputFieldText == null)
+                    inputFieldText = inputFieldBackground.GetComponentInChildren<TMP_Text>();
+                return inputFieldText;
+            }
+        }
 
         private void Awake()
         {
-            inputFieldText = inputFieldBackground.GetComponentInChildren<TMP_Text>();
-
             transprentColor.a = 0;
             DisableSubComponents();
             pen.gameObject.SetActive(false);
@@ -103,7 +108,7 @@ namespace umi3dBrowsers.displayer
                 vignetteImage = pImage;
 
             vignetteImage.color = normalImageColor;
-            inputFieldText.color = normalImageColor;
+            InputFieldText.color = normalImageColor;
         }
 
         public void SetupFavoriteButton(Action onFavorite, bool isFavorite = false)

@@ -56,9 +56,9 @@ namespace umi3dBrowsers.container
 
         [Header("Scrolling")]
         [SerializeField] private Scrollbar scrollbar;
-        [SerializeField] private Button buttonLeft;
+        [SerializeField] private SimpleButton buttonLeft;
         [SerializeField] private Image leftImage;
-        [SerializeField] private Button buttonRight;
+        [SerializeField] private SimpleButton buttonRight;
         [SerializeField] private Image rightImage;
         [SerializeField] private float scrollButtonSpeed = 1.0f;
 
@@ -88,11 +88,11 @@ namespace umi3dBrowsers.container
         {           
             scrollbar.value = 0;
 
-            buttonLeft.onClick.AddListener(() => {
+            buttonLeft.OnClick.AddListener(() => {
                 if (vignetteDisplayers.Count > (int)vignetteMode)
                     scrollbar.value -= scrollButtonSpeed / vignetteDisplayers.Count;
             });
-            buttonRight.onClick.AddListener(() => {
+            buttonRight.OnClick.AddListener(() => {
                 if(vignetteDisplayers.Count > (int)vignetteMode)
                     scrollbar.value += scrollButtonSpeed / vignetteDisplayers.Count;
             });
@@ -228,19 +228,15 @@ namespace umi3dBrowsers.container
         {
             if ((int)vignetteMode < vignetteDisplayers.Count) // cyan
             {
-                buttonLeft.colors = enabledNavigationColor;
-                buttonRight.colors = enabledNavigationColor;
-                buttonLeft.enabled = true;
-                buttonRight.enabled = true;
+                buttonLeft.interactable = true;
+                buttonRight.interactable = true;
                 rightImage.color = enabledNavigationColor.normalColor;
                 leftImage.color = enabledNavigationColor.normalColor;
             }
             else // grey
             {
-                buttonLeft.colors = disableNavigationColor;
-                buttonRight.colors = disableNavigationColor;
-                buttonLeft.enabled = false;
-                buttonRight.enabled = false;
+                buttonLeft.interactable = false;
+                buttonRight.interactable = false;
                 rightImage.color = disableNavigationColor.normalColor;
                 leftImage.color = disableNavigationColor.normalColor;
             }

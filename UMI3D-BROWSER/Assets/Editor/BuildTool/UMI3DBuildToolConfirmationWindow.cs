@@ -26,6 +26,7 @@ namespace umi3d.browserEditor.BuildTool
     public class UMI3DBuildToolConfirmationWindow : EditorWindow
     {
         [SerializeField] VisualTreeAsset ui;
+        [SerializeField] VisualTreeAsset target_VTA = default;
 
         UMI3DBuildToolConfirmationView confirmationView;
 
@@ -47,7 +48,8 @@ namespace umi3d.browserEditor.BuildTool
 
             confirmationView = new(
                 rootVisualElement,
-                ui
+                ui,
+                target_VTA
             );
             confirmationView.Bind();
             confirmationView.Set();

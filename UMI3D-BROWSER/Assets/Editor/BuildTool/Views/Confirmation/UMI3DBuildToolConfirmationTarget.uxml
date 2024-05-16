@@ -1,0 +1,7 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement style="flex-direction: row; justify-content: flex-start;">
+        <ui:Label tabindex="-1" text="Target" parse-escape-sequences="true" display-tooltip-when-elided="true" name="L_Target" enable-rich-text="true" style="width: 75px; text-overflow: ellipsis; overflow: hidden; margin-right: 10px; font-size: 16px; -unity-text-align: middle-left;" />
+        <ui:Label tabindex="-1" text="Release" parse-escape-sequences="true" display-tooltip-when-elided="true" name="L_Release" style="margin-right: 10px; margin-left: 10px; width: 80px; -unity-text-align: middle-left;" />
+        <ui:Label tabindex="-1" text="Scenes" parse-escape-sequences="true" display-tooltip-when-elided="true" name="L_Scenes" style="margin-left: 10px; -unity-text-align: middle-left;" />
+    </ui:VisualElement>
+</ui:UXML>

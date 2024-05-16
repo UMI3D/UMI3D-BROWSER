@@ -22,9 +22,10 @@ using UnityEngine.UIElements;
 
 namespace umi3d.browserEditor.BuildTool
 {
-    public class UMI3DBuildToolConfirmationView 
+    public class UMI3DBuildToolConfirmationView
     {
         public VisualElement root;
+        public VisualTreeAsset target_VTA;
 
         SubGlobal subGlobal = new("BuildTool");
         UMI3DBuildToolVersion_SO versionModel;
@@ -38,10 +39,12 @@ namespace umi3d.browserEditor.BuildTool
 
         public UMI3DBuildToolConfirmationView(
             VisualElement root,
-            VisualTreeAsset ui
+            VisualTreeAsset ui,
+            VisualTreeAsset target_VTA
         )
         {
             this.root = root;
+            this.target_VTA = target_VTA;
 
             root.Add(ui.Instantiate());
 
@@ -63,6 +66,31 @@ namespace umi3d.browserEditor.BuildTool
         {
             version.text = $"Version: {versionModel.newVersion.VersionFromNow}";
             currentBranch.text = $"Current branch: TODO";
+
+            targets.reorderable = false;
+            targets.virtualizationMethod = CollectionVirtualizationMethod.DynamicHeight;
+            targets.showFoldoutHeader = false;
+            targets.showAddRemoveFooter = false;
+            targets.itemsSource = targetModel.targets;
+            targets.makeItem = () =>
+            {
+                return target_VTA.Instantiate();
+            };
+            targets.bindItem = (visual, index) =>
+            {
+                //UMI3DBuildToolTargetView targetView = new(
+                //    root: visual,
+                //    index
+                //);
+                //targetView.Bind();
+                //targetView.Set();
+                //visual.userData = targetView;
+            };
+            targets.unbindItem = (visual, index) =>
+            {
+                //UMI3DBuildToolTargetView targetView = visual.userData as UMI3DBuildToolTargetView;
+                //targetView.Unbind();
+            };
         }
     }
 }

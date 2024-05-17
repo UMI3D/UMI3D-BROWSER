@@ -147,6 +147,7 @@ namespace umi3dBrowsers.displayer
                 currentlySelectedCellGo.SetActive(false);
                 RefreshStyle();
             }
+            EventSystem.current.SetSelectedGameObject(null);
         }
 
         public void Disable()
@@ -189,22 +190,10 @@ namespace umi3dBrowsers.displayer
 
         public void HoverEnter(PointerEventData eventData)
         {
-            // Fix highlighted color
-            var colors = dropdownButton.colors;
-            colors.normalColor = hightLight;
-            colors.pressedColor = colors.normalColor;
-            colors.selectedColor = colors.normalColor;
-            dropdownButton.colors = colors;
         }
 
         public void HoverExit(PointerEventData eventData)
         {
-            // Fix highlighted color
-            var colors = dropdownButton.colors;
-            colors.normalColor = thisColor;
-            colors.pressedColor = colors.normalColor;
-            colors.selectedColor = colors.normalColor;
-            dropdownButton.colors = colors;
         }
     }
 }

@@ -140,7 +140,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.16078432, g: 0.16078432, b: 0.16078432, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -190,6 +190,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54201f7897bbda644b218cb41fa75e97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  scaleHorizontalRT: 0
+  childRT: {fileID: 0}
+  updateOnGUI: 0
 --- !u!114 &711790245352809930
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -211,7 +214,7 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_NormalColor: {r: 0.16078432, g: 0.16078432, b: 0.16078432, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -247,12 +250,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   text: {fileID: 2336781769772095064}
-  thisImage: {fileID: 5134835369613451854}
+  title: {fileID: 0}
+  dropdownButton: {fileID: 711790245352809930}
   thisColor: {r: 0.16037738, g: 0.16037738, b: 0.16037738, a: 1}
   lightGridColor: {r: 0.254717, g: 0.254717, b: 0.254717, a: 1}
   darkGridColor: {r: 0.16078432, g: 0.16078432, b: 0.16078432, a: 1}
   isLightToBeginWith: 0
-  hightLight: {r: 0.5471698, g: 0.5471698, b: 0.5471698, a: 0}
+  hightLight: {r: 0.5471698, g: 0.5471698, b: 0.5471698, a: 1}
   itemPrefab: {fileID: 2462115079048964667, guid: 763863f334031304c81614dfdac6bebd,
     type: 3}
   cells: []

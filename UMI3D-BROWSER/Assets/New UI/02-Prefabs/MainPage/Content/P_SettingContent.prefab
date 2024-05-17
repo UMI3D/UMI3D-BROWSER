@@ -247,7 +247,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &5027394167800674402
 RectTransform:
   m_ObjectHideFlags: 0
@@ -298,8 +298,6 @@ MonoBehaviour:
   settingPanels:
   - panel: {fileID: 1808870448261405348}
     panelName: param_general
-  - panel: {fileID: 5098707433704280108}
-    panelName: param_audio
   useLocalization: 1
 --- !u!114 &6986793516741449211
 MonoBehaviour:
@@ -490,6 +488,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
+  updateOnGUI: 0
 --- !u!1 &253250627202791049
 GameObject:
   m_ObjectHideFlags: 0
@@ -920,6 +919,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
+  updateOnGUI: 0
 --- !u!114 &1541662393597346666
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2440,9 +2440,9 @@ RectTransform:
   - {fileID: 3165880055779950113}
   m_Father: {fileID: 7403810041977459503}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 254, y: -24.5}
   m_SizeDelta: {x: 508, y: 49}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7042615377760350752
@@ -2834,6 +2834,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
+  updateOnGUI: 0
 --- !u!1 &1609708644056068709
 GameObject:
   m_ObjectHideFlags: 0
@@ -3137,7 +3138,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &3391843678757302266
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3852,6 +3853,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
+  updateOnGUI: 0
 --- !u!1 &1933982448339699764
 GameObject:
   m_ObjectHideFlags: 0
@@ -4222,9 +4224,9 @@ RectTransform:
   - {fileID: 4618513105482813537}
   m_Father: {fileID: 3391843678757302266}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 507, y: -73.5}
   m_SizeDelta: {x: 1014, y: 49}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &424426757175059765
@@ -4429,6 +4431,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
+  updateOnGUI: 0
 --- !u!1 &3302532379375762911
 GameObject:
   m_ObjectHideFlags: 0
@@ -4604,6 +4607,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
+  updateOnGUI: 0
 --- !u!1 &3420707472624357048
 GameObject:
   m_ObjectHideFlags: 0
@@ -5038,6 +5042,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
+  updateOnGUI: 0
 --- !u!1 &3731306727492312671
 GameObject:
   m_ObjectHideFlags: 0
@@ -5630,6 +5635,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
+  updateOnGUI: 0
 --- !u!1 &4310298055818516002
 GameObject:
   m_ObjectHideFlags: 0
@@ -5842,6 +5848,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
+  updateOnGUI: 0
 --- !u!114 &5943595122015788840
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6270,6 +6277,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
+  updateOnGUI: 0
 --- !u!1 &4674286444402968911
 GameObject:
   m_ObjectHideFlags: 0
@@ -6446,6 +6454,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
+  updateOnGUI: 0
 --- !u!114 &3647440485934872116
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6893,7 +6902,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6275302604494109637
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8606,6 +8615,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
+  updateOnGUI: 0
 --- !u!114 &724476871858475824
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8669,7 +8679,7 @@ MonoBehaviour:
   lightGridColor: {r: 0.254717, g: 0.254717, b: 0.254717, a: 1}
   darkGridColor: {r: 0.16078432, g: 0.16078432, b: 0.16078432, a: 1}
   isLightToBeginWith: 0
-  hightLight: {r: 0.5471698, g: 0.5471698, b: 0.5471698, a: 0}
+  hightLight: {r: 0.4392157, g: 0.4392157, b: 0.4392157, a: 1}
   itemPrefab: {fileID: 2462115079048964667, guid: 763863f334031304c81614dfdac6bebd,
     type: 3}
   cells: []
@@ -9094,9 +9104,9 @@ RectTransform:
   - {fileID: 1826641895110537718}
   m_Father: {fileID: 7403810041977459503}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 761, y: -24.5}
   m_SizeDelta: {x: 506, y: 49}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1105231802635213782
@@ -10115,6 +10125,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
+  updateOnGUI: 0
 --- !u!1 &8741638520797406913
 GameObject:
   m_ObjectHideFlags: 0
@@ -10303,6 +10314,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
+  updateOnGUI: 0
 --- !u!1 &8889805527991125201
 GameObject:
   m_ObjectHideFlags: 0

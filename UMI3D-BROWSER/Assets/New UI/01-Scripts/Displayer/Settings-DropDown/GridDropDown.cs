@@ -36,7 +36,7 @@ namespace umi3dBrowsers.displayer
         [SerializeField] private TextMeshProUGUI title;
 
         [Header("Colors")]
-        [SerializeField] private Image thisImage;
+        [SerializeField] private Button dropdownButton;
         [SerializeField] private Color thisColor;
         [Space]
         [SerializeField] private Color lightGridColor;
@@ -72,7 +72,13 @@ namespace umi3dBrowsers.displayer
         public void Init(List<GridDropDownItemCell> cells, int indexCurrent = 0)
         {
             this.cells = cells;
-            thisImage.color = thisColor;
+
+            var colors = dropdownButton.colors;
+            colors.normalColor = thisColor;
+            colors.highlightedColor = hightLight;
+            colors.pressedColor = colors.normalColor;
+            colors.selectedColor = colors.normalColor;
+            dropdownButton.colors = colors;
 
             text.text = cells[indexCurrent].ItemText;
             InitAllCells();
@@ -108,20 +114,21 @@ namespace umi3dBrowsers.displayer
 
         private void RefreshStyle()
         {
-            bool light = isLightToBeginWith;
+            bool isLastElementLight = isLightToBeginWith;
+            ColorBlock colors;
             foreach (GridDropDownItemCell cell in cells)
             {
-                if (!cell.Image.gameObject.activeSelf) continue;
-                if (light)
-                {
-                    cell.Image.color = darkGridColor;
-                    light = false;
-                }
-                else
-                {
-                    cell.Image.color = lightGridColor;
-                    light = true;
-                }
+                if (!cell.Button.gameObject.activeSelf) 
+                    continue;
+
+                colors = cell.Button.colors;
+                colors.normalColor = isLastElementLight ? darkGridColor : lightGridColor;
+                colors.highlightedColor = hightLight;
+                colors.pressedColor = colors.normalColor;
+                colors.selectedColor = colors.normalColor;
+                cell.Button.colors = colors;
+
+                isLastElementLight = !isLastElementLight;
             }
         }
 
@@ -131,9 +138,7 @@ namespace umi3dBrowsers.displayer
             {
                 content.gameObject.SetActive(false);
                 if (currentlySelectedCellGo != null)
-                {
                     currentlySelectedCellGo.SetActive(true);
-                }
             }
             else
             {
@@ -147,16 +152,6 @@ namespace umi3dBrowsers.displayer
         public void Disable()
         {
 
-        }
-
-        public void HoverEnter(PointerEventData eventData)
-        {
-            thisImage.color = hightLight;
-        }
-
-        public void HoverExit(PointerEventData eventData)
-        {
-            thisImage.color = thisColor;
         }
 
         public void Init(Color normalColor, Color hoverColor, Color selectedColor)
@@ -190,6 +185,26 @@ namespace umi3dBrowsers.displayer
         public void SetResource(object resource)
         {
 
+        }
+
+        public void HoverEnter(PointerEventData eventData)
+        {
+            // Fix highlighted color
+            var colors = dropdownButton.colors;
+            colors.normalColor = hightLight;
+            colors.pressedColor = colors.normalColor;
+            colors.selectedColor = colors.normalColor;
+            dropdownButton.colors = colors;
+        }
+
+        public void HoverExit(PointerEventData eventData)
+        {
+            // Fix highlighted color
+            var colors = dropdownButton.colors;
+            colors.normalColor = thisColor;
+            colors.pressedColor = colors.normalColor;
+            colors.selectedColor = colors.normalColor;
+            dropdownButton.colors = colors;
         }
     }
 }

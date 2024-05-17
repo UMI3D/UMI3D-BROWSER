@@ -101,6 +101,14 @@ namespace umi3dBrowsers.displayer
             inputFieldBackground.OnDisabled += () => DisableSubComponents();
         }
 
+        private void OnDestroy()
+        {
+
+            likeButton.OnDisabled -= () => DisableSubComponents();
+            trashButton.OnDisabled -= () => DisableSubComponents();
+            inputFieldBackground.OnDisabled -= () => DisableSubComponents();
+        }
+
         public void SetupDisplay(string pName, Image pImage = null)
         {
             inputFieldBackground.Text = pName;
@@ -140,7 +148,7 @@ namespace umi3dBrowsers.displayer
             vignetteState = VignetteState.Hovering;
 
             vignetteImage.color = hoverImageColor;
-            inputFieldText.color = hoverImageColor;
+            InputFieldText.color = hoverImageColor;
 
             likeButton.gameObject.SetActive(true);
             trashButton.gameObject.SetActive(true);
@@ -153,7 +161,7 @@ namespace umi3dBrowsers.displayer
                 StartCoroutine(HoverDelay());
 
             vignetteImage.color = normalImageColor;
-            inputFieldText.color = normalImageColor;
+            InputFieldText.color = normalImageColor;
         }
 
         public void Click()

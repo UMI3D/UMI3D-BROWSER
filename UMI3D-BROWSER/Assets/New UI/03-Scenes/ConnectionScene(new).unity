@@ -6780,6 +6780,11 @@ PrefabInstance:
       propertyPath: dropdownButton
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 565294924631027045, guid: 9cebe07ec29d0434da7f218566d311e0,
+        type: 3}
+      propertyPath: dropdownButton
+      value: 
+      objectReference: {fileID: 4441879685454973321}
     - target: {fileID: 724476871858475824, guid: 9cebe07ec29d0434da7f218566d311e0,
         type: 3}
       propertyPath: m_Colors.m_NormalColor.b
@@ -6995,6 +7000,18 @@ PrefabInstance:
       addedObject: {fileID: 1516853286}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9cebe07ec29d0434da7f218566d311e0, type: 3}
+--- !u!114 &4441879685454973321 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1541662393597346666, guid: 9cebe07ec29d0434da7f218566d311e0,
+    type: 3}
+  m_PrefabInstance: {fileID: 4441879685454973320}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b37eda9be5f2c8447be3d0c50bae9d8d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4701503571925627661
 GameObject:
   m_ObjectHideFlags: 0

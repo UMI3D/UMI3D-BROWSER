@@ -50,10 +50,7 @@ namespace umi3dBrowsers.interaction.selection.projector
 
             selectedInteractableManager.IfCompleted(sim =>
             {
-                sim.Display(
-                    interactable,
-                    controller.transform.position
-                );
+                sim.Display(interactable);
             });
         }
 

@@ -48,5 +48,19 @@ namespace inetum.unityUtils.async
                 action?.Invoke(task.Result);
             }
         }
+
+        public static bool TryGet<T>(this Task<T> task, out T variable)
+        {
+            if (task?.IsCompleted ?? false)
+            {
+                variable = task.Result;
+                return true;
+            }
+            else
+            {
+                variable = default;
+                return false;
+            }
+        }
     }
 }

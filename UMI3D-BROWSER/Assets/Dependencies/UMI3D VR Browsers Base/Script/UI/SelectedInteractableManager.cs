@@ -63,6 +63,8 @@ namespace umi3dVRBrowsersBase.ui
         public List<AbstractParameterDto> parameters;
         [HideInInspector]
         public Task<Transform> playerTransform;
+        [HideInInspector]
+        public Task<Transform> cameraTransform;
 
         Coroutine hideCoroutine;
 
@@ -72,6 +74,10 @@ namespace umi3dVRBrowsersBase.ui
             playerTransform = player.ContinueWith(task =>
             {
                 return task.Result.transform;
+            });
+            cameraTransform = player.ContinueWith(task =>
+            {
+                return task.Result.mainCamera.transform;
             });
 
             Hide();
@@ -84,14 +90,16 @@ namespace umi3dVRBrowsersBase.ui
                 Hide();
             }
 
+            if (!cameraTransform.TryGet(out Transform ct))
+            {
+                return;
+            }
             if (isActiveAndEnabled)
             {
-                Vector3 playerPosition = Vector3.zero;
-                playerTransform.IfCompleted(pt =>
-                {
-                    playerPosition = pt.position;
-                });
-                var distance = Vector3.Distance(transform.position, playerPosition);
+                var distance = Vector3.Distance(
+                    transform.position,
+                    ct.position
+                );
                 var scale = Mathf.Lerp(
                     minScale,
                     maxScale,

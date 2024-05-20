@@ -42,7 +42,6 @@ namespace umi3dVRBrowsersBase.ui
         public Image background;
         public new BoxCollider collider;
 
-        public float delayBeforeHiding = 1f;
         [Tooltip("Used for gear scale.")]
         public float minDistance = 2f;
         [Tooltip("Used for gear scale.")]
@@ -253,7 +252,6 @@ namespace umi3dVRBrowsersBase.ui
                 return;
             }
 
-            float time = 0f;
             IEnumerator HideCoroutine()
             {
                 while (isSelected)
@@ -261,11 +259,8 @@ namespace umi3dVRBrowsersBase.ui
                     yield return null;
                 }
 
-                while (time < delayBeforeHiding)
-                {
-                    time += Time.deltaTime;
-                    yield return null;
-                }
+                // Wait one frame so that text field "show keyboard" action works.
+                yield return null;
 
                 if (!isSelected)
                 {

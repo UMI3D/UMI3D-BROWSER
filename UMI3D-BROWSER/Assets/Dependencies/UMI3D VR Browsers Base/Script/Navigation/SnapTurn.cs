@@ -14,6 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
+using inetum.unityUtils.async;
+using System;
+using System.Threading.Tasks;
+using umi3d.browserRuntime.player;
 using umi3dVRBrowsersBase.interactions;
 using UnityEngine;
 using UnityEngine.Events;
@@ -22,32 +27,42 @@ namespace umi3dVRBrowsersBase.navigation
 {
     public class SnapTurn : MonoBehaviour
     {
-        #region Fields
+        [SerializeField] float snapTurnAngle = 45;
 
-        [SerializeField]
-        private float snapTurnAngle = 45;
-
-        [SerializeField]
-        UnityEvent onSnapTurnStart = new UnityEvent();
-
-        #endregion
+        Task<UMI3DVRPlayer> player;
 
         #region Methods
 
+        private void Awake()
+        {
+            player = Global.GetAsync<UMI3DVRPlayer>();
+        }
+
         private void Update()
         {
-            if (AbstractControllerInputManager.Instance.GetLeftSnapTurn(interactions.ControllerType.LeftHandController)
-                || AbstractControllerInputManager.Instance.GetLeftSnapTurn(interactions.ControllerType.RightHandController))
+            var input = AbstractControllerInputManager.Instance;
+            Func<bool> turnLeft = () =>
             {
-                transform.Rotate(0, -snapTurnAngle, 0);
-                onSnapTurnStart?.Invoke();
-            }
-            else if (AbstractControllerInputManager.Instance.GetRightSnapTurn(interactions.ControllerType.LeftHandController)
-                || AbstractControllerInputManager.Instance.GetRightSnapTurn(interactions.ControllerType.RightHandController))
+                return input.GetLeftSnapTurn(ControllerType.LeftHandController)
+                || input.GetLeftSnapTurn(ControllerType.RightHandController);
+            };
+            Func<bool> turnRight = () =>
             {
-                transform.Rotate(0, snapTurnAngle, 0);
-                onSnapTurnStart?.Invoke();
-            }
+                return input.GetRightSnapTurn(ControllerType.LeftHandController)
+                || input.GetRightSnapTurn(ControllerType.RightHandController);
+            };
+
+            player.IfCompleted(p =>
+            {
+                if (turnLeft())
+                {
+                    transform.RotateAround(p.mainCamera.transform.position, Vector3.up, -snapTurnAngle);
+                }
+                else if (turnRight())
+                {
+                    transform.RotateAround(p.mainCamera.transform.position, Vector3.up, snapTurnAngle);
+                }
+            });
         }
 
         #endregion

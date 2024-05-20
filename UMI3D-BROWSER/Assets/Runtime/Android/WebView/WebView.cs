@@ -92,7 +92,7 @@ namespace QuestBrowser.WebView
 
         private bool useSearchInput = false;
 
-        private string previousUrl;
+        private string previousUrl, lastLoadedUrl;
 
         private ulong id;
 
@@ -142,7 +142,7 @@ namespace QuestBrowser.WebView
 
                     var request = new WebViewUrlChangedRequestDto
                     {
-                        url = previousUrl,
+                        url = lastLoadedUrl,
                         webViewId = id,
                         scrollOffset = new() { X = scrollX, Y = scrollY },
                     };
@@ -282,6 +282,8 @@ namespace QuestBrowser.WebView
                 url = url,
                 webViewId = id
             };
+
+            lastLoadedUrl = url;
 
             UMI3DClientServer.SendRequest(request, true);
         }

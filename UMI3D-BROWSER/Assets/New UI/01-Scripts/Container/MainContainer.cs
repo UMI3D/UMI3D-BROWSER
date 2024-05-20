@@ -137,7 +137,7 @@ namespace umi3dBrowsers
             popupManager.OnPopUpClose += () => tween.Rewind();
 
             HandleContentState(contentState);
-            SetVersion(UMI3DVersion.version);
+            SetVersion(Application.version);
             BindConnectionService();
             BindLoaderDisplayer();
 

@@ -59,29 +59,25 @@ public static class UMI3DAsyncManager
 
     private static void ErrorIfQuitting(List<CancellationToken> tokens, bool isMainThread = true)
     {
-#if UNITY_2022_1_OR_NEWER
-            if (QuittingManager.ApplicationIsQuitting)
-                throw new UMI3DAsyncManagerException("Application is quitting");
-#else
         if (QuittingManager.ApplicationIsQuitting)
-                throw new UMI3DAsyncManagerException("Application is quitting");
-    #if UNITY_EDITOR
-            try
+            throw new UMI3DAsyncManagerException("Application is quitting");
+#if UNITY_EDITOR
+        try
+        {
+            if (isMainThread && !Application.isPlaying)
             {
-                if (isMainThread && !Application.isPlaying)
-                {
-                    throw new UMI3DAsyncManagerException("Application is not playing");
-                }
+                throw new UMI3DAsyncManagerException("Application is not playing");
             }
-            catch(UnityException e)
-            {
-                UnityEngine.Debug.LogException(e);
-            }
-    #endif
+        }
+        catch (UnityException e)
+        {
+            UnityEngine.Debug.LogException(e);
+        }
 #endif
         TestTokens(tokens);
     }
 }
+
 public class UMI3DAsyncManagerException : System.Exception
 {
     public UMI3DAsyncManagerException(string message) : base(message)

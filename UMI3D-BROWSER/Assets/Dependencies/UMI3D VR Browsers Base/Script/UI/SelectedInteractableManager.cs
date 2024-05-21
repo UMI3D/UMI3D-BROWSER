@@ -63,6 +63,8 @@ namespace umi3dVRBrowsersBase.ui
         public List<AbstractParameterDto> parameters;
         [HideInInspector]
         public Task<Transform> playerTransform;
+        [HideInInspector]
+        public Task<Transform> cameraTransform;
 
         Coroutine hideCoroutine;
 
@@ -72,6 +74,10 @@ namespace umi3dVRBrowsersBase.ui
             playerTransform = player.ContinueWith(task =>
             {
                 return task.Result.transform;
+            });
+            cameraTransform = player.ContinueWith(task =>
+            {
+                return task.Result.mainCamera.transform;
             });
 
             Hide();
@@ -84,14 +90,16 @@ namespace umi3dVRBrowsersBase.ui
                 Hide();
             }
 
+            if (!cameraTransform.TryGet(out Transform ct))
+            {
+                return;
+            }
             if (isActiveAndEnabled)
             {
-                Vector3 playerPosition = Vector3.zero;
-                playerTransform.IfCompleted(pt =>
-                {
-                    playerPosition = pt.position;
-                });
-                var distance = Vector3.Distance(transform.position, playerPosition);
+                var distance = Vector3.Distance(
+                    transform.position,
+                    ct.position
+                );
                 var scale = Mathf.Lerp(
                     minScale,
                     maxScale,
@@ -116,8 +124,7 @@ namespace umi3dVRBrowsersBase.ui
         /// </summary>
         /// <param name="interactable"></param>
         /// <param name="position">World position of the gear</param>
-        /// <param name="normal">World normal of the gear</param>
-        public void Display(Interactable interactable, Vector3 position, Vector3 normal)
+        public void Display(Interactable interactable, Vector3 position)
         {
             Rest();
             if (hideCoroutine != null)
@@ -153,7 +160,6 @@ namespace umi3dVRBrowsersBase.ui
             {
                 if (interactions[0] is EventDto || interactions[0] is ManipulationDto)
                 {
-                    
                     string _label = interactions[0].name;
                     if (string.IsNullOrEmpty(_label) || _label == "new tool")
                     {
@@ -185,55 +191,64 @@ namespace umi3dVRBrowsersBase.ui
             }
 
             transform.position = position;
-            transform.rotation = Quaternion.LookRotation(-normal, Vector3.up);
+            cameraTransform.IfCompleted(ct =>
+            {
+                var offset = transform.position - ct.position;
+                transform.LookAt(transform.position + offset);
+            });
         }
 
         /// <summary>
         /// Displays the interactable information.<br/> 
         /// Use an interactable container and a look at point and compute the adequate position.
         /// </summary>
-        /// <param name="interactableContainer"></param>
-        /// <param name="lookAtPoint">World position of the point the object is looked at.</param>
-        public void Display(InteractableContainer interactableContainer, Vector3 lookAtPoint)
+        /// <param name="container"></param>
+        public void Display(InteractableContainer container)
         {
-            Vector3 rootPosition;
-            Vector3 normal;
-            if (interactableContainer.TryGetComponent(out MeshCollider collider) && collider.convex)
+            if (!playerTransform.TryGet(out Transform pt))
             {
-                rootPosition = collider.ClosestPoint(lookAtPoint);
-                normal = -(rootPosition - lookAtPoint).normalized;
-            }
-            else
-            {
-                Ray ray = new Ray(lookAtPoint, interactableContainer.transform.position - lookAtPoint);
-                (RaycastHit[] hits, int hitCount) hitsInfo = umi3d.common.Physics.RaycastAll(ray);
-
-                if (hitsInfo.hitCount == 0) // happens if the center of the object is outside of the mesh
-                {
-                    rootPosition = interactableContainer.transform.position;
-                    normal = -(rootPosition - lookAtPoint).normalized;
-                }
-                else
-                {
-                    //TODO : remove try catch later for a better test
-                    try
-                    {
-                        Collider icCollider = interactableContainer.GetComponentInChildren<Collider>();
-                        RaycastHit[] hits = hitsInfo.hits.SubArray(0, hitsInfo.hitCount);
-                        float closestDist = hits.Where(x => x.collider == icCollider).Min(x => x.distance);
-                        RaycastHit closest = Array.Find(hits, x => x.distance == closestDist);
-                        rootPosition = closest.point;
-                        normal = closest.normal;
-                    }
-                    catch
-                    {
-                        rootPosition = interactableContainer.transform.position;
-                        normal = -(rootPosition - lookAtPoint).normalized;
-                    }
-                }
+                return;
             }
 
-            Display(interactableContainer.Interactable, rootPosition, normal);
+            // Convex meshCollider :
+            if (container.TryGetComponent(out MeshCollider meshCollider) && meshCollider.convex)
+            {
+                Display(
+                    container.Interactable,
+                    meshCollider.ClosestPoint(pt.position)
+                );
+                return;
+            }
+
+            Ray ray = new Ray(pt.position, container.transform.position - pt.position);
+            (RaycastHit[] hits, int hitCount) = umi3d.common.Physics.RaycastAll(ray);
+
+            // if the center of the object is outside of the mesh :
+            if (hitCount == 0)
+            {
+                Display(
+                    container.Interactable,
+                    container.transform.position
+                );
+                return;
+            }
+
+            bool CollideWith(Collider collider, out IEnumerable<RaycastHit> collidedHits)
+            {
+                hits = hits.SubArray(0, hitCount);
+                collidedHits = hits.Where(x => x.collider == collider);
+                return collidedHits.Count() != 0;
+            };
+            if (container.TryGetComponent(out Collider collider) 
+                && CollideWith(collider, out IEnumerable<RaycastHit> collidedHits))
+            {
+                float closestDist = collidedHits.Min(x => x.distance);
+                RaycastHit closest = Array.Find(hits, x => x.distance == closestDist);
+                Display(container.Interactable, closest.point);
+                return;
+            }
+
+            Display(container.Interactable, container.transform.position);
         }
 
         /// <summary>

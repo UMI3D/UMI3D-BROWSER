@@ -96,6 +96,8 @@ namespace QuestBrowser.WebView
 
         private ulong id;
 
+        private bool isInit = false;
+
         #endregion
 
         #region Methods
@@ -179,8 +181,8 @@ namespace QuestBrowser.WebView
             topBarContainer.position = (corners[0] + corners[3]) / 2f;
 
             keyboard.position = new Vector3(
-                keyboard.position.x, 
-                bottomBarContainer.position.y, 
+                keyboard.position.x,
+                bottomBarContainer.position.y,
                 keyboard.position.z
             );
 
@@ -222,9 +224,12 @@ namespace QuestBrowser.WebView
             webView.ChangeTextureSize((int)size.x, (int)size.y);
         }
 
-        protected override void OnUrlChanged(string url)
+        protected async override void OnUrlChanged(string url)
         {
             IsSynchronizing = false;
+
+            while (!isInit)
+                await UMI3DAsyncManager.Yield();
 
             webView.LoadUrl(url);
 
@@ -272,6 +277,8 @@ namespace QuestBrowser.WebView
 
         public void OnUrlLoaded(string url)
         {
+            isInit = true;
+
             if (searchField != null)
             {
                 searchField.text = url;

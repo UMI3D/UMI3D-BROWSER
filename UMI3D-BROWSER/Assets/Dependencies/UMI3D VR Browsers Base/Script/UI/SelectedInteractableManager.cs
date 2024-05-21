@@ -163,11 +163,8 @@ namespace umi3dVRBrowsersBase.ui
                     string _label = interactions[0].name;
                     if (string.IsNullOrEmpty(_label) || _label == "new tool")
                     {
-                        _label = interactable.name;
-                    }
-                    if (string.IsNullOrEmpty(_label) || _label == "new tool")
-                    {
-                        _label = "To Trigger";
+                        _label = "";
+                        background.enabled = false;
                     }
                     label.text = _label;
                 }

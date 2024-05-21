@@ -112,7 +112,6 @@ namespace QuestBrowser.WebView
             //keyboard.Hide();
 
             GetComponent<CanvasScaler>().dynamicPixelsPerUnit = 3;
-            GetComponent<Canvas>().sortingOrder = 1;
 
             synchronizeRectTransform.gameObject.SetActive(false);
 

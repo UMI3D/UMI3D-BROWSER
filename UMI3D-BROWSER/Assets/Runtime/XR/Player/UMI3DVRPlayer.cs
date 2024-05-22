@@ -19,6 +19,8 @@ using umi3d.browserRuntime.navigation;
 using umi3d.cdk;
 using umi3d.cdk.collaboration.userCapture;
 using umi3d.cdk.navigation;
+using umi3dVRBrowsersBase.interactions;
+using umi3dVRBrowsersBase.navigation;
 using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
@@ -40,6 +42,9 @@ namespace umi3d.browserRuntime.player
         [HideInInspector] public DynamicMoveProvider dynamicMoveProvider;
 
         [HideInInspector] public UMI3DNavigation navigation = new();
+        [HideInInspector] public SnapTurn snapTurn;
+        public VRInputObserver teleportingLeft;
+        public VRInputObserver teleportingRight;
 
         private void Awake()
         {
@@ -51,12 +56,17 @@ namespace umi3d.browserRuntime.player
             teleportationProvider = locomotionSystem?.GetComponentInChildren<TeleportationProvider>();
             dynamicMoveProvider = locomotionSystem?.GetComponentInChildren<DynamicMoveProvider>();
 
+            snapTurn = this?.GetComponent<SnapTurn>();
+
             var navigationDelegate = new VRNavigationDelegate();
             navigationDelegate.Init(
                 this,
                 mainCamera.transform,
                 xrOrigin.transform,
-                personalSkeletonContainer.transform
+                personalSkeletonContainer.transform,
+                snapTurn,
+                teleportingLeft,
+                teleportingRight
             );
             navigation.Init(navigationDelegate);
 

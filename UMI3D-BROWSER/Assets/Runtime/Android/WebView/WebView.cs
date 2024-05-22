@@ -26,10 +26,15 @@ namespace QuestBrowser.WebView
 {
     public class WebView : AbstractUMI3DWebView
     {
-        #region Methods
+        #region Fields
 
         [SerializeField]
         private UnityGeckoWebViewInput input = null;
+
+        [SerializeField]
+        private Canvas webViewCanvas = null;
+        [SerializeField]
+        private CanvasScaler webViewCanvasScaler = null;
 
         [SerializeField]
         private RectTransform bottomBarContainer = null;
@@ -113,8 +118,8 @@ namespace QuestBrowser.WebView
         {
             //keyboard.Hide();
 
-            GetComponent<CanvasScaler>().dynamicPixelsPerUnit = 3;
-            GetComponent<Canvas>().sortingOrder = 1;
+            webViewCanvasScaler.dynamicPixelsPerUnit = 3;
+            webViewCanvas.sortingOrder = 1;
 
             synchronizeRectTransform.gameObject.SetActive(false);
 

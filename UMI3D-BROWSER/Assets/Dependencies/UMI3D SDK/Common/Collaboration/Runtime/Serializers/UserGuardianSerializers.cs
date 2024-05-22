@@ -25,6 +25,7 @@ namespace umi3d.common.lbe.guardian
                 //readable = UMI3DSerializer.TryRead(container, out List<ARAnchorDto> anchorARList);
 
                 List<ARAnchorDto> anchorARList = UMI3DSerializer.ReadList<ARAnchorDto>(container);
+                float offsetGuardian = UMI3DSerializer.Read<float>(container);
 
                 Debug.Log("Number of anchor DTOs read: " + anchorARList.Count);             
 
@@ -34,7 +35,8 @@ namespace umi3d.common.lbe.guardian
 
                     var userguardian = new UserGuardianDto
                     {
-                        anchorAR = anchorARList
+                        anchorAR = anchorARList,
+                        OffsetGuardian = offsetGuardian
                     };
 
                     readable = true;
@@ -54,10 +56,11 @@ namespace umi3d.common.lbe.guardian
             if (value is UserGuardianDto c)
             {
                 Debug.Log("Remi : anchor guardian  Write 2");
-
+                Debug.Log("Remi : Offset Write -> " + c.OffsetGuardian);
 
                 bytable = UMI3DSerializer.Write(UMI3DOperationKeys.GuardianBrowserRequest)
-                    + UMI3DSerializer.WriteCollection(c.anchorAR);
+                    + UMI3DSerializer.WriteCollection(c.anchorAR)
+                    + UMI3DSerializer.Write(c.OffsetGuardian);
                 return true;
             }
 
@@ -108,6 +111,7 @@ namespace umi3d.common.lbe.guardian
             if (value is SendGuardianRequestDto s)
             {
                 Debug.Log("<color=blue> Remi : Writing SendGuardianRequestDto </color>");
+                Debug.Log("Remi : Offset Write 2 -> "+s.guardianData.OffsetGuardian);
 
                 bytable = UMI3DSerializer.Write(UMI3DOperationKeys.GuardianBrowserRequest)
                     + UMI3DSerializer.Write(s.guardianData);

@@ -74,6 +74,8 @@ namespace umi3d.cdk.collaboration
         static public UnityEvent EnvironementJoinned = new UnityEvent();
         static public UnityEvent EnvironementLoaded = new UnityEvent();
 
+        static public EnterDto enterDto;
+
         /// <summary>
         /// Get current user UMI3D id.
         /// </summary>
@@ -582,6 +584,7 @@ namespace umi3d.cdk.collaboration
             {
                 PostJoinProgress.AddComplete();
                 EnterDto enter = await HttpClient.SendPostJoin(joinDto);
+                enterDto = enter;
                 PostJoinProgress.AddAndSetStatus("Joined Environment");
                 isConnecting = false;
                 isConnected = true;

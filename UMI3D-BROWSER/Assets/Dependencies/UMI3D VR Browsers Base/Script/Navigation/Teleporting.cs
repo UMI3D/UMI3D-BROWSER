@@ -38,6 +38,8 @@ namespace umi3dVRBrowsersBase.navigation
         /// </summary>
         public GameObject centerEyeAnchor;
 
+        public GameObject calibrateur;
+
         /// <summary>
         /// Teleportation preview.
         /// </summary>
@@ -90,8 +92,5 @@ namespace umi3dVRBrowsersBase.navigation
                                                                    position.y,
                                                                    position.z - offset.z);
         }
-
-        
-
     }
 }

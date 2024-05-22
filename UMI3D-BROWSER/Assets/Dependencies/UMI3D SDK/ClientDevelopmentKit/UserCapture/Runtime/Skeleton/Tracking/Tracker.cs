@@ -45,8 +45,8 @@ namespace umi3d.cdk.userCapture.tracking
             distantController = new DistantController()
             {
                 boneType = boneType,
-                position = transform.position,
-                rotation = transform.rotation,
+                position = transform.position /*- UMI3DLoadingHandler.Instance.transform.position*/,
+                rotation = transform.rotation /** Quaternion.Inverse(UMI3DLoadingHandler.Instance.transform.rotation)*/,
                 scale = transform.localScale,
                 isActive = isActif,
                 isOverrider = isOverrider
@@ -55,8 +55,8 @@ namespace umi3d.cdk.userCapture.tracking
 
         protected virtual void UpdateDistantController()
         {
-            distantController.position = transform.position;
-            distantController.rotation = transform.rotation;
+            distantController.position = transform.position /*- UMI3DLoadingHandler.Instance.transform.position*/;
+            distantController.rotation = transform.rotation /** Quaternion.Inverse(UMI3DLoadingHandler.Instance.transform.rotation)*/;
             distantController.scale = transform.localScale;
             distantController.isActive = isActif;
             distantController.isOverrider = isOverrider;

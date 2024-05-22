@@ -13,6 +13,7 @@ using umi3d.common;
 using umi3d.cdk;
 using umi3d.common.collaboration.dto.signaling;
 using umi3d.cdk.collaboration;
+using umi3d.cdk.navigation;
 
 namespace ClientLBE
 {
@@ -33,7 +34,8 @@ namespace ClientLBE
         private UserGuardianDto userGuardianDto;
 
         public GameObject Player;
-        private GameObject Scene;
+        public GameObject Scene;
+        //public GameObject AvatarScene;
         public GameObject Calibreur;
 
         public void Start()
@@ -44,46 +46,83 @@ namespace ClientLBE
 
         IEnumerator CalibrationScene()
         {
-            yield return new WaitForSeconds(3f);
+            //yield return new WaitForEndOfFrame();
+            //yield return new WaitForEndOfFrame();
 
-            if (Player != null)
+            yield return new WaitForSeconds(1f);
+
+            if (Player != null && (UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DLoadingParameters).BrowserType == XRBrowserTypes.AR)
             {
                 // Obtenir le parent du GameObject Player (Scene)
-                Transform parent = Player.transform.parent;
+                //Transform parent = Player.transform.parent;
 
-                if (parent != null)
-                {
-                    Debug.Log("Remi : " + Player.name + " a un parent : " + parent.name);
+                //if (parent != null)
+                //{
+                //var calibPosOffset = new Vector3(Calibreur.transform.position.x, 0f, Calibreur.transform.position.z) - Scene.transform.position;
+                //var calibRotOffset = Calibreur.transform.rotation * Quaternion.Inverse(Scene.transform.rotation);
 
-                    Scene = parent.gameObject;
+                //var p = Player.transform.position + UMI3DLoadingHandler.Instance.transform.position - calibPosOffset;
+                //var r = Player.transform.rotation * calibRotOffset * UMI3DLoadingHandler.Instance.transform.rotation;
+                //UMI3DNavigation.currentNav.Teleport(UMI3DGlobalID.EnvironmentId, new TeleportDto() { position = p.Dto(), rotation = r.Dto() });
+
+                //    var parent = this.transform.parent;
+                //this.transform.SetParent(null, true);
+
+                Player.transform.SetParent(null, true);
+                //AvatarScene.transform.SetParent(null, true);
+
+                Scene.transform.position = new Vector3(Calibreur.transform.position.x, 0f, Calibreur.transform.position.z);
+                Scene.transform.rotation = Calibreur.transform.rotation;
+
+                //this.transform.SetParent(Scene.transform, true);
+                Player.transform.SetParent(Scene.transform, true);
+                //AvatarScene.transform.SetParent(Scene.transform, true);
+                //AvatarScene.transform.position = Scene.transform.position;
+
+                //Player.transform.rotation = Calibreur.transform.rotation;
+
+                //Player.transform.position += Calibreur.transform.localRotation * calibPosOffset;
+                //Player.transform.localRotation *= Calibreur.transform.localRotation;
+
+
+
+                //yield return new WaitForEndOfFrame();
+
+                //Calibreur.SetActive(false);
+
+                    //Debug.Log("Remi : " + Player.name + " a un parent : " + parent.name);
+
+                    //Scene = parent.gameObject;
 
                     // Détacher le Player de son parent (Scene)
-                    Player.transform.parent = null;
+                    //Player.transform.parent = null;
 
                     // Définir le parent "Scene" comme enfant de Player
-                    Scene.transform.SetParent(Player.transform);
+                    //Scene.transform.SetParent(Player.transform);
 
                     // Définir la position de "Scene" en fonction du Calibreur
-                    Scene.transform.position = new Vector3(Calibreur.transform.position.x, 0.0f, Calibreur.transform.position.z);
+                    //Scene.transform.position = new Vector3(Calibreur.transform.position.x + UMI3DEnvironmentClient.enterDto.userPosition.X , 0.0f, Calibreur.transform.position.z + UMI3DEnvironmentClient.enterDto.userPosition.Z);
 
                     // Définir la rotation de "Scene" en fonction du Calibreur
-                    Scene.transform.rotation = new Quaternion(Scene.transform.rotation.x, Calibreur.transform.rotation.y, Scene.transform.rotation.z, Scene.transform.rotation.w);
+                    //Scene.transform.rotation = new Quaternion(Scene.transform.rotation.x, Calibreur.transform.rotation.y, Scene.transform.rotation.z, Scene.transform.rotation.w);
 
                     // Détacher "Scene" de son parent (Player)
-                    Scene.transform.SetParent(null);
+                    //Scene.transform.SetParent(null);
 
                     // Réattacher le Player à son parent initial
-                    Player.transform.parent = parent;
-                }
-                else
-                {
-                    Debug.Log("Remi : " + Player.name + " n'a pas de parent.");
-                }
+                    //Player.transform.parent = parent;
+                //}
+                //else
+                //{
+                //    Debug.Log("Remi : " + Player.name + " n'a pas de parent.");
+                //}
             }
             else
             {
                 Debug.LogWarning("Remi : Aucun GameObject à vérifier n'est assigné !");
             }
+
+            Calibreur.SetActive(false);
         }
 
 

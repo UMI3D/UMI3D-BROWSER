@@ -246,6 +246,18 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 33b00739fcb2e704582ae7dc517b83a4, type: 3}
+--- !u!114 &740836190096781194 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8244518235068575338, guid: 33b00739fcb2e704582ae7dc517b83a4,
+    type: 3}
+  m_PrefabInstance: {fileID: 740836190096781193}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78c727b25bdee8c44a431b1eed1fa460, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &7575369306401129573
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -444,11 +456,31 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2194609959904435745, guid: 503d8cf448de25647a3f6a39ab0d9bd9,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 740836190096781194}
+    - target: {fileID: 2194609959904435745, guid: 503d8cf448de25647a3f6a39ab0d9bd9,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Leave
+      objectReference: {fileID: 0}
+    - target: {fileID: 2194609959904435745, guid: 503d8cf448de25647a3f6a39ab0d9bd9,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: umi3dBrowsers.player.WatchMenu, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 2349924369267164419, guid: 503d8cf448de25647a3f6a39ab0d9bd9,
         type: 3}
       propertyPath: m_playerCamera
       value: 
       objectReference: {fileID: 1131452855}
+    - target: {fileID: 2525816886715127406, guid: 503d8cf448de25647a3f6a39ab0d9bd9,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2938410453841196385, guid: 503d8cf448de25647a3f6a39ab0d9bd9,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -547,7 +579,7 @@ PrefabInstance:
     - target: {fileID: 5365882361262844315, guid: 503d8cf448de25647a3f6a39ab0d9bd9,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0.0000025867366
+      value: 0.00050015055
       objectReference: {fileID: 0}
     - target: {fileID: 6209316502294966435, guid: 503d8cf448de25647a3f6a39ab0d9bd9,
         type: 3}

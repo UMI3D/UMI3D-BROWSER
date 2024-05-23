@@ -30,6 +30,12 @@ namespace utils.tweens
         private float time = 1;
         private Vector3 tweenOrigine;
 
+        private static bool animate = false;
+        public static void ToggleAnimation(bool isOn)
+        {
+            animate = isOn;
+        }
+
         private void Awake()
         {
             tweenOrigine = transform.position;
@@ -52,7 +58,7 @@ namespace utils.tweens
             float totalTime = 0;
             float eval = 0;
 
-            while (totalTime < time)
+            while (totalTime < time && animate == true)
             {
                 totalTime += Time.deltaTime;
                 eval = EaseInOutCurve.Evaluate(totalTime / time);
@@ -60,6 +66,8 @@ namespace utils.tweens
 
                 yield return null;
             }
+
+            transform.position = tweenTarget.position;
 
             OnTweenComplete?.Invoke();
         }
@@ -69,7 +77,7 @@ namespace utils.tweens
             float totalTime = 0;
             float eval = 0;
 
-            while (totalTime < time)
+            while (totalTime < time && animate == true)
             {
                 totalTime += Time.deltaTime;
                 eval = EaseInOutCurve.Evaluate(totalTime / time);
@@ -77,6 +85,8 @@ namespace utils.tweens
 
                 yield return null;
             }
+
+            transform.position = tweenOrigine;
 
             OnTweenComplete?.Invoke();
         }

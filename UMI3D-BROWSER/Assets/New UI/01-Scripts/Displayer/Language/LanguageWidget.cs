@@ -63,6 +63,7 @@ namespace umi3dBrowsers.displayer
                     {
                         if (language.languageSelectionField != currentField)
                             language.languageSelectionField.Disable();
+                        OnSupportedLanguageValidated?.Invoke(selectedLanguage);
                     });
                 };
 
@@ -76,13 +77,6 @@ namespace umi3dBrowsers.displayer
                     baseField = currentField;
             }
             baseField.Click();
-        }
-
-        public void ValidateSelection()
-        {
-            if (selectedLanguage == null)
-                return;
-            OnSupportedLanguageValidated?.Invoke(selectedLanguage);
         }
     }
 }

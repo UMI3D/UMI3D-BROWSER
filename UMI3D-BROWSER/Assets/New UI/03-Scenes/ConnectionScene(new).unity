@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1249,6 +1249,94 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 597600092}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &640926457
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 7641357056380844684, guid: 81edd7311d250344a9937dce75274a2e,
+        type: 3}
+      propertyPath: m_Name
+      value: SKYBOX_2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7684936378012826588, guid: 81edd7311d250344a9937dce75274a2e,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7684936378012826588, guid: 81edd7311d250344a9937dce75274a2e,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7684936378012826588, guid: 81edd7311d250344a9937dce75274a2e,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7684936378012826588, guid: 81edd7311d250344a9937dce75274a2e,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7684936378012826588, guid: 81edd7311d250344a9937dce75274a2e,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7684936378012826588, guid: 81edd7311d250344a9937dce75274a2e,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -58.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7684936378012826588, guid: 81edd7311d250344a9937dce75274a2e,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7684936378012826588, guid: 81edd7311d250344a9937dce75274a2e,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7684936378012826588, guid: 81edd7311d250344a9937dce75274a2e,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7684936378012826588, guid: 81edd7311d250344a9937dce75274a2e,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7684936378012826588, guid: 81edd7311d250344a9937dce75274a2e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7684936378012826588, guid: 81edd7311d250344a9937dce75274a2e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7684936378012826588, guid: 81edd7311d250344a9937dce75274a2e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7684936378012826588, guid: 81edd7311d250344a9937dce75274a2e,
+        type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 81edd7311d250344a9937dce75274a2e, type: 3}
 --- !u!1 &641571389 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1182567295146937427, guid: 1310caa2feb3a02438ace8909cc19df5,
@@ -8800,3 +8888,4 @@ SceneRoots:
   - {fileID: 949135331}
   - {fileID: 263852484}
   - {fileID: 1446459086}
+  - {fileID: 640926457}

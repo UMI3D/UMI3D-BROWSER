@@ -25,6 +25,7 @@ using Unity.VisualScripting;
 using System.Collections;
 using UnityEngine.SocialPlatforms;
 using umi3dBrowsers.services.connection;
+using utils.tweens;
 
 namespace umi3dBrowsers.container
 {
@@ -39,6 +40,17 @@ namespace umi3dBrowsers.container
         [SerializeField] private AvailibleThemes selectedThemes;
         [SerializeField] private GridDropDown themeDropDown;
         public event Action<AvailibleThemes> OnThemeChanged;
+
+        [Header("Animations")]
+        [SerializeField] private RadioButtonGroup animationsRadio;
+
+        private void Awake()
+        {
+            animationsRadio.OnSelectedButtonChanged += (btn, val) =>
+            {
+                UITweens.ToggleAnimation(val != 0);
+            };
+        }
 
         private void Start()
         {

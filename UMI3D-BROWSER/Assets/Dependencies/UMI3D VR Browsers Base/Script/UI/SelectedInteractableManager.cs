@@ -15,15 +15,20 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
+using inetum.unityUtils.async;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using TMPro;
 using umi3d.browserRuntime.player;
 using umi3d.cdk.interaction;
+using umi3d.common.interaction;
 using umi3dVRBrowsersBase.interactions;
 using umi3dVRBrowsersBase.ui.playerMenu;
 using UnityEngine;
+using UnityEngine.UI;
 using WebSocketSharp;
 
 namespace umi3dVRBrowsersBase.ui
@@ -34,8 +39,9 @@ namespace umi3dVRBrowsersBase.ui
     public class SelectedInteractableManager : AbstractClientInteractableElement, ITriggerableElement
     {
         public TMP_Text label;
+        public Image background;
+        public new BoxCollider collider;
 
-        public float delayBeforeHiding = 1f;
         [Tooltip("Used for gear scale.")]
         public float minDistance = 2f;
         [Tooltip("Used for gear scale.")]
@@ -48,32 +54,57 @@ namespace umi3dVRBrowsersBase.ui
         public event Action triggerHandler;
 
         [HideInInspector]
-        public Interactable currentAssociatedInteractable;
+        public Interactable interactable;
         [HideInInspector]
-        public Transform playerTransform;
+        public List<AbstractInteractionDto> interactions;
+        [HideInInspector]
+        public List<EventDto> events;
+        [HideInInspector]
+        public List<AbstractParameterDto> parameters;
+        [HideInInspector]
+        public Task<Transform> playerTransform;
+        [HideInInspector]
+        public Task<Transform> cameraTransform;
 
+        Coroutine hideCoroutine;
 
         private void Start()
         {
-            Global.Get(out UMI3DVRPlayer player);
-            playerTransform = player.transform;
-
-            PlayerMenuManager.Instance.onMenuClose.AddListener(Hide);
+            var player = Global.GetAsync<UMI3DVRPlayer>();
+            playerTransform = player.ContinueWith(task =>
+            {
+                return task.Result.transform;
+            });
+            cameraTransform = player.ContinueWith(task =>
+            {
+                return task.Result.mainCamera.transform;
+            });
 
             Hide();
         }
 
         private void Update()
         {
-            if (currentAssociatedInteractable == null && gameObject.activeInHierarchy)
+            if (interactable == null && gameObject.activeInHierarchy)
             {
                 Hide();
             }
 
+            if (!cameraTransform.TryGet(out Transform ct))
+            {
+                return;
+            }
             if (isActiveAndEnabled)
             {
-                var distance = Vector3.Distance(transform.position, playerTransform.position);
-                var scale = Mathf.Lerp(minScale, maxScale, Mathf.InverseLerp(minDistance, maxDistance, distance));
+                var distance = Vector3.Distance(
+                    transform.position,
+                    ct.position
+                );
+                var scale = Mathf.Lerp(
+                    minScale,
+                    maxScale,
+                    Mathf.InverseLerp(minDistance, maxDistance, distance)
+                );
                 transform.localScale = new Vector3(scale, scale, scale);
             }
         }
@@ -81,8 +112,11 @@ namespace umi3dVRBrowsersBase.ui
         public void Trigger(ControllerType controllerType)
         {
             triggerHandler?.Invoke();
-
-            PlayerMenuManager.Instance.OpenParameterMenu(controllerType, menuAsync: true);
+            
+            if (interactions.Count > 0)
+            {
+                PlayerMenuManager.Instance.OpenParameterMenu(controllerType, menuAsync: true);
+            }
         }
 
         /// <summary>
@@ -90,66 +124,128 @@ namespace umi3dVRBrowsersBase.ui
         /// </summary>
         /// <param name="interactable"></param>
         /// <param name="position">World position of the gear</param>
-        /// <param name="normal">World normal of the gear</param>
-        public void Display(Interactable interactable, Vector3 position, Vector3 normal)
+        public void Display(Interactable interactable, Vector3 position)
         {
+            Rest();
+            if (hideCoroutine != null)
+            {
+                StopCoroutine(hideCoroutine);
+                hideCoroutine = null;
+            }
+
             gameObject.SetActive(true);
 
-            currentAssociatedInteractable = interactable;
+            this.interactable = interactable;
+            interactions = interactable
+                .interactions
+                .Select(i => i.Result)
+                .ToList();
+            events = interactions
+                .FindAll(i => i is EventDto)
+                .Select(i => i as EventDto)
+                .ToList();
+            parameters = interactions
+                .FindAll(i => i is AbstractParameterDto)
+                .Select(i => i as AbstractParameterDto)
+                .ToList();
+
+            background.enabled = true;
+            if (interactions.Count == 0)
+            {
+                collider.enabled = false;
+                label.text = "";
+                background.enabled = false;
+            }
+            else if (interactions.Count == 1)
+            {
+                if (interactions[0] is EventDto || interactions[0] is ManipulationDto)
+                {
+                    string _label = interactions[0].name;
+                    if (string.IsNullOrEmpty(_label) || _label == "new tool")
+                    {
+                        _label = "";
+                        background.enabled = false;
+                    }
+                    label.text = _label;
+                }
+                else if (interactions[0] is StringParameterDto)
+                {
+                    collider.enabled = true;
+                    label.text = $"Edit text";
+                    PlayerMenuManager.Instance.CtrlToolMenu.RememberParameters();
+                }
+                else
+                {
+                    label.text = interactions[0].name;
+                    UnityEngine.Debug.LogError($"[Selected Interactable] Unhandled case");
+                }
+            }
+            else
+            {
+                label.text = interactable.name;
+                PlayerMenuManager.Instance.CtrlToolMenu.RememberParameters();
+                UnityEngine.Debug.LogError($"[Selected Interactable] Unhandled case");
+            }
 
             transform.position = position;
-            transform.rotation = Quaternion.LookRotation(-normal, Vector3.up);
-
-            label.text = interactable.name;
-            UnityEngine.Debug.Log($"[PG] name = {interactable.name}, {interactable.dto.name}, {interactable.description}");
+            cameraTransform.IfCompleted(ct =>
+            {
+                var offset = transform.position - ct.position;
+                transform.LookAt(transform.position + offset);
+            });
         }
 
         /// <summary>
         /// Displays the interactable information.<br/> 
         /// Use an interactable container and a look at point and compute the adequate position.
         /// </summary>
-        /// <param name="interactableContainer"></param>
-        /// <param name="lookAtPoint">World position of the point the object is looked at.</param>
-        public void Display(InteractableContainer interactableContainer, Vector3 lookAtPoint)
+        /// <param name="container"></param>
+        public void Display(InteractableContainer container)
         {
-            Vector3 rootPosition;
-            Vector3 normal;
-            if (interactableContainer.TryGetComponent(out MeshCollider collider) && collider.convex)
+            if (!playerTransform.TryGet(out Transform pt))
             {
-                rootPosition = collider.ClosestPoint(lookAtPoint);
-                normal = -(rootPosition - lookAtPoint).normalized;
-            }
-            else
-            {
-                Ray ray = new Ray(lookAtPoint, interactableContainer.transform.position - lookAtPoint);
-                (RaycastHit[] hits, int hitCount) hitsInfo = umi3d.common.Physics.RaycastAll(ray);
-
-                if (hitsInfo.hitCount == 0) // happens if the center of the object is outside of the mesh
-                {
-                    rootPosition = interactableContainer.transform.position;
-                    normal = -(rootPosition - lookAtPoint).normalized;
-                }
-                else
-                {
-                    //TODO : remove try catch later for a better test
-                    try
-                    {
-                        Collider icCollider = interactableContainer.GetComponentInChildren<Collider>();
-                        RaycastHit[] hits = hitsInfo.hits.SubArray(0, hitsInfo.hitCount);
-                        float closestDist = hits.Where(x => x.collider == icCollider).Min(x => x.distance);
-                        RaycastHit closest = Array.Find(hits, x => x.distance == closestDist);
-                        rootPosition = closest.point;
-                        normal = closest.normal;
-                    }
-                    catch
-                    {
-                        rootPosition = interactableContainer.transform.position;
-                        normal = -(rootPosition - lookAtPoint).normalized;
-                    }
-                }
+                return;
             }
 
-            Display(interactableContainer.Interactable, rootPosition, normal);
+            // Convex meshCollider :
+            if (container.TryGetComponent(out MeshCollider meshCollider) && meshCollider.convex)
+            {
+                Display(
+                    container.Interactable,
+                    meshCollider.ClosestPoint(pt.position)
+                );
+                return;
+            }
+
+            Ray ray = new Ray(pt.position, container.transform.position - pt.position);
+            (RaycastHit[] hits, int hitCount) = umi3d.common.Physics.RaycastAll(ray);
+
+            // if the center of the object is outside of the mesh :
+            if (hitCount == 0)
+            {
+                Display(
+                    container.Interactable,
+                    container.transform.position
+                );
+                return;
+            }
+
+            bool CollideWith(Collider collider, out IEnumerable<RaycastHit> collidedHits)
+            {
+                hits = hits.SubArray(0, hitCount);
+                collidedHits = hits.Where(x => x.collider == collider);
+                return collidedHits.Count() != 0;
+            };
+            if (container.TryGetComponent(out Collider collider) 
+                && CollideWith(collider, out IEnumerable<RaycastHit> collidedHits))
+            {
+                float closestDist = collidedHits.Min(x => x.distance);
+                RaycastHit closest = Array.Find(hits, x => x.distance == closestDist);
+                Display(container.Interactable, closest.point);
+                return;
+            }
+
+            Display(container.Interactable, container.transform.position);
         }
 
         /// <summary>
@@ -157,13 +253,17 @@ namespace umi3dVRBrowsersBase.ui
         /// </summary>
         public void Hide()
         {
+            Rest();
             gameObject.SetActive(false);
-            currentAssociatedInteractable = null;
         }
 
         public void HideWithDelay()
         {
-            float time = 0f;
+            if (hideCoroutine != null)
+            {
+                return;
+            }
+
             IEnumerator HideCoroutine()
             {
                 while (isSelected)
@@ -171,19 +271,18 @@ namespace umi3dVRBrowsersBase.ui
                     yield return null;
                 }
 
-                while (time < delayBeforeHiding)
-                {
-                    time += Time.deltaTime;
-                    yield return null;
-                }
+                // Wait one frame so that text field "show keyboard" action works.
+                yield return null;
 
                 if (!isSelected)
                 {
                     Hide();
                 }
+
+                hideCoroutine = null;
             }
 
-            CoroutineManager.Instance.AttachCoroutine(HideCoroutine());
+            hideCoroutine = CoroutineManager.Instance.AttachCoroutine(HideCoroutine());
         }
 
         public override void Select(VRController controller)
@@ -194,6 +293,15 @@ namespace umi3dVRBrowsersBase.ui
         public override void Deselect(VRController controller)
         {
             isSelected = false;
+        }
+
+        public void Rest()
+        {
+            interactable = null;
+            interactions = null;
+            events = null;
+            parameters = null;
+            collider.enabled = false;
         }
     }
 }

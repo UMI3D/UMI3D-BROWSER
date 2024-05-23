@@ -19,7 +19,7 @@ using umi3d.common;
 
 namespace umi3d.browserEditor.BuildTool
 {
-    public class UMI3DConfigurator : IBuilToolComponent
+    public class UMI3DConfigurator
     {
         UMI3DCollabLoadingParameters loadingParameters;
 

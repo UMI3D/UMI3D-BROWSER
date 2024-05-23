@@ -15,9 +15,11 @@ limitations under the License.
 */
 
 
+using System;
 using TMPro;
 using umi3dBrowsers.displayer;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class ImageButtonDisplayer : SimpleButton
@@ -26,6 +28,8 @@ public class ImageButtonDisplayer : SimpleButton
     private TextMeshProUGUI textDisplayer;
     private RectTransform rectTransform;
 
+    public event Action<PointerEventData> OnHoverEnter;
+    public event Action<PointerEventData> OnHoverExit;
 
     protected override void Awake()
     {
@@ -33,6 +37,18 @@ public class ImageButtonDisplayer : SimpleButton
         imageDisplayer = GetComponent<Image>();
         textDisplayer = GetComponentInChildren<TextMeshProUGUI>();
         rectTransform = GetComponent<RectTransform>();
+    }
+
+    public override void OnPointerEnter(PointerEventData eventData) 
+    {
+        base.OnPointerEnter(eventData);
+        OnHoverEnter?.Invoke(eventData);
+    }
+
+    public override void OnPointerExit(PointerEventData eventData)
+    {
+        base.OnPointerExit(eventData);
+        OnHoverExit?.Invoke(eventData);
     }
 
     public void InitComponentData(Image sprite = null, Color? spriteColor = null, string text = "", Color? textColor = null, float textSize = 16, float width = 100f, float height = 100f, float positionX = 0f, float positionY = 0f)

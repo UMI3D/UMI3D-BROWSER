@@ -17,10 +17,13 @@ limitations under the License.
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using umi3d.cdk;
 using umi3d.cdk.collaboration;
 using umi3d.common;
 using umi3d.common.interaction;
+using umi3dBrowsers.linker;
 using umi3dVRBrowsersBase.connection;
+using umi3dVRBrowsersBase.ui.watchMenu;
 using UnityEngine;
 
 namespace umi3dBrowsers.services.connection
@@ -159,6 +162,30 @@ namespace umi3dBrowsers.services.connection
         {
             Debug.Log("Todo :: SendAnswer to server======================================");
             //_formAnswerCallBack?.Invoke(formAnswer);
+        }
+
+        /// <summary>
+        /// Leaves current UMI3D Environment.
+        /// </summary>
+        public void Disconnect()
+        {
+            var mainThreadDispatcher = MainThreadDispatcher.UnityMainThreadDispatcher.Instance() as CustomMainThreadDispatcher;
+            if (mainThreadDispatcher != null)
+            {
+                mainThreadDispatcher.StopAllCoroutines();
+                mainThreadDispatcher.ClearQueue();
+            }
+            else
+            {
+                Debug.LogError("MainTheadDispatcher should not be null");
+            }
+
+            UMI3DEnvironmentLoader.Clear();
+            UMI3DResourcesManager.Instance.ClearCache();
+            UMI3DCollaborationClientServer.Logout();
+            umi3dVRBrowsersBase.DontDestroyOnLoad.DestroyAllInstances();
+
+            WatchMenu.UnPinAllMenus();
         }
     }
 }

@@ -44,6 +44,7 @@ namespace umi3dBrowsers.displayer
 
         public override void OnPointerEnter(PointerEventData eventData)
         {
+            base.OnPointerEnter(eventData);
             OnHoverEnter?.Invoke();
             if (_subDisplayer == null) return;
             _subDisplayer.HoverEnter(eventData);
@@ -51,6 +52,7 @@ namespace umi3dBrowsers.displayer
 
         public override void OnPointerExit(PointerEventData eventData)
         {
+            base.OnPointerExit(eventData);
             OnHoverExit?.Invoke();
             if (_subDisplayer == null) return;
             _subDisplayer.HoverExit(eventData);

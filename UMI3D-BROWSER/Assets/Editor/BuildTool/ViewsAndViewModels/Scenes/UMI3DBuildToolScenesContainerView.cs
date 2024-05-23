@@ -14,8 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
 using System;
-using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -23,24 +23,19 @@ namespace umi3d.browserEditor.BuildTool
 {
     public class UMI3DBuildToolScenesContainerView 
     {
+        SubGlobal subGlobal = new("BuildTool");
+
         public VisualElement root;
-        public UMI3DBuildToolScene_SO buildToolScene_SO;
-        public VisualTreeAsset scene_VTA;
-        public Action applyScenes;
+
+        public UMI3DBuildToolScene_SO sceneModel;
 
         public ListView LV_Scenes;
 
-        public UMI3DBuildToolScenesContainerView(
-            VisualElement root,
-            UMI3DBuildToolScene_SO buildToolScene_SO,
-            VisualTreeAsset scene_VTA,
-            Action applyScenes
-        )
+        public UMI3DBuildToolScenesContainerView(VisualElement root)
         {
             this.root = root;
-            this.buildToolScene_SO = buildToolScene_SO;
-            this.scene_VTA = scene_VTA;
-            this.applyScenes = applyScenes;
+
+            subGlobal.TryGet(out sceneModel);
         }
 
         public void Bind()
@@ -56,14 +51,11 @@ namespace umi3d.browserEditor.BuildTool
             LV_Scenes.headerTitle = "Scenes";
             LV_Scenes.showAddRemoveFooter = true;
             LV_Scenes.reorderMode = ListViewReorderMode.Animated;
-            LV_Scenes.itemsSource = buildToolScene_SO.scenes;
+            LV_Scenes.itemsSource = sceneModel.scenes;
             LV_Scenes.makeItem = () =>
             {
-                var visual = scene_VTA.Instantiate();
-                UMI3DBuildToolSceneView sceneView = new(
-                    buildToolScene_SO: buildToolScene_SO,
-                    applyScenes
-                );
+                var visual = sceneModel.scene_VTA.Instantiate();
+                UMI3DBuildToolSceneView sceneView = new();
                 visual.userData = sceneView;
                 return visual;
             };

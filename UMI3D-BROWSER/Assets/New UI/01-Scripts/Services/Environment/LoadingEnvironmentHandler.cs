@@ -15,6 +15,7 @@ limitations under the License.
 */
 using inetum.unityUtils;
 using umi3d.cdk;
+using umi3dBrowsers.linker;
 using umi3dVRBrowsersBase.ui.playerMenu;
 using UnityEngine;
 using UnityEngine.Events;
@@ -22,9 +23,10 @@ using UnityEngine.UI;
 
 namespace umi3dBrowsers.services.environment
 {
-    public class LoadingEnvironmentHandler : PersistentSingleBehaviour<LoadingEnvironmentHandler>
+    public class LoadingEnvironmentHandler : MonoBehaviour
     {
-        private Camera cam;
+        [Header("Linkers")]
+        [SerializeField] private ConnectionToImmersiveLinker linker;
 
         [SerializeField] private LayerMask loadingCullingMask;      
         private int defaultCullingMask;
@@ -41,12 +43,18 @@ namespace umi3dBrowsers.services.environment
         /// </summary>
         public static UnityEvent OnLoadingScreenHidden = new UnityEvent();
 
+        private void Awake()
+        {
+            DontDestroyOnLoad(this);
+            linker.OnDisplayEnvironmentHandler += () => Display();
+            linker.OnStopDisplayEnvironmentHandler += () => StopDisplay();
+        }
+
         private void Start()
         {
-            cam = Camera.main;
-            Debug.Assert(cam != null, "Impossible to find a camera");
+            Debug.Assert(Camera.main != null, "Impossible to find a camera");
 
-            defaultCullingMask = cam.cullingMask;
+            defaultCullingMask = Camera.main.cullingMask;
 
             StopDisplay();
         }
@@ -56,8 +64,8 @@ namespace umi3dBrowsers.services.environment
         /// </summary>
         public void Display()
         {
-            cam.cullingMask = loadingCullingMask.value;
-            cam.clearFlags = CameraClearFlags.Skybox;
+            Camera.main.cullingMask = loadingCullingMask.value;
+            Camera.main.clearFlags = CameraClearFlags.Skybox;
             RenderSettings.skybox = skyBoxHomeMaterial;
         }
 
@@ -66,8 +74,8 @@ namespace umi3dBrowsers.services.environment
         /// </summary>
         public void StopDisplay()
         {
-            cam.cullingMask = defaultCullingMask;
-            cam.clearFlags = CameraClearFlags.Skybox;
+            Camera.main.cullingMask = defaultCullingMask;
+            Camera.main.clearFlags = CameraClearFlags.Skybox;
 
             OnLoadingScreenHidden?.Invoke();
         }

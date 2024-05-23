@@ -17,6 +17,7 @@ limitations under the License.
 using System;
 using System.Collections;
 using TMPro;
+using umi3dBrowsers.services.connection;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -38,6 +39,8 @@ namespace umi3dBrowsers.displayer
         public Color labelBaseColor;
         public bool isSelected;
 
+        public Color labelDisabledColor;
+
         protected override void Awake()
         {
             base.Awake();
@@ -46,6 +49,8 @@ namespace umi3dBrowsers.displayer
 
         public override void OnPointerDown(PointerEventData eventData)
         {
+            if (!interactable)
+                return;
             isSelected = true;
 
             if (eventData.button != PointerEventData.InputButton.Left)
@@ -53,19 +58,29 @@ namespace umi3dBrowsers.displayer
             if (IsInteractable() && navigation.mode != Navigation.Mode.None && EventSystem.current != null)
                 EventSystem.current.SetSelectedGameObject(gameObject, eventData);
             OnClick.Invoke();
-
         }
 
         public override void OnPointerEnter(PointerEventData eventData)
         {
+            if (!interactable)
+                return;
             base.OnPointerEnter(eventData);
             EnableHoverBarFX();
         }
 
         public override void OnPointerExit(PointerEventData eventData)
         {
+            if (!interactable)
+                return;
             base.OnPointerExit(eventData);
             DisableHoverBarFX();
+        }
+
+        public void OnVignetteReset()
+        {
+            var isActive = PlayerPrefsManager.GetVirtualWorlds().FavoriteWorlds.Count > 0;
+            interactable = isActive;
+            label.color = isActive ? labelBaseColor : labelDisabledColor;
         }
 
         public void EnableHoverBarFX()

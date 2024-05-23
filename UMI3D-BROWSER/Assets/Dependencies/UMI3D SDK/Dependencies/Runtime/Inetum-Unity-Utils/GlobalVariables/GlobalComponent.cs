@@ -50,10 +50,10 @@ namespace inetum.unityUtils
 
         private void OnDisable()
         {
-            if (!addRemoveWhenActivationChange)
-            {
-                return;
-            }
+            //if (!addRemoveWhenActivationChange)
+            //{
+            //    return;
+            //}
 
             foreach (var variable in variables)
             {

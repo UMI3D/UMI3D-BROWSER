@@ -286,6 +286,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
+  updateOnGUI: 0
 --- !u!225 &6884489871116509189
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -312,7 +313,6 @@ GameObject:
   - component: {fileID: 2349925562731327915}
   - component: {fileID: 8457114815154006290}
   - component: {fileID: 1859032413784808986}
-  - component: {fileID: 8198399708927322129}
   m_Layer: 5
   m_Name: P_Vignette
   m_TagString: Untagged
@@ -357,6 +357,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   transprentColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   vignetteImage: {fileID: 7682835410405343424}
+  normalImageColor: {r: 0.4392157, g: 0.4392157, b: 0.4392157, a: 1}
+  hoverImageColor: {r: 1, g: 1, b: 1, a: 1}
   likeButton: {fileID: 601504818583472110}
   likeImage: {fileID: 3352723930084963415}
   normalLikeIcon: {fileID: 21300000, guid: 40e731205ffd34744a4f701d9ac35b44, type: 3}
@@ -463,19 +465,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
---- !u!114 &8198399708927322129
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1842928581106226447}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7831fdd9ac1e0fa44976294339e58742, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rescalUIOnStart: 0
+  updateOnGUI: 1
 --- !u!1 &2985796786371590338
 GameObject:
   m_ObjectHideFlags: 0
@@ -641,6 +631,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   inputField: {fileID: 5598981867207518359}
+  ImageButtonDisplayer: {fileID: 6483670452710914878}
 --- !u!114 &3666583381190603853
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -827,6 +818,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
+  updateOnGUI: 0
 --- !u!1 &4101131316969940083
 GameObject:
   m_ObjectHideFlags: 0
@@ -1155,6 +1147,7 @@ GameObject:
   - component: {fileID: 5565908846851168536}
   - component: {fileID: 4863285414771429830}
   - component: {fileID: 7321148282124941331}
+  - component: {fileID: 6483670452710914878}
   m_Layer: 5
   m_Name: InputFieldBG
   m_TagString: Untagged
@@ -1261,6 +1254,53 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &6483670452710914878
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7397809311033673322}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f5415c244c11db4cb78dabd455c845b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 5565908846851168536}
+  OnClick:
+    m_PersistentCalls:
+      m_Calls: []
+  OnRelease:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &7418192443522722999
 GameObject:
   m_ObjectHideFlags: 0
@@ -1374,6 +1414,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
+  updateOnGUI: 0
 --- !u!114 &2609669505149853953
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1641,6 +1682,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
+  updateOnGUI: 0
 --- !u!225 &4272025319540579326
 CanvasGroup:
   m_ObjectHideFlags: 0

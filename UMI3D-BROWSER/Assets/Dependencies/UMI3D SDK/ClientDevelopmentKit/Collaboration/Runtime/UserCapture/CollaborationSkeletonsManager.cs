@@ -228,8 +228,7 @@ namespace umi3d.cdk.collaboration.userCapture
 
             var poseSkeleton = new PoseSubskeleton(environmentId,
                                                                 parentSkeleton: cs,
-                                                                environmentManagerService: collaborativeEnvironmentManagementService,
-                                                                trackerSimulator: TrackerSimulationManager.Instance.GetTrackerSimulator(cs));
+                                                                environmentManagerService: collaborativeEnvironmentManagementService);
 
             cs.Init(trackedSkeleton, poseSkeleton);
 
@@ -323,7 +322,7 @@ namespace umi3d.cdk.collaboration.userCapture
 
             if (!Skeletons.TryGetValue((frame.environmentId, frame.userId), out ISkeleton skeleton))
             {
-                UMI3DLogger.LogWarning($"Skeleton of user {frame.userId} not found. Cannot apply skeleton frame update.", scope);
+                UMI3DLogger.LogWarning($"Skeleton of user {frame.userId} not found. Cannot apply skeleton frame update. [environmentId : {frame.environmentId}]", scope);
                 return;
             }
 

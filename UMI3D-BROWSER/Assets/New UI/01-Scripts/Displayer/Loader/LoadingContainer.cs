@@ -17,6 +17,8 @@ limitations under the License.
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using umi3d.cdk.collaboration;
+using umi3dBrowsers.linker;
 using umi3dBrowsers.services.environment;
 using UnityEngine;
 
@@ -37,20 +39,34 @@ namespace umi3dBrowsers.displayer
         private umi3d.cdk.Progress _currentProgress = null;
         private bool _loadingInProgress = false;
 
+        private ConnectionToImmersiveLinker m_linker;
+
+        private void Awake()
+        {
+            m_linker.OnLeave += () => _loadingInProgress = false;
+            UMI3DEnvironmentClient.EnvironementJoinned.AddListener(() =>
+            {
+                OnLoadingFinished?.Invoke();
+                loadingTipDisplayer.StopDisplayTips();
+                m_linker.StopDisplayEnvironmentHandler();
+                _loadingInProgress = false;
+            });
+        }
+
         private void Start()
         {
             if (autoInit)
                 Init();
         }
 
-        public void Init()
+        public void Init(ConnectionToImmersiveLinker linker = null)
         {
+            m_linker = linker;
             umi3d.cdk.collaboration.UMI3DCollaborationClientServer.onProgress.AddListener(NewProgressReceived);
         }
 
         void NewProgressReceived(umi3d.cdk.Progress progress)
         {
-            Debug.Log("utfiguhoijpoiogph^jupo_igohpuîpoi_");
             if (_currentProgress != null)
             {
                 _currentProgress.OnCompleteUpdated -= OnCompleteUpdated;
@@ -76,12 +92,13 @@ namespace umi3dBrowsers.displayer
 
         private void OnProgressChange(float val)
         {
+            Debug.Log("Loading ::: " + val);
             if (val >= 0 && val < 1)
             {
                 if (_loadingInProgress == false) // Notify that a loading is in progress
                 {
                     OnLoadingInProgress?.Invoke();
-                    LoadingEnvironmentHandler.Instance.Display();
+                    m_linker.DisplayEnvironmentHandler();
                     loadingTipDisplayer.DisplayTips();
                     _loadingInProgress = true;
                 }
@@ -92,7 +109,7 @@ namespace umi3dBrowsers.displayer
                 {
                     OnLoadingFinished?.Invoke();
                     loadingTipDisplayer.StopDisplayTips();
-                    LoadingEnvironmentHandler.Instance.StopDisplay();
+                    m_linker.StopDisplayEnvironmentHandler();
                     _loadingInProgress = false;
                 }
             }

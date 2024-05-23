@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
 using System;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -22,10 +23,13 @@ namespace umi3d.browserEditor.BuildTool
 {
     public class UMI3DBuildToolVersionView 
     {
-        public VisualElement root;
-        public UMI3DBuildToolSettings_SO buildToolSettings_SO;
+        SubGlobal subGlobal = new("BuildTool");
 
-        public UMI3DBuildToolVersionViewModel viewModel;
+        public VisualElement root;
+
+        public UMI3DBuildToolVersion_SO versionModel;
+        public UMI3DBuildToolSettings_SO settingModel;
+
         public VisualElement V_Major;
         public IntegerField IF_Major;
         public Button B_Major;
@@ -40,21 +44,20 @@ namespace umi3d.browserEditor.BuildTool
         public Label L_OldVersion;
         public Label L_Version;
 
-        public UMI3DBuildToolVersionView(
-            VisualElement root, 
-            UMI3DBuildToolVersion_SO buildToolVersion_SO,
-            UMI3DBuildToolSettings_SO buildToolSettings_SO
-        )
+        VersionDTO NewVersion
+        {
+            get
+            {
+                return versionModel.newVersion;
+            }
+        }
+
+        public UMI3DBuildToolVersionView(VisualElement root)
         {
             this.root = root;
-            this.buildToolSettings_SO = buildToolSettings_SO;
-            this.viewModel = new(
-                buildToolVersion_SO, 
-                updateVersion: version =>
-                {
-                    UpdateVersionView();
-                }
-            );
+
+            subGlobal.TryGet(out versionModel);
+            subGlobal.TryGet(out settingModel);
         }
 
         public void Bind()
@@ -72,82 +75,106 @@ namespace umi3d.browserEditor.BuildTool
             L_SDKVersion = root.Q<Label>("L_SDKVersion");
             L_OldVersion = root.Q<Label>("L_OldVersion");
             L_Version = root.Q<Label>("L_BuildVersion");
+
+            versionModel.updateNewVersionHandler += UpdateNewVersion;
+            versionModel.updateOldVersionHandler += UpdateOldVersion;
+            versionModel.updateSDKVersionHandler += UpdateSDKVersion;
+
+            B_Major.clicked += IncreaseMajor;
+            IF_Major.RegisterValueChangedCallback(MajorValueChanged);
+            B_Minor.clicked += IncreaseMinor;
+            IF_Minor.RegisterValueChangedCallback(MinorValueChanged);
+            B_BuildCount.clicked += IncreaseBuildCount;
+            IF_BuildCount.RegisterValueChangedCallback(BuildCountValueChanged);
+            TF_AdditionalVersion.RegisterValueChangedCallback(AdditionalInfoValueChanged);
         }
 
         public void Set()
         {
-            // Major version.
-            B_Major.clicked += () =>
-            {
-                IF_Major.value = ++IF_Major.value;
-            };
-            IF_Major.SetValueWithoutNotify(viewModel.NewVersion.majorVersion);
-            IF_Major.RegisterValueChangedCallback(value =>
-            {
-                viewModel.ApplyMajorVersion(value.newValue);
-            });
-
-            // Minor version
-            B_Minor.clicked += () =>
-            {
-                IF_Minor.value = ++IF_Minor.value;
-            };
-            IF_Minor.SetValueWithoutNotify(viewModel.NewVersion.minorVersion);
-            IF_Minor.RegisterValueChangedCallback(value =>
-            {
-                viewModel.ApplyMinorVersion(value.newValue);
-            });
-
-            // Build count.
-            B_BuildCount.clicked += () =>
-            {
-                IF_BuildCount.value = ++IF_BuildCount.value;
-            };
-            IF_BuildCount.SetValueWithoutNotify(viewModel.NewVersion.buildCountVersion);
-            IF_BuildCount.RegisterValueChangedCallback(value =>
-            {
-                viewModel.ApplyBuildCountVersion(value.newValue);
-            });
-
+            IF_Major.SetValueWithoutNotify(NewVersion.majorVersion);
+            IF_Minor.SetValueWithoutNotify(NewVersion.minorVersion);
+            IF_BuildCount.SetValueWithoutNotify(NewVersion.buildCountVersion);
             // Additional information.
-            // Like if you want to add unity editor version.
-            TF_AdditionalVersion.SetValueWithoutNotify(viewModel.NewVersion.additionalVersion);
-            TF_AdditionalVersion.RegisterValueChangedCallback((value) =>
-            {
-                viewModel.ApplyAdditionalVersion(value.newValue);
-            });
+            // If you want to add unity editor version or the name of the feature you are developing.
+            TF_AdditionalVersion.SetValueWithoutNotify(NewVersion.additionalVersion);
 
-            L_SDKVersion.text = viewModel.SDKVersion.Version;
-            L_OldVersion.text = viewModel.OldVersion.Version;
-            L_Version.text = viewModel.NewVersion.VersionFromNow;
+            L_SDKVersion.text = $"SDK:   {versionModel.sdkVersion.Version}";
+            L_OldVersion.text = $"Old:   {versionModel.oldVersion.Version}";
+            L_Version.text = $"New:   {NewVersion.VersionFromNow}";
 
-            UpdateBorderColor(L_SDKVersion.parent, () => buildToolSettings_SO.sdkColor);
-            UpdateBorderColor(L_OldVersion.parent, () => buildToolSettings_SO.oldVersionColor);
-            UpdateBorderColor(L_Version.parent, () => buildToolSettings_SO.versionColor);
+            UpdateBorderColor(L_SDKVersion.parent, settingModel.sdkColor);
+            //UpdateBorderColor(L_OldVersion.parent, settingModel.oldVersionColor);
+            UpdateBorderColor(L_Version.parent, settingModel.versionColor);
         }
 
-        void UpdateVersionView()
+        void UpdateBorderColor(VisualElement visual, Color color)
         {
-            L_Version.text = viewModel.NewVersion.VersionFromNow;
+            visual.style.borderTopColor = color;
+            visual.style.borderRightColor = color;
+            visual.style.borderBottomColor = color;
+            visual.style.borderLeftColor = color;
         }
 
-        void UpdateBorderColor(VisualElement visual, Func<Color> applyColor)
+        void UpdateNewVersion(VersionDTO version)
         {
+            L_Version.text = $"New:   {version.VersionFromNow}";
+        }
 
-            if (buildToolSettings_SO != null)
-            {
-                visual.style.borderTopColor = applyColor.Invoke();
-                visual.style.borderRightColor = applyColor.Invoke();
-                visual.style.borderBottomColor = applyColor.Invoke();
-                visual.style.borderLeftColor = applyColor.Invoke();
-            }
-            else
-            {
-                visual.style.borderTopColor = StyleKeyword.Null;
-                visual.style.borderRightColor = StyleKeyword.Null;
-                visual.style.borderBottomColor = StyleKeyword.Null;
-                visual.style.borderLeftColor = StyleKeyword.Null;
-            }
+        void UpdateOldVersion(VersionDTO version)
+        {
+            L_OldVersion.text = $"Old:   {version.Version}";
+        }
+
+        void UpdateSDKVersion(VersionDTO version)
+        {
+            L_SDKVersion.text = $"SDK:   {version.Version}";
+        }
+
+        #region Major
+
+        void IncreaseMajor()
+        {
+            IF_Major.value = ++IF_Major.value;
+        }
+
+        void MajorValueChanged(ChangeEvent<int> value)
+        {
+            versionModel.ApplyMajorVersion(value.newValue);
+        }
+
+        #endregion
+
+        #region Minor
+
+        void IncreaseMinor()
+        {
+            IF_Minor.value = ++IF_Minor.value;
+        }
+
+        void MinorValueChanged(ChangeEvent<int> value)
+        {
+            versionModel.ApplyMinorVersion(value.newValue);
+        }
+
+        #endregion
+
+        #region BuildCount
+
+        void IncreaseBuildCount()
+        {
+            IF_BuildCount.value = ++IF_BuildCount.value;
+        }
+
+        void BuildCountValueChanged(ChangeEvent<int> value)
+        {
+            versionModel.ApplyBuildCountVersion(value.newValue);
+        }
+
+        #endregion
+
+        void AdditionalInfoValueChanged(ChangeEvent<string> value)
+        {
+            versionModel.ApplyAdditionalVersion(value.newValue);
         }
     }
 }

@@ -14,18 +14,22 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System;
 using System.Collections.Generic;
 using TMPro;
 using umi3d;
 using umi3d.cdk.collaboration;
 using umi3d.common.interaction;
+using umi3dBrowsers.connection;
 using umi3dBrowsers.container;
 using umi3dBrowsers.container.formrenderer;
 using umi3dBrowsers.displayer;
+using umi3dBrowsers.linker;
+using umi3dBrowsers.sceneManagement;
 using umi3dBrowsers.services.connection;
 using umi3dBrowsers.services.title;
-using umi3dVRBrowsersBase.connection;
 using UnityEngine;
+using UnityEngine.Experimental.GlobalIllumination;
 using UnityEngine.Localization.Settings;
 using UnityEngine.UI;
 using utils.tweens;
@@ -36,6 +40,9 @@ namespace umi3dBrowsers
     {
         [Header("Parent")]
         [SerializeField] private Transform parentTransform;
+
+        [Header("Light")]
+        [SerializeField] private Light directionalLight;
 
         [Header("Navigation-navbar")]
         [SerializeField] private Button parameterButton;
@@ -71,7 +78,7 @@ namespace umi3dBrowsers
         [SerializeField] private SimpleButton backButton;
         [SerializeField] private SimpleButton cancelConnectionButton;
         [SerializeField] private SimpleButton standUpButton;
-        [SerializeField] private SimpleButton flagButton;
+        [SerializeField] private LanguageWidget languageWidget;
 
         [Header("Title")]
         [SerializeField] private TitleManager title;
@@ -89,11 +96,16 @@ namespace umi3dBrowsers
         [SerializeField] private LoadingContainer loadingContainer;
         [SerializeField] private umi3dBrowsers.services.librairies.LibraryManager libraryManager;
         [SerializeField] private UITweens tween;
+        [SerializeField] private PlayerSpawner spawner;
+        [SerializeField] private SceneLoader sceneLoader;
 
         [Header("Options")]
         [SerializeField] private bool forceFlagContent;
 
-        private ContentState _oldState;
+        [Header("Linker")]
+        [SerializeField] private ConnectionToImmersiveLinker connectionToImmersiveLinker;
+
+        private ContentState _returnState;
 
         private void Awake()
         {
@@ -103,21 +115,32 @@ namespace umi3dBrowsers
             if (contentState == ContentState.flagContent && local != null && !forceFlagContent)
                 contentState = ContentState.standUpContent;
             LocalizationSettings.SelectedLocale = local ?? LocalizationSettings.ProjectLocale;
+
+            connectionToImmersiveLinker.OnLeave += () =>
+            {
+                ShowUI();
+                HandleContentState(ContentState.mainContent);
+                connectionProcessorService.Disconnect();
+                sceneLoader.ReloadScene();
+            };
         }
 
         private void Start()
         {
+            spawner.Init(connectionToImmersiveLinker);
+
             BindNavigationButtons();
             BindURL();
             BindFormContainer();
-            BindConnectionService();
-            BindLoaderDisplayer();
 
             popupManager.OnPopUpOpen += () => tween.TweenTo();
             popupManager.OnPopUpClose += () => tween.Rewind();
 
             HandleContentState(contentState);
-            SetVersion(UMI3DVersion.version);
+            SetVersion(Application.version);
+            BindConnectionService();
+            BindLoaderDisplayer();
+
         }
 
         /// <summary>
@@ -152,19 +175,19 @@ namespace umi3dBrowsers
             backButton?.OnClick.AddListener(() =>
             {
                 if (contentState == ContentState.parametersContent || contentState == ContentState.storageContent)
-                    HandleContentState(_oldState);
+                    HandleContentState(_returnState);
             });
             cancelConnectionButton?.OnClick.AddListener(() => {
                 UMI3DCollaborationClientServer.Logout();
             });
-            flagButton?.OnClick.AddListener(() =>
+            languageWidget?.OnSupportedLanguageValidated.AddListener((UnityEngine.Localization.Locale locale) =>
             {
                 HandleContentState(ContentState.standUpContent);
             });
             standUpButton?.OnClick.AddListener(() =>
             {
-                SetUpSkeleton setUp = PlayerDependenciesAccessor.Instance.SetUpSkeleton;
-                StartCoroutine(setUp.SetupSkeleton());
+                SetUpSkeleton setup =  connectionToImmersiveLinker.SetUpSkeleton;
+                StartCoroutine(setup.SetupSkeleton());
                 HandleContentState(ContentState.mainContent);
                 parentTransform.position = new Vector3(parentTransform.position.x, Camera.main.transform.position.y, parentTransform.position.z);
             });
@@ -214,7 +237,7 @@ namespace umi3dBrowsers
                 ProcessForm(connectionFormDto);
             };
             connectionProcessorService.OnAsksToLoadLibrairies += (ids) => connectionProcessorService.SendAnswerToLibrariesDownloadAsk(true);
-            connectionProcessorService.OnConnectionSuccess += () => Debug.Log("____Connection success____");
+            connectionProcessorService.OnConnectionSuccess += () => HideUI();
             connectionProcessorService.OnAnswerFailed += () => {
                 popupManager.ShowPopup(PopupManager.PopupType.Error, "popup_answer_failed_title", "popup_answer_failed_description",
                     ("popup_close", () => { popupManager.ClosePopUp(); }
@@ -228,11 +251,13 @@ namespace umi3dBrowsers
 
         private void BindLoaderDisplayer()
         {
-            loadingContainer.Init();
+            loadingContainer.Init(connectionToImmersiveLinker);
             loadingContainer.OnLoadingInProgress += () =>
             {
                 HandleContentState(ContentState.loadingContent);
                 title.SetTitle(TitleType.mainTitle,"Loading ... ", "");
+                spawner.RepositionPlayer();
+                ShowUI();
             };
             loadingContainer.OnLoadingFinished += () => Debug.Log("TODO : Do something ::: Its loaded");// gameObject.SetActive(false);
         }
@@ -248,7 +273,8 @@ namespace umi3dBrowsers
 
         private void HandleContentState(ContentState state)
         {
-            _oldState = contentState;
+            if (contentState is not (ContentState.storageContent or ContentState.parametersContent))
+                _returnState = contentState;
             contentState = state;
             switch (state)
             {
@@ -312,6 +338,17 @@ namespace umi3dBrowsers
             loadingContent.gameObject.SetActive(false);
             dynamicServerContent.gameObject.SetActive(false);
             navBar.SetActive(true);
+        }
+        private void HideUI()
+        {
+            parentTransform.gameObject.SetActive(false);
+            directionalLight.gameObject.SetActive(false);
+        }
+
+        private void ShowUI()
+        {
+            parentTransform.gameObject.SetActive(true);
+            directionalLight.gameObject.SetActive(true);
         }
     }
 }

@@ -110,7 +110,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 96, y: 96}
+  m_SizeDelta: {x: 64, y: 64}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7090141949112360002
 CanvasRenderer:
@@ -361,6 +361,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
+  updateOnGUI: 0
 --- !u!225 &3885882739101740867
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -597,17 +598,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   transprentColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   vignetteImage: {fileID: 344009632092012096}
+  normalImageColor: {r: 0.4392157, g: 0.4392157, b: 0.4392157, a: 1}
+  hoverImageColor: {r: 1, g: 1, b: 1, a: 1}
   likeButton: {fileID: 3995020310514069545}
   likeImage: {fileID: 7902515993194549043}
   normalLikeIcon: {fileID: 21300000, guid: 40e731205ffd34744a4f701d9ac35b44, type: 3}
-  normalLikeColor: {r: 1, g: 1, b: 1, a: 0}
+  normalLikeColor: {r: 1, g: 1, b: 1, a: 1}
   normaHoverLikeIcon: {fileID: 21300000, guid: 40e731205ffd34744a4f701d9ac35b44, type: 3}
-  normalHoverLikeColor: {r: 0, g: 1, b: 1, a: 0}
+  normalHoverLikeColor: {r: 0, g: 1, b: 1, a: 1}
   selectedLikeIcon: {fileID: 21300000, guid: 2fe725c75adadff498181f8588698f33, type: 3}
-  selectedLikeColor: {r: 1, g: 1, b: 1, a: 0}
+  selectedLikeColor: {r: 1, g: 1, b: 1, a: 1}
   selectedHoverLikeIcon: {fileID: 21300000, guid: 2fe725c75adadff498181f8588698f33,
     type: 3}
-  selectedHoverLikeColor: {r: 1, g: 1, b: 1, a: 0}
+  selectedHoverLikeColor: {r: 1, g: 1, b: 1, a: 1}
   trashButton: {fileID: 7440149681411933856}
   inputFieldBackground: {fileID: 8696773707627030463}
   IF_background: {fileID: 2270611171807340128}
@@ -703,6 +706,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
+  updateOnGUI: 0
 --- !u!114 &8606120696466234703
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -925,6 +929,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   inputField: {fileID: 4943612793382040763}
+  ImageButtonDisplayer: {fileID: 0}
 --- !u!114 &6295683158826162854
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1111,6 +1116,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
+  updateOnGUI: 0
 --- !u!1 &6589570799936200346
 GameObject:
   m_ObjectHideFlags: 0
@@ -1322,6 +1328,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
+  updateOnGUI: 0
 --- !u!225 &1985186691348029351
 CanvasGroup:
   m_ObjectHideFlags: 0

@@ -12,8 +12,10 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
+using inetum.unityUtils.async;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using umi3d.cdk.collaboration;
 using umi3d.cdk.interaction;
 using umi3dBrowsers.interaction.selection;
@@ -139,7 +141,7 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
 
         private List<AbstractDetector<T>> _proximityDetectors;
 
-        public SelectedInteractableManager selectedInteractableManager;
+        public Task<SelectedInteractableManager> selectedInteractableManager;
 
         #endregion fields
 
@@ -153,7 +155,7 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
 
         protected virtual void Start()
         {
-            Global.Get(out selectedInteractableManager);
+            selectedInteractableManager = Global.GetAsync<SelectedInteractableManager>();
         }
 
         private void OnEnable()
@@ -407,7 +409,11 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
                 else if (LastSelected != null) // the selector was selecting something else before
                 {
                     Deselect(LastSelected);
-                    selectedInteractableManager.Hide();
+
+                    selectedInteractableManager.IfCompleted(sim =>
+                    {
+                        sim.Hide();
+                    });
                 }
 
             }

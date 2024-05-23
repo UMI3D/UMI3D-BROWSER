@@ -47,12 +47,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   label: {fileID: 6955289447807756795}
-  delayBeforeHiding: 1
+  background: {fileID: 4294739627830650444}
+  collider: {fileID: 6480795320666331513}
   minDistance: 2
   maxDistance: 6
   minScale: 0.15
   maxScale: 0.5
-  playerTransform: {fileID: 0}
+  events: []
 --- !u!114 &3716950535654356333
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -160,12 +161,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 10
+  m_fontSize: 7
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
-  m_fontSizeMin: 9
-  m_fontSizeMax: 10
+  m_fontSizeMin: 5
+  m_fontSizeMax: 7
   m_fontStyle: 0
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 512

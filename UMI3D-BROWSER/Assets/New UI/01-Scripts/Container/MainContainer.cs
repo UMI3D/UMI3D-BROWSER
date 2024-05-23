@@ -78,7 +78,7 @@ namespace umi3dBrowsers
         [SerializeField] private SimpleButton backButton;
         [SerializeField] private SimpleButton cancelConnectionButton;
         [SerializeField] private SimpleButton standUpButton;
-        [SerializeField] private SimpleButton flagButton;
+        [SerializeField] private LanguageWidget languageWidget;
 
         [Header("Title")]
         [SerializeField] private TitleManager title;
@@ -180,7 +180,7 @@ namespace umi3dBrowsers
             cancelConnectionButton?.OnClick.AddListener(() => {
                 UMI3DCollaborationClientServer.Logout();
             });
-            flagButton?.OnClick.AddListener(() =>
+            languageWidget?.OnSupportedLanguageValidated.AddListener((UnityEngine.Localization.Locale locale) =>
             {
                 HandleContentState(ContentState.standUpContent);
             });

@@ -79,9 +79,11 @@ namespace umi3dBrowsers.displayer
             {
                 BackgroundImage.color = selectedBG;
                 _isSelected = true;
-                OnClick?.Invoke();
+
                 LocalizationSettings.SelectedLocale = Params.SupportedLanguages;
                 PlayerPrefsManager.SaveLocalisationSet(Params.SupportedLanguages);
+
+                OnClick?.Invoke();
             }
         }
 

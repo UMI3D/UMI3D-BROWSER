@@ -1058,50 +1058,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 864270770}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &531637286
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 531637287}
-  - component: {fileID: 531637288}
-  m_Layer: 0
-  m_Name: LanguageManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &531637287
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 531637286}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1780859354}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &531637288
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 531637286}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba363661ad7886b41b50512eb2665c20, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &559541700 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8137424224677497414, guid: d1dc13346723a324ca0d31cf86ee52e6,
@@ -1351,6 +1307,18 @@ MonoBehaviour:
   references:
     version: 2
     RefIds: []
+--- !u!114 &657718369 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1658653038054739340, guid: 236c6f6bec28398478622e96ad15e970,
+    type: 3}
+  m_PrefabInstance: {fileID: 1128305114207327861}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8a17dacbfe236f4eaef0cdbbcf112f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &749918947
 GameObject:
   m_ObjectHideFlags: 0
@@ -3429,18 +3397,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e3db755ad23355408b4b3a50c08fe1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1247925692 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 486544513203762860, guid: 236c6f6bec28398478622e96ad15e970,
-    type: 3}
-  m_PrefabInstance: {fileID: 1128305114207327861}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e3db755ad23355408b4b3a50c08fe1a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1341411408 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 725844368288211144, guid: ed81dbc272338fe428605d9bcb24d5e6,
@@ -4843,7 +4799,6 @@ Transform:
   m_Children:
   - {fileID: 1143609945}
   - {fileID: 1381235281}
-  - {fileID: 531637287}
   m_Father: {fileID: 864270770}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!224 &1787094336 stripped
@@ -5522,20 +5477,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7757393950453599182}
     m_Modifications:
-    - target: {fileID: 486544513203762860, guid: 236c6f6bec28398478622e96ad15e970,
-        type: 3}
-      propertyPath: OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 531637288}
-    - target: {fileID: 1658653038054739340, guid: 236c6f6bec28398478622e96ad15e970,
-        type: 3}
-      propertyPath: languageAssociations.Array.size
-      value: 2
-      objectReference: {fileID: 0}
     - target: {fileID: 1744895909525986718, guid: 236c6f6bec28398478622e96ad15e970,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: -450.61
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2857729180616213546, guid: 236c6f6bec28398478622e96ad15e970,
         type: 3}
@@ -5640,32 +5585,32 @@ PrefabInstance:
     - target: {fileID: 3015912228712036604, guid: 236c6f6bec28398478622e96ad15e970,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3015912228712036604, guid: 236c6f6bec28398478622e96ad15e970,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3015912228712036604, guid: 236c6f6bec28398478622e96ad15e970,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 213
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3015912228712036604, guid: 236c6f6bec28398478622e96ad15e970,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 45
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3015912228712036604, guid: 236c6f6bec28398478622e96ad15e970,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 106.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3015912228712036604, guid: 236c6f6bec28398478622e96ad15e970,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -22.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4905799894114091649, guid: 236c6f6bec28398478622e96ad15e970,
         type: 3}
@@ -5681,11 +5626,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: LanguageContent
-      objectReference: {fileID: 0}
-    - target: {fileID: 5945559527186138994, guid: 236c6f6bec28398478622e96ad15e970,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5761,7 +5701,7 @@ MonoBehaviour:
   backButton: {fileID: 572928161}
   cancelConnectionButton: {fileID: 1174550284}
   standUpButton: {fileID: 1205769063}
-  flagButton: {fileID: 1247925692}
+  languageWidget: {fileID: 657718369}
   title: {fileID: 1427776925955508688}
   versionText: {fileID: 311872180}
   urlDisplayer: {fileID: 1069399991}
@@ -5773,7 +5713,7 @@ MonoBehaviour:
   tween: {fileID: 749918951}
   spawner: {fileID: 1446459085}
   sceneLoader: {fileID: 1920418799}
-  forceFlagContent: 0
+  forceFlagContent: 1
   connectionToImmersiveLinker: {fileID: 11400000, guid: 68ff1a90a5151924e867698a4e1d3a2d,
     type: 2}
 --- !u!1 &1314566949157362920

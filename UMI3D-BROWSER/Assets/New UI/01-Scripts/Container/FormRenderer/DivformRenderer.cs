@@ -86,6 +86,7 @@ namespace umi3dBrowsers.container.formrenderer
         {
             allContainers.Add(_contentRoot);
             InstantiateDiv(connectionFormDto, _contentRoot);
+            tabManager.InitSelectedButtonById();
         }
 
         /// <summary>
@@ -204,26 +205,7 @@ namespace umi3dBrowsers.container.formrenderer
                 parentContainer.contents.Add(imageGO);
 
                 displayer = imageGO.GetComponent<IDisplayer>();
-                if (imageDto.resource != null) 
-                    try
-                    {
-                        object spriteTask = await UMI3DResourcesManager.Instance._LoadFile(0,
-                            imageDto.resource.variants[0],
-                            new ImageDtoLoader()
-                        );
-
-                        Texture2D texture = spriteTask as Texture2D;
-                        displayer.SetResource(
-                            Sprite.Create(texture,
-                                new Rect(0, 0, texture.Size().x, texture.Size().y),
-                                new Vector2())
-                        );
-                    }
-                    catch(Exception ex)
-                    {
-                        Debug.LogException(new Exception("Make sure you are in play mode to load resource in the form," +
-                            " or that every networking UMI3D behaviours are ready"), this);
-                    }
+                displayer.SetResource(await imageDto.GetSprite());
             }
             else // Vignette
             {
@@ -232,13 +214,10 @@ namespace umi3dBrowsers.container.formrenderer
                 {
                     FormContainer newParent = parentContainer.ReplaceContainerWithPrefab(vignetteContainerPrefab);
                     vignetteContainer = newParent.container.GetComponent<VignetteContainer>();
+                    vignetteContainer.Clear();
                 }
 
-                //Add vignette
-                //imageGO = vignetteContainer
-                //parentContainer.contents.Add(imageGO);
-
-                // set the reste of the vignette
+                await vignetteContainer.CreateVignetteFromForm(imageDto);
             }
 
             HandleStyle(imageDto.styles, imageGO, displayer);

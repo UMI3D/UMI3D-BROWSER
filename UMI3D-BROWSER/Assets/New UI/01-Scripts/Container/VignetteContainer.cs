@@ -20,6 +20,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Policy;
+using System.Threading.Tasks;
+using umi3d.cdk;
+using umi3d.common.interaction.form;
 using umi3dBrowsers.displayer;
 using umi3dBrowsers.services.connection;
 using umi3dBrowsers.utils;
@@ -178,6 +181,23 @@ namespace umi3dBrowsers.container
             return vignette;
         }
 
+        public async Task<VignetteDisplayer> CreateVignetteFromForm(ImageDto imageDto)
+        {
+            var vignette = Instantiate(vignetteMode == VignetteScale.Small ? smallVignettePrefab : vignettePrefab, gridLayout.transform).GetComponent<VignetteDisplayer>();
+
+            for (int i = 0; i < imageDto.FirstChildren.Count; i++)
+            {
+                if (imageDto.FirstChildren[i] is LabelDto label)
+                {
+                    vignette.SetupDisplay(label.text);
+                }
+            }
+
+            vignette.SetSprite(await imageDto.GetSprite());
+
+            return vignette;
+        }
+
         public void ResetVignettes() => ResetVignettes(true);
 
         public void ResetVignettes(bool runtime)
@@ -196,6 +216,16 @@ namespace umi3dBrowsers.container
 
             FillWithEmptyVignettes();
             UpdateNavigation();
+        }
+
+        public void Clear()
+        {
+            for(int i = 0; i < vignetteDisplayers.Count; i++)
+            {
+                Destroy(vignetteDisplayers[i].gameObject);
+            }
+
+            vignetteDisplayers = new();
         }
 
         private void FillWithEmptyVignettes()

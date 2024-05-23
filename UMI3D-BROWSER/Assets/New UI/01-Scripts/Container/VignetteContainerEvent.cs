@@ -23,20 +23,5 @@ namespace umi3dBrowsers.container
     {
         public Action OnVignetteReset;
         public Action<VignetteContainer.VignetteScale> OnVignetteChangeMode;
-
-        /*
-        [SerializeField] private List<VignetteContainer> lstVignetteContainers;
-
-        private void Awake()
-        {
-            foreach (var container in lstVignetteContainers)
-            {
-                foreach (var container2 in lstVignetteContainers)
-                {
-                    container.OnReset += () => container2.ResetVignettes();
-                    container.OnChangeMode += mode => container2.ChangeVignetteMode(mode);
-                }
-            }
-        }*/
     }
 }

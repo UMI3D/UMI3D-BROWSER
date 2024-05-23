@@ -119,6 +119,11 @@ namespace umi3dBrowsers.displayer
             InputFieldText.color = normalImageColor;
         }
 
+        internal void SetSprite(Sprite sprite)
+        {
+            vignetteImage.sprite = sprite;
+        }
+
         public void SetupFavoriteButton(Action onFavorite, bool isFavorite = false)
         {
             likeButton.OnClick += onFavorite;
@@ -199,5 +204,7 @@ namespace umi3dBrowsers.displayer
         {
             throw new NotImplementedException();
         }
+
+
     }
 }

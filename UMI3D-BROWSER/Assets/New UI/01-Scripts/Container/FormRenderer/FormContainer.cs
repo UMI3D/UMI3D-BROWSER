@@ -21,7 +21,7 @@ using UnityEngine;
 
 namespace umi3dBrowsers.container.formrenderer
 {
-    public class FormContainer : MonoBehaviour
+    public class FormContainer 
     {
         public FormContainer parentFormContainer;
         public GameObject container;
@@ -36,11 +36,11 @@ namespace umi3dBrowsers.container.formrenderer
         public FormContainer GetNextFormContainer(GameObject content)
         {
             contents.Add(content);
-            FormContainer formContainer = new FormContainer();
-            formContainer.container = content;
-            childrenFormContainers.Add(formContainer);
-            formContainer.parentFormContainer = parentFormContainer;
-            return formContainer;
+            FormContainer childContainer = new FormContainer();
+            childContainer.container = content;
+            childrenFormContainers.Add(childContainer);
+            childContainer.parentFormContainer = this;
+            return childContainer;
         }
 
         /// <summary>
@@ -50,23 +50,30 @@ namespace umi3dBrowsers.container.formrenderer
         /// <returns></returns>
         public FormContainer ReplaceContainerWithPrefab(GameObject intermediaryContainer)
         {
-            /// creare un nouveau qui contient la page 
-            /// reremplit l'adresse de celui ci avec la le prefab
+            FormContainer replacementParentContainer = new FormContainer();
+            replacementParentContainer.parentFormContainer = parentFormContainer;
+            replacementParentContainer.container = container;
+            replacementParentContainer.contents.AddRange(contents);
+            replacementParentContainer.childrenFormContainers.AddRange(childrenFormContainers);
 
+            replacementParentContainer.childrenFormContainers.Add(this);
 
-            GameObject newContainer = Instantiate(intermediaryContainer, parentFormContainer.container.transform); 
-            parentFormContainer.contents.Remove(container);
+            GameObject newContainer = GameObject.Instantiate(intermediaryContainer, container.transform);
+            replacementParentContainer.contents.Add(newContainer);
+
+            parentFormContainer.childrenFormContainers.Remove(this);
+            parentFormContainer.childrenFormContainers.Add(replacementParentContainer);
+
+            parentFormContainer = replacementParentContainer;
+
+            container = newContainer;
+            contents.Clear();
+            childrenFormContainers.Clear();
 
             foreach (var content in contents)
             {
                 content.transform.SetParent(newContainer.transform);
             }
-
-            Destroy(container);
-
-            container = newContainer;
-
-            parentFormContainer.contents.Add(container);
 
             return this;
         }

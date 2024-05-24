@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1257,10 +1257,25 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 522175202554379955, guid: 81edd7311d250344a9937dce75274a2e,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7115002440066437764, guid: 81edd7311d250344a9937dce75274a2e,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 7641357056380844684, guid: 81edd7311d250344a9937dce75274a2e,
         type: 3}
       propertyPath: m_Name
       value: SKYBOX_2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7641357056380844684, guid: 81edd7311d250344a9937dce75274a2e,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 7684936378012826588, guid: 81edd7311d250344a9937dce75274a2e,
         type: 3}
@@ -1337,6 +1352,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 81edd7311d250344a9937dce75274a2e, type: 3}
+--- !u!4 &640926458 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7684936378012826588, guid: 81edd7311d250344a9937dce75274a2e,
+    type: 3}
+  m_PrefabInstance: {fileID: 640926457}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &641571389 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1182567295146937427, guid: 1310caa2feb3a02438ace8909cc19df5,
@@ -5763,6 +5784,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parentTransform: {fileID: 749918948}
+  skyBoxTransform: {fileID: 640926458}
   directionalLight: {fileID: 263852483}
   parameterButton: {fileID: 2117018263}
   storageButton: {fileID: 1955936283}
@@ -5801,7 +5823,7 @@ MonoBehaviour:
   tween: {fileID: 749918951}
   spawner: {fileID: 1446459085}
   sceneLoader: {fileID: 1920418799}
-  forceFlagContent: 1
+  forceFlagContent: 0
   connectionToImmersiveLinker: {fileID: 11400000, guid: 68ff1a90a5151924e867698a4e1d3a2d,
     type: 2}
 --- !u!1 &1314566949157362920

@@ -89,7 +89,7 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
                     OnPointerUp(new PointerEventData(EventSystem.current) { clickCount = 1, pointerId = (int)controller.type });
                     LockedSelector = false;
                 }
-            } else if (activated && LastSelected != null)
+            } else if (activated && LastSelected?.selectedObject != null)
             {
                 raycastHelper.origin = controller.transform.position;
                 raycastHelper.direction = controller.transform.forward;
@@ -112,7 +112,7 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
         public void OnPointerUp(PointerEventData eventData)
         {
             var projector = this.projector as SelectableProjector;
-            if (LastSelected != null && isSelecting)
+            if (LastSelected?.selectedObject != null && isSelecting)
             {
                 projector.Pick(LastSelected.selectedObject, controller, eventData);
             }
@@ -130,7 +130,7 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
         /// <param name="eventData"></param>
         public void OnPointerDown(PointerEventData eventData)
         {
-            if (isSelecting && LastSelected != null)
+            if (isSelecting && LastSelected?.selectedObject != null)
             {
                 (projector as SelectableProjector).PressDown(LastSelected.selectedObject, controller, eventData);
             }

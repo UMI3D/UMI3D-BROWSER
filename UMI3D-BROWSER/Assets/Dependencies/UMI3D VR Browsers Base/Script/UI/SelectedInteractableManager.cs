@@ -25,6 +25,7 @@ using TMPro;
 using umi3d.browserRuntime.player;
 using umi3d.cdk.interaction;
 using umi3d.common.interaction;
+using umi3dBrowsers.linker;
 using umi3dVRBrowsersBase.interactions;
 using umi3dVRBrowsersBase.ui.playerMenu;
 using UnityEngine;
@@ -38,6 +39,8 @@ namespace umi3dVRBrowsersBase.ui
     /// </summary>
     public class SelectedInteractableManager : AbstractClientInteractableElement, ITriggerableElement
     {
+        [SerializeField] private SIM_Linker simLinker;
+
         public TMP_Text label;
         public Image background;
         public new BoxCollider collider;
@@ -81,6 +84,8 @@ namespace umi3dVRBrowsersBase.ui
             });
 
             Hide();
+
+            simLinker.SimReady(this);
         }
 
         private void Update()

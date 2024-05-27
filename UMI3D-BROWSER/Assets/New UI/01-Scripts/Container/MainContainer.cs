@@ -40,6 +40,7 @@ namespace umi3dBrowsers
     {
         [Header("Parent")]
         [SerializeField] private Transform parentTransform;
+        [SerializeField] private Transform skyBoxTransform;
 
         [Header("Light")]
         [SerializeField] private Light directionalLight;
@@ -342,12 +343,14 @@ namespace umi3dBrowsers
         private void HideUI()
         {
             parentTransform.gameObject.SetActive(false);
+            skyBoxTransform.gameObject.SetActive(false);
             directionalLight.gameObject.SetActive(false);
         }
 
         private void ShowUI()
         {
             parentTransform.gameObject.SetActive(true);
+            skyBoxTransform.gameObject.SetActive(true);
             directionalLight.gameObject.SetActive(true);
         }
     }

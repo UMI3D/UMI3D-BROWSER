@@ -745,6 +745,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2319626088986524064, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: teleportingLeft
+      value: 
+      objectReference: {fileID: 1131452857}
+    - target: {fileID: 2319626088986524064, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: teleportingRight
+      value: 
+      objectReference: {fileID: 1131452856}
     - target: {fileID: 2732024595753542663, guid: aa50e35a45eaaed43a950ae34ef532dc,
         type: 3}
       propertyPath: navigations.Array.data[0]
@@ -840,6 +850,30 @@ Camera:
     type: 3}
   m_PrefabInstance: {fileID: 1131452852}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1131452856 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 335970365947459460, guid: aa50e35a45eaaed43a950ae34ef532dc,
+    type: 3}
+  m_PrefabInstance: {fileID: 1131452852}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76a753d697b6290408411f19ff79a837, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1131452857 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3559625777175927475, guid: aa50e35a45eaaed43a950ae34ef532dc,
+    type: 3}
+  m_PrefabInstance: {fileID: 1131452852}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76a753d697b6290408411f19ff79a837, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1176586236 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2674705051583403392, guid: 6d8cc188ac4cb49419e2616ed25f607d,

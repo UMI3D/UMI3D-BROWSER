@@ -26,21 +26,14 @@ namespace umi3dBrowsers.displayer
 {
     public class TMP_UMI3DUIInputField : TMP_InputField
     {
-        [SerializeField] protected Keyboard keyboard;
-
         Action<PointerEventData> hoverEnterCallBack;
         Action<PointerEventData> hoverExitCallBack;
 
         public event Action<string> OnTextChanged;
 
-        protected override void Start()
-        {
-            keyboard = Keyboard.Instance;
-        }
-
         protected override void OnDisable()
         {
-            keyboard?.CancelAndClose();
+            Keyboard.Instance?.CancelAndClose();
         }
 
         public void SetCallBacks(Action<PointerEventData> hoverEnterCallBack, Action<PointerEventData> hoverExitCallBack)
@@ -63,7 +56,7 @@ namespace umi3dBrowsers.displayer
         {
             base.OnSelect(eventData);
 
-            if (keyboard != null)
+            if (Keyboard.Instance != null)
             {
                 InputSelected();
             }
@@ -88,7 +81,7 @@ namespace umi3dBrowsers.displayer
 
         private void InputSelected()
         {
-            keyboard.OpenKeyboard(this, res =>
+            Keyboard.Instance?.OpenKeyboard(this, res =>
             {
                 text = res;
                 OnTextChanged?.Invoke(res);

@@ -57,7 +57,7 @@ namespace umi3dBrowsers.displayer
         private GameObject currentlySelectedCellGo;
 
         public string GetValue()
-        {
+        { 
             return text.text;
         }
 

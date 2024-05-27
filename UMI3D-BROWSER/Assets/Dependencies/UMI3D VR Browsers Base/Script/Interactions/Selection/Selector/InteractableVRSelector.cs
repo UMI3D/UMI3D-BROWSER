@@ -18,6 +18,8 @@ using umi3d.common;
 using umi3dBrowsers.interaction.selection;
 using umi3dBrowsers.interaction.selection.intentdetector;
 using umi3dBrowsers.interaction.selection.projector;
+using umi3dBrowsers.linker;
+using umi3dVRBrowsersBase.ui;
 using UnityEngine;
 
 namespace umi3dVRBrowsersBase.interactions.selection.selector
@@ -54,15 +56,21 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
         #endregion constructors
 
         #region lifecycle
+        protected override void Awake()
+        {
+            base.Awake();
+            simLinker.OnSimReady += sim =>
+            {
+                projector = new InteractableProjector()
+                {
+                    sim = sim
+                };
+            };
+        }
 
         protected override void Start()
         {
             base.Start();
-
-            projector = new InteractableProjector()
-            {
-                selectedInteractableManager = selectedInteractableManager
-            };
         }
 
         protected override void Update()

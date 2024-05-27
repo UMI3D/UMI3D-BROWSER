@@ -6285,6 +6285,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   elasticFollow: {fileID: 0}
+  connectionToImmersiveLinker: {fileID: 11400000, guid: 68ff1a90a5151924e867698a4e1d3a2d,
+    type: 2}
 --- !u!1 &3103591715346689481
 GameObject:
   m_ObjectHideFlags: 0
@@ -6408,8 +6410,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
+      - m_Target: {fileID: 963334185214115161}
+        m_TargetAssemblyTypeName: umi3dBrowsers.keyboard.Keyboard, Assembly-CSharp
         m_MethodName: CancelAndClose
         m_Mode: 1
         m_Arguments:

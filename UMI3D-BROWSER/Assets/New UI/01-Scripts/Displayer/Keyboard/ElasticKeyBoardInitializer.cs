@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using umi3dBrowsers.linker;
 using umi3dBrowsers.utils;
 using UnityEngine;
 
@@ -9,9 +10,13 @@ namespace umi3dBrowsers.keyboard
     {
         [SerializeField] private ElasticFollow elasticFollow;
 
+        [Header("Linker")]
+        [SerializeField] private ConnectionToImmersiveLinker connectionToImmersiveLinker;
+
         private void Awake()
         {
             if (elasticFollow == null) elasticFollow = GetComponentInParent<ElasticFollow>();
+            connectionToImmersiveLinker.OnPlayerLoaded += (playerTransform) => StartCoroutine(SetParent());
         }
 
         private void Start()

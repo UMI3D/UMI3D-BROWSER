@@ -9,6 +9,7 @@ namespace umi3dBrowsers.utils
     public class ElasticFollow : MonoBehaviour, IFollowable
     {
         [SerializeField] private Transform targetTransform;
+        public Transform TargetTransform => targetTransform;
         [SerializeField] private Vector3 filter;
         [SerializeField] private int sequence;
         [SerializeField] private IFollowable.FollowTranslationByDistanceAndRotationComponents followTranslationByDistanceAndRotation;

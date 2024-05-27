@@ -68,6 +68,7 @@ namespace umi3dBrowsers.services.connection
 
         public async void TryConnectToMediaServer(string url)
         {
+            UMI3DCollaborationClientServer.Instance.Clear();
             VirtualWorldData virtualWorldData = new VirtualWorldData();
             OnTryToConnect?.Invoke(url);
 

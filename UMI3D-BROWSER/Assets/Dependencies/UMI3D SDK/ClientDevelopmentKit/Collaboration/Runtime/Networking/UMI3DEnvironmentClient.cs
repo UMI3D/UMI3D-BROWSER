@@ -165,7 +165,6 @@ namespace umi3d.cdk.collaboration
         public class UserInfo
         {
             public ConnectionFormDto formdto;
-            public common.interaction.form.ConnectionFormDto form;
             public UserConnectionAnswerDto answerDto;
 
             public string AudioPassword;
@@ -173,7 +172,6 @@ namespace umi3d.cdk.collaboration
             public UserInfo()
             {
                 formdto = new ConnectionFormDto();
-                form = new();
                 answerDto = new UserConnectionAnswerDto();
                 AudioPassword = null;
 
@@ -181,7 +179,7 @@ namespace umi3d.cdk.collaboration
 
             public void Set(UserConnectionDto dto)
             {
-                common.interaction.FormAnswerDto param = this.answerDto.parameters;
+                FormAnswerDto param = this.answerDto.parameters;
                 this.answerDto = new UserConnectionAnswerDto()
                 {
                     id = dto.id,
@@ -211,7 +209,6 @@ namespace umi3d.cdk.collaboration
                     parameters = param
                 };
                 this.formdto = dto.parameters;
-                this.form = dto.form;
                 this.AudioPassword = dto.audioPassword;
             }
         }
@@ -526,15 +523,9 @@ namespace umi3d.cdk.collaboration
                 if (Ok)
                 {
                     //UMI3DLogger.Log($"Update Identity parameters {UserDto.formdto} ", scope | DebugScope.Connection);
-                    if (UserDto.form != null)
+                    if (UserDto.formdto != null)
                     {
-                        var param = await UMI3DCollaborationClientServer.Instance.Identifier.GetParameterDtos(UserDto.form);
-                        UserDto.answerDto.formAnswer = param;
-                        await HttpClient.SendPostUpdateIdentity(UserDto.answerDto);
-                    }
-                    else if (UserDto.formdto != null)
-                    {
-                        common.interaction.FormAnswerDto param = await UMI3DCollaborationClientServer.Instance.Identifier.GetParameterDtos(UserDto.formdto);
+                        FormAnswerDto param = await UMI3DCollaborationClientServer.Instance.Identifier.GetParameterDtos(UserDto.formdto);
                         UserDto.answerDto.parameters = param;
                         await HttpClient.SendPostUpdateIdentity(UserDto.answerDto);
                     }

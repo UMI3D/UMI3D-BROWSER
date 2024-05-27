@@ -71,7 +71,6 @@ namespace umi3dBrowsers
 #if UNITY_EDITOR
         public ContentState _ContentState { get { return contentState; } set { contentState = value; } }
         public void ToolAccessProcessForm(ConnectionFormDto connectionFormDto) { ProcessForm(connectionFormDto); }
-        public void ToolAccessProcessForm(umi3d.common.interaction.form.ConnectionFormDto connectionFormDto) { ProcessForm(connectionFormDto); }
 #endif
 
 
@@ -266,10 +265,6 @@ namespace umi3dBrowsers
         private void ProcessForm(ConnectionFormDto connectionFormDto)
         {
             dynamicServerContainer.HandleParamForm(connectionFormDto);
-        }
-        private void ProcessForm(umi3d.common.interaction.form.ConnectionFormDto connectionFormDto)
-        {
-            dynamicServerContainer.HandleDivForm(connectionFormDto);
         }
 
         private void HandleContentState(ContentState state)

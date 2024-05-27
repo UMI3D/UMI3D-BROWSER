@@ -18,7 +18,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using umi3d.common;
-using UnityEngine.UI;
 
 namespace umi3d.cdk.navigation
 {

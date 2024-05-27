@@ -13,7 +13,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-using System;
 using umi3d.common.interaction;
 
 namespace umi3d.common.collaboration.dto.networking
@@ -24,14 +23,8 @@ namespace umi3d.common.collaboration.dto.networking
     public class FormConnectionAnswerDto : ConnectionDto
     {
         /// <summary>
-        /// Form for old umi3dServer and worldcontroller
+        /// Global token, as a set of form answers, previously used in the media the client want to connect to.
         /// </summary>
-        [Obsolete("Use interaction.form.FormAnswerDto.")]
-        public interaction.FormAnswerDto formAnswerDto { get; set; }
-
-        /// <summary>
-        /// Form for umi3dServer and worldcontroller
-        /// </summary>
-        public interaction.form.FormAnswerDto formAnswer { get; set; }
+        public FormAnswerDto formAnswerDto { get; set; }
     }
 }

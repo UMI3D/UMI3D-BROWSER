@@ -49,18 +49,18 @@ namespace inetum.unityUtils.async
             }
         }
 
+        /// <summary>
+        /// Try to get the value of the async request.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="task"></param>
+        /// <param name="variable"></param>
+        /// <returns></returns>
         public static bool TryGet<T>(this Task<T> task, out T variable)
         {
-            if (task?.IsCompleted ?? false)
-            {
-                variable = task.Result;
-                return true;
-            }
-            else
-            {
-                variable = default;
-                return false;
-            }
+            var isCompleted = task?.IsCompleted ?? false;
+            variable = isCompleted ? task.Result : default;
+            return isCompleted;
         }
     }
 }

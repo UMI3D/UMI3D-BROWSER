@@ -26,7 +26,7 @@ namespace umi3dBrowsers.interaction.selection.projector
     /// </summary>
     public class InteractableProjector : IProjector<InteractableContainer>
     {
-        public Task<SelectedInteractableManager> selectedInteractableManager;
+        public SelectedInteractableManager sim;
 
         /// <summary>
         /// Checks whether an interctable has already projected tools
@@ -48,10 +48,7 @@ namespace umi3dBrowsers.interaction.selection.projector
             var interactionTool = AbstractInteractionMapper.Instance.GetTool(UMI3DGlobalID.EnvironmentId, interactable.Interactable.dto.id);
             Project(interactionTool, interactable.Interactable.dto.nodeId, controller);
 
-            selectedInteractableManager.IfCompleted(sim =>
-            {
-                sim.Display(interactable);
-            });
+            sim.Display(interactable);
         }
 
         /// <summary>
@@ -80,11 +77,7 @@ namespace umi3dBrowsers.interaction.selection.projector
             UnregisterToToolUpdate(interactionTool);
 
             controller.Release(interactionTool, new RequestedUsingSelector<AbstractSelector>() { controller = controller });
-
-            selectedInteractableManager.IfCompleted(sim =>
-            {
-                sim.HideWithDelay();
-            });
+            sim.HideWithDelay();
         }
 
         /// <inheritdoc/>
@@ -95,10 +88,7 @@ namespace umi3dBrowsers.interaction.selection.projector
 
             controller.Release(tool, new RequestedUsingSelector<AbstractSelector>() { controller = controller });
 
-            selectedInteractableManager.IfCompleted(sim =>
-            {
-                sim.HideWithDelay();
-            });
+            sim.HideWithDelay();
         }
 
         private void UnregisterToToolUpdate(AbstractTool interactionTool)

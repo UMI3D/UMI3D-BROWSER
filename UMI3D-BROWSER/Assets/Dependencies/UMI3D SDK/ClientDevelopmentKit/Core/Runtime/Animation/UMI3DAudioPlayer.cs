@@ -292,7 +292,7 @@ namespace umi3d.cdk
         {
             if (audioSource.outputAudioMixerGroup == null)
             {
-                AudioMixerControl.SetEnvironmentGroup(audioSource);
+                AudioMixerControl.SetGroup(AudioMixerControl.Group.Conversation, audioSource);
             }
             atTime = atTime / 1000f; //Convert to seconds
 

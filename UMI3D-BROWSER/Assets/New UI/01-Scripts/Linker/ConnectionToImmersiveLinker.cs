@@ -25,7 +25,7 @@ namespace umi3dBrowsers.linker
         }
 
         public event Action OnLeave;
-        public void Leave() { OnLeave?.Invoke(); }  
+        public void Leave() { OnLeave?.Invoke(); }
     }
 }
 

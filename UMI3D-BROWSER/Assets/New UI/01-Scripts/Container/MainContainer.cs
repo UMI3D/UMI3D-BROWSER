@@ -203,7 +203,6 @@ namespace umi3dBrowsers
         private void BindFormContainer()
         {
             dynamicServerContainer.OnFormAnwser += (formAnswer) => connectionProcessorService.SendFormAnswer(formAnswer);
-            dynamicServerContainer.OnDivformAnswer += (formAnswer) => connectionProcessorService.SendFormAnswer(formAnswer);
         }
 
         private void BindConnectionService()
@@ -238,10 +237,6 @@ namespace umi3dBrowsers
                     ("popup_close", () => { popupManager.ClosePopUp(); }
                 ));
             };
-            UMI3DCollaborationClientServer.Instance.OnLeavingEnvironment.AddListener(() => {
-                UMI3DCollaborationClientServer.Instance.Identifier.Reset();
-                HandleContentState(ContentState.mainContent);
-            });
         }
 
         private void BindLoaderDisplayer()

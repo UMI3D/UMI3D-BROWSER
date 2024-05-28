@@ -73,7 +73,7 @@ namespace umi3dBrowsers.services.connection
             return form;
         }
 
-        public override void Reset()
+        public void Reset()
         {
             _connectionFormDto = null;
         }

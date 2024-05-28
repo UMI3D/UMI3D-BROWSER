@@ -172,6 +172,7 @@ namespace umi3dBrowsers.services.connection
             umi3dVRBrowsersBase.DontDestroyOnLoad.DestroyAllInstances();
 
             WatchMenu.UnPinAllMenus();
+            identifier.Reset();
         }
     }
 }

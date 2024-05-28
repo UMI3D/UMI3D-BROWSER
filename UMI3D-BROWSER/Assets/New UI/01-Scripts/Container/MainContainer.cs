@@ -71,7 +71,6 @@ namespace umi3dBrowsers
 #if UNITY_EDITOR
         public ContentState _ContentState { get { return contentState; } set { contentState = value; } }
         public void ToolAccessProcessForm(ConnectionFormDto connectionFormDto) { ProcessForm(connectionFormDto); }
-        public void ToolAccessProcessForm(umi3d.common.interaction.form.ConnectionFormDto connectionFormDto) { ProcessForm(connectionFormDto); }
 #endif
 
 
@@ -204,7 +203,6 @@ namespace umi3dBrowsers
         private void BindFormContainer()
         {
             dynamicServerContainer.OnFormAnwser += (formAnswer) => connectionProcessorService.SendFormAnswer(formAnswer);
-            dynamicServerContainer.OnDivformAnswer += (formAnswer) => connectionProcessorService.SendFormAnswer(formAnswer);
         }
 
         private void BindConnectionService()
@@ -232,11 +230,6 @@ namespace umi3dBrowsers
                 ProcessForm(connectionFormDto);
                 title.SetTitle(TitleType.connectionTitle,"", connectionFormDto?.name, true, true);
             };
-            connectionProcessorService.OnDivFormReceived += (connectionFormDto) =>
-            {
-                HandleContentState(ContentState.dynamicServerContent);
-                ProcessForm(connectionFormDto);
-            };
             connectionProcessorService.OnAsksToLoadLibrairies += (ids) => connectionProcessorService.SendAnswerToLibrariesDownloadAsk(true);
             connectionProcessorService.OnConnectionSuccess += () => HideUI();
             connectionProcessorService.OnAnswerFailed += () => {
@@ -244,10 +237,6 @@ namespace umi3dBrowsers
                     ("popup_close", () => { popupManager.ClosePopUp(); }
                 ));
             };
-            UMI3DCollaborationClientServer.Instance.OnLeavingEnvironment.AddListener(() => {
-                UMI3DCollaborationClientServer.Instance.Identifier.Reset();
-                HandleContentState(ContentState.mainContent);
-            });
         }
 
         private void BindLoaderDisplayer()
@@ -266,10 +255,6 @@ namespace umi3dBrowsers
         private void ProcessForm(ConnectionFormDto connectionFormDto)
         {
             dynamicServerContainer.HandleParamForm(connectionFormDto);
-        }
-        private void ProcessForm(umi3d.common.interaction.form.ConnectionFormDto connectionFormDto)
-        {
-            dynamicServerContainer.HandleDivForm(connectionFormDto);
         }
 
         private void HandleContentState(ContentState state)

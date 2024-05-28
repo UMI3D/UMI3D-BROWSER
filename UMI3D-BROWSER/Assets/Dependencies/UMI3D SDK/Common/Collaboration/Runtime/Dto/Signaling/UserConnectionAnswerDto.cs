@@ -29,9 +29,7 @@ namespace umi3d.common.collaboration.dto.signaling
         /// Answers to the connection form.
         /// </summary>
         /// Not null if the received <see cref="UserConnectionDto"/> contained a form.
-        public interaction.FormAnswerDto parameters { get; set; }
-
-        public interaction.form.FormAnswerDto formAnswer { get; set; }
+        public FormAnswerDto parameters { get; set; }
 
         /// <summary>
         /// State if the libraries have been updated

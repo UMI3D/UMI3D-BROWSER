@@ -27,7 +27,6 @@ namespace umi3dBrowsers.services.connection
     public class Identifier : ClientIdentifierApi
     {
         public Action<List<string>, Action<bool>> OnLibrairiesAvailible;
-        public Action<umi3d.common.interaction.form.ConnectionFormDto, Action<umi3d.common.interaction.form.FormAnswerDto>> OnDivFormAvailible;
         public Action<ConnectionFormDto, Action<FormAnswerDto>> OnParamFormAvailible;
 
         public Action OnAnswerFailed;
@@ -57,18 +56,6 @@ namespace umi3dBrowsers.services.connection
             return form;
         }
 
-        public override async Task<umi3d.common.interaction.form.FormAnswerDto> GetParameterDtos(umi3d.common.interaction.form.ConnectionFormDto parameter)
-        {
-            bool isWaiting = true;
-            umi3d.common.interaction.form.FormAnswerDto form = null;
-
-            Action< umi3d.common.interaction.form.FormAnswerDto> callback = (formAnswer) => { form = formAnswer; isWaiting=false; };
-
-            while (isWaiting)
-                await Task.Yield();
-            return form;
-        }
-
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
@@ -86,7 +73,7 @@ namespace umi3dBrowsers.services.connection
             return form;
         }
 
-        public override void Reset()
+        public void Reset()
         {
             _connectionFormDto = null;
         }

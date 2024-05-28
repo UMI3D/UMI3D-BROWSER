@@ -41,16 +41,12 @@ namespace umi3dBrowsers.container.formrenderer
         [SerializeField] private GameObject paramRoot;
 
         [SerializeField] private ParamformRenderer formParamRenderer;
-        //[SerializeField] private DivformRenderer formDivRenderer;
 
         public event Action<FormAnswerDto> OnFormAnwser;
-        //public event Action<umi3d.common.interaction.form.FormAnswerDto> OnDivformAnswer;
 
         private void Start()
         {
             formParamRenderer.OnFormAnswer += (formDto) => OnFormAnwser?.Invoke(formDto);
-
-            //formDivRenderer.OnFormAnswer += (formDto) => OnDivformAnswer?.Invoke(formDto);
         }
 
         public void HandleParamForm(ConnectionFormDto connectionFormDto)
@@ -59,13 +55,6 @@ namespace umi3dBrowsers.container.formrenderer
             formParamRenderer.CleanContent(connectionFormDto.id);
             formParamRenderer.Handle(connectionFormDto);
         }
-
-        //public void HandleDivForm(umi3d.common.interaction.form.ConnectionFormDto connectionFormDto)
-        //{
-        //    formDivRenderer.Init(contentRoot);
-        //    formDivRenderer.CleanContent(connectionFormDto.id);
-        //    formDivRenderer.Handle(connectionFormDto);
-        //}
     }
 }
 

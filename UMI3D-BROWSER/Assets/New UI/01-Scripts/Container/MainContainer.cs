@@ -231,11 +231,6 @@ namespace umi3dBrowsers
                 ProcessForm(connectionFormDto);
                 title.SetTitle(TitleType.connectionTitle,"", connectionFormDto?.name, true, true);
             };
-            connectionProcessorService.OnDivFormReceived += (connectionFormDto) =>
-            {
-                HandleContentState(ContentState.dynamicServerContent);
-                ProcessForm(connectionFormDto);
-            };
             connectionProcessorService.OnAsksToLoadLibrairies += (ids) => connectionProcessorService.SendAnswerToLibrariesDownloadAsk(true);
             connectionProcessorService.OnConnectionSuccess += () => HideUI();
             connectionProcessorService.OnAnswerFailed += () => {

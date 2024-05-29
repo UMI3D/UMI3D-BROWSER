@@ -92,7 +92,9 @@ namespace umi3dBrowsers.displayer
 
         private void OnProgressChange(float val)
         {
+#if UNITY_EDITOR
             Debug.Log("Loading ::: " + val);
+#endif
             if (val >= 0 && val < 1)
             {
                 if (_loadingInProgress == false) // Notify that a loading is in progress

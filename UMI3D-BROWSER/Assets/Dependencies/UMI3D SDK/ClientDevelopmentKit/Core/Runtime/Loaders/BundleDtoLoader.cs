@@ -101,7 +101,7 @@ namespace umi3d.cdk
                 if (!isAsset && !isScene)
                 {
                     var result = bundle.GetAllAssetNames().FirstOrDefault(element => element.Contains(pathIfObjectInBundle));
-                    if(result != null)
+                    if (result != null)
                     {
                         isAsset = true;
                         pathIfObjectInBundle = result;
@@ -148,20 +148,20 @@ namespace umi3d.cdk
                 }
                 else if (isScene)
                 {
-                        var scene = await LoadScene(pathIfObjectInBundle);
+                    var scene = await LoadScene(pathIfObjectInBundle);
 #if UNITY_EDITOR && !UNITY_STANDALONE_WIN
                         UnityEngine.Debug.Log("<color=green>TODO: </color>" + $"Fix shader on asset bundle go {scene.Item1.name}");
                         ShaderFix.FixShadersForEditor(scene.Item1);
 #endif
-                        AbstractMeshDtoLoader.HideModelRecursively(scene.Item1);
-                        return scene;
-                    }
-                    else
-                    {
-                    UMI3DLogger.LogWarning($"Path {pathIfObjectInBundle} not found in Assets nor Scenes.\nAvailabled Assets were {bundle.GetAllAssetNames().ToString<string>()}\nAvailabled Scenes were {bundle.GetAllScenePaths().ToString<string>()}", scope);
-                        return (o);
-                    }
+                    AbstractMeshDtoLoader.HideModelRecursively(scene.Item1);
+                    return scene;
                 }
+                else
+                {
+                    UMI3DLogger.LogWarning($"Path {pathIfObjectInBundle} not found in Assets nor Scenes.\nAvailabled Assets were {bundle.GetAllAssetNames().ToString<string>()}\nAvailabled Scenes were {bundle.GetAllScenePaths().ToString<string>()}", scope);
+                    return (o);
+                }
+            }
 
             return (o);
         }

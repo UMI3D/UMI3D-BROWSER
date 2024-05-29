@@ -380,8 +380,6 @@ namespace umi3d.cdk.collaboration
                 environmentClient?.SendVOIP(length, sample);
         }
 
-
-
         /// <inheritdoc/>
         protected override async Task<byte[]> _GetFile(string url, bool useParameterInsteadOfHeader)
         {
@@ -423,7 +421,6 @@ namespace umi3d.cdk.collaboration
                 }
                 UMI3DLogger.Log($"Remove GetEntity {idsToSend.ToString<ulong>()} {loadingEntities.ToString<ulong>()}", scope);
             }
-
 
             return result;
         }

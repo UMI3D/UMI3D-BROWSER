@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -28,14 +29,53 @@ namespace umi3dBrowsers.utils
 
         public static List<UIColliderScaller> uiColliderScalers = new();
 
+        [Header("UptadeToChildRT")]
+        [SerializeField] private bool scaleHorizontalRT = false;
+        [SerializeField] private RectTransform childRT;
+        private bool hasResized = false;
+
+        [Header("GUI")]
+        [SerializeField] private bool updateOnGUI;
+        private void OnEnable()
+        {
+            if (!uiColliderScalers.Contains(this))
+            {
+                uiColliderScalers.Add(this);
+                ScaleCollider();
+            }
+
+            hasResized = false;
+            HandleRT();
+        }
+
+        private void OnValidate()
+        {
+            ScaleCollider();
+            hasResized = false;
+            HandleRT();
+        }
+
+        private void OnDisable()
+        {
+            if (uiColliderScalers.Contains(this))
+            {
+                uiColliderScalers.Remove(this);
+            }
+        }
+
         private void Awake()
         {
             _collider = GetComponent<BoxCollider>();
             _transform = GetComponent<RectTransform>();
+        }
 
-            if (!uiColliderScalers.Contains(this))
+        private void HandleRT()
+        {
+            if (scaleHorizontalRT)
             {
-                uiColliderScalers.Add(this);
+                RectTransform rectTransform = transform as RectTransform;
+                if (childRT != null)
+                    rectTransform.sizeDelta = new Vector2(childRT.sizeDelta.x, rectTransform.sizeDelta.y);
             }
         }
 
@@ -47,6 +87,20 @@ namespace umi3dBrowsers.utils
 
             Vector3 size = new Vector3(_transform.rect.width, _transform.rect.height, 0.01f);
             _collider.size = size;
+        }
+
+        private void LateUpdate()
+        {
+            if (!hasResized)
+            {
+                hasResized = true;
+                HandleRT();
+            }
+        }
+        private void OnGUI()
+        {
+            if (updateOnGUI)
+                ScaleCollider();
         }
     }
 }

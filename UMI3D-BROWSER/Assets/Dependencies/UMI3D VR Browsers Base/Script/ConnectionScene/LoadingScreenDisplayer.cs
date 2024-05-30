@@ -36,6 +36,7 @@ namespace umi3dVRBrowsersBase.connection
         private LayerMask loadingCullingMask;
 
         private int defaultCullingMask;
+        [SerializeField] private Material skyBoxHomeMaterial;
 
         [SerializeField]
         GameObject loadingLabel;
@@ -100,14 +101,15 @@ namespace umi3dVRBrowsersBase.connection
                 if (PlayerMenuManager.Exists)
                     loadingSphere.transform.position = PlayerMenuManager.Instance.PlayerCameraTransform.position;
 
-                loadingSphere.enabled = true;
+                //loadingSphere.enabled = true;
             }
             else
             {
                 loadingLabel.SetActive(true);
 
                 cam.cullingMask = loadingCullingMask.value;
-                cam.clearFlags = CameraClearFlags.SolidColor;
+                cam.clearFlags = CameraClearFlags.Skybox;
+                RenderSettings.skybox = skyBoxHomeMaterial;
 
                 if (PlayerMenuManager.Exists)
                 {

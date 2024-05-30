@@ -74,7 +74,6 @@ namespace umi3dVRBrowsersBase.connection
         private void Start()
         {
             UMI3DCollaborationClientServer.Instance.OnConnectionLost.AddListener(OnConnectionLost);
-            UMI3DCollaborationClientServer.Instance.OnLeaving.AddListener(() => Destroy(UMI3DClientServer.Instance.gameObject));
         }
 
         /// <summary>

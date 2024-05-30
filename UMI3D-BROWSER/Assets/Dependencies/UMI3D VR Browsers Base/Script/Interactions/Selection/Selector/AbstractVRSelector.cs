@@ -23,6 +23,7 @@ using umi3dBrowsers.interaction.selection.feedback;
 using umi3dBrowsers.interaction.selection.intentdetector;
 using umi3dBrowsers.interaction.selection.projector;
 using umi3dBrowsers.interaction.selection.selector;
+using umi3dBrowsers.linker;
 using umi3dVRBrowsersBase.ui;
 using umi3dVRBrowsersBase.ui.playerMenu;
 using UnityEngine;
@@ -37,7 +38,7 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
     public abstract class AbstractVRSelector<T> : AbstractSelector, IIntentSelector where T : MonoBehaviour
     {
         #region fields
-
+        [SerializeField] protected SIM_Linker simLinker;
         /// <summary>
         /// Controller the selector belongs to
         /// </summary>
@@ -141,21 +142,24 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
 
         private List<AbstractDetector<T>> _proximityDetectors;
 
-        public Task<SelectedInteractableManager> selectedInteractableManager;
+        //public Task<SelectedInteractableManager> selectedInteractableManager;
 
+        protected SelectedInteractableManager sim;
         #endregion fields
 
         #region lifecycle
 
         protected override void Awake()
         {
+            simLinker.OnSimReady += (sim) => { this.sim = sim; };
             controller = GetComponentInParent<VRSelectionManager>().controller; //controller is required before awake
             base.Awake();
         }
 
         protected virtual void Start()
         {
-            selectedInteractableManager = Global.GetAsync<SelectedInteractableManager>();
+
+            //selectedInteractableManager = Global.GetAsync<SelectedInteractableManager>();
         }
 
         private void OnEnable()
@@ -410,12 +414,9 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
                 {
                     Deselect(LastSelected);
 
-                    selectedInteractableManager.IfCompleted(sim =>
-                    {
-                        sim.Hide();
-                    });
-                }
 
+                    sim.Hide();
+                }
             }
 
             projector.Project(selectionInfo.selectedObject, controller);

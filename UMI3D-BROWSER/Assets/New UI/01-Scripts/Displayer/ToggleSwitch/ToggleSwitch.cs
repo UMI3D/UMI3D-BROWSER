@@ -26,7 +26,7 @@ using UnityEngine.UI;
 namespace umi3dBrowsers.displayer
 {
     [AddComponentMenu("UMI3D_UI/Toggle Switch", 30)]
-    public class ToggleSwitch : MonoBehaviour, IPointerClickHandler, IUMI3DBrowserUI
+    public class ToggleSwitch : MonoBehaviour, IPointerClickHandler, IUMI3DBrowserUI, IDisplayer
     {
         [Header("Slider setup")]
         [SerializeField, Range(0, 1f)] private float sliderValue;
@@ -209,6 +209,35 @@ namespace umi3dBrowsers.displayer
             }
 
             _slider.value = endValue;
+        }
+
+        public object GetValue(bool trim)
+        {
+            return CurrentValue;
+        }
+
+        public void SetTitle(string title)
+        {
+            Debug.Log("No title handling implemented for this element [Toggle switch]", this);
+        }
+
+        public void SetPlaceHolder(List<string> placeHolder)
+        {
+            if (placeHolder[0] == "0" && CurrentValue != false)
+                Toggle();
+            else if (placeHolder[0] == "1" &&  CurrentValue != true)
+                Toggle();
+                
+        }
+
+        public void SetColor(Color color)
+        {
+
+        }
+
+        public void SetResource(object resource)
+        {
+
         }
     }
 }

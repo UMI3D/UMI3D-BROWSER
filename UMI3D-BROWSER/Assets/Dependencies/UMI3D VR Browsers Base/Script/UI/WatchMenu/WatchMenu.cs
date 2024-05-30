@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using umi3d.cdk.menu;
+using umi3dBrowsers.linker;
 using umi3dVRBrowsersBase.connection;
 using umi3dVRBrowsersBase.interactions;
 using umi3dVRBrowsersBase.settings;
@@ -280,6 +281,7 @@ namespace umi3dVRBrowsersBase.ui.watchMenu
         /// <summary>
         /// Leaves the application or the environement.
         /// </summary>
+        [ContextMenu("Leave")]
         public void Leave()
         {
             System.Action<bool> leaveCallback = (b) =>
@@ -287,7 +289,9 @@ namespace umi3dVRBrowsersBase.ui.watchMenu
                 if (b)
                 {
                     if (EnvironmentSettings.Instance.IsEnvironmentLoaded)
+                    {
                         Connecting.Instance.Leave();
+                    }
                     else
                         Application.Quit();
                 }

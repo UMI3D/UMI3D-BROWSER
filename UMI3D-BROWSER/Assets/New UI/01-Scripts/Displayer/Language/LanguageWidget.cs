@@ -1,0 +1,84 @@
+/*
+Copyright 2019 - 2024 Inetum
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+using inetum.unityUtils;
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.Localization.Settings;
+
+namespace umi3dBrowsers.displayer
+{
+    public class LanguageWidget : MonoBehaviour
+    {
+        [Serializable]
+        public class LanguageAssociation
+        {
+            [SerializeField] public LanguageSelectionField.LanguageParams languageParams;
+            [SerializeField] public LanguageSelectionField languageSelectionField;
+        }
+
+        [SerializeField] private List<LanguageAssociation> languageAssociations = new();
+
+        [SerializeField, ReadOnly] private UnityEngine.Localization.Locale selectedLanguage;
+        [SerializeField] private GameObject languagePrefab;
+
+        public UnityEvent<UnityEngine.Localization.Locale> OnSupportedLanguageValidated;
+
+        private void Start()
+        {
+            selectedLanguage = LocalizationSettings.SelectedLocale;
+
+            LanguageSelectionField baseField = null;
+            for (int i = 0; i < languageAssociations.Count; i++)
+            {
+                LanguageAssociation currentAsso = languageAssociations[i];
+
+                if (languageAssociations[i].languageSelectionField == null)
+                {
+                    languageAssociations[i].languageSelectionField = Instantiate(languagePrefab, transform).GetComponent<LanguageSelectionField>();
+                }
+
+                LanguageSelectionField currentField = languageAssociations[i].languageSelectionField;
+
+                currentField.Init(currentAsso.languageParams);
+                currentField.OnClick += () =>
+                {
+                    selectedLanguage = currentAsso.languageParams.SupportedLanguages;
+                    languageAssociations.ForEach(language =>
+                    {
+                        if (language.languageSelectionField != currentField)
+                            language.languageSelectionField.Disable();
+                        OnSupportedLanguageValidated?.Invoke(selectedLanguage);
+                    });
+                };
+
+                currentField.OnDisabled += () =>
+                {
+                    if (currentField.Params.SupportedLanguages == selectedLanguage)
+                        selectedLanguage = null;
+                };
+
+                if (selectedLanguage == currentAsso.languageParams.SupportedLanguages)
+                    baseField = currentField;
+            }
+            baseField.Click();
+        }
+    }
+}
+
+

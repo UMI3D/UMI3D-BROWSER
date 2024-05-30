@@ -65,6 +65,8 @@ namespace ClientLBE
                     Scene.transform.rotation = new Quaternion(Scene.transform.rotation.x, Calibreur.transform.rotation.y, Scene.transform.rotation.z, Scene.transform.rotation.w);
 
                     Player.transform.parent = parent;
+
+                    Scene.transform.position = Vector3.zero;
                 }
                 else
                 {
@@ -93,33 +95,6 @@ namespace ClientLBE
             CreatGuardianServer(userGuardianDto);
         }
 
-        //Envoyer les data de chaque ancres au serveur
-        public void SendGuardianInServer()
-        {
-            if (guardianAnchors != null || guardianAnchors.Count > 0)
-            {
-
-                for (int i = 0; i < guardianAnchors.Count; i++)
-                {
-                    ARAnchor arAnchor = guardianAnchors[i].GetComponent<ARAnchor>();
-                    ARAnchorDto newAnchor = new ARAnchorDto();
-                    string trackIdIn = arAnchor.trackableId.ToString();
-
-                    if (ulong.TryParse(trackIdIn, out ulong trackIdOut))
-                    {
-                        newAnchor.trackableId = trackIdOut;
-                    }
-
-                    newAnchor.position = new Vector3Dto { X = guardianAnchorsTransform[i].transform.localPosition.x, Y = guardianAnchorsTransform[i].transform.localPosition.y, Z = guardianAnchorsTransform[i].transform.localPosition.z };
-                    newAnchor.rotation = new Vector4Dto { X = guardianAnchorsTransform[i].transform.localRotation.x, Y = guardianAnchorsTransform[i].transform.localRotation.y, Z = guardianAnchorsTransform[i].transform.localRotation.z, W = guardianAnchorsTransform[i].transform.localRotation.w };
-
-                    userGuardianDto.anchorAR.Add(newAnchor);
-                    userGuardianDto.OffsetGuardian = Vector3.Distance(Calibreur.transform.position, OriginGuardian.transform.position);
-                }
-
-            }
-
-        }
 
         public void GetGuardianArea()
         {
@@ -202,7 +177,7 @@ namespace ClientLBE
                         anchorManager.enabled = true;
                     }
 
-                    AddAnchorGuardian();
+                    //AddAnchorGuardian();
                     
                     SendGuardianInServer();
 
@@ -242,7 +217,7 @@ namespace ClientLBE
             {
                 Debug.LogError("Remi : Aucun sous-système d'entrée XR disponible.");
             }
-            //StartCoroutine(anchorScene());
+           // StartCoroutine(anchorScene());
         }
 
         IEnumerator anchorScene()
@@ -258,6 +233,38 @@ namespace ClientLBE
                 Debug.Log("Remi : Scene empty");
             }
             Debug.Log("Remi : End Add anchor in Scene");
+        }
+
+        //Envoyer les data de chaque ancres au serveur
+        public void SendGuardianInServer()
+        {
+            if (guardianAnchors != null || guardianAnchors.Count > 0)
+            {
+
+                for (int i = 0; i < guardianAnchors.Count; i++)
+                {
+                    /*ARAnchor arAnchor = guardianAnchors[i].GetComponent<ARAnchor>();
+                    ARAnchorDto newAnchor = new ARAnchorDto();
+                    string trackIdIn = arAnchor.trackableId.ToString();*/
+
+                    ARAnchorDto newAnchor = new ARAnchorDto();
+                    string trackIdIn = i.ToString();
+
+
+                    if (ulong.TryParse(trackIdIn, out ulong trackIdOut))
+                    {
+                        newAnchor.trackableId = trackIdOut;
+                    }
+
+                    newAnchor.position = new Vector3Dto { X = guardianAnchorsTransform[i].transform.localPosition.x, Y = guardianAnchorsTransform[i].transform.localPosition.y, Z = guardianAnchorsTransform[i].transform.localPosition.z };
+                    newAnchor.rotation = new Vector4Dto { X = guardianAnchorsTransform[i].transform.localRotation.x, Y = guardianAnchorsTransform[i].transform.localRotation.y, Z = guardianAnchorsTransform[i].transform.localRotation.z, W = guardianAnchorsTransform[i].transform.localRotation.w };
+
+                    userGuardianDto.anchorAR.Add(newAnchor);
+                    userGuardianDto.OffsetGuardian = Vector3.Distance(Calibreur.transform.position, OriginGuardian.transform.position);
+                }
+
+            }
+
         }
 
         IEnumerator WaitSendGuardian()
@@ -315,7 +322,7 @@ namespace ClientLBE
                     guardianAnchors[i].transform.parent = GuardianParent.transform;
                 }
 
-                AddAnchorGuardian();
+                //AddAnchorGuardian();
             }
         }
 

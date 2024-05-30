@@ -2463,8 +2463,8 @@ GameObject:
   - component: {fileID: 5051064084671288346}
   - component: {fileID: 5051064084671288345}
   - component: {fileID: 5051064084671288344}
-  - component: {fileID: 1967790127012337217}
-  - component: {fileID: 3799771570161897762}
+  - component: {fileID: 5249579415636653861}
+  - component: {fileID: 2160676327243919595}
   m_Layer: 0
   m_Name: XR Origin
   m_TagString: Untagged
@@ -2520,7 +2520,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ActionAssets:
   - {fileID: -944628639613478452, guid: c348712bda248c246b8c49b3db54643f, type: 3}
---- !u!114 &1967790127012337217
+--- !u!114 &5249579415636653861
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2533,7 +2533,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AnchorPrefab: {fileID: 0}
---- !u!114 &3799771570161897762
+--- !u!114 &2160676327243919595
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2545,14 +2545,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d028af21d4933f04492005d052464cf0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OriginGuardian: {fileID: 3118920980334219023}
+  OriginGuardian: {fileID: 5051064084671288343}
   GuardianParent: {fileID: 0}
   pointAnchor: {fileID: 2348787935028910363, guid: 3844bcd7c5357e24aa505776ab9185c2,
     type: 3}
   MatGuardian: {fileID: 2100000, guid: b2144e83fd14d8c40b3cb1b51ebb5f37, type: 2}
-  anchorManager: {fileID: 1967790127012337217}
+  anchorManager: {fileID: 5249579415636653861}
   Player: {fileID: 0}
   Calibreur: {fileID: 0}
+  OriginGuardianServer: {fileID: 0}
 --- !u!1 &5373660663191619787
 GameObject:
   m_ObjectHideFlags: 0

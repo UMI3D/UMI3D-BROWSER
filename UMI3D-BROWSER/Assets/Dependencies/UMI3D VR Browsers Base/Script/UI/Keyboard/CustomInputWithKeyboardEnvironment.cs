@@ -21,6 +21,8 @@ using umi3dVRBrowsersBase.ui.displayers;
 using umi3dVRBrowsersBase.ui.playerMenu;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using umi3dBrowsers.keyboard;
+
 
 namespace umi3dVRBrowsersBase.ui.keyboard
 {
@@ -38,11 +40,6 @@ namespace umi3dVRBrowsersBase.ui.keyboard
         private Action<string> editionCallback;
 
         /// <summary>
-        /// Keyboard used to edit this input.
-        /// </summary>
-        protected Keyboard keyboard;
-
-        /// <summary>
         /// Reference to the controller which has this parameter projected on it.
         /// </summary>
         protected ControllerType currentController;
@@ -50,12 +47,6 @@ namespace umi3dVRBrowsersBase.ui.keyboard
         #endregion
 
         #region Methods
-
-        protected override void Start()
-        {
-            keyboard = Keyboard.Instance;
-            Debug.Assert(keyboard != null);
-        }
 
         /// <summary>
         /// Setter for <see cref="editionCallback"/>.
@@ -95,11 +86,11 @@ namespace umi3dVRBrowsersBase.ui.keyboard
         {
             base.OnSelect(eventData);
 
-            if (keyboard != null && !keyboard.WasClosedLastFrame)
+            if (umi3dBrowsers.keyboard.Keyboard.Instance != null && !umi3dBrowsers.keyboard.Keyboard.Instance.WasClosedLastFrame)
             {
                 Transform playerMenuTransform = PlayerMenuManager.Instance.MenuCanvasTransform;
 
-                keyboard.OpenKeyboard(this.text, editionCallback, () => {
+                umi3dBrowsers.keyboard.Keyboard.Instance.OpenKeyboard(this.text, editionCallback, () => {
                     PlayerMenuManager.Instance.gameObject.SetActive(true);
                     StartCoroutine(UnSelectAllSelectable());
                     PlayerMenuManager.Instance.RefreshBackground();

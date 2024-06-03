@@ -226,6 +226,11 @@ namespace umi3dBrowsers
             };
             connectionProcessorService.OnParamFormReceived += (connectionFormDto) =>
             {
+                if (parentTransform.gameObject.activeSelf == false)
+                {
+                    ShowUI();
+                    spawner.RepositionPlayer();
+                }
                 HandleContentState(ContentState.dynamicServerContent);
                 ProcessForm(connectionFormDto);
                 title.SetTitle(TitleType.connectionTitle,"", connectionFormDto?.name ?? "", true, true);

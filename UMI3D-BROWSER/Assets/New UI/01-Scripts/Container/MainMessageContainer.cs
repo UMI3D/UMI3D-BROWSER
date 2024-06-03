@@ -56,8 +56,8 @@ namespace umi3dBrowsers
             if (suffixOverride) suffixText.text = suffix;
             else suffixEvent.SetEntry(suffix);
 
-            float prefixLength = prefixText.text.Length;
-            float suffixLength = suffixText.text.Length;
+            float prefixLength = prefixText.text?.Length ?? 0f;
+            float suffixLength = suffixText.text?.Length ?? 0f;
 
             suffixRectTransform.width = suffixLength * suffixCharSize;
             prefixRectTransform.width = prefixLength * prefixCharSize;

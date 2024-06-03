@@ -63,6 +63,7 @@ namespace umi3dBrowsers
         [SerializeField] private ContentContainer loadingContent;
         [Space]
         [SerializeField] private GameObject Top;
+        [SerializeField] private URLDisplayer connectionUrlDisplayer;
         // todo : call something like an hint manager hints
         // todo : call something like a pop up manager to open a bug popup
 
@@ -105,13 +106,16 @@ namespace umi3dBrowsers
         [Header("Linker")]
         [SerializeField] private ConnectionToImmersiveLinker connectionToImmersiveLinker;
 
+        [Header("Events")]
+        [SerializeField] private VignetteContainerEvent vignetteContainerEvent;
+
         private ContentState _returnState;
 
         private void Awake()
         {
             navBarButtonsColors.colorMultiplier = 1.0f;
 
-            var local = services.connection.PlayerPrefsManager.GetLocalisationLocal();
+            var local = PlayerPrefsManager.GetLocalisationLocal();
             if (contentState == ContentState.flagContent && local != null && !forceFlagContent)
                 contentState = ContentState.standUpContent;
             LocalizationSettings.SelectedLocale = local ?? LocalizationSettings.ProjectLocale;
@@ -269,6 +273,8 @@ namespace umi3dBrowsers
                     Top.SetActive(true);
                     mainContent.gameObject.SetActive(true);
                     title.SetTitle(TitleType.mainTitle,mainContent.PrefixTitleKey, mainContent.SuffixTitleKey);
+                    vignetteContainerEvent.OnVignetteReset?.Invoke();
+                    connectionUrlDisplayer.Url = string.Empty;
                     break;
                 case ContentState.storageContent:
                     CloseAllPanels();

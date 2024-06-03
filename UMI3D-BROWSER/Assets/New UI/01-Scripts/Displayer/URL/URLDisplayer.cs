@@ -30,6 +30,8 @@ namespace umi3dBrowsers
         [Space]
         public UnityEvent<string> OnSubmit;
 
+        public string Url { get => urlField.text; set => urlField.text = value; }
+
         private void Awake()
         {
             submitButton.onClick.AddListener(() =>

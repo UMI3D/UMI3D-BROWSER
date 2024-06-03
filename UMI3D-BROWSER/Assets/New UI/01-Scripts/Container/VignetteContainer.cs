@@ -96,8 +96,6 @@ namespace umi3dBrowsers.container
                 if(vignetteDisplayers.Count > (int)vignetteMode)
                     scrollbar.value += scrollButtonSpeed / vignetteDisplayers.Count;
             });
-
-            vignetteContainerEvent.OnVignetteReset?.Invoke();
         }
 
         private void OnDestroy()

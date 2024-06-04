@@ -99,7 +99,7 @@ namespace umi3dVRBrowsersBase.ui.keyboard
                         PlayerMenuManager.Instance.CtrlToolMenu.toolParametersMenu.Close();
                         PlayerMenuManager.Instance.Close();
                     }
-                }, playerMenuTransform.position, playerMenuTransform.forward);
+                });
 
                 currentController = PlayerMenuManager.Instance.CurrentController;
                 PlayerMenuManager.Instance.gameObject.SetActive(false);

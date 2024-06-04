@@ -247,12 +247,10 @@ namespace com.inetum.unitygeckowebview
         /// <param name="bitmap"></param>
         private void Render()
         {
-            /// Prevent from app crashes. Need to fix it asap.
-
-            //using (profilerNativeRenderCodeMarker.Auto())
-            //{
-            //    webView?.Call("render");
-            //}
+            using (profilerNativeRenderCodeMarker.Auto())
+            {
+                webView?.Call("render");
+            }
 
             using (profileProcessRenderCodeMarker.Auto())
             {

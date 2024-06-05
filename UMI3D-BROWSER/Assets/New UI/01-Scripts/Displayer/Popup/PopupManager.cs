@@ -17,6 +17,7 @@ limitations under the License.
 using System;
 using System.Collections.Generic;
 using TMPro;
+using umi3dBrowsers.linker;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Localization.Components;
@@ -38,6 +39,9 @@ namespace umi3dBrowsers.displayer
 
         private List<PopupDisplayer> activePopUps = new();
 
+        [Header("Linkers")]
+        [SerializeField] private ConnectionServiceLinker connectionServiceLinker;
+
         public enum PopupType
         {
             Error,
@@ -52,6 +56,17 @@ namespace umi3dBrowsers.displayer
             warn.OnDisabled += () => OnPopUpClose?.Invoke();
             info.OnDisabled += () => OnPopUpClose?.Invoke();
             //reportBug.OnDisabled += () => OnPopUpClose?.Invoke();
+
+            connectionServiceLinker.OnTryToConnect += (url) => {
+                SetArguments(PopupManager.PopupType.Info, new Dictionary<string, object>() { { "url", url } });
+                ShowPopup(PopupManager.PopupType.Info, "popup_connection_server", "popup_trying_connect");
+            };
+            connectionServiceLinker.OnConnectionFailure += (message) => {
+                SetArguments(PopupManager.PopupType.Error, new Dictionary<string, object>() { { "error", message } });
+                ShowPopup(PopupManager.PopupType.Error, "popup_fail_connect", "error_msg",
+                    ("popup_close", () => { ClosePopUp(); }
+                ));
+            };
         }
 
         /// <param name="type"></param>

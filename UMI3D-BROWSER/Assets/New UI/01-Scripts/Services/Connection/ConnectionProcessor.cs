@@ -31,8 +31,6 @@ namespace umi3dBrowsers.services.connection
     public class ConnectionProcessor : MonoBehaviour
     {
         public event Action<VirtualWorldData> OnMediaServerPingSuccess;
-        public event Action<string> OnTryToConnect;
-        public event Action<string> OnConnectionFailure;
         public event Action<ConnectionFormDto> OnParamFormReceived;
         public event Action<List<string>> OnAsksToLoadLibrairies;
         public event Action OnConnectionSuccess;
@@ -56,6 +54,9 @@ namespace umi3dBrowsers.services.connection
         private Action<FormAnswerDto> _formParamAnswerCallBack;
         private Action<bool> _shouldDownloadLibrariesCallBack;
 
+        [Header("Linkers")]
+        [SerializeField] private ConnectionServiceLinker connectionServiceLinker;
+
         private void Start()
         {
             identifier.OnParamFormAvailible += HandleParameters;
@@ -67,12 +68,12 @@ namespace umi3dBrowsers.services.connection
         {
             UMI3DCollaborationClientServer.Instance.Clear();
             VirtualWorldData virtualWorldData = new VirtualWorldData();
-            OnTryToConnect?.Invoke(url);
+            connectionServiceLinker.TriesToConnect(url);
 
             url.Trim();
             if (string.IsNullOrEmpty(url))
             {
-                OnConnectionFailure?.Invoke("enter_url");
+                connectionServiceLinker.ConnectionFailure("enter_url");
                 return;
             }
 
@@ -90,12 +91,12 @@ namespace umi3dBrowsers.services.connection
                 UMI3DCollaborationClientServer.Instance.Identifier = identifier;
                 UMI3DCollaborationClientServer.Connect(media, (message) =>
                 {
-                    OnConnectionFailure?.Invoke(message);
+                    connectionServiceLinker.ConnectionFailure(message);
                 });
             }
             else
             {
-                OnConnectionFailure?.Invoke("url_mismatch");
+                connectionServiceLinker.ConnectionFailure("url_mismatch");
                 return;
             }
         }

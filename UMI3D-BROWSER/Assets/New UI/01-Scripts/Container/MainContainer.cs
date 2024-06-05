@@ -104,6 +104,7 @@ namespace umi3dBrowsers
 
         [Header("Linker")]
         [SerializeField] private ConnectionToImmersiveLinker connectionToImmersiveLinker;
+        [SerializeField] private ConnectionServiceLinker connectionServiceLinker;
 
         private ContentState _returnState;
 
@@ -207,16 +208,6 @@ namespace umi3dBrowsers
 
         private void BindConnectionService()
         {
-            connectionProcessorService.OnTryToConnect += (url) => {
-                popupManager.SetArguments(PopupManager.PopupType.Info, new Dictionary<string, object>() { { "url", url } });
-                popupManager.ShowPopup(PopupManager.PopupType.Info, "popup_connection_server", "popup_trying_connect");
-            };
-            connectionProcessorService.OnConnectionFailure += (message) => { 
-                Debug.LogError("Failed to connect");
-                popupManager.SetArguments(PopupManager.PopupType.Error, new Dictionary<string, object>() { { "error", message } });
-                popupManager.ShowPopup(PopupManager.PopupType.Error, "popup_fail_connect", "error_msg", 
-                    ("popup_close", () => { popupManager.ClosePopUp(); }) );
-            };
             connectionProcessorService.OnMediaServerPingSuccess += (virtualWorldData) => 
             {
                 title.SetTitle(TitleType.connectionTitle,"Connected to", virtualWorldData.worldName, true , true);

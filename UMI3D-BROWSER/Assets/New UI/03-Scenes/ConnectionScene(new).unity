@@ -2544,6 +2544,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxConnectionTime: 5
   identifier: {fileID: 11400000, guid: 9c5e01e1568763c478b2c737bee2cd83, type: 2}
+  connectionServiceLinker: {fileID: 11400000, guid: 24604fe66de00534e9fe94635a6279cf,
+    type: 2}
 --- !u!1 &1148127762 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2508254290583818857, guid: a0414abeb630f3a4bb3cd5a7d40f5f3c,
@@ -3505,6 +3507,8 @@ MonoBehaviour:
   info: {fileID: 1672198590}
   reportBug: {fileID: 1496704932}
   ActivePopup: 0
+  connectionServiceLinker: {fileID: 11400000, guid: 24604fe66de00534e9fe94635a6279cf,
+    type: 2}
 --- !u!1001 &1443540218
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5762,6 +5766,7 @@ MonoBehaviour:
   forceFlagContent: 0
   connectionToImmersiveLinker: {fileID: 11400000, guid: 68ff1a90a5151924e867698a4e1d3a2d,
     type: 2}
+  connectionServiceLinker: {fileID: 0}
 --- !u!1 &1314566949157362920
 GameObject:
   m_ObjectHideFlags: 0

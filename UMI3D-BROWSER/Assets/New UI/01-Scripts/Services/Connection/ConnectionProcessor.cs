@@ -56,6 +56,7 @@ namespace umi3dBrowsers.services.connection
             UMI3DCollaborationEnvironmentLoader.Instance.onEnvironmentLoaded.AddListener(() => connectionServiceLinker.ConnectionSuccess());
 
             connectionServiceLinker.OnTryToConnect += TryConnectToMediaServer;
+            connectionServiceLinker.OnSendFormAnwser += SendFormAnswer;
         }
 
         public async void TryConnectToMediaServer(string url)

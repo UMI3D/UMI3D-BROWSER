@@ -18,7 +18,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using umi3d.cdk.collaboration;
+using umi3dBrowsers.data.ui;
 using umi3dBrowsers.linker;
+using umi3dBrowsers.linker.ui;
 using umi3dBrowsers.services.environment;
 using UnityEngine;
 
@@ -30,16 +32,15 @@ namespace umi3dBrowsers.displayer
         [SerializeField] private LoadingBarDisplayer loadingBarDisplayer;
         [SerializeField] private LoadingTipDisplayer loadingTipDisplayer;
 
-        [Header("Options")]
-        [SerializeField] private bool autoInit = false;
-
         public event Action OnLoadingInProgress;
         public event Action OnLoadingFinished;
 
         private umi3d.cdk.Progress _currentProgress = null;
         private bool _loadingInProgress = false;
 
-        private ConnectionToImmersiveLinker m_linker;
+        [SerializeField] private ConnectionToImmersiveLinker m_linker;
+        [SerializeField] private MenuNavigationLinker m_menuNavigationLinker;
+        [SerializeField] private PanelData m_loadingPanel;
 
         private void Awake()
         {
@@ -55,14 +56,11 @@ namespace umi3dBrowsers.displayer
 
         private void Start()
         {
-            if (autoInit)
-                Init();
-        }
-
-        public void Init(ConnectionToImmersiveLinker linker = null)
-        {
-            m_linker = linker;
-            umi3d.cdk.collaboration.UMI3DCollaborationClientServer.onProgress.AddListener(NewProgressReceived);
+            UMI3DCollaborationClientServer.onProgress.AddListener(NewProgressReceived);
+            OnLoadingInProgress += () => {
+                m_menuNavigationLinker.ShowPanel(m_loadingPanel);
+                m_menuNavigationLinker.ReplacePlayerAndShowPanel();
+            };
         }
 
         void NewProgressReceived(umi3d.cdk.Progress progress)

@@ -311,7 +311,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   loadingBarDisplayer: {fileID: 32021706623050284}
   loadingTipDisplayer: {fileID: 7545194726728506111}
-  autoInit: 0
+  m_linker: {fileID: 11400000, guid: 68ff1a90a5151924e867698a4e1d3a2d, type: 2}
+  m_menuNavigationLinker: {fileID: 11400000, guid: 438855b4a25630a4db523fe93ebc1ca5,
+    type: 2}
+  m_loadingPanel: {fileID: 11400000, guid: a7f4c7a26d57d9645b7413f9ffb9667f, type: 2}
 --- !u!114 &3292975665177244469
 MonoBehaviour:
   m_ObjectHideFlags: 0

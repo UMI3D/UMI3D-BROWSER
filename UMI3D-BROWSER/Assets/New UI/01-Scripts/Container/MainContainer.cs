@@ -115,15 +115,17 @@ namespace umi3dBrowsers
             spawner.Init(connectionToImmersiveLinker);
 
             BindNavigationButtons();
-            BindURL();
-            BindFormContainer();
 
             popupManager.OnPopUpOpen += () => tween.TweenTo();
             popupManager.OnPopUpClose += () => tween.Rewind();
 
             SetVersion(Application.version);
             BindConnectionService();
-            BindLoaderDisplayer();
+
+            m_menuNavigationLinker.OnReplacePlayerAndShowPanel += () => {
+                spawner.RepositionPlayer();
+                ShowUI();
+            };
 
         }
 
@@ -146,18 +148,6 @@ namespace umi3dBrowsers
                 parentTransform.position = new Vector3(parentTransform.position.x, Camera.main.transform.position.y, parentTransform.position.z);
         }
 
-        private void BindURL()
-        {
-            /* TODO :urlDisplayer.OnSubmit.AddListener((url) =>
-            {
-                connectionProcessorService.TryConnectToMediaServer(url);
-            });*/
-        }
-        private void BindFormContainer()
-        {
-            // TODO : dynamicServerContainer.OnFormAnwser += (formAnswer) => connectionProcessorService.SendFormAnswer(formAnswer);
-        }
-
         private void BindConnectionService()
         {
             connectionServiceLinker.OnParamFormDtoReceived += (connectionFormDto) =>
@@ -171,19 +161,6 @@ namespace umi3dBrowsers
             };
 
             connectionServiceLinker.OnConnectionSuccess += () => HideUI();
-        }
-
-        private void BindLoaderDisplayer()
-        {
-            /* TODO: loadingContainer.Init(connectionToImmersiveLinker);
-            loadingContainer.OnLoadingInProgress += () =>
-            {
-                // TODO: HandleContentState(ContentState.loadingContent);
-                title.SetTitle(TitleType.mainTitle,"Loading ... ", "");
-                spawner.RepositionPlayer();
-                ShowUI();
-            };
-            loadingContainer.OnLoadingFinished += () => Debug.Log("TODO : Do something ::: Its loaded");// gameObject.SetActive(false);*/
         }
 
         private void HideUI()

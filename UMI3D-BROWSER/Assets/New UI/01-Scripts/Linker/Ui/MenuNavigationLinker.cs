@@ -17,6 +17,8 @@ namespace umi3dBrowsers.linker.ui
         public event Action<bool> OnSetNavBarActive;
         public event Action<bool> OnSetBackButtonActive;
         public event Action<bool> OnSetCancelButtonActive;
+        public event Action OnReplacePlayerAndShowPanel;
+        public void ReplacePlayerAndShowPanel() { OnReplacePlayerAndShowPanel?.Invoke(); }
 
         private Dictionary<PanelData, GameObject> m_panels;
         private PanelData m_currentPanelData;

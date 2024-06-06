@@ -562,7 +562,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1089521771867605554
 RectTransform:
   m_ObjectHideFlags: 0
@@ -599,6 +599,8 @@ MonoBehaviour:
   contentRoot: {fileID: 3308768333321306138}
   paramRoot: {fileID: 1946961698949398182}
   formParamRenderer: {fileID: 1193400614454046512}
+  connectionServiceLinker: {fileID: 11400000, guid: 24604fe66de00534e9fe94635a6279cf,
+    type: 2}
 --- !u!114 &1193400614454046512
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -621,6 +623,8 @@ MonoBehaviour:
     type: 3}
   tabManager: {fileID: 7987622305674645075}
   validationButton: {fileID: 6764881931589576737}
+  connectionServiceLinker: {fileID: 11400000, guid: 24604fe66de00534e9fe94635a6279cf,
+    type: 2}
 --- !u!114 &32198884445513503
 MonoBehaviour:
   m_ObjectHideFlags: 0

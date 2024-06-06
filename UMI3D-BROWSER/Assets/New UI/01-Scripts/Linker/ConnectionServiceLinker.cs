@@ -35,6 +35,9 @@ namespace umi3dBrowsers.linker
         public void AnswerFailed() { OnAnswerFailed?.Invoke(); }
 
         public event Action<bool> OnSendAnswerToLibrariesDownloadAsk;
-        public void SendAnswerToLibrariesDownloadAsk(bool v) { OnSendAnswerToLibrariesDownloadAsk?.Invoke(v);}
+        public void SendAnswerToLibrariesDownloadAsk(bool v) { OnSendAnswerToLibrariesDownloadAsk?.Invoke(v); }
+
+        public event Action<FormAnswerDto> OnSendFormAnwser;
+        public void SendFormAnswer(FormAnswerDto formAnswer) { OnSendFormAnwser?.Invoke(formAnswer); }
     }
 }

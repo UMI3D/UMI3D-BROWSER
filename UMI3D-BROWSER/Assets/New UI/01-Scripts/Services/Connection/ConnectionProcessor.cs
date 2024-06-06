@@ -16,6 +16,7 @@ limitations under the License.
 
 using System;
 using System.Collections.Generic;
+using System.Security.Policy;
 using System.Threading.Tasks;
 using umi3d.cdk;
 using umi3d.cdk.collaboration;
@@ -30,15 +31,6 @@ namespace umi3dBrowsers.services.connection
 {
     public class ConnectionProcessor : MonoBehaviour
     {
-        public event Action<VirtualWorldData> OnMediaServerPingSuccess;
-        public event Action<ConnectionFormDto> OnParamFormReceived;
-        public event Action<List<string>> OnAsksToLoadLibrairies;
-        public event Action OnConnectionSuccess;
-        public event Action OnAnswerFailed {
-            add { identifier.OnAnswerFailed += value; } 
-            remove { identifier.OnAnswerFailed -= value; }
-        }
-
         [SerializeField,
             Tooltip("In seconds, after this time, if no connection was established, display an error message.")]
         private float maxConnectionTime = 5;
@@ -61,14 +53,15 @@ namespace umi3dBrowsers.services.connection
         {
             identifier.OnParamFormAvailible += HandleParameters;
             identifier.OnLibrairiesAvailible += HandleLibrairies;
-            UMI3DCollaborationEnvironmentLoader.Instance.onEnvironmentLoaded.AddListener(() => OnConnectionSuccess.Invoke());
+            UMI3DCollaborationEnvironmentLoader.Instance.onEnvironmentLoaded.AddListener(() => connectionServiceLinker.ConnectionSuccess());
+
+            connectionServiceLinker.OnTryToConnect += TryConnectToMediaServer;
         }
 
         public async void TryConnectToMediaServer(string url)
         {
             UMI3DCollaborationClientServer.Instance.Clear();
             VirtualWorldData virtualWorldData = new VirtualWorldData();
-            connectionServiceLinker.TriesToConnect(url);
 
             url.Trim();
             if (string.IsNullOrEmpty(url))
@@ -86,7 +79,8 @@ namespace umi3dBrowsers.services.connection
                 virtualWorldData.dateFirstConnection = DateTime.UtcNow.ToFileTime();
                 virtualWorldData.dateLastConnection = DateTime.UtcNow.ToFileTime();
                 
-                OnMediaServerPingSuccess?.Invoke(virtualWorldData);
+                connectionServiceLinker.MediaServerPingSuccess(virtualWorldData);
+                services.connection.PlayerPrefsManager.GetVirtualWorlds().AddWorld(virtualWorldData);
 
                 UMI3DCollaborationClientServer.Instance.Identifier = identifier;
                 UMI3DCollaborationClientServer.Connect(media, (message) =>
@@ -123,7 +117,7 @@ namespace umi3dBrowsers.services.connection
         private void HandleParameters(ConnectionFormDto dto, Action<FormAnswerDto> action)
         {
             _formParamAnswerCallBack = action;
-            OnParamFormReceived?.Invoke(dto);
+            connectionServiceLinker.ParamFormDtoReceived(dto);
         }
 
         private void HandleLibrairies(List<string> ids, Action<bool> action)
@@ -135,7 +129,7 @@ namespace umi3dBrowsers.services.connection
                 _shouldDownloadLibrariesCallBack.Invoke(true);
             }
             else
-                OnAsksToLoadLibrairies?.Invoke(ids);
+                connectionServiceLinker.AsksToLoadLibrairies(ids);
         }
 
         protected static string FormatUrl(string url)

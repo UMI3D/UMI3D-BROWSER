@@ -67,6 +67,16 @@ namespace umi3dBrowsers.displayer
                     ("popup_close", () => { ClosePopUp(); }
                 ));
             };
+            connectionServiceLinker.OnMediaServerPingSuccess += (virtualWorldData) =>
+            {
+                ClosePopUp();
+            };
+            connectionServiceLinker.OnAnswerFailed += () => {
+                ShowPopup(PopupManager.PopupType.Error, "popup_answer_failed_title", "popup_answer_failed_description",
+                    ("popup_close", () => { ClosePopUp(); }
+                ));
+            };
+            connectionServiceLinker.OnAsksToLoadLibrairies += (ids) => connectionServiceLinker.SendAnswerToLibrariesDownloadAsk(true);
         }
 
         /// <param name="type"></param>

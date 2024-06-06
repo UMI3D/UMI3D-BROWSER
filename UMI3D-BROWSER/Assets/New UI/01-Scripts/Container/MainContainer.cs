@@ -70,7 +70,7 @@ namespace umi3dBrowsers
         [SerializeField, Tooltip("start content")] private ContentState contentState;
 #if UNITY_EDITOR
         public ContentState _ContentState { get { return contentState; } set { contentState = value; } }
-        public void ToolAccessProcessForm(ConnectionFormDto connectionFormDto) { ProcessForm(connectionFormDto); }
+        public void ToolAccessProcessForm(ConnectionFormDto connectionFormDto) { /*ProcessForm(connectionFormDto);*/ }
 #endif
 
 
@@ -208,14 +208,7 @@ namespace umi3dBrowsers
 
         private void BindConnectionService()
         {
-            connectionProcessorService.OnMediaServerPingSuccess += (virtualWorldData) => 
-            {
-                title.SetTitle(TitleType.connectionTitle,"Connected to", virtualWorldData.worldName, true , true);
-
-                popupManager.ClosePopUp();
-                services.connection.PlayerPrefsManager.GetVirtualWorlds().AddWorld(virtualWorldData);
-            };
-            connectionProcessorService.OnParamFormReceived += (connectionFormDto) =>
+            connectionServiceLinker.OnParamFormDtoReceived += (connectionFormDto) =>
             {
                 if (parentTransform.gameObject.activeSelf == false)
                 {
@@ -223,16 +216,9 @@ namespace umi3dBrowsers
                     spawner.RepositionPlayer();
                 }
                 HandleContentState(ContentState.dynamicServerContent);
-                ProcessForm(connectionFormDto);
-                title.SetTitle(TitleType.connectionTitle,"", connectionFormDto?.name ?? "", true, true);
             };
-            connectionProcessorService.OnAsksToLoadLibrairies += (ids) => connectionProcessorService.SendAnswerToLibrariesDownloadAsk(true);
-            connectionProcessorService.OnConnectionSuccess += () => HideUI();
-            connectionProcessorService.OnAnswerFailed += () => {
-                popupManager.ShowPopup(PopupManager.PopupType.Error, "popup_answer_failed_title", "popup_answer_failed_description",
-                    ("popup_close", () => { popupManager.ClosePopUp(); }
-                ));
-            };
+
+            connectionServiceLinker.OnConnectionSuccess += () => HideUI();
         }
 
         private void BindLoaderDisplayer()
@@ -246,11 +232,6 @@ namespace umi3dBrowsers
                 ShowUI();
             };
             loadingContainer.OnLoadingFinished += () => Debug.Log("TODO : Do something ::: Its loaded");// gameObject.SetActive(false);
-        }
-
-        private void ProcessForm(ConnectionFormDto connectionFormDto)
-        {
-            dynamicServerContainer.HandleParamForm(connectionFormDto);
         }
 
         private void HandleContentState(ContentState state)

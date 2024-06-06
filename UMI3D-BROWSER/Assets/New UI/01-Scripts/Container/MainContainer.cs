@@ -25,6 +25,7 @@ using umi3dBrowsers.container;
 using umi3dBrowsers.container.formrenderer;
 using umi3dBrowsers.displayer;
 using umi3dBrowsers.linker;
+using umi3dBrowsers.linker.ui;
 using umi3dBrowsers.sceneManagement;
 using umi3dBrowsers.services.connection;
 using umi3dBrowsers.services.title;
@@ -40,36 +41,19 @@ namespace umi3dBrowsers
     {
         [Header("Parent")]
         [SerializeField] private Transform parentTransform;
+        [SerializeField] private Transform contentTransform;
         [SerializeField] private Transform skyBoxTransform;
 
         [Header("Light")]
         [SerializeField] private Light directionalLight;
 
         [Header("Navigation-navbar")]
-        [SerializeField] private Button parameterButton;
-        [SerializeField] private Button storageButton;
-        [SerializeField] private Button hintButton;
-        [SerializeField] private Button bugButton;
         [SerializeField] private GameObject navBar;
         [Space]
         [SerializeField] private ColorBlock navBarButtonsColors = new ColorBlock();
         [Space]
-        [SerializeField] private ContentContainer parametersContent;
-        [SerializeField] private ContentContainer storageContent;
-        [SerializeField] private ContentContainer mainContent;
-        [SerializeField] private ContentContainer standUpContent;
-        [SerializeField] private ContentContainer flagContent;
-        [SerializeField] private ContentContainer dynamicServerContent;
-        [SerializeField] private ContentContainer loadingContent;
-        [Space]
         [SerializeField] private GameObject Top;
-        // todo : call something like an hint manager hints
-        // todo : call something like a pop up manager to open a bug popup
-
-        public enum ContentState { mainContent, storageContent, parametersContent, flagContent, standUpContent, dynamicServerContent, loadingContent };
-        [SerializeField, Tooltip("start content")] private ContentState contentState;
 #if UNITY_EDITOR
-        public ContentState _ContentState { get { return contentState; } set { contentState = value; } }
         public void ToolAccessProcessForm(ConnectionFormDto connectionFormDto) { ProcessForm(connectionFormDto); }
 #endif
 
@@ -105,22 +89,21 @@ namespace umi3dBrowsers
         [Header("Linker")]
         [SerializeField] private ConnectionToImmersiveLinker connectionToImmersiveLinker;
         [SerializeField] private ConnectionServiceLinker connectionServiceLinker;
-
-        private ContentState _returnState;
+        [SerializeField] private MenuNavigationLinker m_menuNavigationLinker;
 
         private void Awake()
         {
             navBarButtonsColors.colorMultiplier = 1.0f;
 
-            var local = services.connection.PlayerPrefsManager.GetLocalisationLocal();
-            if (contentState == ContentState.flagContent && local != null && !forceFlagContent)
-                contentState = ContentState.standUpContent;
+            var local = PlayerPrefsManager.GetLocalisationLocal();
             LocalizationSettings.SelectedLocale = local ?? LocalizationSettings.ProjectLocale;
+
+            m_menuNavigationLinker.Initialize(contentTransform, Top, title, navBar);
 
             connectionToImmersiveLinker.OnLeave += () =>
             {
                 ShowUI();
-                HandleContentState(ContentState.mainContent);
+                // TODO: HandleContentState(ContentState.mainContent);
                 connectionProcessorService.Disconnect();
                 sceneLoader.ReloadScene();
             };
@@ -137,7 +120,6 @@ namespace umi3dBrowsers
             popupManager.OnPopUpOpen += () => tween.TweenTo();
             popupManager.OnPopUpClose += () => tween.Rewind();
 
-            HandleContentState(contentState);
             SetVersion(Application.version);
             BindConnectionService();
             BindLoaderDisplayer();
@@ -155,41 +137,27 @@ namespace umi3dBrowsers
 
         private void BindNavigationButtons()
         {
-            parameterButton.colors = navBarButtonsColors;
+           /* TODO : parameterButton.colors = navBarButtonsColors;
             storageButton.colors = navBarButtonsColors;
             hintButton.colors = navBarButtonsColors;
-            bugButton.colors = navBarButtonsColors;
+            bugButton.colors = navBarButtonsColors;*/
 
-            parameterButton?.onClick.AddListener(() =>
-            {
-                HandleContentState(ContentState.parametersContent);
-            });
-            storageButton?.onClick.AddListener(() => {
-                HandleContentState(ContentState.storageContent);
-            });
-            hintButton?.onClick.AddListener(() => {
-
-            });
-            bugButton?.onClick.AddListener(() => {
-                popupManager.ShowPopup(PopupManager.PopupType.ReportBug, "", "");
-            });
             backButton?.OnClick.AddListener(() =>
             {
-                if (contentState == ContentState.parametersContent || contentState == ContentState.storageContent)
-                    HandleContentState(_returnState);
+                /* TODO : if (contentState == ContentState.parametersContent || contentState == ContentState.storageContent)
+                    HandleContentState(_returnState);*/
             });
             cancelConnectionButton?.OnClick.AddListener(() => {
                 UMI3DCollaborationClientServer.Logout();
             });
             languageWidget?.OnSupportedLanguageValidated.AddListener((UnityEngine.Localization.Locale locale) =>
             {
-                HandleContentState(ContentState.standUpContent);
+                // TODO : HandleContentState(ContentState.standUpContent);
             });
             standUpButton?.OnClick.AddListener(() =>
             {
                 SetUpSkeleton setup =  connectionToImmersiveLinker.SetUpSkeleton;
                 StartCoroutine(setup.SetupSkeleton());
-                HandleContentState(ContentState.mainContent);
                 parentTransform.position = new Vector3(parentTransform.position.x, Camera.main.transform.position.y, parentTransform.position.z);
             });
         }
@@ -222,7 +190,7 @@ namespace umi3dBrowsers
                     ShowUI();
                     spawner.RepositionPlayer();
                 }
-                HandleContentState(ContentState.dynamicServerContent);
+                // TODO: HandleContentState(ContentState.dynamicServerContent);
                 ProcessForm(connectionFormDto);
                 title.SetTitle(TitleType.connectionTitle,"", connectionFormDto?.name ?? "", true, true);
             };
@@ -240,7 +208,7 @@ namespace umi3dBrowsers
             loadingContainer.Init(connectionToImmersiveLinker);
             loadingContainer.OnLoadingInProgress += () =>
             {
-                HandleContentState(ContentState.loadingContent);
+                // TODO: HandleContentState(ContentState.loadingContent);
                 title.SetTitle(TitleType.mainTitle,"Loading ... ", "");
                 spawner.RepositionPlayer();
                 ShowUI();
@@ -253,74 +221,23 @@ namespace umi3dBrowsers
             dynamicServerContainer.HandleParamForm(connectionFormDto);
         }
 
-        private void HandleContentState(ContentState state)
+        /* TODO: private void HandleContentState(ContentState state)
         {
-            if (contentState is not (ContentState.storageContent or ContentState.parametersContent))
-                _returnState = contentState;
-            contentState = state;
             switch (state)
             {
-                case ContentState.mainContent:
-                    CloseAllPanels();
-                    Top.SetActive(true);
-                    mainContent.gameObject.SetActive(true);
-                    title.SetTitle(TitleType.mainTitle,mainContent.PrefixTitleKey, mainContent.SuffixTitleKey);
-                    break;
                 case ContentState.storageContent:
-                    CloseAllPanels();
-                    Top.SetActive(true);
-                    storageContent.gameObject.SetActive(true);
                     backButton?.gameObject.SetActive(true);
-                    title.SetTitle(TitleType.subTitle, storageContent.PrefixTitleKey, storageContent.SuffixTitleKey);
                     libraryManager.UpdateContent();
                     break;
                 case ContentState.parametersContent:
-                    CloseAllPanels();
-                    Top.SetActive(true);
-                    parametersContent.gameObject.SetActive(true);
                     backButton?.gameObject.SetActive(true);
-                    title.SetTitle(TitleType.subTitle, parametersContent.PrefixTitleKey, parametersContent.SuffixTitleKey);
-                    break;
-                case ContentState.flagContent:
-                    CloseAllPanels();
-                    flagContent.gameObject.SetActive(true);
-                    Top.SetActive(true);
-                    navBar.SetActive(false);
-                    title.SetTitle(TitleType.mainTitle, flagContent.PrefixTitleKey, flagContent.SuffixTitleKey);
-                    break;
-                case ContentState.standUpContent:
-                    CloseAllPanels();
-                    standUpContent.gameObject.SetActive(true);
                     break;
                 case ContentState.dynamicServerContent:
-                    CloseAllPanels();
-                    Top.SetActive(true);
                     cancelConnectionButton?.gameObject.SetActive(true);
-                    dynamicServerContent.gameObject.SetActive(true);
-                    break;
-                case ContentState.loadingContent:
-                    CloseAllPanels();
-                    //Top.SetActive(true);
-                    loadingContent.gameObject.SetActive(true);
-                    title.SetTitle(TitleType.mainTitle, loadingContent.PrefixTitleKey, loadingContent.SuffixTitleKey);
                     break;
             }
-        }
+        }*/
 
-        private void CloseAllPanels()
-        {
-            Top.SetActive(false);
-            parametersContent.gameObject.SetActive(false);
-            storageContent.gameObject.SetActive(false);
-            mainContent.gameObject.SetActive(false);
-            backButton?.gameObject.SetActive(false);
-            cancelConnectionButton?.gameObject.SetActive(false);
-            flagContent.gameObject.SetActive(false);
-            standUpContent.gameObject.SetActive(false);
-            loadingContent.gameObject.SetActive(false);
-            dynamicServerContent.gameObject.SetActive(false);
-            navBar.SetActive(true);
-        }
         private void HideUI()
         {
             parentTransform.gameObject.SetActive(false);

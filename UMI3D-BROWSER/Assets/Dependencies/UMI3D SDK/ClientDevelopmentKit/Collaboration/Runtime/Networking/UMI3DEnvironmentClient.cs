@@ -558,6 +558,8 @@ namespace umi3d.cdk.collaboration
             UMI3DCollaborationClientServer.Instance.OnNewToken?.Invoke();
         }
 
+        static public EnterDto enterDto;
+
         private async void Join(MultiProgress progress)
         {
             libraryProgress.SetAsCompleted();
@@ -582,6 +584,8 @@ namespace umi3d.cdk.collaboration
             {
                 PostJoinProgress.AddComplete();
                 EnterDto enter = await HttpClient.SendPostJoin(joinDto);
+                Debug.Log("Remi : EnterDTO -> " + enter.userPosition) ;
+                enterDto = enter;
                 PostJoinProgress.AddAndSetStatus("Joined Environment");
                 isConnecting = false;
                 isConnected = true;
@@ -598,6 +602,7 @@ namespace umi3d.cdk.collaboration
                 isJoinning = false;
             }
         }
+
 
         private async Task EnterScene(EnterDto enter, MultiProgress progress)
         {
@@ -616,7 +621,7 @@ namespace umi3d.cdk.collaboration
             await (UMI3DEnvironmentLoader.Instance.Load(environement, LoadProgress));
             UpdateProgress.AddComplete();
             UMI3DLogger.Log($"Load ended, Teleport and set status to active", scope | DebugScope.Connection);
-            UMI3DNavigation.currentNav.Teleport(UMI3DGlobalID.EnvironmentId,new TeleportDto() { position = enter.userPosition, rotation = enter.userRotation });
+            //UMI3DNavigation.currentNav.Teleport(UMI3DGlobalID.EnvironmentId,new TeleportDto() { position = enter.userPosition, rotation = enter.userRotation });
             EnvironementLoaded.Invoke();
             UserDto.answerDto.status = statusToBeSet;
             UMI3DCollaborationClientServer.transactionPending = await HttpClient.SendPostUpdateIdentity(UserDto.answerDto, null);

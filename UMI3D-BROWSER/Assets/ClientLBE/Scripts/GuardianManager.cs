@@ -38,11 +38,14 @@ namespace ClientLBE
         public GameObject Calibreur;
         public Transform OriginGuardianServer;
 
+        private Vector3 UserPosition;
+
         public void Start()
         {
 
             UMI3DEnvironmentLoader.Instance.onEnvironmentLoaded.AddListener(() => CalibrationScene());
             UMI3DEnvironmentLoader.Instance.onEnvironmentLoaded.AddListener(() => GetGuardianArea());
+          
         }
 
         public void CalibrationScene()
@@ -54,19 +57,41 @@ namespace ClientLBE
 
                 if (parent != null)
                 {
+                    UserPosition = new Vector3(UMI3DEnvironmentClient.enterDto.userPosition.X, 0f, UMI3DEnvironmentClient.enterDto.userPosition.Z);
+                    Debug.Log("Remi : UserPosition -> " + UMI3DEnvironmentClient.enterDto.userPosition.X + UMI3DEnvironmentClient.enterDto.userPosition.Y + UMI3DEnvironmentClient.enterDto.userPosition.Z);
+
                     //Création du Parent des ancres
                     GuardianParent = new GameObject("Guardian");
                     GuardianParent.transform.position = Vector3.zero;
 
                     Scene = parent.gameObject;
+
                     Player.transform.parent = null;
 
                     Scene.transform.position = new Vector3(Calibreur.transform.position.x, 0.0f, Calibreur.transform.position.z);
-                    Scene.transform.rotation = new Quaternion(Scene.transform.rotation.x, Calibreur.transform.rotation.y, Scene.transform.rotation.z, Scene.transform.rotation.w);
+                    //Scene.transform.rotation = new Quaternion(Scene.transform.rotation.x, Calibreur.transform.rotation.y, Scene.transform.rotation.z, Scene.transform.rotation.w);
+
+                    GameObject SceneRepere = Instantiate(pointAnchor, Scene.transform.position, Scene.transform.rotation);
+                    Scene.transform.parent = Scene.transform;
+
+
+                    Debug.Log("Remi : COORD -> " + UserPosition);
+                    Debug.Log("Remi : Scene -> " + Scene.transform.position);
+
+                    //Déplacement de la scène à l'origine du spawnpoint
+                    Scene.transform.position = new Vector3(Scene.transform.position.x - UserPosition.x, 0.0f, Scene.transform.position.z - UserPosition.z);
+
+                    Debug.Log("Remi : Scene -> " + Scene.transform.position);
 
                     Player.transform.parent = parent;
 
+                    /* Calibreur.transform.position = new Vector3(Calibreur.transform.position.x + UserPosition.x, 0f, Calibreur.transform.position.y + UserPosition.y) ;
+                     Player.transform.position = new Vector3(Player.transform.position.x + UserPosition.x, 0f, Player.transform.position.y + UserPosition.y);
+                    */
                     Scene.transform.position = Vector3.zero;
+
+                   
+
                 }
                 else
                 {
@@ -199,6 +224,8 @@ namespace ClientLBE
 
 
                     CreateGuardianMesh(anchorForMesh);
+
+                   
 
                     /*Debug.Log("Remi : Start Add anchor in Scene");
                     if (Scene != null)

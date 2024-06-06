@@ -29,7 +29,7 @@ using umi3dVRBrowsersBase.navigation;
 using umi3dVRBrowsersBase.interactions;
 using umi3dVRBrowsersBase.interactions.selection.selector;
 
-namespace umi3dVRBrowsersBase.editor
+namespace umi3dBrowsers.editor
 {
     /// <summary>
     /// Provides an editor helper to help developers make sure their project and player prefab are correctly configured.

@@ -23,6 +23,7 @@ using umi3d.common.interaction;
 using umi3dBrowsers.connection;
 using umi3dBrowsers.container;
 using umi3dBrowsers.container.formrenderer;
+using umi3dBrowsers.data.ui;
 using umi3dBrowsers.displayer;
 using umi3dBrowsers.linker;
 using umi3dBrowsers.linker.ui;
@@ -61,8 +62,6 @@ namespace umi3dBrowsers
         [Header("Navigation")]
         [SerializeField] private SimpleButton backButton;
         [SerializeField] private SimpleButton cancelConnectionButton;
-        [SerializeField] private SimpleButton standUpButton;
-        [SerializeField] private LanguageWidget languageWidget;
 
         [Header("Title")]
         [SerializeField] private TitleManager title;
@@ -70,15 +69,9 @@ namespace umi3dBrowsers
         [Header("Version")]
         [SerializeField] private TextMeshProUGUI versionText;
 
-        [Header("Connection")]
-        [SerializeField] private URLDisplayer urlDisplayer;
-        [SerializeField] private FormRendererContainer dynamicServerContainer;
-
         [Header("Services")]
         [SerializeField] private ConnectionProcessor connectionProcessorService;
         [SerializeField] private PopupManager popupManager;
-        [SerializeField] private LoadingContainer loadingContainer;
-        [SerializeField] private umi3dBrowsers.services.librairies.LibraryManager libraryManager;
         [SerializeField] private UITweens tween;
         [SerializeField] private PlayerSpawner spawner;
         [SerializeField] private SceneLoader sceneLoader;
@@ -90,6 +83,8 @@ namespace umi3dBrowsers
         [SerializeField] private ConnectionToImmersiveLinker connectionToImmersiveLinker;
         [SerializeField] private ConnectionServiceLinker connectionServiceLinker;
         [SerializeField] private MenuNavigationLinker m_menuNavigationLinker;
+        [SerializeField] private PanelData m_mainMenuPanel;
+        [SerializeField] private PanelData m_formPanel;
 
         private void Awake()
         {
@@ -98,12 +93,18 @@ namespace umi3dBrowsers
             var local = PlayerPrefsManager.GetLocalisationLocal();
             LocalizationSettings.SelectedLocale = local ?? LocalizationSettings.ProjectLocale;
 
-            m_menuNavigationLinker.Initialize(contentTransform, Top, title, navBar);
+            m_menuNavigationLinker.Initialize(contentTransform);
+
+            m_menuNavigationLinker.OnSetTopActive += (active) => Top.SetActive(active);
+            m_menuNavigationLinker.OnSetTitle += (type, prefix, suffix) => title.SetTitle(type, prefix, suffix);
+            m_menuNavigationLinker.OnSetNavBarActive += (active) => navBar.SetActive(active);
+            m_menuNavigationLinker.OnSetBackButtonActive += (active) => backButton.gameObject.SetActive(active);
+            m_menuNavigationLinker.OnSetCancelButtonActive += (active) => cancelConnectionButton.gameObject.SetActive(active);
 
             connectionToImmersiveLinker.OnLeave += () =>
             {
                 ShowUI();
-                // TODO: HandleContentState(ContentState.mainContent);
+                m_menuNavigationLinker.ShowPanel(m_mainMenuPanel);
                 connectionProcessorService.Disconnect();
                 sceneLoader.ReloadScene();
             };
@@ -137,41 +138,28 @@ namespace umi3dBrowsers
 
         private void BindNavigationButtons()
         {
-           /* TODO : parameterButton.colors = navBarButtonsColors;
-            storageButton.colors = navBarButtonsColors;
-            hintButton.colors = navBarButtonsColors;
-            bugButton.colors = navBarButtonsColors;*/
-
-            backButton?.OnClick.AddListener(() =>
-            {
-                /* TODO : if (contentState == ContentState.parametersContent || contentState == ContentState.storageContent)
-                    HandleContentState(_returnState);*/
-            });
             cancelConnectionButton?.OnClick.AddListener(() => {
                 UMI3DCollaborationClientServer.Logout();
             });
-            languageWidget?.OnSupportedLanguageValidated.AddListener((UnityEngine.Localization.Locale locale) =>
-            {
-                // TODO : HandleContentState(ContentState.standUpContent);
-            });
+            /*
             standUpButton?.OnClick.AddListener(() =>
             {
                 SetUpSkeleton setup =  connectionToImmersiveLinker.SetUpSkeleton;
                 StartCoroutine(setup.SetupSkeleton());
                 parentTransform.position = new Vector3(parentTransform.position.x, Camera.main.transform.position.y, parentTransform.position.z);
-            });
+            });*/
         }
 
         private void BindURL()
         {
-            urlDisplayer.OnSubmit.AddListener((url) =>
+            /* TODO :urlDisplayer.OnSubmit.AddListener((url) =>
             {
                 connectionProcessorService.TryConnectToMediaServer(url);
-            });
+            });*/
         }
         private void BindFormContainer()
         {
-            dynamicServerContainer.OnFormAnwser += (formAnswer) => connectionProcessorService.SendFormAnswer(formAnswer);
+            // TODO : dynamicServerContainer.OnFormAnwser += (formAnswer) => connectionProcessorService.SendFormAnswer(formAnswer);
         }
 
         private void BindConnectionService()
@@ -190,7 +178,7 @@ namespace umi3dBrowsers
                     ShowUI();
                     spawner.RepositionPlayer();
                 }
-                // TODO: HandleContentState(ContentState.dynamicServerContent);
+                m_menuNavigationLinker.ShowPanel(m_formPanel);
                 ProcessForm(connectionFormDto);
                 title.SetTitle(TitleType.connectionTitle,"", connectionFormDto?.name ?? "", true, true);
             };
@@ -205,7 +193,7 @@ namespace umi3dBrowsers
 
         private void BindLoaderDisplayer()
         {
-            loadingContainer.Init(connectionToImmersiveLinker);
+            /* TODO: loadingContainer.Init(connectionToImmersiveLinker);
             loadingContainer.OnLoadingInProgress += () =>
             {
                 // TODO: HandleContentState(ContentState.loadingContent);
@@ -213,30 +201,13 @@ namespace umi3dBrowsers
                 spawner.RepositionPlayer();
                 ShowUI();
             };
-            loadingContainer.OnLoadingFinished += () => Debug.Log("TODO : Do something ::: Its loaded");// gameObject.SetActive(false);
+            loadingContainer.OnLoadingFinished += () => Debug.Log("TODO : Do something ::: Its loaded");// gameObject.SetActive(false);*/
         }
 
         private void ProcessForm(ConnectionFormDto connectionFormDto)
         {
-            dynamicServerContainer.HandleParamForm(connectionFormDto);
+            // TODO: dynamicServerContainer.HandleParamForm(connectionFormDto);
         }
-
-        /* TODO: private void HandleContentState(ContentState state)
-        {
-            switch (state)
-            {
-                case ContentState.storageContent:
-                    backButton?.gameObject.SetActive(true);
-                    libraryManager.UpdateContent();
-                    break;
-                case ContentState.parametersContent:
-                    backButton?.gameObject.SetActive(true);
-                    break;
-                case ContentState.dynamicServerContent:
-                    cancelConnectionButton?.gameObject.SetActive(true);
-                    break;
-            }
-        }*/
 
         private void HideUI()
         {

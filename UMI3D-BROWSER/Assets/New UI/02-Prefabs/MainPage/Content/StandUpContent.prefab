@@ -71,10 +71,10 @@ RectTransform:
   - {fileID: 3156741022761202167}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1112711871448679654
 MonoBehaviour:
@@ -649,7 +649,20 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1619984255076404483}
   OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: 438855b4a25630a4db523fe93ebc1ca5, type: 2}
+        m_TargetAssemblyTypeName: umi3dBrowsers.linker.ui.MenuNavigationLinker, Assembly-CSharp
+        m_MethodName: ShowPanel
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 11400000, guid: d93821e62456d954aa41c0d28cb2533c,
+            type: 2}
+          m_ObjectArgumentAssemblyTypeName: umi3dBrowsers.data.ui.PanelData, Assembly-CSharp
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   OnRelease:
     m_PersistentCalls:
       m_Calls: []

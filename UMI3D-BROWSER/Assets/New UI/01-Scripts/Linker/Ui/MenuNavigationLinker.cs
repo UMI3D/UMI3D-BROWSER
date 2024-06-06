@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using umi3dBrowsers.data.ui;
 using umi3dBrowsers.services.title;
@@ -11,31 +12,33 @@ namespace umi3dBrowsers.linker.ui
         [SerializeField] private PanelData[] m_panelsData;
         [SerializeField] private PanelData m_StartPanel;
 
+        public event Action<bool> OnSetTopActive;
+        public event Action<TitleType, string, string> OnSetTitle;
+        public event Action<bool> OnSetNavBarActive;
+        public event Action<bool> OnSetBackButtonActive;
+        public event Action<bool> OnSetCancelButtonActive;
+
         private Dictionary<PanelData, GameObject> m_panels;
         private PanelData m_currentPanelData;
+        private PanelData m_lastPanelData;
 
-        private GameObject m_top;
-        private TitleManager m_titleManager;
-        private GameObject m_navBar;
-
-        public void Initialize(Transform pPanelParent, GameObject pTop, TitleManager pTitleManager, GameObject pNavBar)
+        public void Initialize(Transform pPanelParent)
         {
-            m_top = pTop;
-            m_titleManager = pTitleManager;
-            m_navBar = pNavBar;
-
+            m_panels = new();
             foreach (var panelData in m_panelsData)
-                m_panels.Add(panelData, Instantiate(panelData.Prefab, pPanelParent));
+            {
+                var panel = Instantiate(panelData.Prefab, pPanelParent);
+                panel.SetActive(false);
+                m_panels.Add(panelData, panel);
+            }
 
             ShowPanel(m_StartPanel);
         }
 
         public void ShowPanel(PanelData pPanelData)
         {
-            if (m_currentPanelData == pPanelData)
-
-            if (m_panelsData != null)
-                m_panels[m_currentPanelData].SetActive(false);
+            if (pPanelData == null || m_currentPanelData == pPanelData)
+                return;
 
             if (!m_panels.ContainsKey(pPanelData))
             {
@@ -43,12 +46,33 @@ namespace umi3dBrowsers.linker.ui
                 return;
             }
 
+            if (m_currentPanelData != null)
+            {
+                m_panels[m_currentPanelData].SetActive(false);
+
+                if (m_currentPanelData.CanBeReturnedTo)
+                    m_lastPanelData = m_currentPanelData;
+            }
+
             m_currentPanelData = pPanelData;
             m_panels[m_currentPanelData].SetActive(true);
 
-            m_top.SetActive(m_currentPanelData.DisplayTop);
-            m_titleManager.SetTitle(m_currentPanelData.TitleType, m_currentPanelData.TitlePrefix, m_currentPanelData.TitleSuffix);
-            m_navBar.SetActive(m_currentPanelData.DisplayNavbar);
+            UpdateDisplayer();
+        }
+
+        public void Back()
+        {
+            ShowPanel(m_lastPanelData);
+            m_lastPanelData = null;
+        }
+
+        private void UpdateDisplayer()
+        {
+            OnSetTopActive?.Invoke(m_currentPanelData.DisplayTop);
+            OnSetTitle?.Invoke(m_currentPanelData.TitleType, m_currentPanelData.TitlePrefix, m_currentPanelData.TitleSuffix);
+            OnSetNavBarActive?.Invoke(m_currentPanelData.DisplayNavbar);
+            OnSetBackButtonActive?.Invoke(m_currentPanelData.DisplayBack);
+            OnSetCancelButtonActive?.Invoke(m_currentPanelData.DisplayCancel);
         }
     }
 }

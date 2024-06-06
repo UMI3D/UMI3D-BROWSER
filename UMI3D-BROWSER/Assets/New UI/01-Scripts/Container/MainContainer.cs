@@ -128,8 +128,6 @@ namespace umi3dBrowsers
 
         private void Start()
         {
-            spawner.Init(connectionToImmersiveLinker);
-
             BindNavigationButtons();
             BindURL();
             BindFormContainer();
@@ -141,7 +139,6 @@ namespace umi3dBrowsers
             SetVersion(Application.version);
             BindConnectionService();
             BindLoaderDisplayer();
-
         }
 
         /// <summary>

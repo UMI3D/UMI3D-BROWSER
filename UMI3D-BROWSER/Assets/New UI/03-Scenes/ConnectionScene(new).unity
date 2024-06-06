@@ -3797,6 +3797,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8d7463f522549b4a8924247036c5f75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  connectionToImmersiveLinker: {fileID: 11400000, guid: 68ff1a90a5151924e867698a4e1d3a2d,
+    type: 2}
 --- !u!4 &1446459086
 Transform:
   m_ObjectHideFlags: 0
@@ -4060,6 +4062,12 @@ PrefabInstance:
       propertyPath: m_Size.y
       value: 55
       objectReference: {fileID: 0}
+    - target: {fileID: 6437036566123258891, guid: a0414abeb630f3a4bb3cd5a7d40f5f3c,
+        type: 3}
+      propertyPath: connectionServiceLinker
+      value: 
+      objectReference: {fileID: 11400000, guid: 24604fe66de00534e9fe94635a6279cf,
+        type: 2}
     - target: {fileID: 7598627850210954417, guid: a0414abeb630f3a4bb3cd5a7d40f5f3c,
         type: 3}
       propertyPath: m_Spacing
@@ -5766,7 +5774,8 @@ MonoBehaviour:
   forceFlagContent: 0
   connectionToImmersiveLinker: {fileID: 11400000, guid: 68ff1a90a5151924e867698a4e1d3a2d,
     type: 2}
-  connectionServiceLinker: {fileID: 0}
+  connectionServiceLinker: {fileID: 11400000, guid: 24604fe66de00534e9fe94635a6279cf,
+    type: 2}
 --- !u!1 &1314566949157362920
 GameObject:
   m_ObjectHideFlags: 0

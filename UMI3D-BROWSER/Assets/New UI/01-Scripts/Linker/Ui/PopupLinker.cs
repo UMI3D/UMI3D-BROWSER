@@ -25,7 +25,6 @@ namespace umi3dBrowsers.linker.ui
             {
                 var popup = Instantiate(popupData.Prefab, pPopupParent).GetComponent<PopupDisplayer>();
                 popup.gameObject.SetActive(false);
-                popup.OnDisabled += OnPopupClose;
                 m_popups.Add(popupData, popup);
             }
         }
@@ -58,6 +57,7 @@ namespace umi3dBrowsers.linker.ui
 
         public void CloseAll()
         {
+            OnPopupClose?.Invoke();
             foreach (var popup in m_popups.Values)
                 popup.gameObject.SetActive(false);
         }

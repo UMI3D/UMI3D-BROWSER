@@ -47,7 +47,7 @@ namespace umi3dBrowsers.displayer
         private void OnEnable()
         {
             var local = PlayerPrefsManager.GetLocalisationLocal();
-            if (local != null)
+            if (local != null && !menuNavigationLinker.ForceLanguage)
                 menuNavigationLinker.ShowPanel(nextPanel);
             local = PlayerPrefsManager.GetLocalisationLocal();
             LocalizationSettings.SelectedLocale = local ?? LocalizationSettings.ProjectLocale;

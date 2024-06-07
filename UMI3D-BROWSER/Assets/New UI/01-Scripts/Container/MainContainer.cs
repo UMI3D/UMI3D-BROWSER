@@ -43,6 +43,7 @@ namespace umi3dBrowsers
         [Header("Parent")]
         [SerializeField] private Transform parentTransform;
         [SerializeField] private Transform contentTransform;
+        [SerializeField] private Transform popupTransform;
         [SerializeField] private Transform skyBoxTransform;
 
         [Header("Light")]
@@ -71,7 +72,6 @@ namespace umi3dBrowsers
 
         [Header("Services")]
         [SerializeField] private ConnectionProcessor connectionProcessorService;
-        [SerializeField] private PopupManager popupManager;
         [SerializeField] private UITweens tween;
         [SerializeField] private PlayerSpawner spawner;
         [SerializeField] private SceneLoader sceneLoader;
@@ -85,6 +85,9 @@ namespace umi3dBrowsers
         [SerializeField] private MenuNavigationLinker m_menuNavigationLinker;
         [SerializeField] private PanelData m_mainMenuPanel;
         [SerializeField] private PanelData m_formPanel;
+        [SerializeField] private PopupLinker m_popupLinker;
+        [SerializeField] private PopupData m_tryConnectPopup;
+        [SerializeField] private PopupData m_connectionErrorPopup;
 
         private void Awake()
         {
@@ -101,6 +104,8 @@ namespace umi3dBrowsers
             m_menuNavigationLinker.OnSetBackButtonActive += (active) => backButton.gameObject.SetActive(active);
             m_menuNavigationLinker.OnSetCancelButtonActive += (active) => cancelConnectionButton.gameObject.SetActive(active);
 
+            m_popupLinker.Initialize(popupTransform);
+
             connectionToImmersiveLinker.OnLeave += () =>
             {
                 ShowUI();
@@ -116,8 +121,8 @@ namespace umi3dBrowsers
 
             BindNavigationButtons();
 
-            popupManager.OnPopUpOpen += () => tween.TweenTo();
-            popupManager.OnPopUpClose += () => tween.Rewind();
+            m_popupLinker.OnPopupOpen += () => tween.TweenTo();
+            m_popupLinker.OnPopupClose += () => tween.Rewind();
 
             SetVersion(Application.version);
             BindConnectionService();
@@ -127,6 +132,25 @@ namespace umi3dBrowsers
                 ShowUI();
             };
 
+            connectionServiceLinker.OnTryToConnect += (url) => {
+                m_popupLinker.SetArguments(m_tryConnectPopup, new Dictionary<string, object>() { { "url", url } });
+                m_popupLinker.Show(m_tryConnectPopup, "popup_connection_server", "popup_trying_connect");
+            };
+            connectionServiceLinker.OnConnectionFailure += (message) => {
+                m_popupLinker.SetArguments(m_connectionErrorPopup, new Dictionary<string, object>() { { "error", message } });
+                m_popupLinker.Show(m_connectionErrorPopup, "popup_fail_connect", "error_msg",
+                    ("popup_close", () => { m_popupLinker.CloseAll(); }
+                ));
+            };
+            connectionServiceLinker.OnMediaServerPingSuccess += (virtualWorldData) => {
+                m_popupLinker.CloseAll();
+            };
+            connectionServiceLinker.OnAnswerFailed += () => {
+                m_popupLinker.Show(m_connectionErrorPopup, "popup_answer_failed_title", "popup_answer_failed_description",
+                    ("popup_close", () => { m_popupLinker.CloseAll(); }
+                ));
+            };
+            connectionServiceLinker.OnAsksToLoadLibrairies += (ids) => connectionServiceLinker.SendAnswerToLibrariesDownloadAsk(true);
         }
 
         /// <summary>

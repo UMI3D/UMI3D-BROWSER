@@ -11,6 +11,7 @@ namespace umi3dBrowsers.linker.ui
     {
         [SerializeField] private PanelData[] m_panelsData;
         [SerializeField] private PanelData m_StartPanel;
+        [SerializeField] private bool m_forceLanguage;
 
         public event Action<bool> OnSetTopActive;
         public event Action<TitleType, string, string> OnSetTitle;
@@ -19,6 +20,8 @@ namespace umi3dBrowsers.linker.ui
         public event Action<bool> OnSetCancelButtonActive;
         public event Action OnReplacePlayerAndShowPanel;
         public void ReplacePlayerAndShowPanel() { OnReplacePlayerAndShowPanel?.Invoke(); }
+
+        public bool ForceLanguage => m_forceLanguage;
 
         private Dictionary<PanelData, GameObject> m_panels;
         private PanelData m_currentPanelData;
@@ -33,7 +36,10 @@ namespace umi3dBrowsers.linker.ui
                 panel.SetActive(false);
                 m_panels.Add(panelData, panel);
             }
+        }
 
+        public void ShowStartPanel()
+        {
             ShowPanel(m_StartPanel);
         }
 

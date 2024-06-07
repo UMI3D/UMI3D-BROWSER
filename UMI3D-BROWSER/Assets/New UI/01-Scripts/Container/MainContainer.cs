@@ -149,6 +149,8 @@ namespace umi3dBrowsers
                 ));
             };
             connectionServiceLinker.OnAsksToLoadLibrairies += (ids) => connectionServiceLinker.SendAnswerToLibrariesDownloadAsk(true);
+
+            m_menuNavigationLinker.ShowStartPanel();
         }
 
         /// <summary>

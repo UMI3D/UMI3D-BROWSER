@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using umi3d.common.interaction;
 using umi3dBrowsers.services.connection;
+using Unity.VisualScripting;
 using UnityEngine;
 using static umi3dBrowsers.MainContainer;
 
@@ -25,8 +26,8 @@ namespace umi3dBrowsers.linker
         public event Action<ConnectionFormDto> OnParamFormDtoReceived;
         public void ParamFormDtoReceived(ConnectionFormDto data) {  OnParamFormDtoReceived?.Invoke(data);}
 
-        public event Action<List<string>> OnAsksToLoadLibrairies;
-        public void AsksToLoadLibrairies(List<string> ids) { OnAsksToLoadLibrairies?.Invoke(ids);}
+        public event Action<List<string>, Action<bool>> OnAsksToLoadLibrairies;
+        public void AsksToLoadLibrairies(List<string> ids, Action<bool> action) { OnAsksToLoadLibrairies?.Invoke(ids, action);}
 
         public event Action OnConnectionSuccess;
         public void ConnectionSuccess() { OnConnectionSuccess?.Invoke(); }

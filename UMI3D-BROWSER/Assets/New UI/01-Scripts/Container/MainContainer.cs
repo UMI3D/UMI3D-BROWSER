@@ -148,7 +148,7 @@ namespace umi3dBrowsers
                     ("popup_close", () => { m_popupLinker.CloseAll(); }
                 ));
             };
-            connectionServiceLinker.OnAsksToLoadLibrairies += (ids) => connectionServiceLinker.SendAnswerToLibrariesDownloadAsk(true);
+            connectionServiceLinker.OnAsksToLoadLibrairies += (ids, action) => action?.Invoke(true);
 
             m_menuNavigationLinker.ShowStartPanel();
         }

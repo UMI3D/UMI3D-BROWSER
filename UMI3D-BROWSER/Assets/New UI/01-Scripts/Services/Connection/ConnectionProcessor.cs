@@ -128,7 +128,7 @@ namespace umi3dBrowsers.services.connection
                 _shouldDownloadLibrariesCallBack.Invoke(true);
             }
             else
-                connectionServiceLinker.AsksToLoadLibrairies(ids);
+                connectionServiceLinker.AsksToLoadLibrairies(ids, action);
         }
 
         protected static string FormatUrl(string url)

@@ -17,7 +17,9 @@ limitations under the License.
 using Pico.Platform;
 using System.Collections.Generic;
 using umi3d.cdk;
+using umi3dBrowsers.data.ui;
 using umi3dBrowsers.displayer;
+using umi3dBrowsers.linker.ui;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -28,7 +30,8 @@ namespace umi3dBrowsers.services.librairies
     /// </summary>
     public class LibraryManager : MonoBehaviour
     {
-        [SerializeField] private PopupManager popupManager;
+        [SerializeField] private PopupLinker popupLinker;
+        [SerializeField] private PopupData deleteLibPopup;
 
         /// <summary>
         /// Prefab used to represent a library in the menu.
@@ -103,14 +106,14 @@ namespace umi3dBrowsers.services.librairies
                     //4.Bind the button to unistall this lib
                     entry.DeleteButton.onClick.AddListener(() =>
                     {
-                        popupManager.SetArguments(PopupManager.PopupType.Warning, new() { { "libName", lib.key } });
-                        popupManager.ShowPopup(PopupManager.PopupType.Warning, "empty", "popup_deleteLib_description",
-                            ("popup_cancel", () => popupManager.ClosePopUp()),
+                        popupLinker.SetArguments(deleteLibPopup, new() { { "libName", lib.key } });
+                        popupLinker.Show(deleteLibPopup, "empty", "popup_deleteLib_description",
+                            ("popup_cancel", () => popupLinker.CloseAll()),
                             ("popup_yes", () => {
                                 lib.applications.Remove(app.Key);
                                 UMI3DResourcesManager.RemoveLibrary(lib.library);
                                 UpdateContent();
-                                popupManager.ClosePopUp();
+                                popupLinker.CloseAll();
                             }
                         )
                         );

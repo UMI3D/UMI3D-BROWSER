@@ -397,6 +397,48 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2116916963753615859, guid: a0b59ad65e4290e4283c470989a7c4ee,
+        type: 3}
+      propertyPath: OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2116916963753615859, guid: a0b59ad65e4290e4283c470989a7c4ee,
+        type: 3}
+      propertyPath: OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2116916963753615859, guid: a0b59ad65e4290e4283c470989a7c4ee,
+        type: 3}
+      propertyPath: OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 11400000, guid: 438855b4a25630a4db523fe93ebc1ca5,
+        type: 2}
+    - target: {fileID: 2116916963753615859, guid: a0b59ad65e4290e4283c470989a7c4ee,
+        type: 3}
+      propertyPath: OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2116916963753615859, guid: a0b59ad65e4290e4283c470989a7c4ee,
+        type: 3}
+      propertyPath: OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ChangePanel
+      objectReference: {fileID: 0}
+    - target: {fileID: 2116916963753615859, guid: a0b59ad65e4290e4283c470989a7c4ee,
+        type: 3}
+      propertyPath: OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: umi3dBrowsers.linker.ui.MenuNavigationLinker, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 2116916963753615859, guid: a0b59ad65e4290e4283c470989a7c4ee,
+        type: 3}
+      propertyPath: OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
+      value: 
+      objectReference: {fileID: 11400000, guid: d93821e62456d954aa41c0d28cb2533c,
+        type: 2}
+    - target: {fileID: 2116916963753615859, guid: a0b59ad65e4290e4283c470989a7c4ee,
+        type: 3}
+      propertyPath: OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: umi3dBrowsers.data.ui.PanelData, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 2445583802982836067, guid: a0b59ad65e4290e4283c470989a7c4ee,
         type: 3}
       propertyPath: m_Name

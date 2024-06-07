@@ -76,7 +76,6 @@ namespace umi3dBrowsers.displayer
                 if (selectedLanguage == currentAsso.languageParams.SupportedLanguages)
                     baseField = currentField;
             }
-            baseField.Click();
         }
     }
 }

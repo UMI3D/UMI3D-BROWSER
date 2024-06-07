@@ -19,6 +19,7 @@ using System.Collections;
 using System.Collections.Generic;
 using umi3d;
 using umi3d.common.interaction;
+using umi3dBrowsers.linker;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -36,6 +37,7 @@ namespace umi3dBrowsers.container.formrenderer
         [Header("Roots")]
         [SerializeField] private TabManager tabManager;
         [SerializeField] private SimpleButton validationButton;
+        [SerializeField] private ConnectionServiceLinker connectionServiceLinker;
 
         private GameObject _contentRoot;
 
@@ -51,6 +53,8 @@ namespace umi3dBrowsers.container.formrenderer
             this._contentRoot = contentRoot;
 
             validationButton.OnClick.AddListener(() => ValidateForm());
+
+            OnFormAnswer += connectionServiceLinker.SendFormAnswer;
         }
 
         internal void Handle(ConnectionFormDto connectionFormDto)

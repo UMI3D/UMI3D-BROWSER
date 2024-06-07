@@ -1,3 +1,4 @@
+using Moq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,6 +13,12 @@ namespace umi3dBrowsers.linker
         private SetUpSkeleton setUpSkeleton;
         public SetUpSkeleton SetUpSkeleton => setUpSkeleton;
         public void SetSetUpSkeleton(SetUpSkeleton setUpSkeleton) { this.setUpSkeleton = setUpSkeleton; }
+        public void StandUp()
+        {
+            setUpSkeleton.SetUp();
+            OnSkeletonStandUp?.Invoke();
+        }
+        public event Action OnSkeletonStandUp;
 
         public event Action OnDisplayEnvironmentHandler;
         public void DisplayEnvironmentHandler() { OnDisplayEnvironmentHandler?.Invoke(); }

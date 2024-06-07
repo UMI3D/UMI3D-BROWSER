@@ -16,6 +16,7 @@ limitations under the License.
 
 using System;
 using System.Collections.Generic;
+using System.Security.Policy;
 using System.Threading.Tasks;
 using umi3d.cdk;
 using umi3d.cdk.collaboration;
@@ -51,13 +52,15 @@ namespace umi3dBrowsers.services.connection
             identifier.OnParamFormAvailible += HandleParameters;
             identifier.OnLibrairiesAvailible += HandleLibrairies;
             UMI3DCollaborationEnvironmentLoader.Instance.onEnvironmentLoaded.AddListener(() => connectionServiceLinker.ConnectionSuccess());
+
+            connectionServiceLinker.OnTryToConnect += TryConnectToMediaServer;
+            connectionServiceLinker.OnSendFormAnwser += SendFormAnswer;
         }
 
         public async void TryConnectToMediaServer(string url)
         {
             UMI3DCollaborationClientServer.Instance.Clear();
             VirtualWorldData virtualWorldData = new VirtualWorldData();
-            connectionServiceLinker.TriesToConnect(url);
 
             url.Trim();
             if (string.IsNullOrEmpty(url))

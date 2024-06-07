@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using umi3d.common.interaction;
 using umi3dBrowsers.services.connection;
 using UnityEngine;
@@ -13,6 +14,7 @@ namespace umi3dBrowsers.linker
     {
         public event Action<string> OnTryToConnect;
         public void TriesToConnect(string url) { OnTryToConnect?.Invoke(url); }
+        public void TriesToConnect(TMP_Text url) { OnTryToConnect?.Invoke(url.text.Substring(0, url.text.Length - 1)); }
 
         public event Action<string> OnConnectionFailure;
         public void ConnectionFailure(string url) { OnConnectionFailure?.Invoke(url); }
@@ -33,6 +35,9 @@ namespace umi3dBrowsers.linker
         public void AnswerFailed() { OnAnswerFailed?.Invoke(); }
 
         public event Action<bool> OnSendAnswerToLibrariesDownloadAsk;
-        public void SendAnswerToLibrariesDownloadAsk(bool v) { OnSendAnswerToLibrariesDownloadAsk?.Invoke(v);}
+        public void SendAnswerToLibrariesDownloadAsk(bool v) { OnSendAnswerToLibrariesDownloadAsk?.Invoke(v); }
+
+        public event Action<FormAnswerDto> OnSendFormAnwser;
+        public void SendFormAnswer(FormAnswerDto formAnswer) { OnSendFormAnwser?.Invoke(formAnswer); }
     }
 }

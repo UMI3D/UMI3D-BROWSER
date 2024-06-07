@@ -56,6 +56,11 @@ namespace umi3dBrowsers.services.librairies
         /// </summary>
         private int indexOfCurrentTopEntryDisplayed = 0;
 
+        private void OnEnable()
+        {
+            UpdateContent();
+        }
+
         /// <summary>
         /// Updates the content of the library list.
         /// </summary>

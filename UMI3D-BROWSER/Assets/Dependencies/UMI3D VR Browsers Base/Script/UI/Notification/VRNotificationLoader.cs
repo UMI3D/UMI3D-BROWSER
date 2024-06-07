@@ -17,7 +17,7 @@ limitations under the License.
 using System.Threading.Tasks;
 using umi3d.cdk;
 using umi3d.common;
-using umi3dVRBrowsersBase.ui.watchMenu;
+using umi3dBrowsers.player;
 using UnityEngine;
 
 namespace umi3dVRBrowsersBase.ui.notification

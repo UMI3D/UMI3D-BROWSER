@@ -22,8 +22,7 @@ using umi3d.cdk.collaboration;
 using umi3d.common;
 using umi3d.common.interaction;
 using umi3dBrowsers.linker;
-using umi3dVRBrowsersBase.connection;
-using umi3dVRBrowsersBase.ui.watchMenu;
+using umi3dBrowsers.player;
 using UnityEngine;
 
 namespace umi3dBrowsers.services.connection
@@ -39,7 +38,6 @@ namespace umi3dBrowsers.services.connection
         /// Object which handles the connection to a master server.
         /// </summary>
         private LaucherOnMasterServer _launcher = new LaucherOnMasterServer();
-        AdvancedConnectionPanel.Data _mediaConnectionData = new AdvancedConnectionPanel.Data();
         private string _environmentUrl = "";
         private string _mediaDataServerUrl = "";
         private Action<FormAnswerDto> _formParamAnswerCallBack;
@@ -161,7 +159,6 @@ namespace umi3dBrowsers.services.connection
             UMI3DEnvironmentLoader.Clear();
             UMI3DResourcesManager.Instance.ClearCache();
             UMI3DCollaborationClientServer.Logout();
-            umi3dVRBrowsersBase.DontDestroyOnLoad.DestroyAllInstances();
 
             WatchMenu.UnPinAllMenus();
             identifier.Reset();

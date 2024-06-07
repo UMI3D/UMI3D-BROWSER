@@ -84,19 +84,7 @@ namespace umi3dVRBrowsersBase.navigation
                 disp.SetActive(false);
                 displayers.Add(disp);
             }
-
-            LoadingScreenDisplayer.OnLoadingScreenDislayed.AddListener(() =>
-            {
-                isLoadingScreenDisplayed = true;
-            });
-
-            LoadingScreenDisplayer.OnLoadingScreenHidden.AddListener(() =>
-            {
-                isLoadingScreenDisplayed = false;
-            });
         }
-
-        bool isLoadingScreenDisplayed = false;
 
         /// <summary>
         /// Displays teleportation arc.
@@ -104,11 +92,6 @@ namespace umi3dVRBrowsersBase.navigation
         [ContextMenu("Display")]
         public void Display()
         {
-            if (isLoadingScreenDisplayed)
-            {
-                return;
-            }
-
             if (updateRoutine != null)
                 return;
 

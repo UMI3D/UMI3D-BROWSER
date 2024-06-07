@@ -17,8 +17,8 @@ limitations under the License.
 using System.Collections;
 using umi3d.cdk.menu;
 using umi3d.cdk.menu.interaction;
+using umi3dBrowsers.player;
 using umi3dVRBrowsersBase.interactions.input;
-using umi3dVRBrowsersBase.ui.watchMenu;
 using UnityEngine;
 using UnityEngine.UI;
 

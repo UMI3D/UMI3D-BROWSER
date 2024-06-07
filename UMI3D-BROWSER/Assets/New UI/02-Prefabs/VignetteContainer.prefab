@@ -607,7 +607,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e080908f1f0a9b4c8659d1e8116269e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  connectionProcessorService: {fileID: 0}
+  connectionServiceLinker: {fileID: 11400000, guid: 24604fe66de00534e9fe94635a6279cf,
+    type: 2}
   popupManager: {fileID: 0}
   scaller: {fileID: 960552460556117284}
   vignettePrefab: {fileID: 1842928581106226447, guid: 17c625999e5935348843c7ec1c90bfc1,
@@ -1180,7 +1181,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 6322684189187750620}
   m_Direction: 0
   m_Value: 0.50000006
-  m_Size: 0.3961073
+  m_Size: 0.49522692
   m_NumberOfSteps: 1
   m_OnValueChanged:
     m_PersistentCalls:

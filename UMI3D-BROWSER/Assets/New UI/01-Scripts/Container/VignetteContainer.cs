@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Policy;
 using umi3dBrowsers.displayer;
+using umi3dBrowsers.linker;
 using umi3dBrowsers.services.connection;
 using umi3dBrowsers.utils;
 using Unity.VisualScripting;
@@ -31,7 +32,7 @@ namespace umi3dBrowsers.container
 {
     public class VignetteContainer : MonoBehaviour
     {
-        [SerializeField] private ConnectionProcessor connectionProcessorService;
+        [SerializeField] private ConnectionServiceLinker connectionServiceLinker;
         [SerializeField] private PopupManager popupManager;
         [Header("Vignette")]
         [SerializeField] private UIColliderScallerHandler scaller;
@@ -172,7 +173,7 @@ namespace umi3dBrowsers.container
                 vignetteContainerEvent.OnVignetteReset?.Invoke(); 
             });
             vignette.OnClick += () => {
-                connectionProcessorService.TryConnectToMediaServer(pWorldData.worldUrl);
+                connectionServiceLinker.TriesToConnect(pWorldData.worldUrl);
             };
 
             return vignette;

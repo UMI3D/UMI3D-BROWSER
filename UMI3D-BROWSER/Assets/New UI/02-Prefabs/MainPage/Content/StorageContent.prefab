@@ -16,7 +16,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &7818715204526208404
 RectTransform:
   m_ObjectHideFlags: 0
@@ -359,11 +359,11 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2456753906944421495, guid: 3a1699dba8699ba499e4cc6be7d8a2df,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 7430455232575297720}
+      addedObject: {fileID: 353492240267276141}
     - targetCorrespondingSourceObject: {fileID: 2456753906944421495, guid: 3a1699dba8699ba499e4cc6be7d8a2df,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 353492240267276141}
+      addedObject: {fileID: 7430455232575297720}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 8036473430313302162, guid: 3a1699dba8699ba499e4cc6be7d8a2df,
         type: 3}
@@ -377,6 +377,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 9140277635877243244}
+    - targetCorrespondingSourceObject: {fileID: 5946648204246218946, guid: 3a1699dba8699ba499e4cc6be7d8a2df,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7052532387005611693}
   m_SourcePrefab: {fileID: 100100000, guid: 3a1699dba8699ba499e4cc6be7d8a2df, type: 3}
 --- !u!224 &1512571737474091158 stripped
 RectTransform:
@@ -541,6 +545,14 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!222 &7052532387005611693
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7233663199596682787}
+  m_CullTransparentMesh: 1
 --- !u!114 &7258181981710266750 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5935640253769635743, guid: 3a1699dba8699ba499e4cc6be7d8a2df,

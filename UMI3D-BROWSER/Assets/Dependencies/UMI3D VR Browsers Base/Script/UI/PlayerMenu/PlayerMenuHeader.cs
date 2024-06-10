@@ -153,13 +153,14 @@ namespace umi3dVRBrowsersBase.ui.playerMenu
         {
             System.Action<bool> leaveCallback = (b) =>
             {
-                if (b)
-                {
-                    if (EnvironmentSettings.Instance.IsEnvironmentLoaded)
-                        Connecting.Instance.Leave();
-                    else
-                        Application.Quit();
-                }
+                Debug.Log("Todo :: refacto to make the leave fonctional");
+                //if (b)
+                //{
+                //    if (EnvironmentSettings.Instance.IsEnvironmentLoaded)
+                //        Connecting.Instance.Leave();
+                //    else
+                //        Application.Quit();
+                //}
             };
 
             string title = EnvironmentSettings.Instance.IsEnvironmentLoaded ? "Go back to main menu" : "Close application";

@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using umi3d.cdk.collaboration;
 using umi3d.cdk.menu.interaction;
 using umi3d.common.interaction;
+using umi3dBrowsers.linker;
 using umi3dVRBrowsersBase.connection;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -44,6 +45,16 @@ namespace umi3dBrowsers.container.formrenderer
 
         public event Action<FormAnswerDto> OnFormAnwser;
 
+        [Header("Linkers")]
+        [SerializeField] private ConnectionServiceLinker connectionServiceLinker;
+
+        private void Awake()
+        {
+            connectionServiceLinker.OnParamFormDtoReceived += (connectionFormDto) =>
+            {
+                HandleParamForm(connectionFormDto);
+            };
+        }
         private void Start()
         {
             formParamRenderer.OnFormAnswer += (formDto) => OnFormAnwser?.Invoke(formDto);

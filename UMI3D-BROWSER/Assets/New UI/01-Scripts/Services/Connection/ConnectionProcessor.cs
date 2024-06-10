@@ -16,31 +16,20 @@ limitations under the License.
 
 using System;
 using System.Collections.Generic;
+using System.Security.Policy;
 using System.Threading.Tasks;
 using umi3d.cdk;
 using umi3d.cdk.collaboration;
 using umi3d.common;
 using umi3d.common.interaction;
 using umi3dBrowsers.linker;
-using umi3dVRBrowsersBase.connection;
-using umi3dVRBrowsersBase.ui.watchMenu;
+using umi3dBrowsers.player;
 using UnityEngine;
 
 namespace umi3dBrowsers.services.connection
 {
     public class ConnectionProcessor : MonoBehaviour
     {
-        public event Action<VirtualWorldData> OnMediaServerPingSuccess;
-        public event Action<string> OnTryToConnect;
-        public event Action<string> OnConnectionFailure;
-        public event Action<ConnectionFormDto> OnParamFormReceived;
-        public event Action<List<string>> OnAsksToLoadLibrairies;
-        public event Action OnConnectionSuccess;
-        public event Action OnAnswerFailed {
-            add { identifier.OnAnswerFailed += value; } 
-            remove { identifier.OnAnswerFailed -= value; }
-        }
-
         [SerializeField,
             Tooltip("In seconds, after this time, if no connection was established, display an error message.")]
         private float maxConnectionTime = 5;
@@ -50,29 +39,33 @@ namespace umi3dBrowsers.services.connection
         /// Object which handles the connection to a master server.
         /// </summary>
         private LaucherOnMasterServer _launcher = new LaucherOnMasterServer();
-        AdvancedConnectionPanel.Data _mediaConnectionData = new AdvancedConnectionPanel.Data();
         private string _environmentUrl = "";
         private string _mediaDataServerUrl = "";
         private Action<FormAnswerDto> _formParamAnswerCallBack;
         private Action<bool> _shouldDownloadLibrariesCallBack;
 
+        [Header("Linkers")]
+        [SerializeField] private ConnectionServiceLinker connectionServiceLinker;
+
         private void Start()
         {
             identifier.OnParamFormAvailible += HandleParameters;
             identifier.OnLibrairiesAvailible += HandleLibrairies;
-            UMI3DCollaborationEnvironmentLoader.Instance.onEnvironmentLoaded.AddListener(() => OnConnectionSuccess.Invoke());
+            UMI3DCollaborationEnvironmentLoader.Instance.onEnvironmentLoaded.AddListener(() => connectionServiceLinker.ConnectionSuccess());
+
+            connectionServiceLinker.OnTryToConnect += TryConnectToMediaServer;
+            connectionServiceLinker.OnSendFormAnwser += SendFormAnswer;
         }
 
         public async void TryConnectToMediaServer(string url)
         {
             UMI3DCollaborationClientServer.Instance.Clear();
             VirtualWorldData virtualWorldData = new VirtualWorldData();
-            OnTryToConnect?.Invoke(url);
 
             url.Trim();
             if (string.IsNullOrEmpty(url))
             {
-                OnConnectionFailure?.Invoke("enter_url");
+                connectionServiceLinker.ConnectionFailure("enter_url");
                 return;
             }
 
@@ -85,17 +78,18 @@ namespace umi3dBrowsers.services.connection
                 virtualWorldData.dateFirstConnection = DateTime.UtcNow.ToFileTime();
                 virtualWorldData.dateLastConnection = DateTime.UtcNow.ToFileTime();
                 
-                OnMediaServerPingSuccess?.Invoke(virtualWorldData);
+                connectionServiceLinker.MediaServerPingSuccess(virtualWorldData);
+                services.connection.PlayerPrefsManager.GetVirtualWorlds().AddWorld(virtualWorldData);
 
                 UMI3DCollaborationClientServer.Instance.Identifier = identifier;
                 UMI3DCollaborationClientServer.Connect(media, (message) =>
                 {
-                    OnConnectionFailure?.Invoke(message);
+                    connectionServiceLinker.ConnectionFailure(message);
                 });
             }
             else
             {
-                OnConnectionFailure?.Invoke("url_mismatch");
+                connectionServiceLinker.ConnectionFailure("url_mismatch");
                 return;
             }
         }
@@ -122,7 +116,7 @@ namespace umi3dBrowsers.services.connection
         private void HandleParameters(ConnectionFormDto dto, Action<FormAnswerDto> action)
         {
             _formParamAnswerCallBack = action;
-            OnParamFormReceived?.Invoke(dto);
+            connectionServiceLinker.ParamFormDtoReceived(dto);
         }
 
         private void HandleLibrairies(List<string> ids, Action<bool> action)
@@ -134,7 +128,7 @@ namespace umi3dBrowsers.services.connection
                 _shouldDownloadLibrariesCallBack.Invoke(true);
             }
             else
-                OnAsksToLoadLibrairies?.Invoke(ids);
+                connectionServiceLinker.AsksToLoadLibrairies(ids, action);
         }
 
         protected static string FormatUrl(string url)
@@ -168,7 +162,6 @@ namespace umi3dBrowsers.services.connection
             UMI3DEnvironmentLoader.Clear();
             UMI3DResourcesManager.Instance.ClearCache();
             UMI3DCollaborationClientServer.Logout();
-            umi3dVRBrowsersBase.DontDestroyOnLoad.DestroyAllInstances();
 
             WatchMenu.UnPinAllMenus();
             identifier.Reset();

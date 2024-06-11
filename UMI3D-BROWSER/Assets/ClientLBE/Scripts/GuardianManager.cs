@@ -40,16 +40,24 @@ namespace ClientLBE
 
         private Vector3 UserPosition;
 
+        public GameObject RightHandController;
+        public GameObject LeftHandController;
+
+        public GameObject LeftHandTracking;
+        public GameObject RightHandTrackingVariant;
+
+
         public void Start()
         {
 
             UMI3DEnvironmentLoader.Instance.onEnvironmentLoaded.AddListener(() => CalibrationScene());
             UMI3DEnvironmentLoader.Instance.onEnvironmentLoaded.AddListener(() => GetGuardianArea());
-          
+
         }
 
         public void CalibrationScene()
         {
+
             if (Player != null)
             {
                 // Obtenir le parent du GameObject Player (Scene)
@@ -153,16 +161,17 @@ namespace ClientLBE
                         foreach (Vector3 point in boundaryPoints)
                         {
                             // Instancier le prefab à la position du point récupéré                   
-                            GameObject basePoint;
-                            basePoint = Instantiate(pointAnchor, GuardianParent.transform.position, Quaternion.identity);
-                            basePoint.transform.position = point;
-                            guardianAnchors.Add(basePoint);
+                            GameObject AnchorGuardian = new GameObject("AnchorGuardianDown");
+                            //AnchorGuardian = Instantiate(pointAnchor, GuardianParent.transform.position, Quaternion.identity);
+                            AnchorGuardian.transform.position = point;
+                            guardianAnchors.Add(AnchorGuardian);
                             // Instancier un second prefab à la position du point récupéré à Y+2                 
 
-                            GameObject basePointUp = Instantiate(pointAnchor, basePoint.transform.position, Quaternion.identity);
-                            basePointUp.transform.position = new Vector3(basePoint.transform.position.x, basePoint.transform.position.y + 2f, basePoint.transform.position.z);
+                            GameObject AnchorGuardianUp = new GameObject("AnchorGuardianUp");
+                            //GameObject basePointUp = Instantiate(pointAnchor, AnchorGuardian.transform.position, Quaternion.identity);
+                            AnchorGuardianUp.transform.position = new Vector3(AnchorGuardian.transform.position.x, AnchorGuardian.transform.position.y + 2f, AnchorGuardian.transform.position.z);
 
-                            guardianAnchors.Add(basePointUp);
+                            guardianAnchors.Add(AnchorGuardianUp);
                         }
                     }
                     else
@@ -416,10 +425,13 @@ namespace ClientLBE
                 uvs[i] = new Vector2(vertices[i].x, vertices[i].z);
             }
 
-            // propriété du mesh
+            // Propriétés du mesh
             mesh.vertices = vertices.ToArray();
             mesh.triangles = triangles;
             mesh.uv = uvs;
+
+            mesh.RecalculateNormals();
+
 
             // création du mesh renderer et filter
             MeshFilter meshFilter = GuardianMesh.AddComponent<MeshFilter>();
@@ -429,6 +441,14 @@ namespace ClientLBE
             Material material = MatGuardian;
             meshRenderer.material = material;
             meshFilter.mesh = mesh;
+
+            // Ajout d'un MeshCollider
+            MeshCollider meshCollider = GuardianMesh.AddComponent<MeshCollider>();
+            meshCollider.sharedMesh = mesh;
+            meshCollider.convex = true;  // Le mesh collider doit être convex pour être utilisé comme trigger
+            meshCollider.isTrigger = true;
+
+            GuardianMesh.AddComponent<HoverGuardian>();
         }
     }
 }

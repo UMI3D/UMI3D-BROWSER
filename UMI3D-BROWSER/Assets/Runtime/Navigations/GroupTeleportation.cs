@@ -27,7 +27,7 @@ namespace umi3d.browserRuntime.navigation
         /// <summary>
         /// Flag for groupTeleportation
         /// </summary>
-        public static bool isGroupTeleport = true; //TODO: Remettre à false une fois initialisé au lancement selon si arène en AR et déplacement de groupe activé A RETIRER AVANT MERGE DE LA BRANCHE SINON AR POUR TOUT LE MONDE
+        public static bool isGroupTeleport = false; //TODO: Remettre à false une fois initialisé au lancement selon si arène en AR et déplacement de groupe activé A RETIRER AVANT MERGE DE LA BRANCHE SINON AR POUR TOUT LE MONDE
 
         /*/// <summary>
         /// Flag for using common guardian

@@ -40,6 +40,10 @@ namespace umi3dVRBrowsersBase.connection
         [Tooltip("Text to display while resizing.")]
         private UnityEngine.UI.Text waitText;
 
+        [SerializeField]
+        [Tooltip("Text to display while resizing.")]
+        private UnityEngine.UI.Button switchButton;
+
         #endregion
 
         #region Methods
@@ -49,9 +53,21 @@ namespace umi3dVRBrowsersBase.connection
             Assert.IsNotNull(panel);
             Assert.IsNotNull(validateButton);
             Assert.IsNotNull(waitText);
+            Assert.IsNotNull(switchButton);
+
+            switchButton.onClick.AddListener(SwitchVRMR);
 
             validateButton.onClick.AddListener(ResizeSkeleton);
             waitText.gameObject.SetActive(false);
+        }
+
+        [ContextMenu("Set Avatar Height")]
+        void SwitchVRMR()
+        {
+            SetUpSkeleton setUp = GameObject.FindObjectOfType<SetUpSkeleton>();
+            Debug.Assert(setUp != null, "No avatar found to set up height. Should not happen");
+
+            setUp.SwitchARMR();
         }
 
         [ContextMenu("Set Avatar Height")]

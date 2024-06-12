@@ -125,8 +125,8 @@ namespace umi3d.cdk.userCapture.tracking
             foreach (var extrapolator in extrapolators.Values)
                 if (extrapolator.Controller is DistantController vc)
                 {
-                    vc.position = extrapolator.PositionExtrapolator.Extrapolate();
-                    vc.rotation = extrapolator.RotationExtrapolator.Extrapolate();
+                    vc.position = UMI3DLoadingHandler.Instance.transform.TransformPoint(extrapolator.PositionExtrapolator.Extrapolate());
+                    vc.rotation = UMI3DLoadingHandler.Instance.transform.rotation * extrapolator.RotationExtrapolator.Extrapolate();
                 }
         }
 
@@ -178,8 +178,8 @@ namespace umi3d.cdk.userCapture.tracking
                 }
                 else
                 {
-                    vc.position = bone.position.Struct();
-                    vc.rotation = bone.rotation.Quaternion();
+                    vc.position = UMI3DLoadingHandler.Instance.transform.TransformPoint(bone.position.Struct());
+                    vc.rotation = UMI3DLoadingHandler.Instance.transform.rotation * bone.rotation.Quaternion();
                 }
 
                 receivedTypes.Add(bone.boneType);

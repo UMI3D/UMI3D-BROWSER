@@ -24,6 +24,7 @@ using umi3d.cdk.binding;
 using umi3d.common;
 using UnityEngine;
 using MainThreadDispatcher;
+using System.CodeDom;
 
 namespace umi3d.cdk
 {
@@ -123,6 +124,16 @@ namespace umi3d.cdk
         [EditorReadOnly, SerializeField, ConstEnum(typeof(XRBrowserTypes), typeof(uint))]
         private uint browserType;
         public uint BrowserType => browserType;
+
+        public void SetVR()
+        {
+            browserType = (uint)XRBrowserTypes.VR;
+        }
+
+        public void SetMR()
+        {
+            browserType = (uint)XRBrowserTypes.AR;
+        }
 
         public virtual void Init()
         {

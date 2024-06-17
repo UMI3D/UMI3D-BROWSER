@@ -301,79 +301,6 @@ MonoBehaviour:
   m_OccludeARHitsWith3DObjects: 0
   m_OccludeARHitsWith2DObjects: 0
   m_ScaleMode: 0
---- !u!1001 &328800207
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 1131452853}
-    m_Modifications:
-    - target: {fileID: 4524230667309620957, guid: c9e823ad0482d1e40a09e5b4f1ae85f3,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 2018764371}
-    - target: {fileID: 5932620837566583506, guid: c9e823ad0482d1e40a09e5b4f1ae85f3,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5932620837566583506, guid: c9e823ad0482d1e40a09e5b4f1ae85f3,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5932620837566583506, guid: c9e823ad0482d1e40a09e5b4f1ae85f3,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5932620837566583506, guid: c9e823ad0482d1e40a09e5b4f1ae85f3,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5932620837566583506, guid: c9e823ad0482d1e40a09e5b4f1ae85f3,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5932620837566583506, guid: c9e823ad0482d1e40a09e5b4f1ae85f3,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5932620837566583506, guid: c9e823ad0482d1e40a09e5b4f1ae85f3,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5932620837566583506, guid: c9e823ad0482d1e40a09e5b4f1ae85f3,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5932620837566583506, guid: c9e823ad0482d1e40a09e5b4f1ae85f3,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5932620837566583506, guid: c9e823ad0482d1e40a09e5b4f1ae85f3,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8782886671900022695, guid: c9e823ad0482d1e40a09e5b4f1ae85f3,
-        type: 3}
-      propertyPath: m_Name
-      value: Calibreur
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: c9e823ad0482d1e40a09e5b4f1ae85f3, type: 3}
 --- !u!1001 &343249369
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -590,12 +517,12 @@ PrefabInstance:
     - target: {fileID: 2965992166801231509, guid: 6d8cc188ac4cb49419e2616ed25f607d,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2965992166801231509, guid: 6d8cc188ac4cb49419e2616ed25f607d,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3922158729508316332, guid: 6d8cc188ac4cb49419e2616ed25f607d,
         type: 3}
@@ -722,7 +649,7 @@ PrefabInstance:
     - target: {fileID: 5988314907380347006, guid: 6d8cc188ac4cb49419e2616ed25f607d,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -0.000004474063
+      value: -0.000010242507
       objectReference: {fileID: 0}
     - target: {fileID: 6093459749334264534, guid: 6d8cc188ac4cb49419e2616ed25f607d,
         type: 3}
@@ -946,18 +873,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76a753d697b6290408411f19ff79a837, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &782628375 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8782886671900022695, guid: c9e823ad0482d1e40a09e5b4f1ae85f3,
-    type: 3}
-  m_PrefabInstance: {fileID: 328800207}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &782628379 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5932620837566583506, guid: c9e823ad0482d1e40a09e5b4f1ae85f3,
-    type: 3}
-  m_PrefabInstance: {fileID: 328800207}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &896336312
 GameObject:
   m_ObjectHideFlags: 0
@@ -1036,7 +951,7 @@ PrefabInstance:
         type: 3}
       propertyPath: Calibreur
       value: 
-      objectReference: {fileID: 782628375}
+      objectReference: {fileID: 0}
     - target: {fileID: 550485303051507730, guid: aa50e35a45eaaed43a950ae34ef532dc,
         type: 3}
       propertyPath: MainCamera
@@ -1091,7 +1006,7 @@ PrefabInstance:
         type: 3}
       propertyPath: calibrateur
       value: 
-      objectReference: {fileID: 782628375}
+      objectReference: {fileID: 0}
     - target: {fileID: 3072804855574254184, guid: aa50e35a45eaaed43a950ae34ef532dc,
         type: 3}
       propertyPath: m_Camera
@@ -1226,7 +1141,7 @@ PrefabInstance:
         type: 3}
       propertyPath: calibrateur
       value: 
-      objectReference: {fileID: 782628375}
+      objectReference: {fileID: 0}
     - target: {fileID: 8430962178111685224, guid: aa50e35a45eaaed43a950ae34ef532dc,
         type: 3}
       propertyPath: m_BackGroundColor.b
@@ -1255,12 +1170,12 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 0}
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 4563722139069628583, guid: aa50e35a45eaaed43a950ae34ef532dc,
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2074743779376639891, guid: aa50e35a45eaaed43a950ae34ef532dc,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 782628379}
-    m_AddedComponents:
+      addedObject: {fileID: 1131452859}
     - targetCorrespondingSourceObject: {fileID: 8430962178111685219, guid: aa50e35a45eaaed43a950ae34ef532dc,
         type: 3}
       insertIndex: -1
@@ -1310,6 +1225,40 @@ MonoBehaviour:
   m_LightEstimation: 0
   m_FacingDirection: 2
   m_RenderMode: 0
+--- !u!1 &1131452857 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2074743779376639891, guid: aa50e35a45eaaed43a950ae34ef532dc,
+    type: 3}
+  m_PrefabInstance: {fileID: 1131452852}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1131452858 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8399543590952299538, guid: aa50e35a45eaaed43a950ae34ef532dc,
+    type: 3}
+  m_PrefabInstance: {fileID: 1131452852}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1131452854}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0aa0e47305894f4ea13a82debadbd14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1131452859
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1131452857}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5fdacb35880b984b9440c977757c937, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Viewpoint: {fileID: 1131452858}
+  snapTurn: {fileID: 2126105747}
+  rightObs: {fileID: 577154089}
+  leftObs: {fileID: 205511247}
 --- !u!4 &1176586236 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2674705051583403392, guid: 6d8cc188ac4cb49419e2616ed25f607d,
@@ -1518,12 +1467,6 @@ MonoBehaviour:
   m_OccludeARHitsWith3DObjects: 0
   m_OccludeARHitsWith2DObjects: 0
   m_ScaleMode: 0
---- !u!1 &2018764371 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8430962180001979687, guid: aa50e35a45eaaed43a950ae34ef532dc,
-    type: 3}
-  m_PrefabInstance: {fileID: 1131452852}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &2126105747 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3480375292505844209, guid: aa50e35a45eaaed43a950ae34ef532dc,

@@ -26,7 +26,6 @@ using umi3dVRBrowsersBase.ikManagement;
 using umi3dVRBrowsersBase.interactions;
 using umi3dVRBrowsersBase.navigation;
 using UnityEngine;
-using UnityEngine.XR.ARFoundation;
 
 namespace umi3dVRBrowsersBase.connection
 {
@@ -110,12 +109,6 @@ namespace umi3dVRBrowsersBase.connection
         public event System.Action SetupDone;
         public event System.Action SkeletonResized;
 
-        private ARCameraManager cameraManager;
-
-        public SnapTurn snapTurn;
-        public VRInputObserver rightObs;
-        public VRInputObserver leftObs;
-
         #endregion
 
         #region Methods
@@ -126,7 +119,6 @@ namespace umi3dVRBrowsersBase.connection
             Surface.enabled = true;
             LeftWatch.SetActive(false);
             RightWatch.SetActive(false);
-            cameraManager = Viewpoint.GetComponent<ARCameraManager>();
         }
 
         private void Start()
@@ -138,32 +130,6 @@ namespace umi3dVRBrowsersBase.connection
                 Joint.enabled = false;
                 Surface.enabled = false;
             });
-        }
-
-        public void SwitchARMR()
-        {
-            if (cameraManager.enabled)
-                SwitchToVR();
-            else
-                SwitchToMR();
-        }
-
-        private void SwitchToMR()
-        {
-            cameraManager.enabled = true;
-            (UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DLoadingParameters).SetMR();
-            snapTurn.enabled = false;
-            rightObs.enabled = false;
-            leftObs.enabled = false;
-        }
-
-        private void SwitchToVR()
-        {
-            cameraManager.enabled = false;
-            (UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DLoadingParameters).SetVR();
-            snapTurn.enabled = true;
-            rightObs.enabled = true;
-            leftObs.enabled = true;
         }
 
         /// <summary>

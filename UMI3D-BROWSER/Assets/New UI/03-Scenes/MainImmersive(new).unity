@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.06994623, g: 0.06994623, b: 0.06994623, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -270,6 +270,11 @@ PrefabInstance:
       propertyPath: m_AllowDynamicResolution
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1521164894041118268, guid: 33b00739fcb2e704582ae7dc517b83a4,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1843984477142224883, guid: 33b00739fcb2e704582ae7dc517b83a4,
         type: 3}
       propertyPath: simLinker
@@ -326,6 +331,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3834346315630650165, guid: 33b00739fcb2e704582ae7dc517b83a4,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4756198070879943847, guid: 33b00739fcb2e704582ae7dc517b83a4,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4883313436918982358, guid: 33b00739fcb2e704582ae7dc517b83a4,
         type: 3}
       propertyPath: m_Name
@@ -365,7 +380,49 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 636ad0567f208434fa27befdcdf924a3,
         type: 2}
-    m_RemovedComponents: []
+    - target: {fileID: 6560208479217239374, guid: 33b00739fcb2e704582ae7dc517b83a4,
+        type: 3}
+      propertyPath: m_leftGrab.m_Name
+      value: Left Grab
+      objectReference: {fileID: 0}
+    - target: {fileID: 6560208479217239374, guid: 33b00739fcb2e704582ae7dc517b83a4,
+        type: 3}
+      propertyPath: m_rightGrab.m_Name
+      value: Right Grab
+      objectReference: {fileID: 0}
+    - target: {fileID: 6560208479217239374, guid: 33b00739fcb2e704582ae7dc517b83a4,
+        type: 3}
+      propertyPath: m_TriggerLeft.m_Name
+      value: Trigger Left
+      objectReference: {fileID: 0}
+    - target: {fileID: 6560208479217239374, guid: 33b00739fcb2e704582ae7dc517b83a4,
+        type: 3}
+      propertyPath: m_primaryLeft.m_Name
+      value: Primary Left
+      objectReference: {fileID: 0}
+    - target: {fileID: 6560208479217239374, guid: 33b00739fcb2e704582ae7dc517b83a4,
+        type: 3}
+      propertyPath: m_TriggerRight.m_Name
+      value: Trigger Right
+      objectReference: {fileID: 0}
+    - target: {fileID: 6560208479217239374, guid: 33b00739fcb2e704582ae7dc517b83a4,
+        type: 3}
+      propertyPath: m_primaryRight.m_Name
+      value: Primary Right
+      objectReference: {fileID: 0}
+    - target: {fileID: 6560208479217239374, guid: 33b00739fcb2e704582ae7dc517b83a4,
+        type: 3}
+      propertyPath: m_secondaryLeft.m_Name
+      value: Secondary Left
+      objectReference: {fileID: 0}
+    - target: {fileID: 6560208479217239374, guid: 33b00739fcb2e704582ae7dc517b83a4,
+        type: 3}
+      propertyPath: m_secondaryRight.m_Name
+      value: Secondary Right
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 482466726126411679, guid: 33b00739fcb2e704582ae7dc517b83a4, type: 3}
+    - {fileID: 482466726033929722, guid: 33b00739fcb2e704582ae7dc517b83a4, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -788,7 +845,7 @@ PrefabInstance:
     - target: {fileID: 5365882361262844315, guid: 503d8cf448de25647a3f6a39ab0d9bd9,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0.00094614644
+      value: -0.000007867813
       objectReference: {fileID: 0}
     - target: {fileID: 5952451189982151364, guid: 503d8cf448de25647a3f6a39ab0d9bd9,
         type: 3}

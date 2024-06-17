@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using umi3d.cdk.collaboration;
 using umi3d.cdk.menu.interaction;
 using umi3d.common.interaction;
+using umi3dBrowsers.linker;
 using umi3dVRBrowsersBase.connection;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -41,16 +42,22 @@ namespace umi3dBrowsers.container.formrenderer
         [SerializeField] private GameObject paramRoot;
 
         [SerializeField] private ParamformRenderer formParamRenderer;
-        [SerializeField] private DivformRenderer formDivRenderer;
 
         public event Action<FormAnswerDto> OnFormAnwser;
-        public event Action<umi3d.common.interaction.form.FormAnswerDto> OnDivformAnswer;
 
+        [Header("Linkers")]
+        [SerializeField] private ConnectionServiceLinker connectionServiceLinker;
+
+        private void Awake()
+        {
+            connectionServiceLinker.OnParamFormDtoReceived += (connectionFormDto) =>
+            {
+                HandleParamForm(connectionFormDto);
+            };
+        }
         private void Start()
         {
             formParamRenderer.OnFormAnswer += (formDto) => OnFormAnwser?.Invoke(formDto);
-
-            formDivRenderer.OnFormAnswer += (formDto) => OnDivformAnswer?.Invoke(formDto);
         }
 
         public void HandleParamForm(ConnectionFormDto connectionFormDto)
@@ -58,13 +65,6 @@ namespace umi3dBrowsers.container.formrenderer
             formParamRenderer.Init(paramRoot);
             formParamRenderer.CleanContent(connectionFormDto.id);
             formParamRenderer.Handle(connectionFormDto);
-        }
-
-        public void HandleDivForm(umi3d.common.interaction.form.ConnectionFormDto connectionFormDto)
-        {
-            formDivRenderer.Init(contentRoot);
-            formDivRenderer.CleanContent(connectionFormDto.id);
-            formDivRenderer.Handle(connectionFormDto);
         }
     }
 }

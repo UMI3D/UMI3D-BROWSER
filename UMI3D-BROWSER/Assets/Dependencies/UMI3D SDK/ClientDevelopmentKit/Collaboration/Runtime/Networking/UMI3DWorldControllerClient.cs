@@ -125,25 +125,12 @@ namespace umi3d.cdk.collaboration
                 }
                 else if (answerDto is ConnectionFormDto form)
                 {
-                    common.interaction.FormAnswerDto answer = await GetFormAnswer(form);
+                    FormAnswerDto answer = await GetFormAnswer(form);
                     var _answer = new FormConnectionAnswerDto()
                     {
                         formAnswerDto = answer,
                         metadata = form.metadata,
                         globalToken = form.globalToken,
-                        gate = dto.gate,
-                        libraryPreloading = dto.libraryPreloading
-                    };
-                    return await Connect(_answer);
-                }
-                else if (answerDto is common.interaction.form.ConnectionFormDto form2)
-                {
-                    common.interaction.form.FormAnswerDto answer = await GetFormAnswer(form2);
-                    var _answer = new FormConnectionAnswerDto()
-                    {
-                        formAnswer = answer,
-                        metadata = form2.metadata,
-                        globalToken = form2.globalToken,
                         gate = dto.gate,
                         libraryPreloading = dto.libraryPreloading
                     };
@@ -183,13 +170,7 @@ namespace umi3d.cdk.collaboration
             httpClient.HeaderToken = globalToken;
         }
 
-        private async Task<common.interaction.FormAnswerDto> GetFormAnswer(ConnectionFormDto form)
-        {
-            return await UMI3DCollaborationClientServer.Instance.Identifier.GetParameterDtos(form);
-        }
-
-
-        private async Task<common.interaction.form.FormAnswerDto> GetFormAnswer(common.interaction.form.ConnectionFormDto form)
+        private async Task<FormAnswerDto> GetFormAnswer(ConnectionFormDto form)
         {
             return await UMI3DCollaborationClientServer.Instance.Identifier.GetParameterDtos(form);
         }

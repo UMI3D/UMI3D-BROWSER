@@ -127,6 +127,11 @@ namespace umi3dBrowsers.connection
             });
         }
 
+        public void SetUp()
+        {
+            StartCoroutine(SetupSkeleton());
+        }
+
         /// <summary>
         /// Check user's height to change avatar size.
         /// </summary>

@@ -373,9 +373,9 @@ namespace umi3d.cdk.collaboration
         /// <inheritdoc/>
         protected override void OnDataFrame(NetworkingPlayer player, Binary frame, NetWorker sender)
         {
-            if(UMI3DClientServer.Exists && UMI3DClientServer.transactionDispatcher == null)
+            if (UMI3DClientServer.Exists && UMI3DClientServer.transactionDispatcher == null)
             {
-                UMI3DClientServer.transactionDispatcher = new UMI3DTransactionDispatcher((dto) => PerformOperation(dto),(id,c)=>PerformOperation(id,c));
+                UMI3DClientServer.transactionDispatcher = new UMI3DTransactionDispatcher((dto) => PerformOperation(dto), (id, c) => PerformOperation(id, c));
 
             }
 
@@ -416,7 +416,7 @@ namespace umi3d.cdk.collaboration
             }
             else
             {
-                var container = new ByteContainer(UMI3DGlobalID.EnvironmentId, frame);
+                var container = new ByteContainer(UMI3DGlobalID.EnvironmentId, frame, UMI3DClientServer.Instance.version);
                 uint TransactionId = UMI3DSerializer.Read<uint>(container);
                 switch (TransactionId)
                 {
@@ -482,7 +482,7 @@ namespace umi3d.cdk.collaboration
                         await UMI3DAsyncManager.Yield();
                         waitforreparenting = false;
                     });
-                    while(waitforreparenting)
+                    while (waitforreparenting)
                         await UMI3DAsyncManager.Yield();
                     break;
                 case NavigateDto navigate:
@@ -535,7 +535,7 @@ namespace umi3d.cdk.collaboration
                     MainThreadManager.Run(() =>
                     {
                         CollaborationSkeletonsManager.Instance.SetStreamedBones(streamedBones.streamedBones);
-                    }); 
+                    });
                     break;
                 case SetSendingCameraPropertiesDto sendingCamera:
                     MainThreadManager.Run(() =>
@@ -600,6 +600,18 @@ namespace umi3d.cdk.collaboration
                         Vector3Dto pos = UMI3DSerializer.Read<Vector3Dto>(container);
                         Vector4Dto rot = UMI3DSerializer.Read<Vector4Dto>(container);
                         var nav = new TeleportDto() { position = pos, rotation = rot };
+                        MainThreadManager.Run(() =>
+                        {
+                            StartCoroutine(UMI3DNavigation.Navigate(UMI3DGlobalID.EnvironmentId, nav));
+
+                        });
+                    }
+                    break;
+                case UMI3DOperationKeys.ViewpointTeleportationRequest:
+                    {
+                        Vector3Dto pos = UMI3DSerializer.Read<Vector3Dto>(container);
+                        Vector4Dto rot = UMI3DSerializer.Read<Vector4Dto>(container);
+                        var nav = new ViewpointTeleportDto() { position = pos, rotation = rot };
                         MainThreadManager.Run(() =>
                         {
                             StartCoroutine(UMI3DNavigation.Navigate(UMI3DGlobalID.EnvironmentId, nav));
@@ -695,10 +707,12 @@ namespace umi3d.cdk.collaboration
                     {
                         ulong poseId = UMI3DSerializer.Read<ulong>(container);
                         bool stopPose = UMI3DSerializer.Read<bool>(container);
+                        float transitionDuration = UMI3DSerializer.Read<float>(container);
                         PlayPoseClipDto playPoseDto = new PlayPoseClipDto
                         {
                             poseId = poseId,
-                            stopPose = stopPose
+                            stopPose = stopPose,
+                            transitionDuration = transitionDuration
                         };
 
                         MainThreadManager.Run(() =>
@@ -797,7 +811,7 @@ namespace umi3d.cdk.collaboration
             }
             else
             {
-                var container = new ByteContainer(UMI3DGlobalID.EnvironmentId, frame);
+                var container = new ByteContainer(UMI3DGlobalID.EnvironmentId, frame, UMI3DVersion.ComputedVersion);
                 try
                 {
                     System.Collections.Generic.List<UserTrackingFrameDto> frames = UMI3DSerializer.ReadList<UserTrackingFrameDto>(container);

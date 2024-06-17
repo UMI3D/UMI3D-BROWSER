@@ -18,7 +18,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using umi3d.common;
-using UnityEngine.UI;
 
 namespace umi3d.cdk.navigation
 {
@@ -79,6 +78,9 @@ namespace umi3d.cdk.navigation
 
             switch (dto)
             {
+                case ViewpointTeleportDto viewpointTeleportDto:
+                    currentNav.ViewpointTeleport(environmentId, viewpointTeleportDto);
+                    break;
                 case TeleportDto teleportDto:
                     currentNav.Teleport(environmentId, teleportDto);
                     break;

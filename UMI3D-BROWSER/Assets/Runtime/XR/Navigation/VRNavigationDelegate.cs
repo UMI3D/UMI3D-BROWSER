@@ -80,18 +80,32 @@ namespace umi3d.browserRuntime.navigation
             rightObs.enabled = false;
         }
 
-        public void Teleport(ulong environmentId, TeleportDto data)
+        public void ViewpointTeleport(ulong environmentId, ViewpointTeleportDto data)
         {
+            personalSkeletonContainer.rotation = data.rotation.Quaternion();
+            if (cameraTransform != null)
+            {
+                float angle = Vector3.SignedAngle(
+                    personalSkeletonContainer.forward,
+                    Vector3.ProjectOnPlane(
+                        cameraTransform.forward,
+                        Vector3.up
+                    ),
+                    Vector3.up
+                );
+                personalSkeletonContainer.Rotate(0, -angle, 0);
+            }
+
             personalSkeletonContainer.position = data.position.Struct();
             if (cameraTransform != null)
             {
-                Vector3 translation = Vector3.ProjectOnPlane(
-                    personalSkeletonContainer.position - cameraTransform.position,
-                    Vector3.up
-                );
+                Vector3 translation = personalSkeletonContainer.position - cameraTransform.position;
                 personalSkeletonContainer.Translate(translation, Space.World);
             }
+        }
 
+        public void Teleport(ulong environmentId, TeleportDto data)
+        {
             personalSkeletonContainer.rotation = data.rotation.Quaternion();
             if (cameraTransform != null)
             {
@@ -104,6 +118,16 @@ namespace umi3d.browserRuntime.navigation
                     Vector3.up
                 );
                 personalSkeletonContainer.Rotate(0, -angle, 0);
+            }
+
+            personalSkeletonContainer.position = data.position.Struct();
+            if (cameraTransform != null)
+            {
+                Vector3 translation = Vector3.ProjectOnPlane(
+                    personalSkeletonContainer.position - cameraTransform.position,
+                    Vector3.up
+                );
+                personalSkeletonContainer.Translate(translation, Space.World);
             }
         }
 

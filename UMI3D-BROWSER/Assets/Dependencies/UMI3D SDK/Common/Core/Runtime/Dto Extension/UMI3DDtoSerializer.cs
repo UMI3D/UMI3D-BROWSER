@@ -53,12 +53,11 @@ namespace umi3d.common
         /// <param name="dto">UMI3D Data Transfer Object to serialize.</param>
         /// <param name="typeNameHandling">JSON handling parameter to include or not type information when serializing.</param>
         /// <returns>A JSON corresponding to the DTO parameter</returns>
-        public static string ToJson(this UMI3DDto dto, TypeNameHandling typeNameHandling = TypeNameHandling.All, System.Collections.Generic.IList<JsonConverter> converters = null)
+        public static string ToJson(this UMI3DDto dto, TypeNameHandling typeNameHandling = TypeNameHandling.All)
         {
             return JsonConvert.SerializeObject(dto, Formatting.Indented, new JsonSerializerSettings
             {
-                TypeNameHandling = typeNameHandling,
-                Converters = converters
+                TypeNameHandling = typeNameHandling
             });
         }
 

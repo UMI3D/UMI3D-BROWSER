@@ -152,13 +152,13 @@ namespace umi3d.cdk.collaboration
         {
             if (!Exists)
             {
-                failed?.Invoke("no_UMI3DCollaborationServer");
+                failed?.Invoke("No Intance of UMI3DCollaborationServer");
                 return;
             }
 
             if (UMI3DCollaborationClientServer.Instance.IsRedirectionInProgress)
             {
-                failed?.Invoke("redirection_inProgress");
+                failed?.Invoke("Redirection already in progress");
                 return;
             }
             bool aborted = false;
@@ -199,7 +199,7 @@ namespace umi3d.cdk.collaboration
                 }
                 else
                 {
-                    failed?.Invoke("clientServer_notExist");
+                    failed?.Invoke("Client Server do not exist");
                     aborted = true;
                 }
             }

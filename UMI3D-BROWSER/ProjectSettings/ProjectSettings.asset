@@ -49,7 +49,7 @@ PlayerSettings:
   m_StereoRenderingPath: 0
   m_ActiveColorSpace: 1
   unsupportedMSAAFallback: 0
-  m_SpriteBatchVertexThreshold: 300
+  m_SpriteBatchVertexThreshold: 1024
   m_MTRendering: 1
   mipStripping: 0
   numberOfMipsStripped: 0
@@ -136,7 +136,7 @@ PlayerSettings:
   vulkanEnableLateAcquireNextImage: 0
   vulkanEnableCommandBufferRecycling: 1
   loadStoreDebugModeEnabled: 0
-  bundleVersion: 'a_3_5_12_240527 Sdk: b_2_9_0_240322'
+  bundleVersion: 'a_3_5_77_240610 Sdk: b_2_9_0_240322'
   preloadedAssets:
   - {fileID: 0}
   - {fileID: 0}
@@ -152,7 +152,7 @@ PlayerSettings:
   vrSettings:
     enable360StereoCapture: 0
   isWsaHolographicRemotingEnabled: 0
-  enableFrameTimingStats: 0
+  enableFrameTimingStats: 1
   enableOpenGLProfilerGPURecorders: 1
   allowHDRDisplaySupport: 0
   useHDRDisplay: 0
@@ -173,7 +173,7 @@ PlayerSettings:
     iPhone: 0
     tvOS: 0
   overrideDefaultApplicationIdentifier: 1
-  AndroidBundleVersionCode: 30512
+  AndroidBundleVersionCode: 30577
   AndroidMinSdkVersion: 29
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 0
@@ -255,7 +255,7 @@ PlayerSettings:
   clonedFromGUID: 3c72c65a16f0acb438eed22b8b16c24a
   templatePackageId: com.unity.template.urp-blank@3.0.2
   templateDefaultScene: Assets/Scenes/SampleScene.unity
-  useCustomMainManifest: 0
+  useCustomMainManifest: 1
   useCustomLauncherManifest: 0
   useCustomMainGradleTemplate: 0
   useCustomLauncherGradleManifest: 0
@@ -524,7 +524,9 @@ PlayerSettings:
       m_SubKind: 
   m_BuildTargetBatching: []
   m_BuildTargetShaderSettings: []
-  m_BuildTargetGraphicsJobs: []
+  m_BuildTargetGraphicsJobs:
+  - m_BuildTarget: AndroidPlayer
+    m_GraphicsJobs: 1
   m_BuildTargetGraphicsJobMode: []
   m_BuildTargetGraphicsAPIs:
   - m_BuildTarget: iOSSupport

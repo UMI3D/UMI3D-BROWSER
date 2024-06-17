@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5496810393059787620}
   - component: {fileID: 2475501223755920172}
   - component: {fileID: 4862535602382639990}
+  - component: {fileID: 7098972989134648405}
   m_Layer: 5
   m_Name: LanguageWidget
   m_TagString: Untagged
@@ -58,8 +59,8 @@ MonoBehaviour:
   m_ChildAlignment: 0
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 400, y: 100}
-  m_Spacing: {x: 150, y: 100}
+  m_CellSize: {x: 213, y: 45}
+  m_Spacing: {x: 60, y: 46}
   m_Constraint: 1
   m_ConstraintCount: 2
 --- !u!114 &4862535602382639990
@@ -76,47 +77,51 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   languageAssociations:
   - languageParams:
-      SupportedLanguages: 0
-      languageDual: (FR)
-      language: "Fran\xE7ais"
+      SupportedLanguages: {fileID: 11400000, guid: e4e1b824f549ed84394732fcb0999b49,
+        type: 2}
       languageFlag: {fileID: 21300000, guid: 0b6cda7e04ec36e43a34b7453a460c00, type: 3}
     languageSelectionField: {fileID: 2114549109471123185}
   - languageParams:
-      SupportedLanguages: 1
-      languageDual: (DE)
-      language: Deutsh
-      languageFlag: {fileID: 21300000, guid: a5642bd8f7cfafc4ebca2c588e9c15c2, type: 3}
-    languageSelectionField: {fileID: 0}
-  - languageParams:
-      SupportedLanguages: 4
-      languageDual: (EN)
-      language: English
+      SupportedLanguages: {fileID: 11400000, guid: 02d27805034265045865ebee67b29ccd,
+        type: 2}
       languageFlag: {fileID: 21300000, guid: de19a6915c949264a9aca85aee345abd, type: 3}
     languageSelectionField: {fileID: 0}
-  - languageParams:
-      SupportedLanguages: 6
-      languageDual: (IT)
-      language: Italiano
-      languageFlag: {fileID: 21300000, guid: fad8222532d5f384ebb3911860a6886e, type: 3}
-    languageSelectionField: {fileID: 0}
-  - languageParams:
-      SupportedLanguages: 7
-      languageDual: (NL)
-      language: Nederland
-      languageFlag: {fileID: 21300000, guid: d961944af523e8a4881d5259eaec6239, type: 3}
-    languageSelectionField: {fileID: 0}
-  - languageParams:
-      SupportedLanguages: 8
-      languageDual: (ES)
-      language: Espanol
-      languageFlag: {fileID: 21300000, guid: d708c5e62f0d80943a8ea43271def500, type: 3}
-    languageSelectionField: {fileID: 0}
-  selectedLanguage: 0
+  selectedLanguage: {fileID: 0}
   languagePrefab: {fileID: 4673848439384612461, guid: bea91536da9f66b40b1597d77f250e95,
     type: 3}
+  menuNavigationLinker: {fileID: 11400000, guid: 438855b4a25630a4db523fe93ebc1ca5,
+    type: 2}
+  nextPanel: {fileID: 11400000, guid: 32ef96e010a5b524f85fa64333e8ad80, type: 2}
   OnSupportedLanguageValidated:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: 438855b4a25630a4db523fe93ebc1ca5, type: 2}
+        m_TargetAssemblyTypeName: umi3dBrowsers.linker.ui.MenuNavigationLinker, Assembly-CSharp
+        m_MethodName: ShowPanel
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 11400000, guid: 32ef96e010a5b524f85fa64333e8ad80,
+            type: 2}
+          m_ObjectArgumentAssemblyTypeName: umi3dBrowsers.data.ui.PanelData, Assembly-CSharp
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &7098972989134648405
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6986150481094019047}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalFit: 0
+  m_VerticalFit: 1
 --- !u!1001 &2711036538550369942
 PrefabInstance:
   m_ObjectHideFlags: 0

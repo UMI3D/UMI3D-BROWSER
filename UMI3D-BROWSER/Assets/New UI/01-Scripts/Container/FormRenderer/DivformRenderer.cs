@@ -214,10 +214,10 @@ namespace umi3dBrowsers.container.formrenderer
                 {
                     FormContainer newParent = parentContainer.ReplaceContainerWithPrefab(vignetteContainerPrefab);
                     vignetteContainer = newParent.container.GetComponent<VignetteContainer>();
-                    vignetteContainer.Clear();
+                    //vignetteContainer.Clear();
                 }
 
-                await vignetteContainer.CreateVignetteFromForm(imageDto);
+                //await vignetteContainer.CreateVignetteFromForm(imageDto);
             }
 
             HandleStyle(imageDto.styles, imageGO, displayer);

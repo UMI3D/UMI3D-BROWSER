@@ -127,14 +127,4 @@ namespace umi3dBrowsers.input
         RightSnapTurn,
         LeftSnapTurn
     }
-
-    /// <summary>
-    /// Lists of input uses.
-    /// </summary>
-    public enum InputEventType
-    {
-        Down,
-        Up,
-        Hold
-    }
 }

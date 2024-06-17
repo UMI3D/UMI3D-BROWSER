@@ -100,13 +100,13 @@ namespace umi3dBrowsers.input
             if (Umi3dVRInputManager.ActionMap.TryGetValue(controller, out var controllerAction))
             {
                 if(controllerAction.TryGetValue(action, out var inputAction)){
-                    inputAction.performed += i =>
+                    inputAction.action.performed += i =>
                     {
                         onActionDown.Invoke();
                         foreach (System.Action action in subscribersDown)
                             action.Invoke();
                     };
-                    inputAction.canceled += i =>
+                    inputAction.action.performed += i =>
                     {
                         onActionUp.Invoke();
                         foreach (System.Action action in subscribersUp)

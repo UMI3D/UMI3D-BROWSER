@@ -30,36 +30,27 @@ namespace umi3dBrowsers.input
         [HideInInspector]
         public UnityEngine.XR.InputDevice RightController;
 
-        public static Dictionary<ControllerType, Dictionary<ActionType, InputAction>> ActionMap = new();
+        public static Dictionary<ControllerType, Dictionary<ActionType, InputActionReference>> ActionMap = new();
         
         [Header("GrabInput")]
-        [SerializeField] private InputAction m_leftGrab;
-        [SerializeField] private InputAction m_rightGrab;
-        public event Action OnLeftGrabPressed;
-        public event Action OnRightGrabPressed;
+        [SerializeField] private InputActionReference m_leftGrab;
+        [SerializeField] private InputActionReference m_rightGrab;
 
         [Header("Primary")]
-        [SerializeField] private InputAction m_primaryLeft;
-        [SerializeField] private InputAction m_primaryRight;
-        public event Action OnPrimaryLeftPressed;
-        public event Action OnPrimaryRightPressed;
+        [SerializeField] private InputActionReference m_primaryLeft;
+        [SerializeField] private InputActionReference m_primaryRight;
 
         [Header("Secondary")]
-        [SerializeField] private InputAction m_secondaryLeft;
-        [SerializeField] private InputAction m_secondaryRight;
-        public event Action OnSecondaryLeftPressed;
-        public event Action OnSecondaryRightPressed;
+        [SerializeField] private InputActionReference m_secondaryLeft;
+        [SerializeField] private InputActionReference m_secondaryRight;
 
         [Header("Trigger")]
-        [SerializeField] private InputAction m_triggerLeft;
-        [SerializeField] private InputAction m_triggerRight;
-        public event Action OnTriggerLeftPressed;
-        public event Action OnTriggerRightPressed;
+        [SerializeField] private InputActionReference m_triggerLeft;
+        [SerializeField] private InputActionReference m_triggerRight;
 
-        //[HideInInspector]
-        //public PressState JoystickLeftButtonState;
-        //[HideInInspector]
-        //public PressState JoystickRightButtonState;
+        [Header("Teleport")]
+        [SerializeField] private InputActionReference m_rightJoystick;
+        [SerializeField] private InputActionReference m_rightSnapTurn;
 
         protected override void Awake()
         {
@@ -73,19 +64,25 @@ namespace umi3dBrowsers.input
                 isTeleportDown.Add(ctrl, false);
             }
 
-            ActionMap.TryAdd(ControllerType.LeftHandController, new Dictionary<ActionType, InputAction>
+            ActionMap.TryAdd(ControllerType.LeftHandController, new Dictionary<ActionType, InputActionReference>
             {
                 { ActionType.Grab, m_leftGrab },
                 { ActionType.PrimaryButton, m_primaryLeft },
                 { ActionType.SecondaryButton, m_secondaryLeft},
-                { ActionType.Trigger, m_triggerLeft },              
+                { ActionType.Trigger, m_triggerLeft },
+                
             });
-            ActionMap.TryAdd(ControllerType.RightHandController, new Dictionary<ActionType, InputAction>
+            ActionMap.TryAdd(ControllerType.RightHandController, new Dictionary<ActionType, InputActionReference>
             {
                 { ActionType.Grab, m_rightGrab },
                 { ActionType.PrimaryButton, m_primaryRight },
                 { ActionType.SecondaryButton, m_secondaryRight},
                 { ActionType.Trigger, m_secondaryLeft },
+                { ActionType.Teleport, m_rightJoystick },
+                { ActionType.PrimaryButton, m_primaryRight },
+                { ActionType.SecondaryButton, m_secondaryRight },
+                { ActionType.RightSnapTurn, m_rightJoystick },
+                { ActionType.LeftSnapTurn, m_rightJoystick }
             });
         }
 

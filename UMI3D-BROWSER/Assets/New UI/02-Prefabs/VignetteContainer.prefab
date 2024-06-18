@@ -511,7 +511,7 @@ RectTransform:
   m_GameObject: {fileID: 3160502414842021976}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0.0042242}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1125849847675190442}
@@ -522,10 +522,10 @@ RectTransform:
   - {fileID: 434126714101716880}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.125, y: 0.2}
-  m_AnchorMax: {x: 0.85, y: 0.8}
-  m_AnchoredPosition: {x: -0.022277832, y: 0}
-  m_SizeDelta: {x: 0.0081787, y: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2363022751813572197
 CanvasRenderer:
@@ -1182,7 +1182,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 6322684189187750620}
   m_Direction: 0
   m_Value: 0.50000006
-  m_Size: 0.49522692
+  m_Size: 0.54634905
   m_NumberOfSteps: 1
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1503,6 +1503,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5598981867207518359, guid: 17c625999e5935348843c7ec1c90bfc1,
+        type: 3}
+      propertyPath: m_GlobalFontAsset
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5685480288803096182, guid: 17c625999e5935348843c7ec1c90bfc1,
         type: 3}
       propertyPath: m_Size.x
@@ -1761,6 +1766,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5598981867207518359, guid: 17c625999e5935348843c7ec1c90bfc1,
+        type: 3}
+      propertyPath: m_GlobalFontAsset
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 5685480288803096182, guid: 17c625999e5935348843c7ec1c90bfc1,
         type: 3}
@@ -2169,6 +2179,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5598981867207518359, guid: 17c625999e5935348843c7ec1c90bfc1,
+        type: 3}
+      propertyPath: m_GlobalFontAsset
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5685480288803096182, guid: 17c625999e5935348843c7ec1c90bfc1,
         type: 3}
       propertyPath: m_Size.x
@@ -2427,6 +2442,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5598981867207518359, guid: 17c625999e5935348843c7ec1c90bfc1,
+        type: 3}
+      propertyPath: m_GlobalFontAsset
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 5685480288803096182, guid: 17c625999e5935348843c7ec1c90bfc1,
         type: 3}
@@ -2701,6 +2721,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5598981867207518359, guid: 17c625999e5935348843c7ec1c90bfc1,
+        type: 3}
+      propertyPath: m_GlobalFontAsset
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 5685480288803096182, guid: 17c625999e5935348843c7ec1c90bfc1,
         type: 3}

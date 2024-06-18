@@ -15,16 +15,9 @@ limitations under the License.
 */
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using umi3d.cdk.collaboration;
-using umi3d.cdk.menu.interaction;
 using umi3d.common.interaction;
 using umi3dBrowsers.linker;
-using umi3dVRBrowsersBase.connection;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace umi3dBrowsers.container.formrenderer
 {
@@ -42,6 +35,7 @@ namespace umi3dBrowsers.container.formrenderer
         [SerializeField] private GameObject paramRoot;
 
         [SerializeField] private ParamformRenderer formParamRenderer;
+        [SerializeField] private DivformRenderer formDivRenderer;
 
         public event Action<FormAnswerDto> OnFormAnwser;
 
@@ -55,6 +49,7 @@ namespace umi3dBrowsers.container.formrenderer
                 HandleParamForm(connectionFormDto);
             };
         }
+
         private void Start()
         {
             formParamRenderer.OnFormAnswer += (formDto) => OnFormAnwser?.Invoke(formDto);
@@ -65,6 +60,13 @@ namespace umi3dBrowsers.container.formrenderer
             formParamRenderer.Init(paramRoot);
             formParamRenderer.CleanContent(connectionFormDto.id);
             formParamRenderer.Handle(connectionFormDto);
+        }
+
+        public void HandleParamForm(umi3d.common.interaction.form.ConnectionFormDto connectionFormDto)
+        {
+            formDivRenderer.Init(paramRoot);
+            formDivRenderer.CleanContent(connectionFormDto.id);
+            formDivRenderer.Handle(connectionFormDto);
         }
     }
 }

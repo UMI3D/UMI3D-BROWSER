@@ -555,7 +555,6 @@ GameObject:
   - component: {fileID: 1089521771867605554}
   - component: {fileID: 6437036566123258891}
   - component: {fileID: 1193400614454046512}
-  - component: {fileID: 32198884445513503}
   m_Layer: 5
   m_Name: DynamicServerContent
   m_TagString: Untagged
@@ -625,17 +624,3 @@ MonoBehaviour:
   validationButton: {fileID: 6764881931589576737}
   connectionServiceLinker: {fileID: 11400000, guid: 24604fe66de00534e9fe94635a6279cf,
     type: 2}
---- !u!114 &32198884445513503
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9064025147618423764}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fc9d97f85ca49304499c3443fba49c0e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  prefixTitleKey: empty
-  suffixTitleKey: empty

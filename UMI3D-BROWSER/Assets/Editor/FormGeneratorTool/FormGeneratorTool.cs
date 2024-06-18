@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using umi3d.common.interaction;
 using umi3dBrowsers;
+using umi3dBrowsers.container.formrenderer;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -27,6 +28,7 @@ namespace form_generator
     public class FormGeneratorTool : EditorWindow
     {
         [SerializeField] private VisualTreeAsset ui = default;
+        [SerializeField] private FormRendererContainer formRendererContainer;
 
         private Toggle t_newUI;
         private VisualElement FormGeneration;
@@ -76,7 +78,7 @@ namespace form_generator
         {
             SubmitForm.clicked += () =>
             {
-                mainContainer.ToolAccessProcessForm(_oldConnectionFormMaker.ConnectionForm);
+                formRendererContainer.HandleParamForm(_oldConnectionFormMaker.ConnectionForm);
             };
 
             ResetButton.clicked += () =>
@@ -99,7 +101,7 @@ namespace form_generator
             stringParameterDto.name = "Name";
             connectionFormDto.fields.Add(stringParameterDto);
 
-            mainContainer.ToolAccessProcessForm(connectionFormDto);
+            formRendererContainer.HandleParamForm(connectionFormDto);
         }
     }
 }

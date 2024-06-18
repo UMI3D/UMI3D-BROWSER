@@ -63,6 +63,10 @@ namespace form_generator
 
         private VariantStyleDto GetUGUIVariant()
         {
+#if UNITY_EDITOR
+            Awake();
+#endif
+
             UGUIStyleVariantDto style = new UGUIStyleVariantDto();
             style.StyleVariantItems = new();
             

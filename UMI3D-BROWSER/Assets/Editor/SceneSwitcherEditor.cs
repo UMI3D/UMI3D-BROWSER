@@ -20,22 +20,22 @@ namespace umi3d
 {
     public static class SceneSwitcherEditor
     {
-        [MenuItem("Scenes/Start Scene")]
+        [MenuItem("Scenes/Start Scene", priority = 0)]
         static void LoadStartScene()
         {
-            LoadScene("Assets/Dependencies/UMI3D VR Browsers Base/Scene/StartScene.unity");
+            LoadScene("Assets/New UI/03-Scenes/StartScene(new).unity");
         }
 
-        [MenuItem("Scenes/Connection Scene")]
+        [MenuItem("Scenes/Connection Scene", priority = 1)]
         static void LoadConnectionScene()
         {
-            LoadScene("Assets/Dependencies/UMI3D VR Browsers Base/Scene/ConnectionScene.unity");
+            LoadScene("Assets/New UI/03-Scenes/ConnectionScene(new).unity");
         }
 
-        [MenuItem("Scenes/MainImmersive Scene")]
+        [MenuItem("Scenes/MainImmersive Scene", priority = 2)]
         static void LoadMainImmersiveScene()
         {
-            LoadScene("Assets/Project/Common/Scenes/MainImmersive.unity");
+            LoadScene("Assets/New UI/03-Scenes/MainImmersive(new).unity");
         }
 
         static void LoadScene(string path)

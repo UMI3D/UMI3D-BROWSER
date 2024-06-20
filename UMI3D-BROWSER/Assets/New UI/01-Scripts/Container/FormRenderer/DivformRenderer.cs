@@ -19,14 +19,13 @@ using System.Threading.Tasks;
 using umi3d.common.interaction.form;
 using umi3d.common.interaction.form.ugui;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace umi3dBrowsers.container.formrenderer
 {
     public class DivformRenderer : MonoBehaviour
     {
         private FormContainer _contentRoot;
-        private FormAnswerDto _answer;
-        public event Action<FormAnswerDto> OnFormAnswer;
 
         List<FormContainer> allContainers = new();
 
@@ -43,6 +42,10 @@ namespace umi3dBrowsers.container.formrenderer
 
         FormDto _form;
 
+        List<Action> formBinding = new();
+        private FormAnswerDto _answer;
+        public event Action<FormAnswerDto> OnFormAnswer;
+
         public void Init(GameObject contentRoot)
         {
             FormContainer container = new FormContainer();
@@ -56,7 +59,7 @@ namespace umi3dBrowsers.container.formrenderer
         /// <param name="id"></param>
         internal void CleanContent(ulong id)
         {
-            IniFormAnswer(id);
+            InitFormAnswer(id);
             tabManager.Clear();
 
             float delay = 0;
@@ -92,29 +95,33 @@ namespace umi3dBrowsers.container.formrenderer
         /// <param name="parentId"></param>
         private void InstantiateDiv(DivDto divParent, FormContainer parentContainer)
         {
+            var inputAnswer = new InputAnswerDto() {
+                inputId = divParent.id
+            };
+
             switch (divParent)
             {
                 case BaseInputDto inputDto:
-                    HandleInputDto(inputDto, parentContainer); break;
+                    HandleInputDto(inputDto, parentContainer, inputAnswer); break;
                 case FormDto inputDto:
-                    HandleFormDto(inputDto, parentContainer); break;
+                    HandleFormDto(inputDto, parentContainer, inputAnswer); break;
                 case PageDto pageDto:
-                    HandlePageDto(pageDto, parentContainer); break;
+                    HandlePageDto(pageDto, parentContainer, inputAnswer); break;
                 case LabelDto labelDto:
-                    HandleLabelDto(labelDto, parentContainer); break;
+                    HandleLabelDto(labelDto, parentContainer, inputAnswer); break;
                 case ImageDto imageDto:
-                    HandleImageDto(imageDto, parentContainer); break;
+                    HandleImageDto(imageDto, parentContainer, inputAnswer); break;
             }
         }
 
-        private void HandleInputDto(BaseInputDto inputDto, FormContainer parentContainer)
+        private void HandleInputDto(BaseInputDto inputDto, FormContainer parentContainer, InputAnswerDto inputAnswerDto)
         {
             switch (inputDto)
             {
                 case GroupDto groupDto:
-                    HandleGroupDto(groupDto, parentContainer); break;
+                    HandleGroupDto(groupDto, parentContainer, inputAnswerDto); break;
                 case ButtonDto buttonDto:
-                    HandleButtonDto(buttonDto, parentContainer); break;
+                    HandleButtonDto(buttonDto, parentContainer, inputAnswerDto); break;
             }
         }
 
@@ -129,7 +136,7 @@ namespace umi3dBrowsers.container.formrenderer
             }
         }
 
-        private void HandleGroupDto(GroupDto groupDto, FormContainer parentContainer)
+        private void HandleGroupDto(GroupDto groupDto, FormContainer parentContainer, InputAnswerDto inputAnswerDto)
         {
             GameObject group = Instantiate(groupContainerPrefab, parentContainer.container.transform);
             FormContainer container = parentContainer.GetNextFormContainer(group);
@@ -143,7 +150,7 @@ namespace umi3dBrowsers.container.formrenderer
             HandleStyle(groupDto.styles, group, null);
         }
 
-        private void HandleButtonDto(ButtonDto buttonDto, FormContainer parentContainer)
+        private void HandleButtonDto(ButtonDto buttonDto, FormContainer parentContainer, InputAnswerDto inputAnswerDto)
         {
             GameObject buttonGo = null;
             IDisplayer displayer = null;
@@ -155,10 +162,25 @@ namespace umi3dBrowsers.container.formrenderer
 
             displayer.SetTitle(buttonDto.Text);
 
+            var button = buttonGo.GetComponent<Button>();
+            switch (buttonDto.buttonType)
+            {
+                case ButtonType.Submit:
+                    _answer.submitId = inputAnswerDto.inputId;
+                    button.onClick.AddListener(() => { ValidateForm(); });
+                    break;
+                case ButtonType.Cancel:
+                    button.onClick.AddListener(() => { _answer.isCancelation = true; ValidateForm(); });
+                    break;
+                case ButtonType.Back:
+                    button.onClick.AddListener(() => { _answer.isBack = true; ValidateForm(); });
+                    break;
+            }
+
             HandleStyle(buttonDto?.styles, buttonGo, displayer);
         }
 
-        private void HandleFormDto(FormDto formDto, FormContainer parentContainer)
+        private void HandleFormDto(FormDto formDto, FormContainer parentContainer, InputAnswerDto inputAnswerDto)
         {
             _form = formDto;
             foreach(var div in formDto.FirstChildren)
@@ -168,10 +190,15 @@ namespace umi3dBrowsers.container.formrenderer
 
             HandleStyle(formDto.styles, null, null);
         }
-        private void HandlePageDto(PageDto pageDto, FormContainer parentContainer)
+        private void HandlePageDto(PageDto pageDto, FormContainer parentContainer, InputAnswerDto inputAnswerDto)
         {
             FormContainer container = parentContainer.GetNextFormContainer(tabManager.AddNewTab(pageDto.name));
             allContainers.Add(container);
+
+            formBinding.Add(() => {
+                if (container.container.activeInHierarchy)
+                    _answer.pageId = inputAnswerDto.inputId;
+            });
 
             int currentId = allContainers.Count - 1;
             foreach (var div in pageDto.FirstChildren)
@@ -181,7 +208,7 @@ namespace umi3dBrowsers.container.formrenderer
 
             HandleStyle(pageDto.styles, null, null);
         }
-        private void HandleLabelDto(LabelDto labelDto, FormContainer parentContainer)
+        private void HandleLabelDto(LabelDto labelDto, FormContainer parentContainer, InputAnswerDto inputAnswerDto)
         {
             GameObject labelGo = null;
             IDisplayer displayer = null;
@@ -200,7 +227,7 @@ namespace umi3dBrowsers.container.formrenderer
         /// </summary>
         /// <param name="imageDto"></param>
         /// <param name="parentId"></param>
-        private async Task HandleImageDto(ImageDto imageDto, FormContainer parentContainer)
+        private async Task HandleImageDto(ImageDto imageDto, FormContainer parentContainer, InputAnswerDto inputAnswerDto)
         {
             GameObject imageGO = null;
             IDisplayer displayer = null;
@@ -227,16 +254,6 @@ namespace umi3dBrowsers.container.formrenderer
             }
 
             HandleStyle(imageDto.styles, imageGO, displayer);
-        }
-
-        private void IniFormAnswer(ulong id)
-        {
-            _answer = new FormAnswerDto()
-            {
-                formId = id,
-
-                inputs = new()
-            };
         }
 
         private void ApplyStyle(GameObject go, StyleDto styleDto, IDisplayer displayer)
@@ -313,6 +330,22 @@ namespace umi3dBrowsers.container.formrenderer
                     }
                 }
             }
+        }
+
+        [ContextMenu("Validate form ")]
+        public void ValidateForm()
+        {
+            formBinding.ForEach(action => action?.Invoke());
+            OnFormAnswer?.Invoke(_answer);
+        }
+
+        private void InitFormAnswer(ulong id)
+        {
+            _answer = new FormAnswerDto() {
+                formId = id,
+
+                inputs = new()
+            };
         }
     }
 }

@@ -123,6 +123,30 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &246703051 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4255392429382739760, guid: 33b00739fcb2e704582ae7dc517b83a4,
+    type: 3}
+  m_PrefabInstance: {fileID: 740836190096781193}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb7737de953f90146abcd8847de660a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &246703052 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2819022054901922463, guid: 33b00739fcb2e704582ae7dc517b83a4,
+    type: 3}
+  m_PrefabInstance: {fileID: 740836190096781193}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 740836190096781196}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 719c7fa679465b545bde3f5fdae3ee30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &498369415
 GameObject:
   m_ObjectHideFlags: 0
@@ -354,19 +378,31 @@ PrefabInstance:
         type: 2}
     - target: {fileID: 5481750014503510893, guid: 33b00739fcb2e704582ae7dc517b83a4,
         type: 3}
+      propertyPath: playerLinker
+      value: 
+      objectReference: {fileID: 11400000, guid: ebdab160a22736140a50ff9e32f00b72,
+        type: 2}
+    - target: {fileID: 5481750014503510893, guid: 33b00739fcb2e704582ae7dc517b83a4,
+        type: 3}
       propertyPath: teleportingLeft
       value: 
-      objectReference: {fileID: 740836190096781195}
+      objectReference: {fileID: 0}
     - target: {fileID: 5481750014503510893, guid: 33b00739fcb2e704582ae7dc517b83a4,
         type: 3}
       propertyPath: teleportingRight
       value: 
-      objectReference: {fileID: 740836190096781196}
+      objectReference: {fileID: 0}
     - target: {fileID: 5518526966730734563, guid: 33b00739fcb2e704582ae7dc517b83a4,
         type: 3}
       propertyPath: simLinker
       value: 
       objectReference: {fileID: 11400000, guid: 636ad0567f208434fa27befdcdf924a3,
+        type: 2}
+    - target: {fileID: 5819042049234420582, guid: 33b00739fcb2e704582ae7dc517b83a4,
+        type: 3}
+      propertyPath: playerLinker
+      value: 
+      objectReference: {fileID: 11400000, guid: ebdab160a22736140a50ff9e32f00b72,
         type: 2}
     - target: {fileID: 5991894054486918059, guid: 33b00739fcb2e704582ae7dc517b83a4,
         type: 3}
@@ -595,9 +631,19 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 482466726033929722, guid: 33b00739fcb2e704582ae7dc517b83a4, type: 3}
     - {fileID: 482466726126411679, guid: 33b00739fcb2e704582ae7dc517b83a4, type: 3}
+    - {fileID: 3834346315630650165, guid: 33b00739fcb2e704582ae7dc517b83a4, type: 3}
+    - {fileID: 4910524595207761135, guid: 33b00739fcb2e704582ae7dc517b83a4, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1521164894041118268, guid: 33b00739fcb2e704582ae7dc517b83a4,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 740836190096781201}
+    - targetCorrespondingSourceObject: {fileID: 4756198070879943847, guid: 33b00739fcb2e704582ae7dc517b83a4,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 740836190096781200}
   m_SourcePrefab: {fileID: 100100000, guid: 33b00739fcb2e704582ae7dc517b83a4, type: 3}
 --- !u!114 &740836190096781194 stripped
 MonoBehaviour:
@@ -611,30 +657,154 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78c727b25bdee8c44a431b1eed1fa460, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &740836190096781195 stripped
+--- !u!1 &740836190096781196 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4756198070879943847, guid: 33b00739fcb2e704582ae7dc517b83a4,
+    type: 3}
+  m_PrefabInstance: {fileID: 740836190096781193}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &740836190096781197 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1521164894041118268, guid: 33b00739fcb2e704582ae7dc517b83a4,
+    type: 3}
+  m_PrefabInstance: {fileID: 740836190096781193}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &740836190096781198 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4910524595207761135, guid: 33b00739fcb2e704582ae7dc517b83a4,
+  m_CorrespondingSourceObject: {fileID: 7633290024207806134, guid: 33b00739fcb2e704582ae7dc517b83a4,
     type: 3}
   m_PrefabInstance: {fileID: 740836190096781193}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76a753d697b6290408411f19ff79a837, type: 3}
+  m_Script: {fileID: 11500000, guid: cb7737de953f90146abcd8847de660a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &740836190096781196 stripped
+--- !u!114 &740836190096781199 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3834346315630650165, guid: 33b00739fcb2e704582ae7dc517b83a4,
+  m_CorrespondingSourceObject: {fileID: 2632868086204276040, guid: 33b00739fcb2e704582ae7dc517b83a4,
     type: 3}
   m_PrefabInstance: {fileID: 740836190096781193}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 740836190096781197}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76a753d697b6290408411f19ff79a837, type: 3}
+  m_Script: {fileID: 11500000, guid: 719c7fa679465b545bde3f5fdae3ee30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &740836190096781200
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 740836190096781196}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86a495855a42cee42a39763bb3b7ea69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  action: 0
+  controller: 0
+  onActionDown:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 246703051}
+        m_TargetAssemblyTypeName: umi3dVRBrowsersBase.navigation.TeleportArc, Assembly-CSharp
+        m_MethodName: Display
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onActionUp:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 246703052}
+        m_TargetAssemblyTypeName: umi3dVRBrowsersBase.navigation.Teleporting, Assembly-CSharp
+        m_MethodName: Teleport
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 246703051}
+        m_TargetAssemblyTypeName: umi3dVRBrowsersBase.navigation.TeleportArc, Assembly-CSharp
+        m_MethodName: Hide
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &740836190096781201
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 740836190096781197}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86a495855a42cee42a39763bb3b7ea69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  action: 5
+  controller: 1
+  onActionDown:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 740836190096781198}
+        m_TargetAssemblyTypeName: umi3dVRBrowsersBase.navigation.TeleportArc, Assembly-CSharp
+        m_MethodName: Display
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onActionUp:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 740836190096781199}
+        m_TargetAssemblyTypeName: umi3dVRBrowsersBase.navigation.Teleporting, Assembly-CSharp
+        m_MethodName: Teleport
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 740836190096781198}
+        m_TargetAssemblyTypeName: umi3dVRBrowsersBase.navigation.TeleportArc, Assembly-CSharp
+        m_MethodName: Hide
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1001 &7575369306401129573
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -875,6 +1045,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2349924369267164419, guid: 503d8cf448de25647a3f6a39ab0d9bd9,
         type: 3}
+      propertyPath: sIM_Linker
+      value: 
+      objectReference: {fileID: 11400000, guid: 636ad0567f208434fa27befdcdf924a3,
+        type: 2}
+    - target: {fileID: 2349924369267164419, guid: 503d8cf448de25647a3f6a39ab0d9bd9,
+        type: 3}
       propertyPath: m_playerCamera
       value: 
       objectReference: {fileID: 1131452855}
@@ -1009,6 +1185,12 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 636ad0567f208434fa27befdcdf924a3,
         type: 2}
+    - target: {fileID: 5008610468168228763, guid: 503d8cf448de25647a3f6a39ab0d9bd9,
+        type: 3}
+      propertyPath: playerLinker
+      value: 
+      objectReference: {fileID: 11400000, guid: ebdab160a22736140a50ff9e32f00b72,
+        type: 2}
     - target: {fileID: 5134178406164806071, guid: 503d8cf448de25647a3f6a39ab0d9bd9,
         type: 3}
       propertyPath: m_Name
@@ -1017,7 +1199,7 @@ PrefabInstance:
     - target: {fileID: 5365882361262844315, guid: 503d8cf448de25647a3f6a39ab0d9bd9,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0.000054878998
+      value: 0.00080505165
       objectReference: {fileID: 0}
     - target: {fileID: 5952451189982151364, guid: 503d8cf448de25647a3f6a39ab0d9bd9,
         type: 3}
@@ -1042,12 +1224,12 @@ PrefabInstance:
     - target: {fileID: 6314897921695993626, guid: 503d8cf448de25647a3f6a39ab0d9bd9,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6314897921695993626, guid: 503d8cf448de25647a3f6a39ab0d9bd9,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8400808290273360780, guid: 503d8cf448de25647a3f6a39ab0d9bd9,
         type: 3}

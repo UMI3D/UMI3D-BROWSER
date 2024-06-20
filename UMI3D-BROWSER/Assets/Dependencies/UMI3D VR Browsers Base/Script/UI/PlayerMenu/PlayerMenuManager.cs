@@ -17,6 +17,7 @@ using System;
 using System.Threading.Tasks;
 using umi3d.browserRuntime.player;
 using umi3d.cdk.menu;
+using umi3dBrowsers.linker;
 using umi3dVRBrowsersBase.interactions;
 using UnityEngine;
 using UnityEngine.Events;
@@ -93,11 +94,14 @@ namespace umi3dVRBrowsersBase.ui.playerMenu
 
         public UnityEvent onMenuOpen = new UnityEvent();
         public UnityEvent onMenuClose = new UnityEvent();
+
+        [Header("Linkers")]
+        [SerializeField] private SIM_Linker sIM_Linker;
     }
 
     public partial class PlayerMenuManager : SingleBehaviour<PlayerMenuManager>
     {
-        Task<SelectedInteractableManager> selectedInteractableManager;
+        SelectedInteractableManager selectedInteractableManager;
 
         #region Player Menu
 
@@ -116,10 +120,9 @@ namespace umi3dVRBrowsersBase.ui.playerMenu
             transform.RotateAround(playerCameraPosition, Vector3.up, playerCameraRotation.eulerAngles.y);
             m_playerMenuCanvas.SetActive(true);
             m_menuCollider.enabled = true;
-            selectedInteractableManager.IfCompleted(sim =>
-            {
-                sim.Hide();
-            });
+
+            if (selectedInteractableManager != null)
+                selectedInteractableManager.Hide();
 
             ToolboxesMenu.Open();
             CloseSubWindow();
@@ -179,11 +182,11 @@ namespace umi3dVRBrowsersBase.ui.playerMenu
             Debug.Assert(m_playerCamera != null, "Player Camera is null in Player Menu Manager");
             m_menuCollider = GetComponent<BoxCollider>();
             Close(true);
+            sIM_Linker.OnSimReady += sim => selectedInteractableManager = sim;
         }
 
         private void Start()
         {
-            selectedInteractableManager = Global.GetAsync<SelectedInteractableManager>();
             gameObject.AddComponent<SelectablePlayerMenu>();
             MenuHeader.Initialize();
         }
@@ -195,5 +198,4 @@ namespace umi3dVRBrowsersBase.ui.playerMenu
     public class SelectablePlayerMenu : UnityEngine.UI.Selectable
     {
     }
-
 }

@@ -25,8 +25,6 @@ namespace umi3dBrowsers.input
     /// </summary>
     public class VRInputObserver : MonoBehaviour
     {
-        #region Fields
-
         /// <summary>
         /// Input acyion type.
         /// </summary>
@@ -95,7 +93,7 @@ namespace umi3dBrowsers.input
             subscribersDown.Remove(callback);
         }
 
-        private void Awake()
+        private void Start()
         {
             if (Umi3dVRInputManager.ActionMap.TryGetValue(controller, out var controllerAction))
             {
@@ -115,7 +113,5 @@ namespace umi3dBrowsers.input
                 }
             }
         }
-
-        #endregion Methods
     }
 }

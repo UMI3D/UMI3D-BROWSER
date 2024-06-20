@@ -65,27 +65,28 @@ namespace umi3dVRBrowsersBase.ui
         [HideInInspector]
         public List<AbstractParameterDto> parameters;
         [HideInInspector]
-        public Task<Transform> playerTransform;
+        public Transform playerTransform;
         [HideInInspector]
-        public Task<Transform> cameraTransform;
+        public Transform cameraTransform;
 
         Coroutine hideCoroutine;
 
+        [Header("Linkers")]
+        [SerializeField] private PlayerLinker playerLinker;
+
+        private void Awake()
+        {
+            playerLinker.OnPlayerReady += player =>
+            {
+                playerTransform = player.transform;
+                cameraTransform = player.mainCamera.transform;
+
+                simLinker.SimReady(this);
+            };
+        }
         private void Start()
         {
-            var player = Global.GetAsync<UMI3DVRPlayer>();
-            playerTransform = player.ContinueWith(task =>
-            {
-                return task.Result.transform;
-            });
-            cameraTransform = player.ContinueWith(task =>
-            {
-                return task.Result.mainCamera.transform;
-            });
-
             Hide();
-
-            simLinker.SimReady(this);
         }
 
         private void Update()
@@ -95,15 +96,11 @@ namespace umi3dVRBrowsersBase.ui
                 Hide();
             }
 
-            if (!cameraTransform.TryGet(out Transform ct))
-            {
-                return;
-            }
             if (isActiveAndEnabled)
             {
                 var distance = Vector3.Distance(
                     transform.position,
-                    ct.position
+                    cameraTransform.position
                 );
                 var scale = Mathf.Lerp(
                     minScale,
@@ -131,6 +128,8 @@ namespace umi3dVRBrowsersBase.ui
         /// <param name="position">World position of the gear</param>
         public void Display(Interactable interactable, Vector3 position)
         {
+            if (cameraTransform == null) return;
+
             Rest();
             if (hideCoroutine != null)
             {
@@ -193,11 +192,9 @@ namespace umi3dVRBrowsersBase.ui
             }
 
             transform.position = position;
-            cameraTransform.IfCompleted(ct =>
-            {
-                var offset = transform.position - ct.position;
-                transform.LookAt(transform.position + offset);
-            });
+
+            var offset = transform.position - cameraTransform.position;
+            transform.LookAt(transform.position + offset);
         }
 
         /// <summary>
@@ -207,22 +204,18 @@ namespace umi3dVRBrowsersBase.ui
         /// <param name="container"></param>
         public void Display(InteractableContainer container)
         {
-            if (!playerTransform.TryGet(out Transform pt))
-            {
-                return;
-            }
-
+            if (playerTransform == null) return;
             // Convex meshCollider :
             if (container.TryGetComponent(out MeshCollider meshCollider) && meshCollider.convex)
             {
                 Display(
                     container.Interactable,
-                    meshCollider.ClosestPoint(pt.position)
+                    meshCollider.ClosestPoint(playerTransform.position)
                 );
                 return;
             }
 
-            Ray ray = new Ray(pt.position, container.transform.position - pt.position);
+            Ray ray = new Ray(playerTransform.position, container.transform.position - playerTransform.position);
             (RaycastHit[] hits, int hitCount) = umi3d.common.Physics.RaycastAll(ray);
 
             // if the center of the object is outside of the mesh :

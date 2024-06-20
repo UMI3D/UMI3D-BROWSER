@@ -19,6 +19,8 @@ using umi3d.browserRuntime.navigation;
 using umi3d.cdk;
 using umi3d.cdk.collaboration.userCapture;
 using umi3d.cdk.navigation;
+using umi3dBrowsers.linker;
+using umi3dBrowsers.player.navigation;
 using umi3dVRBrowsersBase.interactions;
 using umi3dVRBrowsersBase.navigation;
 using Unity.XR.CoreUtils;
@@ -45,6 +47,9 @@ namespace umi3d.browserRuntime.player
         [HideInInspector] public SnapTurn snapTurn;
         public VRInputObserver teleportingLeft;
         public VRInputObserver teleportingRight;
+
+        [Header("Linkers")]
+        [SerializeField] private PlayerLinker playerLinker;
 
         private void Awake()
         {
@@ -80,6 +85,8 @@ namespace umi3d.browserRuntime.player
                 UMI3DLoadingHandler.Instance.transform,
                 true
             );
+
+            playerLinker.PlayerReady(this);
         }
     }
 }

@@ -1,4 +1,4 @@
-/*
+﻿/*
 Copyright 2019 - 2024 Inetum
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,17 +13,12 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-using System.Collections.Generic;
 
 namespace umi3d.common.interaction.form
 {
-    public class FormAnswerDto : UMI3DDto
+    public class InputAnswerDto : UMI3DDto
     {
-        public ulong formId { get; set; }
-        public ulong pageId { get; set; }
-        public ulong submitId { get; set; }
-        public bool isCancelation { get; set; }
-        public bool isBack { get; set; }
-        public List<InputAnswerDto> inputs { get; set; }
+        public ulong inputId { get; set; }
+        public object value { get; set; }
     }
 }

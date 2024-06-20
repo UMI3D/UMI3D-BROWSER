@@ -13,16 +13,12 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using umi3d.cdk;
 using umi3d.common.interaction.form;
 using umi3d.common.interaction.form.ugui;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace umi3dBrowsers.container.formrenderer
 {
@@ -37,7 +33,6 @@ namespace umi3dBrowsers.container.formrenderer
         [Header("UI Containers")]
         [SerializeField] private GameObject vignetteContainerPrefab;
         [SerializeField] private GameObject groupContainerPrefab;
-
         [Space]
         [SerializeField] private TabManager tabManager;
 
@@ -150,8 +145,19 @@ namespace umi3dBrowsers.container.formrenderer
 
         private void HandleButtonDto(ButtonDto buttonDto, FormContainer parentContainer)
         {
+            GameObject buttonGo = null;
+            IDisplayer displayer = null;
 
+            buttonGo = Instantiate(labelDisplayerPrefab, parentContainer.container.transform);
+            parentContainer.contents.Add(buttonGo);
+
+            displayer = buttonGo.GetComponent<IDisplayer>();
+
+            displayer.SetTitle(buttonDto.Text);
+
+            HandleStyle(buttonDto?.styles, buttonGo, displayer);
         }
+
         private void HandleFormDto(FormDto formDto, FormContainer parentContainer)
         {
             _form = formDto;

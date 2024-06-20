@@ -129,7 +129,7 @@ namespace form_generator
                 case DivType.Button:
                     ButtonDto button = new ButtonDto();
                     button.Name = divTagger.Name;
-                    button.Text = divTagger.GetComponent<TextMeshPro>()?.text;
+                    button.Text = divTagger.GetComponent<TextMeshProUGUI>()?.text;
                     button.tooltip = divTagger.ToolTip;
                     divDto = button;
                     break;

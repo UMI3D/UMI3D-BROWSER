@@ -265,6 +265,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 636ad0567f208434fa27befdcdf924a3,
         type: 2}
+    - target: {fileID: 482466724703756624, guid: 33b00739fcb2e704582ae7dc517b83a4,
+        type: 3}
+      propertyPath: m_RendererIndex
+      value: -1
+      objectReference: {fileID: 0}
     - target: {fileID: 482466724703756637, guid: 33b00739fcb2e704582ae7dc517b83a4,
         type: 3}
       propertyPath: m_AllowDynamicResolution
@@ -368,7 +373,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4883313436918982358, guid: 33b00739fcb2e704582ae7dc517b83a4,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 740836190096781198}
   m_SourcePrefab: {fileID: 100100000, guid: 33b00739fcb2e704582ae7dc517b83a4, type: 3}
 --- !u!114 &740836190096781194 stripped
 MonoBehaviour:
@@ -404,6 +413,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 76a753d697b6290408411f19ff79a837, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &740836190096781197 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4883313436918982358, guid: 33b00739fcb2e704582ae7dc517b83a4,
+    type: 3}
+  m_PrefabInstance: {fileID: 740836190096781193}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &740836190096781198
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 740836190096781197}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e065e099d553a84bb739da859bb34a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &7575369306401129573
@@ -788,7 +815,7 @@ PrefabInstance:
     - target: {fileID: 5365882361262844315, guid: 503d8cf448de25647a3f6a39ab0d9bd9,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0.000990743
+      value: -0.0000008453272
       objectReference: {fileID: 0}
     - target: {fileID: 5952451189982151364, guid: 503d8cf448de25647a3f6a39ab0d9bd9,
         type: 3}

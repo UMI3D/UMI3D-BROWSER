@@ -5,15 +5,18 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/New UI/03-Scenes/StartScene(new).unity
     guid: 29e27bc08726cbe4caaaa02e8eb57f6e
-  - enabled: 1
+  - enabled: 0
     path: Assets/New UI/03-Scenes/ConnectionScene(new).unity
     guid: 8dd1ae8f08c299a41a8cb89a111f3f04
-  - enabled: 1
+  - enabled: 0
     path: Assets/New UI/03-Scenes/MainImmersive(new).unity
     guid: 7978ab7d80caae0489523685e09d3d5c
+  - enabled: 1
+    path: Assets/Samples/Meta XR Core SDK/65.0.0/Sample Scenes/VirtualKeyboard.unity
+    guid: c9684441ee1da1244a223118fdaa5d13
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 588cd68c382f2f543b68b5f0adb53c9c,
       type: 2}

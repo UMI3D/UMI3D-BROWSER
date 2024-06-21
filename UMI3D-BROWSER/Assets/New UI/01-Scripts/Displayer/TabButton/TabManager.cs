@@ -57,6 +57,7 @@ namespace umi3dBrowsers.container
 
         public void InitSelectedButtonById(int id = 0)
         {
+            if (tabs == null || tabs.Count == 0) return;
             foreach (var tab in tabs)
             {
                 tab.SetActive(false);

@@ -14,8 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using Newtonsoft.Json.Converters;
+
 namespace umi3d.common.interaction.form
 {
+    [Newtonsoft.Json.JsonConverter(typeof(StringEnumConverter))]
     public enum TextType
     {
         Text,

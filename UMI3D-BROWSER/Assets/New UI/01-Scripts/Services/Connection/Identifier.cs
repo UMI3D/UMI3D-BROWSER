@@ -65,6 +65,8 @@ namespace umi3dBrowsers.services.connection
 
             Action<umi3d.common.interaction.form.FormAnswerDto> callback = (formAnswer) => { form = formAnswer; isWaiting = false; };
 
+            OnDivFormAvailable.Invoke(parameter, callback);
+
             while (isWaiting)
                 await Task.Yield();
             return form;

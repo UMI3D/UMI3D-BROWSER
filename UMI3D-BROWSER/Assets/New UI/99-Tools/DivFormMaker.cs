@@ -42,7 +42,7 @@ namespace form_generator
             CleanDivsTagger(divs);
             CreateDevHierarchy(divs);
             ConnectionFormDto form = PrepareForm(divs[0]) as ConnectionFormDto;
-            formRendererContainer.HandleParamForm(form);
+            formRendererContainer.HandleDivForm(form);
         }
 
         private void CleanDivsTagger(List<DivTypeTagger> divs)

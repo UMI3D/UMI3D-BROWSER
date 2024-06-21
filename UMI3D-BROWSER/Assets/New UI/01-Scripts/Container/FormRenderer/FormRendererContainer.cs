@@ -37,22 +37,13 @@ namespace umi3dBrowsers.container.formrenderer
         [SerializeField] private ParamformRenderer formParamRenderer;
         [SerializeField] private DivformRenderer formDivRenderer;
 
-        public event Action<FormAnswerDto> OnFormAnwser;
-
         [Header("Linkers")]
         [SerializeField] private ConnectionServiceLinker connectionServiceLinker;
 
         private void Awake()
         {
-            connectionServiceLinker.OnParamFormDtoReceived += (connectionFormDto) =>
-            {
-                HandleParamForm(connectionFormDto);
-            };
-        }
-
-        private void Start()
-        {
-            formParamRenderer.OnFormAnswer += (formDto) => OnFormAnwser?.Invoke(formDto);
+            connectionServiceLinker.OnParamFormDtoReceived += HandleParamForm;
+            connectionServiceLinker.OnDivFormDtoReceived += HandleDivForm;
         }
 
         public void HandleParamForm(ConnectionFormDto connectionFormDto)
@@ -62,7 +53,7 @@ namespace umi3dBrowsers.container.formrenderer
             formParamRenderer.Handle(connectionFormDto);
         }
 
-        public void HandleParamForm(umi3d.common.interaction.form.ConnectionFormDto connectionFormDto)
+        public void HandleDivForm(umi3d.common.interaction.form.ConnectionFormDto connectionFormDto)
         {
             formDivRenderer.Init(paramRoot);
             formDivRenderer.CleanContent(connectionFormDto.id);

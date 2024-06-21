@@ -43,5 +43,8 @@ namespace umi3dBrowsers.linker
 
         public event Action<FormAnswerDto> OnSendFormAnwser;
         public void SendFormAnswer(FormAnswerDto formAnswer) { OnSendFormAnwser?.Invoke(formAnswer); }
+
+        public event Action<umi3d.common.interaction.form.FormAnswerDto> OnSendDivFormAnwser;
+        public void SendDivFormAnswer(umi3d.common.interaction.form.FormAnswerDto formAnswer) { OnSendDivFormAnwser?.Invoke(formAnswer); }
     }
 }

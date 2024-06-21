@@ -42,6 +42,7 @@ namespace umi3dBrowsers.services.connection
         private string _environmentUrl = "";
         private string _mediaDataServerUrl = "";
         private Action<FormAnswerDto> _formParamAnswerCallBack;
+        private Action<umi3d.common.interaction.form.FormAnswerDto> _formDivAnswerCallBack;
         private Action<bool> _shouldDownloadLibrariesCallBack;
 
         [Header("Linkers")]
@@ -50,11 +51,13 @@ namespace umi3dBrowsers.services.connection
         private void Start()
         {
             identifier.OnParamFormAvailible += HandleParameters;
+            identifier.OnDivFormAvailable += HandleDivs;
             identifier.OnLibrairiesAvailible += HandleLibrairies;
             UMI3DCollaborationEnvironmentLoader.Instance.onEnvironmentLoaded.AddListener(() => connectionServiceLinker.ConnectionSuccess());
 
             connectionServiceLinker.OnTryToConnect += TryConnectToMediaServer;
             connectionServiceLinker.OnSendFormAnwser += SendFormAnswer;
+            connectionServiceLinker.OnSendDivFormAnwser += SendDivFormAnswer;
         }
 
         public async void TryConnectToMediaServer(string url)
@@ -119,6 +122,12 @@ namespace umi3dBrowsers.services.connection
             connectionServiceLinker.ParamFormDtoReceived(dto);
         }
 
+        private void HandleDivs(umi3d.common.interaction.form.ConnectionFormDto dto, Action<umi3d.common.interaction.form.FormAnswerDto> action)
+        {
+            _formDivAnswerCallBack = action;
+            connectionServiceLinker.DivFormDtoReceived(dto);
+        }
+
         private void HandleLibrairies(List<string> ids, Action<bool> action)
         {
             _shouldDownloadLibrariesCallBack = action;
@@ -141,6 +150,11 @@ namespace umi3dBrowsers.services.connection
         public void SendFormAnswer(FormAnswerDto formAnswer)
         {
             _formParamAnswerCallBack?.Invoke(formAnswer);
+        }
+
+        public void SendDivFormAnswer(umi3d.common.interaction.form.FormAnswerDto formAnswer)
+        {
+            _formDivAnswerCallBack?.Invoke(formAnswer);
         }
 
         /// <summary>

@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using umi3d.common.interaction.form;
 using umi3d.common.interaction.form.ugui;
+using umi3dBrowsers.linker;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -40,6 +41,8 @@ namespace umi3dBrowsers.container.formrenderer
         [SerializeField] private GameObject buttonDisplayerPrefab;
         [SerializeField] private GameObject imageDisplayerPrefab;
 
+        [SerializeField] private ConnectionServiceLinker connectionServiceLinker;
+
         FormDto _form;
 
         List<Action> formBinding = new();
@@ -51,6 +54,8 @@ namespace umi3dBrowsers.container.formrenderer
             FormContainer container = new FormContainer();
             container.container = contentRoot;
             this._contentRoot = container;
+
+            OnFormAnswer += connectionServiceLinker.SendDivFormAnswer;
         }
 
         /// <summary>

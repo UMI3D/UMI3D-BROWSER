@@ -177,6 +177,14 @@ namespace umi3dBrowsers
                 }
                 m_menuNavigationLinker.ShowPanel(m_formPanel);
             };
+            connectionServiceLinker.OnDivFormDtoReceived += (connectionFormDto) => {
+                if (parentTransform.gameObject.activeSelf == false)
+                {
+                    ShowUI();
+                    spawner.RepositionPlayer();
+                }
+                m_menuNavigationLinker.ShowPanel(m_formPanel);
+            };
 
             connectionServiceLinker.OnConnectionSuccess += () => HideUI();
         }

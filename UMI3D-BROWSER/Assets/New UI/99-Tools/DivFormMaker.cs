@@ -22,6 +22,8 @@ using System.Linq;
 using TMPro;
 using umi3dBrowsers;
 using umi3dBrowsers.container.formrenderer;
+using umi3d.common;
+using System.IO;
 
 namespace form_generator
 {
@@ -32,6 +34,7 @@ namespace form_generator
         [SerializeField] private DivTypeTagger rootDiv;
         [SerializeField] private List<DivTypeTagger> divs = new();
         private List<DivDto> _divDtos = new();
+        [SerializeField] private string formName;
 
         [SerializeField] private FormRendererContainer formRendererContainer;
 
@@ -43,6 +46,38 @@ namespace form_generator
             CreateDevHierarchy(divs);
             ConnectionFormDto form = PrepareForm(divs[0]) as ConnectionFormDto;
             formRendererContainer.HandleDivForm(form);
+
+            GenerateJson(form);
+        }
+
+        private void GenerateJson(ConnectionFormDto form)
+        {
+            StreamWriter file;
+            if (File.Exists(formName + ".json"))
+            {
+                file = new StreamWriter(formName + ".json");
+            }
+            else
+            {
+                file = File.CreateText(formName + ".json");
+            }
+
+            string json = form.ToJsonMin(Newtonsoft.Json.TypeNameHandling.Auto);
+            Debug.Log(json);
+            int bufferSize = 1024;
+            int index = 0;
+            int length = json.Length;
+
+            while (index < length)
+            {
+                int remaining = length - index;
+                int charsToRead = Mathf.Min(remaining, bufferSize);
+                string buffer = json.Substring(index, charsToRead);
+                file.Write(buffer);
+                index += charsToRead;
+            }
+
+            file.Close();
         }
 
         private void CleanDivsTagger(List<DivTypeTagger> divs)

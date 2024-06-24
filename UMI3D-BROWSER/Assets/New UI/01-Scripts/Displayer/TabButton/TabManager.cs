@@ -78,6 +78,8 @@ namespace umi3dBrowsers.container
 
         public void Clear()
         {
+            if (tabs == null)
+                return;
             foreach(var tab in tabs)
             {
                 tab.Clear();

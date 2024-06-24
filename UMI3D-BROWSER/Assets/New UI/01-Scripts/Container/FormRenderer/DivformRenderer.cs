@@ -35,6 +35,7 @@ namespace umi3dBrowsers.container.formrenderer
         [SerializeField] private GameObject groupContainerPrefab;
         [Space]
         [SerializeField] private TabManager tabManager;
+        [SerializeField] private SimpleButton validationButton;
 
         [Header("UI Displayers")]
         [SerializeField] private GameObject labelDisplayerPrefab;
@@ -88,6 +89,9 @@ namespace umi3dBrowsers.container.formrenderer
         /// <param name="connectionFormDto"></param>
         internal void Handle(ConnectionFormDto connectionFormDto)
         {
+            validationButton.gameObject.SetActive(false);
+            validationButton.OnClick.RemoveAllListeners();
+
             allContainers.Add(_contentRoot);
             InstantiateDiv(connectionFormDto, _contentRoot);
             tabManager.InitSelectedButtonById();
@@ -163,7 +167,7 @@ namespace umi3dBrowsers.container.formrenderer
             GameObject buttonGo = null;
             IDisplayer displayer = null;
 
-            buttonGo = Instantiate(labelDisplayerPrefab, parentContainer.container.transform);
+            buttonGo = Instantiate(buttonDisplayerPrefab, parentContainer.container.transform);
             parentContainer.contents.Add(buttonGo);
 
             displayer = buttonGo.GetComponent<IDisplayer>();

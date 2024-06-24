@@ -52,13 +52,16 @@ namespace umi3dBrowsers.container.formrenderer
         {
             this._contentRoot = contentRoot;
 
-            validationButton.OnClick.AddListener(() => ValidateForm());
-
             OnFormAnswer += connectionServiceLinker.SendFormAnswer;
         }
 
+
         internal void Handle(ConnectionFormDto connectionFormDto)
         {
+            validationButton.gameObject.SetActive(true);
+            validationButton.OnClick.RemoveAllListeners();
+            validationButton.OnClick.AddListener(() => ValidateForm());
+
             GameObject container = tabManager.AddNewTabForParamForm(connectionFormDto.fields[0].name);
 
             for (int i = 0; i < connectionFormDto.fields.Count; i++)

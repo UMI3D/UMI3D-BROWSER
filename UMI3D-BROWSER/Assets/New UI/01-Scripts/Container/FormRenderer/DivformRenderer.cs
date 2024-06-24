@@ -205,6 +205,11 @@ namespace umi3dBrowsers.container.formrenderer
             displayer.SetTitle(inputDto.Name);
             displayer.SetPlaceHolder(new List<string> { inputDto.PlaceHolder });
 
+            _answer.inputs.Add(inputAnswerDto);
+            formBinding.Add(() => {
+                inputAnswerDto.value = displayer.GetValue(true);
+            });
+
             HandleStyle(inputDto?.styles, inputGo, displayer);
         }
 

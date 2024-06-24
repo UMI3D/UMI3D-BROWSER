@@ -40,6 +40,7 @@ namespace umi3dBrowsers.container.formrenderer
         [SerializeField] private GameObject labelDisplayerPrefab;
         [SerializeField] private GameObject buttonDisplayerPrefab;
         [SerializeField] private GameObject imageDisplayerPrefab;
+        [SerializeField] private GameObject inputFieldDisplayerPrefab;
 
         [SerializeField] private ConnectionServiceLinker connectionServiceLinker;
 
@@ -127,6 +128,8 @@ namespace umi3dBrowsers.container.formrenderer
                     HandleGroupDto(groupDto, parentContainer, inputAnswerDto); break;
                 case ButtonDto buttonDto:
                     HandleButtonDto(buttonDto, parentContainer, inputAnswerDto); break;
+                case InputDto<string> inputStringDto:
+                    HandleInputStringDto(inputStringDto, parentContainer, inputAnswerDto); break;
             }
         }
 
@@ -183,6 +186,22 @@ namespace umi3dBrowsers.container.formrenderer
             }
 
             HandleStyle(buttonDto?.styles, buttonGo, displayer);
+        }
+
+        private void HandleInputStringDto(InputDto<string> inputDto, FormContainer parentContainer, InputAnswerDto inputAnswerDto)
+        {
+            GameObject inputGo = null;
+            IDisplayer displayer = null;
+
+            inputGo = Instantiate(inputFieldDisplayerPrefab, parentContainer.container.transform);
+            parentContainer.contents.Add(inputGo);
+
+            displayer = inputGo.GetComponent<IDisplayer>();
+
+            displayer.SetTitle(inputDto.Name);
+            displayer.SetPlaceHolder(new List<string> { inputDto.PlaceHolder });
+
+            HandleStyle(inputDto?.styles, inputGo, displayer);
         }
 
         private void HandleFormDto(FormDto formDto, FormContainer parentContainer, InputAnswerDto inputAnswerDto)

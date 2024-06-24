@@ -144,6 +144,11 @@ namespace form_generator
                 case DivType.Range:
                     break;
                 case DivType.Input_Text:
+                    InputDto<string> text_input = new InputDto<string>();
+                    text_input.Name = divTagger.Name;
+                    text_input.PlaceHolder = divTagger.Description;
+                    text_input.tooltip = divTagger.ToolTip;
+                    divDto = text_input;
                     break;
                 case DivType.Label:
                     LabelDto label = new LabelDto();

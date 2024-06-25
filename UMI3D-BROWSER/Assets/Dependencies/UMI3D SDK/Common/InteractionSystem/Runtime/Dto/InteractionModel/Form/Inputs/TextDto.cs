@@ -18,6 +18,5 @@ namespace umi3d.common.interaction.form
 {
     public class TextDto : InputDto<string>
     {
-        public TextType TextType { get; set; }
     }
 }

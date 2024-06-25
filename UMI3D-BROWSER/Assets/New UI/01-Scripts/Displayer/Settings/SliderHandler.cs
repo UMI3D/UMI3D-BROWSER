@@ -30,7 +30,11 @@ namespace umi3dBrowsers.displayer
 
         private void Start()
         {
-            SetText(0);
+            SetText(slider.value);
+
+            slider.onValueChanged.AddListener(value => {
+                SetText(value);
+            });
         }
 
         /// <summary>
@@ -44,7 +48,7 @@ namespace umi3dBrowsers.displayer
 
         public void SetText(float value)
         {
-            text.SetText(value.ToString("0"));
+            text.SetText(value.ToString());
         }
     }
 }

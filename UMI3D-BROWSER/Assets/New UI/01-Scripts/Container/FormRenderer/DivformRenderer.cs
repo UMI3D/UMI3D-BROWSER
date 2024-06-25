@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using umi3d.common.interaction.form;
 using umi3d.common.interaction.form.ugui;
+using umi3dBrowsers.displayer;
 using umi3dBrowsers.linker;
 using UnityEngine;
 using UnityEngine.UI;
@@ -42,6 +43,7 @@ namespace umi3dBrowsers.container.formrenderer
         [SerializeField] private GameObject buttonDisplayerPrefab;
         [SerializeField] private GameObject imageDisplayerPrefab;
         [SerializeField] private GameObject inputFieldDisplayerPrefab;
+        [SerializeField] private GameObject rangeDisplayerPrefab;
 
         [SerializeField] private ConnectionServiceLinker connectionServiceLinker;
 
@@ -134,6 +136,14 @@ namespace umi3dBrowsers.container.formrenderer
                     HandleButtonDto(buttonDto, parentContainer, inputAnswerDto); break;
                 case InputDto<string> inputStringDto:
                     HandleInputStringDto(inputStringDto, parentContainer, inputAnswerDto); break;
+                case InputDto<int> inputStringDto:
+                    HandleInputStringDto(inputStringDto, parentContainer, inputAnswerDto); break;
+                case InputDto<float> inputStringDto:
+                    HandleInputStringDto(inputStringDto, parentContainer, inputAnswerDto); break;
+                case RangeDto<int> rangeDto:
+                    HandleRangeDto(rangeDto, parentContainer, inputAnswerDto); break;
+                case RangeDto<float> rangeDto:
+                    HandleRangeDto(rangeDto, parentContainer, inputAnswerDto); break;
             }
         }
 
@@ -192,18 +202,16 @@ namespace umi3dBrowsers.container.formrenderer
             HandleStyle(buttonDto?.styles, buttonGo, displayer);
         }
 
-        private void HandleInputStringDto(InputDto<string> inputDto, FormContainer parentContainer, InputAnswerDto inputAnswerDto)
+        private void HandleInputStringDto<T>(InputDto<T> inputDto, FormContainer parentContainer, InputAnswerDto inputAnswerDto)
         {
-            GameObject inputGo = null;
-            IDisplayer displayer = null;
-
-            inputGo = Instantiate(inputFieldDisplayerPrefab, parentContainer.container.transform);
+            var inputGo = Instantiate(inputFieldDisplayerPrefab, parentContainer.container.transform);
             parentContainer.contents.Add(inputGo);
 
-            displayer = inputGo.GetComponent<IDisplayer>();
+            var displayer = inputGo.GetComponent<InputFieldDispayer>();
 
             displayer.SetTitle(inputDto.Name);
-            displayer.SetPlaceHolder(new List<string> { inputDto.PlaceHolder });
+            displayer.SetPlaceHolder(new List<string> { inputDto.PlaceHolder.ToString() });
+            displayer.SetType(inputDto.TextType);
 
             _answer.inputs.Add(inputAnswerDto);
             formBinding.Add(() => {
@@ -211,6 +219,46 @@ namespace umi3dBrowsers.container.formrenderer
             });
 
             HandleStyle(inputDto?.styles, inputGo, displayer);
+        }
+
+        private void HandleRangeDto(RangeDto<int> rangeDto, FormContainer parentContainer, InputAnswerDto inputAnswerDto)
+        {
+            var rangeGameObject = Instantiate(rangeDisplayerPrefab, parentContainer.container.transform);
+            parentContainer.contents.Add(rangeGameObject);
+            var displayer = rangeGameObject.GetComponent<SliderDisplayer>();
+
+            displayer.SetTitle(rangeDto.label);
+            displayer.Slider.wholeNumbers = true;
+            displayer.Slider.value = rangeDto.Value;
+            displayer.Slider.minValue = rangeDto.Min;
+            displayer.Slider.maxValue = rangeDto.Max;
+
+            _answer.inputs.Add(inputAnswerDto);
+            formBinding.Add(() => {
+                inputAnswerDto.value = displayer.GetValue(true);
+            });
+
+            HandleStyle(rangeDto?.styles, rangeGameObject, displayer);
+        }
+
+        private void HandleRangeDto(RangeDto<float> rangeDto, FormContainer parentContainer, InputAnswerDto inputAnswerDto)
+        {
+            var rangeGameObject = Instantiate(rangeDisplayerPrefab, parentContainer.container.transform);
+            parentContainer.contents.Add(rangeGameObject);
+            var displayer = rangeGameObject.GetComponent<SliderDisplayer>();
+
+            displayer.SetTitle(rangeDto.label);
+            displayer.Slider.wholeNumbers = false;
+            displayer.Slider.value = rangeDto.Value;
+            displayer.Slider.minValue = rangeDto.Min;
+            displayer.Slider.maxValue = rangeDto.Max;
+
+            _answer.inputs.Add(inputAnswerDto);
+            formBinding.Add(() => {
+                inputAnswerDto.value = displayer.GetValue(true);
+            });
+
+            HandleStyle(rangeDto?.styles, rangeGameObject, displayer);
         }
 
         private void HandleFormDto(FormDto formDto, FormContainer parentContainer, InputAnswerDto inputAnswerDto)

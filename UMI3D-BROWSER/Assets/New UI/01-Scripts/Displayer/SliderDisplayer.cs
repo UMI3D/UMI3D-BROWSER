@@ -13,15 +13,37 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
-using System;
-using umi3d.common.interaction.form;
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
-namespace umi3d
+public class SliderDisplayer : MonoBehaviour, IDisplayer
 {
-    public interface IInputFieldDisplayer : IDisplayer
+    [SerializeField] private TMP_Text m_Label;
+    [SerializeField] private Slider m_Slider;
+
+    public Slider Slider => m_Slider;
+
+    public object GetValue(bool trim)
     {
-        void SetType(TextType type);
+        return m_Slider.value;
+    }
+
+    public void SetColor(Color color)
+    {
+    }
+
+    public void SetPlaceHolder(List<string> placeHolder)
+    {
+    }
+
+    public void SetResource(object resource)
+    {
+    }
+
+    public void SetTitle(string title)
+    {
+        m_Label.text = title;
     }
 }

@@ -116,7 +116,7 @@ namespace umi3dBrowsers.container.formrenderer
                                 formBinding.Add(() => paramRequestDto.parameter = displayer?.GetValue(true));
                                 displayer?.SetTitle(stringParam.name);
                                 displayer?.SetPlaceHolder(new List<string>() { stringParam.description });
-                                inputFieldDisplayer?.SetPrivateParam(connectionFormDto.fields[i].privateParameter);
+                                inputFieldDisplayer?.SetType(connectionFormDto.fields[i].privateParameter ? umi3d.common.interaction.form.TextType.Password : umi3d.common.interaction.form.TextType.Text);
                             }
                         }
                         break;

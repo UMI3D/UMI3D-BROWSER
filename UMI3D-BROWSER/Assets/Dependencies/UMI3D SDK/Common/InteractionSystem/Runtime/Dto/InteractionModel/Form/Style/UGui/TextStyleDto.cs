@@ -21,6 +21,7 @@ namespace umi3d.common.interaction.form.ugui
     public class TextStyleDto : UGUIStyleItemDto
     {
         public float fontSize { get; set; }
+        public ColorStyleDto color { get; set; }
         public List<E_FontStyle> fontStyles { get; set; }
         public List<E_FontAlignment> fontAlignments { get; set; }
     }

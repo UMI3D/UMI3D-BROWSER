@@ -38,6 +38,11 @@ namespace form_generator
 
         [SerializeField] private FormRendererContainer formRendererContainer;
 
+        private void Start()
+        {
+            SendForm();
+        }
+
         [ContextMenu("SendForm")]
         public void SendForm()
         {
@@ -164,8 +169,10 @@ namespace form_generator
                 case DivType.Button:
                     ButtonDto button = new ButtonDto();
                     button.Name = divTagger.Name;
-                    button.Text = divTagger.GetComponent<TextMeshProUGUI>()?.text;
+                    button.Text = divTagger.GetComponentInChildren<TextMeshProUGUI>()?.text;
                     button.tooltip = divTagger.ToolTip;
+                    button.buttonType = ButtonType.Submit;
+                    button.resource = divTagger.GetResourceDto();
                     divDto = button;
                     break;
                 case DivType.Enum:

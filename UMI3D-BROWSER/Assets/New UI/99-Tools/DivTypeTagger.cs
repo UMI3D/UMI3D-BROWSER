@@ -16,12 +16,10 @@ limitations under the License.
 
 using inetum.unityUtils;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using umi3d.common;
 using umi3d.common.interaction.form;
-using umi3d.common.interaction.form.ugui;
 using UnityEngine;
 
 namespace form_generator
@@ -47,7 +45,7 @@ namespace form_generator
         [Header("Resources")]
         [SerializeField] List<Resource> resources = new();
 
-        public  ResourceDto GetResourceDto()
+        public ResourceDto GetResourceDto()
         {
             if (resources.Count == 0) return null;
             Debug.Log($"<color=orange>Well if this debug message stills there and you are trying to use this tool to gen some DivForm on the server side its not going to work," +

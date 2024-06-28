@@ -46,7 +46,6 @@ public class TextDisplayer : MonoBehaviour, IDisplayer
 
     public void SetColor(Color color)
     {
-        text.color = color;
     }
 
     public void SetResource(object resource)
@@ -54,6 +53,12 @@ public class TextDisplayer : MonoBehaviour, IDisplayer
         if (resource is TextStyleDto txtStyle)
         {
             text.fontSize = txtStyle.fontSize;
+            text.color = new Color() {
+                a = txtStyle.color.color.A,
+                b = txtStyle.color.color.B,
+                g = txtStyle.color.color.G,
+                r = txtStyle.color.color.R,
+            };
             for (int i = 0; i < txtStyle.fontStyles.Count; i++)
             {
                 SetFontStyle(txtStyle.fontStyles[i]);

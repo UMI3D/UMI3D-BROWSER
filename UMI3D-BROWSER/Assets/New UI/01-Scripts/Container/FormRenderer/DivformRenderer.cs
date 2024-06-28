@@ -16,6 +16,7 @@ limitations under the License.
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using umi3d.common;
 using umi3d.common.interaction.form;
 using umi3d.common.interaction.form.ugui;
 using umi3dBrowsers.displayer;
@@ -172,7 +173,7 @@ namespace umi3dBrowsers.container.formrenderer
             HandleStyle(groupDto.styles, group, null);
         }
 
-        private void HandleButtonDto(ButtonDto buttonDto, FormContainer parentContainer, InputAnswerDto inputAnswerDto)
+        private async void HandleButtonDto(ButtonDto buttonDto, FormContainer parentContainer, InputAnswerDto inputAnswerDto)
         {
             GameObject buttonGo = null;
             IDisplayer displayer = null;
@@ -183,6 +184,7 @@ namespace umi3dBrowsers.container.formrenderer
             displayer = buttonGo.GetComponent<IDisplayer>();
 
             displayer.SetTitle(buttonDto.Text);
+            displayer.SetResource(await buttonDto.GetSprite());
 
             var button = buttonGo.GetComponent<Button>();
             switch (buttonDto.buttonType)

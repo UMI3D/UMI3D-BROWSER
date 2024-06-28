@@ -17,6 +17,7 @@ limitations under the License.
 using System;
 using umi3d.common.interaction;
 using umi3dBrowsers.linker;
+using umi3dBrowsers.linker.ui;
 using UnityEngine;
 
 namespace umi3dBrowsers.container.formrenderer
@@ -39,6 +40,7 @@ namespace umi3dBrowsers.container.formrenderer
 
         [Header("Linkers")]
         [SerializeField] private ConnectionServiceLinker connectionServiceLinker;
+        [SerializeField] private MenuNavigationLinker menuNavigationLinker;
 
         private void Awake()
         {
@@ -48,6 +50,7 @@ namespace umi3dBrowsers.container.formrenderer
 
         public void HandleParamForm(ConnectionFormDto connectionFormDto)
         {
+            menuNavigationLinker.SetCancelButtonActive(true);
             formParamRenderer.Init(paramRoot);
             formParamRenderer.CleanContent(connectionFormDto.id);
             formParamRenderer.Handle(connectionFormDto);
@@ -55,6 +58,7 @@ namespace umi3dBrowsers.container.formrenderer
 
         public void HandleDivForm(umi3d.common.interaction.form.ConnectionFormDto connectionFormDto)
         {
+            menuNavigationLinker.SetCancelButtonActive(false);
             formDivRenderer.Init(paramRoot);
             formDivRenderer.CleanContent(connectionFormDto.id);
             formDivRenderer.Handle(connectionFormDto);

@@ -22,7 +22,7 @@ public class ButtonDisplayer : MonoBehaviour, IDisplayer
 
     public void SetColor(Color color)
     {
-        text.color = color;
+        image.color = color;
     }
 
     public void SetPlaceHolder(List<string> placeHolder)
@@ -32,22 +32,26 @@ public class ButtonDisplayer : MonoBehaviour, IDisplayer
 
     public void SetResource(object resource)
     {
-        if (resource is TextStyleDto txtStyle)
+        if (resource is TextStyleDto textStyle)
         {
-            text.fontSize = txtStyle.fontSize;
-            for (int i = 0; i < txtStyle.fontStyles.Count; i++)
-            {
-                SetFontStyle(txtStyle.fontStyles[i]);
-            }
-            for (int i = 0; i < txtStyle.fontAlignments.Count; i++)
-            {
-                SetAlignement(txtStyle.fontAlignments[i]);
-            }
+            text.fontSize = textStyle.fontSize;
+            text.color = new Color() {
+                a = textStyle.color.color.A,
+                b = textStyle.color.color.B,
+                g = textStyle.color.color.G,
+                r = textStyle.color.color.R,
+            };
+            if (textStyle.fontStyles != null)
+                foreach (var style in textStyle.fontStyles)
+                    SetFontStyle(style);
+            if (textStyle.fontAlignments != null)
+                foreach (var alignments in textStyle.fontAlignments)
+                    SetAlignement(alignments);
         }
-        if (resource is ImageDto imageStyle)
+        if (resource is Sprite sprite && sprite != null)
         {
             image.enabled = true;
-            image.sprite = imageStyle.GetSprite().Result;
+            image.sprite = sprite;
         }
     }
 

@@ -47,7 +47,7 @@ namespace form_generator
 
         private void Awake()
         {
-            _text = GetComponent<TextMeshProUGUI>();
+            _text = GetComponentInChildren<TextMeshProUGUI>();
             if (_text != null) m_useFont = true;
         }
 
@@ -144,8 +144,6 @@ namespace form_generator
 
         private ColorStyleDto GetColorStyle()
         {
-            if (m_useFont) color = _text.color;
-
             ColorStyleDto colorStyle = new();
             colorStyle.color = new ColorDto();
 
@@ -161,7 +159,16 @@ namespace form_generator
         {
             TextStyleDto textStyle = new();
 
+            ColorStyleDto colorStyle = new();
+            colorStyle.color = new ColorDto();
+
+            colorStyle.color.A = _text.color.a;
+            colorStyle.color.R = _text.color.r;
+            colorStyle.color.G = _text.color.g;
+            colorStyle.color.B = _text.color.b;
+
             textStyle.fontSize = _text.fontSize;
+            textStyle.color = colorStyle;
             textStyle.fontAlignments = GetCorrespondingFontAllignement(_text.alignment);
             textStyle.fontStyles = GetCorrespondingFontStyle(_text.fontStyle);
             return textStyle;

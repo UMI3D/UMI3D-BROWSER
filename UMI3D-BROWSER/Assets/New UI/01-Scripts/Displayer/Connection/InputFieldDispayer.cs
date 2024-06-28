@@ -57,17 +57,14 @@ namespace umi3dBrowsers.displayer
 
         public void SetColor(Color color)
         {
-            throw new NotImplementedException();
         }
 
         public void SetResource(object resource)
         {
-            throw new NotImplementedException();
         }
 
         public void SetType(TextType type)
         {
-            Debug.Log(type);
             textInputField.contentType = ToContentType(type);
             if (type == TextType.Phone)
                 textInputField.characterLimit = 15;

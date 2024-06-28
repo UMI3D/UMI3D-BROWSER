@@ -122,10 +122,10 @@ namespace umi3dBrowsers.container
             return tab;
         }
 
-        public GameObject AddNewTabForParamForm(string label)
+        public GameObject AddNewTabForParamForm(string label, bool useLocalization = true)
         {
             GameObject tabContainer = Instantiate(paramFormContainerPrefab, contentRoot);
-            return AddNewTab(label, true, tabContainer);
+            return AddNewTab(label, useLocalization, tabContainer);
         }
 
         public Transform GetTabContainerById(int id)

@@ -59,7 +59,11 @@ namespace umi3dBrowsers.container.formrenderer
 
         internal void Handle(ConnectionFormDto connectionFormDto)
         {
-            GameObject container = tabManager.AddNewTabForParamForm(connectionFormDto.fields[0].name);
+            validationButton.gameObject.SetActive(true);
+            validationButton.OnClick.RemoveAllListeners();
+            validationButton.OnClick.AddListener(() => ValidateForm());
+
+            GameObject container = tabManager.AddNewTabForParamForm(connectionFormDto.fields[0].name, false);
 
             for (int i = 0; i < connectionFormDto.fields.Count; i++)
             {
@@ -123,7 +127,7 @@ namespace umi3dBrowsers.container.formrenderer
 
                 if (connectionFormDto.fields[i].name == "OR" && connectionFormDto.fields[i].tag == null)
                 {
-                    container = tabManager.AddNewTabForParamForm(connectionFormDto.fields[i + 1].name);
+                    container = tabManager.AddNewTabForParamForm(connectionFormDto.fields[i + 1].name, false);
                 }
             }
 

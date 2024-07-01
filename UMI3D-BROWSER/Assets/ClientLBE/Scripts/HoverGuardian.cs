@@ -6,7 +6,7 @@ public class HoverGuardian : MonoBehaviour
 {
 
     private MeshRenderer meshRenderer;
-    private Material targetMaterial;
+    public Material targetMaterial;
 
     public string shaderVariableName = "_BlendHeight";
     public float targetValue = 1.5f;
@@ -23,19 +23,6 @@ public class HoverGuardian : MonoBehaviour
         targetMaterial.SetFloat(shaderVariableName, 0.0f);
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.name == "LeftHand Controller" || other.name == "RightHand Controller")
-        {
-            if(targetValue == 1)
-            {
-                StartCoroutine(AnimateShaderVariable(targetValue, 0.0f));
-            }
-        }
-        // Ajouter l'objet au dictionnaire avec l'état de sortie initial à false
-        objectExitStatus[other] = false;
-    }
-
     private void OnTriggerStay(Collider other)
     {
         // Vérifiez si l'objet est partiellement à l'extérieur
@@ -45,8 +32,10 @@ public class HoverGuardian : MonoBehaviour
         {
             if (other.name == "LeftHand Controller" || other.name == "RightHand Controller")
             {
-                if (!objectExitStatus[other])
+                if (!objectExitStatus.ContainsKey(other) || !objectExitStatus[other])
                 {
+                    Debug.Log("REMI : Stay -> 3 ");
+
                     // Si l'objet commence à sortir
                     StartCoroutine(AnimateShaderVariable(0.0f, targetValue));
                     objectExitStatus[other] = true;
@@ -55,7 +44,7 @@ public class HoverGuardian : MonoBehaviour
         }
         else
         {
-            if (objectExitStatus[other])
+            if (objectExitStatus.ContainsKey(other) && objectExitStatus[other])
             {
                 // Si l'objet cesse de sortir
                 StartCoroutine(AnimateShaderVariable(targetValue, 0.0f));
@@ -66,17 +55,39 @@ public class HoverGuardian : MonoBehaviour
 
     private bool IsObjectCompletelyInside(Collider other)
     {
-        // Vérifiez si toutes les parties de l'objet sont toujours dans le volume
-        Bounds triggerBounds = GetComponent<Collider>().bounds;
-        Bounds objectBounds = other.bounds;
+        // Supposons que le collider du contrôleur soit une sphère
+        SphereCollider sphereCollider = other as SphereCollider;
+        if (sphereCollider == null) return true; // Si pas de SphereCollider, utilise la méthode des bounds
 
-        // Vérifie si une partie des limites de l'objet est en dehors des limites du déclencheur
-        if (!triggerBounds.Contains(objectBounds.min) || !triggerBounds.Contains(objectBounds.max))
+        Collider triggerCollider = GetComponent<Collider>();
+
+        // Calculez la position du centre de la sphère en coordonnées mondiales
+        Vector3 sphereCenter = other.transform.TransformPoint(sphereCollider.center);
+        float sphereRadius = sphereCollider.radius * Mathf.Max(other.transform.lossyScale.x, other.transform.lossyScale.y, other.transform.lossyScale.z);
+
+        // Vérifie si le centre de la sphère et les points à la surface sont à l'intérieur du trigger collider
+        Vector3[] checkPoints = new Vector3[]
         {
-            return false;
+            sphereCenter,
+            sphereCenter + new Vector3(sphereRadius, 0, 0),
+            sphereCenter + new Vector3(-sphereRadius, 0, 0),
+            sphereCenter + new Vector3(0, sphereRadius, 0),
+            sphereCenter + new Vector3(0, -sphereRadius, 0),
+            sphereCenter + new Vector3(0, 0, sphereRadius),
+            sphereCenter + new Vector3(0, 0, -sphereRadius)
+        };
+
+        foreach (Vector3 point in checkPoints)
+        {
+            Vector3 closestPoint = triggerCollider.ClosestPoint(point);
+            if (closestPoint != point)
+            {
+                return false;
+            }
         }
         return true;
     }
+
 
     private IEnumerator AnimateShaderVariable(float startValue, float endValue)
     {
@@ -96,7 +107,7 @@ public class HoverGuardian : MonoBehaviour
         }
         else
         {
-            Debug.LogError("Material : Variable de shader introuvable ou le matériau est nul.");
+            Debug.LogError("REMI : Material : Variable de shader introuvable ou le matériau est nul.");
         }
     }
 }

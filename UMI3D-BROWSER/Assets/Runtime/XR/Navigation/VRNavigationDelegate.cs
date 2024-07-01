@@ -69,15 +69,7 @@ namespace umi3d.browserRuntime.navigation
                 return;
             }
 
-            personalSkeletonContainer.position = data.position.Struct() - UMI3DLoadingHandler.Instance.transform.position;
-            if (cameraTransform != null)
-            {
-                Vector3 translation = Vector3.ProjectOnPlane(
-                    personalSkeletonContainer.position - cameraTransform.position,
-                    Vector3.up
-                );
-                personalSkeletonContainer.Translate(translation, Space.World);
-            }
+           
 
             personalSkeletonContainer.rotation = data.rotation.Quaternion() * Quaternion.Inverse(UMI3DLoadingHandler.Instance.transform.rotation);
             if (cameraTransform != null)
@@ -92,6 +84,16 @@ namespace umi3d.browserRuntime.navigation
                 );
                 personalSkeletonContainer.Rotate(0, -angle, 0);
             }
+            personalSkeletonContainer.position = data.position.Struct() - UMI3DLoadingHandler.Instance.transform.position;
+            if (cameraTransform != null)
+            {
+                Vector3 translation = Vector3.ProjectOnPlane(
+                    personalSkeletonContainer.position - cameraTransform.position,
+                    Vector3.up
+                );
+                personalSkeletonContainer.Translate(translation, Space.World);
+            }
+
         }
 
         public void Navigate(ulong environmentId, NavigateDto data)

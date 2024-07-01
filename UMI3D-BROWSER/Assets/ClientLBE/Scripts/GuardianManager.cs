@@ -39,6 +39,9 @@ namespace ClientLBE
         public Transform OriginGuardianServer;
 
         private Vector3 UserPosition;
+        private Quaternion UserRotation;
+
+        public GameObject XROrigine;
 
         public GameObject RightHandController;
         public GameObject LeftHandController;
@@ -49,10 +52,58 @@ namespace ClientLBE
 
         public void Start()
         {
+           // StartCoroutine(Test());
 
             UMI3DEnvironmentLoader.Instance.onEnvironmentLoaded.AddListener(() => CalibrationScene());
             UMI3DEnvironmentLoader.Instance.onEnvironmentLoaded.AddListener(() => GetGuardianArea());
 
+        }
+
+        IEnumerator Test()
+        {
+            yield return new WaitForSeconds(15f);
+
+            Transform parent = Player.transform.parent;
+            Debug.Log(parent.name);
+            Scene = parent.gameObject;
+            Calibreur.transform.parent = Scene.transform.parent;
+            Debug.Log("Remi : " + Calibreur.transform.parent.name);
+
+            Player.transform.parent = null;
+            Calibreur.transform.parent = null;
+
+            //Scene = position+rotation calibreur de scene
+            Scene.transform.position = new Vector3(Calibreur.transform.position.x, 0.0f, Calibreur.transform.position.z);
+            Scene.transform.rotation = Calibreur.transform.rotation;
+
+            //Player (Origin) = Rotation Scene = rotation calibreur
+            Player.transform.rotation = Calibreur.transform.rotation;
+            Calibreur.transform.parent = Scene.transform;
+            Player.transform.parent = Scene.transform;
+
+            //Repères
+            /*GameObject CalibreurRepere = Instantiate(pointAnchor, Calibreur.transform.position, Calibreur.transform.rotation);
+            CalibreurRepere.transform.parent = Calibreur.transform;*/
+
+            GameObject SceneRepere = Instantiate(pointAnchor, Scene.transform.position, Scene.transform.rotation);
+            SceneRepere.transform.parent = Scene.transform;
+
+            /* GameObject SpawnRepere = Instantiate(pointAnchor, UserPosition, UserRotation);
+             SpawnRepere.transform.parent = Scene.transform;
+
+             GameObject XRogineRepere = Instantiate(pointAnchor, Player.transform.position, Player.transform.rotation);
+             XRogineRepere.transform.parent = Player.transform;*/
+
+            /*GameObject UserPositionRepere = Instantiate(pointAnchor, new Vector3(Scene.transform.position.x + UserPosition.x, 0.0f, Scene.transform.position.z + UserPosition.z), Calibreur.transform.rotation);
+            UserPositionRepere.transform.parent = Calibreur.transform;*/
+
+            //Calibreur.transform.parent = Scene.transform;
+
+            //Scene.transform.position = Vector3.zero;
+
+            //Création du Parent des ancres
+            GuardianParent = new GameObject("Guardian");
+            GuardianParent.transform.position = Vector3.zero;
         }
 
         public void CalibrationScene()
@@ -66,39 +117,55 @@ namespace ClientLBE
                 if (parent != null)
                 {
                     UserPosition = new Vector3(UMI3DEnvironmentClient.enterDto.userPosition.X, 0f, UMI3DEnvironmentClient.enterDto.userPosition.Z);
+                    UserRotation = new Quaternion(UMI3DEnvironmentClient.enterDto.userRotation.X, UMI3DEnvironmentClient.enterDto.userRotation.Y, UMI3DEnvironmentClient.enterDto.userRotation.Z, UMI3DEnvironmentClient.enterDto.userRotation.W);
                     Debug.Log("Remi : UserPosition -> " + UMI3DEnvironmentClient.enterDto.userPosition.X + UMI3DEnvironmentClient.enterDto.userPosition.Y + UMI3DEnvironmentClient.enterDto.userPosition.Z);
+
+                    Scene = parent.gameObject;
+                    //Calibreur.transform.parent = Scene.transform.parent;
+                    Debug.Log("Remi : " + Calibreur.transform.parent.name);
+
+                    Player.transform.parent = null;
+                    Calibreur.transform.parent = null;
+
+                    //Scene = position + rotation calibreur de scene
+                    Scene.transform.position = new Vector3(Calibreur.transform.position.x, 0.0f, Calibreur.transform.position.z);
+                    //Scene.transform.rotation = Calibreur.transform.rotation;
+
+                    //Player (Origin) = Rotation Scene = rotation calibreur
+                    Player.transform.rotation = Calibreur.transform.rotation;
+                    //Player.transform.parent = Calibreur.transform;
+                    Player.transform.parent = Scene.transform;
+                    Calibreur.transform.parent = Scene.transform;
+
+                    Scene.transform.position = new Vector3(Scene.transform.position.x + UserPosition.x, 0.0f, Scene.transform.position.z + UserPosition.z);
+                    //Player.transform.position = new Vector3(Player.transform.position.x + UserPosition.x, 0.0f, Player.transform.position.z + UserPosition.z);
+
+                    //Repères
+                    /*GameObject CalibreurRepere = Instantiate(pointAnchor, Calibreur.transform.position, Calibreur.transform.rotation);
+                    CalibreurRepere.transform.parent = Calibreur.transform;*/
+
+                    /*GameObject SceneRepere = Instantiate(pointAnchor, Scene.transform.position, Scene.transform.rotation);
+                    SceneRepere.transform.parent = Scene.transform;*/
+
+                    /* GameObject SpawnRepere = Instantiate(pointAnchor, UserPosition, UserRotation);
+                     SpawnRepere.transform.parent = Scene.transform;*/
+
+                    /*GameObject XRogineRepere = Instantiate(pointAnchor, XROrigine.transform.position, XROrigine.transform.rotation);
+                    XRogineRepere.transform.parent = XROrigine.transform;*/
+
+                    GameObject PlayerRepere = Instantiate(pointAnchor, Player.transform.position, Player.transform.rotation);
+                    PlayerRepere.transform.parent = Player.transform;
+
+                    /*GameObject UserPositionRepere = Instantiate(pointAnchor, Scene.transform.position, Scene.transform.rotation);
+                    UserPositionRepere.transform.parent = Scene.transform;*/
+
+                    //Calibreur.transform.parent = Scene.transform;
+
+                    //Scene.transform.position = Vector3.zero;
 
                     //Création du Parent des ancres
                     GuardianParent = new GameObject("Guardian");
                     GuardianParent.transform.position = Vector3.zero;
-
-                    Scene = parent.gameObject;
-
-                    Player.transform.parent = null;
-
-                    Scene.transform.position = new Vector3(Calibreur.transform.position.x, 0.0f, Calibreur.transform.position.z);
-                    //Scene.transform.rotation = new Quaternion(Scene.transform.rotation.x, Calibreur.transform.rotation.y, Scene.transform.rotation.z, Scene.transform.rotation.w);
-
-                    GameObject SceneRepere = Instantiate(pointAnchor, Scene.transform.position, Scene.transform.rotation);
-                    Scene.transform.parent = Scene.transform;
-
-
-                    Debug.Log("Remi : COORD -> " + UserPosition);
-                    Debug.Log("Remi : Scene -> " + Scene.transform.position);
-
-                    //Déplacement de la scène à l'origine du spawnpoint
-                    Scene.transform.position = new Vector3(Scene.transform.position.x - UserPosition.x, 0.0f, Scene.transform.position.z - UserPosition.z);
-
-                    Debug.Log("Remi : Scene -> " + Scene.transform.position);
-
-                    Player.transform.parent = parent;
-
-                    /* Calibreur.transform.position = new Vector3(Calibreur.transform.position.x + UserPosition.x, 0f, Calibreur.transform.position.y + UserPosition.y) ;
-                     Player.transform.position = new Vector3(Player.transform.position.x + UserPosition.x, 0f, Player.transform.position.y + UserPosition.y);
-                    */
-                    Scene.transform.position = Vector3.zero;
-
-                   
 
                 }
                 else

@@ -20,6 +20,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Policy;
+using System.Threading.Tasks;
+using umi3d.common.interaction.form;
 using umi3dBrowsers.data.ui;
 using umi3dBrowsers.displayer;
 using umi3dBrowsers.linker;
@@ -186,13 +188,7 @@ namespace umi3dBrowsers.container
 
         public void ResetVignettes(bool runtime)
         {
-            for (var i = gridLayout.transform.childCount - 1; i >= 0; i--)
-            {
-                if (runtime)
-                    Destroy(gridLayout.transform.GetChild(i).gameObject);
-                else
-                    DestroyImmediate(gridLayout.transform.GetChild(i).gameObject);
-            }
+            Clear(runtime);
 
             vignetteDisplayers = PlayerPrefsManager.HasVirtualWorldsStored()
                 ? CreateVignettes(PlayerPrefsManager.GetVirtualWorlds())
@@ -200,6 +196,17 @@ namespace umi3dBrowsers.container
 
             FillWithEmptyVignettes();
             UpdateNavigation();
+        }
+
+        public void Clear(bool runtime = true)
+        {
+            for (var i = gridLayout.transform.childCount - 1; i >= 0; i--)
+            {
+                if (runtime)
+                    Destroy(gridLayout.transform.GetChild(i).gameObject);
+                else
+                    DestroyImmediate(gridLayout.transform.GetChild(i).gameObject);
+            }
         }
 
         private void FillWithEmptyVignettes()

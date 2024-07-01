@@ -315,7 +315,7 @@ namespace umi3dBrowsers.container.formrenderer
             GameObject imageGO = null;
             IDisplayer displayer = null;
 
-            if (imageDto.FirstChildren.Count == 0) // Simple image
+            if (imageDto.FirstChildren == null || imageDto.FirstChildren.Count == 0) // Simple image
             {
                 imageGO = Instantiate(imageDisplayerPrefab, parentContainer.container.transform);
                 parentContainer.contents.Add(imageGO);
@@ -330,10 +330,10 @@ namespace umi3dBrowsers.container.formrenderer
                 {
                     FormContainer newParent = parentContainer.ReplaceContainerWithPrefab(vignetteContainerPrefab);
                     vignetteContainer = newParent.container.GetComponent<VignetteContainer>();
-                    //vignetteContainer.Clear();
+                    vignetteContainer.Clear();
                 }
 
-                //await vignetteContainer.CreateVignetteFromForm(imageDto);
+                // await vignetteContainer.CreateVignetteFromForm(imageDto);
             }
 
             HandleStyle(imageDto.styles, imageGO, displayer);
@@ -406,6 +406,8 @@ namespace umi3dBrowsers.container.formrenderer
                                 }
                             case TextStyleDto textStyleVariant :
                                 {
+                                    if (displayer == null)
+                                        return;
                                     displayer.SetResource(textStyleVariant);
                                 }
                                 break;

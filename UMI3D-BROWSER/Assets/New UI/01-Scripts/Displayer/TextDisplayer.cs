@@ -50,23 +50,21 @@ public class TextDisplayer : MonoBehaviour, IDisplayer
 
     public void SetResource(object resource)
     {
-        if (resource is TextStyleDto txtStyle)
+        if (resource is TextStyleDto textStyle)
         {
-            text.fontSize = txtStyle.fontSize;
+            text.fontSize = textStyle.fontSize;
             text.color = new Color() {
-                a = txtStyle.color.color.A,
-                b = txtStyle.color.color.B,
-                g = txtStyle.color.color.G,
-                r = txtStyle.color.color.R,
+                a = textStyle.color.color.A,
+                b = textStyle.color.color.B,
+                g = textStyle.color.color.G,
+                r = textStyle.color.color.R,
             };
-            for (int i = 0; i < txtStyle.fontStyles.Count; i++)
-            {
-                SetFontStyle(txtStyle.fontStyles[i]);
-            }
-            for (int i = 0; i < txtStyle.fontAlignments.Count; i++)
-            {
-                SetAlignement(txtStyle.fontAlignments[i]);
-            }
+            if (textStyle.fontStyles != null)
+                for (int i = 0; i < textStyle.fontStyles.Count; i++)
+                    SetFontStyle(textStyle.fontStyles[i]);
+            if (textStyle.fontAlignments != null)
+                for (int i = 0; i < textStyle.fontAlignments.Count; i++)
+                    SetAlignement(textStyle.fontAlignments[i]);
         }
     }
 
@@ -75,7 +73,6 @@ public class TextDisplayer : MonoBehaviour, IDisplayer
         switch (alignment)
         {
             case E_FontAlignment.Left:
-
                 break;
             case E_FontAlignment.Center:
                 break;

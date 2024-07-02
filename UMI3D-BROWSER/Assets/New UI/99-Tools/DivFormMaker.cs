@@ -68,7 +68,7 @@ namespace form_generator
             }
 
             string json = form.ToJsonMin(Newtonsoft.Json.TypeNameHandling.Auto);
-            Debug.Log(json);
+            
             int bufferSize = 1024;
             int index = 0;
             int length = json.Length;

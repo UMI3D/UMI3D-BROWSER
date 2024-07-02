@@ -333,9 +333,17 @@ namespace umi3dBrowsers.container.formrenderer
                     vignetteContainer.Clear();
                 }
 
-                // await vignetteContainer.CreateVignetteFromForm(imageDto);
-            }
+                VignetteDisplayer vignette =  await vignetteContainer.CreateVignette(imageDto);
 
+                vignette.OnClick += () =>
+                {
+                    formBinding.Add(() => {
+                            inputAnswerDto.value = displayer.GetValue(true);
+                            _answer.inputs.Add(inputAnswerDto);
+                    });
+                };
+            }
+            
             HandleStyle(imageDto.styles, imageGO, displayer);
         }
 

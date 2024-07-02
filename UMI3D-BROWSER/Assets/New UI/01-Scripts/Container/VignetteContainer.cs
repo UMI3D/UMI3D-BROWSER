@@ -141,6 +141,17 @@ namespace umi3dBrowsers.container
             }
         }
 
+        public void Clear()
+        {
+            for (var i  = 0; i < vignetteDisplayers.Count; i++)
+            {
+                if (vignetteDisplayers[i] == null) continue;
+                Destroy(vignetteDisplayers[i].gameObject);
+            }
+            vignetteDisplayers.Clear();
+            UpdateNavigation();
+        }
+
         private List<VignetteDisplayer> CreateVignettes(VirtualWorlds pVirtualWorlds)
         {
             var lstVignettes = new List<VignetteDisplayer>();
@@ -184,21 +195,33 @@ namespace umi3dBrowsers.container
             return vignette;
         }
 
+        public async Task<VignetteDisplayer> CreateVignette(ImageDto pImageDto)
+        {
+            var vignette = Instantiate(vignetteMode == VignetteScale.Small ? smallVignettePrefab : vignettePrefab, gridLayout.transform).GetComponent<VignetteDisplayer>();
+            vignette.SetFavoryActive(false);
+            vignette.SetDeleteActive(false);
+
+            if (pImageDto.FirstChildren.Count > 0) // should be a label at least
+            {
+                foreach(var child in pImageDto.FirstChildren)
+                {
+                    if (child is LabelDto label)
+                    {
+                        Debug.Log(label.text);
+                        vignette.SetupDisplay(label.text);
+                    }
+                }
+            }
+
+            Sprite sprite = await pImageDto.GetSprite();
+            vignette.SetSprite(sprite);
+
+            return vignette;
+        }
+
         public void ResetVignettes() => ResetVignettes(true);
 
         public void ResetVignettes(bool runtime)
-        {
-            Clear(runtime);
-
-            vignetteDisplayers = PlayerPrefsManager.HasVirtualWorldsStored()
-                ? CreateVignettes(PlayerPrefsManager.GetVirtualWorlds())
-                : new();
-
-            FillWithEmptyVignettes();
-            UpdateNavigation();
-        }
-
-        public void Clear(bool runtime = true)
         {
             for (var i = gridLayout.transform.childCount - 1; i >= 0; i--)
             {
@@ -207,6 +230,13 @@ namespace umi3dBrowsers.container
                 else
                     DestroyImmediate(gridLayout.transform.GetChild(i).gameObject);
             }
+
+            vignetteDisplayers = PlayerPrefsManager.HasVirtualWorldsStored()
+                ? CreateVignettes(PlayerPrefsManager.GetVirtualWorlds())
+                : new();
+
+            FillWithEmptyVignettes();
+            UpdateNavigation();
         }
 
         private void FillWithEmptyVignettes()

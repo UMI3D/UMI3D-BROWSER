@@ -4294,9 +4294,19 @@ PrefabInstance:
       objectReference: {fileID: 8430962178111685219}
     - target: {fileID: 2160676327243919595, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
         type: 3}
+      propertyPath: ARPlaneManager
+      value: 
+      objectReference: {fileID: 2274770385046502688}
+    - target: {fileID: 2160676327243919595, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
+        type: 3}
       propertyPath: OriginGuardian
       value: 
       objectReference: {fileID: 1752064564893058623}
+    - target: {fileID: 2160676327243919595, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
+        type: 3}
+      propertyPath: arPlaneManager
+      value: 
+      objectReference: {fileID: 2274770385046502688}
     - target: {fileID: 2160676327243919595, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
         type: 3}
       propertyPath: LeftHandTracking
@@ -4609,7 +4619,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.25
+  m_Radius: 0.2
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &482647381763970542
 Rigidbody:
@@ -4799,7 +4809,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.25
+  m_Radius: 0.2
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &3273335688742122067
 Rigidbody:
@@ -5059,8 +5069,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1760703bbd54c04488a8d10600262ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_PlanePrefab: {fileID: 0}
-  m_DetectionMode: -1
+  m_PlanePrefab: {fileID: 7142265552603235509, guid: a3d309f09eeaa4541ab1ce9a15ee52c0,
+    type: 3}
+  m_DetectionMode: 1
 --- !u!114 &8430962180001979689 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5051064084671288345, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
@@ -5121,6 +5132,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: HandTracking
+      objectReference: {fileID: 0}
+    - target: {fileID: 2745992706784168301, guid: 046143d3205ac8545a12e9c8660a2df9,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3346160194427928900, guid: 046143d3205ac8545a12e9c8660a2df9,
         type: 3}

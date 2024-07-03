@@ -21,7 +21,6 @@ namespace ClientLBE
     {
         private GameObject GuardianMesh; //Référence pour stocker le mesh du guardian
 
-        //public GameObject OriginGuardian;
         public GameObject GuardianParent;
 
         public GameObject pointAnchor; // Référence au prefab pour la création des ancres du guardian
@@ -31,8 +30,6 @@ namespace ClientLBE
         private List<Vector3> localVertexPositions = new List<Vector3>();
         private List<Quaternion> localVertexRotations = new List<Quaternion>();
 
-        private List<Transform> guardianAnchorsTransform = new List<Transform>(); // Liste pour stocker toutes les ancres du guardian
-
         public ARAnchorManager anchorManager; // Référence au gestionnaire d'ancres AR
         
         private UserGuardianDto userGuardianDto;
@@ -40,29 +37,71 @@ namespace ClientLBE
         public GameObject Player;
         private Transform Scene;
         public GameObject Calibreur;
-        public Transform OriginGuardianServer;
 
         public Transform PersonnalSketletonContainer;
         public GameObject CameraPlayer;
 
         public GameObject XROrigine;
 
-        public GameObject RightHandController;
-        public GameObject LeftHandController;
-
-        public GameObject LeftHandTracking;
-        public GameObject RightHandTrackingVariant;
-
-
-        private GameObject TempVerticesParent;
-
         private List<GameObject> TempVerticesTransform = new List<GameObject>();
+        private ARPlaneManager arPlaneManager;
 
         public void Start()
         {
+            arPlaneManager = XROrigine.GetComponent<ARPlaneManager>();
             UMI3DEnvironmentLoader.Instance.onEnvironmentLoaded.AddListener(() => StartCalibrationScene());
         }
- 
+
+        void OnEnable()
+        {
+            UMI3DForgeClient.ImportantEventOccurred += HandleImportantEvent;
+
+            if (arPlaneManager != null)
+            {
+                arPlaneManager.planesChanged += OnPlanesChanged;
+            }
+        }
+
+        void OnDisable()
+        {
+            UMI3DForgeClient.ImportantEventOccurred -= HandleImportantEvent;
+
+            if (arPlaneManager != null)
+            {
+                arPlaneManager.planesChanged -= OnPlanesChanged;
+            }
+        }
+
+        void OnPlanesChanged(ARPlanesChangedEventArgs eventArgs)
+        {
+            RetrieveAndProcessARPlanes();
+        }
+
+        void RetrieveAndProcessARPlanes()
+        {
+            if (arPlaneManager != null)
+            {
+                List<ARPlane> planesToDestroy = new List<ARPlane>();
+
+                foreach (ARPlane plane in arPlaneManager.trackables)
+                {
+                    if (plane.transform.position.y >= -0.2f && plane.transform.position.y <= 0.2f)
+                    {
+                        planesToDestroy.Add(plane);
+                    }
+                }
+
+                foreach (ARPlane plane in planesToDestroy)
+                {
+                    Destroy(plane.gameObject);
+                }
+            }
+            else
+            {
+                Debug.LogError("REMI : ARPlaneManager non trouvé sur ce GameObject.");
+            }
+        }
+
         public void StartCalibrationScene()
         {
             StartCoroutine(CalibrationScene());
@@ -112,22 +151,11 @@ namespace ClientLBE
             }
         }
 
-        void OnEnable()
-        {
-            UMI3DForgeClient.ImportantEventOccurred += HandleImportantEvent;
-        }
-
-        void OnDisable()
-        {
-            UMI3DForgeClient.ImportantEventOccurred -= HandleImportantEvent;
-        }
-
         //Création du guardian à partir des données du serveur
         void HandleImportantEvent(UserGuardianDto userGuardianDto)
         {
             CreatGuardianServer(userGuardianDto);
         }
-
 
         public void GetGuardianArea()
         {
@@ -189,7 +217,6 @@ namespace ClientLBE
                     {
                         StartCoroutine(WaitSendGuardian());
                     }
-
                 }
             }
             else

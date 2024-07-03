@@ -162,7 +162,7 @@ namespace umi3dBrowsers.container.formrenderer
         private void HandleGroupDto(GroupDto groupDto, FormContainer parentContainer, InputAnswerDto inputAnswerDto)
         {
             GameObject group = Instantiate(groupContainerPrefab, parentContainer.container.transform);
-            FormContainer container = parentContainer.GetNextFormContainer(group);
+            FormContainer container = parentContainer.GetNextFormContainer(group, groupDto.styles);
             allContainers.Add(container);
 
             foreach (var div in groupDto.FirstChildren)
@@ -275,7 +275,7 @@ namespace umi3dBrowsers.container.formrenderer
         }
         private void HandlePageDto(PageDto pageDto, FormContainer parentContainer, InputAnswerDto inputAnswerDto)
         {
-            FormContainer container = parentContainer.GetNextFormContainer(tabManager.AddNewTab(pageDto.name));
+            FormContainer container = parentContainer.GetNextFormContainer(tabManager.AddNewTab(pageDto.name), pageDto.styles);
             allContainers.Add(container);
 
             formBinding.Add(() => {
@@ -330,10 +330,14 @@ namespace umi3dBrowsers.container.formrenderer
                 {
                     FormContainer newParent = parentContainer.ReplaceContainerWithPrefab(vignetteContainerPrefab);
                     vignetteContainer = newParent.container.GetComponent<VignetteContainer>();
+                    vignetteContainer.CanBeReset = false;
                     vignetteContainer.Clear();
+
+                    HandleStyle(newParent.Styles, newParent.container, newParent.container.GetComponent<IDisplayer>());
                 }
 
                 VignetteDisplayer vignette =  await vignetteContainer.CreateVignette(imageDto);
+                vignetteContainer.UpdateNavigation();
 
                 vignette.OnClick += () =>
                 {

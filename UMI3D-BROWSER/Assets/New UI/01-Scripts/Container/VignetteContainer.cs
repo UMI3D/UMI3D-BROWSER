@@ -74,6 +74,10 @@ namespace umi3dBrowsers.container
         [Header("Deactivated Navigation Color")]
         [SerializeField] private ColorBlock disableNavigationColor;
 
+        bool canBeReset = true;
+
+        public bool CanBeReset { get => canBeReset; set => canBeReset = value; }
+
         public enum VignetteScale
         {
             None = 0,
@@ -223,6 +227,9 @@ namespace umi3dBrowsers.container
 
         public void ResetVignettes(bool runtime)
         {
+            if (!canBeReset)
+                return;
+
             for (var i = gridLayout.transform.childCount - 1; i >= 0; i--)
             {
                 if (runtime)
@@ -265,7 +272,7 @@ namespace umi3dBrowsers.container
             scaller.ScaleColliders();
         }
 
-        private void UpdateNavigation()
+        public void UpdateNavigation()
         {
             if ((int)vignetteMode < vignetteDisplayers.Count) // cyan
             {

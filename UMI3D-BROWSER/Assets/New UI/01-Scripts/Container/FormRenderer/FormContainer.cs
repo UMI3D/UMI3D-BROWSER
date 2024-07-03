@@ -17,6 +17,7 @@ limitations under the License.
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using umi3d.common.interaction.form;
 using UnityEngine;
 
 namespace umi3dBrowsers.container.formrenderer
@@ -27,19 +28,21 @@ namespace umi3dBrowsers.container.formrenderer
         public GameObject container;
         public List<GameObject> contents = new();
         public List<FormContainer> childrenFormContainers = new();
+        public List<StyleDto> Styles;
 
         /// <summary>
         /// adds the content to this container and generates a new one with the content as container
         /// </summary>
         /// <param name="group"></param>
         /// <returns></returns>
-        public FormContainer GetNextFormContainer(GameObject content)
+        public FormContainer GetNextFormContainer(GameObject content, List<StyleDto> styles)
         {
             contents.Add(content);
             FormContainer childContainer = new FormContainer();
             childContainer.container = content;
             childrenFormContainers.Add(childContainer);
             childContainer.parentFormContainer = this;
+            childContainer.Styles = styles;
             return childContainer;
         }
 

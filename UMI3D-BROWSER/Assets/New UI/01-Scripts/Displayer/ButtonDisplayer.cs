@@ -34,13 +34,15 @@ public class ButtonDisplayer : MonoBehaviour, IDisplayer
     {
         if (resource is TextStyleDto textStyle)
         {
-            text.fontSize = textStyle.fontSize;
-            text.color = new Color() {
-                a = textStyle.color.color.A,
-                b = textStyle.color.color.B,
-                g = textStyle.color.color.G,
-                r = textStyle.color.color.R,
-            };
+            if (textStyle.fontSize != 0)
+                text.fontSize = textStyle.fontSize;
+            if (textStyle.color != null)
+                text.color = new Color() {
+                    a = textStyle.color.color.A,
+                    b = textStyle.color.color.B,
+                    g = textStyle.color.color.G,
+                    r = textStyle.color.color.R,
+                };
             if (textStyle.fontStyles != null)
                 foreach (var style in textStyle.fontStyles)
                     SetFontStyle(style);

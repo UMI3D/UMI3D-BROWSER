@@ -52,13 +52,15 @@ public class TextDisplayer : MonoBehaviour, IDisplayer
     {
         if (resource is TextStyleDto textStyle)
         {
-            text.fontSize = textStyle.fontSize;
-            text.color = new Color() {
-                a = textStyle.color.color.A,
-                b = textStyle.color.color.B,
-                g = textStyle.color.color.G,
-                r = textStyle.color.color.R,
-            };
+            if (textStyle.fontSize != 0)
+                text.fontSize = textStyle.fontSize;
+            if (textStyle.color != null)
+                text.color = new Color() {
+                    a = textStyle.color.color.A,
+                    b = textStyle.color.color.B,
+                    g = textStyle.color.color.G,
+                    r = textStyle.color.color.R,
+                };
             if (textStyle.fontStyles != null)
                 for (int i = 0; i < textStyle.fontStyles.Count; i++)
                     SetFontStyle(textStyle.fontStyles[i]);
@@ -73,28 +75,39 @@ public class TextDisplayer : MonoBehaviour, IDisplayer
         switch (alignment)
         {
             case E_FontAlignment.Left:
+                text.alignment = TextAlignmentOptions.Left;
                 break;
             case E_FontAlignment.Center:
+                text.alignment = TextAlignmentOptions.Center;
                 break;
             case E_FontAlignment.Right:
+                text.alignment = TextAlignmentOptions.Right;
                 break;
             case E_FontAlignment.Justified:
+                text.alignment = TextAlignmentOptions.Justified;
                 break;
             case E_FontAlignment.Flush:
+                text.alignment = TextAlignmentOptions.Flush;
                 break;
             case E_FontAlignment.GeometryCenter:
+                text.alignment = TextAlignmentOptions.CenterGeoAligned;
                 break;
             case E_FontAlignment.Top:
+                text.alignment = TextAlignmentOptions.Top;
                 break;
             case E_FontAlignment.Middle:
                 break;
             case E_FontAlignment.Bottom:
+                text.alignment = TextAlignmentOptions.Bottom;
                 break;
             case E_FontAlignment.Baseline:
+                text.alignment = TextAlignmentOptions.Baseline;
                 break;
             case E_FontAlignment.Midline:
+                text.alignment = TextAlignmentOptions.Midline;
                 break;
             case E_FontAlignment.Capline:
+                text.alignment = TextAlignmentOptions.Capline;
                 break;
         }
     }

@@ -14,6 +14,9 @@ using umi3d.cdk;
 using umi3d.common.collaboration.dto.signaling;
 using umi3d.cdk.collaboration;
 using BeardedManStudios.Forge.Networking.Unity;
+using umi3d.cdk.collaboration.userCapture;
+using umi3d.cdk.userCapture;
+using umi3d.common.userCapture;
 
 namespace ClientLBE
 {
@@ -46,10 +49,20 @@ namespace ClientLBE
         private List<GameObject> TempVerticesTransform = new List<GameObject>();
         private ARPlaneManager arPlaneManager;
 
+        public GameObject CollabSkeletonScene;
+        public Material specificMaterial;
+
+
         public void Start()
         {
             arPlaneManager = XROrigine.GetComponent<ARPlaneManager>();
             UMI3DEnvironmentLoader.Instance.onEnvironmentLoaded.AddListener(() => StartCalibrationScene());
+            CollaborationSkeletonsManager.Instance.CollaborativeSkeletonCreated += OnCollaborativeSkeletonCreated;
+        }
+
+        public void Update()
+        {
+            Debug.Log("REMI : CollabSkeletonScene -> " + CollabSkeletonScene.transform.position);
         }
 
         void OnEnable()
@@ -74,10 +87,53 @@ namespace ClientLBE
 
         void OnPlanesChanged(ARPlanesChangedEventArgs eventArgs)
         {
-            RetrieveAndProcessARPlanes();
+            GetARPlanes();
         }
 
-        void RetrieveAndProcessARPlanes()
+        private void OnCollaborativeSkeletonCreated(ulong userId)
+        {
+
+            // Récupérer le squelette de cet utilisateur
+            var skeleton = CollaborationSkeletonsManager.Instance.GetCollaborativeSkeleton((UMI3DGlobalID.EnvironmentId, userId)) as AbstractSkeleton;
+
+            if (skeleton != null)
+            {
+                // Ajouter une capsule
+                AddCapsuleToBone(skeleton, BoneType.Hips);
+            }
+            else
+            {
+                Debug.LogWarning("Bone non trouvé pour cet utilisateur.");
+            }
+        }
+
+        private void AddCapsuleToBone(AbstractSkeleton skeleton, uint boneType)
+        {
+            if (skeleton.Bones.TryGetValue(boneType, out var boneTransform))
+            {
+                // Créer une capsule
+                GameObject capsule = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+
+                capsule.transform.SetParent(skeleton.HipsAnchor);  
+
+                capsule.transform.localPosition = new Vector3 (boneTransform.Position.x, 0f, boneTransform.Position.z);
+                capsule.transform.localRotation = boneTransform.Rotation;
+                capsule.transform.localScale = new Vector3(capsule.transform.localScale.x/1.25f, capsule.transform.localScale.y, capsule.transform.localScale.z/ 1.25f); // Ajustez si nécessaire
+
+                Renderer capsuleRenderer = capsule.GetComponent<Renderer>();
+
+                if (capsuleRenderer != null && specificMaterial != null)
+                {
+                    capsuleRenderer.material = specificMaterial;
+                }
+            }
+            else
+            {
+                Debug.LogWarning("Bone non trouvé.");
+            }
+        }
+
+        void GetARPlanes()
         {
             if (arPlaneManager != null)
             {
@@ -114,7 +170,6 @@ namespace ClientLBE
 
             if (Player != null)
             {
-                // Obtenir le parent du GameObject Player (Scene)
                 Transform parent = Player.transform.parent;
 
                 if (parent != null)

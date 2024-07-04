@@ -44,8 +44,7 @@ public class ButtonDisplayer : MonoBehaviour, IDisplayer
                     r = textStyle.color.color.R,
                 };
             if (textStyle.fontStyles != null)
-                foreach (var style in textStyle.fontStyles)
-                    SetFontStyle(style);
+                SetFontStyle(textStyle.fontStyles);
             if (textStyle.fontAlignments != null)
                 foreach (var alignments in textStyle.fontAlignments)
                     SetAlignement(alignments);
@@ -99,31 +98,34 @@ public class ButtonDisplayer : MonoBehaviour, IDisplayer
         }
     }
 
-    private void SetFontStyle(E_FontStyle fontStyle)
+    private void SetFontStyle(List<E_FontStyle> fontStyles)
     {
-        switch (fontStyle)
+        foreach (E_FontStyle fontStyle in fontStyles)
         {
-            case E_FontStyle.Bold:
-                text.fontStyle = FontStyles.Bold;
-                break;
-            case E_FontStyle.Italic:
-                text.fontStyle = FontStyles.Italic;
-                break;
-            case E_FontStyle.Underline:
-                text.fontStyle = FontStyles.Underline;
-                break;
-            case E_FontStyle.Strikethrough:
-                text.fontStyle = FontStyles.Strikethrough;
-                break;
-            case E_FontStyle.Lowercase:
-                text.fontStyle = FontStyles.LowerCase;
-                break;
-            case E_FontStyle.Uppercase:
-                text.fontStyle = FontStyles.UpperCase;
-                break;
-            case E_FontStyle.Smallcaps:
-                text.fontStyle = FontStyles.SmallCaps;
-                break;
+            switch (fontStyle)
+            {
+                case E_FontStyle.Bold:
+                    text.fontStyle |= FontStyles.Bold;
+                    break;
+                case E_FontStyle.Italic:
+                    text.fontStyle |= FontStyles.Italic;
+                    break;
+                case E_FontStyle.Underline:
+                    text.fontStyle |= FontStyles.Underline;
+                    break;
+                case E_FontStyle.Strikethrough:
+                    text.fontStyle |= FontStyles.Strikethrough;
+                    break;
+                case E_FontStyle.Lowercase:
+                    text.fontStyle |= FontStyles.LowerCase;
+                    break;
+                case E_FontStyle.Uppercase:
+                    text.fontStyle |= FontStyles.UpperCase;
+                    break;
+                case E_FontStyle.Smallcaps:
+                    text.fontStyle |= FontStyles.SmallCaps;
+                    break;
+            }
         }
     }
 }

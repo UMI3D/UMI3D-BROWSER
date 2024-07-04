@@ -275,7 +275,7 @@ namespace umi3dBrowsers.container.formrenderer
         }
         private void HandlePageDto(PageDto pageDto, FormContainer parentContainer, InputAnswerDto inputAnswerDto)
         {
-            FormContainer container = parentContainer.GetNextFormContainer(tabManager.AddNewTab(pageDto.name), pageDto.styles);
+            FormContainer container = parentContainer.GetNextFormContainer(tabManager.AddNewTab(pageDto.name, out var tab), pageDto.styles);
             allContainers.Add(container);
 
             formBinding.Add(() => {
@@ -289,7 +289,7 @@ namespace umi3dBrowsers.container.formrenderer
                 InstantiateDiv(div, container);
             }
 
-            HandleStyle(pageDto.styles, null, null);
+            HandleStyle(pageDto.styles, tab.gameObject, null);
         }
         private void HandleLabelDto(LabelDto labelDto, FormContainer parentContainer, InputAnswerDto inputAnswerDto)
         {
@@ -339,13 +339,15 @@ namespace umi3dBrowsers.container.formrenderer
                 VignetteDisplayer vignette =  await vignetteContainer.CreateVignette(imageDto);
                 vignetteContainer.UpdateNavigation();
 
-                vignette.OnClick += () =>
-                {
-                    formBinding.Add(() => {
-                            inputAnswerDto.value = displayer.GetValue(true);
-                            _answer.inputs.Add(inputAnswerDto);
-                    });
+                _answer.inputs.Add(inputAnswerDto);
+                vignette.OnClick += () => {
+                    inputAnswerDto.value = true;
+                    ValidateForm();
                 };
+                formBinding.Add(() => {
+                    if (inputAnswerDto.value == null)
+                    inputAnswerDto.value = false;
+                });
             }
             
             HandleStyle(imageDto.styles, imageGO, displayer);

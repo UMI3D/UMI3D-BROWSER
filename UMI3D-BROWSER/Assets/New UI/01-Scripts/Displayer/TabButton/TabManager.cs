@@ -124,6 +124,35 @@ namespace umi3dBrowsers.container
 
             return tab;
         }
+        public GameObject AddNewTab(string label, out Tab tabButton, bool useLocalization = false, GameObject container = null)
+        {
+            TabToContainerBinder tabBinder = new TabToContainerBinder();
+
+            tabButton = Instantiate(tabButtonPrefab, navigationRoot).GetComponent<Tab>();
+            tabButton.SetLabel(label, useLocalization);
+            GameObject tab = container;
+
+            if (tab == null) // Instantiate a container if none are given
+                tab = Instantiate(containerPrefab, contentRoot);
+
+            tabBinder.SetTabButton(tabButton);
+            tabBinder.SetTabContainer(tab);
+            tabBinder.Bind();
+            tabBinder.OnSelectionChanged += (tabBinder) => {
+                currentActiveButton = tabBinder;
+                UpdateTabsVisual();
+            };
+
+            if (tabs == null)
+            {
+                tabs = new();
+                currentActiveButton = tabBinder;
+                tabBinder.SetActive(true);
+            }
+            tabs.Add(tabBinder);
+
+            return tab;
+        }
 
         public GameObject AddNewTabForParamForm(string label)
         {

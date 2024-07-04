@@ -45,6 +45,7 @@ namespace umi3dBrowsers.container
         [SerializeField] private GameObject vignettePrefab;
         [SerializeField] private GameObject emptyVignettePrefab;
         [SerializeField] private GameObject smallVignettePrefab;
+        [SerializeField] private GameObject midVignettePrefab;
         [SerializeField] private List<VignetteDisplayer> vignetteDisplayers;
 
         [Header("Sizes")]
@@ -53,12 +54,16 @@ namespace umi3dBrowsers.container
         [Space]
         [SerializeField] private Vector2 smallVignetteSize;
         [SerializeField] private Vector2 smallVignetteSpace;
+        [Space]
+        [SerializeField] private Vector2 midVignetteSize;
+        [SerializeField] private Vector2 midVignetteSpace;
 
         [Header("Layout")]
         [SerializeField] private bool isFavorite;
         [SerializeField] private GridLayoutGroup gridLayout;
         [SerializeField] private int largeVignetteRowAmount;
         [SerializeField] private int smallVignetteRowAmount;
+        [SerializeField] private int midVignetteRowAmount;
 
         [Header("Scrolling")]
         [SerializeField] private Scrollbar scrollbar;
@@ -82,10 +87,13 @@ namespace umi3dBrowsers.container
         {
             None = 0,
             Large = 2,
-            Small = 8
+            Small = 8,
+            Mid = 3
         }
 
         [SerializeField] private VignetteScale vignetteMode;
+        [SerializeField] private VignetteScale primaryVignetteMode;
+        [SerializeField] private VignetteScale secondaryVignetteMode;
         [SerializeField] private VignetteContainerEvent vignetteContainerEvent;
 
         private void Awake()
@@ -108,6 +116,9 @@ namespace umi3dBrowsers.container
             });
 
             vignetteContainerEvent.OnVignetteReset?.Invoke();
+
+            primaryVignetteMode = VignetteScale.Large;
+            secondaryVignetteMode = VignetteScale.Small;
         }
 
         private void OnDestroy()
@@ -121,10 +132,22 @@ namespace umi3dBrowsers.container
         {
             if (vignetteMode == VignetteScale.None) return;
 
-            if (vignetteMode == VignetteScale.Large)
-                vignetteContainerEvent.OnVignetteChangeMode?.Invoke(VignetteScale.Small);
-            else if (vignetteMode == VignetteScale.Small)
-                vignetteContainerEvent.OnVignetteChangeMode?.Invoke(VignetteScale.Large);
+            if (vignetteMode == primaryVignetteMode)
+                vignetteContainerEvent.OnVignetteChangeMode?.Invoke(secondaryVignetteMode);
+            else if (vignetteMode == secondaryVignetteMode)
+                vignetteContainerEvent.OnVignetteChangeMode?.Invoke(primaryVignetteMode);
+        }
+
+        public void ChangePrimaryVignetteMode(VignetteScale vignetteScale)
+        {
+            primaryVignetteMode = vignetteScale;
+            ChangeVignetteMode(vignetteScale);
+        }
+
+        public void ChangeSecondaryVignetteMode(VignetteScale vignetteScale)
+        {
+            secondaryVignetteMode = vignetteScale;
+            ChangeVignetteMode(vignetteScale);   
         }
 
         public void ChangeVignetteMode(VignetteScale mode)
@@ -142,6 +165,11 @@ namespace umi3dBrowsers.container
                     SetGridLayout(smallVignetteSize, smallVignetteRowAmount, smallVignetteSpace);
                     UpdateNavigation();
                     break;
+                case VignetteScale.Mid:
+                    SetGridLayout(midVignetteSize, midVignetteRowAmount, midVignetteSpace);
+                    UpdateNavigation();
+                    break;
+
             }
         }
 

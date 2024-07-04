@@ -613,6 +613,7 @@ MonoBehaviour:
     type: 3}
   smallVignettePrefab: {fileID: 5713357516848366199, guid: 5f74d9d53187cd54e84e5321fb8666d9,
     type: 3}
+  midVignettePrefab: {fileID: 0}
   vignetteDisplayers:
   - {fileID: 0}
   - {fileID: 0}
@@ -626,10 +627,13 @@ MonoBehaviour:
   largeVignetteSpace: {x: 24, y: 0}
   smallVignetteSize: {x: 169, y: 111}
   smallVignetteSpace: {x: 11, y: 30}
+  midVignetteSize: {x: 227, y: 265}
+  midVignetteSpace: {x: 24, y: 0}
   isFavorite: 0
   gridLayout: {fileID: 4684022820558560661}
   largeVignetteRowAmount: 1
   smallVignetteRowAmount: 2
+  midVignetteRowAmount: 1
   scrollbar: {fileID: 4416285529175177648}
   buttonLeft: {fileID: 4525537551609907182}
   leftImage: {fileID: 6581994255176282785}
@@ -653,6 +657,8 @@ MonoBehaviour:
     m_ColorMultiplier: 0
     m_FadeDuration: 0
   vignetteMode: 2
+  primaryVignetteMode: 0
+  secondaryVignetteMode: 0
   vignetteContainerEvent: {fileID: 11400000, guid: 2511ab057e48ce441aa8fad3ed6a0e69,
     type: 2}
   virtualWorlds:
@@ -1176,8 +1182,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 858012872897415378}
   m_HandleRect: {fileID: 6322684189187750620}
   m_Direction: 0
-  m_Value: 0.50000554
-  m_Size: 0.99430346
+  m_Value: 1
+  m_Size: 1
   m_NumberOfSteps: 1
   m_OnValueChanged:
     m_PersistentCalls:

@@ -332,6 +332,7 @@ namespace umi3dBrowsers.container.formrenderer
                     vignetteContainer = newParent.container.GetComponent<VignetteContainer>();
                     vignetteContainer.CanBeReset = false;
                     vignetteContainer.Clear();
+                    vignetteContainer.ChangePrimaryVignetteMode(VignetteContainer.VignetteScale.Mid);
 
                     HandleStyle(newParent.Styles, newParent.container, newParent.container.GetComponent<IDisplayer>());
                 }

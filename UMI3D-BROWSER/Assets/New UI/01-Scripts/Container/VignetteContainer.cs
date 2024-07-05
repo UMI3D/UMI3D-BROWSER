@@ -47,6 +47,8 @@ namespace umi3dBrowsers.container
         [SerializeField] private GameObject smallVignettePrefab;
         [SerializeField] private GameObject midVignettePrefab;
         [SerializeField] private List<VignetteDisplayer> vignetteDisplayers;
+        private List<GameObject> m_emptyVignettes = new();
+        private List<VignetteBuffer> m_vignetteBuffers = new();
 
         [Header("Sizes")]
         [SerializeField] private Vector2 largeVignetteSize;
@@ -116,9 +118,6 @@ namespace umi3dBrowsers.container
             });
 
             vignetteContainerEvent.OnVignetteReset?.Invoke();
-
-            primaryVignetteMode = VignetteScale.Large;
-            secondaryVignetteMode = VignetteScale.Small;
         }
 
         private void OnDestroy()
@@ -140,12 +139,14 @@ namespace umi3dBrowsers.container
 
         public void ChangePrimaryVignetteMode(VignetteScale vignetteScale)
         {
+            if (vignetteMode == primaryVignetteMode) vignetteMode = vignetteScale;
             primaryVignetteMode = vignetteScale;
             ChangeVignetteMode(vignetteScale);
         }
 
         public void ChangeSecondaryVignetteMode(VignetteScale vignetteScale)
         {
+            if (vignetteMode == secondaryVignetteMode) vignetteMode = vignetteScale;
             secondaryVignetteMode = vignetteScale;
             ChangeVignetteMode(vignetteScale);   
         }
@@ -171,6 +172,8 @@ namespace umi3dBrowsers.container
                     break;
 
             }
+
+            FillWithEmptyVignettes();
         }
 
         public void Clear()
@@ -181,6 +184,14 @@ namespace umi3dBrowsers.container
                 Destroy(vignetteDisplayers[i].gameObject);
             }
             vignetteDisplayers.Clear();
+
+            foreach (var buffer in m_vignetteBuffers)
+            {
+                if (buffer.VignetteGo != null)
+                    Destroy(buffer.VignetteGo);
+            }
+            m_vignetteBuffers.Clear();
+
             UpdateNavigation();
         }
 
@@ -227,7 +238,7 @@ namespace umi3dBrowsers.container
             return vignette;
         }
 
-        public async Task<VignetteDisplayer> CreateVignette(ImageDto pImageDto)
+        public async Task<VignetteBuffer> CreateVignette(ImageDto pImageDto, VignetteBuffer pBuffer = null)
         {
             var vignette = Instantiate(vignetteMode == VignetteScale.Small ? smallVignettePrefab : vignettePrefab, gridLayout.transform).GetComponent<VignetteDisplayer>();
             vignette.SetFavoryActive(false);
@@ -248,7 +259,15 @@ namespace umi3dBrowsers.container
             Sprite sprite = await pImageDto.GetSprite();
             vignette.SetSprite(sprite);
 
-            return vignette;
+            if (pBuffer == null)
+            {
+                pBuffer = new VignetteBuffer();
+                m_vignetteBuffers.Add(pBuffer);
+            }
+
+            pBuffer.SetImageDto(pImageDto);
+            pBuffer.SetVignetteDisplayer(vignette);
+            return pBuffer;
         }
 
         public void ResetVignettes() => ResetVignettes(true);
@@ -256,7 +275,10 @@ namespace umi3dBrowsers.container
         public void ResetVignettes(bool runtime)
         {
             if (!canBeReset)
+            {
+                ResetVignetteForForms();
                 return;
+            }
 
             for (var i = gridLayout.transform.childCount - 1; i >= 0; i--)
             {
@@ -274,11 +296,33 @@ namespace umi3dBrowsers.container
             UpdateNavigation();
         }
 
-        private void FillWithEmptyVignettes()
+        private async void ResetVignetteForForms()
         {
-            var nbrVignetteTotal = vignetteMode == VignetteScale.Small ? 8 : 2;
+            foreach(var buffer in m_vignetteBuffers)
+            {
+                Destroy(buffer.VignetteGo);
+            }
+
+            foreach (var buffer in m_vignetteBuffers)
+            {
+                await CreateVignette(buffer.ImageDto, buffer);
+            }
+        }
+
+        public void FillWithEmptyVignettes()
+        {
+            foreach(var emptyVignette in m_emptyVignettes)
+                Destroy(emptyVignette.gameObject);
+
+            m_emptyVignettes = new();
+
+            var nbrVignetteTotal = 0;
+            if (vignetteMode == VignetteScale.Small) nbrVignetteTotal = 8;
+            else if (vignetteMode == VignetteScale.Mid) nbrVignetteTotal = 3;
+            else if (vignetteMode == VignetteScale.Large) nbrVignetteTotal = 2;
+
             for (var i = vignetteDisplayers.Count - nbrVignetteTotal; i < 0; i++)
-                Instantiate(emptyVignettePrefab, gridLayout.transform);
+                m_emptyVignettes.Add(Instantiate(emptyVignettePrefab, gridLayout.transform));
         }
 
         private void SetGridLayout(Vector2 vignetteSize, int vignetteRowAmount, Vector2 vignetteSpace, bool runtime = true)
@@ -327,6 +371,33 @@ namespace umi3dBrowsers.container
             PlayerPrefsManager.SaveVirtualWorld(virtualWorlds);
         }
 #endif
+    }
+
+    /// <summary>
+    /// A class use to handle vignettes when they are created useing a orm system
+    /// The matter is to reparent the OnClick event to the rigth answer DTO.
+    /// </summary>
+    public class VignetteBuffer
+    {
+        private VignetteDisplayer m_vignetteDisplayer;
+        private ImageDto m_imageDto;
+        public ImageDto ImageDto => m_imageDto;
+        public GameObject VignetteGo => m_vignetteDisplayer.gameObject;
+
+
+        public event Action OnVignetteClicked;
+
+        public void SetImageDto(ImageDto dto)
+        {
+            m_imageDto = dto;
+        }
+
+        public void SetVignetteDisplayer(VignetteDisplayer vignetteDisplayer)
+        {
+            if (m_vignetteDisplayer != null) m_vignetteDisplayer.OnClick -= OnVignetteClicked;
+            m_vignetteDisplayer = vignetteDisplayer;
+            m_vignetteDisplayer.OnClick += OnVignetteClicked;
+        }
     }
 }
 

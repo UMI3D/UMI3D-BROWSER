@@ -53,6 +53,7 @@ namespace umi3dBrowsers.container.formrenderer
         List<Action> formBinding = new();
         private FormAnswerDto _answer;
         public event Action<FormAnswerDto> OnFormAnswer;
+        private List<VignetteContainer> m_vignetteContainers = new();
 
         public void Init(GameObject contentRoot)
         {
@@ -84,6 +85,7 @@ namespace umi3dBrowsers.container.formrenderer
 #endif
             }
             allContainers = new();
+            m_vignetteContainers = new();
         }
 
         /// <summary>
@@ -98,6 +100,11 @@ namespace umi3dBrowsers.container.formrenderer
             allContainers.Add(_contentRoot);
             InstantiateDiv(connectionFormDto, _contentRoot);
             tabManager.InitSelectedButtonById();
+            foreach(var  container in m_vignetteContainers)
+            {
+                if (container == null) continue;
+                container.FillWithEmptyVignettes();
+            }
         }
 
         /// <summary>
@@ -335,19 +342,22 @@ namespace umi3dBrowsers.container.formrenderer
                     vignetteContainer.ChangePrimaryVignetteMode(VignetteContainer.VignetteScale.Mid);
 
                     HandleStyle(newParent.Styles, newParent.container, newParent.container.GetComponent<IDisplayer>());
+                    m_vignetteContainers.Add(vignetteContainer);
                 }
 
-                VignetteDisplayer vignette =  await vignetteContainer.CreateVignette(imageDto);
+                VignetteBuffer buffer =  await vignetteContainer.CreateVignette(imageDto);
                 vignetteContainer.UpdateNavigation();
 
                 _answer.inputs.Add(inputAnswerDto);
-                vignette.OnClick += () => {
+
+                buffer.OnVignetteClicked += () => {
                     inputAnswerDto.value = true;
                     ValidateForm();
                 };
+
                 formBinding.Add(() => {
                     if (inputAnswerDto.value == null)
-                    inputAnswerDto.value = false;
+                        inputAnswerDto.value = false;
                 });
             }
             

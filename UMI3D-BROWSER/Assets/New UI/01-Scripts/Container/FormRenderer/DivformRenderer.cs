@@ -68,7 +68,7 @@ namespace umi3dBrowsers.container.formrenderer
         /// Makes sure that there is no trace of anything left in the form
         /// </summary>
         /// <param name="id"></param>
-        internal void CleanContent(ulong id)
+        internal void CleanContent(string id)
         {
             InitFormAnswer(id);
             tabManager.Clear();
@@ -116,7 +116,7 @@ namespace umi3dBrowsers.container.formrenderer
         private void InstantiateDiv(DivDto divParent, FormContainer parentContainer)
         {
             var inputAnswer = new InputAnswerDto() {
-                inputId = divParent.id
+                inputId = divParent.guid
             };
 
             switch (divParent)
@@ -197,14 +197,13 @@ namespace umi3dBrowsers.container.formrenderer
             switch (buttonDto.buttonType)
             {
                 case ButtonType.Submit:
-                    _answer.submitId = inputAnswerDto.inputId;
-                    button.onClick.AddListener(() => { ValidateForm(); });
+                    button.onClick.AddListener(() => { ValidateForm(inputAnswerDto.inputId); });
                     break;
                 case ButtonType.Cancel:
-                    button.onClick.AddListener(() => { _answer.isCancelation = true; ValidateForm(); });
+                    button.onClick.AddListener(() => { _answer.isCancelation = true; ValidateForm(inputAnswerDto.inputId); });
                     break;
                 case ButtonType.Back:
-                    button.onClick.AddListener(() => { _answer.isBack = true; ValidateForm(); });
+                    button.onClick.AddListener(() => { _answer.isBack = true; ValidateForm(inputAnswerDto.inputId); });
                     break;
             }
 
@@ -348,17 +347,9 @@ namespace umi3dBrowsers.container.formrenderer
                 VignetteBuffer buffer =  await vignetteContainer.CreateVignette(imageDto);
                 vignetteContainer.UpdateNavigation();
 
-                _answer.inputs.Add(inputAnswerDto);
-
                 buffer.OnVignetteClicked += () => {
-                    inputAnswerDto.value = true;
-                    ValidateForm();
+                    ValidateForm(imageDto.guid);
                 };
-
-                formBinding.Add(() => {
-                    if (inputAnswerDto.value == null)
-                        inputAnswerDto.value = false;
-                });
             }
             
             HandleStyle(imageDto.styles, imageGO, displayer);
@@ -443,13 +434,14 @@ namespace umi3dBrowsers.container.formrenderer
         }
 
         [ContextMenu("Validate form ")]
-        public void ValidateForm()
+        public void ValidateForm(string submitId)
         {
+            _answer.submitId = submitId;
             formBinding.ForEach(action => action?.Invoke());
             OnFormAnswer?.Invoke(_answer);
         }
 
-        private void InitFormAnswer(ulong id)
+        private void InitFormAnswer(string id)
         {
             _answer = new FormAnswerDto() {
                 formId = id,

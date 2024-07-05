@@ -61,13 +61,6 @@ namespace umi3d.common
             });
         }
 
-        public static string ToJsonMin(this UMI3DDto dto, TypeNameHandling typeNameHandling = TypeNameHandling.All)
-        {
-            return JsonConvert.SerializeObject(dto, Formatting.None, new JsonSerializerSettings {
-                TypeNameHandling = typeNameHandling
-            });
-        }
-
 
 
         #endregion

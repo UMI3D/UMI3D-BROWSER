@@ -18,7 +18,6 @@ namespace umi3d.common.interaction.form
 {
     public class ButtonDto : BaseInputDto
     {
-        public string Name { get; set; }    
         public string Text { get; set; }
         public ButtonType buttonType { get; set; }
         public ResourceDto resource { get; set; }

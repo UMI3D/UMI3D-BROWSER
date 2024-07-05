@@ -55,14 +55,12 @@ namespace ClientLBE
 
         public void Start()
         {
+
             arPlaneManager = XROrigine.GetComponent<ARPlaneManager>();
+            StartCoroutine(GetARPlanes());
+
             UMI3DEnvironmentLoader.Instance.onEnvironmentLoaded.AddListener(() => StartCalibrationScene());
             CollaborationSkeletonsManager.Instance.CollaborativeSkeletonCreated += OnCollaborativeSkeletonCreated;
-        }
-
-        public void Update()
-        {
-            Debug.Log("REMI : CollabSkeletonScene -> " + CollabSkeletonScene.transform.position);
         }
 
         void OnEnable()
@@ -87,7 +85,7 @@ namespace ClientLBE
 
         void OnPlanesChanged(ARPlanesChangedEventArgs eventArgs)
         {
-            GetARPlanes();
+            StartCoroutine(GetARPlanes());
         }
 
         private void OnCollaborativeSkeletonCreated(ulong userId)
@@ -133,21 +131,28 @@ namespace ClientLBE
             }
         }
 
-        void GetARPlanes()
+        public IEnumerator GetARPlanes()
         {
+            //Délais d'attente pour que arPlaneManager.trackables retuourne des ARplanes
+            yield return new WaitForSeconds(0.5f);
+
             if (arPlaneManager != null)
             {
+
                 List<ARPlane> planesToDestroy = new List<ARPlane>();
 
-                foreach (ARPlane plane in arPlaneManager.trackables)
+                var trackables = arPlaneManager.trackables;
+
+                foreach (var plane in trackables)
                 {
-                    if (plane.transform.position.y >= -0.2f && plane.transform.position.y <= 0.2f)
+
+                    if (plane.transform.position.y >= -0.5f && plane.transform.position.y <= 0.5f)
                     {
                         planesToDestroy.Add(plane);
                     }
                 }
 
-                foreach (ARPlane plane in planesToDestroy)
+                foreach (var plane in planesToDestroy)
                 {
                     Destroy(plane.gameObject);
                 }
@@ -167,6 +172,12 @@ namespace ClientLBE
         {
             yield return null;
             yield return null;
+
+            //Détruire tous les ARPlane à la connection de l'environnement26
+            foreach (ARPlane plane in arPlaneManager.trackables)
+            {
+                Destroy(plane.gameObject);
+            }
 
             if (Player != null)
             {

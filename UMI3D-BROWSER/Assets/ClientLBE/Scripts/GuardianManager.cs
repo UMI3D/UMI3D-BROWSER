@@ -55,7 +55,6 @@ namespace ClientLBE
 
         public void Start()
         {
-
             arPlaneManager = XROrigine.GetComponent<ARPlaneManager>();
             StartCoroutine(GetARPlanes());
 
@@ -136,19 +135,23 @@ namespace ClientLBE
             //Délais d'attente pour que arPlaneManager.trackables retuourne des ARplanes
             yield return new WaitForSeconds(0.5f);
 
+            List<ARPlane> planesToDestroy = new List<ARPlane>();
+            List<ARPlane> planesToCalibrate = new List<ARPlane>();
+
             if (arPlaneManager != null)
             {
-
-                List<ARPlane> planesToDestroy = new List<ARPlane>();
-
                 var trackables = arPlaneManager.trackables;
 
                 foreach (var plane in trackables)
                 {
 
-                    if (plane.transform.position.y >= -0.5f && plane.transform.position.y <= 0.5f)
+                    if (plane.transform.position.y >= -0.5f && plane.transform.position.y <= 0.5f || plane.transform.position.y > 1.2f)
                     {
                         planesToDestroy.Add(plane);
+                    }
+                    else
+                    {
+                        planesToCalibrate.Add(plane);
                     }
                 }
 
@@ -161,19 +164,32 @@ namespace ClientLBE
             {
                 Debug.LogError("REMI : ARPlaneManager non trouvé sur ce GameObject.");
             }
+
+            if(planesToCalibrate.Count == 1 )
+            {
+                GameObject CalibreurARPlane = new GameObject("Calibreur Plane");
+                CalibreurARPlane.transform.position = planesToCalibrate[0].transform.position;
+                CalibreurARPlane.transform.rotation = planesToCalibrate[0].transform.rotation;
+
+                Calibreur = CalibreurARPlane;
+                Calibreur.transform.parent = Player.transform;
+            }
+
+            else
+            {
+                Debug.LogWarning("Plusieurs ARPlane détecté. Seulement un seul ARPlane doit être sélectionner pour servir de calibrer. Modifier la configuration de votre environnement");
+            }
         }
 
         public void StartCalibrationScene()
         {
             StartCoroutine(CalibrationScene());
         }
-        
+
         public IEnumerator CalibrationScene()
         {
             yield return null;
             yield return null;
-
-           
 
             if (Player != null)
             {
@@ -185,7 +201,7 @@ namespace ClientLBE
 
                     Calibreur.transform.rotation = new Quaternion(0.0f, Calibreur.transform.rotation.y, 0.0f, Calibreur.transform.rotation.w);
                     Calibreur.transform.SetParent(null, true);
-                    Player.transform.SetParent(Calibreur.transform, true);               
+                    Player.transform.SetParent(Calibreur.transform, true);
 
                     Vector3 Offset = Vector3.ProjectOnPlane(CameraPlayer.transform.position - Calibreur.transform.position, Vector3.up);
                     Calibreur.transform.Translate(Offset, Space.World);
@@ -210,6 +226,13 @@ namespace ClientLBE
             else
             {
                 Debug.LogWarning("Remi : Aucun GameObject à vérifier n'est assigné !");
+            }
+
+            var trackables = arPlaneManager.trackables;
+
+            foreach (var plane in trackables)
+            {
+                Destroy(plane.gameObject);
             }
         }
 
@@ -362,16 +385,7 @@ namespace ClientLBE
             CreateGuardianMesh(VerticePos);
 
             GuardianMesh.transform.position = new Vector3(Calibreur.transform.position.x, 0.0f, Calibreur.transform.position.z);
-            //GuardianMesh.transform.rotation = new Quaternion(GuardianMesh.transform.rotation.x, Calibreur.transform.rotation.y, GuardianMesh.transform.rotation.z, GuardianMesh.transform.rotation.w);
-
             GuardianMesh.transform.rotation = Calibreur.transform.rotation;
-
-
-            //Détruire tous les ARPlane à la connection de l'environnement26
-            foreach (ARPlane plane in arPlaneManager.trackables)
-            {
-                Destroy(plane.gameObject);
-            }
         }
 
         public void AddAnchorGuardian()
@@ -382,7 +396,6 @@ namespace ClientLBE
                 Vector3 basePointPosition = guardianAnchors[i];
                 Quaternion basePointRotation = new Quaternion(0f,0f,0f,0f);
                 Pose basePointPose = new Pose(basePointPosition, basePointRotation);
-
             }
             GuardianMesh.AddComponent<ARAnchor>();
         }

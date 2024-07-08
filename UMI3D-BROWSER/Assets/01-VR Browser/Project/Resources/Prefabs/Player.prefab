@@ -4314,9 +4314,19 @@ PrefabInstance:
       objectReference: {fileID: 7620486828765168160}
     - target: {fileID: 2160676327243919595, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
         type: 3}
+      propertyPath: specificMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 39c022038caa54b4eba1664059f53bb6, type: 2}
+    - target: {fileID: 2160676327243919595, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
+        type: 3}
       propertyPath: LeftHandController
       value: 
       objectReference: {fileID: 8430962179464926925}
+    - target: {fileID: 2160676327243919595, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
+        type: 3}
+      propertyPath: CollabSkeletonScene
+      value: 
+      objectReference: {fileID: 8430962178111685219}
     - target: {fileID: 2160676327243919595, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
         type: 3}
       propertyPath: RightHandController
@@ -5136,7 +5146,7 @@ PrefabInstance:
     - target: {fileID: 2745992706784168301, guid: 046143d3205ac8545a12e9c8660a2df9,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3346160194427928900, guid: 046143d3205ac8545a12e9c8660a2df9,
         type: 3}

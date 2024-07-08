@@ -173,11 +173,7 @@ namespace ClientLBE
             yield return null;
             yield return null;
 
-            //Détruire tous les ARPlane à la connection de l'environnement26
-            foreach (ARPlane plane in arPlaneManager.trackables)
-            {
-                Destroy(plane.gameObject);
-            }
+           
 
             if (Player != null)
             {
@@ -366,7 +362,16 @@ namespace ClientLBE
             CreateGuardianMesh(VerticePos);
 
             GuardianMesh.transform.position = new Vector3(Calibreur.transform.position.x, 0.0f, Calibreur.transform.position.z);
+            //GuardianMesh.transform.rotation = new Quaternion(GuardianMesh.transform.rotation.x, Calibreur.transform.rotation.y, GuardianMesh.transform.rotation.z, GuardianMesh.transform.rotation.w);
+
             GuardianMesh.transform.rotation = Calibreur.transform.rotation;
+
+
+            //Détruire tous les ARPlane à la connection de l'environnement26
+            foreach (ARPlane plane in arPlaneManager.trackables)
+            {
+                Destroy(plane.gameObject);
+            }
         }
 
         public void AddAnchorGuardian()

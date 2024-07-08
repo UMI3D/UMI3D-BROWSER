@@ -100,6 +100,7 @@ namespace umi3dBrowsers.container.formrenderer
             allContainers.Add(_contentRoot);
             InstantiateDiv(connectionFormDto, _contentRoot);
             tabManager.InitSelectedButtonById();
+
             foreach(var  container in m_vignetteContainers)
             {
                 if (container == null) continue;
@@ -337,9 +338,9 @@ namespace umi3dBrowsers.container.formrenderer
                 {
                     FormContainer newParent = parentContainer.ReplaceContainerWithPrefab(vignetteContainerPrefab);
                     vignetteContainer = newParent.container.GetComponent<VignetteContainer>();
-                    vignetteContainer.CanBeReset = false;
+                    vignetteContainer.ShouldResetAndFetchVignetteFromDB = false;
                     vignetteContainer.Clear();
-                    vignetteContainer.ChangePrimaryVignetteMode(VignetteContainer.VignetteScale.Mid);
+                    vignetteContainer.ChangePrimaryVignetteMode(E_VignetteScale.Mid);
 
                     HandleStyle(newParent.Styles, newParent.container, newParent.container.GetComponent<IDisplayer>());
                     m_vignetteContainers.Add(vignetteContainer);

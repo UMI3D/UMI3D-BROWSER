@@ -22,6 +22,6 @@ namespace umi3dBrowsers.container
     public class VignetteContainerEvent : ScriptableObject
     {
         public Action OnVignetteReset;
-        public Action<VignetteContainer.VignetteScale> OnVignetteChangeMode;
+        public Action<E_VignetteScale> OnVignetteChangeMode;
     }
 }

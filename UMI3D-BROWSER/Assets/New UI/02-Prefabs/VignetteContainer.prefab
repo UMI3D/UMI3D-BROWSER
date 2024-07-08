@@ -606,34 +606,21 @@ MonoBehaviour:
     type: 2}
   popupLinker: {fileID: 11400000, guid: 6791a9e677b43dd4fb1d319da7708082, type: 2}
   removeWorldPopup: {fileID: 11400000, guid: ea06411a2a8eac54facd0179d45e21d4, type: 2}
-  scaller: {fileID: 960552460556117284}
-  vignettePrefab: {fileID: 1842928581106226447, guid: 17c625999e5935348843c7ec1c90bfc1,
-    type: 3}
+  scaler: {fileID: 960552460556117284}
   emptyVignettePrefab: {fileID: 1842928581106226447, guid: c1ced952cf1b8cc48b9bb7d6e98e0d02,
     type: 3}
-  smallVignettePrefab: {fileID: 5713357516848366199, guid: 5f74d9d53187cd54e84e5321fb8666d9,
-    type: 3}
-  midVignettePrefab: {fileID: 0}
-  vignetteDisplayers:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  largeVignetteSize: {x: 347, y: 266}
-  largeVignetteSpace: {x: 24, y: 0}
-  smallVignetteSize: {x: 169, y: 111}
-  smallVignetteSpace: {x: 11, y: 30}
-  midVignetteSize: {x: 227, y: 265}
-  midVignetteSpace: {x: 24, y: 0}
+  vignetteDisplayers: []
+  m_vignetteContainerDatas:
+  - {fileID: 11400000, guid: 4fc00e52bc2bcc34e84a36370b1e488c, type: 2}
+  - {fileID: 11400000, guid: 6e20eb6852e1b5347a829a920166f17b, type: 2}
+  - {fileID: 11400000, guid: 83d293c9a07662846b6a177482793f0d, type: 2}
+  vignetteMode: 2
+  primaryVignetteMode: 2
+  secondaryVignetteMode: 8
+  vignetteContainerEvent: {fileID: 11400000, guid: 2511ab057e48ce441aa8fad3ed6a0e69,
+    type: 2}
   isFavorite: 0
   gridLayout: {fileID: 4684022820558560661}
-  largeVignetteRowAmount: 1
-  smallVignetteRowAmount: 2
-  midVignetteRowAmount: 1
   scrollbar: {fileID: 4416285529175177648}
   buttonLeft: {fileID: 4525537551609907182}
   leftImage: {fileID: 6581994255176282785}
@@ -656,38 +643,8 @@ MonoBehaviour:
     m_DisabledColor: {r: 0.39607847, g: 0.39607847, b: 0.39607847, a: 1}
     m_ColorMultiplier: 0
     m_FadeDuration: 0
-  vignetteMode: 2
-  primaryVignetteMode: 2
-  secondaryVignetteMode: 8
-  vignetteContainerEvent: {fileID: 11400000, guid: 2511ab057e48ce441aa8fad3ed6a0e69,
-    type: 2}
   virtualWorlds:
-    worlds:
-    - worldName: sqc
-      worldUrl: fe
-      isFavorite: 0
-      dateFirstConnection: 0
-      dateLastConnection: 0
-    - worldName: ddqsf
-      worldUrl: qfdsqsd
-      isFavorite: 0
-      dateFirstConnection: 0
-      dateLastConnection: 0
-    - worldName: dsfqqsdf
-      worldUrl: qsdfqsdfqsdf
-      isFavorite: 0
-      dateFirstConnection: 0
-      dateLastConnection: 0
-    - worldName: qsfqsdgqsdh
-      worldUrl: sdqsdf<w
-      isFavorite: 0
-      dateFirstConnection: 0
-      dateLastConnection: 0
-    - worldName: azfq<sdf
-      worldUrl: fghkhgkd
-      isFavorite: 0
-      dateFirstConnection: 0
-      dateLastConnection: 0
+    worlds: []
 --- !u!114 &960552460556117284
 MonoBehaviour:
   m_ObjectHideFlags: 0

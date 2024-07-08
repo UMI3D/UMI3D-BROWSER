@@ -30,9 +30,8 @@ namespace umi3d.browserRuntime.navigation
         Transform cameraTransform;
         Transform playerTransform;
         Transform personalSkeletonContainer;
-        SnapTurn snapTurn;
-        VRInputObserver leftObs;
-        VRInputObserver rightObs;
+        UMI3DSnapTurnProvider snapTurn;
+        UMI3DTeleportationProvider umi3dTeleportationProvider;
 
         /// <summary>
         /// Is player active ?
@@ -47,9 +46,8 @@ namespace umi3d.browserRuntime.navigation
             Transform cameraTransform,
             Transform playerTransform,
             Transform personalSkeletonContainer,
-            SnapTurn snapTurn,
-            VRInputObserver leftObs,
-            VRInputObserver rightObs
+            UMI3DSnapTurnProvider snapTurn,
+            UMI3DTeleportationProvider umi3dTeleportationProvider
         )
         {
             logger.MainContext = context;
@@ -60,24 +58,21 @@ namespace umi3d.browserRuntime.navigation
             this.personalSkeletonContainer = personalSkeletonContainer;
 
             this.snapTurn = snapTurn;
-            this.leftObs = leftObs;
-            this.rightObs = rightObs;
+            this.umi3dTeleportationProvider = umi3dTeleportationProvider;
         }
 
         public void Activate() 
         {
             isActive = true;
             snapTurn.enabled = true;
-            leftObs.enabled = true;
-            rightObs.enabled = true;
+            umi3dTeleportationProvider.enabled = true;
         }
 
         public void Disable() 
         {
             isActive = false;
             snapTurn.enabled = false;
-            leftObs.enabled = false;
-            rightObs.enabled = false;
+            umi3dTeleportationProvider.enabled = false;
         }
 
         public void ViewpointTeleport(ulong environmentId, ViewpointTeleportDto data)

@@ -17,13 +17,14 @@ limitations under the License.
 using inetum.unityUtils;
 using System.Collections;
 using System.Collections.Generic;
-using umi3d.cdk;
-using umi3d.cdk.collaboration;
+using umi3d.browserRuntime.player;
 using umi3d.cdk.userCapture.tracking;
 using umi3d.common.userCapture;
 using umi3dBrowsers.linker;
 using umi3dVRBrowsersBase.ikManagement;
+using Unity.XR.CoreUtils;
 using UnityEngine;
+using UnityEngine.XR;
 
 namespace umi3dBrowsers.connection
 {
@@ -34,39 +35,21 @@ namespace umi3dBrowsers.connection
     {
         [Header("Linker")]
         [SerializeField] private ConnectionToImmersiveLinker linker;
-
-        public TrackedSubskeleton trackedSkeleton;
-
-        public List<Tracker> trackers = new List<Tracker>();
-
-        public SkinnedMeshRenderer Joint, Surface;
-        public TrackedSubskeletonBone Viewpoint;
-        public GameObject LeftWatch, RightWatch;
-
-        /// <summary>
-        /// Root of player's camera.
-        /// </summary>
-        public Transform OVRAnchor;
-
+        
         /// <summary>
         /// Avatar skeleton root.
         /// </summary>
         public Transform skeletonContainer;
 
+        public List<Tracker> trackers = new List<Tracker>();
+
+        public SkinnedMeshRenderer Joint, Surface;
+        public GameObject LeftWatch, RightWatch;
+
         /// <summary>
         /// ?
         /// </summary>
         public FootTargetBehavior FootTargetBehavior;
-
-        /// <summary>
-        /// Offset between anchor and the real neck position
-        /// </summary>
-        private Vector3 neckOffset;
-
-        /// <summary>
-        /// Avatar height stored if a player leave an environement to connect to another.
-        /// </summary>
-        private static float skeletonHeight = -1;
 
         /// <summary>
         /// Avatar's neck.
@@ -83,84 +66,140 @@ namespace umi3dBrowsers.connection
         /// </summary>
         public float maxAngleBeforeRotating = 50;
 
-        /// <summary>
-        /// Skeleton scale associated to users heights.
-        /// </summary>
-        private static Vector3 sessionScaleFactor = default;
+        [SerializeField]
+        bool debugJointAndSurface = false;
 
-        /// <summary>
-        /// Is avatar's height set up ?
-        /// </summary>
-        private bool isSetup = false;
-
-        /// <summary>
-        /// Computed neck position
-        /// </summary>
-        private Vector3 startingVirtualNeckPosition;
-
-        /// <summary>
-        /// Distance between <see cref="startingVirtualNeckPosition"/> and <see cref="skeletonContainer"/>.
-        /// </summary>
-        private float diffY;
 
         public event System.Action SetupDone;
         public event System.Action SkeletonResized;
+        
+        /// <summary>
+        /// Is avatar's height set up ?
+        /// </summary>
+        bool isSetup = false;
+        TrackedSubskeleton trackedSkeleton;
+        /// <summary>
+        /// Skeleton scale associated to users heights.
+        /// </summary>
+        static Vector3 sessionScaleFactor = default;
+        /// <summary>
+        /// Computed neck position
+        /// </summary>
+        Vector3 startingVirtualNeckPosition;
+        /// <summary>
+        /// Distance between <see cref="startingVirtualNeckPosition"/> and <see cref="skeletonContainer"/>.
+        /// </summary>
+        float diffY;
+        /// <summary>
+        /// Offset between anchor and the real neck position
+        /// </summary>
+        Vector3 neckOffset;
 
+        bool isPlayerSet;
+        Transform playerTransform;
+        XROrigin xrOrigin;
+        Transform mainCameraTransform;
+        TrackedSubskeletonBone viewpointTSB;
+        Tracker viewpointTracker;
 
         private void Awake()
         {
-            Joint.enabled = false;
-            Surface.enabled = false;
+            Joint.enabled = debugJointAndSurface;
+            Surface.enabled = debugJointAndSurface;
+
             LeftWatch.SetActive(false);
             RightWatch.SetActive(false);
             linker.SetSetUpSkeleton(this);
+
+            Linker
+                .Get<UMI3DVRPlayer>(nameof(UMI3DVRPlayer))
+                .linked += (player, isSet) =>
+                {
+                    isPlayerSet = isSet;
+                    if (isSet)
+                    {
+                        playerTransform = player?.transform ?? null;
+                        xrOrigin = player?.xrOrigin ?? null;
+                        mainCameraTransform = player?.mainCamera.transform ?? null;
+                        viewpointTSB = player?.mainCamera.GetComponent<TrackedSubskeletonBone>() ?? null;
+                        viewpointTracker = player?.mainCamera.GetComponent<Tracker>() ?? null;
+                        trackers.Add(viewpointTracker);
+                    }
+                    else
+                    {
+                        if (trackers.Contains(viewpointTracker))
+                        {
+                            trackers.Remove(viewpointTracker);
+                        }
+                        playerTransform = null;
+                        xrOrigin = null;
+                        mainCameraTransform = null;
+                        viewpointTSB = null;
+                        viewpointTracker = null;
+                    }
+                };
         }
 
         private void Start()
         {
-            //StartCoroutine(SetupSkeleton());
-
-            UMI3DEnvironmentLoader.Instance.onEnvironmentLoaded.AddListener(() =>
-            {
-                Joint.enabled = false;
-                Surface.enabled = false;
-            });
+            trackedSkeleton = GetComponentInChildren<TrackedSubskeleton>();
         }
 
-        /// <summary>
-        /// Check user's height to change avatar size.
-        /// </summary>
+        public void SetUp()
+        {
+            StartCoroutine(SetupSkeleton());
+        }
+        
         public IEnumerator SetupSkeleton()
         {
-            // Enable the joint and surface for debug.
-            //Joint.enabled = true;
-            //Surface.enabled = true;
+            while (!isPlayerSet)
+            {
+                yield return null;
+            }
+
+            // Wait for camera to be positioned
+            while (!TryResizeSkeleton())
+            {
+                yield return null;
+            }
+
             LeftWatch.SetActive(true);
             RightWatch.SetActive(true);
-
-            while (!TryResizeSkeleton()) //wait for camera to be positioned
-                yield return null;
 
             FootTargetBehavior.SetFootTargets();
             
             trackers.ForEach(x => trackedSkeleton.ReplaceController(x.distantController));
-            trackedSkeleton.bones.Add(BoneType.Viewpoint, Viewpoint);
+            trackedSkeleton.bones.Add(BoneType.Viewpoint, viewpointTSB);
 
             isSetup = true;
             SetupDone?.Invoke();
         }
 
+        /// <summary>
+        /// Check user's height to change avatar size.
+        /// </summary>
         public bool TryResizeSkeleton()
         {
-            if (OVRAnchor.localPosition.y == 0)
+            if (!isPlayerSet)
+            {
+                return false;
+            }
+
+            UnityEngine.Debug.Log($"SetupSkeleton: player = {playerTransform.position}, xrO = {xrOrigin.transform.position}, camera = {mainCameraTransform.position}");
+
+            if (mainCameraTransform.localPosition.y == 0)
                 return false;
 
-            skeletonHeight = OVRAnchor.localPosition.y;
+            var inputDevice = InputDevices.GetDeviceAtXRNode(XRNode.Head);
+            float distanceToGround = inputDevice.TryGetFeatureValue(CommonUsages.devicePosition, out Vector3 position) ? position.y : 0f;
+
+            float skeletonHeight = mainCameraTransform.localPosition.y;
             sessionScaleFactor = 1.05f * skeletonHeight * Vector3.one;
+            UnityEngine.Debug.Log($"skeletonHeight = {skeletonHeight}, sessionScale = {sessionScaleFactor}, distance to gound = {distanceToGround}");
             skeletonContainer.localScale = sessionScaleFactor;
 
-            neckOffset = new Vector3(0, -0.060f * OVRAnchor.localPosition.y, -0.07f);
-            startingVirtualNeckPosition = OVRAnchor.TransformPoint(neckOffset);
+            neckOffset = new Vector3(0, -0.060f * mainCameraTransform.localPosition.y, -0.07f);
+            startingVirtualNeckPosition = mainCameraTransform.TransformPoint(neckOffset);
             diffY = startingVirtualNeckPosition.y - skeletonContainer.position.y;
 
             SkeletonResized?.Invoke();
@@ -169,41 +208,26 @@ namespace umi3dBrowsers.connection
         }
 
         /// <summary>
-        /// Sets the position and rotation of the avatar according to users movments.
+        /// Sets the position and rotation of the avatar according to users movements.
         /// </summary>
         private void LateUpdate()
         {
             if (isSetup)
             {
-                float diffAngle = Vector3.Angle(Vector3.ProjectOnPlane(OVRAnchor.forward, Vector3.up), this.transform.forward);
+                float diffAngle = Vector3.Angle(Vector3.ProjectOnPlane(mainCameraTransform.forward, Vector3.up), this.transform.forward);
 
-                float rotX = OVRAnchor.localRotation.eulerAngles.x > 180 ? OVRAnchor.localRotation.eulerAngles.x - 360 : OVRAnchor.localRotation.eulerAngles.x;
+                float rotX = mainCameraTransform.localRotation.eulerAngles.x > 180 ? mainCameraTransform.localRotation.eulerAngles.x - 360 : mainCameraTransform.localRotation.eulerAngles.x;
 
                 Neck.localRotation = Quaternion.Euler(Mathf.Clamp(rotX, -60, 60), 0, 0);
 
-                Vector3 virtualNeckPosition = OVRAnchor.TransformPoint(neckOffset);
+                Vector3 virtualNeckPosition = mainCameraTransform.TransformPoint(neckOffset);
 
                 transform.position = new Vector3(virtualNeckPosition.x, virtualNeckPosition.y - diffY, virtualNeckPosition.z);
 
                 skeletonContainer.position = new Vector3(virtualNeckPosition.x, virtualNeckPosition.y - diffY, virtualNeckPosition.z);
 
-                Vector3 anchorForwardProjected = Vector3.Cross(OVRAnchor.right, Vector3.up).normalized;
+                Vector3 anchorForwardProjected = Vector3.Cross(mainCameraTransform.right, Vector3.up).normalized;
                 transform.rotation = Quaternion.LookRotation(anchorForwardProjected, Vector3.up);
-            }
-        }
-
-        /// <summary>
-        /// Smooth rotation of the avatar.
-        /// </summary>
-        /// <returns></returns>
-        private IEnumerator ResetCoroutine()
-        {
-            var targetRotation = Quaternion.Euler(transform.localEulerAngles.x, OVRAnchor.localEulerAngles.y, transform.localEulerAngles.z);
-            while (Quaternion.Angle(transform.localRotation, targetRotation) > 5)
-            {
-                var smoothRot = Quaternion.Lerp(transform.localRotation, targetRotation, smoothRotationSpeed);
-                this.transform.localRotation = smoothRot;
-                yield return null;
             }
         }
     }

@@ -14,13 +14,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
 using System;
+using System.Collections;
 using umi3d.browserRuntime.navigation;
 using umi3d.cdk;
 using umi3d.cdk.collaboration.userCapture;
 using umi3d.cdk.navigation;
 using umi3dVRBrowsersBase.interactions;
 using umi3dVRBrowsersBase.navigation;
+using Unity.VisualScripting;
 using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
@@ -42,9 +45,13 @@ namespace umi3d.browserRuntime.player
         [HideInInspector] public DynamicMoveProvider dynamicMoveProvider;
 
         [HideInInspector] public UMI3DNavigation navigation = new();
-        [HideInInspector] public SnapTurn snapTurn;
-        public VRInputObserver teleportingLeft;
-        public VRInputObserver teleportingRight;
+        [HideInInspector] public UMI3DSnapTurnProvider snapTurn;
+        [HideInInspector] public UMI3DTeleportationProvider umi3dTeleportationProvider;
+
+        /// <summary>
+        /// The <see cref="UMI3DVRPlayer"/> linker.
+        /// </summary>
+        Linker<UMI3DVRPlayer> linker;
 
         private void Awake()
         {
@@ -56,7 +63,8 @@ namespace umi3d.browserRuntime.player
             teleportationProvider = locomotionSystem?.GetComponentInChildren<TeleportationProvider>();
             dynamicMoveProvider = locomotionSystem?.GetComponentInChildren<DynamicMoveProvider>();
 
-            snapTurn = this?.GetComponent<SnapTurn>();
+            snapTurn = GetComponentInChildren<UMI3DSnapTurnProvider>();
+            umi3dTeleportationProvider = GetComponentInChildren<UMI3DTeleportationProvider>();
 
             var navigationDelegate = new VRNavigationDelegate();
             navigationDelegate.Init(
@@ -65,13 +73,15 @@ namespace umi3d.browserRuntime.player
                 xrOrigin.transform,
                 personalSkeletonContainer.transform,
                 snapTurn,
-                teleportingLeft,
-                teleportingRight
+                umi3dTeleportationProvider
             );
             navigation.Init(navigationDelegate);
 
             // SKELETON SERVICE
             CollaborationSkeletonsManager.Instance.navigation = navigationDelegate; //also use to init manager via Instance call
+
+
+            linker = Linker.Get<UMI3DVRPlayer>(nameof(UMI3DVRPlayer));
         }
 
         private void Start()
@@ -80,6 +90,29 @@ namespace umi3d.browserRuntime.player
                 UMI3DLoadingHandler.Instance.transform,
                 true
             );
+
+            StartCoroutine(CenterCamera());
+        }
+
+        void OnEnable()
+        {
+            // Link is made at the end of the OnEnable method so that all the set up has been made.
+            linker.Link(this);
+        }
+
+        void OnDisable()
+        {
+            // Unlink when disabled.
+            linker.Link(null, false);
+        }
+
+        IEnumerator CenterCamera()
+        {
+            // Wait one frame so that the VR trackers update the position of gameObjects.
+            yield return null;
+
+            // Center the camera at the position of the player.
+            PlayerTransformUtils.CenterCamera(mainCamera.transform.parent, mainCamera.transform);
         }
     }
 }

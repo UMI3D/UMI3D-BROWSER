@@ -19,6 +19,7 @@ using System.Collections;
 using System.Collections.Generic;
 using umi3d;
 using umi3d.common.interaction;
+using umi3dBrowsers.linker;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -36,6 +37,7 @@ namespace umi3dBrowsers.container.formrenderer
         [Header("Roots")]
         [SerializeField] private TabManager tabManager;
         [SerializeField] private SimpleButton validationButton;
+        [SerializeField] private ConnectionServiceLinker connectionServiceLinker;
 
         private GameObject _contentRoot;
 
@@ -51,11 +53,17 @@ namespace umi3dBrowsers.container.formrenderer
             this._contentRoot = contentRoot;
 
             validationButton.OnClick.AddListener(() => ValidateForm());
+
+            OnFormAnswer += connectionServiceLinker.SendFormAnswer;
         }
 
         internal void Handle(ConnectionFormDto connectionFormDto)
         {
-            GameObject container = tabManager.AddNewTabForParamForm(connectionFormDto.fields[0].name);
+            validationButton.gameObject.SetActive(true);
+            validationButton.OnClick.RemoveAllListeners();
+            validationButton.OnClick.AddListener(() => ValidateForm());
+
+            GameObject container = tabManager.AddNewTabForParamForm(connectionFormDto.fields[0].name, false);
 
             for (int i = 0; i < connectionFormDto.fields.Count; i++)
             {
@@ -119,7 +127,7 @@ namespace umi3dBrowsers.container.formrenderer
 
                 if (connectionFormDto.fields[i].name == "OR" && connectionFormDto.fields[i].tag == null)
                 {
-                    container = tabManager.AddNewTabForParamForm(connectionFormDto.fields[i + 1].name);
+                    container = tabManager.AddNewTabForParamForm(connectionFormDto.fields[i + 1].name, false);
                 }
             }
 

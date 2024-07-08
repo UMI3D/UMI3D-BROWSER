@@ -20,7 +20,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Policy;
+using umi3dBrowsers.data.ui;
 using umi3dBrowsers.displayer;
+using umi3dBrowsers.linker;
+using umi3dBrowsers.linker.ui;
 using umi3dBrowsers.services.connection;
 using umi3dBrowsers.utils;
 using Unity.VisualScripting;
@@ -31,8 +34,9 @@ namespace umi3dBrowsers.container
 {
     public class VignetteContainer : MonoBehaviour
     {
-        [SerializeField] private ConnectionProcessor connectionProcessorService;
-        [SerializeField] private PopupManager popupManager;
+        [SerializeField] private ConnectionServiceLinker connectionServiceLinker;
+        [SerializeField] private PopupLinker popupLinker;
+        [SerializeField] private PopupData removeWorldPopup;
         [Header("Vignette")]
         [SerializeField] private UIColliderScallerHandler scaller;
         [Space]
@@ -156,13 +160,13 @@ namespace umi3dBrowsers.container
                 vignetteContainerEvent.OnVignetteReset?.Invoke(); 
             }, pWorldData.isFavorite);
             vignette.SetupRemoveButton(() => {
-                popupManager.SetArguments(PopupManager.PopupType.Warning, new() { { "worldName", pWorldData.worldName } });
-                popupManager.ShowPopup(PopupManager.PopupType.Warning, "empty", "popup_deleteWorld_description",
-                    ("popup_cancel", () => popupManager.ClosePopUp()),
+                popupLinker.SetArguments(removeWorldPopup, new() { { "worldName", pWorldData.worldName } });
+                popupLinker.Show(removeWorldPopup, "empty", "popup_deleteWorld_description",
+                    ("popup_cancel", () => popupLinker.CloseAll()),
                     ("popup_yes", () => {
                         pVirtualWorlds.RemoveWorld(pWorldData);
                         vignetteContainerEvent.OnVignetteReset?.Invoke();
-                        popupManager.ClosePopUp();
+                        popupLinker.CloseAll();
                     })
                 );
             });
@@ -172,7 +176,7 @@ namespace umi3dBrowsers.container
                 vignetteContainerEvent.OnVignetteReset?.Invoke(); 
             });
             vignette.OnClick += () => {
-                connectionProcessorService.TryConnectToMediaServer(pWorldData.worldUrl);
+                connectionServiceLinker.TriesToConnect(pWorldData.worldUrl);
             };
 
             return vignette;

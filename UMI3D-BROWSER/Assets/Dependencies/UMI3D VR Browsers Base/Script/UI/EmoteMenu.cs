@@ -18,7 +18,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using umi3d.cdk.collaboration.emotes;
-using umi3dVRBrowsersBase.ui.watchMenu;
 using UnityEngine;
 using UnityEngine.EventSystems;
 

@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Security.Policy;
 using System.Threading.Tasks;
+using umi3d;
 using umi3d.cdk;
 using umi3d.cdk.collaboration;
 using umi3d.common;
@@ -44,6 +45,8 @@ namespace umi3dBrowsers.services.connection
         private Action<FormAnswerDto> _formParamAnswerCallBack;
         private Action<umi3d.common.interaction.form.FormAnswerDto> _formDivAnswerCallBack;
         private Action<bool> _shouldDownloadLibrariesCallBack;
+
+        private List<string> _compatibleFormVersion = new List<string>() { "1", "2.0" };
 
         [Header("Linkers")]
         [SerializeField] private ConnectionServiceLinker connectionServiceLinker;

@@ -292,7 +292,7 @@ namespace umi3dBrowsers.container
             for (var i = nbrVignetteTotal - vignetteDisplayers.Count; i < 0; i++)
                 m_emptyVignettes.Add(Instantiate(emptyVignettePrefab, gridLayout.transform));
         }
-
+ 
         private void SetGridLayout(VignetteContainerData data, bool runtime = true)
         {
             if (data == null) return;

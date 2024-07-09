@@ -22,40 +22,47 @@ namespace ClientLBE
 {
     public class GuardianManager : MonoBehaviour
     {
-        private GameObject GuardianMesh; //Référence pour stocker le mesh du guardian
-
-        public GameObject GuardianParent;
-
-        public GameObject pointAnchor; // Référence au prefab pour la création des ancres du guardian
-        public Material MatGuardian; // Matériau pour le rendu du guardian
-
-        private List<Vector3> guardianAnchors = new List<Vector3>(); // Liste pour stocker toutes les ancres du guardian
-        private List<Vector3> localVertexPositions = new List<Vector3>();
-        private List<Quaternion> localVertexRotations = new List<Quaternion>();
-
-        public ARAnchorManager anchorManager; // Référence au gestionnaire d'ancres AR
-        
-        private UserGuardianDto userGuardianDto;
-
+        [Header("CALIBRATION SCENE")]
         public GameObject Player;
-        private Transform Scene;
-        public GameObject Calibreur;
-
         public Transform PersonnalSketletonContainer;
         public GameObject CameraPlayer;
 
-        public GameObject XROrigine;
+        private Transform Scene;
+
+        [Header("GUARDIAN")]
+        public GameObject pointAnchor; // Référence au prefab pour la création des ancres du guardian
+        private GameObject GuardianMesh; //Référence pour stocker le mesh du guardian
+        public GameObject GuardianParent; 
+        public Material MatGuardian; // Matériau pour le rendu du guardian
+        
+        private List<Vector3> localVertexPositions = new List<Vector3>();
+        private List<Quaternion> localVertexRotations = new List<Quaternion>();
+
+        [Header("ANCHOR AR")]
+        public ARAnchorManager anchorManager; // Référence au gestionnaire d'ancres AR
+        private List<Vector3> guardianAnchors = new List<Vector3>(); // Liste pour stocker toutes les ancres du guardian
+        private UserGuardianDto userGuardianDto;
 
         private List<GameObject> TempVerticesTransform = new List<GameObject>();
-        private ARPlaneManager arPlaneManager;
 
+        [Header("CALIBREUR")]
+        public bool AutomatiqueCalibration = false;
+        public GameObject Calibreur;
+        private ARPlaneManager arPlaneManager;
         public GameObject CollabSkeletonScene;
         public Material specificMaterial;
 
 
         public void Start()
         {
-            arPlaneManager = XROrigine.GetComponent<ARPlaneManager>();
+            //Desactivation du calibreur manuel
+            if(AutomatiqueCalibration == true)
+            {
+                Calibreur.SetActive(false);
+                Calibreur = null;
+            }
+
+            arPlaneManager = this.GetComponent<ARPlaneManager>();
             StartCoroutine(GetARPlanes());
 
             UMI3DEnvironmentLoader.Instance.onEnvironmentLoaded.AddListener(() => StartCalibrationScene());
@@ -164,21 +171,24 @@ namespace ClientLBE
             {
                 Debug.LogError("REMI : ARPlaneManager non trouvé sur ce GameObject.");
             }
-
-            if(planesToCalibrate.Count == 1 )
+            if(AutomatiqueCalibration == true)
             {
-                GameObject CalibreurARPlane = new GameObject("Calibreur Plane");
-                CalibreurARPlane.transform.position = planesToCalibrate[0].transform.position;
-                CalibreurARPlane.transform.rotation = planesToCalibrate[0].transform.rotation;
+                if (planesToCalibrate.Count == 1)
+                {
+                    GameObject CalibreurARPlane = new GameObject("Calibreur Plane");
+                    CalibreurARPlane.transform.position = planesToCalibrate[0].transform.position;
+                    CalibreurARPlane.transform.rotation = planesToCalibrate[0].transform.rotation;
 
-                Calibreur = CalibreurARPlane;
-                Calibreur.transform.parent = Player.transform;
-            }
+                    Calibreur = CalibreurARPlane;
+                    Calibreur.transform.parent = Player.transform;
+                }
 
-            else
-            {
-                Debug.LogWarning("Plusieurs ARPlane détecté. Seulement un seul ARPlane doit être sélectionner pour servir de calibrer. Modifier la configuration de votre environnement");
+                else
+                {
+                    Debug.LogWarning("Plusieurs ARPlane détecté. Seulement un seul ARPlane doit être sélectionner pour servir de calibrer. Modifier la configuration de votre environnement");
+                }
             }
+            
         }
 
         public void StartCalibrationScene()
@@ -335,7 +345,7 @@ namespace ClientLBE
                     newAnchor.rotation = new Vector4Dto { X = localVertexRotations[i].x, Y = localVertexRotations[i].y, Z = localVertexRotations[i].z, W = localVertexRotations[i].w };
 
                     userGuardianDto.anchorAR.Add(newAnchor);
-                    userGuardianDto.OffsetGuardian = Vector3.Distance(Calibreur.transform.position, XROrigine.transform.position);
+                    userGuardianDto.OffsetGuardian = Vector3.Distance(Calibreur.transform.position, this.transform.position);
                 }
             }
         }

@@ -114,9 +114,15 @@ namespace umi3dBrowsers.displayer
         public void SetLabel(string label, bool useLocalization = false)
         {
             if (useLocalization)
+            {
+                localizeString.enabled = true;
                 localizeString.SetEntry(label);
+            }
             else
+            {
+                localizeString.enabled = false;
                 this.label.text = label.Trim();
+            }
         }
     }
 }

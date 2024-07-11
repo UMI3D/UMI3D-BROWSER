@@ -1776,8 +1776,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boneType: 16
-  isActif: 1
-  isOverrider: 1
 --- !u!1 &4835906484574170353
 GameObject:
   m_ObjectHideFlags: 0
@@ -2057,8 +2055,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boneType: 6
-  isActif: 1
-  isOverrider: 1
 --- !u!1 &5160596936467214449
 GameObject:
   m_ObjectHideFlags: 0
@@ -2624,7 +2620,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   turnAmount: 45
-  debounceTime: 0.3
+  debounceTime: 0
 --- !u!114 &2685656844327412233
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2639,7 +2635,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftArc: {fileID: 4255392429382739760}
   rightArc: {fileID: 7633290024207806134}
-  debounceTime: 0.3
+  debounceTime: 0
 --- !u!1 &8672234592648203645
 GameObject:
   m_ObjectHideFlags: 0

@@ -24,6 +24,7 @@ using umi3dBrowsers.linker;
 using umi3dVRBrowsersBase.ikManagement;
 using Unity.XR.CoreUtils;
 using UnityEngine;
+using umi3d.cdk.userCapture.tracking.constraint;
 using UnityEngine.XR;
 
 namespace umi3dBrowsers.connection
@@ -143,7 +144,19 @@ namespace umi3dBrowsers.connection
         private void Start()
         {
             trackedSkeleton = GetComponentInChildren<TrackedSubskeleton>();
+
+            SpineFlexer.Enabled += () =>
+            {
+                shouldNotRotateHips = true;
+            };
+
+            SpineFlexer.Disabled += () =>
+            {
+                shouldNotRotateHips = false;
+            };
         }
+
+        bool shouldNotRotateHips = false;
 
         public void SetUp()
         {
@@ -167,8 +180,8 @@ namespace umi3dBrowsers.connection
             RightWatch.SetActive(true);
 
             FootTargetBehavior.SetFootTargets();
-            
-            trackers.ForEach(x => trackedSkeleton.ReplaceController(x.distantController));
+
+            trackers.ForEach(x => trackedSkeleton.ReplaceController(x));
             trackedSkeleton.bones.Add(BoneType.Viewpoint, viewpointTSB);
 
             isSetup = true;
@@ -193,7 +206,7 @@ namespace umi3dBrowsers.connection
 
             float skeletonHeight = mainCameraTransform.localPosition.y;
             sessionScaleFactor = 1.05f * skeletonHeight * Vector3.one;
-            UnityEngine.Debug.Log($"skeletonHeight = {skeletonHeight}, sessionScale = {sessionScaleFactor}, distance to gound = {distanceToGround}");
+
             skeletonContainer.localScale = sessionScaleFactor;
 
             neckOffset = new Vector3(0, -0.060f * mainCameraTransform.localPosition.y, -0.07f);
@@ -218,14 +231,14 @@ namespace umi3dBrowsers.connection
 
                 Neck.localRotation = Quaternion.Euler(Mathf.Clamp(rotX, -60, 60), 0, 0);
 
-                Vector3 virtualNeckPosition = mainCameraTransform.TransformPoint(neckOffset);
+                if (!shouldNotRotateHips)
+                {
+                    Vector3 virtualNeckPosition = mainCameraTransform.TransformPoint(neckOffset);
+                    skeletonContainer.position = new Vector3(virtualNeckPosition.x, virtualNeckPosition.y - diffY, virtualNeckPosition.z);
 
-                transform.position = new Vector3(virtualNeckPosition.x, virtualNeckPosition.y - diffY, virtualNeckPosition.z);
-
-                skeletonContainer.position = new Vector3(virtualNeckPosition.x, virtualNeckPosition.y - diffY, virtualNeckPosition.z);
-
-                Vector3 anchorForwardProjected = Vector3.Cross(mainCameraTransform.right, Vector3.up).normalized;
-                transform.rotation = Quaternion.LookRotation(anchorForwardProjected, Vector3.up);
+                    Vector3 anchorForwardProjected = Vector3.Cross(mainCameraTransform.right, Vector3.up).normalized;
+                    skeletonContainer.rotation = Quaternion.LookRotation(anchorForwardProjected, Vector3.up); // là
+                }
             }
         }
     }

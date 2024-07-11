@@ -198,8 +198,6 @@ namespace umi3dBrowsers.connection
                 return false;
             }
 
-            UnityEngine.Debug.Log($"SetupSkeleton: player = {playerTransform.position}, xrO = {xrOrigin.transform.position}, camera = {mainCameraTransform.position}");
-
             if (mainCameraTransform.localPosition.y == 0)
                 return false;
 
@@ -208,7 +206,7 @@ namespace umi3dBrowsers.connection
 
             float skeletonHeight = mainCameraTransform.localPosition.y;
             sessionScaleFactor = 1.05f * skeletonHeight * Vector3.one;
-            UnityEngine.Debug.Log($"skeletonHeight = {skeletonHeight}, sessionScale = {sessionScaleFactor}, distance to gound = {distanceToGround}");
+
             skeletonContainer.localScale = sessionScaleFactor;
 
             neckOffset = new Vector3(0, -0.060f * mainCameraTransform.localPosition.y, -0.07f);

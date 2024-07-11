@@ -185,8 +185,6 @@ namespace umi3dBrowsers.connection
                 return false;
             }
 
-            UnityEngine.Debug.Log($"SetupSkeleton: player = {playerTransform.position}, xrO = {xrOrigin.transform.position}, camera = {mainCameraTransform.position}");
-
             if (mainCameraTransform.localPosition.y == 0)
                 return false;
 

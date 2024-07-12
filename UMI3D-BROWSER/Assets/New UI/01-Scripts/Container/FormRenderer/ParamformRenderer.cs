@@ -29,6 +29,7 @@ namespace umi3dBrowsers.container.formrenderer
     {
         [Header("Displayers")]
         [SerializeField] private GameObject textFieldPrefab;
+        [SerializeField] private GameObject textPrefab;
         [SerializeField] private GameObject vectorFieldPrefab;
         [SerializeField] private GameObject dropDownFieldPrefab;
         [SerializeField] private GameObject sliderPrefab;
@@ -111,13 +112,16 @@ namespace umi3dBrowsers.container.formrenderer
                                 formBinding.Add(() => paramRequestDto.parameter = null);
                             else
                             {
-                                gameObject = Instantiate(textFieldPrefab, container.transform);
-                                IInputFieldDisplayer inputFieldDisplayer = gameObject?.GetComponentInChildren<IInputFieldDisplayer>();
+                                if (stringParam.isDisplayer)
+                                    gameObject = Instantiate(textPrefab, container.transform);
+                                else
+                                    gameObject = Instantiate(textFieldPrefab, container.transform);
+                                var inputFieldDisplayer = gameObject?.GetComponentInChildren<IDisplayer>();
                                 displayer = inputFieldDisplayer;
                                 formBinding.Add(() => paramRequestDto.parameter = displayer?.GetValue(true));
                                 displayer?.SetTitle(stringParam.name);
                                 displayer?.SetPlaceHolder(new List<string>() { stringParam.description });
-                                inputFieldDisplayer?.SetPrivateParam(connectionFormDto.fields[i].privateParameter);
+                                ((IInputFieldDisplayer)inputFieldDisplayer)?.SetPrivateParam(connectionFormDto.fields[i].privateParameter);
                             }
                         }
                         break;

@@ -4309,6 +4309,11 @@ PrefabInstance:
       objectReference: {fileID: 2274770385046502688}
     - target: {fileID: 2160676327243919595, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
         type: 3}
+      propertyPath: ManualCalibreur
+      value: 
+      objectReference: {fileID: 6416078307636125354}
+    - target: {fileID: 2160676327243919595, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
+        type: 3}
       propertyPath: LeftHandTracking
       value: 
       objectReference: {fileID: 7620486828765168160}
@@ -4332,6 +4337,11 @@ PrefabInstance:
       propertyPath: RightHandController
       value: 
       objectReference: {fileID: 8430962179540647080}
+    - target: {fileID: 2160676327243919595, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
+        type: 3}
+      propertyPath: AutomatiqueCalibration
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2160676327243919595, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
         type: 3}
       propertyPath: RightHandTrackingVariant

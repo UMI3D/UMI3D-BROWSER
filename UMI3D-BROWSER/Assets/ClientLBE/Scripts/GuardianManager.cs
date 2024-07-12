@@ -22,6 +22,8 @@ namespace ClientLBE
 {
     public class GuardianManager : MonoBehaviour
     {
+        #region Fields
+
         [Header("CALIBRATION SCENE")]
         public GameObject Player;
         public Transform PersonnalSketletonContainer;
@@ -48,10 +50,22 @@ namespace ClientLBE
         [Header("CALIBREUR")]
         public bool AutomatiqueCalibration = false;
         public GameObject Calibreur;
+        public GameObject ManualCalibreur;
+
         private ARPlaneManager arPlaneManager;
         public GameObject CollabSkeletonScene;
         public Material specificMaterial;
 
+        public GameObject OrientaionPanel;
+        public float OrientationCalibreur;
+
+        private List<ARPlane> planesToCalibrate = new List<ARPlane>();
+
+
+
+        #endregion
+
+        #region Methods
 
         public void Start()
         {
@@ -143,7 +157,6 @@ namespace ClientLBE
             yield return new WaitForSeconds(0.5f);
 
             List<ARPlane> planesToDestroy = new List<ARPlane>();
-            List<ARPlane> planesToCalibrate = new List<ARPlane>();
 
             if (arPlaneManager != null)
             {
@@ -171,6 +184,7 @@ namespace ClientLBE
             {
                 Debug.LogError("REMI : ARPlaneManager non trouvé sur ce GameObject.");
             }
+
             if(AutomatiqueCalibration == true)
             {
                 if (planesToCalibrate.Count == 1)
@@ -187,8 +201,40 @@ namespace ClientLBE
                 {
                     Debug.LogWarning("Plusieurs ARPlane détecté. Seulement un seul ARPlane doit être sélectionner pour servir de calibrer. Modifier la configuration de votre environnement");
                 }
+            }    
+        }
+
+        public void ToggleCalibrationScene(bool arg)
+        {
+            AutomatiqueCalibration = arg;
+
+            if (arg == true)
+            {
+                Calibreur.SetActive(false);
+                Calibreur = null;
+                for (int i = 0; i < planesToCalibrate.Count; i++)
+                {
+                    planesToCalibrate[i].gameObject.SetActive(true);
+                }
+
+                Calibreur = planesToCalibrate[0].gameObject;
             }
-            
+            else if (arg == false)
+            {
+                Calibreur = null;
+                for (int i = 0; i < planesToCalibrate.Count; i++)
+                {
+                    planesToCalibrate[i].gameObject.SetActive(false);
+                }
+                Calibreur = ManualCalibreur ;
+                Calibreur.SetActive(true);
+
+                if(OrientaionPanel.activeSelf == true && OrientaionPanel.GetComponent<CanvasGroup>().alpha == 1)
+                {
+                    OrientaionPanel.GetComponent<GetPlayerOrientationPanel>().ClosePanel();
+
+                }
+            }
         }
 
         public void StartCalibrationScene()
@@ -196,10 +242,27 @@ namespace ClientLBE
             StartCoroutine(CalibrationScene());
         }
 
+        public void OrientationChoice(float Orientaion)
+        {
+            OrientationCalibreur = Orientaion;
+        }
+
+        public void CloseOrientaionChoice()
+        {
+            Calibreur.transform.Rotate(Calibreur.transform.rotation.x, OrientationCalibreur, Calibreur.transform.rotation.z, Space.World);
+
+            OrientaionPanel.SetActive(false);
+        }
         public IEnumerator CalibrationScene()
         {
+
             yield return null;
             yield return null;
+
+            if(AutomatiqueCalibration == true)
+            {
+                CloseOrientaionChoice();
+            }
 
             if (Player != null)
             {
@@ -208,6 +271,7 @@ namespace ClientLBE
                 if (parent != null)
                 {
                     Scene = parent;
+
 
                     Calibreur.transform.rotation = new Quaternion(0.0f, Calibreur.transform.rotation.y, 0.0f, Calibreur.transform.rotation.w);
                     Calibreur.transform.SetParent(null, true);
@@ -238,11 +302,12 @@ namespace ClientLBE
                 Debug.LogWarning("Remi : Aucun GameObject à vérifier n'est assigné !");
             }
 
-            var trackables = arPlaneManager.trackables;
+            arPlaneManager.enabled = false;
 
-            foreach (var plane in trackables)
+            // Désactiver chaque plan
+            for (int i = 0; i<planesToCalibrate.Count; i++)
             {
-                Destroy(plane.gameObject);
+                planesToCalibrate[i].gameObject.SetActive(false);
             }
         }
 
@@ -481,5 +546,6 @@ namespace ClientLBE
             GuardianMesh.transform.parent = null;
         }
     }
+    #endregion
 }
 

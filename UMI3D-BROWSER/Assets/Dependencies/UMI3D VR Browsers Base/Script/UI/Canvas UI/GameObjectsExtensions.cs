@@ -21,6 +21,6 @@ namespace umi3dVRBrowsersBase.ui
 {
     public static class GameObjectsExtensions
     {
-        public static void Add(this GameObject go, GameObject child) => child.transform.parent = go.transform;
+        public static void Add(this GameObject go, GameObject child) => go.transform.SetParent(child.transform, false);
     }
 }

@@ -209,16 +209,9 @@ namespace umi3dBrowsers.container
             vignette.SetDeleteActive(false);
 
             if (pImageDto.FirstChildren.Count > 0) // should be a label at least
-            {
                 foreach(var child in pImageDto.FirstChildren)
-                {
                     if (child is LabelDto label)
-                    {
-                        Debug.Log(label.text);
                         vignette.SetupDisplay(label.text);
-                    }
-                }
-            }
 
             Sprite sprite = await pImageDto.GetSprite();
             vignette.SetSprite(sprite);

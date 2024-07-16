@@ -17,20 +17,21 @@ limitations under the License.
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using umi3d.common.interaction.form;
+using umi3d.common.interaction.form.ugui;
 
 namespace umi3d.common.collaboration
 {
-    public class WritteParameterConverter : Newtonsoft.Json.JsonConverter
+    public class WriteDivConverter : JsonConverter
     {
         public override bool CanRead => false;
-
         public override bool CanWrite => true;
 
         public override bool CanConvert(Type objectType)
         {
-            return typeof(DivDto).IsAssignableFrom(objectType) || typeof(VariantStyleDto).IsAssignableFrom(objectType);
+            return typeof(DivDto).IsAssignableFrom(objectType);
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
@@ -40,6 +41,7 @@ namespace umi3d.common.collaboration
 
         string GetTypeName(Type type)
         {
+            UnityEngine.Debug.Log("GetTypeName");
             if (!type.IsGenericType)
                 return type.Name;
 
@@ -50,38 +52,44 @@ namespace umi3d.common.collaboration
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            if (value is VariantStyleDto sdto)
-            {
-                sdto.type = GetTypeName(sdto.GetType());
-            }
-            else if (value is DivDto dto)
-            {
-                dto.type = GetTypeName(dto.GetType());
-            }
+            var divDto = value as DivDto;
+            SetDivAndChildsType(divDto);
 
-            if (value is GroupDto group)
-            {
-                //var tmp = group.children;
-                //group.children = null;
-                //JObject gjo = JObject.FromObject(value);
-                //if (tmp is not null)
-                //    gjo["children"] = JToken.FromObject(tmp, serializer); //JsonConvert.SerializeObject(tmp, serializer.Converters.ToArray());
-                //gjo["styles"] = JToken.FromObject(group.styles, serializer);
-                //group.children = tmp;
-                //gjo.WriteTo(writer);
+            JObject jsonObject = JObject.FromObject(value);
+            jsonObject.WriteTo(writer);
+        }
+
+        private void SetDivAndChildsType(DivDto divDto)
+        {
+            if (divDto == null)
                 return;
-            }
 
-            JObject jo = JObject.FromObject(value);
+            divDto.type = GetTypeName(divDto.GetType());
+            if (divDto.styles != null)
+                SetStylesTypes(divDto.styles);
 
-            if(value is DivDto divDto)
+            if (divDto.FirstChildren == null)
+                return;
+
+            foreach (var child in divDto.FirstChildren)
             {
-                jo["styles"] = JToken.FromObject(divDto.styles, serializer);
-                //jo["styles"] = JsonConvert.SerializeObject(divDto.styles, serializer.Converters.ToArray());
+                SetDivAndChildsType(child);
             }
+        }
 
-            //jo["Type"] = "Hello";
-            jo.WriteTo(writer);
+        private void SetStylesTypes(List<StyleDto> lstStyleDto)
+        {
+            foreach (var styleDto in lstStyleDto)
+            {
+                foreach (var variantStyleDto in styleDto.variants)
+                {
+                    variantStyleDto.type = GetTypeName(variantStyleDto.GetType());
+
+                    if (variantStyleDto is UGUIStyleVariantDto uguiStyleVariantDto)
+                        foreach (var uguiStyleItemDto in uguiStyleVariantDto.StyleVariantItems)
+                            uguiStyleItemDto.type = GetTypeName(uguiStyleItemDto.GetType());
+                }
+            }
         }
     }
 }

@@ -87,7 +87,11 @@ namespace umi3d.common.collaboration
 
                     if (variantStyleDto is UGUIStyleVariantDto uguiStyleVariantDto)
                         foreach (var uguiStyleItemDto in uguiStyleVariantDto.StyleVariantItems)
+                        {
                             uguiStyleItemDto.type = GetTypeName(uguiStyleItemDto.GetType());
+                            if (uguiStyleItemDto is TextStyleDto textStyleItemDto && textStyleItemDto.color != null)
+                                textStyleItemDto.color.type = GetTypeName(textStyleItemDto.color.GetType());
+                        }
                 }
             }
         }

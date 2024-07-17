@@ -21,7 +21,6 @@ using System.Linq;
 using umi3d.common;
 using umi3d.common.interaction.form;
 using umi3d.common.interaction.form.ugui;
-using UnityEngine;
 
 public class ReadStyleConverter : JsonConverter
 {
@@ -81,8 +80,10 @@ public class ReadStyleConverter : JsonConverter
             textStyleDto.fontSize = fontSize.ToObject<float>();
         if (jsonObject.TryGetValue("color", out var color))
             textStyleDto.color = color.ToObject<ColorStyleDto>(serializer);
-        UnityEngine.Debug.Log("TODO : Text style Font");
-        UnityEngine.Debug.Log("TODO : Text style Alignements");
+        if (jsonObject.TryGetValue("fontStyles", out var fontStyles))
+            textStyleDto.fontStyles = fontStyles?.ToObject<E_FontStyle[]>()?.ToList();
+        if (jsonObject.TryGetValue("fontAlignments", out var fontAlignments))
+            textStyleDto.fontAlignments = fontAlignments?.ToObject<E_FontAlignment[]>()?.ToList();
 
         return textStyleDto;
     }
@@ -107,7 +108,7 @@ public class ReadStyleConverter : JsonConverter
             positionStyleDto.posX = posX.ToObject<float>();
         if (jsonObject.TryGetValue("posY", out var posY))
             positionStyleDto.posY = posY.ToObject<float>();
-        if (jsonObject.TryGetValue("color", out var posZ))
+        if (jsonObject.TryGetValue("posZ", out var posZ))
             positionStyleDto.posZ = posZ.ToObject<float>();
 
         return positionStyleDto;
@@ -116,7 +117,6 @@ public class ReadStyleConverter : JsonConverter
     private object ReadColorJson(JObject jsonObject)
     {
         var colorStyleDto = new ColorStyleDto();
-
         if (jsonObject.TryGetValue("color", out var color))
             colorStyleDto.color = color.ToObject<ColorDto>();
 
@@ -148,7 +148,8 @@ public class ReadStyleConverter : JsonConverter
         var uguiStyleVariantDto = new UGUIStyleVariantDto();
         if (jsonObject.TryGetValue("StyleVariantItems", out var StyleVariantItems))
             uguiStyleVariantDto.StyleVariantItems = StyleVariantItems?.ToObject<UGUIStyleItemDto[]>(serializer)?.ToList();
-        UnityEngine.Debug.Log("TODO: UGUIStyleVariantDto Device Type");
+        if (jsonObject.TryGetValue("deviceType", out var deviceType))
+            uguiStyleVariantDto.deviceType = deviceType.ToObject<umi3d.common.interaction.form.DeviceType>();
         return uguiStyleVariantDto;
     }
 

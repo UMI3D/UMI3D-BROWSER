@@ -86,13 +86,13 @@ public class ReadDivConverter : JsonConverter
                 /*if (type == nameof(EnumDto))
                     return ReadEnumJson(serializer, jsonObject);*/
 
-                if (type == nameof(InputDto<string>))
+                if (type == "InputDto<String>")
                     return ReadInputJson<string>(serializer, jsonObject);
-                if (type == nameof(InputDto<int>))
+                if (type == "InputDto<Int32>")
                     return ReadInputJson<int>(serializer, jsonObject);
-                if (type == nameof(InputDto<float>))
+                if (type == "InputDto<Single>")
                     return ReadInputJson<float>(serializer, jsonObject);
-                if (type == nameof(InputDto<bool>))
+                if (type == "InputDto<Boolean>")
                     return ReadInputJson<bool>(serializer, jsonObject);
                 if (type == nameof(InputDto<ColorDto>))
                     return ReadInputJson<ColorDto>(serializer, jsonObject);
@@ -103,13 +103,13 @@ public class ReadDivConverter : JsonConverter
                 if (type == nameof(InputDto<Vector4Dto>))
                     return ReadInputJson<Vector4Dto>(serializer, jsonObject);
 
-                if (type == nameof(RangeDto<string>))
+                if (type == "RangeDto<String>")
                     return ReadRangeDtoJson<string>(serializer, jsonObject);
-                if (type == nameof(RangeDto<int>))
+                if (type == "RangeDto<Int32>")
                     return ReadRangeDtoJson<int>(serializer, jsonObject);
-                if (type == nameof(RangeDto<float>))
+                if (type == "RangeDto<Single>")
                     return ReadRangeDtoJson<float>(serializer, jsonObject);
-                if (type == nameof(RangeDto<bool>))
+                if (type == "RangeDto<Boolean>")
                     return ReadRangeDtoJson<bool>(serializer, jsonObject);
                 if (type == nameof(RangeDto<ColorDto>))
                     return ReadRangeDtoJson<ColorDto>(serializer, jsonObject);
@@ -119,7 +119,7 @@ public class ReadDivConverter : JsonConverter
                     return ReadRangeDtoJson<Vector3Dto>(serializer, jsonObject);
                 if (type == nameof(RangeDto<Vector4Dto>))
                     return ReadRangeDtoJson<Vector4Dto>(serializer, jsonObject);
-
+                Debug.Log(type);
             }
         }
         catch (Exception ex)
@@ -149,7 +149,8 @@ public class ReadDivConverter : JsonConverter
     {
         var imageDto = new ImageDto();
 
-        Debug.Log("TODO : Read Image Ressource");
+        if (jsonObject.TryGetValue("resource", out var ressource))
+            imageDto.resource = ressource.ToObject<ResourceDto>();
 
         ReadDivJson(imageDto, jsonObject, serializer);
         return imageDto;
@@ -180,8 +181,10 @@ public class ReadDivConverter : JsonConverter
 
         if (jsonObject.TryGetValue("Text", out var Text))
             buttonDto.Text = Text.ToObject<string>();
-        Debug.Log("TODO : Read Button Type");
-        Debug.Log("TODO : Read Button Ressource");
+        if (jsonObject.TryGetValue("buttonType", out var buttonType))
+            buttonDto.buttonType = buttonType.ToObject<ButtonType>();
+        if (jsonObject.TryGetValue("resource", out var ressource))
+            buttonDto.resource = ressource.ToObject<ResourceDto>();
 
         ReadDivJson(buttonDto, jsonObject, serializer);
         ReadBaseInputJson(buttonDto, jsonObject, serializer);
@@ -208,7 +211,8 @@ public class ReadDivConverter : JsonConverter
             inputDto.Name = Name.ToObject<string>();
         if (jsonObject.TryGetValue("Value", out var Value))
             inputDto.Value = Value.ToObject<T>();
-        Debug.Log("TODO : Input Text type");
+        if (jsonObject.TryGetValue("TextType", out var TextType))
+            inputDto.TextType = Value.ToObject<TextType>();
         if (jsonObject.TryGetValue("PlaceHolder", out var PlaceHolder))
             inputDto.PlaceHolder = PlaceHolder.ToObject<T>();
 

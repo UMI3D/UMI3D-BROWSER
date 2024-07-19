@@ -29,6 +29,7 @@ namespace umi3dBrowsers.container.formrenderer
     {
         [Header("Displayers")]
         [SerializeField] private GameObject textFieldPrefab;
+        [SerializeField] private GameObject textPrefab;
         [SerializeField] private GameObject vectorFieldPrefab;
         [SerializeField] private GameObject dropDownFieldPrefab;
         [SerializeField] private GameObject sliderPrefab;
@@ -62,7 +63,7 @@ namespace umi3dBrowsers.container.formrenderer
             validationButton.OnClick.RemoveAllListeners();
             validationButton.OnClick.AddListener(() => ValidateForm());
 
-            GameObject container = tabManager.AddNewTabForParamForm(connectionFormDto.fields[0].name);
+            GameObject container = tabManager.AddNewTabForParamForm(connectionFormDto.fields[0].name, false);
 
             for (int i = 0; i < connectionFormDto.fields.Count; i++)
             {
@@ -110,8 +111,11 @@ namespace umi3dBrowsers.container.formrenderer
                                 formBinding.Add(() => paramRequestDto.parameter = null);
                             else
                             {
-                                gameObject = Instantiate(textFieldPrefab, container.transform);
-                                IInputFieldDisplayer inputFieldDisplayer = gameObject?.GetComponentInChildren<IInputFieldDisplayer>();
+                                if (stringParam.isDisplayer)
+                                    gameObject = Instantiate(textPrefab, container.transform);
+                                else
+                                    gameObject = Instantiate(textFieldPrefab, container.transform);
+                                var inputFieldDisplayer = gameObject?.GetComponentInChildren<IInputFieldDisplayer>();
                                 displayer = inputFieldDisplayer;
                                 formBinding.Add(() => paramRequestDto.parameter = displayer?.GetValue(true));
                                 displayer?.SetTitle(stringParam.name);
@@ -126,7 +130,7 @@ namespace umi3dBrowsers.container.formrenderer
 
                 if (connectionFormDto.fields[i].name == "OR" && connectionFormDto.fields[i].tag == null)
                 {
-                    container = tabManager.AddNewTabForParamForm(connectionFormDto.fields[i + 1].name);
+                    container = tabManager.AddNewTabForParamForm(connectionFormDto.fields[i + 1].name, false);
                 }
             }
 

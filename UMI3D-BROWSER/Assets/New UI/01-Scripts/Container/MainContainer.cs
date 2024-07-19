@@ -159,7 +159,7 @@ namespace umi3dBrowsers
         private void BindNavigationButtons()
         {
             cancelConnectionButton?.OnClick.AddListener(() => {
-                UMI3DCollaborationClientServer.Logout();
+                connectionToImmersiveLinker.Leave();
             });
 
             connectionToImmersiveLinker.OnSkeletonStandUp += () =>

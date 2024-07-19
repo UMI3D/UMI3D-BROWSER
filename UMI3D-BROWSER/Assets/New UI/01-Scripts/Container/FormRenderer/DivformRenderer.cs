@@ -125,7 +125,6 @@ namespace umi3dBrowsers.container.formrenderer
 
             foreach(var  container in m_vignetteContainers)
             {
-                Debug.Log(container);
                 if (container == null) continue;
                 container.FillWithEmptyVignettes();
             }

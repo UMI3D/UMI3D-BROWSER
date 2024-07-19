@@ -272,7 +272,8 @@ namespace umi3dBrowsers.container
 
         public void FillWithEmptyVignettes()
         {
-            foreach(var emptyVignette in m_emptyVignettes)
+            Debug.Log("FillWithEmptyVignettes");
+            foreach (var emptyVignette in m_emptyVignettes)
                 Destroy(emptyVignette.gameObject);
 
             m_emptyVignettes = new();
@@ -282,7 +283,7 @@ namespace umi3dBrowsers.container
             else if (vignetteMode == E_VignetteScale.Mid) nbrVignetteTotal = 3;
             else if (vignetteMode == E_VignetteScale.Large) nbrVignetteTotal = 2;
 
-            for (var i = nbrVignetteTotal - vignetteDisplayers.Count; i < 0; i++)
+            for (var i = vignetteDisplayers.Count - nbrVignetteTotal; i < 0; i++)
                 m_emptyVignettes.Add(Instantiate(emptyVignettePrefab, gridLayout.transform));
         }
  

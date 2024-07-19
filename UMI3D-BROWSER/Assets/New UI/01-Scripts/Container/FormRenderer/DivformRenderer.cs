@@ -16,6 +16,7 @@ limitations under the License.
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using umi3d.common;
 using umi3d.common.interaction.form;
 using umi3d.common.interaction.form.ugui;
 using umi3dBrowsers.displayer;
@@ -29,7 +30,7 @@ namespace umi3dBrowsers.container.formrenderer
     {
         private FormContainer _contentRoot;
 
-        List<FormContainer> allContainers = new();
+        private List<FormContainer> allContainers = new();
 
         [Header("UI Containers")]
         [SerializeField] private GameObject vignetteContainerPrefab;
@@ -46,10 +47,11 @@ namespace umi3dBrowsers.container.formrenderer
         [SerializeField] private GameObject rangeDisplayerPrefab;
 
         [SerializeField] private ConnectionServiceLinker connectionServiceLinker;
+        [SerializeField] private List<GameObject> objectsToNotCleanup;
 
-        FormDto _form;
+        private FormDto _form;
 
-        List<Action> formBinding = new();
+        private List<Action> formBinding = new();
         private FormAnswerDto _answer;
         public event Action<FormAnswerDto> OnFormAnswer;
         private List<VignetteContainer> m_vignetteContainers = new();
@@ -72,19 +74,23 @@ namespace umi3dBrowsers.container.formrenderer
             InitFormAnswer(id);
             tabManager.Clear();
 
-            float delay = 0;
-            for (int i = 1; i < allContainers.Count; i++)
-            {
-                if (allContainers[i] == null) continue;
-#if UNITY_EDITOR
-                DestroyImmediate(allContainers[i].container);
-#else
-                Destroy(allContainers[i].container, delay);
-                delay += 0.01f;
-#endif
-            }
+            foreach (var container in allContainers)
+                RemoveContainer(container);
+
             allContainers = new();
             m_vignetteContainers = new();
+        }
+
+        private void RemoveContainer(FormContainer container)
+        {
+            if (container == null) 
+                return;
+
+            if (!objectsToNotCleanup.Contains(container?.container))
+                DestroyImmediate(container?.container);
+
+            foreach (var childContainer in container.childrenFormContainers)
+                RemoveContainer(childContainer);
         }
 
         [ContextMenu("Validate form ")]
@@ -119,6 +125,7 @@ namespace umi3dBrowsers.container.formrenderer
 
             foreach(var  container in m_vignetteContainers)
             {
+                Debug.Log(container);
                 if (container == null) continue;
                 container.FillWithEmptyVignettes();
             }

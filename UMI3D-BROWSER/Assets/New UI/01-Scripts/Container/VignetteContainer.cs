@@ -272,7 +272,6 @@ namespace umi3dBrowsers.container
 
         public void FillWithEmptyVignettes()
         {
-            Debug.Log("FillWithEmptyVignettes");
             foreach (var emptyVignette in m_emptyVignettes)
                 Destroy(emptyVignette.gameObject);
 

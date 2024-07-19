@@ -48,6 +48,7 @@ namespace umi3dBrowsers.container.formrenderer
 
         [SerializeField] private ConnectionServiceLinker connectionServiceLinker;
         [SerializeField] private List<GameObject> objectsToNotCleanup;
+        [SerializeField] private ConnectionToImmersiveLinker connectionToImmersiveLinker;
 
         private FormDto _form;
 
@@ -189,7 +190,7 @@ namespace umi3dBrowsers.container.formrenderer
                                 button.onClick.AddListener(() => { ValidateForm(inputAnswerDto.inputId); });
                                 break;
                             case ButtonType.Cancel:
-                                button.onClick.AddListener(() => { _answer.isCancelation = true; ValidateForm(inputAnswerDto.inputId); });
+                                button.onClick.AddListener(() => { connectionToImmersiveLinker.Leave(); });
                                 break;
                             case ButtonType.Back:
                                 button.onClick.AddListener(() => { _answer.isBack = true; ValidateForm(inputAnswerDto.inputId); });
@@ -272,7 +273,7 @@ namespace umi3dBrowsers.container.formrenderer
                 InstantiateDiv(div, container);
 
             formBinding.Add(() => {
-                if (container.container.activeInHierarchy)
+                if (container != null && container.container != null && container.container.activeInHierarchy)
                     _answer.pageId = inputAnswerDto.inputId;
             });
 

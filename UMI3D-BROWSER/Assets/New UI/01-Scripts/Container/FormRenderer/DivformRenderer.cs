@@ -100,6 +100,7 @@ namespace umi3dBrowsers.container.formrenderer
             _answer.submitId = submitId;
             formBinding.ForEach(action => action?.Invoke());
             OnFormAnswer?.Invoke(_answer);
+            Debug.Log(_answer.ToJson(Newtonsoft.Json.TypeNameHandling.None));
         }
 
         private void InitFormAnswer(string id)
@@ -313,12 +314,10 @@ namespace umi3dBrowsers.container.formrenderer
                     m_vignetteContainers.Add(vignetteContainer);
                 }
 
-                VignetteBuffer buffer =  await vignetteContainer.CreateVignette(imageDto);
-                vignetteContainer.UpdateNavigation();
-
-                buffer.OnVignetteClicked += () => {
+                VignetteBuffer buffer =  await vignetteContainer.CreateVignette(imageDto, null, () => {
                     ValidateForm(imageDto.guid);
-                };
+                });
+                vignetteContainer.UpdateNavigation();
             }
             
             HandleStyle(imageGO, displayer, imageDto.styles);

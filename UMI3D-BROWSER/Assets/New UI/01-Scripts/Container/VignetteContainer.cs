@@ -201,7 +201,7 @@ namespace umi3dBrowsers.container
             return vignette;
         }
 
-        public async Task<VignetteBuffer> CreateVignette(ImageDto pImageDto, VignetteBuffer pBuffer = null)
+        public async Task<VignetteBuffer> CreateVignette(ImageDto pImageDto, VignetteBuffer pBuffer = null, Action onClick = null)
         {
             VignetteContainerData data = VignetteContainerData.FindVignetteContainerDataByVignetteScale(vignetteMode, m_vignetteContainerDatas);
             var vignette = Instantiate(data.VignettePrefab, gridLayout.transform).GetComponent<VignetteDisplayer>();
@@ -225,6 +225,7 @@ namespace umi3dBrowsers.container
             }
 
             pBuffer.SetImageDto(pImageDto);
+            pBuffer.OnVignetteClicked += onClick;
             pBuffer.SetVignetteDisplayer(vignette);
             return pBuffer;
         }

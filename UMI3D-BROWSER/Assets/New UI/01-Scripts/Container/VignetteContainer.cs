@@ -227,6 +227,7 @@ namespace umi3dBrowsers.container
             pBuffer.SetImageDto(pImageDto);
             pBuffer.OnVignetteClicked += onClick;
             pBuffer.SetVignetteDisplayer(vignette);
+            FillWithEmptyVignettes();
             return pBuffer;
         }
 

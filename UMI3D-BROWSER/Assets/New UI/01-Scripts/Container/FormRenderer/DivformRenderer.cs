@@ -100,7 +100,6 @@ namespace umi3dBrowsers.container.formrenderer
             _answer.submitId = submitId;
             formBinding.ForEach(action => action?.Invoke());
             OnFormAnswer?.Invoke(_answer);
-            Debug.Log(_answer.ToJson(Newtonsoft.Json.TypeNameHandling.None));
         }
 
         private void InitFormAnswer(string id)
@@ -124,12 +123,6 @@ namespace umi3dBrowsers.container.formrenderer
             allContainers.Add(_contentRoot);
             InstantiateDiv(connectionFormDto, _contentRoot);
             tabManager.InitSelectedButtonById();
-
-            foreach(var  container in m_vignetteContainers)
-            {
-                if (container == null) continue;
-                container.FillWithEmptyVignettes();
-            }
         }
 
         private void HandleFormDto(FormDto formDto, FormContainer parentContainer, InputAnswerDto inputAnswerDto)

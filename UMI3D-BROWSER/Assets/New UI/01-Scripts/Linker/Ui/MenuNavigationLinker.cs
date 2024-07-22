@@ -13,13 +13,10 @@ namespace umi3dBrowsers.linker.ui
         [SerializeField] private PanelData m_StartPanel;
         [SerializeField] private bool m_forceLanguage;
 
-        public event Action<bool> OnSetTopActive;
-        public event Action<TitleType, string, string> OnSetTitle;
-        public event Action<bool> OnSetNavBarActive;
-        public event Action<bool> OnSetBackButtonActive;
         public event Action<bool> OnSetCancelButtonActive;
         public event Action OnReplacePlayerAndShowPanel;
         public void ReplacePlayerAndShowPanel() { OnReplacePlayerAndShowPanel?.Invoke(); }
+        public event Action<PanelData> OnPanelChanged;
 
         public bool ForceLanguage => m_forceLanguage;
 
@@ -65,7 +62,7 @@ namespace umi3dBrowsers.linker.ui
             m_currentPanelData = pPanelData;
             m_panels[m_currentPanelData].SetActive(true);
 
-            UpdateDisplayer();
+            OnPanelChanged?.Invoke(m_currentPanelData);
         }
 
         public void Back()
@@ -77,14 +74,6 @@ namespace umi3dBrowsers.linker.ui
         public void SetCancelButtonActive(bool pShow)
         {
             OnSetCancelButtonActive?.Invoke(pShow);
-        }
-
-        private void UpdateDisplayer()
-        {
-            OnSetTopActive?.Invoke(m_currentPanelData.DisplayTop);
-            OnSetTitle?.Invoke(m_currentPanelData.TitleType, m_currentPanelData.TitlePrefix, m_currentPanelData.TitleSuffix);
-            OnSetNavBarActive?.Invoke(m_currentPanelData.DisplayNavbar);
-            OnSetBackButtonActive?.Invoke(m_currentPanelData.DisplayBack);
         }
     }
 }

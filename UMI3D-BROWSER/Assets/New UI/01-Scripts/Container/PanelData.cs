@@ -7,6 +7,7 @@ namespace umi3dBrowsers.data.ui
     public class PanelData : ScriptableObject
     {
         [SerializeField] private GameObject m_prefab;
+        [SerializeField] private PageTipData m_pageTip;
         [Header("Parameters")]
         [SerializeField] private bool m_displayTop;
         [SerializeField] private bool m_displayNavbar;
@@ -27,5 +28,8 @@ namespace umi3dBrowsers.data.ui
         public string TitlePrefix => m_titlePrefab;
         public string TitleSuffix => m_titleSuffix;
         public TitleType TitleType => m_titleType;
+
+        public bool HasPageTip => m_pageTip != null;
+        public PageTipData PageTip => m_pageTip;
     }
 }

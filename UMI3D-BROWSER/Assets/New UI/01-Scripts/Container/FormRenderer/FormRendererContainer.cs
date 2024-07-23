@@ -15,16 +15,10 @@ limitations under the License.
 */
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using umi3d.cdk.collaboration;
-using umi3d.cdk.menu.interaction;
 using umi3d.common.interaction;
 using umi3dBrowsers.linker;
-using umi3dVRBrowsersBase.connection;
-using Unity.VisualScripting;
+using umi3dBrowsers.linker.ui;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace umi3dBrowsers.container.formrenderer
 {
@@ -42,29 +36,32 @@ namespace umi3dBrowsers.container.formrenderer
         [SerializeField] private GameObject paramRoot;
 
         [SerializeField] private ParamformRenderer formParamRenderer;
-
-        public event Action<FormAnswerDto> OnFormAnwser;
+        [SerializeField] private DivformRenderer formDivRenderer;
 
         [Header("Linkers")]
         [SerializeField] private ConnectionServiceLinker connectionServiceLinker;
+        [SerializeField] private MenuNavigationLinker menuNavigationLinker;
 
         private void Awake()
         {
-            connectionServiceLinker.OnParamFormDtoReceived += (connectionFormDto) =>
-            {
-                HandleParamForm(connectionFormDto);
-            };
-        }
-        private void Start()
-        {
-            formParamRenderer.OnFormAnswer += (formDto) => OnFormAnwser?.Invoke(formDto);
+            connectionServiceLinker.OnParamFormDtoReceived += HandleParamForm;
+            connectionServiceLinker.OnDivFormDtoReceived += HandleDivForm;
         }
 
         public void HandleParamForm(ConnectionFormDto connectionFormDto)
         {
+            menuNavigationLinker.SetCancelButtonActive(true);
             formParamRenderer.Init(paramRoot);
             formParamRenderer.CleanContent(connectionFormDto.id);
             formParamRenderer.Handle(connectionFormDto);
+        }
+
+        public void HandleDivForm(umi3d.common.interaction.form.ConnectionFormDto connectionFormDto)
+        {
+            menuNavigationLinker.SetCancelButtonActive(false);
+            formDivRenderer.Init(paramRoot);
+            formDivRenderer.CleanContent(connectionFormDto.guid);
+            formDivRenderer.Handle(connectionFormDto);
         }
     }
 }

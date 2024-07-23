@@ -55,9 +55,6 @@ namespace umi3dBrowsers
         [SerializeField] private ColorBlock navBarButtonsColors = new ColorBlock();
         [Space]
         [SerializeField] private GameObject Top;
-#if UNITY_EDITOR
-        public void ToolAccessProcessForm(ConnectionFormDto connectionFormDto) {/* ProcessForm(connectionFormDto); */}
-#endif
 
 
         [Header("Navigation")]
@@ -75,9 +72,6 @@ namespace umi3dBrowsers
         [SerializeField] private UITweens tween;
         [SerializeField] private PlayerSpawner spawner;
         [SerializeField] private SceneLoader sceneLoader;
-
-        [Header("Options")]
-        [SerializeField] private bool forceFlagContent;
 
         [Header("Linker")]
         [SerializeField] private ConnectionToImmersiveLinker connectionToImmersiveLinker;
@@ -176,6 +170,14 @@ namespace umi3dBrowsers
         {
             connectionServiceLinker.OnParamFormDtoReceived += (connectionFormDto) =>
             {
+                if (parentTransform.gameObject.activeSelf == false)
+                {
+                    ShowUI();
+                    spawner.RepositionPlayer();
+                }
+                m_menuNavigationLinker.ShowPanel(m_formPanel);
+            };
+            connectionServiceLinker.OnDivFormDtoReceived += (connectionFormDto) => {
                 if (parentTransform.gameObject.activeSelf == false)
                 {
                     ShowUI();

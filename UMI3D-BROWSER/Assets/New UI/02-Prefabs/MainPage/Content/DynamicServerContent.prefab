@@ -441,7 +441,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -73}
+  m_AnchoredPosition: {x: 0, y: -98}
   m_SizeDelta: {x: 0, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &7987622305674645075
@@ -539,10 +539,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 2095598199557988102}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -55}
-  m_SizeDelta: {x: 0, y: -110}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -25}
+  m_SizeDelta: {x: 738, y: 310}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &9064025147618423764
 GameObject:
@@ -555,7 +555,7 @@ GameObject:
   - component: {fileID: 1089521771867605554}
   - component: {fileID: 6437036566123258891}
   - component: {fileID: 1193400614454046512}
-  - component: {fileID: 32198884445513503}
+  - component: {fileID: 808326237093957408}
   m_Layer: 5
   m_Name: DynamicServerContent
   m_TagString: Untagged
@@ -599,7 +599,10 @@ MonoBehaviour:
   contentRoot: {fileID: 3308768333321306138}
   paramRoot: {fileID: 1946961698949398182}
   formParamRenderer: {fileID: 1193400614454046512}
+  formDivRenderer: {fileID: 808326237093957408}
   connectionServiceLinker: {fileID: 11400000, guid: 24604fe66de00534e9fe94635a6279cf,
+    type: 2}
+  menuNavigationLinker: {fileID: 11400000, guid: 438855b4a25630a4db523fe93ebc1ca5,
     type: 2}
 --- !u!114 &1193400614454046512
 MonoBehaviour:
@@ -627,7 +630,7 @@ MonoBehaviour:
   validationButton: {fileID: 6764881931589576737}
   connectionServiceLinker: {fileID: 11400000, guid: 24604fe66de00534e9fe94635a6279cf,
     type: 2}
---- !u!114 &32198884445513503
+--- !u!114 &808326237093957408
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -636,8 +639,34 @@ MonoBehaviour:
   m_GameObject: {fileID: 9064025147618423764}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fc9d97f85ca49304499c3443fba49c0e, type: 3}
+  m_Script: {fileID: 11500000, guid: 859febb1104365b4fa02400f51576863, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefixTitleKey: empty
-  suffixTitleKey: empty
+  vignetteContainerPrefab: {fileID: 3160502414842021976, guid: 5658573cbd718f247a830647cd4a6a97,
+    type: 3}
+  groupContainerPrefab: {fileID: 5178461189047998669, guid: baaf14124e09bc44aa72a110d3fc45bf,
+    type: 3}
+  tabManager: {fileID: 7987622305674645075}
+  validationButton: {fileID: 6764881931589576737}
+  labelDisplayerPrefab: {fileID: 8370930241941166574, guid: 7b0e1ee21e3402f4a9cc9c3cea232b6e,
+    type: 3}
+  buttonDisplayerPrefab: {fileID: 7635469808214001579, guid: 39a8a545b6c4a2c4da50ed0df6c091d6,
+    type: 3}
+  imageDisplayerPrefab: {fileID: 4526573573664236330, guid: be214ef4d4f77e345b0639159c9ecde8,
+    type: 3}
+  inputFieldDisplayerPrefab: {fileID: 8370930241941166574, guid: 2a5a695f8f75a7e4aa1bff7c94c12ab2,
+    type: 3}
+  rangeDisplayerPrefab: {fileID: 3074182177419696406, guid: f74fa73e441bc9448aa738e727bf7884,
+    type: 3}
+  connectionServiceLinker: {fileID: 11400000, guid: 24604fe66de00534e9fe94635a6279cf,
+    type: 2}
+  objectsToNotCleanup:
+  - {fileID: 6127173452563234930}
+  - {fileID: 7810394937995887273}
+  - {fileID: 3308768333321306138}
+  - {fileID: 1946961698949398182}
+  - {fileID: 6004628016510422473}
+  - {fileID: 2508254290583818857}
+  - {fileID: 296451996952465717}
+  connectionToImmersiveLinker: {fileID: 11400000, guid: 68ff1a90a5151924e867698a4e1d3a2d,
+    type: 2}

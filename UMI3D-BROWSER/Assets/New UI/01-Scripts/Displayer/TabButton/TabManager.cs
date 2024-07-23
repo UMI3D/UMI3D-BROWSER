@@ -57,6 +57,7 @@ namespace umi3dBrowsers.container
 
         public void InitSelectedButtonById(int id = 0)
         {
+            if (tabs == null || tabs.Count == 0) return;
             foreach (var tab in tabs)
             {
                 tab.SetActive(false);
@@ -77,6 +78,8 @@ namespace umi3dBrowsers.container
 
         public void Clear()
         {
+            if (tabs == null)
+                return;
             foreach(var tab in tabs)
             {
                 tab.Clear();
@@ -107,6 +110,35 @@ namespace umi3dBrowsers.container
             tabBinder.Bind();
             tabBinder.OnSelectionChanged += (tabBinder) =>
             {
+                currentActiveButton = tabBinder;
+                UpdateTabsVisual();
+            };
+
+            if (tabs == null)
+            {
+                tabs = new();
+                currentActiveButton = tabBinder;
+                tabBinder.SetActive(true);
+            }
+            tabs.Add(tabBinder);
+
+            return tab;
+        }
+        public GameObject AddNewTab(string label, out Tab tabButton, bool useLocalization = false, GameObject container = null)
+        {
+            TabToContainerBinder tabBinder = new TabToContainerBinder();
+
+            tabButton = Instantiate(tabButtonPrefab, navigationRoot).GetComponent<Tab>();
+            tabButton.SetLabel(label, useLocalization);
+            GameObject tab = container;
+
+            if (tab == null) // Instantiate a container if none are given
+                tab = Instantiate(containerPrefab, contentRoot);
+
+            tabBinder.SetTabButton(tabButton);
+            tabBinder.SetTabContainer(tab);
+            tabBinder.Bind();
+            tabBinder.OnSelectionChanged += (tabBinder) => {
                 currentActiveButton = tabBinder;
                 UpdateTabsVisual();
             };

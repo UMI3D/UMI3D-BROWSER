@@ -24,7 +24,10 @@ namespace umi3dBrowsers.linker
         public void MediaServerPingSuccess(VirtualWorldData data) {  OnMediaServerPingSuccess?.Invoke(data);}
 
         public event Action<ConnectionFormDto> OnParamFormDtoReceived;
-        public void ParamFormDtoReceived(ConnectionFormDto data) {  OnParamFormDtoReceived?.Invoke(data);}
+        public void ParamFormDtoReceived(ConnectionFormDto data) {  OnParamFormDtoReceived?.Invoke(data); }
+
+        public event Action<umi3d.common.interaction.form.ConnectionFormDto> OnDivFormDtoReceived;
+        public void DivFormDtoReceived(umi3d.common.interaction.form.ConnectionFormDto data) { OnDivFormDtoReceived?.Invoke(data); }
 
         public event Action<List<string>, Action<bool>> OnAsksToLoadLibrairies;
         public void AsksToLoadLibrairies(List<string> ids, Action<bool> action) { OnAsksToLoadLibrairies?.Invoke(ids, action);}
@@ -40,5 +43,8 @@ namespace umi3dBrowsers.linker
 
         public event Action<FormAnswerDto> OnSendFormAnwser;
         public void SendFormAnswer(FormAnswerDto formAnswer) { OnSendFormAnwser?.Invoke(formAnswer); }
+
+        public event Action<umi3d.common.interaction.form.FormAnswerDto> OnSendDivFormAnwser;
+        public void SendDivFormAnswer(umi3d.common.interaction.form.FormAnswerDto formAnswer) { OnSendDivFormAnwser?.Invoke(formAnswer); }
     }
 }

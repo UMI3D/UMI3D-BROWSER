@@ -807,7 +807,7 @@ GameObject:
   - component: {fileID: 1818478995513232185}
   - component: {fileID: 9219437335763470368}
   m_Layer: 5
-  m_Name: ButtonDone
+  m_Name: ButtonRedo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -916,8 +916,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2444331496189273469}
-        m_TargetAssemblyTypeName: PageTipDisplayer, Assembly-CSharp
-        m_MethodName: Done
+        m_TargetAssemblyTypeName: PanelTutoDisplayer, Assembly-CSharp
+        m_MethodName: Redo
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1157,7 +1157,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   localizeStringEvent: {fileID: 3701651975407330644}
   buttonNext: {fileID: 5005688865599763428}
-  buttonDone: {fileID: 9219437335763470368}
+  buttonRedo: {fileID: 9219437335763470368}
   buttonPrevious: {fileID: 4935804787527944612}
 --- !u!1 &6634595346571087356
 GameObject:
@@ -1600,7 +1600,7 @@ GameObject:
   - component: {fileID: 170391237037334511}
   - component: {fileID: 260891380429965078}
   m_Layer: 5
-  m_Name: ButtonNext_Label
+  m_Name: ButtonRedo_Label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1653,7 +1653,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Done
+  m_text: Redo
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4acad17a965a2b2419bf6e3a131cdeea, type: 2}
   m_sharedMaterial: {fileID: 9069234558876671038, guid: 4acad17a965a2b2419bf6e3a131cdeea,

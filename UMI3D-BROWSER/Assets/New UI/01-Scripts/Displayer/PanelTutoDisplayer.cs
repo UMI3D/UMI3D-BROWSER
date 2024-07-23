@@ -23,7 +23,7 @@ public class PanelTutoDisplayer : MonoBehaviour
 {
     [SerializeField] private LocalizeStringEvent localizeStringEvent;
     [SerializeField] private Button buttonNext;
-    [SerializeField] private Button buttonDone;
+    [SerializeField] private Button buttonRedo;
     [SerializeField] private Button buttonPrevious;
 
     private PanelTutoManager _currentPanelTutoManager;
@@ -49,9 +49,10 @@ public class PanelTutoDisplayer : MonoBehaviour
         ++_tutoIndex;
         GoTo();
     }
-    public void Done()
+    public void Redo()
     {
-        Hide();
+        _tutoIndex = 0;
+        GoTo();
     }
     public void Previous()
     {
@@ -74,20 +75,20 @@ public class PanelTutoDisplayer : MonoBehaviour
         {
             _tutoIndex = _currentPanelTutoManager.Count - 1;
             buttonNext.gameObject.SetActive(false);
-            buttonDone.gameObject.SetActive(true);
+            buttonRedo.gameObject.SetActive(true);
             buttonPrevious.gameObject.SetActive(_currentPanelTutoManager.Count > 1);
         }
         else if (_tutoIndex <= 0)
         {
             _tutoIndex = 0;
             buttonNext.gameObject.SetActive(_currentPanelTutoManager.Count > 1);
-            buttonDone.gameObject.SetActive(_currentPanelTutoManager.Count == 1);
+            buttonRedo.gameObject.SetActive(_currentPanelTutoManager.Count == 1);
             buttonPrevious.gameObject.SetActive(false);
         }
         else
         {
             buttonNext.gameObject.SetActive(true);
-            buttonDone.gameObject.SetActive(false);
+            buttonRedo.gameObject.SetActive(false);
             buttonPrevious.gameObject.SetActive(true);
         }
         EventSystem.current.SetSelectedGameObject(null);

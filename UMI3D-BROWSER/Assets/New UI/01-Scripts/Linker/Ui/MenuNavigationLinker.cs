@@ -16,7 +16,7 @@ namespace umi3dBrowsers.linker.ui
         public event Action<bool> OnSetCancelButtonActive;
         public event Action OnReplacePlayerAndShowPanel;
         public void ReplacePlayerAndShowPanel() { OnReplacePlayerAndShowPanel?.Invoke(); }
-        public event Action<PanelData> OnPanelChanged;
+        public event Action<PanelData, PanelTutoManager> OnPanelChanged;
 
         public bool ForceLanguage => m_forceLanguage;
 
@@ -62,7 +62,7 @@ namespace umi3dBrowsers.linker.ui
             m_currentPanelData = pPanelData;
             m_panels[m_currentPanelData].SetActive(true);
 
-            OnPanelChanged?.Invoke(m_currentPanelData);
+            OnPanelChanged?.Invoke(m_currentPanelData, m_panels[m_currentPanelData].GetComponentInChildren<PanelTutoManager>());
         }
 
         public void Back()

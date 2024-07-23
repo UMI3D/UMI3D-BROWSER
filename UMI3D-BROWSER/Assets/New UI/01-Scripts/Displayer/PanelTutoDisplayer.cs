@@ -19,32 +19,34 @@ using UnityEngine.EventSystems;
 using UnityEngine.Localization.Components;
 using UnityEngine.UI;
 
-public class PageTipDisplayer : MonoBehaviour
+public class PanelTutoDisplayer : MonoBehaviour
 {
     [SerializeField] private LocalizeStringEvent localizeStringEvent;
     [SerializeField] private Button buttonNext;
     [SerializeField] private Button buttonDone;
     [SerializeField] private Button buttonPrevious;
 
-    private PageTipData _pageTipData;
-    private int _pageIndex;
+    private PanelTutoManager _currentPanelTutoManager;
+    private PanelTuto _currentPanelTuto;
+    private int _tutoIndex;
 
     private RectTransform _rectTransform;
 
-    public void Show(PageTipData pageTipData)
+    public void Show(PanelTutoManager pageTipDataManager)
     {
         _rectTransform = transform as RectTransform;
         gameObject.SetActive(true);
-        Init(pageTipData);
+        Init(pageTipDataManager);
     }
     public void Hide()
     {
+        _currentPanelTuto?.HideElementOverlay();
         gameObject.SetActive(false);
     }
 
     public void Next()
     {
-        ++_pageIndex;
+        ++_tutoIndex;
         GoTo();
     }
     public void Done()
@@ -53,31 +55,33 @@ public class PageTipDisplayer : MonoBehaviour
     }
     public void Previous()
     {
-        --_pageIndex;
+        --_tutoIndex;
         GoTo();
     }
 
-    private void Init(PageTipData pageTipData)
+    private void Init(PanelTutoManager pageTipDataManager)
     {
-        _pageTipData = pageTipData;
-        _pageIndex = 0;
+        _currentPanelTutoManager = pageTipDataManager;
+        _tutoIndex = 0;
         GoTo();
     }
 
     private void GoTo()
     {
-        if (_pageIndex >= _pageTipData.Count - 1)
+        _currentPanelTuto?.HideElementOverlay();
+
+        if (_tutoIndex >= _currentPanelTutoManager.Count - 1)
         {
-            _pageIndex = _pageTipData.Count - 1;
+            _tutoIndex = _currentPanelTutoManager.Count - 1;
             buttonNext.gameObject.SetActive(false);
             buttonDone.gameObject.SetActive(true);
-            buttonPrevious.gameObject.SetActive(_pageTipData.Count > 1);
+            buttonPrevious.gameObject.SetActive(_currentPanelTutoManager.Count > 1);
         }
-        else if (_pageIndex <= 0)
+        else if (_tutoIndex <= 0)
         {
-            _pageIndex = 0;
-            buttonNext.gameObject.SetActive(_pageTipData.Count > 1);
-            buttonDone.gameObject.SetActive(_pageTipData.Count == 1);
+            _tutoIndex = 0;
+            buttonNext.gameObject.SetActive(_currentPanelTutoManager.Count > 1);
+            buttonDone.gameObject.SetActive(_currentPanelTutoManager.Count == 1);
             buttonPrevious.gameObject.SetActive(false);
         }
         else
@@ -88,8 +92,9 @@ public class PageTipDisplayer : MonoBehaviour
         }
         EventSystem.current.SetSelectedGameObject(null);
 
-        var tip = _pageTipData.GetTip(_pageIndex);
-        localizeStringEvent.SetEntry(tip.LocalizedString);
-        _rectTransform.anchoredPosition = tip.Position;
+        _currentPanelTuto = _currentPanelTutoManager.GetTuto(_tutoIndex);
+        localizeStringEvent.SetEntry(_currentPanelTuto.LocalisedKey);
+        _rectTransform.anchoredPosition = _currentPanelTuto.TutoPosition;
+        _currentPanelTuto.ShowElementOverlay();
     }
 }

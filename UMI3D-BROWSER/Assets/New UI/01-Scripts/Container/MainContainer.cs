@@ -74,7 +74,7 @@ namespace umi3dBrowsers
         [SerializeField] private UITweens tween;
         [SerializeField] private PlayerSpawner spawner;
         [SerializeField] private SceneLoader sceneLoader;
-        [SerializeField] private PageTipDisplayer PageTipDisplayer;
+        [SerializeField] private PanelTutoDisplayer PageTipDisplayer;
 
         [Header("Linker")]
         [SerializeField] private ConnectionToImmersiveLinker connectionToImmersiveLinker;
@@ -96,15 +96,19 @@ namespace umi3dBrowsers
             m_menuNavigationLinker.Initialize(contentTransform);
             m_menuNavigationLinker.OnSetCancelButtonActive += (active) => cancelConnectionButton.gameObject.SetActive(active);
 
-            m_menuNavigationLinker.OnPanelChanged += panel => {
+            m_menuNavigationLinker.OnPanelChanged += (panel, panelTutoManager) => {
                 Top.SetActive(panel.DisplayTop);
                 title.SetTitle(panel.TitleType, panel.TitlePrefix, panel.TitleSuffix);
                 navBar.SetActive(panel.DisplayNavbar);
                 backButton.gameObject.SetActive(panel.DisplayBack);
 
-                PageTipButton.transform.parent.gameObject.SetActive(panel.HasPageTip);
-                PageTipButton.onClick.RemoveAllListeners();
-                PageTipButton.onClick.AddListener(() => PageTipDisplayer.Show(panel.PageTip));
+                var hasTuto = panelTutoManager != null && panelTutoManager.Count > 0;
+                PageTipButton.transform.parent.gameObject.SetActive(hasTuto);
+                if (hasTuto)
+                {
+                    PageTipButton.onClick.RemoveAllListeners();
+                    PageTipButton.onClick.AddListener(() => PageTipDisplayer.Show(panelTutoManager));
+                }
             };
 
             m_popupLinker.Initialize(popupTransform);

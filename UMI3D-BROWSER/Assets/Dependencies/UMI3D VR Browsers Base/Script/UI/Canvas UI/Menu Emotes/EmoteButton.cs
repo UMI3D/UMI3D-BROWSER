@@ -34,10 +34,16 @@ namespace umi3dVRBrowsersBase.ui
 
         public EmoteButton() 
         {
+            Debug.LogError("TODO : Revert fix which disables ui not added to canvas");
+
             Emote = new Image_C();
+            Emote.Go.SetActive(false);
             Name = new Text_C();
+            Name.Go.SetActive(false);
             Box = new Vbox_C(0f, Emote.Go, Name.Go);
+            Box.Go.SetActive(false);
             Button = new Button_C(EmoteClicked, Box.Go);
+            Button.Go.SetActive(false);
 
             Button.RectTBehaviour.RectTransformChanged += () =>
             {

@@ -25,13 +25,13 @@ public class PanelTutoManager : MonoBehaviour
     public PanelTuto GetTuto(int index) => lstPanelTuto[index];
     public int Count => lstPanelTuto.Count;
 
-    protected void Awake()
+    protected void OnEnable()
     {
+        SearchPanelTuto();
         foreach (var tuto in lstPanelTuto)
             tuto.HideElementOverlay();
     }
 
-#if UNITY_EDITOR
     [ContextMenu("Search for panel tuto")]
     private void SearchPanelTuto()
     {
@@ -47,5 +47,4 @@ public class PanelTutoManager : MonoBehaviour
                     lstPanelTuto.Add(panelTuto);
         }
     }
-#endif
 }

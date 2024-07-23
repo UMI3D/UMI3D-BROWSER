@@ -37,6 +37,16 @@ namespace umi3dBrowsers.container
 
     public class Settings : MonoBehaviour
     {
+        [Serializable]
+        struct SettingsTab
+        {
+            public settingPanel Panel;
+            [Header("Page Tuto")]
+            public bool Use;
+            public string LocalisedKey;
+            public Vector2 TutoPosition;
+        }
+
         [Header("General")]
         [SerializeField] private UnityEngine.Localization.Locale selectedLanguage;
         [SerializeField] private AvailibleThemes selectedTheme;
@@ -62,8 +72,9 @@ namespace umi3dBrowsers.container
         [SerializeField] private TabManager tabManager;
         [SerializeField] private int startPanelIndex;
         [Space]
-        [SerializeField] private List<settingPanel> settingPanels = new();
+        [SerializeField] private List<SettingsTab> settingPanels = new();
         [SerializeField] private bool useLocalization;
+        [SerializeField] private GameObject panelTutoPrefab;
 
         private void Awake()
         {
@@ -87,7 +98,12 @@ namespace umi3dBrowsers.container
         {
             for(int i = 0; i<settingPanels.Count; i++)
             {
-                tabManager.AddNewTab(settingPanels[i].PanelName, useLocalization, settingPanels[i].Panel);
+                tabManager.AddNewTab(settingPanels[i].Panel.PanelName, out var tab, useLocalization, settingPanels[i].Panel.Panel);
+                if (settingPanels[i].Use)
+                {
+                    var panelTuto = Instantiate(panelTutoPrefab, tab.transform).GetComponent<PanelTuto>();
+                    panelTuto.Set(settingPanels[i].LocalisedKey, settingPanels[i].TutoPosition);
+                }
             }
 
             tabManager.InitSelectedButtonById();

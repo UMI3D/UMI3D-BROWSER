@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Localization.Components;
 using UnityEngine.UI;
 
@@ -85,6 +86,7 @@ public class PageTipDisplayer : MonoBehaviour
             buttonDone.gameObject.SetActive(false);
             buttonPrevious.gameObject.SetActive(true);
         }
+        EventSystem.current.SetSelectedGameObject(null);
 
         var tip = _pageTipData.GetTip(_pageIndex);
         localizeStringEvent.SetEntry(tip.LocalizedString);

@@ -15,15 +15,11 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
-using System;
 using System.Collections;
 using umi3d.browserRuntime.navigation;
 using umi3d.cdk;
 using umi3d.cdk.collaboration.userCapture;
 using umi3d.cdk.navigation;
-using umi3dVRBrowsersBase.interactions;
-using umi3dVRBrowsersBase.navigation;
-using Unity.VisualScripting;
 using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;

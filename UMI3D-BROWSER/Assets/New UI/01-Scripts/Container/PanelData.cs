@@ -11,7 +11,6 @@ namespace umi3dBrowsers.data.ui
         [SerializeField] private bool m_displayTop;
         [SerializeField] private bool m_displayNavbar;
         [SerializeField] private bool m_displayBack;
-        [SerializeField] private bool m_displayCancel;
         [SerializeField] private bool m_canBeReturnedTo;
         [Header("Title")]
         [SerializeField] private string m_titlePrefab;
@@ -23,7 +22,6 @@ namespace umi3dBrowsers.data.ui
         public bool DisplayTop => m_displayTop;
         public bool DisplayNavbar => m_displayNavbar;
         public bool DisplayBack => m_displayBack;
-        public bool DisplayCancel => m_displayCancel;
         public bool CanBeReturnedTo => m_canBeReturnedTo;
 
         public string TitlePrefix => m_titlePrefab;

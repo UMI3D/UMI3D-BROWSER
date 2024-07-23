@@ -19,6 +19,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using umi3d;
+using umi3d.common.interaction.form;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -56,18 +57,59 @@ namespace umi3dBrowsers.displayer
 
         public void SetColor(Color color)
         {
-            throw new NotImplementedException();
         }
 
         public void SetResource(object resource)
         {
-            throw new NotImplementedException();
         }
 
-        public void SetPrivateParam(bool privateParameter)
+        public void SetType(TextType type)
         {
-            if (privateParameter == true)
-                textInputField.contentType = TMP_InputField.ContentType.Password;
+            textInputField.contentType = ToContentType(type);
+            if (type == TextType.Phone)
+                textInputField.characterLimit = 15;
+
+            textInputField.characterValidation = ToCharaterValidation(type);
+        }
+
+        private TMP_InputField.ContentType ToContentType(TextType type)
+        {
+            switch (type)
+            {
+                case TextType.Text:
+                    return TMP_InputField.ContentType.Standard;
+                case TextType.Mail:
+                    return TMP_InputField.ContentType.EmailAddress;
+                case TextType.Password:
+                    return TMP_InputField.ContentType.Password;
+                case TextType.Phone:
+                    return TMP_InputField.ContentType.IntegerNumber;
+                case TextType.URL:
+                    return TMP_InputField.ContentType.Standard;
+                case TextType.Number:
+                    return TMP_InputField.ContentType.IntegerNumber;
+            }
+            return TMP_InputField.ContentType.Standard;
+        }
+
+        private TMP_InputField.CharacterValidation ToCharaterValidation(TextType type)
+        {
+            switch (type)
+            {
+                case TextType.Text:
+                    return TMP_InputField.CharacterValidation.None;
+                case TextType.Mail:
+                    return TMP_InputField.CharacterValidation.EmailAddress;
+                case TextType.Password:
+                    return TMP_InputField.CharacterValidation.None;
+                case TextType.Phone:
+                    return TMP_InputField.CharacterValidation.Integer;
+                case TextType.URL:
+                    return TMP_InputField.CharacterValidation.None;
+                case TextType.Number:
+                    return TMP_InputField.CharacterValidation.Decimal;
+            }
+            return TMP_InputField.CharacterValidation.Name;
         }
     }
 }

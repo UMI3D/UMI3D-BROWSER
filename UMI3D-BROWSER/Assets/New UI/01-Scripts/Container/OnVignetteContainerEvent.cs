@@ -24,7 +24,7 @@ namespace umi3dBrowsers.container
         [SerializeField] private VignetteContainerEvent vignetteContainerEvent;
 
         [SerializeField] private UnityEvent onReset;
-        [SerializeField] private UnityEvent<VignetteContainer.VignetteScale> onVignetteChangeMode;
+        [SerializeField] private UnityEvent<E_VignetteScale> onVignetteChangeMode;
 
         private void OnEnable()
         {
@@ -39,6 +39,6 @@ namespace umi3dBrowsers.container
         }
 
         private void OnReset() => onReset?.Invoke();
-        private void OnVignetteChangeMode(VignetteContainer.VignetteScale scale) => onVignetteChangeMode?.Invoke(scale);
+        private void OnVignetteChangeMode(E_VignetteScale scale) => onVignetteChangeMode?.Invoke(scale);
     }
 }

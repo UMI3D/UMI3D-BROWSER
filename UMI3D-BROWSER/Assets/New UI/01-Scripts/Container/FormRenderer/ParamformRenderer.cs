@@ -53,10 +53,9 @@ namespace umi3dBrowsers.container.formrenderer
         {
             this._contentRoot = contentRoot;
 
-            validationButton.OnClick.AddListener(() => ValidateForm());
-
             OnFormAnswer += connectionServiceLinker.SendFormAnswer;
         }
+
 
         internal void Handle(ConnectionFormDto connectionFormDto)
         {
@@ -116,12 +115,12 @@ namespace umi3dBrowsers.container.formrenderer
                                     gameObject = Instantiate(textPrefab, container.transform);
                                 else
                                     gameObject = Instantiate(textFieldPrefab, container.transform);
-                                var inputFieldDisplayer = gameObject?.GetComponentInChildren<IDisplayer>();
+                                var inputFieldDisplayer = gameObject?.GetComponentInChildren<IInputFieldDisplayer>();
                                 displayer = inputFieldDisplayer;
                                 formBinding.Add(() => paramRequestDto.parameter = displayer?.GetValue(true));
                                 displayer?.SetTitle(stringParam.name);
                                 displayer?.SetPlaceHolder(new List<string>() { stringParam.description });
-                                ((IInputFieldDisplayer)inputFieldDisplayer)?.SetPrivateParam(connectionFormDto.fields[i].privateParameter);
+                                inputFieldDisplayer?.SetType(connectionFormDto.fields[i].privateParameter ? umi3d.common.interaction.form.TextType.Password : umi3d.common.interaction.form.TextType.Text);
                             }
                         }
                         break;

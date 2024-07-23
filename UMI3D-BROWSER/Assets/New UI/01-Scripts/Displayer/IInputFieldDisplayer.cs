@@ -15,12 +15,13 @@ limitations under the License.
 */
 
 using System;
+using umi3d.common.interaction.form;
 using UnityEngine;
 
 namespace umi3d
 {
     public interface IInputFieldDisplayer : IDisplayer
     {
-        void SetPrivateParam(bool privateParameter);
+        void SetType(TextType type);
     }
 }

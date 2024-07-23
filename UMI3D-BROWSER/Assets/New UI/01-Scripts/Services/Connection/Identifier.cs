@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using umi3d.cdk.collaboration;
 using umi3d.common.interaction;
+using Unity.Burst.Intrinsics;
 using UnityEngine;
 
 namespace umi3dBrowsers.services.connection
@@ -28,6 +29,7 @@ namespace umi3dBrowsers.services.connection
     {
         public Action<List<string>, Action<bool>> OnLibrairiesAvailible;
         public Action<ConnectionFormDto, Action<FormAnswerDto>> OnParamFormAvailible;
+        public Action<umi3d.common.interaction.form.ConnectionFormDto, Action<umi3d.common.interaction.form.FormAnswerDto>> OnDivFormAvailable;
 
         public Action OnAnswerFailed;
 
@@ -50,6 +52,20 @@ namespace umi3dBrowsers.services.connection
             Action<FormAnswerDto> callback = (formAnswer) => { form = formAnswer; isWaiting = false; };
 
             OnParamFormAvailible.Invoke(parameter, callback);
+
+            while (isWaiting)
+                await Task.Yield();
+            return form;
+        }
+
+        public override async Task<umi3d.common.interaction.form.FormAnswerDto> GetParameterDtos(umi3d.common.interaction.form.ConnectionFormDto parameter)
+        {
+            bool isWaiting = true;
+            umi3d.common.interaction.form.FormAnswerDto form = null;
+
+            Action<umi3d.common.interaction.form.FormAnswerDto> callback = (formAnswer) => { form = formAnswer; isWaiting = false; };
+
+            OnDivFormAvailable.Invoke(parameter, callback);
 
             while (isWaiting)
                 await Task.Yield();

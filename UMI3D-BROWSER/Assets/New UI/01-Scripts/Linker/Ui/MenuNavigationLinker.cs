@@ -74,13 +74,17 @@ namespace umi3dBrowsers.linker.ui
             m_lastPanelData = null;
         }
 
+        public void SetCancelButtonActive(bool pShow)
+        {
+            OnSetCancelButtonActive?.Invoke(pShow);
+        }
+
         private void UpdateDisplayer()
         {
             OnSetTopActive?.Invoke(m_currentPanelData.DisplayTop);
             OnSetTitle?.Invoke(m_currentPanelData.TitleType, m_currentPanelData.TitlePrefix, m_currentPanelData.TitleSuffix);
             OnSetNavBarActive?.Invoke(m_currentPanelData.DisplayNavbar);
             OnSetBackButtonActive?.Invoke(m_currentPanelData.DisplayBack);
-            OnSetCancelButtonActive?.Invoke(m_currentPanelData.DisplayCancel);
         }
     }
 }

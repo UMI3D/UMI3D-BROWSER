@@ -46,6 +46,7 @@ public class Badge : MonoBehaviour
         scaller = GetComponent<UIColliderScaller>();
     }
 
+    [ContextMenu("UpdateUI")]
     private void OnGUI()
     {
         backgroundTransform.sizeDelta = new Vector2(textTransform.sizeDelta.x + 2f * padding, textTransform.sizeDelta.y + padding);

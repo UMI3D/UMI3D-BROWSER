@@ -20,6 +20,7 @@ using umi3d.browserRuntime.navigation;
 using umi3d.cdk;
 using umi3d.cdk.collaboration.userCapture;
 using umi3d.cdk.navigation;
+using umi3dBrowsers.linker;
 using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
@@ -48,6 +49,7 @@ namespace umi3d.browserRuntime.player
         /// The <see cref="UMI3DVRPlayer"/> linker.
         /// </summary>
         Linker<UMI3DVRPlayer> linker;
+        [SerializeField] private ConnectionToImmersiveLinker connectionLinker;
 
         private void Awake()
         {
@@ -109,6 +111,12 @@ namespace umi3d.browserRuntime.player
 
             // Center the camera at the position of the player.
             PlayerTransformUtils.CenterCamera(mainCamera.transform.parent, mainCamera.transform);
+        }
+
+        [ContextMenu("Leave")]
+        void DebugLeave()
+        {
+            connectionLinker.Leave();
         }
     }
 }

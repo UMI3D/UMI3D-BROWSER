@@ -40,9 +40,7 @@ namespace umi3dVRBrowsersBase.ui
 
         public Text_C(string text = null)
         {
-            Debug.Log("INSTANTIATE TEXT");
-
-            Go = new GameObject("fraise");
+            Go = new GameObject("Text");
             TextPro = Go.AddComponent<TextMeshProUGUI>();
             RectT = Go.GetComponent<RectTransform>();
             RectTBehaviour = Go.AddComponent<RectTBehaviour>();

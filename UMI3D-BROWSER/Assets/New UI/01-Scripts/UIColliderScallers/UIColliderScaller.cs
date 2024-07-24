@@ -36,6 +36,7 @@ namespace umi3dBrowsers.utils
 
         [Header("GUI")]
         [SerializeField] private bool updateOnGUI;
+        [SerializeField] private bool setCenter;
         private void OnEnable()
         {
             if (!uiColliderScalers.Contains(this))
@@ -87,6 +88,8 @@ namespace umi3dBrowsers.utils
 
             Vector3 size = new Vector3(_transform.rect.width, _transform.rect.height, 0.01f);
             _collider.size = size;
+            if (setCenter)
+                _collider.center = new Vector2((0.5f - _transform.pivot.x) * _transform.sizeDelta.x, (0.5f - _transform.pivot.y) * _transform.sizeDelta.y);
         }
 
         private void LateUpdate()

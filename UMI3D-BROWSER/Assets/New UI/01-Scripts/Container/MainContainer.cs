@@ -30,6 +30,7 @@ using umi3dBrowsers.linker.ui;
 using umi3dBrowsers.sceneManagement;
 using umi3dBrowsers.services.connection;
 using umi3dBrowsers.services.title;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Experimental.GlobalIllumination;
 using UnityEngine.Localization.Settings;
@@ -55,6 +56,7 @@ namespace umi3dBrowsers
         [SerializeField] private ColorBlock navBarButtonsColors = new ColorBlock();
         [Space]
         [SerializeField] private GameObject Top;
+        [SerializeField] private Button PageTipButton;
 
 
         [Header("Navigation")]
@@ -72,6 +74,7 @@ namespace umi3dBrowsers
         [SerializeField] private UITweens tween;
         [SerializeField] private PlayerSpawner spawner;
         [SerializeField] private SceneLoader sceneLoader;
+        [SerializeField] private PanelTutoDisplayer PageTipDisplayer;
 
         [Header("Linker")]
         [SerializeField] private ConnectionToImmersiveLinker connectionToImmersiveLinker;
@@ -91,12 +94,22 @@ namespace umi3dBrowsers
             LocalizationSettings.SelectedLocale = local ?? LocalizationSettings.ProjectLocale;
 
             m_menuNavigationLinker.Initialize(contentTransform);
-
-            m_menuNavigationLinker.OnSetTopActive += (active) => Top.SetActive(active);
-            m_menuNavigationLinker.OnSetTitle += (type, prefix, suffix) => title.SetTitle(type, prefix, suffix);
-            m_menuNavigationLinker.OnSetNavBarActive += (active) => navBar.SetActive(active);
-            m_menuNavigationLinker.OnSetBackButtonActive += (active) => backButton.gameObject.SetActive(active);
             m_menuNavigationLinker.OnSetCancelButtonActive += (active) => cancelConnectionButton.gameObject.SetActive(active);
+
+            m_menuNavigationLinker.OnPanelChanged += (panel, panelTutoManager) => {
+                Top.SetActive(panel.DisplayTop);
+                title.SetTitle(panel.TitleType, panel.TitlePrefix, panel.TitleSuffix);
+                navBar.SetActive(panel.DisplayNavbar);
+                backButton.gameObject.SetActive(panel.DisplayBack);
+
+                var hasTuto = panelTutoManager != null && panelTutoManager.Count > 0;
+                PageTipButton.transform.parent.gameObject.SetActive(hasTuto);
+                if (hasTuto)
+                {
+                    PageTipButton.onClick.RemoveAllListeners();
+                    PageTipButton.onClick.AddListener(() => PageTipDisplayer.Show(panelTutoManager));
+                }
+            };
 
             m_popupLinker.Initialize(popupTransform);
 

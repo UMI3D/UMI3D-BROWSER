@@ -16,6 +16,7 @@ limitations under the License.
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TMPro;
 using umi3d;
 using umi3d.cdk.collaboration;
@@ -115,11 +116,21 @@ namespace umi3dBrowsers
 
             connectionToImmersiveLinker.OnLeave += () =>
             {
+                // Reset the set up skeleton to compute the size of the player.
+                connectionToImmersiveLinker.SetSetUpSkeleton(null);
+                new Task(async () =>
+                {
+                    while (connectionToImmersiveLinker.SetUpSkeleton == null)
+                    {
+                        await Task.Yield();
+                    }
+                    connectionToImmersiveLinker.StandUp();
+                }).Start(TaskScheduler.FromCurrentSynchronizationContext());
+
                 ShowUI();
                 m_menuNavigationLinker.ShowPanel(m_mainMenuPanel);
                 connectionProcessorService.Disconnect();
                 sceneLoader.ReloadScene();
-                connectionToImmersiveLinker.StandUp();
             };
         }
 

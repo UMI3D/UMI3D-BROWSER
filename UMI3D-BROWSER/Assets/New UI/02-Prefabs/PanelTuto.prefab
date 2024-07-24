@@ -414,6 +414,7 @@ MonoBehaviour:
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
   updateOnGUI: 0
+  setCenter: 0
 --- !u!1 &2637698846177468924
 GameObject:
   m_ObjectHideFlags: 0
@@ -1003,6 +1004,7 @@ MonoBehaviour:
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
   updateOnGUI: 1
+  setCenter: 1
 --- !u!1 &5363808881975649790
 GameObject:
   m_ObjectHideFlags: 0
@@ -1174,6 +1176,7 @@ MonoBehaviour:
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
   updateOnGUI: 0
+  setCenter: 0
 --- !u!1 &5869417610409397715
 GameObject:
   m_ObjectHideFlags: 0
@@ -1606,7 +1609,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: -12, y: 10}
-  m_SizeDelta: {x: 163.67, y: 29}
+  m_SizeDelta: {x: 141.13, y: 29}
   m_Pivot: {x: 1, y: 0}
 --- !u!222 &6961869839254046629
 CanvasRenderer:
@@ -1721,8 +1724,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 163.67, y: 29, z: 0.01}
-  m_Center: {x: -81.835, y: 14.5, z: 0}
+  m_Size: {x: 141.13, y: 29, z: 0.01}
+  m_Center: {x: -70.565, y: 14.5, z: 0}
 --- !u!114 &7117255920643945529
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1738,6 +1741,7 @@ MonoBehaviour:
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
   updateOnGUI: 1
+  setCenter: 1
 --- !u!1 &7944974992762167966
 GameObject:
   m_ObjectHideFlags: 0
@@ -2097,6 +2101,7 @@ MonoBehaviour:
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
   updateOnGUI: 0
+  setCenter: 0
 --- !u!222 &3082011724175802138
 CanvasRenderer:
   m_ObjectHideFlags: 0

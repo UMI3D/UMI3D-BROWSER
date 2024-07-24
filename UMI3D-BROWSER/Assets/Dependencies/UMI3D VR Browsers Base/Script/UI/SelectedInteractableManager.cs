@@ -166,10 +166,9 @@ namespace umi3dVRBrowsersBase.ui
                 if (interactions[0] is EventDto || interactions[0] is ManipulationDto)
                 {
                     string _label = interactions[0].name;
-                    if (string.IsNullOrEmpty(_label) || _label == "new tool")
+                    if (_label == "new tool")
                     {
                         _label = "";
-                        background.enabled = false;
                     }
                     label.text = _label;
                 }
@@ -190,6 +189,11 @@ namespace umi3dVRBrowsersBase.ui
                 label.text = interactable.name;
                 PlayerMenuManager.Instance.CtrlToolMenu.RememberParameters();
                 UnityEngine.Debug.LogError($"[Selected Interactable] Unhandled case");
+            }
+
+            if (string.IsNullOrEmpty(label.text))
+            {
+                background.enabled = false;
             }
 
             transform.position = position;

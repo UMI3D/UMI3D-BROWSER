@@ -106,6 +106,7 @@ namespace umi3dBrowsers
                 m_menuNavigationLinker.ShowPanel(m_mainMenuPanel);
                 connectionProcessorService.Disconnect();
                 sceneLoader.ReloadScene();
+                connectionToImmersiveLinker.StandUp();
             };
         }
 

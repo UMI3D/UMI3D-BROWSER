@@ -36,6 +36,9 @@ namespace com.inetum.unitygeckowebview
         /// </summary>
         public void onTextInputSelected()
         {
+            if (webView is null)
+                return;
+
             UnityGeckoWebView.actionsToRunOnMainThread.Enqueue(() => webView.OnTextInputSelected?.Invoke());
         }
 
@@ -44,6 +47,9 @@ namespace com.inetum.unitygeckowebview
         /// </summary>
         public void onUrlStartedLoading(string url)
         {
+            if (webView is null)
+                return;
+
             UnityGeckoWebView.actionsToRunOnMainThread.Enqueue(() => webView.OnUrlStartedLoading?.Invoke(url));
         }
     }

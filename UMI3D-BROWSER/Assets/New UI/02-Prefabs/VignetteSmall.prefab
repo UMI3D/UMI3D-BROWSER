@@ -107,10 +107,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 2253587701443598097}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 64, y: 64}
+  m_SizeDelta: {x: 826, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7090141949112360002
 CanvasRenderer:
@@ -362,6 +362,7 @@ MonoBehaviour:
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
   updateOnGUI: 0
+  setCenter: 0
 --- !u!225 &3885882739101740867
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -579,8 +580,8 @@ RectTransform:
   - {fileID: 8285204237041413818}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -707,6 +708,7 @@ MonoBehaviour:
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
   updateOnGUI: 0
+  setCenter: 0
 --- !u!114 &8606120696466234703
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1080,7 +1082,6 @@ MonoBehaviour:
   m_isRichTextEditingAllowed: 0
   m_LineLimit: 0
   m_InputValidator: {fileID: 0}
-  keyboard: {fileID: 0}
 --- !u!65 &6321428047188744490
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1117,6 +1118,7 @@ MonoBehaviour:
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
   updateOnGUI: 0
+  setCenter: 0
 --- !u!1 &6589570799936200346
 GameObject:
   m_ObjectHideFlags: 0
@@ -1329,6 +1331,7 @@ MonoBehaviour:
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
   updateOnGUI: 0
+  setCenter: 0
 --- !u!225 &1985186691348029351
 CanvasGroup:
   m_ObjectHideFlags: 0

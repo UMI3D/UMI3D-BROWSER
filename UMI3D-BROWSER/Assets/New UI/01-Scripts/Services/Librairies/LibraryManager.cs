@@ -32,6 +32,8 @@ namespace umi3dBrowsers.services.librairies
     {
         [SerializeField] private PopupLinker popupLinker;
         [SerializeField] private PopupData deleteLibPopup;
+        [SerializeField] private SimpleButton buttonUp;
+        [SerializeField] private SimpleButton buttonDown;
 
         /// <summary>
         /// Prefab used to represent a library in the menu.
@@ -161,6 +163,8 @@ namespace umi3dBrowsers.services.librairies
                 bool display = (i >= indexOfCurrentTopEntryDisplayed) && (i <= indexOfCurrentTopEntryDisplayed + nbLibraryDisplayedAtSameTime);
                 currentEntries[i].gameObject.SetActive(display);
             }
+            buttonUp.gameObject.SetActive(currentEntries.Count > nbLibraryDisplayedAtSameTime);
+            buttonDown.gameObject.SetActive(currentEntries.Count > nbLibraryDisplayedAtSameTime);
         }
     }
 }

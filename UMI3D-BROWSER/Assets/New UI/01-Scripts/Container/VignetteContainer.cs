@@ -19,7 +19,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Policy;
 using System.Threading.Tasks;
 using umi3d.common.interaction.form;
 using umi3dBrowsers.data.ui;
@@ -28,7 +27,6 @@ using umi3dBrowsers.linker;
 using umi3dBrowsers.linker.ui;
 using umi3dBrowsers.services.connection;
 using umi3dBrowsers.utils;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -67,12 +65,6 @@ namespace umi3dBrowsers.container
         [SerializeField] private Image rightImage;
         [SerializeField] private float scrollButtonSpeed = 1.0f;
 
-        [Header("Navigation")]
-        [Header("Activated Navigation Color")]
-        [SerializeField] private ColorBlock enabledNavigationColor;
-        [Header("Deactivated Navigation Color")]
-        [SerializeField] private ColorBlock disableNavigationColor;
-
         private bool m_shouldResetAndFetchVignetteFromDB = true;
 
         public bool ShouldResetAndFetchVignetteFromDB { get => m_shouldResetAndFetchVignetteFromDB; set => m_shouldResetAndFetchVignetteFromDB = value; }
@@ -81,22 +73,25 @@ namespace umi3dBrowsers.container
         {
             vignetteContainerEvent.OnVignetteReset += ResetVignettes;
             vignetteContainerEvent.OnVignetteChangeMode += ChangeVignetteMode;
-        }
-
-        private void Start()
-        {           
-            scrollbar.value = 0;
 
             buttonLeft.OnClick.AddListener(() => {
                 if (vignetteDisplayers.Count > (int)vignetteMode)
                     scrollbar.value -= scrollButtonSpeed / vignetteDisplayers.Count;
             });
             buttonRight.OnClick.AddListener(() => {
-                if(vignetteDisplayers.Count > (int)vignetteMode)
+                if (vignetteDisplayers.Count > (int)vignetteMode)
                     scrollbar.value += scrollButtonSpeed / vignetteDisplayers.Count;
             });
 
             vignetteContainerEvent.OnVignetteReset?.Invoke();
+        }
+
+        private void OnEnable()
+        {
+            new Task(async () => {
+                await Task.Yield();
+                scrollbar.value = 0;
+            }).Start(TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         private void OnDestroy()
@@ -270,6 +265,7 @@ namespace umi3dBrowsers.container
             {
                 await CreateVignette(buffer.ImageDto, buffer);
             }
+            UpdateNavigation();
         }
 
         public void FillWithEmptyVignettes()
@@ -311,19 +307,15 @@ namespace umi3dBrowsers.container
 
         public void UpdateNavigation()
         {
-            if ((int)vignetteMode < vignetteDisplayers.Count) // cyan
+            if ((int)vignetteMode < vignetteDisplayers.Count)
             {
-                buttonLeft.interactable = true;
-                buttonRight.interactable = true;
-                rightImage.color = enabledNavigationColor.normalColor;
-                leftImage.color = enabledNavigationColor.normalColor;
+                buttonLeft.gameObject.SetActive(true);
+                buttonRight.gameObject.SetActive(true);
             }
-            else // grey
+            else
             {
-                buttonLeft.interactable = false;
-                buttonRight.interactable = false;
-                rightImage.color = disableNavigationColor.normalColor;
-                leftImage.color = disableNavigationColor.normalColor;
+                buttonLeft.gameObject.SetActive(false);
+                buttonRight.gameObject.SetActive(false);
             }
         }
 

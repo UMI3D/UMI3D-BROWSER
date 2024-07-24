@@ -359,6 +359,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5481750014503510893, guid: 33b00739fcb2e704582ae7dc517b83a4,
         type: 3}
+      propertyPath: connectionLinker
+      value: 
+      objectReference: {fileID: 11400000, guid: 68ff1a90a5151924e867698a4e1d3a2d,
+        type: 2}
+    - target: {fileID: 5481750014503510893, guid: 33b00739fcb2e704582ae7dc517b83a4,
+        type: 3}
       propertyPath: teleportingRight
       value: 
       objectReference: {fileID: 0}
@@ -790,7 +796,7 @@ PrefabInstance:
     - target: {fileID: 5365882361262844315, guid: 503d8cf448de25647a3f6a39ab0d9bd9,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0.000006682735
+      value: 0.00007204967
       objectReference: {fileID: 0}
     - target: {fileID: 5952451189982151364, guid: 503d8cf448de25647a3f6a39ab0d9bd9,
         type: 3}
@@ -815,12 +821,12 @@ PrefabInstance:
     - target: {fileID: 6314897921695993626, guid: 503d8cf448de25647a3f6a39ab0d9bd9,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6314897921695993626, guid: 503d8cf448de25647a3f6a39ab0d9bd9,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8400808290273360780, guid: 503d8cf448de25647a3f6a39ab0d9bd9,
         type: 3}

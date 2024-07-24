@@ -85,8 +85,8 @@ namespace umi3dBrowsers.utils
             if(_transform == null) _transform = GetComponent<RectTransform>();
             if (_collider == null) _collider = GetComponent<BoxCollider>();
 
-            Vector3 size = new Vector3(_transform.rect.width, _transform.rect.height, 0.01f);
-            _collider.size = size;
+            _collider.size = new Vector3(_transform.sizeDelta.x, _transform.sizeDelta.y, 0.01f);
+            _collider.center = new Vector2((0.5f - _transform.pivot.x) * _transform.sizeDelta.x, (0.5f - _transform.pivot.y) * _transform.sizeDelta.y);
         }
 
         private void LateUpdate()

@@ -1,9 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using umi3dBrowsers.linker;
 using UnityEngine;
-using static umi3dBrowsers.MainContainer;
 
 namespace umi3dBrowsers
 {
@@ -25,7 +21,11 @@ namespace umi3dBrowsers
         public void RepositionPlayer()
         {
             playerTransform.position = transform.position;
-            playerTransform.rotation = transform.rotation;  
+            playerTransform.rotation = transform.rotation;
+
+            var cameraTransform = Camera.main.transform;
+            cameraTransform.parent.localEulerAngles = new Vector3(0, -cameraTransform.localEulerAngles.y, 0);
+            cameraTransform.parent.localPosition = new Vector3(-cameraTransform.localPosition.x, 0, -cameraTransform.localPosition.y);
         }
     }
 }

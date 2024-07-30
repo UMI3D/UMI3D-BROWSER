@@ -59,6 +59,9 @@ namespace umi3d.cdk.collaboration
         public delegate void OnImportantEvent(UserGuardianDto guardianData);
         public static event OnImportantEvent ImportantEventOccurred;
 
+        public delegate void OnLBEGroupEvent(LBEGroupDto lBEGroupData);
+        public static event OnLBEGroupEvent LBEGroupEventOccurred;
+
         //private GuardianManager guardianManager;
 
         private UMI3DUser GetUserByNetWorkId(uint nid)
@@ -571,7 +574,15 @@ namespace umi3d.cdk.collaboration
                         if (ImportantEventOccurred != null)
                             ImportantEventOccurred(guardianData);
                     });
+                    break;
+                case SendLBEGroupRequestDTO lBEGroupRequestDTO:
+                    MainThreadManager.Run(() =>
+                    {
+                        LBEGroupDto lBEGroupDto = lBEGroupRequestDTO.lBEGroupData;
+                        if (LBEGroupEventOccurred != null)
+                            LBEGroupEventOccurred(lBEGroupDto);
 
+                    });
                     break;
                 default:
                     return false;
@@ -769,6 +780,25 @@ namespace umi3d.cdk.collaboration
 
                         if (ImportantEventOccurred != null)
                             ImportantEventOccurred(userguardian);
+                    });
+                    break;
+                case UMI3DOperationKeys.SetLBEGroupRequest:
+                    MainThreadManager.Run(() =>
+                    {
+                        Debug.Log("REMI : Ok SetLBEGroupRequest");
+                        SendLBEGroupRequestDTO lBEGroupRequestDTO = UMI3DSerializer.Read<SendLBEGroupRequestDTO>(container);
+                        Debug.Log("REMI : Received SetLBEGroupRequest");
+
+                        var lBEGroup = new LBEGroupDto
+                        {
+                            Members = lBEGroupRequestDTO.lBEGroupData.Members,
+                            GroupId = lBEGroupRequestDTO.lBEGroupData.GroupId,
+                            userGuardianDto = lBEGroupRequestDTO.lBEGroupData.userGuardianDto
+                        };
+
+                        if (LBEGroupEventOccurred != null)
+                            LBEGroupEventOccurred(lBEGroup);
+
                     });
                     break;
 

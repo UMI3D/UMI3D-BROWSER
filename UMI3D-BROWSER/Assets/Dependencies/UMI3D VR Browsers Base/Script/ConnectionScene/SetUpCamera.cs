@@ -58,6 +58,9 @@ namespace umi3dVRBrowsersBase.connection
             snapTurn.enabled = false;
             rightObs.enabled = false;
             leftObs.enabled = false;
+            Debug.Log("REMI : SwitchToMR");
+
+
         }
 
         private void SwitchToVR()
@@ -67,6 +70,8 @@ namespace umi3dVRBrowsersBase.connection
             snapTurn.enabled = true;
             rightObs.enabled = true;
             leftObs.enabled = true;
+            Debug.Log("REMI : SwitchToVR");
+
         }
 
         #endregion

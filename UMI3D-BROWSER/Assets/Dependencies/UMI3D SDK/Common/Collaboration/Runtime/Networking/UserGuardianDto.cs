@@ -16,6 +16,8 @@ namespace umi3d.common.lbe
         public List<ARAnchorDto> anchorAR { get; set; }
 
         public float OffsetGuardian { get; set; }
+
+        public uint AR { get; set; }
     }
 }
 

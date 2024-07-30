@@ -17,6 +17,7 @@ using BeardedManStudios.Forge.Networking.Unity;
 using umi3d.cdk.collaboration.userCapture;
 using umi3d.cdk.userCapture;
 using umi3d.common.userCapture;
+using System.Linq;
 
 namespace ClientLBE
 {
@@ -61,6 +62,10 @@ namespace ClientLBE
 
         private List<ARPlane> planesToCalibrate = new List<ARPlane>();
 
+        private JoinDto joinDtoUser;
+
+        private uint AR = 0;
+        private LBEGroupDto lBEGroupDto = new LBEGroupDto();
 
 
         #endregion
@@ -86,6 +91,7 @@ namespace ClientLBE
         void OnEnable()
         {
             UMI3DForgeClient.ImportantEventOccurred += HandleImportantEvent;
+            UMI3DForgeClient.LBEGroupEventOccurred += LBEGroupEvent;
 
             if (arPlaneManager != null)
             {
@@ -96,6 +102,8 @@ namespace ClientLBE
         void OnDisable()
         {
             UMI3DForgeClient.ImportantEventOccurred -= HandleImportantEvent;
+            UMI3DForgeClient.LBEGroupEventOccurred -= LBEGroupEvent;
+
 
             if (arPlaneManager != null)
             {
@@ -107,12 +115,23 @@ namespace ClientLBE
         {
             StartCoroutine(GetARPlanes());
         }
+       
 
         private void OnCollaborativeSkeletonCreated(ulong userId)
         {
-
             // Récupérer le squelette de cet utilisateur
             var skeleton = CollaborationSkeletonsManager.Instance.GetCollaborativeSkeleton((UMI3DGlobalID.EnvironmentId, userId)) as AbstractSkeleton;
+
+
+            if(AR == 1)
+            {
+                Debug.Log("REMI : User MR Accepted !!");
+            }
+            else
+            {
+                Debug.Log("REMI : User VR Accepted !!");
+
+            }
 
             if (skeleton != null)
             {
@@ -317,6 +336,15 @@ namespace ClientLBE
             CreatGuardianServer(userGuardianDto);
         }
 
+        void LBEGroupEvent(LBEGroupDto lBEGroupDto)
+        {
+            LBEGroupDto lBEGroupDtoData = lBEGroupDto;
+            Debug.Log("REMI : lBEGroupDtoData Members -> " + lBEGroupDtoData.Members.Count);
+            Debug.Log("REMI : lBEGroupDtoData GroupID -> " + lBEGroupDtoData.GroupId);
+            Debug.Log("REMI : lBEGroupDtoData UserGuardianDto -> " + lBEGroupDtoData.userGuardianDto.OffsetGuardian);
+
+        }
+
         public void GetGuardianArea()
         {
             if (userGuardianDto == null)
@@ -401,7 +429,7 @@ namespace ClientLBE
                         newAnchor.trackableId = trackIdOut;
                     }
 
-                    if(localVertexPositions.Count != 8)
+                    if (localVertexPositions.Count != 8)
                     {
                         Debug.LogError("Le nombre de Coordonnée n'est pas égal à 8");
                     }
@@ -410,8 +438,15 @@ namespace ClientLBE
                     newAnchor.rotation = new Vector4Dto { X = localVertexRotations[i].x, Y = localVertexRotations[i].y, Z = localVertexRotations[i].z, W = localVertexRotations[i].w };
 
                     userGuardianDto.anchorAR.Add(newAnchor);
-                    userGuardianDto.OffsetGuardian = Vector3.Distance(Calibreur.transform.position, this.transform.position);
+                   
                 }
+
+                userGuardianDto.OffsetGuardian = Vector3.Distance(Calibreur.transform.position, this.transform.position);
+
+                var loadingParameters = UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DLoadingParameters;
+                userGuardianDto.AR = loadingParameters.BrowserType;
+
+                Debug.Log("REMI : GuardianManager BrowserType -> " + loadingParameters.BrowserType);
             }
         }
 
@@ -422,7 +457,8 @@ namespace ClientLBE
         }
 
         public void CreatGuardianServer(UserGuardianDto GuardianDto)
-        {
+        {                      
+
             //Clean data first guardian in connection
             if (GuardianMesh != null)
             {

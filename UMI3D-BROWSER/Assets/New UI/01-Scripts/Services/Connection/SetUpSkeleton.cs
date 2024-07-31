@@ -50,7 +50,7 @@ namespace umi3dBrowsers.connection
         /// <summary>
         /// ?
         /// </summary>
-        public FootTargetBehavior FootTargetBehavior;
+        public umi3dVRBrowsersBase.ikManagement.FootTargetBehavior FootTargetBehavior;
 
         /// <summary>
         /// Avatar's neck.

@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdbf0d855aeab454d90f79dd1cf38cc4, type: 3}
+  m_Name: FPSData
+  m_EditorClassIdentifier: 
+  cameraMode: 2
+  cursorMode: 0
+  maxXHeadAngle: {x: -60, y: 70}
+  maxXCameraAngle: 90
+  maxYCameraAngle: 90
+  maxNeckAngle: 50
+  AngularViewSpeed: {x: 5, y: 5}
+  cameraRotation: {x: -0, y: 0}
+  forwardSpeed: {x: 3, y: 1, z: 10}
+  lateralSpeed: {x: 1, y: 1, z: 7}
+  backwardSpeed: {x: 3, y: 1, z: 10}
+  gravity: -9.807
+  maxJumpAltitude: 1
+  crouchYAxis: -0.35
+  crouchSpeed: 0.2
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 1536
+  navmeshLayer:
+    serializedVersion: 2
+    m_Bits: 512
+  topSphereCenter: {x: 0, y: 1.4, z: 0}
+  capsuleRadius: 0.3
+  maxAltitudeToCheckGround: 25
+  maxSlopeAngle: 45
+  maxStepHeight: 0.3
+  stepEpsilon: 0.05
+  groundYAxis: 0.036349237
+  previousGroundYAxis: 0.036349237
+  WantToJump: 0
+  IsJumping: 0
+  WantToCrouch: 0
+  IsCrouching: 0
+  WantToSprint: 0
+  IsSprinting: 0
+  WantToLookAround: 0
+  navigationMode: 0
+  verticalVelocity: 0
+  playerTranslationSpeed: {x: 0, y: 0, z: 0}
+  playerTranslation: {x: 0, y: 0, z: 0}
+  flyingSpeed: 5

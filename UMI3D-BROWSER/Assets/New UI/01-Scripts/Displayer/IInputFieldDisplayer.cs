@@ -18,7 +18,7 @@ using System;
 using umi3d.common.interaction.form;
 using UnityEngine;
 
-namespace umi3d
+namespace umi3dBrowsers.displayer
 {
     public interface IInputFieldDisplayer : IDisplayer
     {

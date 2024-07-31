@@ -17,11 +17,12 @@ limitations under the License.
 
 using System;
 using System.Collections;
+using umi3dBrowsers.displayer;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace umi3dBrowsers.displayer
+namespace umi3dBrowsers.Displayer
 {
     public class ButtonSubDisplayer : MonoBehaviour, ISubDisplayer
     {

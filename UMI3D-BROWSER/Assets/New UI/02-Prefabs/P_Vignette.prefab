@@ -87,10 +87,10 @@ GameObject:
   - component: {fileID: 4692050331735262392}
   - component: {fileID: 7137238654993343386}
   - component: {fileID: 6464746979277691626}
-  - component: {fileID: 4156449703515636775}
   - component: {fileID: 6548763404247888921}
   - component: {fileID: 3075719367739334349}
   - component: {fileID: 6884489871116509189}
+  - component: {fileID: 1342669012543034932}
   m_Layer: 5
   m_Name: Trash_btn
   m_TagString: Untagged
@@ -177,57 +177,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 49, y: 49, z: 0.01}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &4156449703515636775
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1697863947369522365}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ef4d6e6b0d2ca842b4eb75a9957f8e4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  backgroundNormalColor: {r: 0.2509804, g: 0.2509804, b: 0.2509804, a: 1}
-  normalColor: {r: 0.5294118, g: 0.5294118, b: 0.5294118, a: 1}
-  hoverColor: {r: 1, g: 1, b: 1, a: 1}
-  clickColor: {r: 1, g: 1, b: 1, a: 1}
-  button: {fileID: 6548763404247888921}
-  button_collider: {fileID: 6464746979277691626}
-  backGround: {fileID: 7137238654993343386}
-  iconImage: {fileID: 4864681675048781048}
-  normalIcon: {fileID: 21300000, guid: 8a0a8aa557470c7429e8b8d7d7035e32, type: 3}
-  hoverIcon: {fileID: 21300000, guid: 4653d98d4563c284983c101c39761270, type: 3}
-  clickIcon: {fileID: 21300000, guid: 8a0a8aa557470c7429e8b8d7d7035e32, type: 3}
-  canvasGroup: {fileID: 6884489871116509189}
-  animationDuration: 0.5
-  slideEase:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  stayClicked: 0
-  canUnclick: 0
 --- !u!114 &6548763404247888921
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -300,6 +249,57 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &1342669012543034932
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1697863947369522365}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5060827362cfe04b878b653cdfc0f0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  backgroundNormalColor: {r: 0.2509804, g: 0.2509804, b: 0.2509804, a: 1}
+  normalColor: {r: 0.34509805, g: 0.34509805, b: 0.34509805, a: 1}
+  hoverColor: {r: 0.34117648, g: 0.86666673, b: 0.9058824, a: 1}
+  clickColor: {r: 0.34117648, g: 0.86666673, b: 0.9058824, a: 1}
+  button: {fileID: 6548763404247888921}
+  button_collider: {fileID: 6464746979277691626}
+  backGround: {fileID: 7137238654993343386}
+  iconImage: {fileID: 4864681675048781048}
+  normalIcon: {fileID: 21300000, guid: 8a0a8aa557470c7429e8b8d7d7035e32, type: 3}
+  hoverIcon: {fileID: 21300000, guid: 8a0a8aa557470c7429e8b8d7d7035e32, type: 3}
+  clickIcon: {fileID: 21300000, guid: 4653d98d4563c284983c101c39761270, type: 3}
+  canvasGroup: {fileID: 6884489871116509189}
+  animationDuration: 0.5
+  slideEase:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  stayClicked: 1
+  canUnclick: 1
 --- !u!1 &1842928581106226447
 GameObject:
   m_ObjectHideFlags: 0
@@ -360,7 +360,7 @@ MonoBehaviour:
   vignetteImage: {fileID: 7682835410405343424}
   normalImageColor: {r: 0.4392157, g: 0.4392157, b: 0.4392157, a: 1}
   hoverImageColor: {r: 1, g: 1, b: 1, a: 1}
-  likeButton: {fileID: 601504818583472110}
+  likeButton: {fileID: 8770222194302191042}
   likeImage: {fileID: 3352723930084963415}
   normalLikeIcon: {fileID: 21300000, guid: 40e731205ffd34744a4f701d9ac35b44, type: 3}
   normalLikeColor: {r: 0.5882353, g: 0.5882353, b: 0.5882353, a: 1}
@@ -371,7 +371,7 @@ MonoBehaviour:
   selectedHoverLikeIcon: {fileID: 21300000, guid: 2fe725c75adadff498181f8588698f33,
     type: 3}
   selectedHoverLikeColor: {r: 1, g: 1, b: 1, a: 1}
-  trashButton: {fileID: 4156449703515636775}
+  trashButton: {fileID: 1342669012543034932}
   inputFieldBackground: {fileID: 1884330495189378900}
   IF_background: {fileID: 5565908846851168536}
   pen: {fileID: 8429262860562236062}
@@ -583,7 +583,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 26.01, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 15.09}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8819700660958586467
@@ -856,7 +856,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 8, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &4647281022483880887
@@ -1487,9 +1487,9 @@ GameObject:
   - component: {fileID: 4002457640006580064}
   - component: {fileID: 7348110059903674529}
   - component: {fileID: 6152917247468766486}
-  - component: {fileID: 601504818583472110}
   - component: {fileID: 4202507596290024687}
   - component: {fileID: 4272025319540579326}
+  - component: {fileID: 8770222194302191042}
   m_Layer: 5
   m_Name: Favorie_btn
   m_TagString: Untagged
@@ -1620,7 +1620,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &601504818583472110
+--- !u!114 &4202507596290024687
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1629,7 +1629,35 @@ MonoBehaviour:
   m_GameObject: {fileID: 8492506141636887673}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ef4d6e6b0d2ca842b4eb75a9957f8e4, type: 3}
+  m_Script: {fileID: 11500000, guid: 54201f7897bbda644b218cb41fa75e97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scaleHorizontalRT: 0
+  childRT: {fileID: 0}
+  updateOnGUI: 0
+  setCenter: 0
+--- !u!225 &4272025319540579326
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8492506141636887673}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &8770222194302191042
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8492506141636887673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5060827362cfe04b878b653cdfc0f0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   backgroundNormalColor: {r: 0.2509804, g: 0.2509804, b: 0.2509804, a: 1}
@@ -1671,31 +1699,3 @@ MonoBehaviour:
     m_RotationOrder: 4
   stayClicked: 1
   canUnclick: 1
---- !u!114 &4202507596290024687
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8492506141636887673}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 54201f7897bbda644b218cb41fa75e97, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  scaleHorizontalRT: 0
-  childRT: {fileID: 0}
-  updateOnGUI: 0
-  setCenter: 0
---- !u!225 &4272025319540579326
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8492506141636887673}
-  m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0

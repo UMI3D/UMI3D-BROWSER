@@ -14,6 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+#if UNITY_STANDALONE_WIN || UNITY_STANDALONE_OSX
+
 using inetum.unityUtils;
 using System;
 using System.Runtime.InteropServices;
@@ -95,8 +97,6 @@ namespace umi3d.browserRuntime.pc
         /// </summary>
         static FullScreenMode nextFullScreenMode = FullScreenMode.Windowed;
 
-#if UNITY_STANDALONE_WIN
-
         /// <summary>
         /// External method to minimize or maximize the window.<br/>
         /// <br/>
@@ -144,11 +144,6 @@ namespace umi3d.browserRuntime.pc
         /// <returns></returns>
         [DllImport("user32.dll")]
         static extern bool IsZoomed(IntPtr hWnd);
-#else
-        static IntPtr window;
-        static IntPtr GetActiveWindow() { throw new NotImplementedException(); }
-        static bool IsZoomed(IntPtr hWnd) { throw new NotImplementedException(); }
-#endif
 
         static WindowsManager()
         {
@@ -324,3 +319,5 @@ namespace umi3d.browserRuntime.pc
         }
     }
 }
+
+#endif

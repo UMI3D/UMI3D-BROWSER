@@ -15,7 +15,9 @@ limitations under the License.
 */
 using inetum.unityUtils;
 using umi3d.browserRuntime.notificationKeys;
+#if UNITY_STANDALONE_WIN || UNITY_STANDALONE_OSX
 using umi3d.browserRuntime.pc;
+#endif
 using UnityEngine;
 
 /// <summary>
@@ -28,7 +30,9 @@ public class GamePanelController : umi3d.baseBrowser.connection.BaseGamePanelCon
     {
         base.Start();
 
+#if UNITY_STANDALONE_WIN || UNITY_STANDALONE_OSX
         GamePanel.DisplayHeader = WindowsManager.IsWindowInFullScreen;
+#endif
     }
 
     private void OnEnable()

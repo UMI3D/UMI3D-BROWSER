@@ -16,7 +16,9 @@ limitations under the License.
 
 using inetum.unityUtils;
 using umi3d.browserRuntime.notificationKeys;
+#if UNITY_STANDALONE_WIN || UNITY_STANDALONE_OSX
 using umi3d.browserRuntime.pc;
+#endif
 using UnityEngine;
 using static umi3d.baseBrowser.preferences.SettingsPreferences;
 
@@ -40,7 +42,9 @@ public class LauncherPanelController : umi3d.baseBrowser.connection.BaseLauncher
             ShowLanguageSelection();
         }
 
+#if UNITY_STANDALONE_WIN || UNITY_STANDALONE_OSX
         Launcher.DisplayHeader = WindowsManager.IsWindowInFullScreen;
+#endif
     }
 
     private void OnEnable()

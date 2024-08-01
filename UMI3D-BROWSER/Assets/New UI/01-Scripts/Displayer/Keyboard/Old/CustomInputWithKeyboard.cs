@@ -20,21 +20,21 @@ using UnityEngine.EventSystems;
 namespace umi3dVRBrowsersBase.ui.keyboard
 {
     /// <summary>
-    /// Custom <see cref="UnityEngine.UI.InputField"/> which works with <see cref="Keyboard"/> (both displayed at the same time).
+    /// Custom <see cref="UnityEngine.UI.InputField"/> which works with <see cref="KeyboardWebView"/> (both displayed at the same time).
     /// If the keyboard must hide the inputfield to edit it, <see cref="CustomInputWithKeyboardEnvironment"/>.
     /// </summary>
     public class CustomInputWithKeyboard : CustomInputSelectable
     {
         /// <summary>
-        /// Keyboard to edit this inputfield.
+        /// KeyboardWebView to edit this inputfield.
         /// </summary>
-        protected Keyboard keyboard;
+        protected KeyboardWebView keyboard;
 
         /// <summary>
         /// Setter for <see cref="keyboard"/>.
         /// </summary>
         /// <param name="keyboard"></param>
-        public void SetKeyboard(Keyboard keyboard)
+        public void SetKeyboard(KeyboardWebView keyboard)
         {
             this.keyboard = keyboard;
         }

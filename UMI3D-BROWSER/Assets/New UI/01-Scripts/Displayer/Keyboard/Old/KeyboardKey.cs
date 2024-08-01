@@ -21,7 +21,7 @@ using UnityEngine.UI;
 namespace umi3dVRBrowsersBase.ui.keyboard
 {
     /// <summary>
-    /// Base class for a <see cref="Keyboard"/> key.
+    /// Base class for a <see cref="KeyboardWebView"/> key.
     /// </summary>
     public class KeyboardKey : MonoBehaviour
     {

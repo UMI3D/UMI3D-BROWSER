@@ -27,7 +27,7 @@ using umi3dBrowsers.keyboard;
 namespace umi3dVRBrowsersBase.ui.keyboard
 {
     /// <summary>
-    /// Custom <see cref="UnityEngine.UI.InputField"/> which works with <see cref="Keyboard"/> (not displayed at the same time).
+    /// Custom <see cref="UnityEngine.UI.InputField"/> which works with <see cref="KeyboardWebView"/> (not displayed at the same time).
     /// If the keyboard and the inputfield must be visible at the same time <see cref="CustomInputWithKeyboard"/>.
     /// </summary>
     public class CustomInputWithKeyboardEnvironment : CustomInputSelectable

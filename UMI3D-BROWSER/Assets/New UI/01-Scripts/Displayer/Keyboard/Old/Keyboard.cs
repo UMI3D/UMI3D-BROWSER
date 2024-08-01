@@ -17,15 +17,16 @@ limitations under the License.
 using System;
 using System.Collections;
 using TMPro;
+using umi3dVRBrowsersBase.ui.keyboard;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace umi3dVRBrowsersBase.ui.keyboard
+namespace umi3dBrowsers.keyboard
 {
     /// <summary>
-    /// 3D Keyboard to edit textfields (such as <see cref="CustomInputWithKeyboard"/> and <see cref="CustomInputWithKeyboardEnvironment"/>.
+    /// 3D KeyboardWebView to edit textfields (such as <see cref="CustomInputWithKeyboard"/> and <see cref="CustomInputWithKeyboardEnvironment"/>.
     /// </summary>
     public class Keyboard : MonoBehaviour
     {
@@ -61,7 +62,7 @@ namespace umi3dVRBrowsersBase.ui.keyboard
         [Tooltip("Input to display a preview of what users write")]
         private TMP_InputField previewField;
 
-        private InputField editedField;
+        private TMP_InputField editedField;
 
         /// <summary>
         /// Relevant if <see cref="previewField"/> is not set by default.
@@ -229,7 +230,7 @@ namespace umi3dVRBrowsersBase.ui.keyboard
                 editedField.shouldHideMobileInput = true;
         }
 
-        private void BindEditedField(InputField inputField)
+        private void BindEditedField(TMP_InputField inputField)
         {
             if (editedField != null)
                 editedField = inputField;
@@ -360,7 +361,7 @@ namespace umi3dVRBrowsersBase.ui.keyboard
         /// </summary>
         /// <param name="inputField"></param>
         /// <param name="onEditFinished"></param>
-        public void OpenKeyboard(InputField inputField, Action<string> onEditFinished)
+        public void OpenKeyboard(TMP_InputField inputField, Action<string> onEditFinished)
         {
             BindEditedField(inputField);
 
@@ -390,6 +391,7 @@ namespace umi3dVRBrowsersBase.ui.keyboard
         /// <summary>
         /// Open the keyboard simply, just to listen to key inputs.
         /// </summary>
+        [ContextMenu("Open key board")]
         public void OpenKeyboard()
         {
             if (WasClosedLastFrame) return;
@@ -471,11 +473,12 @@ namespace umi3dVRBrowsersBase.ui.keyboard
         /// </summary>
         public void Hide()
         {
-            root.SetActive(false);
+            root?.SetActive(false);
             setCaretPosition = false;
 
             WasClosedLastFrame = true;
-            StartCoroutine(ResetWasClosedLastFrame());
+            if (Application.isPlaying) 
+                StartCoroutine(ResetWasClosedLastFrame());
         }
 
         /// <summary>

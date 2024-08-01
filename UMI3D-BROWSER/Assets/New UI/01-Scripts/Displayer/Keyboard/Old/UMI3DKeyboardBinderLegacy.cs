@@ -22,6 +22,6 @@ namespace umi3d.browserRuntime.ui
 {
     public class UMI3DKeyboardBinderLegacy : MonoBehaviour
     {
-        public Keyboard keyboard;
+        public KeyboardWebView keyboard;
     }
 }

@@ -19,7 +19,7 @@ using UnityEngine;
 namespace umi3dVRBrowsersBase.ui.keyboard
 {
     /// <summary>
-    /// Defines a letter key for <see cref="Keyboard"/>.
+    /// Defines a letter key for <see cref="KeyboardWebView"/>.
     /// </summary>
     public class KeyboardLetter : KeyboardKey
     {

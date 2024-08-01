@@ -61,6 +61,11 @@ namespace umi3d.browserEditor.BuildTool
                         BuildTargetGroup.Standalone,
                         BuildTarget.StandaloneWindows64
                     );
+                case E_Target.Windows:
+                    return ChangeBuildTarget(
+                        BuildTargetGroup.Standalone,
+                        BuildTarget.StandaloneWindows
+                    );
                 default:
                     return -1;
             }

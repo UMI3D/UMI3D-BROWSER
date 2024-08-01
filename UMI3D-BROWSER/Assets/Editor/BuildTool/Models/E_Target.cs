@@ -26,6 +26,7 @@ namespace umi3d.browserEditor.BuildTool
         Focus = 2, 
         Pico = 4, 
         SteamXR = 8,
+        Windows = 16,
     }
 
     public static class TargetExt
@@ -38,6 +39,7 @@ namespace umi3d.browserEditor.BuildTool
                 E_Target.Focus => BuildTarget.Android,
                 E_Target.Pico => BuildTarget.Android,
                 E_Target.SteamXR => BuildTarget.StandaloneWindows64,
+                E_Target.Windows => BuildTarget.StandaloneWindows,
                 _ => BuildTarget.StandaloneWindows
             };
         }

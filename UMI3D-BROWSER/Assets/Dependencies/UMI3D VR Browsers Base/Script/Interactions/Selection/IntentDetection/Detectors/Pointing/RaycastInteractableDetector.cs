@@ -19,7 +19,7 @@ namespace umi3dBrowsers.interaction.selection.intentdetector
     /// <summary>
     /// Raycast detector for <see cref="InteractableContainer"/>.
     /// </summary>
-    public class RaycastInteractableDetector : AbstractPointingInteractableDetector
+    public class RaycastInteractableDetector : AbstractInteractableDetector
     {
         /// <inheritdoc/>
         protected override void SetDetectionMethod()

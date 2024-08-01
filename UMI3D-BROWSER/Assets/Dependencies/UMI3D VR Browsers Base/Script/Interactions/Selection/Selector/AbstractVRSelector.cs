@@ -11,11 +11,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
-using inetum.unityUtils.async;
-using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using umi3d.cdk.collaboration;
 using umi3d.cdk.interaction;
 using umi3dBrowsers.interaction.selection;
@@ -25,7 +21,6 @@ using umi3dBrowsers.interaction.selection.projector;
 using umi3dBrowsers.interaction.selection.selector;
 using umi3dBrowsers.linker;
 using umi3dVRBrowsersBase.ui;
-using umi3dVRBrowsersBase.ui.playerMenu;
 using UnityEngine;
 using UnityEngine.Events;
 

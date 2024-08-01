@@ -16,6 +16,7 @@ using umi3dBrowsers.interaction.selection;
 using umi3dBrowsers.interaction.selection.intentdetector;
 using umi3dBrowsers.interaction.selection.projector;
 using umi3dBrowsers.interaction.selection.zoneselection;
+using umi3dVRBrowsersBase.interactions.selection.intentdetector;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -31,13 +32,13 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
         /// Selection Intent Detectors (virtual pointing). In order of decreasing priority.
         /// </summary>
         [SerializeField, Tooltip("Selection Intent Detector for virtual pointing. In order of decreasing priority.")]
-        private List<AbstractPointingSelectableDetector> pointingDetectors;
+        private List<RaycastSelectableDetector> pointingDetectors;
 
         /// <summary>
         /// Selection Intent Detector (virtual hand). In order of decreasing priority.
         /// </summary>
         [SerializeField, Tooltip("Selection Intent Detector for virtual hand (grab). In order of decreasing priority.")]
-        private List<AbstractGrabSelectableDetector> proximityDetectors;
+        private List<ColliderProximitySelectableDetector> proximityDetectors;
 
         /// <summary>
         /// Helper to raycast selectable.

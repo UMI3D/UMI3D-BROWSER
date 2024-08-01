@@ -30,13 +30,13 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
         /// Selection Intent Detectors (virtual pointing). In order of decreasing priority.
         /// </summary>
         [SerializeField, Tooltip("Selection Intent Detector for virtual pointing. In order of decreasing priority.")]
-        private List<AbstractPointingElementDetector> pointingDetectors;
+        private List<RaycastElementDetector> pointingDetectors;
 
         /// <summary>
         /// Selection Intent Detector (virtual hand). In order of decreasing priority.
         /// </summary>
         [SerializeField, Tooltip("Selection Intent Detector for virtual hand (grab). In order of decreasing priority.")]
-        private List<AbstractGrabElementDetector> proximityDetectors;
+        private List<ColliderProximityElementDetector> proximityDetectors;
 
         #region constructors
 

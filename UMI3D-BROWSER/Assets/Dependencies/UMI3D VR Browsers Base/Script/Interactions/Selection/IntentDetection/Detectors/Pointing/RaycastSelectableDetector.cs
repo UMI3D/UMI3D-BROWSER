@@ -19,7 +19,7 @@ namespace umi3dBrowsers.interaction.selection.intentdetector
     /// <summary>
     /// Raycast detector for <see cref="Selectable"/>.
     /// </summary>
-    public class RaycastSelectableDetector : AbstractPointingSelectableDetector
+    public class RaycastSelectableDetector : AbstractSelectableDetector
     {
         /// <inheritdoc/>
         protected override void SetDetectionMethod()

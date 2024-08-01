@@ -22,7 +22,7 @@ namespace umi3dVRBrowsersBase.interactions.selection.intentdetector
     /// <summary>
     /// Detector for proximity selection with a collider
     /// </summary>
-    public class ColliderProximitySelectableDetector : AbstractGrabSelectableDetector
+    public class ColliderProximitySelectableDetector : AbstractSelectableDetector
     {
         [SerializeField, Tooltip("Handler for proximity selection.")]
         protected SelectableColliderZoneSelectionHandler proximityColliderHandler;

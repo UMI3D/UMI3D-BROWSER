@@ -19,7 +19,7 @@ namespace umi3dVRBrowsersBase.interactions.selection.intentdetector
     /// <summary>
     /// Raycast detector for <see cref="AbstractClientInteractableElement"/>.
     /// </summary>
-    public class RaycastElementDetector : AbstractPointingElementDetector
+    public class RaycastElementDetector : AbstractElementDetector
     {
         /// <inheritdoc/>
         protected override void SetDetectionMethod()

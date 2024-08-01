@@ -21,12 +21,4 @@ namespace umi3dBrowsers.interaction.selection.intentdetector
     /// </summary>
     public abstract class AbstractSelectableDetector : AbstractDetector<Selectable>
     { }
-
-    /// <inheritdoc/>
-    public abstract class AbstractPointingSelectableDetector : AbstractSelectableDetector
-    { }
-
-    /// <inheritdoc/>
-    public abstract class AbstractGrabSelectableDetector : AbstractSelectableDetector
-    { }
 }

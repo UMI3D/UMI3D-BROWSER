@@ -1647,7 +1647,7 @@ Camera:
   m_TargetEye: 3
   m_HDR: 0
   m_AllowMSAA: 1
-  m_AllowDynamicResolution: 0
+  m_AllowDynamicResolution: 1
   m_ForceIntoRT: 0
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
@@ -1873,7 +1873,7 @@ GameObject:
   - component: {fileID: 5481750014503510893}
   - component: {fileID: 7132735958748874842}
   m_Layer: 0
-  m_Name: Player
+  m_Name: PlayerXR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1894,7 +1894,6 @@ Transform:
   m_Children:
   - {fileID: 564465196500090883}
   - {fileID: 7598740861241819361}
-  - {fileID: 8208838369484474823}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5735923932081644372
@@ -1951,7 +1950,7 @@ MonoBehaviour:
   dynamicMoveProvider: {fileID: 0}
   snapTurn: {fileID: 0}
   umi3dTeleportationProvider: {fileID: 0}
-  connectionLinker: {fileID: 0}
+  connectionLinker: {fileID: 11400000, guid: 68ff1a90a5151924e867698a4e1d3a2d, type: 2}
 --- !u!114 &7132735958748874842
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1965,52 +1964,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   linker: {fileID: 11400000, guid: 68ff1a90a5151924e867698a4e1d3a2d, type: 2}
---- !u!1 &4989430032758259270
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8208838369484474823}
-  - component: {fileID: 149318565548468475}
-  m_Layer: 0
-  m_Name: XR Interaction Manager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8208838369484474823
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4989430032758259270}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 2005345126950165136}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &149318565548468475
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4989430032758259270}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 83e4e6cca11330d4088d729ab4fc9d9f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_StartingHoverFilters: []
-  m_StartingSelectFilters: []
 --- !u!1 &5145287278813968175
 GameObject:
   m_ObjectHideFlags: 0
@@ -2975,10 +2928,20 @@ PrefabInstance:
       propertyPath: near clip plane
       value: 0.15
       objectReference: {fileID: 0}
+    - target: {fileID: 5051064082787748696, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
+        type: 3}
+      propertyPath: m_AllowDynamicResolution
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5051064084671288343, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
         type: 3}
       propertyPath: m_Name
       value: XR Origin
+      objectReference: {fileID: 0}
+    - target: {fileID: 5051064084671288345, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
+        type: 3}
+      propertyPath: m_CameraYOffset
+      value: 1.9
       objectReference: {fileID: 0}
     - target: {fileID: 5051064084671288345, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
         type: 3}
@@ -3040,7 +3003,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5051064084671288344, guid: 3bacf1bc1e19629438bb4b12b4fd005b, type: 3}
+    - {fileID: 5051064084134830079, guid: 3bacf1bc1e19629438bb4b12b4fd005b, type: 3}
+    - {fileID: 5051064084377662874, guid: 3bacf1bc1e19629438bb4b12b4fd005b, type: 3}
     m_RemovedGameObjects:
     - {fileID: 6910296223892424240, guid: 3bacf1bc1e19629438bb4b12b4fd005b, type: 3}
     - {fileID: 3212295263725440832, guid: 3bacf1bc1e19629438bb4b12b4fd005b, type: 3}
@@ -3130,6 +3096,18 @@ PrefabInstance:
       propertyPath: controller
       value: 
       objectReference: {fileID: 4254791642422268530}
+    - target: {fileID: 3036516098682089026, guid: 9a2489c3820349e49b50c24c500d47e8,
+        type: 3}
+      propertyPath: simLinker
+      value: 
+      objectReference: {fileID: 11400000, guid: 636ad0567f208434fa27befdcdf924a3,
+        type: 2}
+    - target: {fileID: 3408741537558009882, guid: 9a2489c3820349e49b50c24c500d47e8,
+        type: 3}
+      propertyPath: simLinker
+      value: 
+      objectReference: {fileID: 11400000, guid: 636ad0567f208434fa27befdcdf924a3,
+        type: 2}
     - target: {fileID: 3600997075644770501, guid: 9a2489c3820349e49b50c24c500d47e8,
         type: 3}
       propertyPath: hapticFeedback
@@ -3195,6 +3173,12 @@ PrefabInstance:
       propertyPath: hapticFeedback
       value: 
       objectReference: {fileID: 7408689437739644213}
+    - target: {fileID: 8812648691467824138, guid: 9a2489c3820349e49b50c24c500d47e8,
+        type: 3}
+      propertyPath: simLinker
+      value: 
+      objectReference: {fileID: 11400000, guid: 636ad0567f208434fa27befdcdf924a3,
+        type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4183,6 +4167,18 @@ PrefabInstance:
       propertyPath: controller
       value: 
       objectReference: {fileID: 568424845740989385}
+    - target: {fileID: 3036516098682089026, guid: 9a2489c3820349e49b50c24c500d47e8,
+        type: 3}
+      propertyPath: simLinker
+      value: 
+      objectReference: {fileID: 11400000, guid: 636ad0567f208434fa27befdcdf924a3,
+        type: 2}
+    - target: {fileID: 3408741537558009882, guid: 9a2489c3820349e49b50c24c500d47e8,
+        type: 3}
+      propertyPath: simLinker
+      value: 
+      objectReference: {fileID: 11400000, guid: 636ad0567f208434fa27befdcdf924a3,
+        type: 2}
     - target: {fileID: 3600997075644770501, guid: 9a2489c3820349e49b50c24c500d47e8,
         type: 3}
       propertyPath: hapticFeedback
@@ -4248,6 +4244,12 @@ PrefabInstance:
       propertyPath: hapticFeedback
       value: 
       objectReference: {fileID: 4599673738632147825}
+    - target: {fileID: 8812648691467824138, guid: 9a2489c3820349e49b50c24c500d47e8,
+        type: 3}
+      propertyPath: simLinker
+      value: 
+      objectReference: {fileID: 11400000, guid: 636ad0567f208434fa27befdcdf924a3,
+        type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

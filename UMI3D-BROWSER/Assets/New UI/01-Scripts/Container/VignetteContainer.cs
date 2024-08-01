@@ -19,7 +19,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using System.Threading.Tasks;
+using umi3d.browserRuntime.notificationKeys;
 using umi3d.common.interaction.form;
 using umi3dBrowsers.data.ui;
 using umi3dBrowsers.displayer;
@@ -35,8 +37,6 @@ namespace umi3dBrowsers.container
     public class VignetteContainer : MonoBehaviour
     {
         [SerializeField] private ConnectionServiceLinker connectionServiceLinker;
-        [SerializeField] private PopupLinker popupLinker;
-        [SerializeField] private PopupData removeWorldPopup;
 
         [Header("Vignette")]
         [SerializeField] private UIColliderScallerHandler scaler;
@@ -174,14 +174,28 @@ namespace umi3dBrowsers.container
                 vignetteContainerEvent.OnVignetteReset?.Invoke(); 
             }, pWorldData.isFavorite);
             vignette.SetupRemoveButton(() => {
-                popupLinker.SetArguments(removeWorldPopup, new() { { "worldName", pWorldData.worldName } });
-                popupLinker.Show(removeWorldPopup, "empty", "popup_deleteWorld_description",
-                    ("popup_cancel", () => popupLinker.CloseAll()),
-                    ("popup_yes", () => {
-                        pVirtualWorlds.RemoveWorld(pWorldData);
-                        vignetteContainerEvent.OnVignetteReset?.Invoke();
-                        popupLinker.CloseAll();
-                    })
+                Action callbackCancel = null;
+                Action callbackYes = () => 
+                {
+                    pVirtualWorlds.RemoveWorld(pWorldData);
+                    vignetteContainerEvent.OnVignetteReset?.Invoke();
+                };
+                NotificationHub.Default.Notify(
+                    this,
+                    DialogueBoxNotificationKey.NewDialogueBox,
+                    new()
+                    {
+                        { DialogueBoxNotificationKey.NewDialogueBoxInfo.Type, DialogueBoxNotificationKey.NewDialogueBoxInfo.PopUpType.Warning },
+                        { DialogueBoxNotificationKey.NewDialogueBoxInfo.Arguments, new Dictionary<string, object>() { { "worldName", pWorldData.worldName } } },
+                        { DialogueBoxNotificationKey.NewDialogueBoxInfo.Title, "empty" },
+                        { DialogueBoxNotificationKey.NewDialogueBoxInfo.Message, "popup_deleteWorld_description" },
+                        { DialogueBoxNotificationKey.NewDialogueBoxInfo.Buttons, new[]
+                            {
+                                ("popup_cancel", callbackCancel),
+                                ("popup_yes", callbackYes)
+                            }
+                        },
+                    }
                 );
             });
             vignette.SetupRenameButton(newName => { 

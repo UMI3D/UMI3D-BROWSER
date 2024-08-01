@@ -14,8 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
 using Pico.Platform;
+using System;
 using System.Collections.Generic;
+using umi3d.browserRuntime.notificationKeys;
 using umi3d.cdk;
 using umi3dBrowsers.data.ui;
 using umi3dBrowsers.displayer;
@@ -30,8 +33,6 @@ namespace umi3dBrowsers.services.librairies
     /// </summary>
     public class LibraryManager : MonoBehaviour
     {
-        [SerializeField] private PopupLinker popupLinker;
-        [SerializeField] private PopupData deleteLibPopup;
         [SerializeField] private SimpleButton buttonUp;
         [SerializeField] private SimpleButton buttonDown;
 
@@ -108,16 +109,29 @@ namespace umi3dBrowsers.services.librairies
                     //4.Bind the button to unistall this lib
                     entry.DeleteButton.onClick.AddListener(() =>
                     {
-                        popupLinker.SetArguments(deleteLibPopup, new() { { "libName", lib.key } });
-                        popupLinker.Show(deleteLibPopup, "empty", "popup_deleteLib_description",
-                            ("popup_cancel", () => popupLinker.CloseAll()),
-                            ("popup_yes", () => {
-                                lib.applications.Remove(app.Key);
-                                UMI3DResourcesManager.RemoveLibrary(lib.library);
-                                UpdateContent();
-                                popupLinker.CloseAll();
+                        Action callbackCancel = null;
+                        Action callbackYes = () =>
+                        {
+                            lib.applications.Remove(app.Key);
+                            UMI3DResourcesManager.RemoveLibrary(lib.library);
+                            UpdateContent();
+                        };
+                        NotificationHub.Default.Notify(
+                            this,
+                            DialogueBoxNotificationKey.NewDialogueBox,
+                            new()
+                            {
+                                { DialogueBoxNotificationKey.NewDialogueBoxInfo.Type, DialogueBoxNotificationKey.NewDialogueBoxInfo.PopUpType.Warning },
+                                { DialogueBoxNotificationKey.NewDialogueBoxInfo.Arguments, new Dictionary<string, object>() { { "libName", lib.key } } },
+                                { DialogueBoxNotificationKey.NewDialogueBoxInfo.Title, "empty" },
+                                { DialogueBoxNotificationKey.NewDialogueBoxInfo.Message, "popup_deleteLib_description" },
+                                { DialogueBoxNotificationKey.NewDialogueBoxInfo.Buttons, new[]
+                                    {
+                                        ("popup_cancel", callbackCancel),
+                                        ("popup_yes", callbackYes)
+                                    }
+                                },
                             }
-                        )
                         );
                     });
 

@@ -14,26 +14,20 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TMPro;
-using umi3d;
-using umi3d.cdk.collaboration;
-using umi3d.common.interaction;
-using umi3dBrowsers.connection;
-using umi3dBrowsers.container;
-using umi3dBrowsers.container.formrenderer;
+using umi3d.browserRuntime.notificationKeys;
+using umi3d.browserRuntime.ui;
 using umi3dBrowsers.data.ui;
-using umi3dBrowsers.displayer;
 using umi3dBrowsers.linker;
 using umi3dBrowsers.linker.ui;
 using umi3dBrowsers.sceneManagement;
 using umi3dBrowsers.services.connection;
 using umi3dBrowsers.services.title;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Experimental.GlobalIllumination;
 using UnityEngine.Localization.Settings;
 using UnityEngine.UI;
 using utils.tweens;
@@ -83,9 +77,6 @@ namespace umi3dBrowsers
         [SerializeField] private MenuNavigationLinker m_menuNavigationLinker;
         [SerializeField] private PanelData m_mainMenuPanel;
         [SerializeField] private PanelData m_formPanel;
-        [SerializeField] private PopupLinker m_popupLinker;
-        [SerializeField] private PopupData m_tryConnectPopup;
-        [SerializeField] private PopupData m_connectionErrorPopup;
 
         private void Awake()
         {
@@ -112,8 +103,6 @@ namespace umi3dBrowsers
                 }
             };
 
-            m_popupLinker.Initialize(popupTransform);
-
             connectionToImmersiveLinker.OnLeave += () =>
             {
                 // Reset the set up skeleton to compute the size of the player.
@@ -138,9 +127,6 @@ namespace umi3dBrowsers
         {
             BindNavigationButtons();
 
-            m_popupLinker.OnPopupOpen += () => tween.TweenTo();
-            m_popupLinker.OnPopupClose += () => tween.Rewind();
-
             SetVersion(Application.version);
             BindConnectionService();
 
@@ -149,27 +135,47 @@ namespace umi3dBrowsers
                 ShowUI();
             };
 
-            connectionServiceLinker.OnTryToConnect += (url) => {
-                m_popupLinker.SetArguments(m_tryConnectPopup, new Dictionary<string, object>() { { "url", url } });
-                m_popupLinker.Show(m_tryConnectPopup, "popup_connection_server", "popup_trying_connect");
-            };
-            connectionServiceLinker.OnConnectionFailure += (message) => {
-                m_popupLinker.SetArguments(m_connectionErrorPopup, new Dictionary<string, object>() { { "error", message } });
-                m_popupLinker.Show(m_connectionErrorPopup, "popup_fail_connect", "error_msg",
-                    ("popup_close", () => { m_popupLinker.CloseAll(); }
-                ));
-            };
             connectionServiceLinker.OnMediaServerPingSuccess += (virtualWorldData) => {
-                m_popupLinker.CloseAll();
-            };
-            connectionServiceLinker.OnAnswerFailed += () => {
-                m_popupLinker.Show(m_connectionErrorPopup, "popup_answer_failed_title", "popup_answer_failed_description",
-                    ("popup_close", () => { m_popupLinker.CloseAll(); }
-                ));
+                NotificationHub.Default.Notify(
+                    this,
+                    DialogueBoxNotificationKey.CloseAllPopUp
+                );
             };
             connectionServiceLinker.OnAsksToLoadLibrairies += (ids, action) => action?.Invoke(true);
 
             m_menuNavigationLinker.ShowStartPanel();
+        }
+
+        private void OnEnable()
+        {
+            PopUpManager.SetRoot(popupTransform);
+
+            NotificationHub.Default.Subscribe(
+                this,
+                DialogueBoxNotificationKey.PopUpOpen, 
+                null,
+                tween.TweenTo
+            );
+
+            NotificationHub.Default.Subscribe(
+                this,
+                DialogueBoxNotificationKey.PopUpClose,
+                null,
+                tween.Rewind
+            );
+        }
+
+        private void OnDisable()
+        {
+            NotificationHub.Default.Unsubscribe(
+                this,
+                DialogueBoxNotificationKey.PopUpOpen
+            );
+
+            NotificationHub.Default.Unsubscribe(
+                this,
+                DialogueBoxNotificationKey.PopUpClose
+            );
         }
 
         /// <summary>

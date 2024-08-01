@@ -13,7 +13,7 @@ PlayerSettings:
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: Inetum
-  productName: UMI3D Browser XR
+  productName: UMI3D Browser XR Alpha
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
@@ -136,14 +136,11 @@ PlayerSettings:
   vulkanEnableLateAcquireNextImage: 0
   vulkanEnableCommandBufferRecycling: 1
   loadStoreDebugModeEnabled: 0
-  bundleVersion: 'p_3_5_101_240723 Sdk: r_2_8_0_240424'
+  bundleVersion: 'a_VerifyBuildWorking_WithPcFileAdded_3_6_0_240731 Sdk: b_2_9_0_240322'
   preloadedAssets:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 11400000, guid: eac67687cb7c1d54bbbd3823149b2e20, type: 2}
-  - {fileID: -4944046442322217198, guid: 05613238e4967ee4eaf7ec16d6b74134, type: 2}
-  - {fileID: 11400000, guid: 1fa2aa15cefdd584a951e2c56dad67d6, type: 2}
-  - {fileID: -1669993590190219027, guid: cacddd76b8745654ba3fc8d71f8b9116, type: 2}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -164,7 +161,7 @@ PlayerSettings:
   androidSupportedAspectRatio: 1
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
-    Android: com.inetum.OculusQuestBrowser
+    Android: com.inetum.OculusQuestBrowser.Alpha
     Standalone: com.inetum.umi3d-browser
     iPhone: com.Unity-Technologies.com.unity.template.urp-blank
   buildNumber:
@@ -173,7 +170,7 @@ PlayerSettings:
     iPhone: 0
     tvOS: 0
   overrideDefaultApplicationIdentifier: 1
-  AndroidBundleVersionCode: 30601
+  AndroidBundleVersionCode: 30600
   AndroidMinSdkVersion: 29
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 0

@@ -180,13 +180,13 @@ namespace umi3dBrowsers.container.formrenderer
                         var button = container.container.GetComponent<Button>();
                         switch (buttonDto.buttonType)
                         {
-                            case ButtonType.Submit:
+                            case umi3d.common.interaction.form.ButtonType.Submit:
                                 button.onClick.AddListener(() => { ValidateForm(inputAnswerDto.inputId); });
                                 break;
-                            case ButtonType.Cancel:
+                            case umi3d.common.interaction.form.ButtonType.Cancel:
                                 button.onClick.AddListener(() => { connectionToImmersiveLinker.Leave(); });
                                 break;
-                            case ButtonType.Back:
+                            case umi3d.common.interaction.form.ButtonType.Back:
                                 button.onClick.AddListener(() => { _answer.isBack = true; ValidateForm(inputAnswerDto.inputId); });
                                 break;
                         }
@@ -235,11 +235,11 @@ namespace umi3dBrowsers.container.formrenderer
             }
         }
 
-        private void HandleDivDto<T>(T itemDto, GameObject prefab, FormContainer parentContainer, Action<T, FormContainer, IDisplayer> handleItem) where T : DivDto
+        private void HandleDivDto<T>(T itemDto, GameObject prefab, FormContainer parentContainer, Action<T, FormContainer, displayer.IDisplayer> handleItem) where T : DivDto
         {
             GameObject gameObject = Instantiate(prefab, parentContainer.container.transform);
             FormContainer container = parentContainer.GetNextFormContainer(gameObject, itemDto.styles);
-            var displayer = gameObject.GetComponent<IDisplayer>();
+            var displayer = gameObject.GetComponent<displayer.IDisplayer>();
 
             handleItem?.Invoke(itemDto, container, displayer);
 
@@ -282,14 +282,14 @@ namespace umi3dBrowsers.container.formrenderer
         private async Task HandleImageDto(ImageDto imageDto, FormContainer parentContainer, InputAnswerDto inputAnswerDto)
         {
             GameObject imageGO = null;
-            IDisplayer displayer = null;
+            displayer.IDisplayer displayer = null;
 
             if (imageDto.FirstChildren == null || imageDto.FirstChildren.Count == 0) // Simple image
             {
                 imageGO = Instantiate(imageDisplayerPrefab, parentContainer.container.transform);
                 parentContainer.contents.Add(imageGO);
 
-                displayer = imageGO.GetComponent<IDisplayer>();
+                displayer = imageGO.GetComponent<displayer.IDisplayer>();
                 displayer.SetResource(await imageDto.GetSprite());
             }
             else // Vignette
@@ -303,7 +303,7 @@ namespace umi3dBrowsers.container.formrenderer
                     vignetteContainer.Clear();
                     vignetteContainer.ChangePrimaryVignetteMode(E_VignetteScale.Mid);
 
-                    HandleStyle(newParent.container, newParent.container.GetComponent<IDisplayer>(), newParent.Styles);
+                    HandleStyle(newParent.container, newParent.container.GetComponent<displayer.IDisplayer>(), newParent.Styles);
                     m_vignetteContainers.Add(vignetteContainer);
                 }
 
@@ -316,7 +316,7 @@ namespace umi3dBrowsers.container.formrenderer
             HandleStyle(imageGO, displayer, imageDto.styles);
         }
 
-        private void HandleStyle(GameObject gameObject, IDisplayer displayer, List<StyleDto> styleDtos)
+        private void HandleStyle(GameObject gameObject, displayer.IDisplayer displayer, List<StyleDto> styleDtos)
         {
             if (gameObject == null || styleDtos == null)
                 return;
@@ -334,7 +334,7 @@ namespace umi3dBrowsers.container.formrenderer
             }
         }
 
-        private void ApplyStyle(GameObject go, IDisplayer displayer, UGUIStyleItemDto styleItemDto)
+        private void ApplyStyle(GameObject go, displayer.IDisplayer displayer, UGUIStyleItemDto styleItemDto)
         {
             switch (styleItemDto) 
             { 

@@ -134,7 +134,7 @@ namespace form_generator
                     ButtonDto button = new ButtonDto();
                     button.Text = divTagger.GetComponentInChildren<TextMeshProUGUI>()?.text;
                     button.tooltip = divTagger.ToolTip;
-                    button.buttonType = ButtonType.Submit;
+                    button.buttonType = umi3d.common.interaction.form.ButtonType.Submit;
                     button.resource = divTagger.GetResourceDto();
                     divDto = button;
                     break;

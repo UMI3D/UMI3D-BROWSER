@@ -46,6 +46,9 @@ namespace umi3d.browserEditor.BuildTool
                 case E_Target.Pico:
                     loadingParameters.supportedformats.Add(UMI3DAssetFormat.unity_android_urp);
                     break;
+                case E_Target.Windows:
+                    loadingParameters.supportedformats.Add(UMI3DAssetFormat.unity_standalone_urp);
+                    break;
             }
         }
     }

@@ -43,6 +43,9 @@ namespace umi3d.browserEditor.BuildTool
                 case E_Target.SteamXR:
                     ChangeDeviceConditionalCompilation(MultiDevice.XR);
                     break;
+                case E_Target.Windows:
+                    ChangeDeviceConditionalCompilation(MultiDevice.PC);
+                    break;
                 default:
                     break;
             }

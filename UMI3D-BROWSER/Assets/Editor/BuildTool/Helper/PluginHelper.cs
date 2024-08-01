@@ -37,6 +37,9 @@ namespace umi3d.browserEditor.BuildTool
                 case E_Target.SteamXR:
                     DisableAllPlugins(BuildTargetGroup.Standalone, except: E_Plugin.OpenXR);
                     break;
+                case E_Target.Windows:
+                    DisableAllPlugins(BuildTargetGroup.Android);
+                    break;
             }
 
             switch (target)

@@ -848,7 +848,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &258872585446966364
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -880,6 +880,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   popupLinker: {fileID: 11400000, guid: 6791a9e677b43dd4fb1d319da7708082, type: 2}
   deleteLibPopup: {fileID: 11400000, guid: ea06411a2a8eac54facd0179d45e21d4, type: 2}
+  buttonUp: {fileID: 0}
+  buttonDown: {fileID: 0}
   libraryItemPrefab: {fileID: 2172850233969740207}
   container: {fileID: 5935640253769635743}
   nbLibraryDisplayedAtSameTime: 5

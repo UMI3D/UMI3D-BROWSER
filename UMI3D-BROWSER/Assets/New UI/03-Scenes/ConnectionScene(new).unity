@@ -897,6 +897,7 @@ GameObject:
   - component: {fileID: 1489218864}
   - component: {fileID: 1489218866}
   - component: {fileID: 1489218865}
+  - component: {fileID: 1489218867}
   m_Layer: 5
   m_Name: Popups
   m_TagString: Untagged
@@ -961,6 +962,24 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1489218863}
   m_CullTransparentMesh: 1
+--- !u!114 &1489218867
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1489218863}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 600a2906000422a4ebaf8729b03932ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  infoPopUp: {fileID: 3962503603607600965, guid: 178486ba959e5854db1f711aa8793aa5,
+    type: 3}
+  warningPopUp: {fileID: 3962503603607600965, guid: c563446949949d44a89e73a8b6d9fc81,
+    type: 3}
+  errorPopUp: {fileID: 3962503603607600965, guid: acd7a41e6a1fc04479d9a30a59637e63,
+    type: 3}
 --- !u!1 &1622218455
 GameObject:
   m_ObjectHideFlags: 0

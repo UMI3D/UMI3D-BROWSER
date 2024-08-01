@@ -38,8 +38,16 @@ namespace umi3dBrowsers.displayer
 
         public void SetArguments(Dictionary<string, object> arguments)
         {
-            title.StringReference.Arguments = new object[] { arguments };
-            description.StringReference.Arguments = new object[] { arguments };
+            if (arguments == null) 
+            {
+                title.StringReference.Arguments = null;
+                description.StringReference.Arguments = null;
+            }
+            else
+            {
+                title.StringReference.Arguments = new object[] { arguments };
+                description.StringReference.Arguments = new object[] { arguments };
+            }
         }
 
         public void SetButtons(params (string, Action)[] buttons)
@@ -60,7 +68,12 @@ namespace umi3dBrowsers.displayer
         {
             var buttonObject = Instantiate(buttonPrefab, buttonGroup.transform).GetComponent<SimpleButton>();
             buttonObject.GetComponentInChildren<LocalizeStringEvent>().SetEntry(button.Item1);
-            buttonObject.OnClick.AddListener(new UnityAction(button.Item2));
+            Action callback = () =>
+            {
+                button.Item2?.Invoke();
+                gameObject.SetActive(false);
+            };
+            buttonObject.OnClick.AddListener(new UnityAction(callback));
 
             return buttonObject.gameObject;
         }

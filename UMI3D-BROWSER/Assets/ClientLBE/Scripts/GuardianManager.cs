@@ -66,6 +66,8 @@ namespace ClientLBE
 
         private uint AR = 0;
         private LBEGroupDto lBEGroupDto = new LBEGroupDto();
+        private ulong currentUserId;
+
 
 
         #endregion
@@ -74,8 +76,19 @@ namespace ClientLBE
 
         public void Start()
         {
+            currentUserId = GetCurrentUserId();
+
+            if (currentUserId != 0)
+            {
+                Debug.Log("REMI : L'ID de l'utilisateur actuel est : " + currentUserId);
+            }
+            else
+            {
+                Debug.LogWarning("REMIO : Impossible de récupérer l'ID de l'utilisateur actuel.");
+            }
+
             //Desactivation du calibreur manuel
-            if(AutomatiqueCalibration == true)
+            if (AutomatiqueCalibration == true)
             {
                 Calibreur.SetActive(false);
                 Calibreur = null;
@@ -85,7 +98,16 @@ namespace ClientLBE
             StartCoroutine(GetARPlanes());
 
             UMI3DEnvironmentLoader.Instance.onEnvironmentLoaded.AddListener(() => StartCalibrationScene());
-            CollaborationSkeletonsManager.Instance.CollaborativeSkeletonCreated += OnCollaborativeSkeletonCreated;
+            //CollaborationSkeletonsManager.Instance.CollaborativeSkeletonCreated += OnCollaborativeSkeletonCreated;
+        }
+
+        private ulong GetCurrentUserId()
+        {
+            if (UMI3DCollaborationClientServer.Exists)
+            {
+                return UMI3DCollaborationClientServer.Instance?.GetUserId() ?? 0;
+            }
+            return 0;
         }
 
         void OnEnable()
@@ -104,7 +126,6 @@ namespace ClientLBE
             UMI3DForgeClient.ImportantEventOccurred -= HandleImportantEvent;
             UMI3DForgeClient.LBEGroupEventOccurred -= LBEGroupEvent;
 
-
             if (arPlaneManager != null)
             {
                 arPlaneManager.planesChanged -= OnPlanesChanged;
@@ -115,34 +136,53 @@ namespace ClientLBE
         {
             StartCoroutine(GetARPlanes());
         }
-       
 
-        private void OnCollaborativeSkeletonCreated(ulong userId)
+        private void AddCapsulesToCurrentARUsers(LBEGroupDto lBEGroupDto)
+        {
+            Debug.LogWarning($"REMY : ADD CAPSULE.");
+
+            foreach (var userId in lBEGroupDto.UserAR)
+            {
+                var skeleton = CollaborationSkeletonsManager.Instance.GetCollaborativeSkeleton((UMI3DGlobalID.EnvironmentId, userId)) as AbstractSkeleton;
+
+                Debug.LogWarning("REMY : userId -> "+ userId);
+
+
+                if (skeleton != null)
+                {
+                    Debug.LogWarning($"REMY : Utilisateur AR avec l'ID: {userId} trouvé.");
+                    AddCapsuleToBone(skeleton, BoneType.Hips);
+                }
+                else
+                {
+                    Debug.LogWarning($"REMY : Utilisateur AR avec l'ID: {userId} non trouvé dans la scène.");
+                }
+            }
+        }
+
+       /* private void OnCollaborativeSkeletonCreated(ulong userId)
         {
             // Récupérer le squelette de cet utilisateur
             var skeleton = CollaborationSkeletonsManager.Instance.GetCollaborativeSkeleton((UMI3DGlobalID.EnvironmentId, userId)) as AbstractSkeleton;
 
-
-            if(AR == 1)
+            if (lBEGroupDto != null && lBEGroupDto.UserAR.Contains(userId))
             {
                 Debug.Log("REMI : User MR Accepted !!");
+                if (skeleton != null)
+                {
+                    // Ajouter une capsule
+                    AddCapsuleToBone(skeleton, BoneType.Hips);
+                }
+                else
+                {
+                    Debug.LogWarning("Bone non trouvé pour cet utilisateur.");
+                }
             }
             else
             {
                 Debug.Log("REMI : User VR Accepted !!");
-
             }
-
-            if (skeleton != null)
-            {
-                // Ajouter une capsule
-                AddCapsuleToBone(skeleton, BoneType.Hips);
-            }
-            else
-            {
-                Debug.LogWarning("Bone non trouvé pour cet utilisateur.");
-            }
-        }
+        }*/
 
         private void AddCapsuleToBone(AbstractSkeleton skeleton, uint boneType)
         {
@@ -274,7 +314,6 @@ namespace ClientLBE
         }
         public IEnumerator CalibrationScene()
         {
-
             yield return null;
             yield return null;
 
@@ -290,7 +329,6 @@ namespace ClientLBE
                 if (parent != null)
                 {
                     Scene = parent;
-
 
                     Calibreur.transform.rotation = new Quaternion(0.0f, Calibreur.transform.rotation.y, 0.0f, Calibreur.transform.rotation.w);
                     Calibreur.transform.SetParent(null, true);
@@ -333,15 +371,20 @@ namespace ClientLBE
         //Création du guardian à partir des données du serveur
         void HandleImportantEvent(UserGuardianDto userGuardianDto)
         {
-            CreatGuardianServer(userGuardianDto);
+            //CreatGuardianServer(userGuardianDto);
         }
 
-        void LBEGroupEvent(LBEGroupDto lBEGroupDto)
+        void LBEGroupEvent(LBEGroupDto LbeGroupDtoData)
         {
-            LBEGroupDto lBEGroupDtoData = lBEGroupDto;
-            Debug.Log("REMI : lBEGroupDtoData Members -> " + lBEGroupDtoData.Members.Count);
-            Debug.Log("REMI : lBEGroupDtoData GroupID -> " + lBEGroupDtoData.GroupId);
-            Debug.Log("REMI : lBEGroupDtoData UserGuardianDto -> " + lBEGroupDtoData.userGuardianDto.OffsetGuardian);
+            lBEGroupDto = LbeGroupDtoData;
+            Debug.Log("REMI : lBEGroupDtoData GroupID -> " + lBEGroupDto.GroupId);
+            Debug.Log("REMI : lBEGroupDtoData Members -> " + lBEGroupDto.UserAR.Count);
+            Debug.Log("REMI : lBEGroupDtoData Members -> " + lBEGroupDto.UserVR.Count);
+            Debug.Log("REMI : lBEGroupDtoData UserGuardianDto -> " + lBEGroupDto.userGuardianDto.OffsetGuardian);
+            
+            CreatGuardianServer(lBEGroupDto.userGuardianDto);
+
+            AddCapsulesToCurrentARUsers(lBEGroupDto);
 
         }
 

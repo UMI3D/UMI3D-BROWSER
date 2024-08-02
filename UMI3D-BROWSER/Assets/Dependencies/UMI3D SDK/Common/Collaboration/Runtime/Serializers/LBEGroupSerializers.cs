@@ -19,7 +19,8 @@ namespace umi3d.common.lbe
             if (typeof(T) == typeof(LBEGroupDto))
             {
                 uint groupId = UMI3DSerializer.Read<uint>(container);
-                List<ulong> members = UMI3DSerializer.ReadList<ulong>(container);
+                List<ulong> UserAR = UMI3DSerializer.ReadList<ulong>(container);
+                List<ulong> userVR = UMI3DSerializer.ReadList<ulong>(container);
                 readable = UMI3DSerializer.TryRead(container, out uint Key);
                 UserGuardianDto userGuardianDto = UMI3DSerializer.Read<UserGuardianDto>(container);
 
@@ -28,7 +29,8 @@ namespace umi3d.common.lbe
                     var lBEGroup = new LBEGroupDto()
                     {
                         GroupId = groupId,
-                        Members = members,
+                        UserAR = UserAR,
+                        UserVR = userVR,
                         userGuardianDto = userGuardianDto
                     };
                     readable = true;
@@ -47,7 +49,8 @@ namespace umi3d.common.lbe
             {
                 bytable = UMI3DSerializer.Write(UMI3DOperationKeys.SetLBEGroupRequest)
                     + UMI3DSerializer.Write(c.GroupId)
-                    + UMI3DSerializer.WriteCollection(c.Members)
+                    + UMI3DSerializer.WriteCollection(c.UserAR)
+                    + UMI3DSerializer.WriteCollection(c.UserVR)
                     + UMI3DSerializer.Write(c.userGuardianDto);
                 return true;
             }

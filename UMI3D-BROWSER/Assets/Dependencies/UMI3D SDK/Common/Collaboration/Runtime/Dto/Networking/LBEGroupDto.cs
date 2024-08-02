@@ -2,19 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 namespace umi3d.common.lbe
 {
-    public class LBEGroupDto : MonoBehaviour
+    public class LBEGroupDto : UMI3DDto
     {
         public uint GroupId { get; set; }
 
-        public List<ulong> Members { get; set; } = new List<ulong>();
+        public List<ulong> UserAR { get; set; }
+
+        public List<ulong> UserVR { get; set; }
 
         public UserGuardianDto userGuardianDto;
 
         public LBEGroupDto()
         {
-            Members = new List<ulong>();
+            UserAR = new List<ulong>();
+            UserVR = new List<ulong>();
         }
     }
 }

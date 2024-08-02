@@ -567,7 +567,6 @@ namespace umi3d.cdk.collaboration
                 case SendGuardianRequestDto guardianRequestDto:
                     MainThreadManager.Run(() =>
                     {
-                        Debug.Log("Remi : Get transaction dto !! ");
                         UserGuardianDto guardianData = guardianRequestDto.guardianData;
 
                         // Simuler un événement important
@@ -592,9 +591,6 @@ namespace umi3d.cdk.collaboration
 
         public async Task<bool> PerformOperation(uint operationId, ByteContainer container)
         {
-
-
-            Debug.Log("Remi : Operation ID" + operationId);
 
             switch (operationId)
             {
@@ -761,12 +757,9 @@ namespace umi3d.cdk.collaboration
                 case UMI3DOperationKeys.SetGuardianRequest:
                     MainThreadManager.Run(() =>
                     {
-                        Debug.Log("Remi : Get transaction NO dto SetGuardianRequest !! ");
-
                         SendGuardianRequestDto userGuardianDto = UMI3DSerializer.Read<SendGuardianRequestDto>(container);
 
                         Debug.Log("Remi : Received SendGuardianRequestDto");
-                        Debug.Log("Remi : Number of anchor DTOs received: " + userGuardianDto.guardianData.anchorAR.Count);
 
                         foreach (ARAnchorDto anchor in userGuardianDto.guardianData.anchorAR)
                         {
@@ -785,14 +778,25 @@ namespace umi3d.cdk.collaboration
                 case UMI3DOperationKeys.SetLBEGroupRequest:
                     MainThreadManager.Run(() =>
                     {
-                        Debug.Log("REMI : Ok SetLBEGroupRequest");
-                        SendLBEGroupRequestDTO lBEGroupRequestDTO = UMI3DSerializer.Read<SendLBEGroupRequestDTO>(container);
                         Debug.Log("REMI : Received SetLBEGroupRequest");
+
+                        SendLBEGroupRequestDTO lBEGroupRequestDTO = UMI3DSerializer.Read<SendLBEGroupRequestDTO>(container);
+
+                        foreach (ulong userAR in lBEGroupRequestDTO.lBEGroupData.UserAR)
+                        {
+                            Debug.Log("REMY : -> userAR : " + userAR);
+                        }
+
+                        foreach (ulong userVR in lBEGroupRequestDTO.lBEGroupData.UserVR)
+                        {
+                            Debug.Log("REMY : -> userVR : " + userVR);
+                        }
 
                         var lBEGroup = new LBEGroupDto
                         {
-                            Members = lBEGroupRequestDTO.lBEGroupData.Members,
                             GroupId = lBEGroupRequestDTO.lBEGroupData.GroupId,
+                            UserAR = lBEGroupRequestDTO.lBEGroupData.UserAR,
+                            UserVR = lBEGroupRequestDTO.lBEGroupData.UserVR,
                             userGuardianDto = lBEGroupRequestDTO.lBEGroupData.userGuardianDto
                         };
 

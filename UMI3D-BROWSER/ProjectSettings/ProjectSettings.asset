@@ -13,7 +13,7 @@ PlayerSettings:
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: Inetum
-  productName: UMI3D Browser XR Alpha
+  productName: UMI3D Browser Alpha
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
@@ -141,7 +141,6 @@ PlayerSettings:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 11400000, guid: eac67687cb7c1d54bbbd3823149b2e20, type: 2}
-  - {fileID: 1252740022237663050, guid: 05613238e4967ee4eaf7ec16d6b74134, type: 2}
   - {fileID: 3826392025944409223, guid: cacddd76b8745654ba3fc8d71f8b9116, type: 2}
   - {fileID: 11400000, guid: 1fa2aa15cefdd584a951e2c56dad67d6, type: 2}
   metroInputSource: 0
@@ -165,7 +164,7 @@ PlayerSettings:
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
     Android: com.inetum.OculusQuestBrowser.Alpha
-    Standalone: com.inetum.umi3d-browser-xr.Alpha
+    Standalone: com.inetum.umi3d-browser.Alpha
     iPhone: com.Unity-Technologies.com.unity.template.urp-blank
   buildNumber:
     Standalone: 0
@@ -821,8 +820,8 @@ PlayerSettings:
   webGLMemoryGeometricGrowthCap: 96
   webGLPowerPreference: 2
   scriptingDefineSymbols:
-    Android: USE_INPUT_SYSTEM_POSE_CONTROL;UNITY_POST_PROCESSING_STACK_V2;USE_VIVE_OPENXR_ANDROID_1_0_5;UMI3D_XR
-    Standalone: USE_INPUT_SYSTEM_POSE_CONTROL;UNITY_POST_PROCESSING_STACK_V2;UMI3D_XR
+    Android: USE_INPUT_SYSTEM_POSE_CONTROL;UNITY_POST_PROCESSING_STACK_V2;USE_VIVE_OPENXR_ANDROID_1_0_5;UMI3D_PC
+    Standalone: USE_INPUT_SYSTEM_POSE_CONTROL;UNITY_POST_PROCESSING_STACK_V2;UMI3D_PC
     Windows Store Apps: USE_INPUT_SYSTEM_POSE_CONTROL;USE_INPUT_SYSTEM_POSE_CONTROL;USE_INPUT_SYSTEM_POSE_CONTROL;USE_INPUT_SYSTEM_POSE_CONTROL;USE_INPUT_SYSTEM_POSE_CONTROL
   additionalCompilerArguments: {}
   platformArchitecture: {}

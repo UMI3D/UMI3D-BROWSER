@@ -176,6 +176,7 @@ namespace umi3dVRBrowsersBase.ui.playerMenu
         protected override void Awake()
         {
             base.Awake();
+            if (m_playerCamera == null) m_playerCamera = Camera.main;
             Debug.Assert(m_playerCamera != null, "Player Camera is null in Player Menu Manager");
             m_menuCollider = GetComponent<BoxCollider>();
             Close(true);

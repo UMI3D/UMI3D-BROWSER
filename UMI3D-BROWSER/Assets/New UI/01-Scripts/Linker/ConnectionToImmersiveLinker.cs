@@ -15,7 +15,9 @@ namespace umi3dBrowsers.linker
         public void SetSetUpSkeleton(SetUpSkeleton setUpSkeleton) { this.setUpSkeleton = setUpSkeleton; }
         public void StandUp()
         {
+#if UMI3D_XR
             setUpSkeleton.SetUp();
+#endif
             OnSkeletonStandUp?.Invoke();
         }
         public event Action OnSkeletonStandUp;

@@ -14,26 +14,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TMPro;
-using umi3d;
-using umi3d.cdk.collaboration;
-using umi3d.common.interaction;
-using umi3dBrowsers.connection;
-using umi3dBrowsers.container;
-using umi3dBrowsers.container.formrenderer;
 using umi3dBrowsers.data.ui;
-using umi3dBrowsers.displayer;
 using umi3dBrowsers.linker;
 using umi3dBrowsers.linker.ui;
 using umi3dBrowsers.sceneManagement;
 using umi3dBrowsers.services.connection;
 using umi3dBrowsers.services.title;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Experimental.GlobalIllumination;
 using UnityEngine.Localization.Settings;
 using UnityEngine.UI;
 using utils.tweens;
@@ -186,9 +176,10 @@ namespace umi3dBrowsers
             cancelConnectionButton?.OnClick.AddListener(() => {
                 connectionToImmersiveLinker.Leave();
             });
-
+#if UMI3D_XR
             connectionToImmersiveLinker.OnSkeletonStandUp += () =>
                 parentTransform.position = new Vector3(parentTransform.position.x, Camera.main.transform.position.y, parentTransform.position.z);
+#endif
         }
 
         private void BindConnectionService()

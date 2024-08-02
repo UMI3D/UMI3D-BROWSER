@@ -30,7 +30,7 @@ namespace umi3d.browserRuntime.ui
         public AudioClip clickSound;
 
         [Tooltip("The audio source responsible of the sound")]
-        private AudioSource audioSource;
+        AudioSource audioSource;
 
         private void Awake()
         {

@@ -59,11 +59,13 @@ namespace umi3d.browserRuntime.ui
             ApplyStyle(blackGrey);
         }
 
-        void ApplyStyle(string normalHex)
+        void ApplyStyle(string colorHex)
         {
             ColorBlock colorBlock = new();
 
-            colorBlock.normalColor = HexToColor(normalHex);
+            colorBlock.normalColor = HexToColor(colorHex);
+            colorBlock.highlightedColor = HexToColor(colorHex);
+            colorBlock.selectedColor = HexToColor(colorHex);
             colorBlock.pressedColor = HexToColor(blue);
             colorBlock.disabledColor = HexToColor(disable, 10);
             colorBlock.colorMultiplier = 1;

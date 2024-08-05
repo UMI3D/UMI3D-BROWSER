@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1182492981284698535}
   - component: {fileID: 5141954830890573209}
+  - component: {fileID: 6219344913283396469}
   - component: {fileID: 4032303156467274208}
   - component: {fileID: 4270669299128629980}
   - component: {fileID: 924065277104236474}
@@ -64,6 +65,23 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &6219344913283396469
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1278514031943565970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!114 &4032303156467274208
 MonoBehaviour:
   m_ObjectHideFlags: 0

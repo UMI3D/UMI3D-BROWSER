@@ -40,10 +40,11 @@ namespace umi3dBrowsers.platform
 #elif UMI3D_XR
             canvas.renderMode = RenderMode.WorldSpace;
             var rectTransform = canvas.transform as RectTransform;
-            rectTransform.anchoredPosition = worldSpaceAnchoredPosition;
-            rectTransform.sizeDelta = worldSpaceSizeDelta;
             rectTransform.localScale = worldSpaceLocalScale;
+            rectTransform.sizeDelta = worldSpaceSizeDelta;
+            rectTransform.anchoredPosition3D = worldSpaceAnchoredPosition;
 #endif
+            Debug.Log(canvas.renderMode);
         }
     }
 }

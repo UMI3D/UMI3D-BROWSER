@@ -9,10 +9,11 @@ namespace umi3dBrowsers.player
     public class PlayerInstanciator : MonoBehaviour
     {
         [SerializeField] private MultiDeviceReference<GameObject> playerPrefab;
+        [SerializeField] private Transform playerParent;
 
         private void Awake()
         {
-            Instantiate(playerPrefab.Reference);
+            Instantiate(playerPrefab.Reference, playerParent);
         }
     }
 }

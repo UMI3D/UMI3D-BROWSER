@@ -25,6 +25,7 @@ namespace umi3d.browserRuntime.ui
     {
         [SerializeField] string character;
         TMPro.TMP_Text text;
+        bool isLowerCase = true;
 
         void Awake()
         {
@@ -39,16 +40,34 @@ namespace umi3d.browserRuntime.ui
                 null,
                 SwitchToCharacter
             );
+
+            NotificationHub.Default.Subscribe(
+                this,
+                "CharacterMode",
+                null,
+                SwitchToLowerOrUpperCase
+            );
         }
 
         void OnDisable()
         {
             NotificationHub.Default.Unsubscribe(this, "Character");
+            NotificationHub.Default.Unsubscribe(this, "CharacterMode");
         }
 
         void SwitchToCharacter()
         {
-            text.text = character;
+            text.text = isLowerCase ? character.ToLower() : character.ToUpper();
+        }
+
+        void SwitchToLowerOrUpperCase(Notification notification)
+        {
+            if (notification.TryGetInfoT("KeyMode", out bool isLower))
+            {
+                isLowerCase = isLower;
+            }
+
+            SwitchToCharacter();
         }
     }
 }

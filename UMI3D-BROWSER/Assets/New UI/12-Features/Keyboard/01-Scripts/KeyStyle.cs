@@ -23,57 +23,81 @@ namespace umi3d.browserRuntime.ui
 {
     public class KeyStyle : MonoBehaviour
     {
+        enum Style
+        {
+            /// <summary>
+            /// For the characters 'a', 'b', 'c', ...
+            /// </summary>
+            LightGrey,
+            /// <summary>
+            /// For the digital keys '1', '2', '3', ...
+            /// </summary>
+            DarkGrey,
+            /// <summary>
+            /// For the special common keys 'enter', ',', 'symb', ...
+            /// </summary>
+            BlackGrey
+        }
+
+        [SerializeField] Style style;
+
         Button button;
 
+        /// <summary>
+        /// For the characters 'a', 'b', 'c', ...
+        /// </summary>
         const string lightGrey = "#97979C";
-        const string darkGrey = "#656565";
-        const string blackGrey = "#494949";
-        const string disable = "#C8C8C8";
+        const string lightGreyHover = "#C3C3C3";
 
+        /// <summary>
+        /// For the digital keys '1', '2', '3', ...
+        /// </summary>
+        const string darkGrey = "#656565";
+        const string darkGreyHover = "#727272";
+
+        /// <summary>
+        /// For the special common keys 'enter', ',', 'symb', ...
+        /// </summary>
+        const string blackGrey = "#494949";
+        const string blackGreyHover = "#727272";
+
+        const string disable = "#C8C8C8";
         const string blue = "#5EE3F0";
 
-        void Awake()
+        private void OnValidate()
         {
-            button = gameObject.GetComponent<Button>();
-            if (button == null)
+            switch (style)
             {
-                button = gameObject.AddComponent<Button>();
+                case Style.LightGrey:
+                    ApplyStyle(lightGrey, lightGreyHover);
+                    break;
+                case Style.DarkGrey:
+                    ApplyStyle(darkGrey, darkGreyHover);
+                    break;
+                case Style.BlackGrey:
+                    ApplyStyle(blackGrey, blackGreyHover);
+                    break;
+                default:
+                    break;
             }
         }
 
-        [ContextMenu("ApplyLightGrey")]
-        void ApplyLightGrey()
-        {
-            ApplyStyle(lightGrey);
-        }
-
-        [ContextMenu("ApplyDarkGrey")]
-        void ApplyDarkGrey()
-        {
-            ApplyStyle(darkGrey);
-        }
-
-        [ContextMenu("ApplyBlackGrey")]
-        void ApplyBlackGrey()
-        {
-            ApplyStyle(blackGrey);
-        }
-
-        void ApplyStyle(string colorHex)
+        void ApplyStyle(string normalHex, string highlightHex)
         {
             ColorBlock colorBlock = new();
 
-            colorBlock.normalColor = HexToColor(colorHex);
-            colorBlock.highlightedColor = HexToColor(colorHex);
-            colorBlock.selectedColor = HexToColor(colorHex);
+            colorBlock.normalColor = HexToColor(normalHex);
+            colorBlock.highlightedColor = HexToColor(highlightHex);
+            colorBlock.selectedColor = HexToColor(normalHex);
             colorBlock.pressedColor = HexToColor(blue);
             colorBlock.disabledColor = HexToColor(disable, 10);
             colorBlock.colorMultiplier = 1;
             colorBlock.fadeDuration = .1f;
 
+            button = gameObject.GetComponent<Button>();
             if (button == null)
             {
-                button = gameObject.GetComponent<Button>();
+                button = gameObject.AddComponent<Button>();
             }
             button.colors = colorBlock;
 

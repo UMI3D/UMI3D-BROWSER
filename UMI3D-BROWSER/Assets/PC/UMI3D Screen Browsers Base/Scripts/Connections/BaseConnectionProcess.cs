@@ -69,8 +69,12 @@ namespace umi3d.baseBrowser.connection
             LoadingParameters.supportedformats.Add(UMI3DAssetFormat.jpg);
 #if UNITY_STANDALONE || UNITY_EDITOR
             LoadingParameters.supportedformats.Add(UMI3DAssetFormat.unity_standalone_urp);
+            LoadingParameters.SetHasHeadMountedDisplay(false);
+            LoadingParameters.SetCollaborationUserCaptureActivated(false);
 #elif UNITY_ANDROID
             LoadingParameters.supportedformats.Add(UMI3DAssetFormat.unity_android_urp);
+            LoadingParameters.SetHasHeadMountedDisplay(true);
+            LoadingParameters.SetCollaborationUserCaptureActivated(true);
 #endif
             Debug.Log("TODO : Not force mono speaker mode. For now forced for bluetooth headset.");
 

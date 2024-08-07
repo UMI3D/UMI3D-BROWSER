@@ -16,13 +16,14 @@ limitations under the License.
 
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.ui
 {
-    public class Key : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
+    public class Key : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler, IPointerExitHandler
     {
         KeyType type;
         Button button;
@@ -50,17 +51,45 @@ namespace umi3d.browserRuntime.ui
 
         public virtual void OnPress()
         {
+
             //keyboard.DeactivateShift();
         }
 
         public void OnPointerDown(PointerEventData eventData)
         {
+            UnityEngine.Debug.Log($"down");
             buttonPressed = true;
         }
 
         public void OnPointerUp(PointerEventData eventData)
         {
+            // Don't work yet
+            UnityEngine.Debug.Log($"up");
             buttonPressed = false;
+        }
+        
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            // Don't work yet
+            UnityEngine.Debug.Log($"enter");
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            // Don't work yet
+            UnityEngine.Debug.Log($"exit");
+        }
+
+        public void Enter()
+        {
+            // Don't work yet
+            UnityEngine.Debug.Log($"enter 2");
+        }
+
+        public void Exit()
+        {
+            // Don't work yet
+            UnityEngine.Debug.Log($"exit 2");
         }
     }
 }

@@ -12,21 +12,25 @@ limitations under the License.
 */
 using System;
 using umi3d.baseBrowser.Controller;
-using umi3d.baseBrowser.notification;
+using umi3d.cdk;
 using umi3d.cdk.collaboration;
 using umi3d.commonScreen;
 using umi3d.commonScreen.Displayer;
 using umi3d.commonScreen.game;
+using umi3dBrowsers.linker;
 using UnityEngine;
 using UnityEngine.UIElements;
 using static umi3d.baseBrowser.cursor.BaseCursor;
 using static umi3d.commonScreen.game.GamePanel_C;
+using NotificationLoader = umi3d.baseBrowser.notification.NotificationLoader;
 
 namespace umi3d.baseBrowser.connection
 {
     public abstract partial class BaseGamePanelController : inetum.unityUtils.SingleBehaviour<BaseGamePanelController>
     {
         #region Field
+        [Header("Linker")]
+        [SerializeField] private ConnectionToImmersiveLinker connectionToImmersiveLinker;
 
         public UIDocument document;
         [HideInInspector]
@@ -48,73 +52,14 @@ namespace umi3d.baseBrowser.connection
 
         #region Initialization of the Connection Process
 
-        protected virtual void InitConnectionProcess()
+        protected void Init()
         {
-            BaseConnectionProcess.Instance.ConnectionSucces += (media) =>
-            {
-                GamePanel.CurrentView = GameViews.Loader;
-                Loader.Loading.TitleLabel.LocalisedText = new LocalisationAttribute("Loading environment","Other", "LoadingEnv");
-                Loader.Loading.Value = 0;
-                Menu.GameData.WorldName = media.name;
-            };
-            BaseConnectionProcess.Instance.ConnectionFail += (message) =>
-            {
-                var dialoguebox = new Dialoguebox_C();
-                dialoguebox.Type = DialogueboxType.Default;
-                dialoguebox.Title = new LocalisationAttribute("Server error", "ErrorStrings", "ServerError");
-                dialoguebox.Message = message;
-                dialoguebox.ChoiceAText = new LocalisationAttribute("Leave", "GenericStrings", "Leave");
-                dialoguebox.Callback = (index) => BaseConnectionProcess.Instance.Leave();
-                dialoguebox.Enqueue(root);
-            };
-            BaseConnectionProcess.Instance.LoadedEnvironment += () =>
-            {
-                GamePanel.AddScreenToStack = GameViews.Game;
-                m_isContextualMenuDown = false;
-                BaseController.Instance.CurrentController.ResetInputsWhenEnvironmentLaunch();
-                OnMenuObjectContentChange();
-            };
-            BaseConnectionProcess.Instance.Connecting += (state) => Loader.Loading.Message = state;
-            BaseConnectionProcess.Instance.RedirectionStarted += () =>
-            {
-                GamePanel.AddScreenToStack = GameViews.Loader;
-                Loader.CurrentScreen = LoaderScreens.Loading;
-            };
-            BaseConnectionProcess.Instance.RedirectionEnded += () => GamePanel.AddScreenToStack = GameViews.Game;
-            BaseConnectionProcess.Instance.ConnectionLost += () =>
-            {
-                BaseController.CanProcess = false;
-
-                var dialoguebox = new Dialoguebox_C();
-                dialoguebox.Type = DialogueboxType.Confirmation;
-                dialoguebox.Title = new LocalisationAttribute("Connection to the server lost", "ErrorStrings", "ConnectionLost");
-                dialoguebox.Message = new LocalisationAttribute
-                (
-                    "Leave the environment or try to reconnect ?",
-                    "ErrorStrings", "LeaveOrTry"
-                );
-                dialoguebox.ChoiceAText = new LocalisationAttribute("Reconnect", "GenericStrings", "Reconnect");
-                dialoguebox.ChoiceA.Type = ButtonType.Default;
-                dialoguebox.ChoiceBText = new LocalisationAttribute("Leave", "GenericStrings", "Leave");
-                dialoguebox.Callback = (index) =>
-                {
-                    BaseController.CanProcess = true;
-                    if (index == 0) cdk.collaboration.UMI3DCollaborationClientServer.Reconnect();
-                    else BaseConnectionProcess.Instance.Leave();
-                };
-                dialoguebox.Enqueue(root);
-            };
-            BaseConnectionProcess.Instance.ForcedLeave += (message) =>
-            {
-                var dialoguebox = new Dialoguebox_C();
-                dialoguebox.Type = DialogueboxType.Default;
-                dialoguebox.Title = new LocalisationAttribute("Forced Deconnection", "ErrorStrings", "ForcedDeco");
-                dialoguebox.Message = message;
-                dialoguebox.ChoiceAText = new LocalisationAttribute("Leave", "GenericStrings", "Leave");
-                dialoguebox.Callback = (index) => BaseConnectionProcess.Instance.Leave();
-                dialoguebox.Enqueue(root);
-            };
-            BaseConnectionProcess.Instance.AskForDownloadingLibraries += (count, callback) =>
+            UMI3DEnvironmentLoader.Instance.onEnvironmentLoaded.AddListener(OnEnvironmentLoaded);
+            UMI3DCollaborationClientServer.Instance.OnRedirectionAborted.AddListener(OnRedirectionAborted);
+            UMI3DCollaborationClientServer.Instance.OnConnectionLost?.AddListener(OnConnectionLost);
+            UMI3DCollaborationClientServer.Instance.OnForceLogoutMessage.AddListener(OnForceLogoutMessage);
+            Debug.Log("TODO: SETUP ASK FOR LIBS");
+            /*BaseConnectionProcess.Instance.AskForDownloadingLibraries += (count, callback) =>
             {
                 var dialoguebox = new Dialoguebox_C();
                 dialoguebox.Type = DialogueboxType.Confirmation;
@@ -132,39 +77,74 @@ namespace umi3d.baseBrowser.connection
                 dialoguebox.ChoiceBText = new LocalisationAttribute("Deny", "GenericStrings", "Deny");
                 dialoguebox.Callback = (index) => callback?.Invoke(index == 0);
                 dialoguebox.Enqueue(root);
+            };*/
+            UMI3DEnvironmentClient.EnvironementLoaded.AddListener(EnvironmentLoaded);
+            UMI3DCollaborationEnvironmentLoader.Instance.OnUpdateJoinnedUserList += OnUpdateJoinnedUserList;
+        }
+
+        private void OnUpdateJoinnedUserList()
+        {
+            var count = UMI3DCollaborationEnvironmentLoader.Instance.JoinnedUserList.Count;
+            Game.NotifAndUserArea.UserList.RefreshList();
+            Game.NotifAndUserArea.OnUserCountUpdated(count);
+            Menu.GameData.ParticipantCount = count;
+        }
+
+        private void EnvironmentLoaded()
+        {
+            Menu.Libraries.InitLibraries();
+            Menu.Tips.InitTips();
+            EnvironmentSettings.Instance.AudioSetting.GeneralVolume = ((int)Menu.Settings.Audio.Data.GeneralVolume) / 10f;
+        }
+
+        private void OnForceLogoutMessage(string message)
+        {
+            var dialoguebox = new Dialoguebox_C();
+            dialoguebox.Type = DialogueboxType.Default;
+            dialoguebox.Title = new LocalisationAttribute("Forced Deconnection", "ErrorStrings", "ForcedDeco");
+            dialoguebox.Message = message;
+            dialoguebox.ChoiceAText = new LocalisationAttribute("Leave", "GenericStrings", "Leave");
+            dialoguebox.Callback = (index) => connectionToImmersiveLinker.Leave();
+            dialoguebox.Enqueue(root);
+        }
+
+        private void OnConnectionLost()
+        {
+            BaseController.CanProcess = false;
+
+            var dialoguebox = new Dialoguebox_C();
+            dialoguebox.Type = DialogueboxType.Confirmation;
+            dialoguebox.Title = new LocalisationAttribute("Connection to the server lost", "ErrorStrings", "ConnectionLost");
+            dialoguebox.Message = new LocalisationAttribute
+            (
+                "Leave the environment or try to reconnect ?",
+                "ErrorStrings", "LeaveOrTry"
+            );
+            dialoguebox.ChoiceAText = new LocalisationAttribute("Reconnect", "GenericStrings", "Reconnect");
+            dialoguebox.ChoiceA.Type = ButtonType.Default;
+            dialoguebox.ChoiceBText = new LocalisationAttribute("Leave", "GenericStrings", "Leave");
+            dialoguebox.Callback = (index) => {
+                BaseController.CanProcess = true;
+                if (index == 0)
+                    UMI3DCollaborationClientServer.Reconnect();
+                else
+                    connectionToImmersiveLinker.Leave();
             };
-            BaseConnectionProcess.Instance.GetParameterDtos += GetParameterDtos;
-            BaseConnectionProcess.Instance.LoadingLauncher += (value) =>
-            {
-                GamePanel.AddScreenToStack = GameViews.Loader;
-                Loader.CurrentScreen = LoaderScreens.Loading;
-                Loader.Loading.Title = new LocalisationAttribute("Leave environment", "Other", "LeaveEnvironment");
-                Loader.Loading.Value = value / 100f;
-            };
-            BaseConnectionProcess.Instance.DisplayPopUpAfterLoadingFailed += (title, message, action) =>
-            {
-                var dialoguebox = new Dialoguebox_C();
-                dialoguebox.Type = DialogueboxType.Confirmation;
-                dialoguebox.Title = title;
-                dialoguebox.Message = message;
-                dialoguebox.ChoiceAText = new LocalisationAttribute("Resume", "GenericStrings", "Resume");
-                dialoguebox.ChoiceA.Type = ButtonType.Default;
-                dialoguebox.ChoiceBText = new LocalisationAttribute("Stop", "GenericStrings", "Stop");
-                dialoguebox.Callback = action;
-                dialoguebox.Enqueue(root);
-            };
-            BaseConnectionProcess.Instance.EnvironmentLoaded += () =>
-            {
-                Menu.Libraries.InitLibraries();
-                Menu.Tips.InitTips();
-                EnvironmentSettings.Instance.AudioSetting.GeneralVolume = ((int)Menu.Settings.Audio.Data.GeneralVolume) / 10f;
-            };
-            BaseConnectionProcess.Instance.UserCountUpdated += count =>
-            {
-                Game.NotifAndUserArea.UserList.RefreshList();
-                Game.NotifAndUserArea.OnUserCountUpdated(count);
-                Menu.GameData.ParticipantCount = count;
-            };
+            dialoguebox.Enqueue(root);
+        }
+
+        private void OnRedirectionAborted()
+        {
+            GamePanel.AddScreenToStack = GameViews.Game;
+        }
+
+        private void OnEnvironmentLoaded()
+        {
+            Debug.Log("OnEnvironmentLoaded");
+            GamePanel.AddScreenToStack = GameViews.Game;
+            m_isContextualMenuDown = false;
+            BaseController.Instance.CurrentController.ResetInputsWhenEnvironmentLaunch();
+            OnMenuObjectContentChange();
         }
 
         #endregion
@@ -185,12 +165,10 @@ namespace umi3d.baseBrowser.connection
 
         protected virtual void Start()
         {
-            BaseConnectionProcess.Instance.ResetEnvironmentEvents();
-
             root.Add(TooltipsLayer_C.Instance);
             GamePanel = root.Q<GamePanel_C>();
 
-            InitConnectionProcess();
+            Init();
 
             InitLoader();
             InitMenu();
@@ -200,12 +178,10 @@ namespace umi3d.baseBrowser.connection
 
             GamePanel.CurrentView = GameViews.Loader;
 
-            BaseConnectionProcess.Instance.EnvironmentLeave += () =>
+            connectionToImmersiveLinker.OnLeave += () =>
             {
                 UnityEngine.Debug.Log($"leave");
                 var clhGameObject = UMI3DCollaborationLoadingHandler.Instance.gameObject;
-                //UMI3DCollaborationLoadingHandler.Instance = null;
-                //DestroyImmediate(clh.gameObject);
                 UMI3DCollaborationLoadingHandler.Destroy();
                 Destroy(clhGameObject);
             };
@@ -220,6 +196,14 @@ namespace umi3d.baseBrowser.connection
             UMI3DUser.OnUserAvatarStatusUpdated.RemoveListener(Game.NotifAndUserArea.UserList.UpdateUser);
             UMI3DUser.OnUserAttentionStatusUpdated.RemoveListener(Game.NotifAndUserArea.UserList.UpdateUser);
             UMI3DUser.OnRemoveUser.RemoveListener(Game.NotifAndUserArea.UserList.RemoveUser);
+
+            UMI3DEnvironmentLoader.Instance.onEnvironmentLoaded.RemoveListener(OnEnvironmentLoaded);
+            UMI3DCollaborationClientServer.Instance.OnRedirectionAborted.RemoveListener(OnRedirectionAborted);
+            UMI3DCollaborationClientServer.Instance.OnConnectionLost?.RemoveListener(OnConnectionLost);
+            UMI3DCollaborationClientServer.Instance.OnForceLogoutMessage.RemoveListener(OnForceLogoutMessage);
+            Debug.Log("TODO: SETUP ASK FOR LIBS");
+            UMI3DEnvironmentClient.EnvironementLoaded.RemoveListener(EnvironmentLoaded);
+            UMI3DCollaborationEnvironmentLoader.Instance.OnUpdateJoinnedUserList -= OnUpdateJoinnedUserList;
         }
 
         protected override void OnDestroy()

@@ -10,11 +10,8 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-using System.Collections;
-using System.Collections.Generic;
 using umi3d.commonScreen.Displayer;
 using umi3d.commonScreen.menu;
-using UnityEngine;
 
 namespace umi3d.baseBrowser.connection
 {
@@ -36,7 +33,7 @@ namespace umi3d.baseBrowser.connection
                 dialoguebox.ChoiceA.Type = ButtonType.Default;
                 dialoguebox.Callback = (index) =>
                 {
-                    if (index != 0) BaseConnectionProcess.Instance.Leave();
+                    if (index != 0) connectionToImmersiveLinker.Leave();
                 };
                 dialoguebox.EnqueuePriority(root);
             };

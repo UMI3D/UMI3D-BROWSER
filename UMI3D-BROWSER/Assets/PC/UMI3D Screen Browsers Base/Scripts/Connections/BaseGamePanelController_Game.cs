@@ -19,10 +19,8 @@ using umi3d.commonDesktop.game;
 using umi3d.commonScreen.Container;
 using umi3d.commonScreen.Displayer;
 using umi3d.commonScreen.game;
-using umi3d.mobileBrowser.Controller;
 using umi3d.mobileBrowser.interactions;
 using UnityEngine;
-using UnityEngine.UIElements;
 using static umi3d.commonScreen.game.GamePanel_C;
 
 namespace umi3d.baseBrowser.connection

@@ -12,7 +12,6 @@ limitations under the License.
 */
 using umi3d.baseBrowser.cursor;
 using umi3d.baseBrowser.inputs.interactions;
-using umi3d.cdk.collaboration;
 using umi3d.cdk.collaboration.emotes;
 using umi3d.commonScreen.game;
 using umi3d.mobileBrowser.interactions;
@@ -130,7 +129,7 @@ namespace umi3d.baseBrowser.connection
                 EmoteManager.Instance.PlayEmote(emote);
             };
 
-            BaseConnectionProcess.Instance.EnvironmentLeave += () => NotifAndUsersArea_C.Instance = null;
+            connectionToImmersiveLinker.OnLeave += () => NotifAndUsersArea_C.Instance = null;
 
             Game.TrailingArea.ButtonsArea.MainActionDown = MainMobileAction.OnClickedDown;
             Game.TrailingArea.ButtonsArea.MainActionUp = MainMobileAction.OnClickedUp;

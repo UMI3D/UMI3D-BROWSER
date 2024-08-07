@@ -15,13 +15,10 @@ limitations under the License.
 */
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using umi3d.cdk.collaboration;
 using umi3dBrowsers.data.ui;
 using umi3dBrowsers.linker;
 using umi3dBrowsers.linker.ui;
-using umi3dBrowsers.services.environment;
 using UnityEngine;
 
 namespace umi3dBrowsers.displayer

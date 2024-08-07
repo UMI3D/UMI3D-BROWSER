@@ -153,8 +153,6 @@ namespace umi3d.baseBrowser.connection
         {
             base.Awake();
             Debug.Assert(document != null);
-            Debug.Assert(FormMenu != null);
-            Debug.Assert(formMenuDisplay != null);
 
             Screen.sleepTimeout = SleepTimeout.NeverSleep;
 
@@ -170,7 +168,6 @@ namespace umi3d.baseBrowser.connection
 
             Init();
 
-            InitLoader();
             InitMenu();
             InitGame();
 

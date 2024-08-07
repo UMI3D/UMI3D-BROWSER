@@ -99,13 +99,6 @@ public class GamePanelController : umi3d.baseBrowser.connection.BaseGamePanelCon
         GamePanel.DisplayHeader = mode == FullScreenMode.FullScreenWindow;
     }
 
-    protected override void InitLoader()
-    {
-        base.InitLoader();
-
-        Loader.Version = BrowserDesktop.BrowserVersion.Version;
-    }
-
     protected override void InitGame()
     {
         base.InitGame();

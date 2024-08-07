@@ -44,7 +44,6 @@ namespace umi3dBrowsers.platform
             rectTransform.sizeDelta = worldSpaceSizeDelta;
             rectTransform.anchoredPosition3D = worldSpaceAnchoredPosition;
 #endif
-            Debug.Log(canvas.renderMode);
         }
     }
 }

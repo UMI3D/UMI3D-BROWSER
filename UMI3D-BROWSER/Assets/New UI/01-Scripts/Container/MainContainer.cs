@@ -17,6 +17,8 @@ limitations under the License.
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TMPro;
+using umi3d.baseBrowser.cursor;
+using umi3d.cdk;
 using umi3dBrowsers.data.ui;
 using umi3dBrowsers.linker;
 using umi3dBrowsers.linker.ui;
@@ -122,6 +124,10 @@ namespace umi3dBrowsers
                 connectionProcessorService.Disconnect();
                 sceneLoader.ReloadScene();
             };
+
+            UMI3DEnvironmentLoader.Instance.onEnvironmentLoaded?.AddListener(() => {
+                BaseCursor.SetMovement(this, BaseCursor.CursorMovement.Center);
+            } );
         }
 
         private void Start()

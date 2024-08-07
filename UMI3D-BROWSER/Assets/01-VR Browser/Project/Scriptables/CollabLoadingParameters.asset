@@ -18,7 +18,7 @@ MonoBehaviour:
   - fbx
   - png
   - jpg
-  - unity_android_urp
+  - unity_standalone_urp
   maximumResolution: 0
   notificationLoader: {fileID: 11400000, guid: 0547a6e5311adf04b9592ef5488099fb, type: 2}
   defaultMat: {fileID: 2100000, guid: 05469e08cff52964c98239a779d41da9, type: 2}
@@ -28,12 +28,12 @@ MonoBehaviour:
   _skyboxEquirectangularMaterial: {fileID: 2100000, guid: 550ddc5eab91acd47adeb9d3fd1b2ff8,
     type: 2}
   hasImmersiveDevice: 0
-  hasHeadMountedDisplay: 1
+  hasHeadMountedDisplay: 0
   skeletonHierarchyDefinition: {fileID: 11400000, guid: e4facea53a30b4c40aa447fc608d5c8a,
     type: 2}
   clientPoses: []
   bonesWithController: []
-  collaborationUserCaptureActivated: 1
+  collaborationUserCaptureActivated: 0
   collabTrackedSkeleton: {fileID: 3328692698567505491, guid: ab6aa0a6a7023a149a67b281f2e62d88,
     type: 3}
   areEmotesSupported: 1

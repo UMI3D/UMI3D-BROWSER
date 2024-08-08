@@ -77,5 +77,19 @@ namespace umi3d.browserRuntime.NotificationKeys
             /// </summary>
             public const string IsABC = "IsABC";
         }
+
+        /// <summary>
+        /// Notification sent when the version of the keyboard will change.
+        /// </summary>
+        public const string ChangeVersion = "ChangeVersion";
+
+        public static class VersionInfo
+        {
+            /// <summary>
+            /// The version of the keyboard (AZERTY, QWERTY, ...).<br/>
+            /// This should be a string.
+            /// </summary>
+            public const string Version = "Version";
+        }
     }
 }

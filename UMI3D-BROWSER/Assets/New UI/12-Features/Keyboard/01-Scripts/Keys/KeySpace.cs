@@ -14,17 +14,36 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
 using System.Collections;
 using System.Collections.Generic;
+using umi3d.browserRuntime.NotificationKeys;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui
 {
+    [RequireComponent(typeof(Key))]
     public class KeySpace : MonoBehaviour
     {
+        Key key;
+
         void Awake()
         {
-        
+            key = GetComponent<Key>();
+
+            key.PointerUp += PointerUp;
+        }
+
+        private void PointerUp()
+        {
+            NotificationHub.Default.Notify(
+                this, 
+                KeyboardNotificationKeys.AddCharacters, 
+                new() 
+                { 
+                    { KeyboardNotificationKeys.AddCharactersInfo.Characters, ' ' } 
+                }
+            );
         }
     }
 }

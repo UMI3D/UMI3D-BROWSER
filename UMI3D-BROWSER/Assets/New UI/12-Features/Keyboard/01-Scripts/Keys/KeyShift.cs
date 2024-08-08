@@ -14,17 +14,81 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
 using System.Collections;
 using System.Collections.Generic;
+using umi3d.browserRuntime.NotificationKeys;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.ui
 {
+    [RequireComponent(typeof(Key))]
     public class KeyShift : MonoBehaviour
     {
+        [SerializeField] bool isLowerCase = true;
+        Key key;
+        Button button;
+
         void Awake()
         {
-        
+            key = GetComponent<Key>();
+            button = GetComponent<Button>();
+
+            key.PointerUp += PointerUp;
+        }
+
+        private void OnEnable()
+        {
+            NotificationHub.Default.Subscribe(
+               this,
+               KeyboardNotificationKeys.ABCOrSymbol,
+               null,
+               ABCOrSymbol
+           );
+        }
+
+        private void OnDisable()
+        {
+            NotificationHub.Default.Unsubscribe(this, KeyboardNotificationKeys.ABCOrSymbol);
+        }
+
+        void PointerUp()
+        {
+            isLowerCase = !isLowerCase;
+
+            NotificationHub.Default.Notify(
+                this,
+                KeyboardNotificationKeys.LetterCase,
+                new()
+                {
+                    { KeyboardNotificationKeys.LetterCaseInfo.IsLowerCase, isLowerCase }
+                }
+            );
+        }
+
+        void ABCOrSymbol(Notification notification)
+        {
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.ABCOrSymbolInfo.IsABC, out bool isABC))
+            {
+                UnityEngine.Debug.LogError($"[KeyShift] no information for {KeyboardNotificationKeys.ABCOrSymbolInfo.IsABC}");
+                return;
+            }
+
+            button.interactable = isABC;
+            if (isABC)
+            {
+                isLowerCase = true;
+
+                NotificationHub.Default.Notify(
+                    this,
+                    KeyboardNotificationKeys.LetterCase,
+                    new()
+                    {
+                        { KeyboardNotificationKeys.LetterCaseInfo.IsLowerCase, isLowerCase }
+                    }
+                );
+            }
         }
     }
 }

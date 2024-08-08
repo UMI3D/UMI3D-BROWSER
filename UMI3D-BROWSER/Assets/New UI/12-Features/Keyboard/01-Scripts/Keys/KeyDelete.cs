@@ -14,17 +14,76 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
 using System.Collections;
 using System.Collections.Generic;
+using umi3d.browserRuntime.NotificationKeys;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui
 {
+    [RequireComponent(typeof(Key))]
     public class KeyDelete : MonoBehaviour
     {
+        Key key;
+        Coroutine coroutine;
+
+        [Tooltip("Interval in second between each deletion.")]
+        [SerializeField] float deletionInterval = .5f;
+        [Tooltip("Duration in second of the phase 0.")]
+        [SerializeField] float phase0Duration = 3f;
+
         void Awake()
         {
-        
+            key = GetComponent<Key>();
+
+            key.PointerDown += PointerDown;
+            key.PointerUp += PointerUp;
+        }
+
+        private void PointerDown()
+        {
+            if (coroutine != null)
+            {
+                StopCoroutine(coroutine);
+            }
+            coroutine = StartCoroutine(Delete());
+        }
+
+        private void PointerUp()
+        {
+            StopCoroutine(coroutine);
+            coroutine = null;
+        }
+
+        IEnumerator Delete()
+        {
+            float time = 0;
+            int phase = 0;
+
+            while (true)
+            {
+                if (time < phase0Duration)
+                {
+                    phase = 0;
+                }
+                else
+                {
+                    phase = 1;
+                }
+
+                NotificationHub.Default.Notify(
+                    this,
+                    KeyboardNotificationKeys.RemoveCharacters,
+                    new()
+                    {
+                        { KeyboardNotificationKeys.RemoveCharactersInfo.DeletionPhase, phase }
+                    }
+                );
+
+                yield return new WaitForSeconds(deletionInterval);
+                time += deletionInterval;
+            }
         }
     }
 }

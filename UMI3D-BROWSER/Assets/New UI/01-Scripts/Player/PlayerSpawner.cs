@@ -23,9 +23,11 @@ namespace umi3dBrowsers
             playerTransform.position = transform.position;
             playerTransform.rotation = transform.rotation;
 
+#if UMI3D_XR
             var cameraTransform = Camera.main.transform;
             cameraTransform.parent.localEulerAngles = new Vector3(0, -cameraTransform.localEulerAngles.y, 0);
-            cameraTransform.parent.localPosition = new Vector3(-cameraTransform.localPosition.x, cameraTransform.parent.localPosition.y, -cameraTransform.localPosition.z);
+            cameraTransform.parent.localPosition = new Vector3(-cameraTransform.localPosition.x, 0, -cameraTransform.localPosition.z);
+#endif
         }
     }
 }

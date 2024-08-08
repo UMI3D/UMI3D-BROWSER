@@ -46,13 +46,9 @@ namespace umi3d.baseBrowser.connection
                 }
             });
 
-            KeyboardShortcut.AddUpListener(ShortcutEnum.DisplayHideNotifications, () =>
-            {
-                if
-                (
-                    GamePanel.CurrentView == GameViews.GameMenu
-                    || GamePanel.CurrentView == GameViews.Loader
-                ) return;
+            KeyboardShortcut.AddUpListener(ShortcutEnum.DisplayHideNotifications, () => {
+                if (GamePanel.CurrentView == GameViews.GameMenu)
+                    return;
 
                 if
                 (
@@ -72,13 +68,9 @@ namespace umi3d.baseBrowser.connection
                 }
             });
 
-            KeyboardShortcut.AddUpListener(ShortcutEnum.DisplayHideUsersList, () =>
-            {
-                if
-                (
-                    GamePanel.CurrentView == GameViews.GameMenu
-                    || GamePanel.CurrentView == GameViews.Loader
-                ) return;
+            KeyboardShortcut.AddUpListener(ShortcutEnum.DisplayHideUsersList, () => {
+                if (GamePanel.CurrentView == GameViews.GameMenu)
+                    return;
 
                 if
                 (
@@ -98,13 +90,9 @@ namespace umi3d.baseBrowser.connection
                 }
             });
 
-            KeyboardShortcut.AddUpListener(ShortcutEnum.FreeCursor, () =>
-            {
-                if
-                (
-                    GamePanel.CurrentView == GameViews.GameMenu
-                    || GamePanel.CurrentView == GameViews.Loader
-                ) return;
+            KeyboardShortcut.AddUpListener(ShortcutEnum.FreeCursor, () => {
+                if (GamePanel.CurrentView == GameViews.GameMenu)
+                    return;
 
                 if (BaseCursor.Movement == CursorMovement.Center) BaseCursor.SetMovement(this, CursorMovement.Free);
                 else
@@ -115,14 +103,9 @@ namespace umi3d.baseBrowser.connection
                 }
             });
 
-            KeyboardEmote.EmotePressed += index =>
-            {
-                if
-                (
-                    GamePanel.CurrentView == GameViews.GameMenu
-                    || GamePanel.CurrentView == GameViews.Loader
-                    || BaseCursor.Movement == CursorMovement.Free
-                ) return;
+            KeyboardEmote.EmotePressed += index => {
+                if (GamePanel.CurrentView == GameViews.GameMenu || BaseCursor.Movement == CursorMovement.Free) 
+                    return;
 
                 if (EmoteWindow_C.Emotes == null || EmoteWindow_C.Emotes.Count <= index) return;
                 var emote = EmoteWindow_C.Emotes[index];
@@ -137,25 +120,17 @@ namespace umi3d.baseBrowser.connection
 
         protected void InitControls_ContextualMenu()
         {
-            KeyboardShortcut.AddDownListener(ShortcutEnum.DisplayHideContextualMenu, () =>
-            {
-                if
-                (
-                    GamePanel.CurrentView == GameViews.GameMenu
-                    || GamePanel.CurrentView == GameViews.Loader
-                ) return;
+            KeyboardShortcut.AddDownListener(ShortcutEnum.DisplayHideContextualMenu, () => {
+                if (GamePanel.CurrentView == GameViews.GameMenu)
+                    return;
 
                 if (!Game.IsLeadingAndtrailingClicked(GetMouseWorldPosition())) return;
 
                 m_contextualMenuActionDown?.Invoke();
             });
-            KeyboardShortcut.AddUpListener(ShortcutEnum.DisplayHideContextualMenu, () =>
-            {
-                if
-                (
-                    GamePanel.CurrentView == GameViews.GameMenu
-                    || GamePanel.CurrentView == GameViews.Loader
-                ) return;
+            KeyboardShortcut.AddUpListener(ShortcutEnum.DisplayHideContextualMenu, () => {
+                if (GamePanel.CurrentView == GameViews.GameMenu) 
+                    return;
 
                 if (!Game.IsLeadingAndtrailingClicked(GetMouseWorldPosition())) return;
 

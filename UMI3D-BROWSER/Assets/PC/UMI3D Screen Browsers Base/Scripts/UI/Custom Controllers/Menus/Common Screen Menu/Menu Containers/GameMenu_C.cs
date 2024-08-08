@@ -136,7 +136,8 @@ namespace umi3d.commonScreen.menu
                 .WithAnimation(.5f);
 
             this.SetOpacity(isTransitionIn ? 1 : 0)
-                .WithAnimation(.5f).SetCallback(() => {
+                .WithAnimation(.5f)
+                .SetCallback(() => {
                     if (!isTransitionIn)
                         RemoveAllScreen();
                 });

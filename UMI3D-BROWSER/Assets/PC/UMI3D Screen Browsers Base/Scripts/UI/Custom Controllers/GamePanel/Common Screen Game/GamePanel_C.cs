@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 using System.Collections.Generic;
+using System.Diagnostics;
 using umi3d.commonScreen.menu;
 using UnityEngine.UIElements;
 
@@ -23,7 +24,6 @@ namespace umi3d.commonScreen.game
     {
         public enum GameViews
         {
-            Loader,
             GameMenu,
             Game
         }
@@ -85,7 +85,6 @@ namespace umi3d.commonScreen.game
             set
             {
                 if (ViewStack.TryPeek(out var lastScreen) && lastScreen.Equals(value)) return;
-                if (lastScreen == GameViews.Loader && value == GameViews.GameMenu) return;
                 ViewStack.Push(value);
 
                 GetView(m_currentGameView, out VisualElement backgroundView, false);
@@ -144,7 +143,6 @@ namespace umi3d.commonScreen.game
             get => m_displayHeader;
             set
             {
-                Loader.DisplayHeader = value;
                 Menu.DisplayHeader = value;
                 Game.TopArea.DisplayHeader = value;
             }
@@ -155,7 +153,6 @@ namespace umi3d.commonScreen.game
 
         public override string UssCustomClass_Emc => "game-panel";
 
-        public Loader_C Loader = new Loader_C { name = "loader" };
         public GameMenu_C Menu = new GameMenu_C { name = "game-menu" };
         public Game_C Game = new Game_C { name = "game" };
 
@@ -189,7 +186,6 @@ namespace umi3d.commonScreen.game
 
         protected void RemoveAllView()
         {
-            Loader.RemoveFromHierarchy();
             Menu.RemoveFromHierarchy();
             Game.RemoveFromHierarchy();
         }
@@ -198,11 +194,6 @@ namespace umi3d.commonScreen.game
         {
             switch (view)
             {
-                case GameViews.Loader:
-                    gameView = Loader;
-                    if (setMovement) Loader.SetMovement?.Invoke(this);
-                    if (!setMovement) Loader.UnSetMovement?.Invoke(this);
-                    break;
                 case GameViews.GameMenu:
                     gameView = Menu;
                     break;

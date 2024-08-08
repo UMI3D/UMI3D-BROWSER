@@ -23,8 +23,6 @@ namespace umi3d.baseBrowser.connection
 {
     public abstract class BaseLauncherPanelController : MonoBehaviour
     {
-        public Launcher_C Launcher;
-
         [SerializeField]
         protected UIDocument document;
         protected VisualElement root => document.rootVisualElement;
@@ -37,15 +35,6 @@ namespace umi3d.baseBrowser.connection
             Screen.sleepTimeout = SleepTimeout.SystemSetting;
 
             root.Add(TooltipsLayer_C.Instance);
-
-            Launcher = root.Q<Launcher_C>();
-#if !UNITY_STANDALONE
-            Launcher.Version = Application.version;
-#endif
-            Launcher.Settings.Audio.SetAudio();
-            Launcher.InitLibraries();
-            Launcher.InitTips();
-            Launcher.CurrentScreen = LauncherScreens.Home;
 
             m_connectionDialoguebox = new Dialoguebox_C();
             m_connectionDialoguebox.Type = DialogueboxType.Default;

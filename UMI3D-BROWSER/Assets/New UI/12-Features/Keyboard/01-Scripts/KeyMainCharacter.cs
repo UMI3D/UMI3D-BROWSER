@@ -17,6 +17,7 @@ limitations under the License.
 using inetum.unityUtils;
 using System.Collections;
 using System.Collections.Generic;
+using umi3d.browserRuntime.NotificationKeys;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui
@@ -24,6 +25,7 @@ namespace umi3d.browserRuntime.ui
     public class KeyMainCharacter : MonoBehaviour
     {
         [SerializeField] string character;
+        [SerializeField] bool allowUpperCase = true;
         TMPro.TMP_Text text;
         bool isLowerCase = true;
 
@@ -36,38 +38,55 @@ namespace umi3d.browserRuntime.ui
         {
             NotificationHub.Default.Subscribe(
                 this,
-                "Character",
+                KeyboardNotificationKeys.ABCOrSymbol,
                 null,
                 SwitchToCharacter
             );
 
             NotificationHub.Default.Subscribe(
                 this,
-                "CharacterMode",
+                KeyboardNotificationKeys.LetterCase,
                 null,
-                SwitchToLowerOrUpperCase
+                SwitchLetterCase
             );
         }
 
         void OnDisable()
         {
-            NotificationHub.Default.Unsubscribe(this, "Character");
-            NotificationHub.Default.Unsubscribe(this, "CharacterMode");
+            NotificationHub.Default.Unsubscribe(this, KeyboardNotificationKeys.ABCOrSymbol);
+            NotificationHub.Default.Unsubscribe(this, KeyboardNotificationKeys.LetterCase);
         }
 
-        void SwitchToCharacter()
+        void SwitchToCharacter(Notification notification)
         {
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.ABCOrSymbolInfo.IsABC, out bool isABC) || !isABC)
+            {
+                return;
+            }
+
             text.text = isLowerCase ? character.ToLower() : character.ToUpper();
         }
 
-        void SwitchToLowerOrUpperCase(Notification notification)
+        void SwitchLetterCase(Notification notification)
         {
-            if (notification.TryGetInfoT("KeyMode", out bool isLower))
+            if (!allowUpperCase)
+            {
+                return;
+            }
+
+            if (notification.TryGetInfoT(KeyboardNotificationKeys.LetterCaseInfo.IsLowerCase, out bool isLower))
             {
                 isLowerCase = isLower;
             }
 
-            SwitchToCharacter();
+            SwitchToCharacter(new Notification(
+                KeyboardNotificationKeys.ABCOrSymbol, 
+                this, 
+                new()
+                {
+                    { KeyboardNotificationKeys.ABCOrSymbolInfo.IsABC, true }
+                })
+            );
         }
     }
 }

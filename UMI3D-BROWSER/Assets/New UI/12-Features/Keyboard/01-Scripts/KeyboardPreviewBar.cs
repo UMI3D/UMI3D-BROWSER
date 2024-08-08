@@ -17,6 +17,8 @@ limitations under the License.
 using inetum.unityUtils;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using umi3d.browserRuntime.NotificationKeys;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui
@@ -59,16 +61,16 @@ namespace umi3d.browserRuntime.ui
 
             NotificationHub.Default.Subscribe(
                this,
-               "AddCharacters",
+               KeyboardNotificationKeys.AddCharacters,
                null,
                AddCharacters
            );
 
             NotificationHub.Default.Subscribe(
                this,
-               "RemoveCharacters",
+               KeyboardNotificationKeys.RemoveCharacters,
                null,
-               AddCharacters
+               RemoveCharacters
            );
         }
 
@@ -76,6 +78,21 @@ namespace umi3d.browserRuntime.ui
         {
             inputField.onTextSelection.RemoveListener(SelectText);
             inputField.onEndTextSelection.RemoveListener(UnSelectText);
+
+            NotificationHub.Default.Unsubscribe(this, KeyboardNotificationKeys.AddCharacters);
+            NotificationHub.Default.Unsubscribe(this, KeyboardNotificationKeys.RemoveCharacters);
+        }
+
+        void Focus()
+        {
+            bool onFocusSelectAll = inputField.onFocusSelectAll;
+            inputField.onFocusSelectAll = false;
+            inputField.Select();
+            new Task(async () =>
+            {
+                await Task.Yield();
+                inputField.onFocusSelectAll = onFocusSelectAll;
+            }).Start(TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         void SelectText(string str, int pos1, int pos2)
@@ -97,9 +114,9 @@ namespace umi3d.browserRuntime.ui
 
         void AddCharacters(Notification notification)
         {
-            if (!notification.TryGetInfoT("Characters", out string characters))
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.AddCharactersInfo.Characters, out string characters))
             {
-                if (!notification.TryGetInfoT("Characters", out char character))
+                if (!notification.TryGetInfoT(KeyboardNotificationKeys.AddCharactersInfo.Characters, out char character))
                 {
                     UnityEngine.Debug.LogError($"[KeyboardPreviewBar] No characters added.");
                     return;
@@ -113,6 +130,7 @@ namespace umi3d.browserRuntime.ui
             if (!isTextSelected)
             {
                 inputField.text = text.Insert(inputField.stringPosition, characters);
+                Focus();
                 inputField.stringPosition += characters.Length;
             }
             else
@@ -123,6 +141,7 @@ namespace umi3d.browserRuntime.ui
                 text = text.Remove(start, end - start + 1);
                 text = text.Insert(start, characters);
                 inputField.text = text;
+                Focus();
 
                 inputField.stringPosition = start + 1;
                 inputField.selectionAnchorPosition = start + 1;
@@ -134,7 +153,7 @@ namespace umi3d.browserRuntime.ui
 
         void RemoveCharacters(Notification notification)
         {
-            if (!notification.TryGetInfoT("DeletionPhase", out int deletionPhase))
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.RemoveCharactersInfo.DeletionPhase, out int deletionPhase))
             {
                 UnityEngine.Debug.LogWarning($"[KeyboardPreviewBar] No deletion phase.");
                 return;
@@ -155,6 +174,7 @@ namespace umi3d.browserRuntime.ui
                 {
                     inputField.stringPosition -= 1;
                     inputField.text = text.Remove(inputField.stringPosition, 1);
+                    Focus();
                 }
                 else
                 {
@@ -163,6 +183,7 @@ namespace umi3d.browserRuntime.ui
 
                     text = text.Remove(start, end - start + 1);
                     inputField.text = text;
+                    Focus();
 
                     inputField.stringPosition = start;
                     inputField.selectionAnchorPosition = start;
@@ -185,6 +206,7 @@ namespace umi3d.browserRuntime.ui
                 {
                     inputField.text = trimmedLeft + right;
                     inputField.stringPosition = trimmedLeft.Length;
+                    Focus();
                     return;
                 }
 
@@ -195,11 +217,13 @@ namespace umi3d.browserRuntime.ui
                 {
                     inputField.text = right;
                     inputField.stringPosition = 0;
+                    Focus();
                 }
                 else
                 {
                     inputField.text = left.Substring(0, lastIdxOfSpace + 1) + right;
                     inputField.stringPosition = lastIdxOfSpace + 1;
+                    Focus();
                 }
             }
             else
@@ -208,6 +232,13 @@ namespace umi3d.browserRuntime.ui
             }
         }
 
+#if UNITY_EDITOR
+        [ContextMenu("TestFocus")]
+        void TestFocus()
+        {
+            UnityEngine.Debug.Log($"test focus = {inputField.stringPosition}");
+            Focus();
+        }
 
         [ContextMenu("TestAddSimple")]
         void TestAddSimple()
@@ -276,5 +307,6 @@ namespace umi3d.browserRuntime.ui
             RemoveCharacters(new Notification("", null, new() {
                 { "DeletionPhase", 1 } }));
         }
+#endif
     }
 }

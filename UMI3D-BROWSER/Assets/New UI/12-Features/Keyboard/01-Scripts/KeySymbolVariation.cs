@@ -17,6 +17,7 @@ limitations under the License.
 using inetum.unityUtils;
 using System.Collections;
 using System.Collections.Generic;
+using umi3d.browserRuntime.NotificationKeys;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui
@@ -36,8 +37,8 @@ namespace umi3d.browserRuntime.ui
         private void OnEnable()
         {
             NotificationHub.Default.Subscribe(
-                this, 
-                "Symbol", 
+                this,
+                KeyboardNotificationKeys.ABCOrSymbol, 
                 null, 
                 SwitchToSymbol
             );
@@ -45,11 +46,16 @@ namespace umi3d.browserRuntime.ui
 
         private void OnDisable()
         {
-            NotificationHub.Default.Unsubscribe(this, "Symbol");
+            NotificationHub.Default.Unsubscribe(this, KeyboardNotificationKeys.ABCOrSymbol);
         }
 
-        void SwitchToSymbol()
+        void SwitchToSymbol(Notification notification)
         {
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.ABCOrSymbolInfo.IsABC, out bool isABC) || isABC)
+            {
+                return;
+            }
+
             text.text = variation;
         }
     }

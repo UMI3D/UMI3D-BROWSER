@@ -17,6 +17,7 @@ limitations under the License.
 using inetum.unityUtils;
 using System;
 using System.Collections.Generic;
+using umi3d.browserRuntime.conditionalCompilation;
 using umi3dBrowsers.data.ui;
 using umi3dBrowsers.linker.ui;
 using umi3dBrowsers.services.connection;
@@ -40,7 +41,7 @@ namespace umi3dBrowsers.displayer
         [SerializeField, ReadOnly] private UnityEngine.Localization.Locale selectedLanguage;
         [SerializeField] private GameObject languagePrefab;
         [SerializeField] private MenuNavigationLinker menuNavigationLinker;
-        [SerializeField] private PanelData nextPanel;
+        [SerializeField] private MultiDeviceReference<PanelData> nextPanel;
 
         public UnityEvent<UnityEngine.Localization.Locale> OnSupportedLanguageValidated;
 
@@ -48,7 +49,7 @@ namespace umi3dBrowsers.displayer
         {
             var local = PlayerPrefsManager.GetLocalisationLocal();
             if (local != null && !menuNavigationLinker.ForceLanguage)
-                menuNavigationLinker.ShowPanel(nextPanel);
+                menuNavigationLinker.ShowPanel(nextPanel.Reference);
             local = PlayerPrefsManager.GetLocalisationLocal();
             LocalizationSettings.SelectedLocale = local ?? LocalizationSettings.ProjectLocale;
         }
@@ -78,6 +79,7 @@ namespace umi3dBrowsers.displayer
                         if (language.languageSelectionField != currentField)
                             language.languageSelectionField.Disable();
                         OnSupportedLanguageValidated?.Invoke(selectedLanguage);
+                        menuNavigationLinker.ShowPanel(nextPanel.Reference);
                     });
                 };
 

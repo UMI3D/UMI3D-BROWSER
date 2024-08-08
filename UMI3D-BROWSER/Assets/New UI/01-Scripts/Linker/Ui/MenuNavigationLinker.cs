@@ -29,6 +29,8 @@ namespace umi3dBrowsers.linker.ui
             m_panels = new();
             foreach (var panelData in m_panelsData)
             {
+                if (panelData.Prefab == null)
+                    continue;
                 var panel = Instantiate(panelData.Prefab, pPanelParent);
                 panel.SetActive(false);
                 m_panels.Add(panelData, panel);

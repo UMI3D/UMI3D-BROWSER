@@ -12,10 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6f1e655b952ca2438e43a760c13b81d, type: 3}
   m_Name: Language
   m_EditorClassIdentifier: 
-  m_prefab: {fileID: 5945559527186138994, guid: 236c6f6bec28398478622e96ad15e970,
-    type: 3}
+  m_prefab:
+    pcRef: {fileID: 5945559527186138994, guid: 236c6f6bec28398478622e96ad15e970, type: 3}
+    xrRef: {fileID: 5945559527186138994, guid: 236c6f6bec28398478622e96ad15e970, type: 3}
   m_displayTop: 1
   m_displayNavbar: 0
+  m_displayBack: 0
+  m_canBeReturnedTo: 0
   m_titlePrefab: pre_change_your
   m_titleSuffix: suf_language
   m_titleType: 0

@@ -10,8 +10,10 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+using AsImpL;
 using System;
 using umi3d.baseBrowser.Controller;
+using umi3d.baseBrowser.cursor;
 using umi3d.cdk;
 using umi3d.cdk.collaboration;
 using umi3d.commonScreen;
@@ -140,10 +142,16 @@ namespace umi3d.baseBrowser.connection
 
         private void OnEnvironmentLoaded()
         {
-            Debug.Log("OnEnvironmentLoaded");
             GamePanel.AddScreenToStack = GameViews.Game;
-            m_isContextualMenuDown = false;
+            BaseCursor.SetMovement(this, BaseCursor.CursorMovement.Center);
+
             BaseController.Instance.CurrentController.ResetInputsWhenEnvironmentLaunch();
+
+            m_isContextualMenuDown = false;
+
+            TopArea.InformationArea.EnvironmentName = UMI3DCollaborationClientServer.Instance.environementName;
+            Menu.GameData.EnvironmentName = UMI3DCollaborationClientServer.Instance.environementName;
+
             OnMenuObjectContentChange();
         }
 

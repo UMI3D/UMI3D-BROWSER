@@ -25,7 +25,6 @@ namespace umi3d.browserRuntime.ui
 {
     public class Key : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler, IPointerExitHandler
     {
-        KeyType type;
         Button button;
         bool buttonPressed;
 

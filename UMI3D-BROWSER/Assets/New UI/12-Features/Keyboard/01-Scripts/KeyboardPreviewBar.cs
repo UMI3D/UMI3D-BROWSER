@@ -17,9 +17,7 @@ limitations under the License.
 using inetum.unityUtils;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.TextCore.Text;
 
 namespace umi3d.browserRuntime.ui
 {
@@ -87,12 +85,12 @@ namespace umi3d.browserRuntime.ui
                 SelectionStart = Mathf.Min(pos1, pos2);
                 //minus one to convert from caret pos to character pos
                 SelectionEnd = Mathf.Max(pos1 - 1, pos2 - 1);
-                UnityEngine.Debug.Log($"start {SelectionStart}, {SelectionEnd}");
             }
         }
 
         void UnSelectText(string str, int pos1, int pos2)
         {
+            inputField.stringPosition = pos1;
             SelectionStart = null;
             SelectionEnd = null;
         }
@@ -101,8 +99,13 @@ namespace umi3d.browserRuntime.ui
         {
             if (!notification.TryGetInfoT("Characters", out string characters))
             {
-                UnityEngine.Debug.LogWarning($"[KeyboardPreviewBar] No characters added.");
-                return;
+                if (!notification.TryGetInfoT("Characters", out char character))
+                {
+                    UnityEngine.Debug.LogError($"[KeyboardPreviewBar] No characters added.");
+                    return;
+                }
+
+                characters = character.ToString();
             }
             
             var text = inputField.text;
@@ -137,11 +140,17 @@ namespace umi3d.browserRuntime.ui
                 return;
             }
 
+            if (inputField.stringPosition == 0 && !isTextSelected)
+            {
+                return;
+            }
+
             var text = inputField.text;
 
             // In phase 0: delete only one character or the selected text.
             if (deletionPhase == 0)
             {
+
                 if (!isTextSelected)
                 {
                     inputField.stringPosition -= 1;
@@ -165,10 +174,12 @@ namespace umi3d.browserRuntime.ui
             // In phase 1: delete world by world.
             else if (deletionPhase == 1)
             {
+                // The part that will be partially deleted.
                 string left = text.Substring(0, inputField.stringPosition);
+                // The part that will not be deleted.
                 string right = text.Substring(inputField.stringPosition, text.Length - inputField.stringPosition);
 
-                // Remove the spaces.
+                // Remove the trailing spaces.
                 string trimmedLeft = left.TrimEnd();
                 if (trimmedLeft.Length < left.Length)
                 {
@@ -179,15 +190,21 @@ namespace umi3d.browserRuntime.ui
 
                 // Remove the last word.
                 int lastIdxOfSpace = left.LastIndexOf(' ');
+
                 if (lastIdxOfSpace == -1)
                 {
                     inputField.text = right;
                     inputField.stringPosition = 0;
                 }
+                else
+                {
+                    inputField.text = left.Substring(0, lastIdxOfSpace + 1) + right;
+                    inputField.stringPosition = lastIdxOfSpace + 1;
+                }
             }
             else
             {
-                UnityEngine.Debug.Log($"[KeyboardPreviewBar] Deletion phase case unhandled.");
+                UnityEngine.Debug.LogError($"[KeyboardPreviewBar] Deletion phase case unhandled.");
             }
         }
 
@@ -233,7 +250,7 @@ namespace umi3d.browserRuntime.ui
             random = (char)Random.Range(a, z);
             UnityEngine.Debug.Log($"Test add {random}");
             AddCharacters(new Notification("", null, new() {
-                { "Characters", random.ToString() } }));
+                { "Characters", random } }));
 
             random = (char)Random.Range(a, z);
             UnityEngine.Debug.Log($"Test add {random}");
@@ -243,7 +260,7 @@ namespace umi3d.browserRuntime.ui
             random = (char)Random.Range(a, z);
             UnityEngine.Debug.Log($"Test add {random}");
             AddCharacters(new Notification("", null, new() {
-                { "Characters", random.ToString() } }));
+                { "Characters", random } }));
         }
 
         [ContextMenu("TestRemovePhase0")]

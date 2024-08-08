@@ -173,7 +173,7 @@ namespace umi3d.baseBrowser.connection
 
             InitControls();
 
-            GamePanel.CurrentView = GameViews.Game;
+            GamePanel.CurrentView = GameViews.None;
 
             connectionToImmersiveLinker.OnLeave += () =>
             {

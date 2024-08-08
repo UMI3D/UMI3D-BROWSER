@@ -24,6 +24,7 @@ namespace umi3d.commonScreen.game
     {
         public enum GameViews
         {
+            None,
             GameMenu,
             Game
         }
@@ -85,28 +86,38 @@ namespace umi3d.commonScreen.game
             set
             {
                 if (ViewStack.TryPeek(out var lastScreen) && lastScreen.Equals(value)) return;
+                if (lastScreen == GameViews.None && value == GameViews.GameMenu)
+                    return;
                 ViewStack.Push(value);
 
                 GetView(m_currentGameView, out VisualElement backgroundView, false);
-
                 GetView(value, out VisualElement foregroundView, true);
-                Add(foregroundView);
-                foregroundView.style.visibility = Visibility.Hidden;
 
-                backgroundView.schedule.Execute(() =>
+                if (foregroundView != null)
                 {
-                    foregroundView.WaitUntil
-                            (
-                                () => !float.IsNaN(foregroundView.layout.width) && !float.IsNaN(foregroundView.layout.height),
-                                () =>
-                                {
-                                    ((IGameView)backgroundView).TransitionOut(this);
+                    Add(foregroundView);
+                    foregroundView.style.visibility = Visibility.Hidden;
 
-                                    foregroundView.style.visibility = StyleKeyword.Null;
-                                    ((IGameView)foregroundView).TransitionIn(this);
-                                }
-                            );
-                });
+                    schedule.Execute(() =>
+                    {
+                        this.WaitUntil
+                                (
+                                    () => !float.IsNaN(foregroundView.layout.width) && !float.IsNaN(foregroundView.layout.height),
+                                    () => {
+                                        ((IGameView)backgroundView)?.TransitionOut(this);
+
+                                        foregroundView.style.visibility = StyleKeyword.Null;
+                                        ((IGameView)foregroundView).TransitionIn(this);
+                                    }
+                                );
+                    });
+                } 
+                else if (backgroundView != null)
+                {
+                    schedule.Execute(() => {
+                        ((IGameView)backgroundView).TransitionOut(this);
+                    });
+                }
 
                 m_currentGameView = value;
             }

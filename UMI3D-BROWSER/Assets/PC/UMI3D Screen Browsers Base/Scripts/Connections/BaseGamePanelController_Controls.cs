@@ -33,6 +33,8 @@ namespace umi3d.baseBrowser.connection
 
             KeyboardShortcut.AddUpListener(ShortcutEnum.DisplayHideGameMenu, () =>
             {
+                if (GamePanel.CurrentView == GameViews.None)
+                    return;
                 if (GamePanel.CurrentView == GameViews.GameMenu)
                 {
                     GamePanel.AddScreenToStack = GameViews.Game;
@@ -47,6 +49,8 @@ namespace umi3d.baseBrowser.connection
             });
 
             KeyboardShortcut.AddUpListener(ShortcutEnum.DisplayHideNotifications, () => {
+                if (GamePanel.CurrentView == GameViews.None)
+                    return;
                 if (GamePanel.CurrentView == GameViews.GameMenu)
                     return;
 
@@ -69,6 +73,8 @@ namespace umi3d.baseBrowser.connection
             });
 
             KeyboardShortcut.AddUpListener(ShortcutEnum.DisplayHideUsersList, () => {
+                if (GamePanel.CurrentView == GameViews.None)
+                    return;
                 if (GamePanel.CurrentView == GameViews.GameMenu)
                     return;
 
@@ -91,6 +97,8 @@ namespace umi3d.baseBrowser.connection
             });
 
             KeyboardShortcut.AddUpListener(ShortcutEnum.FreeCursor, () => {
+                if (GamePanel.CurrentView == GameViews.None)
+                    return;
                 if (GamePanel.CurrentView == GameViews.GameMenu)
                     return;
 
@@ -104,6 +112,8 @@ namespace umi3d.baseBrowser.connection
             });
 
             KeyboardEmote.EmotePressed += index => {
+                if (GamePanel.CurrentView == GameViews.None)
+                    return;
                 if (GamePanel.CurrentView == GameViews.GameMenu || BaseCursor.Movement == CursorMovement.Free) 
                     return;
 

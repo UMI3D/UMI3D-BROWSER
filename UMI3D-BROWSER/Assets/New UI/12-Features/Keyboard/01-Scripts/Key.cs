@@ -14,9 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -28,6 +28,9 @@ namespace umi3d.browserRuntime.ui
         KeyType type;
         Button button;
         bool buttonPressed;
+
+        public event Action PointerDown;
+        public event Action PointerUp;
 
         void Awake()
         {
@@ -51,45 +54,81 @@ namespace umi3d.browserRuntime.ui
 
         public virtual void OnPress()
         {
+            if (!button.IsInteractable())
+            {
+                return;
+            }
 
-            //keyboard.DeactivateShift();
+            UnityEngine.Debug.Log($"[Key] press");
         }
 
         public void OnPointerDown(PointerEventData eventData)
         {
-            UnityEngine.Debug.Log($"down");
+            if (!button.IsInteractable())
+            {
+                return;
+            }
+
+            UnityEngine.Debug.Log($"[Key] down");
             buttonPressed = true;
+            PointerDown?.Invoke();
         }
 
         public void OnPointerUp(PointerEventData eventData)
         {
+            if (!button.IsInteractable())
+            {
+                return;
+            }
+
             // Don't work yet
-            UnityEngine.Debug.Log($"up");
+            UnityEngine.Debug.Log($"[Key] up");
             buttonPressed = false;
+            PointerUp?.Invoke();
         }
         
         public void OnPointerEnter(PointerEventData eventData)
         {
+            if (!button.IsInteractable())
+            {
+                return;
+            }
+
             // Don't work yet
-            UnityEngine.Debug.Log($"enter");
+            UnityEngine.Debug.Log($"[Key] enter");
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
+            if (!button.IsInteractable())
+            {
+                return;
+            }
+
             // Don't work yet
-            UnityEngine.Debug.Log($"exit");
+            UnityEngine.Debug.Log($"[Key] exit");
         }
 
         public void Enter()
         {
+            if (!button.IsInteractable())
+            {
+                return;
+            }
+
             // Don't work yet
-            UnityEngine.Debug.Log($"enter 2");
+            UnityEngine.Debug.Log($"[Key] enter 2");
         }
 
         public void Exit()
         {
+            if (!button.IsInteractable())
+            {
+                return;
+            }
+
             // Don't work yet
-            UnityEngine.Debug.Log($"exit 2");
+            UnityEngine.Debug.Log($"[Key] exit 2");
         }
     }
 }

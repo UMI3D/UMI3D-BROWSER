@@ -18,7 +18,6 @@ using inetum.unityUtils;
 using System.Collections;
 using System.Collections.Generic;
 using umi3d.browserRuntime.NotificationKeys;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui
@@ -42,10 +41,11 @@ namespace umi3d.browserRuntime.ui
 
             NotificationHub.Default.Notify(
                 this,
-                KeyboardNotificationKeys.ABCOrSymbol,
+                KeyboardNotificationKeys.ChangeMode,
                 new()
                 {
-                    { KeyboardNotificationKeys.ABCOrSymbolInfo.IsABC, isABCShown }
+                    { KeyboardNotificationKeys.ModeInfo.IsABC, isABCShown },
+                    { KeyboardNotificationKeys.ModeInfo.IsLowerCase, true }
                 }
             );
         }

@@ -55,25 +55,17 @@ namespace umi3d.browserRuntime.NotificationKeys
         }
 
         /// <summary>
-        /// Notification sent when the letter case will change.
+        /// Notification sent when the keyboard mode (abc / symbol / lower case / upper case) will change.
         /// </summary>
-        public const string ChangeLetterCase = "ChangeLetterCase";
+        public const string ChangeMode = "ChangeMode";
 
-        public static class LetterCaseInfo
+        public static class ModeInfo
         {
             /// <summary>
             /// Whether the letter case is lower case.
             /// </summary>
             public const string IsLowerCase = "IsLowerCase";
-        }
 
-        /// <summary>
-        /// Notification sent when the keyboard mode will change (characters or symbols).
-        /// </summary>
-        public const string ABCOrSymbol = "ABCOrSymbol";
-
-        public static class ABCOrSymbolInfo
-        {
             /// <summary>
             /// Whether the characters mode is selected.
             /// </summary>

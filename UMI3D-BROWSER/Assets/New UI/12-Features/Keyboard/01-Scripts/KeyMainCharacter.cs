@@ -27,7 +27,6 @@ namespace umi3d.browserRuntime.ui
         [SerializeField] string character;
         [SerializeField] bool allowUpperCase = true;
         TMPro.TMP_Text text;
-        bool isLowerCase = true;
 
         void Awake()
         {
@@ -38,55 +37,31 @@ namespace umi3d.browserRuntime.ui
         {
             NotificationHub.Default.Subscribe(
                 this,
-                KeyboardNotificationKeys.ABCOrSymbol,
+                KeyboardNotificationKeys.ChangeMode,
                 null,
                 SwitchToCharacter
-            );
-
-            NotificationHub.Default.Subscribe(
-                this,
-                KeyboardNotificationKeys.ChangeLetterCase,
-                null,
-                SwitchLetterCase
             );
         }
 
         void OnDisable()
         {
-            NotificationHub.Default.Unsubscribe(this, KeyboardNotificationKeys.ABCOrSymbol);
-            NotificationHub.Default.Unsubscribe(this, KeyboardNotificationKeys.ChangeLetterCase);
+            NotificationHub.Default.Unsubscribe(this, KeyboardNotificationKeys.ChangeMode);
         }
 
         void SwitchToCharacter(Notification notification)
         {
-            if (!notification.TryGetInfoT(KeyboardNotificationKeys.ABCOrSymbolInfo.IsABC, out bool isABC) || !isABC)
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.ModeInfo.IsABC, out bool isABC) || !isABC)
             {
                 return;
             }
 
-            text.text = isLowerCase ? character.ToLower() : character.ToUpper();
-        }
-
-        void SwitchLetterCase(Notification notification)
-        {
-            if (!allowUpperCase)
-            {
-                return;
-            }
-
-            if (notification.TryGetInfoT(KeyboardNotificationKeys.LetterCaseInfo.IsLowerCase, out bool isLower))
+            bool isLowerCase = true;
+            if (allowUpperCase && notification.TryGetInfoT(KeyboardNotificationKeys.ModeInfo.IsLowerCase, out bool isLower))
             {
                 isLowerCase = isLower;
             }
 
-            SwitchToCharacter(new Notification(
-                KeyboardNotificationKeys.ABCOrSymbol, 
-                this, 
-                new()
-                {
-                    { KeyboardNotificationKeys.ABCOrSymbolInfo.IsABC, true }
-                })
-            );
+            text.text = isLowerCase ? character.ToLower() : character.ToUpper();
         }
     }
 }

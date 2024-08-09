@@ -38,7 +38,7 @@ namespace umi3d.browserRuntime.ui
         {
             NotificationHub.Default.Subscribe(
                 this,
-                KeyboardNotificationKeys.ABCOrSymbol, 
+                KeyboardNotificationKeys.ChangeMode, 
                 null, 
                 SwitchToSymbol
             );
@@ -46,12 +46,12 @@ namespace umi3d.browserRuntime.ui
 
         private void OnDisable()
         {
-            NotificationHub.Default.Unsubscribe(this, KeyboardNotificationKeys.ABCOrSymbol);
+            NotificationHub.Default.Unsubscribe(this, KeyboardNotificationKeys.ChangeMode);
         }
 
         void SwitchToSymbol(Notification notification)
         {
-            if (!notification.TryGetInfoT(KeyboardNotificationKeys.ABCOrSymbolInfo.IsABC, out bool isABC) || isABC)
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.ModeInfo.IsABC, out bool isABC) || isABC)
             {
                 return;
             }

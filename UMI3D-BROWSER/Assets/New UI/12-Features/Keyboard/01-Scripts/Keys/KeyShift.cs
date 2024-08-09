@@ -43,7 +43,7 @@ namespace umi3d.browserRuntime.ui
         {
             NotificationHub.Default.Subscribe(
                this,
-               KeyboardNotificationKeys.ABCOrSymbol,
+               KeyboardNotificationKeys.ChangeMode,
                null,
                ABCOrSymbol
            );
@@ -51,7 +51,7 @@ namespace umi3d.browserRuntime.ui
 
         private void OnDisable()
         {
-            NotificationHub.Default.Unsubscribe(this, KeyboardNotificationKeys.ABCOrSymbol);
+            NotificationHub.Default.Unsubscribe(this, KeyboardNotificationKeys.ChangeMode);
         }
 
         void PointerDown()
@@ -60,35 +60,28 @@ namespace umi3d.browserRuntime.ui
 
             NotificationHub.Default.Notify(
                 this,
-                KeyboardNotificationKeys.ChangeLetterCase,
+                KeyboardNotificationKeys.ChangeMode,
                 new()
                 {
-                    { KeyboardNotificationKeys.LetterCaseInfo.IsLowerCase, isLowerCase }
+                    { KeyboardNotificationKeys.ModeInfo.IsABC, true },
+                    { KeyboardNotificationKeys.ModeInfo.IsLowerCase, isLowerCase }
                 }
             );
         }
 
         void ABCOrSymbol(Notification notification)
         {
-            if (!notification.TryGetInfoT(KeyboardNotificationKeys.ABCOrSymbolInfo.IsABC, out bool isABC))
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.ModeInfo.IsABC, out bool isABC))
             {
-                UnityEngine.Debug.LogError($"[KeyShift] no information for {KeyboardNotificationKeys.ABCOrSymbolInfo.IsABC}");
+                UnityEngine.Debug.LogError($"[KeyShift] No ModeInfo.IsABC keys.");
                 return;
             }
 
             button.interactable = isABC;
-            if (isABC)
-            {
-                isLowerCase = true;
 
-                NotificationHub.Default.Notify(
-                    this,
-                    KeyboardNotificationKeys.ChangeLetterCase,
-                    new()
-                    {
-                        { KeyboardNotificationKeys.LetterCaseInfo.IsLowerCase, isLowerCase }
-                    }
-                );
+            if (notification.TryGetInfoT(KeyboardNotificationKeys.ModeInfo.IsLowerCase, out bool isLowerCase))
+            {
+                this.isLowerCase = isLowerCase;
             }
         }
     }

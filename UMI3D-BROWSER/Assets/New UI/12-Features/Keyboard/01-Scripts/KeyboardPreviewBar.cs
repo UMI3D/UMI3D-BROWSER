@@ -121,9 +121,9 @@ namespace umi3d.browserRuntime.ui
 
         void AddCharacters(Notification notification)
         {
-            if (!notification.TryGetInfoT(KeyboardNotificationKeys.AddCharactersInfo.Characters, out string characters))
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.CharactersInfo.Characters, out string characters))
             {
-                if (!notification.TryGetInfoT(KeyboardNotificationKeys.AddCharactersInfo.Characters, out char character))
+                if (!notification.TryGetInfoT(KeyboardNotificationKeys.CharactersInfo.Characters, out char character))
                 {
                     UnityEngine.Debug.LogError($"[KeyboardPreviewBar] No characters added.");
                     return;
@@ -158,7 +158,7 @@ namespace umi3d.browserRuntime.ui
 
         void RemoveCharacters(Notification notification)
         {
-            if (!notification.TryGetInfoT(KeyboardNotificationKeys.RemoveCharactersInfo.DeletionPhase, out int deletionPhase))
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.CharactersInfo.DeletionPhase, out int deletionPhase))
             {
                 UnityEngine.Debug.LogWarning($"[KeyboardPreviewBar] No deletion phase.");
                 return;

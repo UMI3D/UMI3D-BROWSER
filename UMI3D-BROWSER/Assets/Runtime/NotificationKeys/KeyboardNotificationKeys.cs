@@ -31,21 +31,18 @@ namespace umi3d.browserRuntime.NotificationKeys
         /// </summary>
         public const string AddCharacters = "AddCharacters";
 
-        public static class AddCharactersInfo
-        {
-            /// <summary>
-            /// The characters added. Can be <see cref="string"/> or <see cref="char"/>.
-            /// </summary>
-            public const string Characters = "Characters";
-        }
-
         /// <summary>
         /// Notification sent when characters will be removed.
         /// </summary>
         public const string RemoveCharacters = "RemoveCharacters";
 
-        public static class RemoveCharactersInfo
+        public static class CharactersInfo
         {
+            /// <summary>
+            /// The characters added. Can be <see cref="string"/> or <see cref="char"/>.
+            /// </summary>
+            public const string Characters = "Characters";
+
             /// <summary>
             /// The deletion phase.
             /// 

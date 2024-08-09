@@ -43,7 +43,7 @@ namespace umi3d.browserRuntime.ui
                 KeyboardNotificationKeys.AddCharacters,
                 new()
                 {
-                    { KeyboardNotificationKeys.AddCharactersInfo.Characters, text.text }
+                    { KeyboardNotificationKeys.CharactersInfo.Characters, text.text }
                 }
             );
         }

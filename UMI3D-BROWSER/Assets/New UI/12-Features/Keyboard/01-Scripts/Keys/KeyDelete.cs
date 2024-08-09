@@ -77,7 +77,7 @@ namespace umi3d.browserRuntime.ui
                     KeyboardNotificationKeys.RemoveCharacters,
                     new()
                     {
-                        { KeyboardNotificationKeys.RemoveCharactersInfo.DeletionPhase, phase }
+                        { KeyboardNotificationKeys.CharactersInfo.DeletionPhase, phase }
                     }
                 );
 

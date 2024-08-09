@@ -25,13 +25,167 @@ using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.ui
 {
+    public class PointerBehaviour : IPointerDownHandler, IPointerUpHandler, IPointerExitHandler
+    {
+        /// <summary>
+        /// Notification key for the count of click (down or up).<br/>
+        /// Value is int.<br/>
+        /// </summary>
+        public const string NKCount = "Count";
+
+        /// <summary>
+        /// Notification key the long press.<br/>
+        /// Value is bool.<br/>
+        /// True means this is a long press.
+        /// </summary>
+        public const string NKIsLongPress = "IsLongPress";
+
+        public const string NKIsImmediate = "NKIsImmediate";
+
+        /// <summary>
+        /// Event raised when the pointer is down.
+        /// </summary>
+        public event Action<Notification> pointerDown;
+
+        /// <summary>
+        /// Event raised when the pointer is up.
+        /// </summary>
+        public event Action<Notification> pointerUp;
+
+        public float timeOut;
+        public MonoBehaviour monoBehaviour;
+        
+        int numberOfDown = 0;
+        int numberOfUp = 0;
+        bool? isLongPress = null;
+        float currentTimeOut;
+        bool isTimeOut = false;
+
+        Coroutine coroutine;
+
+        public void OnPointerDown(PointerEventData eventData)
+        {
+            // Add 'timeOut' each time the pointer is down.
+            // This way the user can do more than a double click.
+            currentTimeOut += timeOut;
+
+            if (coroutine == null || isTimeOut)
+            {
+                // If no update is being made yet start the coroutine.
+                coroutine = monoBehaviour.StartCoroutine(Update());
+            }
+
+            // Increase the number of down.
+            numberOfDown++;
+
+            // Raise the 'pointerDown' event each time the pointer is down.
+            pointerDown?.Invoke(new Notification(
+                "PointerBehaviour",
+                this,
+                new()
+                {
+                    { NKCount, numberOfDown },
+                    { NKIsLongPress, isLongPress.HasValue ? isLongPress.Value : false },
+                    { NKIsImmediate, true }
+                })
+            );
+        }
+
+        public void OnPointerUp(PointerEventData eventData)
+        {
+            //if (coroutine == null || isTimeOut)
+            //{
+            //    // If the time is out or the coroutine is null
+            //    // then the number of up must be 1.
+            //    numberOfUp = 1;
+            //}
+            //else
+            //{
+            //}
+            // Increase the number of up.
+            numberOfUp++;
+
+            // Raise the 'pointerUp' event each time the pointer is up.
+            pointerUp?.Invoke(new Notification(
+                "PointerBehaviour",
+                this,
+                new()
+                {
+                    { NKCount, numberOfUp },
+                    { NKIsLongPress, isLongPress.HasValue ? isLongPress.Value : false },
+                    { NKIsImmediate, true }
+                })
+            );
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            if (coroutine != null)
+            {
+                monoBehaviour.StopCoroutine(coroutine);
+                coroutine = null;
+            }
+        }
+
+        IEnumerator Update()
+        {
+            isTimeOut = false;
+
+            // Reset all the fields.
+            numberOfDown = 0;
+            numberOfUp = 0;
+            isLongPress = null;
+            currentTimeOut = timeOut;
+
+            float time = 0f;
+            while (time < currentTimeOut)
+            {
+                yield return null;
+                time += Time.deltaTime;
+            }
+
+            isLongPress = numberOfUp > 0;
+
+            // After the 'timeOut' is reached a 'pointerDown' event is raised.
+            // If only one down has been made it is a single click else it is a multi click.
+            pointerDown?.Invoke(new Notification(
+                "PointerBehaviour",
+                this,
+                new()
+                {
+                    { NKCount, numberOfDown },
+                    { NKIsLongPress, isLongPress.Value },
+                    { NKIsImmediate, false }
+                })
+            );
+
+            if (numberOfUp > 0)
+            {
+                pointerUp?.Invoke(new Notification(
+                    "PointerBehaviour",
+                    this,
+                    new()
+                    {
+                        { NKCount, numberOfUp },
+                        { NKIsLongPress, isLongPress.Value },
+                        { NKIsImmediate, false }
+                    })
+                );
+            }
+
+            isTimeOut = true;
+        }
+    }
+
     public class Key : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler, IPointerExitHandler
     {
         Button button;
 
         public bool buttonPressed;
+        public PointerBehaviour pointerBehaviour;
         public event Action PointerDown;
         public event Action PointerUp;
+        public event Action PointerDoubleUp;
 
         void Awake()
         {
@@ -40,7 +194,12 @@ namespace umi3d.browserRuntime.ui
             {
                 button = gameObject.AddComponent<Button>();
             }
-            button.onClick.AddListener(OnPress);
+
+            pointerBehaviour = new()
+            {
+                monoBehaviour = this,
+                timeOut = .5f
+            };
         }
 
         private void OnEnable()
@@ -53,16 +212,6 @@ namespace umi3d.browserRuntime.ui
 
         }
 
-        public virtual void OnPress()
-        {
-            if (!button.IsInteractable())
-            {
-                return;
-            }
-
-            UnityEngine.Debug.Log($"[Key] press");
-        }
-
         public void OnPointerDown(PointerEventData eventData)
         {
             if (!button.IsInteractable())
@@ -72,6 +221,7 @@ namespace umi3d.browserRuntime.ui
 
             UnityEngine.Debug.Log($"[Key] down");
             buttonPressed = true;
+            pointerBehaviour.OnPointerDown(eventData);
             PointerDown?.Invoke();
             NotificationHub.Default.Notify(this, KeyboardNotificationKeys.AskPreviewFocus);
         }
@@ -86,6 +236,7 @@ namespace umi3d.browserRuntime.ui
             // Don't work yet
             UnityEngine.Debug.Log($"[Key] up");
             buttonPressed = false;
+            pointerBehaviour.OnPointerUp(eventData);
             PointerUp?.Invoke();
         }
         
@@ -109,6 +260,7 @@ namespace umi3d.browserRuntime.ui
 
             // Don't work yet
             UnityEngine.Debug.Log($"[Key] exit");
+            pointerBehaviour.OnPointerExit(eventData);
         }
 
         public void Enter()

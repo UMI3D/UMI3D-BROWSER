@@ -48,7 +48,8 @@ namespace umi3dBrowsers
         [Space]
         [SerializeField] private ColorBlock navBarButtonsColors = new ColorBlock();
         [Space]
-        [SerializeField] private GameObject Top;
+        [SerializeField] private GameObject Logo;
+        [SerializeField] private GameObject Title;
         [SerializeField] private Button PageTipButton;
 
 
@@ -90,7 +91,8 @@ namespace umi3dBrowsers
             m_menuNavigationLinker.OnSetCancelButtonActive += (active) => cancelConnectionButton.gameObject.SetActive(active);
 
             m_menuNavigationLinker.OnPanelChanged += (panel, panelTutoManager) => {
-                Top.SetActive(panel.DisplayTop);
+                Logo.SetActive(panel.DisplayTop);
+                Title.SetActive(panel.DisplayTop);
                 title.SetTitle(panel.TitleType, panel.TitlePrefix, panel.TitleSuffix);
                 navBar.SetActive(panel.DisplayNavbar);
                 backButton.gameObject.SetActive(panel.DisplayBack);

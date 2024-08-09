@@ -202,7 +202,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -5.721, y: 1.79}
+  m_AnchoredPosition: {x: -5.7210083, y: 1.789978}
   m_SizeDelta: {x: 1130, y: 780}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &2020383500957314445
@@ -250,7 +250,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &3447574658024037393
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -640,6 +640,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7995110285226247898, guid: 851d1507c9321f04ba163763614d1207,
         type: 3}
+      propertyPath: Logo
+      value: 
+      objectReference: {fileID: 2174711457731588715}
+    - target: {fileID: 7995110285226247898, guid: 851d1507c9321f04ba163763614d1207,
+        type: 3}
+      propertyPath: Title
+      value: 
+      objectReference: {fileID: 5308710116344838188}
+    - target: {fileID: 7995110285226247898, guid: 851d1507c9321f04ba163763614d1207,
+        type: 3}
       propertyPath: tween
       value: 
       objectReference: {fileID: 2449244938706002768}
@@ -691,6 +701,18 @@ PrefabInstance:
 --- !u!224 &787370051403284354 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2078381860504022738, guid: 851d1507c9321f04ba163763614d1207,
+    type: 3}
+  m_PrefabInstance: {fileID: 1601779163119309136}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2174711457731588715 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 582241048093877051, guid: 851d1507c9321f04ba163763614d1207,
+    type: 3}
+  m_PrefabInstance: {fileID: 1601779163119309136}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &5308710116344838188 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6887967630328129916, guid: 851d1507c9321f04ba163763614d1207,
     type: 3}
   m_PrefabInstance: {fileID: 1601779163119309136}
   m_PrefabAsset: {fileID: 0}

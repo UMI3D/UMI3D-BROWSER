@@ -98,6 +98,8 @@ namespace umi3d.common
         public const uint ARAnchorBrowserRequest = 10019;
         public const uint SetGuardianRequest = 10020;
         public const uint SetLBEGroupRequest = 10021;
+        public const uint SetNewUserLBE = 10022;
+        public const uint DeleteUserLBE = 10023;
 
 
         public const uint EmoteRequest = 10020;

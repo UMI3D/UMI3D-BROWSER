@@ -114,6 +114,9 @@ namespace ClientLBE
         {
             UMI3DForgeClient.ImportantEventOccurred += HandleImportantEvent;
             UMI3DForgeClient.LBEGroupEventOccurred += LBEGroupEvent;
+            UMI3DForgeClient.AddLBEGroupEvent += AddUserLBEGroup;
+            UMI3DForgeClient.DelLBEGroupEvent += DelUserLBEGroup;
+
 
             if (arPlaneManager != null)
             {
@@ -125,10 +128,66 @@ namespace ClientLBE
         {
             UMI3DForgeClient.ImportantEventOccurred -= HandleImportantEvent;
             UMI3DForgeClient.LBEGroupEventOccurred -= LBEGroupEvent;
+            UMI3DForgeClient.AddLBEGroupEvent -= AddUserLBEGroup;
+            UMI3DForgeClient.DelLBEGroupEvent -= DelUserLBEGroup;
 
             if (arPlaneManager != null)
             {
                 arPlaneManager.planesChanged -= OnPlanesChanged;
+            }
+        }
+
+        void AddUserLBEGroup(AddUserLBEGroupDTO addUserLBEGroupDTO)
+        {
+            Debug.Log("REMY : Add User -> userID : "+addUserLBEGroupDTO.UserId +" -> isUseAR : " + addUserLBEGroupDTO.IsUserAR);
+
+            if(addUserLBEGroupDTO.IsUserAR == true)
+            {
+                lBEGroupDto.UserAR.Add(addUserLBEGroupDTO.UserId);
+                AddCapsulesToCurrentARUsers(lBEGroupDto);
+                Debug.Log("User AR ADD");
+
+            }
+            else
+            {
+                lBEGroupDto.UserVR.Add(addUserLBEGroupDTO.UserId);
+                Debug.Log("User VR ADD");
+
+            }
+        }
+
+        void DelUserLBEGroup(DelUserLBEGroupDto delUserLBEGroupDto)
+        {
+            Debug.Log("REMY : Delete User -> " + delUserLBEGroupDto.UserId);
+
+            foreach (ulong userIDAR in lBEGroupDto.UserAR)
+            {
+                if(userIDAR == delUserLBEGroupDto.UserId)
+                {
+                    lBEGroupDto.UserAR.Remove(delUserLBEGroupDto.UserId);
+                    Debug.Log("REMY : User AR leave");
+
+                    return;
+                }
+                else
+                {
+                    Debug.Log("REMY : Not user AR leave");
+                }
+            }
+            foreach (ulong userIDVR in lBEGroupDto.UserVR)
+            {
+                if (userIDVR == delUserLBEGroupDto.UserId)
+                {
+                    lBEGroupDto.UserVR.Remove(delUserLBEGroupDto.UserId);
+                    Debug.Log("REMY : User VR leave");
+
+                    return;
+                }
+                else
+                {
+                    Debug.Log("REMY : Not user VR leave");
+
+                }
             }
         }
 

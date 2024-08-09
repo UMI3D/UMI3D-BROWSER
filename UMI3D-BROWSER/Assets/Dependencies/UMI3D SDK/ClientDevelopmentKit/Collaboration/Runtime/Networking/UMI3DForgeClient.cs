@@ -62,6 +62,12 @@ namespace umi3d.cdk.collaboration
         public delegate void OnLBEGroupEvent(LBEGroupDto lBEGroupData);
         public static event OnLBEGroupEvent LBEGroupEventOccurred;
 
+        public delegate void OnAddLBEGroupEvent(AddUserLBEGroupDTO addUserLBEGroupDTO);
+        public static event OnAddLBEGroupEvent AddLBEGroupEvent;
+
+        public delegate void OnDelLBEGroupEvent(DelUserLBEGroupDto delUserLBEGroupDto);
+        public static event OnDelLBEGroupEvent DelLBEGroupEvent;
+
         //private GuardianManager guardianManager;
 
         private UMI3DUser GetUserByNetWorkId(uint nid)
@@ -574,13 +580,21 @@ namespace umi3d.cdk.collaboration
                             ImportantEventOccurred(guardianData);
                     });
                     break;
-                case SendLBEGroupRequestDTO lBEGroupRequestDTO:
+                case AddUserLBEGroupDTO addUserLBEGroupDTO:
                     MainThreadManager.Run(() =>
                     {
-                        LBEGroupDto lBEGroupDto = lBEGroupRequestDTO.lBEGroupData;
-                        if (LBEGroupEventOccurred != null)
-                            LBEGroupEventOccurred(lBEGroupDto);
+                        AddUserLBEGroupDTO addlBEGroupDto = addUserLBEGroupDTO;
+                        if (AddLBEGroupEvent != null)
+                            AddLBEGroupEvent(addlBEGroupDto);
+                    });
+                    break;
 
+                case DelUserLBEGroupDto delUserLBEGroupDTO:
+                    MainThreadManager.Run(() =>
+                    {
+                        DelUserLBEGroupDto dellBEGroupDto = delUserLBEGroupDTO;
+                        if (DelLBEGroupEvent != null)
+                            DelLBEGroupEvent(dellBEGroupDto);
                     });
                     break;
                 default:
@@ -805,7 +819,47 @@ namespace umi3d.cdk.collaboration
 
                     });
                     break;
+                case UMI3DOperationKeys.SetNewUserLBE:
+                    MainThreadManager.Run(() =>
+                    {
+                        Debug.Log("REMY : Received AddUserLBEGroupDTO");
 
+                        AddUserGroupOperationsDto addUserLBEGroupDTO = UMI3DSerializer.Read<AddUserGroupOperationsDto>(container);
+
+                        Debug.Log("REMY : Received AddUserLBEGroupDTO -> " + addUserLBEGroupDTO.AddUserLBEGroup.UserId);
+                        Debug.Log("REMY : Received AddUserLBEGroupDTO -> " + addUserLBEGroupDTO.AddUserLBEGroup.IsUserAR);
+
+
+                        var addUser = new AddUserLBEGroupDTO
+                        {
+                            UserId = addUserLBEGroupDTO.AddUserLBEGroup.UserId,
+                            IsUserAR = addUserLBEGroupDTO.AddUserLBEGroup.IsUserAR
+                        };
+
+                        if (AddLBEGroupEvent != null)
+                            AddLBEGroupEvent(addUser);
+                    });
+                    break;
+
+                case UMI3DOperationKeys.DeleteUserLBE:
+                    MainThreadManager.Run(() =>
+                    {
+                        Debug.Log("REMY : Received DelUserLBEGroupDto");
+
+                        DelUserGroupOperationsDto delUserLBEGroupDTO = UMI3DSerializer.Read<DelUserGroupOperationsDto>(container);
+
+                        Debug.Log("REMY : Received DelUserLBEGroupDto -> " + delUserLBEGroupDTO.delUserLBEGroupDto.UserId);
+
+
+                        var delUser = new DelUserLBEGroupDto
+                        {
+                            UserId = delUserLBEGroupDTO.delUserLBEGroupDto.UserId,
+                        };
+
+                        if (DelLBEGroupEvent != null)
+                            DelLBEGroupEvent(delUser);
+                    });
+                    break;
                 case UMI3DOperationKeys.ARAnchorBrowserRequest:
                     MainThreadManager.Run(() =>
                     {

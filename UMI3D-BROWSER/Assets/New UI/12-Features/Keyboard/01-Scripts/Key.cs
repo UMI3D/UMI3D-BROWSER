@@ -14,9 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using umi3d.browserRuntime.NotificationKeys;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -26,8 +28,8 @@ namespace umi3d.browserRuntime.ui
     public class Key : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler, IPointerExitHandler
     {
         Button button;
-        bool buttonPressed;
 
+        public bool buttonPressed;
         public event Action PointerDown;
         public event Action PointerUp;
 
@@ -71,6 +73,7 @@ namespace umi3d.browserRuntime.ui
             UnityEngine.Debug.Log($"[Key] down");
             buttonPressed = true;
             PointerDown?.Invoke();
+            NotificationHub.Default.Notify(this, KeyboardNotificationKeys.AskPreviewFocus);
         }
 
         public void OnPointerUp(PointerEventData eventData)

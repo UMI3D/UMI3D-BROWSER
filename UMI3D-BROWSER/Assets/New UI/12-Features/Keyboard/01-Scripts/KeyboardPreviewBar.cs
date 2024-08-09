@@ -60,6 +60,13 @@ namespace umi3d.browserRuntime.ui
             inputField.onEndTextSelection.AddListener(UnSelectText);
 
             NotificationHub.Default.Subscribe(
+                this,
+                KeyboardNotificationKeys.AskPreviewFocus,
+                null,
+                Focus
+            );
+
+            NotificationHub.Default.Subscribe(
                this,
                KeyboardNotificationKeys.AddCharacters,
                null,
@@ -130,7 +137,6 @@ namespace umi3d.browserRuntime.ui
             if (!isTextSelected)
             {
                 inputField.text = text.Insert(inputField.stringPosition, characters);
-                Focus();
                 inputField.stringPosition += characters.Length;
             }
             else
@@ -141,7 +147,6 @@ namespace umi3d.browserRuntime.ui
                 text = text.Remove(start, end - start + 1);
                 text = text.Insert(start, characters);
                 inputField.text = text;
-                Focus();
 
                 inputField.stringPosition = start + 1;
                 inputField.selectionAnchorPosition = start + 1;
@@ -174,7 +179,6 @@ namespace umi3d.browserRuntime.ui
                 {
                     inputField.stringPosition -= 1;
                     inputField.text = text.Remove(inputField.stringPosition, 1);
-                    Focus();
                 }
                 else
                 {
@@ -183,7 +187,6 @@ namespace umi3d.browserRuntime.ui
 
                     text = text.Remove(start, end - start + 1);
                     inputField.text = text;
-                    Focus();
 
                     inputField.stringPosition = start;
                     inputField.selectionAnchorPosition = start;
@@ -206,7 +209,6 @@ namespace umi3d.browserRuntime.ui
                 {
                     inputField.text = trimmedLeft + right;
                     inputField.stringPosition = trimmedLeft.Length;
-                    Focus();
                     return;
                 }
 
@@ -217,13 +219,11 @@ namespace umi3d.browserRuntime.ui
                 {
                     inputField.text = right;
                     inputField.stringPosition = 0;
-                    Focus();
                 }
                 else
                 {
                     inputField.text = left.Substring(0, lastIdxOfSpace + 1) + right;
                     inputField.stringPosition = lastIdxOfSpace + 1;
-                    Focus();
                 }
             }
             else

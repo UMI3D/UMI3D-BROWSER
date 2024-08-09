@@ -22,6 +22,11 @@ namespace umi3d.browserRuntime.NotificationKeys
     public static class KeyboardNotificationKeys 
     {
         /// <summary>
+        /// Notification sent when an object ask for the focus of the preview bar.
+        /// </summary>
+        public const string AskPreviewFocus = "AskPreviewFocus";
+
+        /// <summary>
         /// Notification sent when characters will be added.
         /// </summary>
         public const string AddCharacters = "AddCharacters";

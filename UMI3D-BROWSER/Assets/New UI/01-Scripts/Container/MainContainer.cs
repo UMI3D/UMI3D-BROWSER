@@ -134,8 +134,10 @@ namespace umi3dBrowsers
         {
             BindNavigationButtons();
 
+#if UMI3D_XR
             m_popupLinker.OnPopupOpen += () => tween.TweenTo();
             m_popupLinker.OnPopupClose += () => tween.Rewind();
+#endif
 
             SetVersion(Application.version);
             BindConnectionService();

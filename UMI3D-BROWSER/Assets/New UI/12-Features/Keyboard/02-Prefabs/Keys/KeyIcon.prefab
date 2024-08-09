@@ -92,6 +92,7 @@ GameObject:
   - component: {fileID: 1809827633896406955}
   - component: {fileID: 1483451282032099210}
   - component: {fileID: 3035742776615921275}
+  - component: {fileID: 586288627104333832}
   m_Layer: 0
   m_Name: KeyIcon
   m_TagString: Untagged
@@ -265,6 +266,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7c53c85ce9fef5488c7a7a284aa4107, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  buttonPressed: 0
+--- !u!114 &586288627104333832
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6430663099506593935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6551c64c39a38d74e8c02bda422de265, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 10
+  depth: 10
+  epsilon: 0.001
 --- !u!1 &8678849939861719501
 GameObject:
   m_ObjectHideFlags: 0

@@ -18,6 +18,7 @@ using inetum.unityUtils;
 using System.Collections;
 using System.Collections.Generic;
 using umi3d.browserRuntime.NotificationKeys;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -35,7 +36,7 @@ namespace umi3d.browserRuntime.ui
             key = GetComponent<Key>();
             button = GetComponent<Button>();
 
-            key.PointerUp += PointerUp;
+            key.PointerDown += PointerDown;
         }
 
         private void OnEnable()
@@ -53,7 +54,7 @@ namespace umi3d.browserRuntime.ui
             NotificationHub.Default.Unsubscribe(this, KeyboardNotificationKeys.ABCOrSymbol);
         }
 
-        void PointerUp()
+        void PointerDown()
         {
             isLowerCase = !isLowerCase;
 

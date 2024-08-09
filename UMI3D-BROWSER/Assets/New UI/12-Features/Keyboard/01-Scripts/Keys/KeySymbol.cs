@@ -18,6 +18,7 @@ using inetum.unityUtils;
 using System.Collections;
 using System.Collections.Generic;
 using umi3d.browserRuntime.NotificationKeys;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui
@@ -32,10 +33,10 @@ namespace umi3d.browserRuntime.ui
         {
             key = GetComponent<Key>();
 
-            key.PointerUp += PointerUp;
+            key.PointerDown += PointerDown;
         }
 
-        void PointerUp()
+        void PointerDown()
         {
             isABCShown = !isABCShown;
 

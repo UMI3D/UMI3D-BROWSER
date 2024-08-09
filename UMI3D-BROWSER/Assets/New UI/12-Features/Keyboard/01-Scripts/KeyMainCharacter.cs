@@ -45,7 +45,7 @@ namespace umi3d.browserRuntime.ui
 
             NotificationHub.Default.Subscribe(
                 this,
-                KeyboardNotificationKeys.LetterCase,
+                KeyboardNotificationKeys.ChangeLetterCase,
                 null,
                 SwitchLetterCase
             );
@@ -54,7 +54,7 @@ namespace umi3d.browserRuntime.ui
         void OnDisable()
         {
             NotificationHub.Default.Unsubscribe(this, KeyboardNotificationKeys.ABCOrSymbol);
-            NotificationHub.Default.Unsubscribe(this, KeyboardNotificationKeys.LetterCase);
+            NotificationHub.Default.Unsubscribe(this, KeyboardNotificationKeys.ChangeLetterCase);
         }
 
         void SwitchToCharacter(Notification notification)

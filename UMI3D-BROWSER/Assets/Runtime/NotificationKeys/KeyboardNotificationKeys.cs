@@ -60,7 +60,7 @@ namespace umi3d.browserRuntime.NotificationKeys
         /// <summary>
         /// Notification sent when the letter case will change.
         /// </summary>
-        public const string LetterCase = "LetterCase";
+        public const string ChangeLetterCase = "ChangeLetterCase";
 
         public static class LetterCaseInfo
         {

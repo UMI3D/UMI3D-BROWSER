@@ -60,7 +60,7 @@ namespace umi3d.browserRuntime.ui
 
             NotificationHub.Default.Notify(
                 this,
-                KeyboardNotificationKeys.LetterCase,
+                KeyboardNotificationKeys.ChangeLetterCase,
                 new()
                 {
                     { KeyboardNotificationKeys.LetterCaseInfo.IsLowerCase, isLowerCase }
@@ -83,7 +83,7 @@ namespace umi3d.browserRuntime.ui
 
                 NotificationHub.Default.Notify(
                     this,
-                    KeyboardNotificationKeys.LetterCase,
+                    KeyboardNotificationKeys.ChangeLetterCase,
                     new()
                     {
                         { KeyboardNotificationKeys.LetterCaseInfo.IsLowerCase, isLowerCase }

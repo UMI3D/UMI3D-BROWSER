@@ -177,13 +177,13 @@ namespace umi3dVRBrowsersBase.interactions
                             {
                                 var toolInputs = new List<AbstractUMI3DInput>();
                                 AbstractUMI3DInput[] buffer;
-                                if (associatedInputs.TryGetValue(tool.id, out buffer))
+                                if (associatedInputs.TryGetValue((tool.environmentId,tool.id), out buffer))
                                 {
                                     toolInputs = new List<AbstractUMI3DInput>(buffer);
-                                    associatedInputs.Remove(tool.id);
+                                    associatedInputs.Remove((tool.environmentId, tool.id));
                                 }
                                 toolInputs.Add(newInput);
-                                associatedInputs.Add(tool.id, toolInputs.ToArray());
+                                associatedInputs.Add((tool.environmentId, tool.id), toolInputs.ToArray());
                             }
                             else
                                 throw new System.Exception("Internal Error");
@@ -222,13 +222,13 @@ namespace umi3dVRBrowsersBase.interactions
                         {
                             var toolInputs = new List<AbstractUMI3DInput>();
                             AbstractUMI3DInput[] buffer;
-                            if (associatedInputs.TryGetValue(tool.id, out buffer))
+                            if (associatedInputs.TryGetValue((tool.environmentId, tool.id), out buffer))
                             {
                                 toolInputs = new List<AbstractUMI3DInput>(buffer);
-                                associatedInputs.Remove(tool.id);
+                                associatedInputs.Remove((tool.environmentId, tool.id));
                             }
                             toolInputs.Add(newInput);
-                            associatedInputs.Add(tool.id, toolInputs.ToArray());
+                            associatedInputs.Add((tool.environmentId, tool.id), toolInputs.ToArray());
                         }
                         else
                             throw new System.Exception("Internal Error");
@@ -261,13 +261,13 @@ namespace umi3dVRBrowsersBase.interactions
             AbstractUMI3DInput[] inputs = projectionMemory.Project(this, UMI3DGlobalID.EnvironmentId, interactions.FindAll(inter => inter is AbstractParameterDto).ToArray(), tool.id, hoveredObjectId);
             var toolInputs = new List<AbstractUMI3DInput>();
 
-            if (associatedInputs.TryGetValue(tool.id, out AbstractUMI3DInput[] buffer))
+            if (associatedInputs.TryGetValue((tool.environmentId, tool.id), out AbstractUMI3DInput[] buffer))
             {
                 toolInputs = new List<AbstractUMI3DInput>(buffer);
-                associatedInputs.Remove(tool.id);
+                associatedInputs.Remove((tool.environmentId, tool.id));
             }
             toolInputs.AddRange(inputs);
-            associatedInputs.Add(tool.id, toolInputs.ToArray());
+            associatedInputs.Add((tool.environmentId, tool.id), toolInputs.ToArray());
         }
 
         /// <summary>

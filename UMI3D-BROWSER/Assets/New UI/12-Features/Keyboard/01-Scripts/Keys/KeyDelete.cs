@@ -26,6 +26,7 @@ namespace umi3d.browserRuntime.ui
     public class KeyDelete : MonoBehaviour
     {
         Key key;
+        PointerDownBehaviour pointerDown;
         Coroutine coroutine;
 
         [Tooltip("Interval in second between each deletion.")]
@@ -33,11 +34,17 @@ namespace umi3d.browserRuntime.ui
         [Tooltip("Duration in second of the phase 0.")]
         [SerializeField] float phase0Duration = 3f;
 
+        Dictionary<string, object> info = new()
+        {
+            { KeyboardNotificationKeys.CharactersInfo.DeletionPhase, 0 }
+        };
+
         void Awake()
         {
             key = GetComponent<Key>();
+            pointerDown = GetComponent<PointerDownBehaviour>();
 
-            key.PointerDown += PointerDown;
+            pointerDown.pointerClickedSimple += PointerDown;
             key.PointerUp += PointerUp;
         }
 
@@ -72,13 +79,11 @@ namespace umi3d.browserRuntime.ui
                     phase = 1;
                 }
 
+                info[KeyboardNotificationKeys.CharactersInfo.DeletionPhase] = phase;
                 NotificationHub.Default.Notify(
                     this,
                     KeyboardNotificationKeys.RemoveCharacters,
-                    new()
-                    {
-                        { KeyboardNotificationKeys.CharactersInfo.DeletionPhase, phase }
-                    }
+                    info
                 );
 
                 yield return new WaitForSeconds(deletionInterval);

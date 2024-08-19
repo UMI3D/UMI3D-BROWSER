@@ -91,6 +91,7 @@ GameObject:
   - component: {fileID: 3919676845038646996}
   - component: {fileID: 1809827633896406955}
   - component: {fileID: 1483451282032099210}
+  - component: {fileID: 8873234004733204232}
   - component: {fileID: 3035742776615921275}
   - component: {fileID: 586288627104333832}
   m_Layer: 0
@@ -254,6 +255,20 @@ MonoBehaviour:
   childRT: {fileID: 0}
   updateOnGUI: 0
   setCenter: 0
+--- !u!114 &8873234004733204232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6430663099506593935}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49bb269d6fe6ec6418403fd96c7ecde6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isSimpleClick: 1
+  timeOut: 0.5
 --- !u!114 &3035742776615921275
 MonoBehaviour:
   m_ObjectHideFlags: 0

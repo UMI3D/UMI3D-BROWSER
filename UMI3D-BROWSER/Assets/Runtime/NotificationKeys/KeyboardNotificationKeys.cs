@@ -67,6 +67,11 @@ namespace umi3d.browserRuntime.NotificationKeys
             public const string IsLowerCase = "IsLowerCase";
 
             /// <summary>
+            /// Whether the upper case is locked.
+            /// </summary>
+            public const string IsUpperCaseLocked = "IsUpperCaseLocked";
+
+            /// <summary>
             /// Whether the characters mode is selected.
             /// </summary>
             public const string IsABC = "IsABC";

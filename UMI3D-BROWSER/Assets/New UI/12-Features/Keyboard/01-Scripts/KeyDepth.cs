@@ -31,6 +31,7 @@ namespace umi3d.browserRuntime.ui
         [SerializeField] float epsilon = .001f;
 
         Key key;
+        PointerDownBehaviour pointerDown;
         Button button;
         Coroutine coroutine;
 
@@ -41,13 +42,27 @@ namespace umi3d.browserRuntime.ui
         void Awake()
         {
             key = GetComponent<Key>();
+            pointerDown = GetComponent<PointerDownBehaviour>();
             button = GetComponent<Button>();
 
             rectTransform = transform.GetChild(0).GetComponent<RectTransform>();
             upPosition = rectTransform.anchoredPosition3D;
             downPosition = upPosition + new Vector3(0, 0, depth);
+        }
 
-            key.PointerDown += PointerDown;
+        void OnEnable()
+        {
+            pointerDown.pointerClickedSimple += PointerDown;
+        }
+
+        void OnDisable()
+        {
+            pointerDown.pointerClickedSimple -= PointerDown;
+            if (coroutine != null)
+            {
+                StopCoroutine(coroutine);
+            }
+            rectTransform.anchoredPosition3D = upPosition;
         }
 
         void PointerDown()

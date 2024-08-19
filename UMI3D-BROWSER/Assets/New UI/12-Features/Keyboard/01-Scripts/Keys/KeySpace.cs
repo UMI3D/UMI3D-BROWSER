@@ -27,6 +27,11 @@ namespace umi3d.browserRuntime.ui
     {
         Key key;
 
+        Dictionary<string, object> info = new()
+        {
+            { KeyboardNotificationKeys.CharactersInfo.Characters, ' ' }
+        };
+
         void Awake()
         {
             key = GetComponent<Key>();
@@ -39,10 +44,7 @@ namespace umi3d.browserRuntime.ui
             NotificationHub.Default.Notify(
                 this, 
                 KeyboardNotificationKeys.AddCharacters, 
-                new() 
-                { 
-                    { KeyboardNotificationKeys.CharactersInfo.Characters, ' ' } 
-                }
+                info
             );
         }
     }

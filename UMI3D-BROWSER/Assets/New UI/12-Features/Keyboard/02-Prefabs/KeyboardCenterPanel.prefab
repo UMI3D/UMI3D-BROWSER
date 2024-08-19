@@ -1911,6 +1911,11 @@ PrefabInstance:
       propertyPath: m_Colors.m_HighlightedColor.r
       value: 0.44705883
       objectReference: {fileID: 0}
+    - target: {fileID: 8873234004733204232, guid: 151e7800caf85cc4f826c70144ef94e0,
+        type: 3}
+      propertyPath: isSimpleClick
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9007366596534572612, guid: 151e7800caf85cc4f826c70144ef94e0,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -1974,6 +1979,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa7a895461564f9419f62f3a24c91e74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  iconDefault: {fileID: 21300000, guid: abc1c88a232c7594e831ad8a1c9bfcc7, type: 3}
+  iconLock: {fileID: 21300000, guid: 712c3b72385c38a4b9ed656f43d294b2, type: 3}
 --- !u!1001 &922812096384274687
 PrefabInstance:
   m_ObjectHideFlags: 0

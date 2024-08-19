@@ -22,31 +22,34 @@ using UnityEngine;
 
 namespace umi3d.browserRuntime.ui
 {
-    [RequireComponent(typeof(Key))]
+    [RequireComponent(typeof(PointerDownBehaviour))]
     public class KeySymbol : MonoBehaviour
     {
         [SerializeField] bool isABCShown = true;
-        Key key;
+        PointerDownBehaviour pointerDown;
+
+        Dictionary<string, object> info = new()
+        {
+            { KeyboardNotificationKeys.ModeInfo.IsABC, true },
+            { KeyboardNotificationKeys.ModeInfo.IsLowerCase, true }
+        };
 
         void Awake()
         {
-            key = GetComponent<Key>();
+            pointerDown = GetComponent<PointerDownBehaviour>();
 
-            key.PointerDown += PointerDown;
+            pointerDown.pointerClickedSimple += PointerDown;
         }
 
         void PointerDown()
         {
             isABCShown = !isABCShown;
 
+            info[KeyboardNotificationKeys.ModeInfo.IsABC] = isABCShown;
             NotificationHub.Default.Notify(
                 this,
                 KeyboardNotificationKeys.ChangeMode,
-                new()
-                {
-                    { KeyboardNotificationKeys.ModeInfo.IsABC, isABCShown },
-                    { KeyboardNotificationKeys.ModeInfo.IsLowerCase, true }
-                }
+                info
             );
         }
     }

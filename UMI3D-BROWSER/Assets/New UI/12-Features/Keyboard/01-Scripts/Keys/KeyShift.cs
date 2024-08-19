@@ -23,30 +23,39 @@ using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.ui
 {
-    [RequireComponent(typeof(Key))]
     public class KeyShift : MonoBehaviour
     {
-        Key key;
+        [SerializeField] Sprite iconDefault;
+        [SerializeField] Sprite iconLock;
+
+        PointerDownBehaviour pointerDown;
         Button button;
+        Image icon;
 
         bool isLowerCase = true;
-        bool isUpperCaseLock = false;
+        bool isUpperCaseLocked = false;
+
+        Dictionary<string, object> info = new()
+        {
+            { KeyboardNotificationKeys.ModeInfo.IsABC, true },
+            { KeyboardNotificationKeys.ModeInfo.IsLowerCase, true },
+            { KeyboardNotificationKeys.ModeInfo.IsUpperCaseLocked, false }
+        };
 
         void Awake()
         {
-            key = GetComponent<Key>();
+            pointerDown = GetComponent<PointerDownBehaviour>();
             button = GetComponent<Button>();
-
-            //key.PointerDown += PointerDown;
+            icon = transform
+                .GetChild(0)
+                .GetChild(0)
+                .GetComponent<Image>();
         }
 
-        void Start()
+        void OnEnable()
         {
-            key.pointerBehaviour.pointerDown += PointerDown;
-        }
+            pointerDown.pointerClicked += PointerDown;
 
-        private void OnEnable()
-        {
             NotificationHub.Default.Subscribe(
                this,
                KeyboardNotificationKeys.ChangeMode,
@@ -55,83 +64,68 @@ namespace umi3d.browserRuntime.ui
            );
         }
 
-        private void OnDisable()
+        void OnDisable()
         {
+            pointerDown.pointerClicked -= PointerDown;
+
             NotificationHub.Default.Unsubscribe(this, KeyboardNotificationKeys.ChangeMode);
         }
 
-        private void PointerDown(Notification notification)
+        void PointerDown(Notification notification)
         {
-            if (!notification.TryGetInfoT(PointerBehaviour.NKCount, out int count))
-            {
-                UnityEngine.Debug.LogError($"message");
-                return;
-            }
             if (!notification.TryGetInfoT(PointerBehaviour.NKIsImmediate, out bool isImmediate) || !isImmediate)
             {
                 return;
             }
-            UnityEngine.Debug.Log($"[Shift] {count}");
-
-            if (count == 1 && isImmediate)
+            if (!notification.TryGetInfoT(PointerBehaviour.NKCount, out int count))
             {
-                UnityEngine.Debug.Log($"[Shift] simple");
+                UnityEngine.Debug.LogError($"[KeyShift] No PointerBehaviour.NKCount keys.");
+                return;
+            }
+
+            if (count == 1)
+            {
                 isLowerCase = !isLowerCase;
-                isUpperCaseLock = false;
-
-                NotificationHub.Default.Notify(
-                    this,
-                    KeyboardNotificationKeys.ChangeMode,
-                    new()
-                    {
-                        { KeyboardNotificationKeys.ModeInfo.IsABC, true },
-                        { KeyboardNotificationKeys.ModeInfo.IsLowerCase, isLowerCase }
-                    }
-                );
+                isUpperCaseLocked = false;
+                icon.sprite = iconDefault;
             }
 
-            if (count == 2 && isImmediate)
+            if (count == 2)
             {
-                UnityEngine.Debug.Log($"[Shift] lock");
                 isLowerCase = false;
-                isUpperCaseLock = true;
-
-                NotificationHub.Default.Notify(
-                    this,
-                    KeyboardNotificationKeys.ChangeMode,
-                    new()
-                    {
-                        { KeyboardNotificationKeys.ModeInfo.IsABC, true },
-                        { KeyboardNotificationKeys.ModeInfo.IsLowerCase, isLowerCase }
-                    }
-                );
+                isUpperCaseLocked = true;
+                icon.sprite = iconLock;
             }
+
+            info[KeyboardNotificationKeys.ModeInfo.IsABC] = true;
+            info[KeyboardNotificationKeys.ModeInfo.IsLowerCase] = isLowerCase;
+            info[KeyboardNotificationKeys.ModeInfo.IsUpperCaseLocked] = isUpperCaseLocked;
+            NotificationHub.Default.Notify(
+                this,
+                KeyboardNotificationKeys.ChangeMode,
+                info
+            );
         }
-
-        //void PointerDown()
-        //{
-        //    isLowerCase = !isLowerCase;
-
-        //    NotificationHub.Default.Notify(
-        //        this,
-        //        KeyboardNotificationKeys.ChangeMode,
-        //        new()
-        //        {
-        //            { KeyboardNotificationKeys.ModeInfo.IsABC, true },
-        //            { KeyboardNotificationKeys.ModeInfo.IsLowerCase, isLowerCase }
-        //        }
-        //    );
-        //}
 
         void ABCOrSymbol(Notification notification)
         {
+            if (notification.Publisher is KeyShift keyShift)
+            {
+                return;
+            }
+
+            UnityEngine.Debug.Log($"ABCOrSymbol");
+
             if (!notification.TryGetInfoT(KeyboardNotificationKeys.ModeInfo.IsABC, out bool isABC))
             {
                 UnityEngine.Debug.LogError($"[KeyShift] No ModeInfo.IsABC keys.");
                 return;
             }
 
+            UnityEngine.Debug.Log($"ABCOrSymbol {isABC}");
+
             button.interactable = isABC;
+            icon.sprite = iconDefault;
 
             if (notification.TryGetInfoT(KeyboardNotificationKeys.ModeInfo.IsLowerCase, out bool isLowerCase))
             {

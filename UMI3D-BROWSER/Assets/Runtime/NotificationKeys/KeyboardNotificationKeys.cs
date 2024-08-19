@@ -46,6 +46,16 @@ namespace umi3d.browserRuntime.NotificationKeys
         /// </summary>
         public const string ChangeVersion = "ChangeVersion";
 
+        /// <summary>
+        /// Notification sent when the key is hovered.
+        /// </summary>
+        public const string KeyHovered = "KeyHovered";
+
+        /// <summary>
+        /// Notification sent when the key is clicked.
+        /// </summary>
+        public const string KeyClicked = "KeyClicked";
+
         public static class Info
         {
             /// <summary>

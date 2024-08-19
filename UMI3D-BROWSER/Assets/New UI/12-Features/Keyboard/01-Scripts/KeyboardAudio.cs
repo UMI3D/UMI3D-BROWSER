@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
+using umi3d.browserRuntime.NotificationKeys;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.XR.Interaction.Toolkit;
@@ -42,14 +43,14 @@ namespace umi3d.browserRuntime.ui
 
             NotificationHub.Default.Subscribe(
                 this,
-                "Hover",
+                KeyboardNotificationKeys.KeyHovered,
                 null,
                 KeyHovered
             );
 
             NotificationHub.Default.Subscribe(
                 this,
-                "Clicked",
+                KeyboardNotificationKeys.KeyClicked,
                 null,
                 KeyClicked
             );

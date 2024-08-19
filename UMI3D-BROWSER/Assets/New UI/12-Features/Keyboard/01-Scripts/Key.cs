@@ -86,6 +86,12 @@ namespace umi3d.browserRuntime.ui
             buttonPressed = false;
             pointerDown.OnPointerUp(eventData);
             PointerUp?.Invoke();
+
+            NotificationHub.Default.Notify(
+              this,
+              KeyboardNotificationKeys.KeyClicked,
+              null
+          );
         }
         
         public void OnPointerEnter(PointerEventData eventData)
@@ -94,6 +100,12 @@ namespace umi3d.browserRuntime.ui
             {
                 return;
             }
+
+            NotificationHub.Default.Notify(
+                this,
+                KeyboardNotificationKeys.KeyHovered,
+                null
+            );
 
             // Don't work yet
             //UnityEngine.Debug.Log($"[Key] enter");

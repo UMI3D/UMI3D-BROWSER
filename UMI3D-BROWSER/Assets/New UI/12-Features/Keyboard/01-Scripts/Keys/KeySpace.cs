@@ -29,6 +29,7 @@ namespace umi3d.browserRuntime.ui
 
         Dictionary<string, object> info = new()
         {
+            { KeyboardNotificationKeys.Info.IsAddingCharacters, true },
             { KeyboardNotificationKeys.Info.Characters, ' ' }
         };
 
@@ -43,7 +44,7 @@ namespace umi3d.browserRuntime.ui
         {
             NotificationHub.Default.Notify(
                 this, 
-                KeyboardNotificationKeys.AddCharacters, 
+                KeyboardNotificationKeys.AddOrRemoveCharacters, 
                 info
             );
         }

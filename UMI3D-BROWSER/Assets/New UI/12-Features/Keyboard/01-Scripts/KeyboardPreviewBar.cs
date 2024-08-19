@@ -67,18 +67,11 @@ namespace umi3d.browserRuntime.ui
             );
 
             NotificationHub.Default.Subscribe(
-               this,
-               KeyboardNotificationKeys.AddCharacters,
-               null,
-               AddCharacters
-           );
-
-            NotificationHub.Default.Subscribe(
-               this,
-               KeyboardNotificationKeys.RemoveCharacters,
-               null,
-               RemoveCharacters
-           );
+                this,
+                KeyboardNotificationKeys.AddOrRemoveCharacters,
+                null,
+                AddOrRemoveCharacters
+            );
         }
 
         void OnDisable()
@@ -86,8 +79,7 @@ namespace umi3d.browserRuntime.ui
             inputField.onTextSelection.RemoveListener(SelectText);
             inputField.onEndTextSelection.RemoveListener(UnSelectText);
 
-            NotificationHub.Default.Unsubscribe(this, KeyboardNotificationKeys.AddCharacters);
-            NotificationHub.Default.Unsubscribe(this, KeyboardNotificationKeys.RemoveCharacters);
+            NotificationHub.Default.Unsubscribe(this, KeyboardNotificationKeys.AddOrRemoveCharacters);
         }
 
         void Focus()
@@ -117,6 +109,24 @@ namespace umi3d.browserRuntime.ui
             inputField.stringPosition = pos1;
             SelectionStart = null;
             SelectionEnd = null;
+        }
+
+        void AddOrRemoveCharacters(Notification notification)
+        {
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.IsAddingCharacters, out bool isAdding))
+            {
+                UnityEngine.Debug.LogError($"[KeyboardPreviewBar] No KeyboardNotificationKeys.Info.IsAddingCharacters.");
+                return;
+            }
+
+            if (isAdding)
+            {
+                AddCharacters(notification);
+            }
+            else
+            {
+                RemoveCharacters(notification);
+            }
         }
 
         void AddCharacters(Notification notification)

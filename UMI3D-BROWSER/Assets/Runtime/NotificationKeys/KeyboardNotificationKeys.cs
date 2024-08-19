@@ -27,14 +27,9 @@ namespace umi3d.browserRuntime.NotificationKeys
         public const string AskPreviewFocus = "AskPreviewFocus";
 
         /// <summary>
-        /// Notification sent when characters will be added.
+        /// Notification sent when characters will be added or removed.
         /// </summary>
-        public const string AddCharacters = "AddCharacters";
-
-        /// <summary>
-        /// Notification sent when characters will be removed.
-        /// </summary>
-        public const string RemoveCharacters = "RemoveCharacters";
+        public const string AddOrRemoveCharacters = "AddOrRemoveCharacters";
 
         /// <summary>
         /// Notification sent when the keyboard mode (abc / symbol / lower case / upper case) will change.
@@ -59,26 +54,38 @@ namespace umi3d.browserRuntime.NotificationKeys
         public static class Info
         {
             /// <summary>
-            /// The characters added. Can be <see cref="string"/> or <see cref="char"/>.<br/>
+            /// Whether some characters will be added or removed.<br/>
+            /// If true then characters will be added. Else characters will be removed.<br/>
+            /// Value is <see cref="bool"/>.<br/>
             /// <br/>
-            /// See Notification key: <see cref="AddCharacters"/>
+            /// See Notification key: <see cref="AddOrRemoveCharacters"/>
+            /// </summary>
+            public const string IsAddingCharacters = "IsAddingCharacters";
+
+            /// <summary>
+            /// The characters added.<br/>
+            /// Value is <see cref="string"/> or <see cref="char"/>.<br/>
+            /// <br/>
+            /// See Notification key: <see cref="AddOrRemoveCharacters"/>
             /// </summary>
             public const string Characters = "Characters";
 
             /// <summary>
-            /// The deletion phase.
+            /// The deletion phase.<br/>
+            /// Value is <see cref="int"/>.
             /// 
             /// <list type="number">
             /// <item>Character by character, or the current selected text.</item>
             /// <item>Word / spaces by word / spaces.</item>
             /// </list>
             /// 
-            /// See Notification key: <see cref="RemoveCharacters"/>
+            /// See Notification key: <see cref="AddOrRemoveCharacters"/>
             /// </summary>
             public const string DeletionPhase = "DeletionPhase";
 
             /// <summary>
             /// Whether the letter case is lower case.<br/>
+            /// Value is <see cref="bool"/>. <br/>
             /// <br/>
             /// See Notification key: <see cref="ChangeMode"/>
             /// </summary>
@@ -86,6 +93,7 @@ namespace umi3d.browserRuntime.NotificationKeys
 
             /// <summary>
             /// Whether the upper case is locked.<br/>
+            /// Value is <see cref="bool"/>.
             /// <br/>
             /// See Notification key: <see cref="ChangeMode"/>
             /// </summary>
@@ -93,6 +101,7 @@ namespace umi3d.browserRuntime.NotificationKeys
 
             /// <summary>
             /// Whether the characters mode is selected.<br/>
+            /// Value is <see cref="bool"/>.<br/>
             /// <br/>
             /// See Notification key: <see cref="ChangeMode"/>
             /// </summary>
@@ -100,7 +109,7 @@ namespace umi3d.browserRuntime.NotificationKeys
 
             /// <summary>
             /// The version of the keyboard (AZERTY, QWERTY, ...).<br/>
-            /// This should be a string.<br/>
+            /// Value is <see cref="string"/>.<br/>
             /// <br/>
             /// See Notification key: <see cref="ChangeVersion"/>
             /// </summary>

@@ -62,6 +62,13 @@ namespace umi3d.browserRuntime.ui
                null,
                ABCOrSymbol
            );
+
+            NotificationHub.Default.Subscribe(
+               this,
+               KeyboardNotificationKeys.AddOrRemoveCharacters,
+               null,
+               AddOrRemoveCharacters
+           );
         }
 
         void OnDisable()
@@ -114,23 +121,48 @@ namespace umi3d.browserRuntime.ui
                 return;
             }
 
-            UnityEngine.Debug.Log($"ABCOrSymbol");
+            icon.sprite = iconDefault;
 
             if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.IsABC, out bool isABC))
             {
-                UnityEngine.Debug.LogError($"[KeyShift] No ModeInfo.IsABC keys.");
+                UnityEngine.Debug.LogError($"[KeyShift] No KeyboardNotificationKeys.Info.IsABC keys.");
                 return;
             }
 
-            UnityEngine.Debug.Log($"ABCOrSymbol {isABC}");
-
             button.interactable = isABC;
-            icon.sprite = iconDefault;
+            isLowerCase = true;
+            isUpperCaseLocked = false;
+        }
 
-            if (notification.TryGetInfoT(KeyboardNotificationKeys.Info.IsLowerCase, out bool isLowerCase))
+        void AddOrRemoveCharacters(Notification notification)
+        {
+            if (isUpperCaseLocked || !button.IsInteractable())
             {
-                this.isLowerCase = isLowerCase;
+                return;
             }
+
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.IsAddingCharacters, out bool isAdding))
+            {
+                UnityEngine.Debug.LogError($"[KeyShift] No KeyboardNotificationKeys.Info.IsAddingCharacters keys.");
+                return;
+            }
+
+            if (isAdding && notification.TryGetInfoT(KeyboardNotificationKeys.Info.Characters, out char character) && character == ' ')
+            {
+                return;
+            }
+
+            isLowerCase = true;
+            isUpperCaseLocked = false;
+
+            info[KeyboardNotificationKeys.Info.IsABC] = true;
+            info[KeyboardNotificationKeys.Info.IsLowerCase] = isLowerCase;
+            info[KeyboardNotificationKeys.Info.IsUpperCaseLocked] = isUpperCaseLocked;
+            NotificationHub.Default.Notify(
+                this,
+                KeyboardNotificationKeys.ChangeMode,
+                info
+            );
         }
     }
 }

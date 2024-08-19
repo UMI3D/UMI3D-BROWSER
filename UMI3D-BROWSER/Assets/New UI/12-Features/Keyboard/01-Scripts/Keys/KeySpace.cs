@@ -29,7 +29,7 @@ namespace umi3d.browserRuntime.ui
 
         Dictionary<string, object> info = new()
         {
-            { KeyboardNotificationKeys.CharactersInfo.Characters, ' ' }
+            { KeyboardNotificationKeys.Info.Characters, ' ' }
         };
 
         void Awake()

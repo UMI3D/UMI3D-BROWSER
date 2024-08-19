@@ -50,13 +50,13 @@ namespace umi3d.browserRuntime.ui
 
         void SwitchToCharacter(Notification notification)
         {
-            if (!notification.TryGetInfoT(KeyboardNotificationKeys.ModeInfo.IsABC, out bool isABC) || !isABC)
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.IsABC, out bool isABC) || !isABC)
             {
                 return;
             }
 
             bool isLowerCase = true;
-            if (allowUpperCase && notification.TryGetInfoT(KeyboardNotificationKeys.ModeInfo.IsLowerCase, out bool isLower))
+            if (allowUpperCase && notification.TryGetInfoT(KeyboardNotificationKeys.Info.IsLowerCase, out bool isLower))
             {
                 isLowerCase = isLower;
             }

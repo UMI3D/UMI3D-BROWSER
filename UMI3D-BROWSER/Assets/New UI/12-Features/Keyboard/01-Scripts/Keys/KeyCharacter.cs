@@ -28,6 +28,11 @@ namespace umi3d.browserRuntime.ui
         Key key;
         TMPro.TMP_Text text;
 
+        static Dictionary<string, object> info = new()
+        {
+            { KeyboardNotificationKeys.Info.Characters, 'a' }
+        };
+
         void Awake()
         {
             key = GetComponent<Key>();
@@ -38,13 +43,11 @@ namespace umi3d.browserRuntime.ui
 
         private void PointerUp()
         {
+            info[KeyboardNotificationKeys.Info.Characters] = text.text;
             NotificationHub.Default.Notify(
                 this,
                 KeyboardNotificationKeys.AddCharacters,
-                new()
-                {
-                    { KeyboardNotificationKeys.CharactersInfo.Characters, text.text }
-                }
+                info
             );
         }
     }

@@ -51,7 +51,7 @@ namespace umi3d.browserRuntime.ui
 
         void SwitchToSymbol(Notification notification)
         {
-            if (!notification.TryGetInfoT(KeyboardNotificationKeys.ModeInfo.IsABC, out bool isABC) || isABC)
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.IsABC, out bool isABC) || isABC)
             {
                 return;
             }

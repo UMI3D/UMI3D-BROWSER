@@ -30,8 +30,8 @@ namespace umi3d.browserRuntime.ui
 
         Dictionary<string, object> info = new()
         {
-            { KeyboardNotificationKeys.ModeInfo.IsABC, true },
-            { KeyboardNotificationKeys.ModeInfo.IsLowerCase, true }
+            { KeyboardNotificationKeys.Info.IsABC, true },
+            { KeyboardNotificationKeys.Info.IsLowerCase, true }
         };
 
         void Awake()
@@ -45,7 +45,7 @@ namespace umi3d.browserRuntime.ui
         {
             isABCShown = !isABCShown;
 
-            info[KeyboardNotificationKeys.ModeInfo.IsABC] = isABCShown;
+            info[KeyboardNotificationKeys.Info.IsABC] = isABCShown;
             NotificationHub.Default.Notify(
                 this,
                 KeyboardNotificationKeys.ChangeMode,

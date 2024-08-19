@@ -36,10 +36,22 @@ namespace umi3d.browserRuntime.NotificationKeys
         /// </summary>
         public const string RemoveCharacters = "RemoveCharacters";
 
-        public static class CharactersInfo
+        /// <summary>
+        /// Notification sent when the keyboard mode (abc / symbol / lower case / upper case) will change.
+        /// </summary>
+        public const string ChangeMode = "ChangeMode";
+
+        /// <summary>
+        /// Notification sent when the version of the keyboard will change.
+        /// </summary>
+        public const string ChangeVersion = "ChangeVersion";
+
+        public static class Info
         {
             /// <summary>
-            /// The characters added. Can be <see cref="string"/> or <see cref="char"/>.
+            /// The characters added. Can be <see cref="string"/> or <see cref="char"/>.<br/>
+            /// <br/>
+            /// See Notification key: <see cref="AddCharacters"/>
             /// </summary>
             public const string Characters = "Characters";
 
@@ -50,45 +62,40 @@ namespace umi3d.browserRuntime.NotificationKeys
             /// <item>Character by character, or the current selected text.</item>
             /// <item>Word / spaces by word / spaces.</item>
             /// </list>
+            /// 
+            /// See Notification key: <see cref="RemoveCharacters"/>
             /// </summary>
             public const string DeletionPhase = "DeletionPhase";
-        }
 
-        /// <summary>
-        /// Notification sent when the keyboard mode (abc / symbol / lower case / upper case) will change.
-        /// </summary>
-        public const string ChangeMode = "ChangeMode";
-
-        public static class ModeInfo
-        {
             /// <summary>
-            /// Whether the letter case is lower case.
+            /// Whether the letter case is lower case.<br/>
+            /// <br/>
+            /// See Notification key: <see cref="ChangeMode"/>
             /// </summary>
             public const string IsLowerCase = "IsLowerCase";
 
             /// <summary>
-            /// Whether the upper case is locked.
+            /// Whether the upper case is locked.<br/>
+            /// <br/>
+            /// See Notification key: <see cref="ChangeMode"/>
             /// </summary>
             public const string IsUpperCaseLocked = "IsUpperCaseLocked";
 
             /// <summary>
-            /// Whether the characters mode is selected.
+            /// Whether the characters mode is selected.<br/>
+            /// <br/>
+            /// See Notification key: <see cref="ChangeMode"/>
             /// </summary>
             public const string IsABC = "IsABC";
-        }
 
-        /// <summary>
-        /// Notification sent when the version of the keyboard will change.
-        /// </summary>
-        public const string ChangeVersion = "ChangeVersion";
-
-        public static class VersionInfo
-        {
             /// <summary>
             /// The version of the keyboard (AZERTY, QWERTY, ...).<br/>
-            /// This should be a string.
+            /// This should be a string.<br/>
+            /// <br/>
+            /// See Notification key: <see cref="ChangeVersion"/>
             /// </summary>
             public const string Version = "Version";
+
         }
     }
 }

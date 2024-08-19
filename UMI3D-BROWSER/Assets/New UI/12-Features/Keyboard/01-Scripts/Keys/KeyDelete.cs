@@ -36,7 +36,7 @@ namespace umi3d.browserRuntime.ui
 
         Dictionary<string, object> info = new()
         {
-            { KeyboardNotificationKeys.CharactersInfo.DeletionPhase, 0 }
+            { KeyboardNotificationKeys.Info.DeletionPhase, 0 }
         };
 
         void Awake()
@@ -79,7 +79,7 @@ namespace umi3d.browserRuntime.ui
                     phase = 1;
                 }
 
-                info[KeyboardNotificationKeys.CharactersInfo.DeletionPhase] = phase;
+                info[KeyboardNotificationKeys.Info.DeletionPhase] = phase;
                 NotificationHub.Default.Notify(
                     this,
                     KeyboardNotificationKeys.RemoveCharacters,

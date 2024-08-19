@@ -44,9 +44,9 @@ namespace umi3d.browserRuntime.ui
 
         void VersionChanged(Notification notification)
         {
-            if (!notification.TryGetInfoT(KeyboardNotificationKeys.VersionInfo.Version, out string _version))
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.Version, out string _version))
             {
-                UnityEngine.Debug.LogError($"[KeyboardVersion] notification information does not contain {KeyboardNotificationKeys.VersionInfo.Version}.");
+                UnityEngine.Debug.LogError($"[KeyboardVersion] notification information does not contain {KeyboardNotificationKeys.Info.Version}.");
                 return;
             }
 

@@ -37,9 +37,9 @@ namespace umi3d.browserRuntime.ui
 
         Dictionary<string, object> info = new()
         {
-            { KeyboardNotificationKeys.ModeInfo.IsABC, true },
-            { KeyboardNotificationKeys.ModeInfo.IsLowerCase, true },
-            { KeyboardNotificationKeys.ModeInfo.IsUpperCaseLocked, false }
+            { KeyboardNotificationKeys.Info.IsABC, true },
+            { KeyboardNotificationKeys.Info.IsLowerCase, true },
+            { KeyboardNotificationKeys.Info.IsUpperCaseLocked, false }
         };
 
         void Awake()
@@ -97,9 +97,9 @@ namespace umi3d.browserRuntime.ui
                 icon.sprite = iconLock;
             }
 
-            info[KeyboardNotificationKeys.ModeInfo.IsABC] = true;
-            info[KeyboardNotificationKeys.ModeInfo.IsLowerCase] = isLowerCase;
-            info[KeyboardNotificationKeys.ModeInfo.IsUpperCaseLocked] = isUpperCaseLocked;
+            info[KeyboardNotificationKeys.Info.IsABC] = true;
+            info[KeyboardNotificationKeys.Info.IsLowerCase] = isLowerCase;
+            info[KeyboardNotificationKeys.Info.IsUpperCaseLocked] = isUpperCaseLocked;
             NotificationHub.Default.Notify(
                 this,
                 KeyboardNotificationKeys.ChangeMode,
@@ -116,7 +116,7 @@ namespace umi3d.browserRuntime.ui
 
             UnityEngine.Debug.Log($"ABCOrSymbol");
 
-            if (!notification.TryGetInfoT(KeyboardNotificationKeys.ModeInfo.IsABC, out bool isABC))
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.IsABC, out bool isABC))
             {
                 UnityEngine.Debug.LogError($"[KeyShift] No ModeInfo.IsABC keys.");
                 return;
@@ -127,7 +127,7 @@ namespace umi3d.browserRuntime.ui
             button.interactable = isABC;
             icon.sprite = iconDefault;
 
-            if (notification.TryGetInfoT(KeyboardNotificationKeys.ModeInfo.IsLowerCase, out bool isLowerCase))
+            if (notification.TryGetInfoT(KeyboardNotificationKeys.Info.IsLowerCase, out bool isLowerCase))
             {
                 this.isLowerCase = isLowerCase;
             }

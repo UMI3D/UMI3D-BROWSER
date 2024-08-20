@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TMPro;
@@ -38,10 +39,9 @@ namespace umi3dBrowsers
         [SerializeField] private Transform parentTransform;
         [SerializeField] private Transform contentTransform;
         [SerializeField] private Transform popupTransform;
-        [SerializeField] private Transform skyBoxTransform;
 
-        [Header("Light")]
-        [SerializeField] private Light directionalLight;
+        [Header("Dependencies")]
+        [SerializeField] private MainContainerLinker mainContainerLinker;
 
         [Header("Navigation-navbar")]
         [SerializeField] private GameObject navBar;
@@ -66,8 +66,6 @@ namespace umi3dBrowsers
         [Header("Services")]
         [SerializeField] private ConnectionProcessor connectionProcessorService;
         [SerializeField] private UITweens tween;
-        [SerializeField] private PlayerSpawner spawner;
-        [SerializeField] private SceneLoader sceneLoader;
         [SerializeField] private PanelTutoDisplayer PageTipDisplayer;
 
         [Header("Linker")]
@@ -97,8 +95,17 @@ namespace umi3dBrowsers
                 navBar.SetActive(panel.DisplayNavbar);
                 backButton.gameObject.SetActive(panel.DisplayBack);
 
-                var hasTuto = panelTutoManager != null && panelTutoManager.Count > 0;
-                PageTipButton.transform.parent.gameObject.SetActive(hasTuto);
+                var hasTuto = panelTutoManager != null && panelTutoManager.Count > 0;   
+
+                try
+                {
+                    PageTipButton.transform.parent.gameObject.SetActive(hasTuto);
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogError(ex);
+                }
+
                 if (hasTuto)
                 {
                     PageTipButton.onClick.RemoveAllListeners();
@@ -124,7 +131,7 @@ namespace umi3dBrowsers
                 ShowUI();
                 m_menuNavigationLinker.ShowPanel(m_mainMenuPanel);
                 connectionProcessorService.Disconnect();
-                sceneLoader.ReloadScene();
+                mainContainerLinker.Loader.ReloadScene();
             };
 
             UMI3DEnvironmentLoader.Instance.onEnvironmentLoaded?.AddListener(() => {
@@ -145,7 +152,7 @@ namespace umi3dBrowsers
             BindConnectionService();
 
             m_menuNavigationLinker.OnReplacePlayerAndShowPanel += () => {
-                spawner.RepositionPlayer();
+                mainContainerLinker.Spawner.RepositionPlayer();
                 ShowUI();
             };
 
@@ -199,7 +206,7 @@ namespace umi3dBrowsers
                 if (parentTransform.gameObject.activeSelf == false)
                 {
                     ShowUI();
-                    spawner.RepositionPlayer();
+                    mainContainerLinker.Spawner.RepositionPlayer();
                 }
                 m_menuNavigationLinker.ShowPanel(m_formPanel);
             };
@@ -207,7 +214,7 @@ namespace umi3dBrowsers
                 if (parentTransform.gameObject.activeSelf == false)
                 {
                     ShowUI();
-                    spawner.RepositionPlayer();
+                    mainContainerLinker.Spawner.RepositionPlayer();
                 }
                 m_menuNavigationLinker.ShowPanel(m_formPanel);
             };
@@ -218,15 +225,15 @@ namespace umi3dBrowsers
         private void HideUI()
         {
             parentTransform.gameObject.SetActive(false);
-            skyBoxTransform.gameObject.SetActive(false);
-            directionalLight.gameObject.SetActive(false);
+            mainContainerLinker.Skybox.gameObject.SetActive(false);
+            mainContainerLinker.DirectionalLight.gameObject.SetActive(false);
         }
 
         private void ShowUI()
         {
             parentTransform.gameObject.SetActive(true);
-            skyBoxTransform.gameObject.SetActive(true);
-            directionalLight.gameObject.SetActive(true);
+            mainContainerLinker.Skybox.gameObject.SetActive(true);
+            mainContainerLinker.DirectionalLight.gameObject.SetActive(true);
         }
     }
 }

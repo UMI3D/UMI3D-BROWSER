@@ -260,6 +260,12 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!4 &32252913 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7684936378012826588, guid: 81edd7311d250344a9937dce75274a2e,
+    type: 3}
+  m_PrefabInstance: {fileID: 640926457}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &263852482
 GameObject:
   m_ObjectHideFlags: 0
@@ -405,6 +411,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7641357056380844684, guid: 81edd7311d250344a9937dce75274a2e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7684936378012826588, guid: 81edd7311d250344a9937dce75274a2e,
         type: 3}
@@ -622,6 +633,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1732209209}
   - component: {fileID: 1732209208}
+  - component: {fileID: 1732209210}
   m_Layer: 0
   m_Name: Instanciator
   m_TagString: Untagged
@@ -661,6 +673,24 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1732209210
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1732209207}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05a8dc9549be51949b496655ea57b61d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainContainerLinker: {fileID: 11400000, guid: 4537bbeeb4ba60b4b8a9569e6cd5ced4,
+    type: 2}
+  skyBox: {fileID: 32252913}
+  directionalLight: {fileID: 263852483}
+  sceneLoader: {fileID: 1920418799}
+  spawner: {fileID: 1446459085}
 --- !u!1 &1920418796
 GameObject:
   m_ObjectHideFlags: 0

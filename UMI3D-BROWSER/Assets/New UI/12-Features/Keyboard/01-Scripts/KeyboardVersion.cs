@@ -52,5 +52,24 @@ namespace umi3d.browserRuntime.ui
 
             gameObject.SetActive(version.ToString() == _version);
         }
+
+#if UNITY_EDITOR
+        static Version currentVersion = Version.QWERTY;
+
+        [ContextMenu("TestSwitch")]
+        void TestSwitch()
+        {
+            currentVersion = currentVersion == Version.QWERTY ? Version.AZERTY : Version.QWERTY;
+            UnityEngine.Debug.Log($"test switch version to {currentVersion}");
+            NotificationHub.Default.Notify(
+                this,
+                KeyboardNotificationKeys.ChangeVersion,
+                new()
+                {
+                    { KeyboardNotificationKeys.Info.Version, currentVersion.ToString() }
+                }
+            );
+        }
+#endif
     }
 }

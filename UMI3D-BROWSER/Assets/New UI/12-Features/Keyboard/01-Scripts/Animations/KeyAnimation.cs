@@ -18,6 +18,7 @@ using inetum.unityUtils;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using umi3d.browserRuntime.NotificationKeys;
 using UnityEditor.Localization.Plugins.XLIFF.V12;
 using UnityEngine;
 
@@ -25,21 +26,34 @@ namespace umi3d.browserRuntime.ui
 {
     public class KeyAnimation : MonoBehaviour
     {
+        /// <summary>
+        /// The animation of the key.
+        /// </summary>
+        new inetum.unityUtils.Animation animation = new();
         Coroutine coroutine;
-        RectTransform rectTransform;
+        /// <summary>
+        /// The initial scale of the key (when it is open).
+        /// </summary>
         Vector3 scale;
 
         void Awake()
         {
-            rectTransform = GetComponent<RectTransform>();
+            RectTransform rectTransform = GetComponent<RectTransform>();
+
+            // Get the scale of the key.
+            // The keyboard has to be open.
             scale = rectTransform.localScale;
+
+            animation
+                .SetApplyValue<Vector3>(x => rectTransform.localScale = x)
+                .SetLerp<Vector3>(Easings.Lerp);
         }
 
         void OnEnable()
         {
             NotificationHub.Default.Subscribe(
                 this,
-                "Animation",
+                KeyboardNotificationKeys.OpenOrClose,
                 null,
                 Animate
             );
@@ -47,90 +61,75 @@ namespace umi3d.browserRuntime.ui
 
         void OnDisable()
         {
-            NotificationHub.Default.Unsubscribe(this, "Animation");
+            NotificationHub.Default.Unsubscribe(this, KeyboardNotificationKeys.OpenOrClose);
         }
 
         void Animate(Notification notification)
         {
-            if (!notification.TryGetInfoT("IsStarting", out bool isStarting))
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.IsOpening, out bool isStarting))
             {
-                UnityEngine.Debug.LogError($"[KeyboardBackgroundAnimation] no IsStarting key.");
+                UnityEngine.Debug.LogError($"[KeyAnimation] no KeyboardNotificationKeys.Info.IsOpening key.");
                 return;
             }
 
-            if (!notification.TryGetInfoT("AnimationTime", out float animationTime))
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.AnimationTime, out float animationTime))
             {
-                UnityEngine.Debug.LogError($"[KeyboardBackgroundAnimation] no AnimationTime key.");
+                UnityEngine.Debug.LogError($"[KeyAnimation] no KeyboardNotificationKeys.Info.AnimationTime key.");
                 return;
             }
 
-            if (!notification.TryGetInfoT("IsAnimated", out bool isAnimated))
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.PhaseOneStartTimePercentage, out float phaseOnePct))
             {
-                UnityEngine.Debug.LogError($"[KeyboardBackgroundAnimation] no IsAnimated key.");
+                UnityEngine.Debug.LogError($"[KeyAnimation] no KeyboardNotificationKeys.Info.PhaseOneStartTimePercentage key.");
+                return;
+            }
+
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.WithAnimation, out bool isAnimated))
+            {
+                UnityEngine.Debug.LogError($"[KeyAnimation] no KeyboardNotificationKeys.Info.WithAnimation key.");
                 return;
             }
 
             if (coroutine != null)
             {
                 StopCoroutine(coroutine);
+                coroutine = null;
             }
 
             if (isAnimated)
             {
-                Vector3 currentScale = rectTransform.localScale;
                 coroutine = StartCoroutine(
                     isStarting
-                    ? Opening(animationTime, currentScale)
-                    : Closing(animationTime, currentScale)
+                    ? Opening(animationTime, phaseOnePct)
+                    : Closing(animationTime, phaseOnePct)
                 );
             }
             else
             {
-                rectTransform.localScale = new(
-                    isStarting ? 1f : 0f,
-                    isStarting ? 1f : 0f,
-                    isStarting ? 1f : 0f
+                animation.ApplyValue(
+                    isStarting 
+                    ? Vector3.one
+                    : Vector3.zero
                 );
             }
         }
 
-        IEnumerator Opening(float animationTime, Vector3 currentScale)
+        IEnumerator Opening(float animationTime, float phaseOnePct)
         {
-            float elapsedTime = Average(currentScale) * animationTime / Average(scale);
-            yield return Animation(
-                animationTime, 
-                currentScale, 
-                scale, 
-                elapsedTime,
-                (a, b) => Easings.EaseOutBack(a, b)
-            );
-        }
-
-        IEnumerator Closing(float animationTime, Vector3 currentScale)
-        {
-            float elapsedTime = Average(scale - currentScale) * animationTime / Average(scale);
-            yield return Animation(
-                animationTime, 
-                currentScale, 
-                Vector3.zero, 
-                elapsedTime,
-                Easings.EaseInCirc
-            );
-        }
-
-        IEnumerator Animation(float animationTime, Vector3 initial, Vector3 final, float elapsedTime, Func<float, float, float> easingMethod)
-        {
-            while (elapsedTime < animationTime)
+            // Wait for the background animation to be half completed.
+            float elapsedTime = animationTime * animation.completionPercentage;
+            while (animation.epsilon < animationTime * phaseOnePct - elapsedTime)
             {
-                float t = easingMethod(elapsedTime, animationTime);
-                Vector3 x = Easings.Lerp(initial, final, t);
-                UnityEngine.Debug.Log($"t = {t} && x = {x}");
-                rectTransform.localScale = x;
                 yield return null;
                 elapsedTime += Time.deltaTime;
             }
 
-            rectTransform.localScale = final;
+            yield return animation
+                .SetInitAndFinalValue(Vector3.zero, scale)
+                .SetAnimationTime(animationTime * (1 - phaseOnePct))
+                .SetEasing((e, a) => Easings.EaseOutBack(e, a))
+                .Start();
+
             if (coroutine != null)
             {
                 StopCoroutine(coroutine);
@@ -138,9 +137,19 @@ namespace umi3d.browserRuntime.ui
             }
         }
 
-        float Average(Vector3 a)
+        IEnumerator Closing(float animationTime, float phaseOnePct)
         {
-            return (a.x + a.y + a.z) / 3f;
+            yield return animation
+                .SetInitAndFinalValue(scale, Vector3.zero)
+                .SetAnimationTime(animationTime * (1 - phaseOnePct))
+                .SetEasing(Easings.EaseInCirc)
+                .Start();
+
+            if (coroutine != null)
+            {
+                StopCoroutine(coroutine);
+                coroutine = null;
+            }
         }
     }
 }

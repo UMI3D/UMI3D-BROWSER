@@ -25,17 +25,28 @@ namespace umi3d.browserRuntime.ui
 {
     public class KeyboardBackgroundAnimation : MonoBehaviour
     {
-        [Tooltip("Limit of the difference between two floats.")]
-        [SerializeField] float epsilon = .001f;
-
+        /// <summary>
+        /// The animation of the background.
+        /// </summary>
+        new inetum.unityUtils.Animation animation = new();
         Coroutine coroutine;
-        RectTransform rectTransform;
+        /// <summary>
+        /// The initial width of the background (when it is open).
+        /// </summary>
         float width;
 
         void Awake()
         {
-            rectTransform = GetComponent<RectTransform>();
+            RectTransform rectTransform = GetComponent<RectTransform>();
+
+            // Get the width of the background.
+            // The keyboard has to be open.
             width = rectTransform.rect.width;
+
+            animation
+                .SetApplyValue<float>(x => rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, x))
+                .SetEasing(Easings.EaseInCirc)
+                .SetLerp<float>(Easings.Lerp);
         }
 
         void OnEnable()
@@ -82,11 +93,11 @@ namespace umi3d.browserRuntime.ui
             if (coroutine != null)
             {
                 StopCoroutine(coroutine);
+                coroutine = null;
             }
 
             if (isAnimated)
             {
-                UnityEngine.Debug.Log($"message");
                 coroutine = StartCoroutine(
                     isOpening
                     ? Opening(animationTime) 
@@ -95,60 +106,17 @@ namespace umi3d.browserRuntime.ui
             }
             else
             {
-                rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, isOpening ? width : 0f);
+                animation.ApplyValue(isOpening ? width : 0f);
             }
         }
 
         IEnumerator Opening(float animationTime)
         {
-            this.animationTime = animationTime;
-            yield return Animation(
-                0f, 
-                width
-            );
-        }
+            yield return animation
+                .SetInitAndFinalValue(0f, width)
+                .SetAnimationTime(animationTime)
+                .Start();
 
-        IEnumerator Closing(float animationTime, float phaseOnePct)
-        {
-
-            float elapsedTime = animationTime * completionPercentage;
-            while (epsilon < animationTime * phaseOnePct - elapsedTime)
-            {
-                yield return null;
-                elapsedTime += Time.deltaTime;
-            }
-
-            this.animationTime = animationTime * (1 - phaseOnePct);
-            yield return Animation(
-                width, 
-                0f
-            );
-        }
-
-        float animationTime = 0f;
-        float completionPercentage = 0f;
-        IEnumerator Animation(float initial, float final)
-        {
-            float elapsedTime = animationTime * completionPercentage;
-
-            while (epsilon < animationTime - elapsedTime)
-            {
-                float t = Easings.EaseInCirc(elapsedTime, animationTime);
-                float x = Easings.Lerp(initial, final, t);
-
-                rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, x);
-
-                completionPercentage = elapsedTime / animationTime;
-
-                yield return null;
-                elapsedTime += Time.deltaTime;
-            }
-
-            completionPercentage = 0f;
-
-            rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, final);
-
-            yield return null;
             if (coroutine != null)
             {
                 StopCoroutine(coroutine);
@@ -156,56 +124,26 @@ namespace umi3d.browserRuntime.ui
             }
         }
 
-#if UNITY_EDITOR
-        [ContextMenu("TestOpenWithAnimation")]
-        void TestOpenWithAnimation()
+        IEnumerator Closing(float animationTime, float phaseOnePct)
         {
-            UnityEngine.Debug.Log($"test open with animation");
-            NotificationHub.Default.Notify(
-                this,
-                "Animation",
-                new()
-                {
-                    { "AnimationPhase", 0 },
-                    { "IsStarting", true },
-                    { "AnimationTime", 10f },
-                    { "IsAnimated", true },
-                }
-            );
-        }
+            // Wait for the key animation to be completed.
+            float elapsedTime = animationTime * animation.completionPercentage;
+            while (animation.epsilon < animationTime * phaseOnePct - elapsedTime)
+            {
+                yield return null;
+                elapsedTime += Time.deltaTime;
+            }
 
-        [ContextMenu("TestCloseWithAnimation")]
-        void TestCloseWithAnimation()
-        {
-            UnityEngine.Debug.Log($"test close with animation");
-            NotificationHub.Default.Notify(
-                this,
-                "Animation",
-                new()
-                {
-                    { "AnimationPhase", 1 },
-                    { "IsStarting", false },
-                    { "AnimationTime", 10f },
-                    { "IsAnimated", true },
-                }
-            );
-        }
+            yield return animation
+                .SetInitAndFinalValue(width, 0f)
+                .SetAnimationTime(animationTime * (1 - phaseOnePct))
+                .Start();
 
-        [ContextMenu("TestClose")]
-        void TestClose()
-        {
-            UnityEngine.Debug.Log($"test close");
-            NotificationHub.Default.Notify(
-                this,
-                "Animation",
-                new()
-                {
-                    { "IsStarting", false },
-                    { "AnimationTime", 1f },
-                    { "IsAnimated", false },
-                }
-            );
+            if (coroutine != null)
+            {
+                StopCoroutine(coroutine);
+                coroutine = null;
+            }
         }
-#endif
     }
 }

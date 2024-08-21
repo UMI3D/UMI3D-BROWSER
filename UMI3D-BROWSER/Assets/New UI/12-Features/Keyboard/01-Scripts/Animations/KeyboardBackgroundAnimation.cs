@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using umi3d.browserRuntime.NotificationKeys;
@@ -41,7 +42,7 @@ namespace umi3d.browserRuntime.ui
         {
             NotificationHub.Default.Subscribe(
                 this,
-                "Animation",
+                KeyboardNotificationKeys.OpenOrClose,
                 null,
                 Animate
             );
@@ -49,26 +50,32 @@ namespace umi3d.browserRuntime.ui
 
         void OnDisable()
         {
-            NotificationHub.Default.Unsubscribe(this, "Animation");
+            NotificationHub.Default.Unsubscribe(this, KeyboardNotificationKeys.OpenOrClose);
         }
 
         void Animate(Notification notification)
         {
-            if (!notification.TryGetInfoT("IsStarting", out bool isStarting))
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.IsOpening, out bool isOpening))
             {
-                UnityEngine.Debug.LogError($"[KeyboardBackgroundAnimation] no IsStarting key.");
+                UnityEngine.Debug.LogError($"[KeyboardBackgroundAnimation] no KeyboardNotificationKeys.Info.IsOpening key.");
                 return;
             }
 
-            if (!notification.TryGetInfoT("AnimationTime", out float animationTime))
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.AnimationTime, out float animationTime))
             {
-                UnityEngine.Debug.LogError($"[KeyboardBackgroundAnimation] no AnimationTime key.");
+                UnityEngine.Debug.LogError($"[KeyboardBackgroundAnimation] no KeyboardNotificationKeys.Info.AnimationTime key.");
                 return;
             }
 
-            if (!notification.TryGetInfoT("IsAnimated", out bool isAnimated))
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.PhaseOneStartTimePercentage, out float phaseOnePct))
             {
-                UnityEngine.Debug.LogError($"[KeyboardBackgroundAnimation] no IsAnimated key.");
+                UnityEngine.Debug.LogError($"[KeyboardBackgroundAnimation] no KeyboardNotificationKeys.Info.PhaseOneStartTimePercentage key.");
+                return;
+            }
+
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.WithAnimation, out bool isAnimated))
+            {
+                UnityEngine.Debug.LogError($"[KeyboardBackgroundAnimation] no KeyboardNotificationKeys.Info.WithAnimation key.");
                 return;
             }
 
@@ -79,43 +86,69 @@ namespace umi3d.browserRuntime.ui
 
             if (isAnimated)
             {
-                float currentWidth = rectTransform.rect.width;
+                UnityEngine.Debug.Log($"message");
                 coroutine = StartCoroutine(
-                    isStarting 
-                    ? Opening(animationTime, currentWidth) 
-                    : Closing(animationTime, currentWidth)
+                    isOpening
+                    ? Opening(animationTime) 
+                    : Closing(animationTime, phaseOnePct)
                 );
             }
             else
             {
-                rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, isStarting ? width : 0f);
+                rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, isOpening ? width : 0f);
             }
         }
 
-        IEnumerator Opening(float animationTime, float currentWidth)
+        IEnumerator Opening(float animationTime)
         {
-            float elapsedTime = currentWidth * animationTime / width;
-            yield return Animation(animationTime, currentWidth, width, elapsedTime);
+            this.animationTime = animationTime;
+            yield return Animation(
+                0f, 
+                width
+            );
         }
 
-        IEnumerator Closing(float animationTime, float currentWidth)
+        IEnumerator Closing(float animationTime, float phaseOnePct)
         {
-            float elapsedTime = (width - currentWidth) * animationTime / width;
-            yield return Animation(animationTime, currentWidth, 0f, elapsedTime);
-        }
 
-        IEnumerator Animation(float animationTime, float initial, float final, float elapsedTime)
-        {
-            while (epsilon < animationTime - elapsedTime)
+            float elapsedTime = animationTime * completionPercentage;
+            while (epsilon < animationTime * phaseOnePct - elapsedTime)
             {
-                float t = Easings.EaseInCirc(elapsedTime, animationTime);
-                float x = Easings.Lerp(initial, final, t);
-                rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, x);
                 yield return null;
                 elapsedTime += Time.deltaTime;
             }
 
+            this.animationTime = animationTime * (1 - phaseOnePct);
+            yield return Animation(
+                width, 
+                0f
+            );
+        }
+
+        float animationTime = 0f;
+        float completionPercentage = 0f;
+        IEnumerator Animation(float initial, float final)
+        {
+            float elapsedTime = animationTime * completionPercentage;
+
+            while (epsilon < animationTime - elapsedTime)
+            {
+                float t = Easings.EaseInCirc(elapsedTime, animationTime);
+                float x = Easings.Lerp(initial, final, t);
+
+                rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, x);
+
+                completionPercentage = elapsedTime / animationTime;
+
+                yield return null;
+                elapsedTime += Time.deltaTime;
+            }
+
+            completionPercentage = 0f;
+
             rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, final);
+
+            yield return null;
             if (coroutine != null)
             {
                 StopCoroutine(coroutine);
@@ -133,6 +166,7 @@ namespace umi3d.browserRuntime.ui
                 "Animation",
                 new()
                 {
+                    { "AnimationPhase", 0 },
                     { "IsStarting", true },
                     { "AnimationTime", 10f },
                     { "IsAnimated", true },
@@ -149,6 +183,7 @@ namespace umi3d.browserRuntime.ui
                 "Animation",
                 new()
                 {
+                    { "AnimationPhase", 1 },
                     { "IsStarting", false },
                     { "AnimationTime", 10f },
                     { "IsAnimated", true },

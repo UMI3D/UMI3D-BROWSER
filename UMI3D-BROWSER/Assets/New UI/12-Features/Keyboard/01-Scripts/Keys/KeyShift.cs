@@ -92,15 +92,22 @@ namespace umi3d.browserRuntime.ui
 
             if (count == 1)
             {
+                // When simple click :
+                // switch between lower case and upper case.
                 isLowerCase = !isLowerCase;
+                // unlock the upper case.
                 isUpperCaseLocked = false;
+                // change the sprite to default.
                 icon.sprite = iconDefault;
             }
-
-            if (count == 2)
+            else if (count == 2)
             {
+                // When double click :
+                // set to upper case.
                 isLowerCase = false;
+                // lock the upper case.
                 isUpperCaseLocked = true;
+                // change the sprite to icon lock.
                 icon.sprite = iconLock;
             }
 
@@ -116,11 +123,13 @@ namespace umi3d.browserRuntime.ui
 
         void ABCOrSymbol(Notification notification)
         {
+            // If the notification is raised by this class then return.
             if (notification.Publisher is KeyShift keyShift)
             {
                 return;
             }
 
+            // change the sprite to default.
             icon.sprite = iconDefault;
 
             if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.IsABC, out bool isABC))
@@ -129,8 +138,11 @@ namespace umi3d.browserRuntime.ui
                 return;
             }
 
+            // Activate or deactivate this key.
             button.interactable = isABC;
+            // Set the case to lower.
             isLowerCase = true;
+            // Unlock the upper case.
             isUpperCaseLocked = false;
         }
 

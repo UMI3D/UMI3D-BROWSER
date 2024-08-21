@@ -71,14 +71,7 @@ namespace umi3d.browserRuntime.ui
 
             while (true)
             {
-                if (time < phase0Duration)
-                {
-                    phase = 0;
-                }
-                else
-                {
-                    phase = 1;
-                }
+                phase = time < phase0Duration ? 0 : 1;
 
                 info[KeyboardNotificationKeys.Info.DeletionPhase] = phase;
                 NotificationHub.Default.Notify(

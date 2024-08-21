@@ -66,7 +66,7 @@ namespace umi3d.browserRuntime.ui
 
         void Animate(Notification notification)
         {
-            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.IsOpening, out bool isStarting))
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.IsOpening, out bool isOpening))
             {
                 UnityEngine.Debug.LogError($"[KeyAnimation] no KeyboardNotificationKeys.Info.IsOpening key.");
                 return;
@@ -99,7 +99,7 @@ namespace umi3d.browserRuntime.ui
             if (isAnimated)
             {
                 coroutine = StartCoroutine(
-                    isStarting
+                    isOpening
                     ? Opening(animationTime, phaseOnePct)
                     : Closing(animationTime, phaseOnePct)
                 );
@@ -107,7 +107,7 @@ namespace umi3d.browserRuntime.ui
             else
             {
                 animation.ApplyValue(
-                    isStarting 
+                    isOpening 
                     ? Vector3.one
                     : Vector3.zero
                 );

@@ -21,7 +21,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.UI;
 
-namespace umi3d.browserRuntime.ui
+namespace umi3d.browserRuntime.ui.keyboard
 {
     public class KeyboardAudio : MonoBehaviour
     {

@@ -18,7 +18,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace umi3d.browserRuntime.ui
+namespace umi3d.browserRuntime.ui.keyboard
 {
     public class KeyEmoji : MonoBehaviour
     {

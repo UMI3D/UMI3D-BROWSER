@@ -21,7 +21,7 @@ using System.Threading.Tasks;
 using umi3d.browserRuntime.NotificationKeys;
 using UnityEngine;
 
-namespace umi3d.browserRuntime.ui
+namespace umi3d.browserRuntime.ui.keyboard
 {
     public class KeyboardPreviewBar : MonoBehaviour
     {

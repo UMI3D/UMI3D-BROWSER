@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using umi3d.browserRuntime.NotificationKeys;
 using UnityEngine;
 
-namespace umi3d.browserRuntime.ui
+namespace umi3d.browserRuntime.ui.keyboard
 {
     public class KeyQuit : MonoBehaviour
     {

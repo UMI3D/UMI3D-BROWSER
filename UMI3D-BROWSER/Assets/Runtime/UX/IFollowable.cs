@@ -271,13 +271,20 @@ namespace umi3d.browserRuntime.UX
         /// <param name="sequences"></param>
         void Rotate(Quaternion rotation, Vector3 filter, int sequences)
         {
-            if (sequences <= 0) sequences = 1;
+            if (sequences <= 1)
+            {
+                // If 'sequences' is inferior to 1 then consider that there are no sequences.
+                Rotate(rotation, filter);
+                return;
+            }
+
             // Length of a sequence.
             var sequence = 360f / (float)sequences;
             // Half of the length of a sequence.
             var halfSequence = sequence / 2f;
 
             var _rotation = Quaternion.identity;
+            // Filter the rotation.
             _rotation.eulerAngles = Vector3.Scale(filter, rotation.eulerAngles);
 
             /// <summary>
@@ -288,13 +295,18 @@ namespace umi3d.browserRuntime.UX
             /// </summary>
             void SetRotation(float angle, float current, Action<float> rotate, bool log)
             {
-                // Delay compared with min and max of a sequence.
+                // Portion of a sequence where the rotation ends up in the previous of next sequence.
                 const float hysteresis = 20f;
 
-                var min = -halfSequence + hysteresis;
-                var max = halfSequence - hysteresis;
+                // The min value of the sequence. This value is excluded.
+                var min = -halfSequence - hysteresis;
+                // The max value of the sequence. This value is included.
+                var max = halfSequence + hysteresis;
+                // The middle of the sequence.
                 var middle = 0f;
-                for (int i = 0; i <= sequences; i++)
+
+                // Loop over all the sequences.
+                for (int i = 0; i < sequences; i++)
                 {
                     if (log) UnityEngine.Debug.Log($"{i}: {min}, {max}, {angle}, {middle}");
                     if
@@ -303,9 +315,13 @@ namespace umi3d.browserRuntime.UX
                         && angle > min
                     )
                     {
+                        // The rotation ends up in this sequence so rotate toward the 'middle' of the sequence.
+                        // End the loop.
                         rotate(middle);
                         return;
                     }
+
+                    // Increase the min, max and middle value to match the next sequence.
                     min += sequence;
                     max += sequence;
                     middle += sequence;
@@ -359,11 +375,10 @@ namespace umi3d.browserRuntime.UX
         }
 
         /// <summary>
-        /// Rotate this toward <paramref name="rotation"/> filtered with <paramref name="filter"/> at <see cref="SmoothRotationSpeed"/> speed.
-        /// 
-        /// <para>
-        /// Set <see cref="RotationTarget"/> with <paramref name="rotation"/>. This method should be used in a monobehaviour's LateUpdate method.
-        /// </para>
+        /// Rotate from <see cref="CurrentPosition"/> toward <paramref name="rotation"/> filtered with <paramref name="filter"/> at <see cref="SmoothRotationSpeed"/> speed.<br/>
+        /// <br/>
+        /// This method should be used in a monobehaviour's LateUpdate method.<br/>
+        /// <br/>
         /// <example>
         /// To filtered the rotation on the Y axi copy and past the following piece of code:
         /// <code>
@@ -372,7 +387,7 @@ namespace umi3d.browserRuntime.UX
         /// </example>
         /// </summary>
         /// <param name="rotation"></param>
-        /// <param name="filter"></param>
+        /// <param name="filter">The filtering. If a coordinate equals 0 that means no rotation will be made around that axis.</param>
         void Rotate(Quaternion rotation, Vector3 filter)
         {
             var _rotation = Quaternion.identity;
@@ -382,45 +397,26 @@ namespace umi3d.browserRuntime.UX
         }
 
         /// <summary>
-        /// Rotate this toward <paramref name="rotation"/> at <see cref="SmoothRotationSpeed"/> speed.
-        /// 
-        /// <para>
-        /// Set <see cref="RotationTarget"/> with <paramref name="rotation"/>. This method should be used in a monobehaviour's LateUpdate method.
-        /// </para>
-        /// </summary>
-        /// <param name="rotation"></param>
-        void Rotate(Quaternion rotation)
-        {
-            if (this is not MonoBehaviour mono) return;
-
-            RotationTarget = rotation;
-            Rotate();
-        }
-
-        /// <summary>
-        /// Rotate this toward <see cref="RotationTarget"/> at <see cref="SmoothRotationSpeed"/> speed.
-        /// 
-        /// <para>
+        /// Rotate from <see cref="CurrentPosition"/> toward <paramref name="rotation"/> at <see cref="SmoothRotationSpeed"/> speed.<br/>
+        /// <br/>
         /// This method should be used in a monobehaviour's LateUpdate method.
-        /// </para>
-        /// </summary>
-        void Rotate()
-        {
-            if (this is not MonoBehaviour mono) return;
-
-            mono.transform.localRotation = Quaternion.Lerp(CurrentRotation, RotationTarget, SmoothRotationSpeed * Time.deltaTime);
-        }
-
-        /// <summary>
-        /// Rotate toward <see cref="RotationTarget"/> without delay.
         /// </summary>
         /// <param name="rotation"></param>
-        void RotateImmediately(Quaternion rotation)
+        void Rotate(Quaternion rotation, bool withAnimation = true)
         {
             if (this is not MonoBehaviour mono) return;
 
-            RotationTarget = rotation;
-            mono.transform.localRotation = RotationTarget;
+            if (withAnimation)
+            {
+                mono.transform.localRotation = Quaternion.Lerp(
+                    CurrentRotation, 
+                    rotation, 
+                    SmoothRotationSpeed * Time.deltaTime
+                );
+            } else
+            {
+                mono.transform.localRotation = RotationTarget;
+            }
         }
 
         #endregion

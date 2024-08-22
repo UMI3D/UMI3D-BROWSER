@@ -8,21 +8,38 @@ namespace umi3dBrowsers.utils
 {
     public class ElasticFollow : MonoBehaviour, IFollowable
     {
-        [SerializeField] private Transform targetTransform;
-        public Transform TargetTransform => targetTransform;
-        [SerializeField] private Vector3 filter;
-        [SerializeField] private int sequence;
-        [SerializeField] private IFollowable.FollowTranslationByDistanceAndRotationComponents followTranslationByDistanceAndRotation;
-        [SerializeField] private IFollowable.FollowRotationComponents followRotation;
+        [SerializeField] Transform targetTransform;
 
-        public float SmoothTranslationSpeed { get => followTranslationByDistanceAndRotation.SmoothTranslationSpeed;
-            set => followTranslationByDistanceAndRotation.SmoothTranslationSpeed = value; }
-        public float SmoothRotationSpeed { get => followRotation.SmoothRotationSpeed; set => followRotation.SmoothRotationSpeed = value; }
-        public Vector3 Offset { get => followTranslationByDistanceAndRotation.Offset; 
-            set => followTranslationByDistanceAndRotation.Offset = value; }
-        public Vector3 TranslationTarget { get => followTranslationByDistanceAndRotation.TranslationTarget; 
-            set => followTranslationByDistanceAndRotation.TranslationTarget = value; }
-        public Quaternion RotationTarget { get => Quaternion.Euler(followRotation.RotationTarget); set => followRotation.RotationTarget = value.eulerAngles; }
+        [SerializeField] IFollowable.FollowSpeedComponents speedComponents;
+        [SerializeField] IFollowable.FollowRotationFilterComponents filterComponents;
+        IFollowable.FollowTargetComponents targetComponents;
+        Vector3 offset = Vector3.zero;
+
+        public float SmoothTranslationSpeed
+        {
+            get => speedComponents.SmoothTranslationSpeed;
+            set => speedComponents.SmoothTranslationSpeed = value;
+        }
+        public float SmoothRotationSpeed
+        {
+            get => speedComponents.SmoothRotationSpeed;
+            set => speedComponents.SmoothRotationSpeed = value;
+        }
+        public Vector3 Offset
+        {
+            get => Offset;
+            set => Offset = value;
+        }
+        public Vector3 TranslationTarget
+        {
+            get => targetComponents.TranslationTarget;
+            set => targetComponents.TranslationTarget = value;
+        }
+        public Quaternion RotationTarget
+        {
+            get => Quaternion.Euler(targetComponents.RotationTarget);
+            set => targetComponents.RotationTarget = value.eulerAngles;
+        }
 
         internal void SetTarget(Transform transform)
         {
@@ -34,7 +51,7 @@ namespace umi3dBrowsers.utils
             if (targetTransform == null) return;
 
             (this as IFollowable).Translate(targetTransform.position);
-            (this as IFollowable).Rotate(targetTransform.rotation, filter, sequence);
+            (this as IFollowable).Rotate(targetTransform.rotation, filterComponents.Filter, filterComponents.Sequences);
         }
     }
 }

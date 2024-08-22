@@ -16,6 +16,7 @@ limitations under the License.
 
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using umi3d.browserRuntime.UX;
 using UnityEngine;
 
@@ -29,6 +30,8 @@ namespace umi3d.browserRuntime.ui.keyboard
         IFollowable.FollowTargetComponents targetComponents;
         Vector3 offset = Vector3.zero;
 
+        Task setupTarget;
+
         public float SmoothTranslationSpeed
         {
             get => speedComponents.SmoothTranslationSpeed;
@@ -41,8 +44,8 @@ namespace umi3d.browserRuntime.ui.keyboard
         }
         public Vector3 Offset
         {
-            get => Offset;
-            set => Offset = value;
+            get => offset;
+            set => offset = value;
         }
         public Vector3 TranslationTarget
         {
@@ -53,6 +56,25 @@ namespace umi3d.browserRuntime.ui.keyboard
         { 
             get => Quaternion.Euler(targetComponents.RotationTarget); 
             set => targetComponents.RotationTarget = value.eulerAngles; 
+        }
+
+        void OnEnable()
+        {
+            if (target == null && setupTarget == null)
+            {
+                setupTarget = new Task(async () =>
+                {
+                    while (Camera.main == null)
+                    {
+                        await Task.Yield();
+                    }
+                    target = Camera.main.transform;
+
+                    setupTarget = null;
+                });
+
+                setupTarget.Start(TaskScheduler.FromCurrentSynchronizationContext());
+            }
         }
 
         void LateUpdate()

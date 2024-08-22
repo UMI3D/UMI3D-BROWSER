@@ -27,8 +27,8 @@ namespace umi3dBrowsers.utils
         }
         public Vector3 Offset
         {
-            get => Offset;
-            set => Offset = value;
+            get => offset;
+            set => offset = value;
         }
         public Vector3 TranslationTarget
         {

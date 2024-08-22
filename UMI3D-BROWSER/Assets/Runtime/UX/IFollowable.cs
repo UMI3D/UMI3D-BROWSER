@@ -39,30 +39,47 @@ namespace umi3d.browserRuntime.UX
     public interface IFollowable
     {
         /// <summary>
-        /// Editor container for organizing purpose.
+        /// Editor container for organizing purpose.<br/>
+        /// <br/>
+        /// With these components you can track the translation and rotation speed.
         /// </summary>
         [Serializable]
-        public struct FollowTranslationByPositionComponents
+        public struct FollowSpeedComponents
         {
-            [Header("Required for initialisation")]
-            [SerializeField] public float SmoothTranslationSpeed;
-            [SerializeField] public Vector3 Offset;
-            [Space()]
-            [SerializeField] public Vector3 TranslationTarget;
+            [Tooltip("Translation speed of the follower.")]
+            public float SmoothTranslationSpeed;
+
+            [Tooltip("Rotation speed of the follower.")]
+            public float SmoothRotationSpeed;
         }
 
         /// <summary>
-        /// Editor container for organizing purpose.
+        /// Editor container for organizing purpose.<br/>
+        /// <br/>
+        /// With these components you can track the translation and rotation transform.
         /// </summary>
         [Serializable]
-        public struct FollowTranslationByDistanceAndRotationComponents
+        public struct FollowTargetComponents
         {
-            [Header("Required for initialisation")]
-            [SerializeField] public float SmoothTranslationSpeed;
-            [SerializeField] public float OffsetDistance;
-            [SerializeField] public Vector3 OffsetRotation;
-            [Space()]
-            [SerializeField] public Vector3 TranslationTarget;
+            [Tooltip("Translation of the target.")]
+            public Vector3 TranslationTarget;
+
+            [Tooltip("Rotation of the target.")]
+            public Vector3 RotationTarget;
+        }
+
+        /// <summary>
+        /// Editor container for organizing purpose.<br/>
+        /// <br/>
+        /// With these components you can track the translation offset distance and rotation.
+        /// </summary>
+        [Serializable]
+        public struct FollowOffsetDistanceRotationComponents
+        {
+            [Tooltip("Follower's offset distance from the target.")]
+            public float OffsetDistance;
+            [Tooltip("Follower's offset rotation from the target.")]
+            public Vector3 OffsetRotation;
 
             /// <summary>
             /// Compute the offset position via <see cref="OffsetDistance"/> and <see cref="OffsetRotation"/>.
@@ -81,16 +98,19 @@ namespace umi3d.browserRuntime.UX
         }
 
         /// <summary>
-        /// Editor container for organizing purpose.
+        /// Editor container for organizing purpose.<br/>
+        /// <br/>
+        /// With these components you can filter the rotation.
         /// </summary>
         [Serializable]
-        public struct FollowRotationComponents
+        public struct FollowRotationFilterComponents
         {
-            [Header("Required for initialisation")]
-            [SerializeField] public float SmoothRotationSpeed;
-            [Space()]
-            [SerializeField] public Vector3 RotationTarget;
+            [Tooltip("Rotation filter.")]
+            public Vector3 Filter;
+            [Tooltip("Rotation sequences count.")]
+            public int Sequences;
         }
+
 
         /// <summary>
         /// The speed of this to translate toward <see cref="TranslationTarget"/>.

@@ -51,5 +51,37 @@ namespace inetum.unityUtils.math
             pitchAngle = Vector3.Angle(zAxis, Vector3.ProjectOnPlane(zAxis, Vector3.up));
         }
 
+        /// <summary>
+        /// Transform a rotation to a direction.
+        /// </summary>
+        /// <param name="rotation"></param>
+        /// <returns></returns>
+        public static Vector3 RotationToDirection(Quaternion rotation)
+        {
+            return RotationToDirection(rotation.eulerAngles);
+        }
+
+        /// <summary>
+        /// Transform a rotation to a direction.
+        /// </summary>
+        /// <param name="rotation"></param>
+        /// <returns></returns>
+        public static Vector3 RotationToDirection(Vector3 rotation)
+        {
+            // Convert the rotation angles to radians
+            float angleRadX = rotation.x * Mathf.Deg2Rad;
+            float angleRadY = rotation.y * Mathf.Deg2Rad;
+            float angleRadZ = rotation.z * Mathf.Deg2Rad;
+
+            // Calculate the X, Y, and Z components of the direction
+            float dirX = Mathf.Sin(angleRadY) * Mathf.Cos(angleRadX);
+            float dirY = Mathf.Sin(angleRadX);
+            float dirZ = Mathf.Cos(angleRadY) * Mathf.Cos(angleRadX);
+
+            // Normalize the direction
+            Vector3 direction = new Vector3(dirX, dirY, dirZ).normalized;
+
+            return direction;
+        }
     }
 }

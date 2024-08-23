@@ -29,15 +29,12 @@ namespace umi3d.browserRuntime.ui.keyboard
         [SerializeField] Transform target;
 
         [SerializeField] IFollowable.FollowSpeedComponents speedComponents;
+        [SerializeField] IFollowable.TranslationComponents translationComponents;
         [SerializeField] IFollowable.RotationComponents rotationComponents;
-        IFollowable.FollowTargetComponents targetComponents;
-        Vector3 offset = Vector3.zero;
-        Quaternion currentArcCenter;
 
         Task setupTarget;
 
-        float lazyRotationDelay = 1f;
-        Coroutine lazyRotation;
+        float lazyDelay = 1f;
 
         public float SmoothTranslationSpeed
         {
@@ -49,20 +46,15 @@ namespace umi3d.browserRuntime.ui.keyboard
             get => speedComponents.SmoothRotationSpeed; 
             set => speedComponents.SmoothRotationSpeed = value; 
         }
-        public Vector3 Offset
+        public Vector3 CurrentGuardianCenter
         {
-            get => offset;
-            set => offset = value;
-        }
-        public Vector3 TranslationTarget
-        {
-            get => targetComponents.TranslationTarget;
-            set => targetComponents.TranslationTarget = value;
+            get => translationComponents.currentGuardianCenter;
+            set => translationComponents.currentGuardianCenter = value;
         }
         public Quaternion CurrentArcCenter
         {
-            get => currentArcCenter;
-            set => currentArcCenter = value;
+            get => rotationComponents.CurrentArcCenter;
+            set => rotationComponents.CurrentArcCenter = value;
         }
 
         void OnEnable()
@@ -76,6 +68,8 @@ namespace umi3d.browserRuntime.ui.keyboard
                         await Task.Yield();
                     }
                     target = Camera.main.transform;
+
+                    (this as IFollowable).Rest(target);
 
                     setupTarget = null;
                 });
@@ -91,41 +85,70 @@ namespace umi3d.browserRuntime.ui.keyboard
                 return;
             }
 
-            (this as IFollowable).Translate(target.position);
+            Vector3 position = target.position;
+            if ((this as IFollowable).ShouldLazyTranslate(ref position, translationComponents.lazyGuardianRadius))
+            {
+                if (translationComponents.lazyCoroutine == null)
+                {
+                    translationComponents.lazyCoroutine = StartCoroutine(LazyTranslation());
+                }
+            }
 
             Vector3 rotation = target.rotation.eulerAngles;
             if ((this as IFollowable).ShouldLazyRotate(ref rotation, rotationComponents.lazyArcPct, rotationComponents.filter))
             {
-                if (lazyRotation == null)
+                if (rotationComponents.lazyCoroutine == null)
                 {
-                    lazyRotation = StartCoroutine(LazyRotation());
+                    rotationComponents.lazyCoroutine = StartCoroutine(LazyRotation());
                 }
             }
         }
 
+        IEnumerator LazyTranslation()
+        {
+            yield return new WaitForSeconds(lazyDelay);
+
+            Vector3 position = target.position;
+            if ((this as IFollowable).ShouldLazyTranslate(ref position, translationComponents.lazyGuardianRadius))
+            {
+                (this as IFollowable).Translate(position, false);
+                (this as IFollowable).CurrentGuardianCenter = target.position;
+            }
+
+            translationComponents.lazyCoroutine = null;
+        }
+
         IEnumerator LazyRotation()
         {
-            yield return new WaitForSeconds(lazyRotationDelay);
+            yield return new WaitForSeconds(lazyDelay);
 
             Vector3 rotation = target.rotation.eulerAngles;
             if ((this as IFollowable).ShouldLazyRotate(ref rotation, rotationComponents.lazyArcPct, rotationComponents.filter))
             {
-                (this as IFollowable).CurrentArcCenter = Quaternion.Euler(rotation);
                 (this as IFollowable).Rotate(Quaternion.Euler(rotation), false, rotationComponents.filter);
+                (this as IFollowable).CurrentArcCenter = Quaternion.Euler(rotation);
             }
 
-            lazyRotation = null;
+            rotationComponents.lazyCoroutine = null;
         }
 
 #if UNITY_EDITOR
 
-        float radius = 1f;
+        [SerializeReference] bool debug = true;
+        float radius = 1f;        
         
-        private void OnDrawGizmos()
+        void OnDrawGizmos()
         {
+            if (!debug)
+            {
+                return;
+            }
+
+            GizmosDrawer.DrawWireSphere((this as IFollowable).CurrentGuardianCenter, translationComponents.lazyGuardianRadius, Color.cyan);
+
             Vector3 direction = RotationUtils.RotationToDirection((this as IFollowable).CurrentArcCenter);
             GizmosDrawer.DrawWireArc(
-                transform.position, 
+                target != null ? target.position : transform.position, 
                 direction, 
                 new(1f, 0f, 1f),
                 rotationComponents.lazyArcPct, 

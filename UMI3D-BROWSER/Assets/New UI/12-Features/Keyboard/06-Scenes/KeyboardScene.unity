@@ -1874,12 +1874,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8122544901583412155, guid: 5a9db11f23a4523468bfa8c51674f6c5,
         type: 3}
-      propertyPath: speedComponents.SmoothRotationSpeed
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8122544901583412155, guid: 5a9db11f23a4523468bfa8c51674f6c5,
-        type: 3}
-      propertyPath: speedComponents.SmoothTranslationSpeed
+      propertyPath: filterComponents.Filter.y
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8138780835830260724, guid: 5a9db11f23a4523468bfa8c51674f6c5,

@@ -47,11 +47,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 0}
   speedComponents:
-    SmoothTranslationSpeed: 0
-    SmoothRotationSpeed: 0
-  filterComponents:
-    Filter: {x: 0, y: 0, z: 0}
-    Sequences: 0
+    SmoothTranslationSpeed: 1
+    SmoothRotationSpeed: 1
+  translationComponents:
+    filter: {x: 0, y: 0, z: 0}
+    lazyGuardianRadius: 1
+    currentGuardianCenter: {x: 0, y: 0, z: 0}
+  rotationComponents:
+    filter: {x: 0, y: 1, z: 0}
+    lazyArcPct: 0.4
 --- !u!1001 &272081729489313412
 PrefabInstance:
   m_ObjectHideFlags: 0

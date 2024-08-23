@@ -115,8 +115,8 @@ namespace umi3dVRBrowsersBase.connection
 
         private void Awake()
         {
-            Joint.enabled = true;
-            Surface.enabled = true;
+            //Joint.enabled = true;
+            //Surface.enabled = true;
             LeftWatch.SetActive(false);
             RightWatch.SetActive(false);
         }
@@ -130,6 +130,8 @@ namespace umi3dVRBrowsersBase.connection
                 Joint.enabled = false;
                 Surface.enabled = false;
             });
+
+            SwitchTrackerToController();
         }
 
         /// <summary>

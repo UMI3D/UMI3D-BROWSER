@@ -471,7 +471,7 @@ PrefabInstance:
     - target: {fileID: 5988314907380347006, guid: 6d8cc188ac4cb49419e2616ed25f607d,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -0.00000768517
+      value: -0.0000054245997
       objectReference: {fileID: 0}
     - target: {fileID: 6093459749334264534, guid: 6d8cc188ac4cb49419e2616ed25f607d,
         type: 3}
@@ -786,11 +786,61 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 758455039067974444, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: m_MinimumHoldTime
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 758455039067974444, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: m_GestureDetectionInterval
+      value: 0.035
+      objectReference: {fileID: 0}
+    - target: {fileID: 1809528694589186553, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: m_MinimumHoldTime
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 1809528694589186553, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: m_GestureDetectionInterval
+      value: 0.035
+      objectReference: {fileID: 0}
+    - target: {fileID: 3134146086695007908, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: m_MinimumHoldTime
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 3134146086695007908, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: m_GestureDetectionInterval
+      value: 0.035
+      objectReference: {fileID: 0}
+    - target: {fileID: 3366739409938089031, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: m_MinimumHoldTime
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 3366739409938089031, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: m_GestureDetectionInterval
+      value: 0.035
+      objectReference: {fileID: 0}
     - target: {fileID: 3378953992622946779, guid: aa50e35a45eaaed43a950ae34ef532dc,
         type: 3}
       propertyPath: OrientaionPanel
       value: 
       objectReference: {fileID: 1725134124}
+    - target: {fileID: 4099567960425757809, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: m_MinimumHoldTime
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 4099567960425757809, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: m_GestureDetectionInterval
+      value: 0.035
+      objectReference: {fileID: 0}
     - target: {fileID: 4563722139069628583, guid: aa50e35a45eaaed43a950ae34ef532dc,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -841,10 +891,80 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5422914791100568911, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: m_MinimumHoldTime
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 5422914791100568911, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: m_GestureDetectionInterval
+      value: 0.035
+      objectReference: {fileID: 0}
     - target: {fileID: 5582060202346245420, guid: aa50e35a45eaaed43a950ae34ef532dc,
         type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 6401935388136431514, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: m_MinimumHoldTime
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 6401935388136431514, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: m_GestureDetectionInterval
+      value: 0.035
+      objectReference: {fileID: 0}
+    - target: {fileID: 6807379700560094882, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: m_MinimumHoldTime
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 6807379700560094882, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: m_GestureDetectionInterval
+      value: 0.035
+      objectReference: {fileID: 0}
+    - target: {fileID: 7912355339525819892, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: m_MinimumHoldTime
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 7912355339525819892, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: m_GestureDetectionInterval
+      value: 0.035
+      objectReference: {fileID: 0}
+    - target: {fileID: 8034257807398290113, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: m_MinimumHoldTime
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 8034257807398290113, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: m_GestureDetectionInterval
+      value: 0.035
+      objectReference: {fileID: 0}
+    - target: {fileID: 8999675283082528788, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: m_MinimumHoldTime
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 8999675283082528788, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: m_GestureDetectionInterval
+      value: 0.035
+      objectReference: {fileID: 0}
+    - target: {fileID: 9103036359392036641, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: m_MinimumHoldTime
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 9103036359392036641, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: m_GestureDetectionInterval
+      value: 0.035
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using log4net.Util;
 using System;
 using UnityEngine;
 
@@ -79,6 +80,22 @@ namespace inetum.unityUtils.debug
                 posA = posB;
             }
             Debug.DrawLine(posA, center, color.Value);
+        }
+
+        /// <summary>
+        /// Draws a wireframe sphere with center and radius.
+        /// </summary>
+        /// <param name="center"></param>
+        /// <param name="radius"></param>
+        /// <param name="color"></param>
+        public static void DrawWireSphere(Vector3 center, float radius, Color? color = null)
+        {
+            Color currentColor = Gizmos.color;
+            Gizmos.color = color.HasValue ? color.Value : Gizmos.color;
+
+            Gizmos.DrawWireSphere(center, radius);
+
+            Gizmos.color = currentColor;
         }
     }
 }

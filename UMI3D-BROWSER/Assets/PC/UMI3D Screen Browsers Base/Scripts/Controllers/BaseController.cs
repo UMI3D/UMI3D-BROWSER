@@ -136,6 +136,10 @@ namespace umi3d.baseBrowser.Controller
 
             //TODO for now CurrentController is the desktop one.
             CurrentController = m_controllers.Find(controller => controller is KeyboardAndMouseController);
+
+            UMI3DEnvironmentLoader.Instance.onEnvironmentLoaded?.AddListener(() => {
+                CanProcess = true;
+            });
         }
 
         protected virtual void Start()

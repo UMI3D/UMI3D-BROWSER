@@ -16,7 +16,6 @@ limitations under the License.
 using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace umi3d.browserRuntime.UX
 {
@@ -61,7 +60,7 @@ namespace umi3d.browserRuntime.UX
         /// With these components you can track the translation offset distance and rotation.
         /// </summary>
         [Serializable]
-        public struct FollowOffsetDistanceRotationComponents
+        public struct OffsetDistanceRotationComponents
         {
             [Tooltip("Follower's offset distance from the target.")]
             public float OffsetDistance;
@@ -85,9 +84,23 @@ namespace umi3d.browserRuntime.UX
         }
 
         /// <summary>
-        /// Editor container for organizing purpose.<br/>
-        /// <br/>
-        /// With these components you can filter the rotation.
+        /// Editor container for organizing purpose.
+        /// </summary>
+        [Serializable]
+        public struct TranslationComponents
+        {
+            [Tooltip("Translation filter.")]
+            public Vector3 filter;
+            [Tooltip("Lazy translation guardian sphere radius.")]
+            public float lazyGuardianRadius;
+            [Tooltip("Lazy translation guardian center.")]
+            public Vector3 currentGuardianCenter;
+            [Tooltip("Lazy translation coroutine.")]
+            [HideInInspector] public Coroutine lazyCoroutine;
+        }
+
+        /// <summary>
+        /// Editor container for organizing purpose.
         /// </summary>
         [Serializable]
         public struct RotationComponents
@@ -96,8 +109,20 @@ namespace umi3d.browserRuntime.UX
             public Vector3 filter;
             [Tooltip("Lazy rotation arc percentage.")]
             public float lazyArcPct;
-        }
+            [Tooltip("Current center of the lazy rotation arc.")]
+            Vector3 currentArcCenter;
+            [Tooltip("Lazy rotation coroutine.")]
+            [HideInInspector] public Coroutine lazyCoroutine;
 
+            /// <summary>
+            /// Current center of the lazy rotation arc.
+            /// </summary>
+            public Quaternion CurrentArcCenter
+            {
+                get => Quaternion.Euler(currentArcCenter);
+                set => currentArcCenter = value.eulerAngles;
+            }
+        }
 
         /// <summary>
         /// The speed of the translate animation.
@@ -107,38 +132,7 @@ namespace umi3d.browserRuntime.UX
         /// The speed of the rotate animation.
         /// </summary>
         float SmoothRotationSpeed { get; set; }
-
-        /// <summary>
-        /// The offset added to <see cref="TranslationTarget"/> when translating.
-        /// </summary>
-        Vector3 Offset { get; set; }
-        /// <summary>
-        /// The <see cref="Offset"/> as a distance and a rotation.
-        /// 
-        /// <para>
-        /// <code>
-        ///     ^
-        ///     |   x : Offset
-        ///     |  /                    
-        ///     |a/                     / = Distance
-        ///     |/                      a = rotation
-        ///     o -------------> 
-        /// Translation Target
-        /// </code>
-        /// </para>
-        /// </summary>
-        (float distance, Vector3 rotation) OffsetDistanceRotation
-        {
-            get =>
-                (
-                    Offset.magnitude,
-                    Quaternion
-                        .FromToRotation(new Vector3(0f, 0f, Offset.magnitude), Offset)
-                        .eulerAngles
-            );
-            set => Offset = Quaternion.Euler(value.rotation) * new Vector3(0f, 0f, value.distance);
-        }
-
+        
         /// <summary>
         /// Current position of this.
         /// </summary>
@@ -164,95 +158,129 @@ namespace umi3d.browserRuntime.UX
         }
 
         /// <summary>
-        /// Current center of the current lazy rotation arc.
+        /// Current center of the translation guardian.<br/>
+        /// <br/>
+        /// When a lazy translation ends this value should be equal to the object position.
+        /// </summary>
+        Vector3 CurrentGuardianCenter { get; set; }
+
+        /// <summary>
+        /// Current center of the lazy rotation arc.<br/>
+        /// <br/>
+        /// When no rotation is being performed it should correspond to <see cref="CurrentRotation"/>.
         /// </summary>
         Quaternion CurrentArcCenter { get; set; }
-
-
-
-
-        /// <summary>
-        /// Editor container for organizing purpose.<br/>
-        /// <br/>
-        /// With these components you can track the translation and rotation transform.
-        /// </summary>
-        [Serializable]
-        public struct FollowTargetComponents
-        {
-            [Tooltip("Translation of the target.")]
-            public Vector3 TranslationTarget;
-        }
-
-        /// <summary>
-        /// Translation target.
-        /// 
-        /// <para>
-        /// The actual position of the target will be <see cref="TranslationTarget"/> + <see cref="Offset"/>.
-        /// </para>
-        /// </summary>
-        Vector3 TranslationTarget { get; set; }
-
-
-
 
         #region Translation
 
         /// <summary>
-        /// Translate this toward <paramref name="translation"/> with an offset of <paramref name="offset"/> at <see cref="SmoothTranslationSpeed"/> speed.
+        /// Return a distance and a rotation from an offset.
         /// 
         /// <para>
-        /// Set <see cref="TranslationTarget"/> with <paramref name="translation"/> and <see cref="Offset"/> with <paramref name="offset"/>.
+        /// <code>
+        ///     ^
+        ///     |   x : Offset
+        ///     |  /                    
+        ///     |a/                     / = Distance
+        ///     |/                      a = rotation
+        ///     o -------------> 
+        /// Translation Target
+        /// </code>
         /// </para>
         /// </summary>
-        /// <param name="translation"></param>
-        /// <param name="offset"></param>
-        void Translate(Vector3 translation, Vector3 offset)
+        (float distance, Vector3 rotation) OffsetToDistanceRotation(Vector3 offset)
         {
-            if (this is not MonoBehaviour mono) return;
-
-            TranslationTarget = translation;
-            Offset = offset;
-            Translate();
-        }
-
-        /// <summary>
-        /// Translate this toward <paramref name="translation"/> with an offset of <see cref="Offset"/> at <see cref="SmoothTranslationSpeed"/> speed.
-        /// </summary>
-        /// <param name="translation"></param>
-        void Translate(Vector3 translation)
-        {
-            if (this is not MonoBehaviour mono) return;
-
-            TranslationTarget = translation;
-            Translate();
-        }
-
-        /// <summary>
-        /// Translate this toward <see cref="TranslationTarget"/> + <see cref="Offset"/> at <see cref="SmoothTranslationSpeed"/> speed.
-        /// <para>
-        /// This method should be used in a monobehaviour's LateUpdate method.
-        /// </para>
-        /// </summary>
-        void Translate()
-        {
-            if (this is not MonoBehaviour mono) return;
-
-            mono.transform.localPosition = Vector3.Lerp
-            (
-                CurrentPosition,
-                TranslationTarget + Offset,
-                SmoothTranslationSpeed * Time.deltaTime
+            return (
+                offset.magnitude,
+                Quaternion
+                    .FromToRotation(new Vector3(0f, 0f, offset.magnitude), offset)
+                    .eulerAngles
             );
         }
 
         /// <summary>
-        /// Translate this toward <see cref="TranslationTarget"/> without delay.
+        /// Return the offset from a distance and a rotation.
+        /// 
+        /// <para>
+        /// <code>
+        ///     ^
+        ///     |   x : Offset
+        ///     |  /                    
+        ///     |a/                     / = Distance
+        ///     |/                      a = rotation
+        ///     o -------------> 
+        /// Translation Target
+        /// </code>
+        /// </para>
         /// </summary>
-        void TranslateImmediately()
+        Vector3 DistanceRotationToOffset(float distance, Vector3 rotation)
+        {
+            return Quaternion.Euler(rotation) * new Vector3(0f, 0f, distance);
+        }
+
+        /// <summary>
+        /// Translate from <see cref="CurrentPosition"/> toward <paramref name="position"/> with an offset of <paramref name="offset"/> at <see cref="SmoothTranslationSpeed"/> speed.<br/>
+        /// <br/>
+        /// If <paramref name="withAnimation"/> is true then the translation is animated at <see cref="SmoothRotationSpeed"/> speed.<br/>
+        /// This method should be used in a monobehaviour's LateUpdate method if <paramref name="withAnimation"/> is true.<br/>
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="withAnimation"></param>
+        /// <param name="offset"></param>
+        void Translate(Vector3 position, bool withAnimation = true, Vector3? offset = null, Vector3? filter = null)
         {
             if (this is not MonoBehaviour mono) return;
 
-            mono.transform.localPosition = TranslationTarget + Offset;
+            // Get the translation from the current position to the new position.
+            Vector3 translation = position - CurrentPosition;
+
+            // Filter the translation.
+            if (filter.HasValue)
+            {
+                translation = Vector3.Scale(translation, filter.Value);
+            }
+
+            // Get the new position with the filtered translation.
+            position = CurrentPosition + translation;
+
+            if (offset == null)
+            {
+                offset = Vector3.zero;
+            }
+
+            if (withAnimation)
+            {
+                mono.transform.localPosition = Vector3.Lerp
+                (
+                    CurrentPosition,
+                    position + offset.Value,
+                    SmoothTranslationSpeed * Time.deltaTime
+                );
+            }
+            else
+            {
+                mono.transform.localPosition = position + offset.Value;
+            }
+        }
+
+        bool ShouldLazyTranslate(ref Vector3 position, float guardianRadius, Vector3? filter = null)
+        {
+            // Get the translation from the current position to the new position.
+            Vector3 translation = position - CurrentPosition;
+
+            // Filter the translation.
+            if (filter.HasValue)
+            {
+                translation = Vector3.Scale(translation, filter.Value);
+            }
+
+            // Get the new position with the filtered translation.
+            position = CurrentPosition + translation;
+
+            // Calculate the distance between the center of the sphere and the position.
+            float distance = Vector3.Distance(position, CurrentGuardianCenter);
+
+            return distance > guardianRadius;
         }
 
         #endregion
@@ -262,7 +290,7 @@ namespace umi3d.browserRuntime.UX
         /// <summary>
         /// Rotate from <see cref="CurrentPosition"/> toward <paramref name="rotation"/>.<br/>
         /// <br/>
-        /// If <paramref name="withAnimation"/> is true then the rotation animate at <see cref="SmoothRotationSpeed"/> speed.<br/>
+        /// If <paramref name="withAnimation"/> is true then the rotation is animated at <see cref="SmoothRotationSpeed"/> speed.<br/>
         /// This method should be used in a monobehaviour's LateUpdate method if <paramref name="withAnimation"/> is true.<br/>
         /// <br/>
         /// The rotation is filtered with <paramref name="filter"/>. A filter of x = 0, y = 1, z = 0 means that the only allowed rotation is on the y axis.
@@ -352,5 +380,17 @@ namespace umi3d.browserRuntime.UX
         }
 
         #endregion
+
+        /// <summary>
+        /// Reset the position and translation.
+        /// </summary>
+        /// <param name="transform"></param>
+        void Rest(Transform transform)
+        {
+            Translate(transform.position, false);
+            Rotate(transform.rotation, false);
+            CurrentGuardianCenter = transform.position;
+            CurrentArcCenter = transform.rotation;
+        }
     }
 }

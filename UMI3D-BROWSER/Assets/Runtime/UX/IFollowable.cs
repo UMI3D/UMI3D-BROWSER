@@ -14,7 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 using System;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace umi3d.browserRuntime.UX
 {
@@ -56,21 +58,6 @@ namespace umi3d.browserRuntime.UX
         /// <summary>
         /// Editor container for organizing purpose.<br/>
         /// <br/>
-        /// With these components you can track the translation and rotation transform.
-        /// </summary>
-        [Serializable]
-        public struct FollowTargetComponents
-        {
-            [Tooltip("Translation of the target.")]
-            public Vector3 TranslationTarget;
-
-            [Tooltip("Rotation of the target.")]
-            public Vector3 RotationTarget;
-        }
-
-        /// <summary>
-        /// Editor container for organizing purpose.<br/>
-        /// <br/>
         /// With these components you can track the translation offset distance and rotation.
         /// </summary>
         [Serializable]
@@ -103,21 +90,21 @@ namespace umi3d.browserRuntime.UX
         /// With these components you can filter the rotation.
         /// </summary>
         [Serializable]
-        public struct FollowRotationFilterComponents
+        public struct RotationComponents
         {
             [Tooltip("Rotation filter.")]
-            public Vector3 Filter;
-            [Tooltip("Rotation sequences count.")]
-            public int Sequences;
+            public Vector3 filter;
+            [Tooltip("Lazy rotation arc percentage.")]
+            public float lazyArcPct;
         }
 
 
         /// <summary>
-        /// The speed of this to translate toward <see cref="TranslationTarget"/>.
+        /// The speed of the translate animation.
         /// </summary>
         float SmoothTranslationSpeed { get; set; }
         /// <summary>
-        /// The speed of this to rotate toward <see cref="RotationTarget"/>.
+        /// The speed of the rotate animation.
         /// </summary>
         float SmoothRotationSpeed { get; set; }
 
@@ -153,19 +140,6 @@ namespace umi3d.browserRuntime.UX
         }
 
         /// <summary>
-        /// Translation target.
-        /// 
-        /// <para>
-        /// The actual position of the target will be <see cref="TranslationTarget"/> + <see cref="Offset"/>.
-        /// </para>
-        /// </summary>
-        Vector3 TranslationTarget { get; set; }
-        /// <summary>
-        /// Rotation target.
-        /// </summary>
-        Quaternion RotationTarget { get; set; }
-
-        /// <summary>
         /// Current position of this.
         /// </summary>
         Vector3 CurrentPosition
@@ -188,6 +162,38 @@ namespace umi3d.browserRuntime.UX
                 return mono.transform.localRotation;
             }
         }
+
+        /// <summary>
+        /// Current center of the current lazy rotation arc.
+        /// </summary>
+        Quaternion CurrentArcCenter { get; set; }
+
+
+
+
+        /// <summary>
+        /// Editor container for organizing purpose.<br/>
+        /// <br/>
+        /// With these components you can track the translation and rotation transform.
+        /// </summary>
+        [Serializable]
+        public struct FollowTargetComponents
+        {
+            [Tooltip("Translation of the target.")]
+            public Vector3 TranslationTarget;
+        }
+
+        /// <summary>
+        /// Translation target.
+        /// 
+        /// <para>
+        /// The actual position of the target will be <see cref="TranslationTarget"/> + <see cref="Offset"/>.
+        /// </para>
+        /// </summary>
+        Vector3 TranslationTarget { get; set; }
+
+
+
 
         #region Translation
 
@@ -254,169 +260,95 @@ namespace umi3d.browserRuntime.UX
         #region Rotation
 
         /// <summary>
-        /// Rotate this by <paramref name="rotation"/> filtered with <paramref name="filter"/> if it matches the condition of the sequences.
-        /// 
-        /// <para>
-        /// Divide a circle in <paramref name="sequences"/> sequences. Rotate toward the corresponding sequence.
-        /// </para>
-        /// <example>
-        /// To rotate horizontally (Y axis) toward 4 positions, copy and past this piece of code.
-        /// <code>
-        ///     (this as IFollowable).Rotate(rotation, Vector3.up, 4);
-        /// </code>
-        /// </example>
+        /// Rotate from <see cref="CurrentPosition"/> toward <paramref name="rotation"/>.<br/>
+        /// <br/>
+        /// If <paramref name="withAnimation"/> is true then the rotation animate at <see cref="SmoothRotationSpeed"/> speed.<br/>
+        /// This method should be used in a monobehaviour's LateUpdate method if <paramref name="withAnimation"/> is true.<br/>
+        /// <br/>
+        /// The rotation is filtered with <paramref name="filter"/>. A filter of x = 0, y = 1, z = 0 means that the only allowed rotation is on the y axis.
         /// </summary>
         /// <param name="rotation"></param>
+        /// <param name="withAnimation"></param>
         /// <param name="filter"></param>
-        /// <param name="sequences"></param>
-        void Rotate(Quaternion rotation, Vector3 filter, int sequences)
-        {
-            if (sequences <= 1)
-            {
-                // If 'sequences' is inferior to 1 then consider that there are no sequences.
-                Rotate(rotation, filter);
-                return;
-            }
-
-            // Length of a sequence.
-            var sequence = 360f / (float)sequences;
-            // Half of the length of a sequence.
-            var halfSequence = sequence / 2f;
-
-            var _rotation = Quaternion.identity;
-            // Filter the rotation.
-            _rotation.eulerAngles = Vector3.Scale(filter, rotation.eulerAngles);
-
-            /// <summary>
-            ///       |<- sequence->|
-            /// ------|--]---0---]--|-------
-            ///         min     max
-            ///       |<->| = hysteresis
-            /// </summary>
-            void SetRotation(float angle, float current, Action<float> rotate, bool log)
-            {
-                // Portion of a sequence where the rotation ends up in the previous of next sequence.
-                const float hysteresis = 20f;
-
-                // The min value of the sequence. This value is excluded.
-                var min = -halfSequence - hysteresis;
-                // The max value of the sequence. This value is included.
-                var max = halfSequence + hysteresis;
-                // The middle of the sequence.
-                var middle = 0f;
-
-                // Loop over all the sequences.
-                for (int i = 0; i < sequences; i++)
-                {
-                    if (log) UnityEngine.Debug.Log($"{i}: {min}, {max}, {angle}, {middle}");
-                    if
-                    (
-                        angle <= max
-                        && angle > min
-                    )
-                    {
-                        // The rotation ends up in this sequence so rotate toward the 'middle' of the sequence.
-                        // End the loop.
-                        rotate(middle);
-                        return;
-                    }
-
-                    // Increase the min, max and middle value to match the next sequence.
-                    min += sequence;
-                    max += sequence;
-                    middle += sequence;
-                }
-                rotate(current);
-            }
-
-            SetRotation
-            (
-                _rotation.eulerAngles.x,
-                RotationTarget.eulerAngles.x,
-                middle =>
-                {
-                    _rotation.eulerAngles = new Vector3
-                    (
-                        middle,
-                        _rotation.eulerAngles.y,
-                        _rotation.eulerAngles.z
-                    );
-                }, false);
-
-            SetRotation
-            (
-                _rotation.eulerAngles.y,
-                RotationTarget.eulerAngles.y,
-                middle =>
-                {
-                    _rotation.eulerAngles = new Vector3
-                    (
-                        _rotation.eulerAngles.x,
-                        middle,
-                        _rotation.eulerAngles.z
-                    );
-                }, false);
-
-            SetRotation
-            (
-                _rotation.eulerAngles.z,
-                RotationTarget.eulerAngles.z,
-                middle =>
-                {
-                    _rotation.eulerAngles = new Vector3
-                    (
-                        _rotation.eulerAngles.x,
-                        _rotation.eulerAngles.y,
-                        middle
-                    );
-                }, false);
-
-            Rotate(_rotation);
-        }
-
-        /// <summary>
-        /// Rotate from <see cref="CurrentPosition"/> toward <paramref name="rotation"/> filtered with <paramref name="filter"/> at <see cref="SmoothRotationSpeed"/> speed.<br/>
-        /// <br/>
-        /// This method should be used in a monobehaviour's LateUpdate method.<br/>
-        /// <br/>
-        /// <example>
-        /// To filtered the rotation on the Y axi copy and past the following piece of code:
-        /// <code>
-        ///     (this as IFollowable).Rotate(rotation, Vector3.up);
-        /// </code>
-        /// </example>
-        /// </summary>
-        /// <param name="rotation"></param>
-        /// <param name="filter">The filtering. If a coordinate equals 0 that means no rotation will be made around that axis.</param>
-        void Rotate(Quaternion rotation, Vector3 filter)
-        {
-            var _rotation = Quaternion.identity;
-            _rotation.eulerAngles = Vector3.Scale(filter, rotation.eulerAngles);
-
-            Rotate(_rotation);
-        }
-
-        /// <summary>
-        /// Rotate from <see cref="CurrentPosition"/> toward <paramref name="rotation"/> at <see cref="SmoothRotationSpeed"/> speed.<br/>
-        /// <br/>
-        /// This method should be used in a monobehaviour's LateUpdate method.
-        /// </summary>
-        /// <param name="rotation"></param>
-        void Rotate(Quaternion rotation, bool withAnimation = true)
+        void Rotate(Quaternion rotation, bool withAnimation = true, Vector3? filter = null)
         {
             if (this is not MonoBehaviour mono) return;
+
+            if (filter.HasValue)
+            {
+                rotation.eulerAngles = Vector3.Scale(filter.Value, rotation.eulerAngles);
+            }
 
             if (withAnimation)
             {
                 mono.transform.localRotation = Quaternion.Lerp(
-                    CurrentRotation, 
-                    rotation, 
+                    CurrentRotation,
+                    rotation,
                     SmoothRotationSpeed * Time.deltaTime
                 );
-            } else
-            {
-                mono.transform.localRotation = RotationTarget;
             }
+            else
+            {
+                mono.transform.localRotation = rotation;
+            }
+        }
+
+        /// <summary>
+        /// Whether the <paramref name="rotation"/> is greater enough.<br/>
+        /// <br/>
+        /// If after the <paramref name="rotation"/> this object ends up in the current arc then it should not have rotate.
+        /// </summary>
+        /// <param name="rotation"></param>
+        /// <param name="arcPct"></param>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        bool ShouldLazyRotate(ref Vector3 rotation, float arcPct, Vector3? filter = null)
+        {
+            if (filter.HasValue)
+            {
+                rotation = Vector3.Scale(filter.Value, rotation);
+            }
+
+            // Length of the arc.
+            float arcLength = 360f * arcPct;
+            // Half of the length of a arcLength.
+            float halfArcLength = arcLength / 2f;
+
+            bool shouldRotate = false;
+
+            Vector3 currentSequenceCenter = CurrentArcCenter.eulerAngles;
+
+            Vector3 min = new(
+                -halfArcLength + currentSequenceCenter.x,
+                -halfArcLength + currentSequenceCenter.y,
+                -halfArcLength + currentSequenceCenter.z
+            );
+
+            Vector3 max = new(
+                halfArcLength + currentSequenceCenter.x,
+                halfArcLength + currentSequenceCenter.y,
+                halfArcLength + currentSequenceCenter.z
+            );
+
+            Vector3 middle = new(
+               currentSequenceCenter.x,
+               currentSequenceCenter.y,
+               currentSequenceCenter.z
+            );
+
+            for (int i = 0; i < 3; i++)
+            {
+                if (rotation[i] < min[i] || max[i] < rotation[i])
+                {
+                    shouldRotate = true;
+                }
+                else
+                {
+                    rotation[i] = currentSequenceCenter[i];
+                }
+            }
+
+            return shouldRotate;
         }
 
         #endregion

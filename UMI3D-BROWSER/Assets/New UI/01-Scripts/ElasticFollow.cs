@@ -11,7 +11,7 @@ namespace umi3dBrowsers.utils
         [SerializeField] Transform targetTransform;
 
         [SerializeField] IFollowable.FollowSpeedComponents speedComponents;
-        [SerializeField] IFollowable.FollowRotationFilterComponents filterComponents;
+        [SerializeField] IFollowable.RotationComponents filterComponents;
         IFollowable.FollowTargetComponents targetComponents;
         Vector3 offset = Vector3.zero;
 
@@ -35,11 +35,12 @@ namespace umi3dBrowsers.utils
             get => targetComponents.TranslationTarget;
             set => targetComponents.TranslationTarget = value;
         }
-        public Quaternion RotationTarget
+        public Quaternion CurrentArcCenter
         {
-            get => Quaternion.Euler(targetComponents.RotationTarget);
-            set => targetComponents.RotationTarget = value.eulerAngles;
+            get => csc;
+            set => csc = value;
         }
+        Quaternion csc;
 
         internal void SetTarget(Transform transform)
         {
@@ -51,7 +52,7 @@ namespace umi3dBrowsers.utils
             if (targetTransform == null) return;
 
             (this as IFollowable).Translate(targetTransform.position);
-            (this as IFollowable).Rotate(targetTransform.rotation, filterComponents.Filter, filterComponents.Sequences);
+            //(this as IFollowable).Rotate(targetTransform.rotation, filterComponents.Filter, filterComponents.Sequences);
         }
     }
 }

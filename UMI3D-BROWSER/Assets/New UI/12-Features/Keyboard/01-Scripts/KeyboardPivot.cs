@@ -19,18 +19,25 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using umi3d.browserRuntime.UX;
 using UnityEngine;
+using inetum.unityUtils.math;
+using inetum.unityUtils.debug;
 
 namespace umi3d.browserRuntime.ui.keyboard
 {
     public class KeyboardPivot : MonoBehaviour, IFollowable
     {
         [SerializeField] Transform target;
+
         [SerializeField] IFollowable.FollowSpeedComponents speedComponents;
-        [SerializeField] IFollowable.FollowRotationFilterComponents filterComponents;
+        [SerializeField] IFollowable.RotationComponents rotationComponents;
         IFollowable.FollowTargetComponents targetComponents;
         Vector3 offset = Vector3.zero;
+        Quaternion currentArcCenter;
 
         Task setupTarget;
+
+        float lazyRotationDelay = 1f;
+        Coroutine lazyRotation;
 
         public float SmoothTranslationSpeed
         {
@@ -52,10 +59,10 @@ namespace umi3d.browserRuntime.ui.keyboard
             get => targetComponents.TranslationTarget;
             set => targetComponents.TranslationTarget = value;
         }
-        public Quaternion RotationTarget 
-        { 
-            get => Quaternion.Euler(targetComponents.RotationTarget); 
-            set => targetComponents.RotationTarget = value.eulerAngles; 
+        public Quaternion CurrentArcCenter
+        {
+            get => currentArcCenter;
+            set => currentArcCenter = value;
         }
 
         void OnEnable()
@@ -85,7 +92,47 @@ namespace umi3d.browserRuntime.ui.keyboard
             }
 
             (this as IFollowable).Translate(target.position);
-            (this as IFollowable).Rotate(target.rotation, filterComponents.Filter, filterComponents.Sequences);
+
+            Vector3 rotation = target.rotation.eulerAngles;
+            if ((this as IFollowable).ShouldLazyRotate(ref rotation, rotationComponents.lazyArcPct, rotationComponents.filter))
+            {
+                if (lazyRotation == null)
+                {
+                    lazyRotation = StartCoroutine(LazyRotation());
+                }
+            }
         }
+
+        IEnumerator LazyRotation()
+        {
+            yield return new WaitForSeconds(lazyRotationDelay);
+
+            Vector3 rotation = target.rotation.eulerAngles;
+            if ((this as IFollowable).ShouldLazyRotate(ref rotation, rotationComponents.lazyArcPct, rotationComponents.filter))
+            {
+                (this as IFollowable).CurrentArcCenter = Quaternion.Euler(rotation);
+                (this as IFollowable).Rotate(Quaternion.Euler(rotation), false, rotationComponents.filter);
+            }
+
+            lazyRotation = null;
+        }
+
+#if UNITY_EDITOR
+
+        float radius = 1f;
+        
+        private void OnDrawGizmos()
+        {
+            Vector3 direction = RotationUtils.RotationToDirection((this as IFollowable).CurrentArcCenter);
+            GizmosDrawer.DrawWireArc(
+                transform.position, 
+                direction, 
+                new(1f, 0f, 1f),
+                rotationComponents.lazyArcPct, 
+                radius
+            );
+        }
+
+#endif
     }
 }

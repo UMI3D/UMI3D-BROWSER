@@ -32,6 +32,9 @@ namespace umi3d.cdk.interaction
         /// </summary>
         protected AbstractTool currentTool = null;
 
+        /// <summary>
+        /// Currently projected tool ID.
+        /// </summary>
         protected ulong? currentToolId = null;
 
         /// <summary>
@@ -193,12 +196,6 @@ namespace umi3d.cdk.interaction
 
             currentTool = tool;
             currentToolId = tool.id;
-        }
-
-
-        private void CleanTool()
-        {
-            currentTool.OnRemoved.RemoveAllListeners();
         }
 
         /// <summary>

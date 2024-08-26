@@ -83,5 +83,39 @@ namespace inetum.unityUtils.math
 
             return direction;
         }
+
+        /// <summary>
+        /// Whether <paramref name="angle"/> is between (strictly) <paramref name="min"/> and <paramref name="max"/>.
+        /// </summary>
+        /// <param name="angle">Angle in degree.</param>
+        /// <param name="min">Angle in degree.</param>
+        /// <param name="max">Angle in degree.</param>
+        /// <returns></returns>
+        public static bool IsBetween(this float angle, float min, float max)
+        {
+            if (min > 360f)
+            {
+                min %= 360f;
+            }
+
+            if (max > 360f)
+            {
+                max %= 360f;
+            }
+
+            if (angle > 360f)
+            {
+                angle %= 360f;
+            }
+
+            if (min < max)
+            {
+                return min < angle && angle < max;
+            }
+            else
+            {
+                return min < angle || angle < max;
+            }
+        }
     }
 }

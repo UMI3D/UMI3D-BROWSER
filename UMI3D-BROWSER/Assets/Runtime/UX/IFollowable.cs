@@ -94,7 +94,7 @@ namespace umi3d.browserRuntime.UX
             [Tooltip("Lazy translation guardian sphere radius.")]
             public float lazyGuardianRadius;
             [Tooltip("Lazy translation guardian center.")]
-            public Vector3 currentGuardianCenter;
+            [HideInInspector] public Vector3 currentGuardianCenter;
             [Tooltip("Lazy translation coroutine.")]
             [HideInInspector] public Coroutine lazyCoroutine;
         }
@@ -110,7 +110,7 @@ namespace umi3d.browserRuntime.UX
             [Tooltip("Lazy rotation arc percentage.")]
             public float lazyArcPct;
             [Tooltip("Current center of the lazy rotation arc.")]
-            Vector3 currentArcCenter;
+            [HideInInspector] public Vector3 currentArcCenter;
             [Tooltip("Lazy rotation coroutine.")]
             [HideInInspector] public Coroutine lazyCoroutine;
 
@@ -123,53 +123,6 @@ namespace umi3d.browserRuntime.UX
                 set => currentArcCenter = value.eulerAngles;
             }
         }
-
-        /// <summary>
-        /// The speed of the translate animation.
-        /// </summary>
-        float SmoothTranslationSpeed { get; set; }
-        /// <summary>
-        /// The speed of the rotate animation.
-        /// </summary>
-        float SmoothRotationSpeed { get; set; }
-        
-        /// <summary>
-        /// Current position of this.
-        /// </summary>
-        Vector3 CurrentPosition
-        {
-            get
-            {
-                if (this is not MonoBehaviour mono) return Vector3.zero;
-                return mono.transform.localPosition;
-            }
-        }
-
-        /// <summary>
-        /// Current rotation of this.
-        /// </summary>
-        Quaternion CurrentRotation
-        {
-            get
-            {
-                if (this is not MonoBehaviour mono) return Quaternion.identity;
-                return mono.transform.localRotation;
-            }
-        }
-
-        /// <summary>
-        /// Current center of the translation guardian.<br/>
-        /// <br/>
-        /// When a lazy translation ends this value should be equal to the object position.
-        /// </summary>
-        Vector3 CurrentGuardianCenter { get; set; }
-
-        /// <summary>
-        /// Current center of the lazy rotation arc.<br/>
-        /// <br/>
-        /// When no rotation is being performed it should correspond to <see cref="CurrentRotation"/>.
-        /// </summary>
-        Quaternion CurrentArcCenter { get; set; }
 
         #region Translation
 
@@ -221,18 +174,19 @@ namespace umi3d.browserRuntime.UX
         /// <summary>
         /// Translate from <see cref="CurrentPosition"/> toward <paramref name="position"/> with an offset of <paramref name="offset"/> at <see cref="SmoothTranslationSpeed"/> speed.<br/>
         /// <br/>
-        /// If <paramref name="withAnimation"/> is true then the translation is animated at <see cref="SmoothRotationSpeed"/> speed.<br/>
-        /// This method should be used in a monobehaviour's LateUpdate method if <paramref name="withAnimation"/> is true.<br/>
+        /// If <paramref name="animationSpeed"/> is more than 0 then the translation is animated at <see cref="SmoothRotationSpeed"/> speed.<br/>
+        /// This method should be used in a monobehaviour's LateUpdate method if <paramref name="animationSpeed"/> is more than 0.<br/>
         /// </summary>
         /// <param name="position"></param>
-        /// <param name="withAnimation"></param>
+        /// <param name="animationSpeed"></param>
         /// <param name="offset"></param>
-        void Translate(Vector3 position, bool withAnimation = true, Vector3? offset = null, Vector3? filter = null)
+        /// <param name="filter"></param>
+        void TranslateToward(Vector3 position, float animationSpeed = 0f, Vector3? offset = null, Vector3? filter = null)
         {
             if (this is not MonoBehaviour mono) return;
 
             // Get the translation from the current position to the new position.
-            Vector3 translation = position - CurrentPosition;
+            Vector3 translation = position - mono.transform.localPosition;
 
             // Filter the translation.
             if (filter.HasValue)
@@ -241,20 +195,20 @@ namespace umi3d.browserRuntime.UX
             }
 
             // Get the new position with the filtered translation.
-            position = CurrentPosition + translation;
+            position = mono.transform.localPosition + translation;
 
             if (offset == null)
             {
                 offset = Vector3.zero;
             }
 
-            if (withAnimation)
+            if (animationSpeed > 0)
             {
                 mono.transform.localPosition = Vector3.Lerp
                 (
-                    CurrentPosition,
+                    mono.transform.position,
                     position + offset.Value,
-                    SmoothTranslationSpeed * Time.deltaTime
+                    animationSpeed * Time.deltaTime
                 );
             }
             else
@@ -263,10 +217,19 @@ namespace umi3d.browserRuntime.UX
             }
         }
 
-        bool ShouldLazyTranslate(ref Vector3 position, float guardianRadius, Vector3? filter = null)
+        /// <summary>
+        /// Translate of <paramref name="translation"/> with an offset of <paramref name="offset"/> at <see cref="SmoothTranslationSpeed"/> speed.<br/>
+        /// <br/>
+        /// If <paramref name="animationSpeed"/> is more than 0 then the translation is animated at <see cref="SmoothRotationSpeed"/> speed.<br/>
+        /// This method should be used in a monobehaviour's LateUpdate method if <paramref name="animationSpeed"/> is more than 0.<br/>
+        /// </summary>
+        /// <param name="translation"></param>
+        /// <param name="animationSpeed"></param>
+        /// <param name="offset"></param>
+        /// <param name="filter"></param>
+        void Translate(Vector3 translation, float animationSpeed = 0f, Vector3? offset = null, Vector3? filter = null)
         {
-            // Get the translation from the current position to the new position.
-            Vector3 translation = position - CurrentPosition;
+            if (this is not MonoBehaviour mono) return;
 
             // Filter the translation.
             if (filter.HasValue)
@@ -275,12 +238,26 @@ namespace umi3d.browserRuntime.UX
             }
 
             // Get the new position with the filtered translation.
-            position = CurrentPosition + translation;
+            Vector3 position = mono.transform.localPosition + translation;
 
-            // Calculate the distance between the center of the sphere and the position.
-            float distance = Vector3.Distance(position, CurrentGuardianCenter);
+            if (offset == null)
+            {
+                offset = Vector3.zero;
+            }
 
-            return distance > guardianRadius;
+            if (animationSpeed > 0)
+            {
+                mono.transform.localPosition = Vector3.Lerp
+                (
+                    mono.transform.position,
+                    position + offset.Value,
+                    animationSpeed * Time.deltaTime
+                );
+            }
+            else
+            {
+                mono.transform.localPosition = position + offset.Value;
+            }
         }
 
         #endregion
@@ -288,17 +265,56 @@ namespace umi3d.browserRuntime.UX
         #region Rotation
 
         /// <summary>
-        /// Rotate from <see cref="CurrentPosition"/> toward <paramref name="rotation"/>.<br/>
+        /// Rotate from the current rotation toward <paramref name="rotation"/>.<br/>
         /// <br/>
-        /// If <paramref name="withAnimation"/> is true then the rotation is animated at <see cref="SmoothRotationSpeed"/> speed.<br/>
-        /// This method should be used in a monobehaviour's LateUpdate method if <paramref name="withAnimation"/> is true.<br/>
+        /// If <paramref name="animationSpeed"/> is more than 0 then the rotation is animated at <see cref="SmoothRotationSpeed"/> speed.<br/>
+        /// This method should be used in a monobehaviour's LateUpdate method if <paramref name="animationSpeed"/> is more than 0.<br/>
         /// <br/>
         /// The rotation is filtered with <paramref name="filter"/>. A filter of x = 0, y = 1, z = 0 means that the only allowed rotation is on the y axis.
         /// </summary>
         /// <param name="rotation"></param>
         /// <param name="withAnimation"></param>
         /// <param name="filter"></param>
-        void Rotate(Quaternion rotation, bool withAnimation = true, Vector3? filter = null)
+        void RotateToward(Quaternion endRotation, float animationSpeed = 0f, Vector3? filter = null)
+        {
+            if (this is not MonoBehaviour mono) return;
+
+            Quaternion _rotation = endRotation * Quaternion.Inverse(mono.transform.localRotation);
+
+            if (filter.HasValue)
+            {
+                _rotation.eulerAngles = Vector3.Scale(filter.Value, _rotation.eulerAngles);
+            }
+
+            // Get the end rotation after adding the rotation to the current rotation.
+            endRotation = mono.transform.localRotation * _rotation;
+
+            if (animationSpeed > 0)
+            {
+                mono.transform.localRotation = Quaternion.Lerp(
+                    mono.transform.localRotation,
+                    endRotation,
+                    animationSpeed * Time.deltaTime
+                );
+            }
+            else
+            {
+                mono.transform.localRotation = endRotation;
+            }
+        }
+
+        /// <summary>
+        /// Rotate of <paramref name="rotation"/>.<br/>
+        /// <br/>
+        /// If <paramref name="animationSpeed"/> is more than 0 then the rotation is animated at <see cref="SmoothRotationSpeed"/> speed.<br/>
+        /// This method should be used in a monobehaviour's LateUpdate method if <paramref name="animationSpeed"/> is more than 0.<br/>
+        /// <br/>
+        /// The rotation is filtered with <paramref name="filter"/>. A filter of x = 0, y = 1, z = 0 means that the only allowed rotation is on the y axis.
+        /// </summary>
+        /// <param name="rotation"></param>
+        /// <param name="withAnimation"></param>
+        /// <param name="filter"></param>
+        void Rotate(Quaternion rotation, float animationSpeed = 0f, Vector3? filter = null)
         {
             if (this is not MonoBehaviour mono) return;
 
@@ -307,90 +323,23 @@ namespace umi3d.browserRuntime.UX
                 rotation.eulerAngles = Vector3.Scale(filter.Value, rotation.eulerAngles);
             }
 
-            if (withAnimation)
+            // Get the end rotation after adding the rotation to the current rotation.
+            Quaternion endRotation = mono.transform.localRotation * rotation;
+
+            if (animationSpeed > 0)
             {
                 mono.transform.localRotation = Quaternion.Lerp(
-                    CurrentRotation,
-                    rotation,
-                    SmoothRotationSpeed * Time.deltaTime
+                    mono.transform.localRotation,
+                    endRotation,
+                    animationSpeed * Time.deltaTime
                 );
             }
             else
             {
-                mono.transform.localRotation = rotation;
+                mono.transform.localRotation = endRotation;
             }
-        }
-
-        /// <summary>
-        /// Whether the <paramref name="rotation"/> is greater enough.<br/>
-        /// <br/>
-        /// If after the <paramref name="rotation"/> this object ends up in the current arc then it should not have rotate.
-        /// </summary>
-        /// <param name="rotation"></param>
-        /// <param name="arcPct"></param>
-        /// <param name="filter"></param>
-        /// <returns></returns>
-        bool ShouldLazyRotate(ref Vector3 rotation, float arcPct, Vector3? filter = null)
-        {
-            if (filter.HasValue)
-            {
-                rotation = Vector3.Scale(filter.Value, rotation);
-            }
-
-            // Length of the arc.
-            float arcLength = 360f * arcPct;
-            // Half of the length of a arcLength.
-            float halfArcLength = arcLength / 2f;
-
-            bool shouldRotate = false;
-
-            Vector3 currentSequenceCenter = CurrentArcCenter.eulerAngles;
-
-            Vector3 min = new(
-                -halfArcLength + currentSequenceCenter.x,
-                -halfArcLength + currentSequenceCenter.y,
-                -halfArcLength + currentSequenceCenter.z
-            );
-
-            Vector3 max = new(
-                halfArcLength + currentSequenceCenter.x,
-                halfArcLength + currentSequenceCenter.y,
-                halfArcLength + currentSequenceCenter.z
-            );
-
-            Vector3 middle = new(
-               currentSequenceCenter.x,
-               currentSequenceCenter.y,
-               currentSequenceCenter.z
-            );
-
-            for (int i = 0; i < 3; i++)
-            {
-                if (rotation[i] < min[i] || max[i] < rotation[i])
-                {
-                    shouldRotate = true;
-                }
-                else
-                {
-                    rotation[i] = currentSequenceCenter[i];
-                }
-            }
-
-            return shouldRotate;
         }
 
         #endregion
-
-        /// <summary>
-        /// Reset the position and translation.
-        /// </summary>
-        /// <param name="transform"></param>
-        void Rest(Transform transform)
-        {
-            Translate(transform.position, false);
-            Rotate(transform.rotation, false);
-            CurrentGuardianCenter = transform.position;
-            CurrentArcCenter = transform.rotation;
-        }
     }
 }

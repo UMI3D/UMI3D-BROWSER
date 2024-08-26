@@ -45,7 +45,7 @@ namespace inetum.unityUtils.debug
         {
             if (color == null)
             {
-                color = Color.green;
+                color = Gizmos.color;
             }
 
             float anglesRange = 360f * anglePct;

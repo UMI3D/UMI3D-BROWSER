@@ -15,13 +15,11 @@ limitations under the License.
 */
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using umi3d.cdk.collaboration;
+using umi3d.common;
 using umi3dBrowsers.data.ui;
 using umi3dBrowsers.linker;
 using umi3dBrowsers.linker.ui;
-using umi3dBrowsers.services.environment;
 using UnityEngine;
 
 namespace umi3dBrowsers.displayer
@@ -35,7 +33,7 @@ namespace umi3dBrowsers.displayer
         public event Action OnLoadingInProgress;
         public event Action OnLoadingFinished;
 
-        private umi3d.cdk.Progress _currentProgress = null;
+        private Progress _currentProgress = null;
         private bool _loadingInProgress = false;
 
         [SerializeField] private ConnectionToImmersiveLinker m_linker;
@@ -59,7 +57,7 @@ namespace umi3dBrowsers.displayer
             UMI3DCollaborationClientServer.onProgress.AddListener(NewProgressReceived);
         }
 
-        void NewProgressReceived(umi3d.cdk.Progress progress)
+        void NewProgressReceived(Progress progress)
         {
             if (_currentProgress != null)
             {

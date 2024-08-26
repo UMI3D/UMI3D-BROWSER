@@ -37,6 +37,9 @@ namespace umi3d.browserEditor.BuildTool
                 case E_Target.SteamXR:
                     DisableAllPlugins(BuildTargetGroup.Standalone, except: E_Plugin.OpenXR);
                     break;
+                case E_Target.Windows:
+                    DisableAllPlugins(BuildTargetGroup.Standalone);
+                    break;
             }
 
             switch (target)
@@ -56,11 +59,6 @@ namespace umi3d.browserEditor.BuildTool
         {
             var loader = GetLoaderName(plugin);
 
-            if (!XRPackageMetadataStore.IsLoaderAssigned(loader, buildTargetGroup))
-            {
-                return;
-            }
-
             var settings = XRGeneralSettingsPerBuildTarget
                 .XRGeneralSettingsForBuildTarget(buildTargetGroup)
                 .AssignedSettings;
@@ -78,18 +76,13 @@ namespace umi3d.browserEditor.BuildTool
             }
             else
             {
-                UnityEngine.Debug.LogError($"[UMI3D] Could not disabled [{plugin}] plugin on {buildTargetGroup}");
+                UnityEngine.Debug.LogWarning($"[UMI3D] Could not disabled [{plugin}] plugin on {buildTargetGroup} (may be this plugin was not enable in the fist place)");
             }
         }
 
         static void EnablePlugin(BuildTargetGroup buildTargetGroup, E_Plugin plugin)
         {
             var loader = GetLoaderName(plugin);
-
-            if (XRPackageMetadataStore.IsLoaderAssigned(loader, buildTargetGroup))
-            {
-                return;
-            }
 
             var settings = XRGeneralSettingsPerBuildTarget
                 .XRGeneralSettingsForBuildTarget(buildTargetGroup)

@@ -18,32 +18,36 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SliderDisplayer : MonoBehaviour, IDisplayer
+namespace umi3dBrowsers.displayer
 {
-    [SerializeField] private TMP_Text m_Label;
-    [SerializeField] private Slider m_Slider;
-
-    public Slider Slider => m_Slider;
-
-    public object GetValue(bool trim)
+    public class SliderDisplayer : MonoBehaviour, IDisplayer
     {
-        return m_Slider.value;
+        [SerializeField] private TMP_Text m_Label;
+        [SerializeField] private Slider m_Slider;
+
+        public Slider Slider => m_Slider;
+
+        public object GetValue(bool trim)
+        {
+            return m_Slider.value;
+        }
+
+        public void SetColor(Color color)
+        {
+        }
+
+        public void SetPlaceHolder(List<string> placeHolder)
+        {
+        }
+
+        public void SetResource(object resource)
+        {
+        }
+
+        public void SetTitle(string title)
+        {
+            m_Label.text = title;
+        }
     }
 
-    public void SetColor(Color color)
-    {
-    }
-
-    public void SetPlaceHolder(List<string> placeHolder)
-    {
-    }
-
-    public void SetResource(object resource)
-    {
-    }
-
-    public void SetTitle(string title)
-    {
-        m_Label.text = title;
-    }
 }

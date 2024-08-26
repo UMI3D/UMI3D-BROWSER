@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using umi3d.browserRuntime.conditionalCompilation;
 using umi3dBrowsers.services.title;
 using UnityEngine;
 
@@ -22,7 +23,7 @@ namespace umi3dBrowsers.data.ui
     [CreateAssetMenu(menuName = "Data/Ui/Panel")]
     public class PanelData : ScriptableObject
     {
-        [SerializeField] private GameObject m_prefab;
+        [SerializeField] private MultiDeviceReference<GameObject> m_prefab;
         [Header("Parameters")]
         [SerializeField] private bool m_displayTop;
         [SerializeField] private bool m_displayNavbar;
@@ -33,7 +34,7 @@ namespace umi3dBrowsers.data.ui
         [SerializeField] private string m_titleSuffix;
         [SerializeField] private TitleType m_titleType;
 
-        public GameObject Prefab => m_prefab;
+        public GameObject Prefab => m_prefab.Reference;
 
         public bool DisplayTop => m_displayTop;
         public bool DisplayNavbar => m_displayNavbar;

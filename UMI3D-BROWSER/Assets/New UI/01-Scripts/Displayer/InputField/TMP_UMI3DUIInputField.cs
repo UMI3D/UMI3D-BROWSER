@@ -15,12 +15,12 @@ limitations under the License.
 */
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
-using umi3dBrowsers.keyboard;
 using UnityEngine;
 using UnityEngine.EventSystems;
+#if UMI3D_XR
+using umi3dBrowsers.keyboard;
+#endif
 
 namespace umi3dBrowsers.displayer
 {
@@ -33,7 +33,9 @@ namespace umi3dBrowsers.displayer
 
         protected override void OnDisable()
         {
+#if UMI3D_XR
             Keyboard.Instance?.CancelAndClose();
+#endif
         }
 
         public void SetCallBacks(Action<PointerEventData> hoverEnterCallBack, Action<PointerEventData> hoverExitCallBack)
@@ -52,17 +54,19 @@ namespace umi3dBrowsers.displayer
             hoverExitCallBack?.Invoke(eventData);
         }
 
+
+#if UMI3D_XR
         public override void OnSelect(BaseEventData eventData)
         {
             base.OnSelect(eventData);
-
             if (Keyboard.Instance != null)
             {
                 InputSelected();
             }
             else
                 Debug.Log($"<color=cyan>Please make sure you've got a key board</color>", this);
-        }
+    }
+#endif
 
         public override void OnDeselect(BaseEventData eventData)
         {
@@ -74,11 +78,7 @@ namespace umi3dBrowsers.displayer
             }
         }
 
-        public override void OnUpdateSelected(BaseEventData eventData)
-        {
-            base.OnUpdateSelected(eventData);
-        }
-
+#if UMI3D_XR
         private void InputSelected()
         {
             Keyboard.Instance?.OpenKeyboard(this, res =>
@@ -87,6 +87,7 @@ namespace umi3dBrowsers.displayer
                 OnTextChanged?.Invoke(res);
             });
         }
+#endif
     }
 }
 

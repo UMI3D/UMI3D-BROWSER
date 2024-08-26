@@ -1,0 +1,17 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <umi3d.commonScreen.Displayer.Button_C label="Label" text="Text" />
+    <umi3d.commonScreen.Displayer.Dropdown_C index="0" label="Label" choices="un, deux, trois" />
+    <umi3d.commonScreen.Displayer.LoadingBar_C message="Message" title="Title" value="50" />
+    <umi3d.commonScreen.Displayer.SegmentedPicker_C options="un, deux, trois" value="un" label="Label" />
+    <umi3d.commonScreen.Displayer.Slider_C label="Label" />
+    <umi3d.commonScreen.Displayer.Text_C text="Text" />
+    <umi3d.commonScreen.Displayer.Textfield_C label="Label" />
+    <umi3d.commonScreen.Displayer.Toggle_C label="Label" />
+    <umi3d.commonScreen.Displayer.User_C user-name="Romain" />
+    <umi3d.commonScreen.Displayer.ThresholdSlider_C show-input-field="true" content-value="5.57" value="2.83" />
+    <umi3d.commonScreen.Displayer.InteractableMappingRow_C action-name="Cube 0">
+        <umi3d.commonScreen.Displayer.Mapping_C type="Mouse" />
+        <umi3d.commonScreen.Displayer.Mapping_C mapping-name="Ctrl" />
+    </umi3d.commonScreen.Displayer.InteractableMappingRow_C>
+    <umi3d.commonScreen.Displayer.Tool_C is-selected="false" label="Label" tool-type="ToolboxMenu" />
+</ui:UXML>

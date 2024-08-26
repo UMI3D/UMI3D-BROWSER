@@ -14,15 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using umi3d;
 using umi3d.common.interaction.form;
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.UI;
 
 namespace umi3dBrowsers.displayer
 {

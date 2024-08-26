@@ -92,6 +92,7 @@ namespace umi3d.browserEditor.BuildTool
                         }
                         break;
                     case E_Target.SteamXR:
+                    case E_Target.Windows:
                         if (buildTarget != BuildTarget.StandaloneWindows)
                         {
                             return false;

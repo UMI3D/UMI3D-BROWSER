@@ -19,6 +19,7 @@ using System.Collections;
 using System.Collections.Generic;
 using umi3d;
 using umi3d.common.interaction;
+using umi3dBrowsers.displayer;
 using umi3dBrowsers.linker;
 using UnityEngine;
 using UnityEngine.UI;
@@ -67,7 +68,7 @@ namespace umi3dBrowsers.container.formrenderer
 
             for (int i = 0; i < connectionFormDto.fields.Count; i++)
             {
-                IDisplayer displayer = null;
+                displayer.IDisplayer displayer = null;
 
                 ParameterSettingRequestDto paramRequestDto = new ParameterSettingRequestDto()
                 {
@@ -83,7 +84,7 @@ namespace umi3dBrowsers.container.formrenderer
                     case EnumParameterDto<string> paramEnum:
                         {
                             GameObject gameObject = Instantiate(dropDownFieldPrefab, container.transform);
-                            displayer = gameObject.GetComponentInChildren<IDisplayer>();
+                            displayer = gameObject.GetComponentInChildren<displayer.IDisplayer>();
                             formBinding.Add(() => paramRequestDto.parameter = displayer.GetValue(true));
                             displayer.SetTitle(paramEnum.name);
                             displayer.SetPlaceHolder(paramEnum.possibleValues);
@@ -92,7 +93,7 @@ namespace umi3dBrowsers.container.formrenderer
                     case BooleanParameterDto boolParam:
                         {
                             GameObject gameObject = Instantiate(toggleSwitchPrefab, container.transform);
-                            displayer = gameObject.GetComponentInChildren<IDisplayer>();
+                            displayer = gameObject.GetComponentInChildren<displayer.IDisplayer>();
                             formBinding.Add(() => paramRequestDto.parameter = displayer.GetValue(true));
                             displayer.SetTitle(boolParam.name);
                             displayer.SetPlaceHolder(new List<string>() { boolParam.value ? "1" : "0" });

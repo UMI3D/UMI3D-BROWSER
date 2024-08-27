@@ -22,9 +22,5 @@ namespace umi3d.browserRuntime.ui.keyboard
 {
     public class KeyEmoji : MonoBehaviour
     {
-        void Awake()
-        {
-        
-        }
     }
 }

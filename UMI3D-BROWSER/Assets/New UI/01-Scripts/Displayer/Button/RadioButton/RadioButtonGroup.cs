@@ -28,6 +28,7 @@ namespace umi3dBrowsers.displayer
         [Header("Buttons")]
         [SerializeField] private List<UMI3DUI_Button> buttons = new();
         public event Action<UMI3DUI_Button, int> OnSelectedButtonChanged;
+        [SerializeField] private int defaultActivationID;
 
         [Header("Style")]
         [SerializeField] private Color NormalColor;
@@ -62,8 +63,6 @@ namespace umi3dBrowsers.displayer
                 radio.SetID(i++);
             }
 
-            buttons[_panelStartId].SubDisplayer.Click();
-
             OnSelectedButtonChanged += (button, id) =>
             {
                 foreach (var radio in buttons)
@@ -73,6 +72,11 @@ namespace umi3dBrowsers.displayer
                     radio.Deselect();
                 }
             };
+
+            if (defaultActivationID != -1)
+            {
+                buttons[defaultActivationID].Select();
+            }
         }
 
         public void ActivateButtonWithId(int id)

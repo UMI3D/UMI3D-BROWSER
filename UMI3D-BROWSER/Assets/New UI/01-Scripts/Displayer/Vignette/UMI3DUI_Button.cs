@@ -35,6 +35,7 @@ namespace umi3dBrowsers.displayer
 
         [Header("Selection")]
         [SerializeField] private List<GameObject> objectToEnableOnHover;
+        [SerializeField] private bool autoUnHover;
         [SerializeField] private List<GameObject> objectToEnableOnClick;
         [SerializeField] private bool autoDeselect;
 
@@ -52,11 +53,8 @@ namespace umi3dBrowsers.displayer
         protected override void Awake()
         {
             _subDisplayer = GetComponent<ISubDisplayer>();
-            if (_subDisplayer != null)
-                onClick.AddListener(_subDisplayer.Click);
 
-            onClick.AddListener(() => isSelected = true);
-            onClick.AddListener(() => ActivateList(objectToEnableOnClick, true));
+            onClick.AddListener(() => Select());
 
             if (relatedButtonStyles != null && autoInitStyles)
                 foreach (var style in relatedButtonStyles)
@@ -115,13 +113,16 @@ namespace umi3dBrowsers.displayer
                         style.Disable();
         }
 
-        public void Select()
+        public override void Select()
         {
             if (_subDisplayer != null)
                 _subDisplayer.Click();
 
             isSelected = true;
             ActivateList(objectToEnableOnClick, true);
+
+            if (autoUnHover)
+                ActivateList(objectToEnableOnHover, false);
         }
 
         private void ActivateList(List<GameObject> list, bool isIt)

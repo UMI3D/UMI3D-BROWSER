@@ -17,6 +17,8 @@ limitations under the License.
 
 using inetum.unityUtils;
 using System;
+using System.Collections;
+
 using umi3d.common;
 using UnityEngine;
 using UnityEngine.UI;
@@ -41,7 +43,12 @@ namespace umi3d.cdk
             canvasScaler.dynamicPixelsPerUnit = dto.dynamicPixelsPerUnit;
             canvasScaler.referencePixelsPerUnit = dto.referencePixelsPerUnit;
             Canvas canvas = node.GetOrAddComponent<Canvas>();
+            canvas.overrideSorting = dto.orderInLayer != 0; // having a sorting order different from 0 require to activate overriding
             canvas.sortingOrder = dto.orderInLayer;
+            
+            // overrideSorting property cannot be modified if object is disabled, need to update at each activation.
+            ActivationEventListener canvasListener = node.GetOrAddComponent<ActivationEventListener>();
+            canvasListener.OnEnabled += () => CoroutineManager.Instance.AttachCoroutine(WaitAndSetOrder(dto, node));
         }
 
         /// <summary>
@@ -67,13 +74,25 @@ namespace umi3d.cdk
                     }
                     break;
                 case UMI3DPropertyKeys.OrderInLayer:
-                    Canvas canvas = node.gameObject.GetOrAddComponent<Canvas>();
-                    canvas.sortingOrder = dto.orderInLayer = (int)(Int64)property.value;
-                    break;
+                    {
+                        Canvas canvas = node.gameObject.GetOrAddComponent<Canvas>();
+                        canvas.sortingOrder = dto.orderInLayer = (int)(Int64)property.value;
+                        canvas.overrideSorting = dto.orderInLayer != 0;
+                        break;
+                    }
+
                 default:
                     return false;
             }
             return true;
+        }
+
+        private IEnumerator WaitAndSetOrder(UICanvasDto dto, GameObject node) // unity lock those properties on the frame during which the object is activated
+        {
+            yield return null;
+            Canvas canvas = node.GetOrAddComponent<Canvas>();
+            canvas.overrideSorting = dto.orderInLayer != 0; // having a sorting order different from 0 require to activate overriding
+            canvas.sortingOrder = dto.orderInLayer;
         }
 
         public bool SetUMI3DPorperty(UICanvasDto dto, UMI3DNodeInstance node, uint operationId, uint propertyKey, ByteContainer container)
@@ -93,9 +112,12 @@ namespace umi3d.cdk
                     }
                     break;
                 case UMI3DPropertyKeys.OrderInLayer:
-                    Canvas canvas = node.gameObject.GetOrAddComponent<Canvas>();
-                    canvas.sortingOrder = dto.orderInLayer = UMI3DSerializer.Read<int>(container);
-                    break;
+                    {
+                        Canvas canvas = node.gameObject.GetOrAddComponent<Canvas>();
+                        canvas.sortingOrder = dto.orderInLayer = UMI3DSerializer.Read<int>(container);
+                        canvas.overrideSorting = dto.orderInLayer != 0;
+                        break;
+                    }
                 default:
                     return false;
             }

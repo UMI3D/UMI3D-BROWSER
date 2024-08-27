@@ -31,6 +31,12 @@ namespace umi3d.cdk.interaction
         /// Currently projected tool.
         /// </summary>
         protected AbstractTool currentTool = null;
+
+        /// <summary>
+        /// Currently projected tool ID.
+        /// </summary>
+        protected ulong? currentToolId = null;
+
         /// <summary>
         /// Currently projected tool.
         /// </summary>
@@ -189,8 +195,8 @@ namespace umi3d.cdk.interaction
             }
 
             currentTool = tool;
+            currentToolId = tool.id;
         }
-
 
         /// <summary>
         /// Project a tool on this controller.
@@ -220,10 +226,14 @@ namespace umi3d.cdk.interaction
         /// <see cref="Project(AbstractTool)"/>
         public virtual void Release(AbstractTool tool, InteractionMappingReason reason)
         {
-            if (currentTool == null)
-                throw new System.Exception("no tool is currently projected on this controller");
-            if (currentTool.id != tool.id)
-                throw new System.Exception("This tool is not currently projected on this controller");
+            //if (currentTool == null)
+            //    throw new System.Exception("no tool is currently projected on this controller");
+            if (currentToolId != tool.id)
+            {
+                Debug.LogError("This tool is not currently projected on this controller. Temporary Fix.");
+                return;
+                //throw new System.Exception("This tool is not currently projected on this controller");
+            }
 
             if (associatedInputs.TryGetValue(tool.id, out AbstractUMI3DInput[] inputs))
             {
@@ -235,6 +245,7 @@ namespace umi3d.cdk.interaction
                 associatedInputs.Remove(tool.id);
             }
             currentTool = null;
+            currentToolId = null;
         }
 
         /// <summary>

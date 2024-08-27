@@ -17,6 +17,7 @@ limitations under the License.
 using System;
 using System.Collections;
 using TMPro;
+using umi3d.browserRuntime.UX;
 using umi3dVRBrowsersBase.ui.keyboard;
 using UnityEngine;
 using UnityEngine.Events;
@@ -147,6 +148,8 @@ namespace umi3dBrowsers.keyboard
         /// </summary>
         public bool WasClosedLastFrame { get; private set; } = false;
 
+        LazyRotationAndTranslation lazyRotationAndTranslation;
+
         #endregion Fields
 
         #region Event
@@ -177,6 +180,8 @@ namespace umi3dBrowsers.keyboard
         private void Awake()
         {
             if (isSingleton) Instance = this;
+
+            lazyRotationAndTranslation = transform.parent.GetComponent<LazyRotationAndTranslation>();
         }
 
         private void Start()
@@ -369,6 +374,20 @@ namespace umi3dBrowsers.keyboard
         }
 
         /// <summary>
+        /// Opens the keyboard at a certain position to edit a text input
+        /// </summary>
+        /// <param name="editedText"></param>
+        /// <param name="onEditFinished"></param>
+        /// <param name="position"></param>
+        /// <param name="normal"></param>
+        public void OpenKeyboard(string editedText, Action<string> onEditFinished, Action onEditCanceled, Vector3 position, Vector3 normal)
+        {
+            transform.SetPositionAndRotation(position, Quaternion.LookRotation(normal, Vector3.up));
+
+            OpenKeyboard(editedText, onEditFinished, onEditCanceled);
+        }
+
+        /// <summary>
         /// Opens the keyboard to edit a text input.
         /// </summary>
         /// <param name="editedText"></param>
@@ -386,39 +405,19 @@ namespace umi3dBrowsers.keyboard
             this.onEditCanceled = onEditCanceled;
 
             IsOpen = true;
+
+            if (lazyRotationAndTranslation != null)
+            {
+                lazyRotationAndTranslation.enabled = true;
+                lazyRotationAndTranslation.Rest();
+            }
         }
 
         /// <summary>
         /// Open the keyboard simply, just to listen to key inputs.
         /// </summary>
         [ContextMenu("Open key board")]
-        public void OpenKeyboard()
-        {
-            if (WasClosedLastFrame) return;
-
-            root.SetActive(true);
-
-            previewField.text = string.Empty;
-
-            this.onEditFinished = null;
-            this.onEditCanceled = null;
-
-            IsOpen = true;
-        }
-
-        /// <summary>
-        /// Opens the keyboard at a certain position to edit a text input
-        /// </summary>
-        /// <param name="editedText"></param>
-        /// <param name="onEditFinished"></param>
-        /// <param name="position"></param>
-        /// <param name="normal"></param>
-        public void OpenKeyboard(string editedText, Action<string> onEditFinished, Action onEditCanceled, Vector3 position, Vector3 normal)
-        {
-            transform.SetPositionAndRotation(position, Quaternion.LookRotation(normal, Vector3.up));
-
-            OpenKeyboard(editedText, onEditFinished, onEditCanceled);
-        }
+        public void OpenKeyboard() => OpenKeyboard(null, null, null);
 
         /// <summary>
         /// Selects an <see cref="InputField"/> once it is possible.
@@ -494,6 +493,11 @@ namespace umi3dBrowsers.keyboard
             yield return new WaitForEndOfFrame();
 
             WasClosedLastFrame = false;
+
+            if (lazyRotationAndTranslation != null)
+            {
+                lazyRotationAndTranslation.enabled = false;
+            }
         }
 
         /// <summary>

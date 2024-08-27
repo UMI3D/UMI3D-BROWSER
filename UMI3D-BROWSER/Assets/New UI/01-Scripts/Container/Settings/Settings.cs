@@ -42,7 +42,7 @@ namespace umi3dBrowsers.container
         {
             public settingPanel Panel;
             [Header("Page Tuto")]
-            public bool Use;
+            public bool UseTutorial;
             public string LocalisedKey;
             public Vector2 TutoPosition;
         }
@@ -74,6 +74,8 @@ namespace umi3dBrowsers.container
         [Space]
         [SerializeField] private List<SettingsTab> settingPanels = new();
         [SerializeField] private bool useLocalization;
+
+        [Header("Navigation")]
         [SerializeField] private GameObject panelTutoPrefab;
 
         private void Awake()
@@ -99,7 +101,7 @@ namespace umi3dBrowsers.container
             for(int i = 0; i<settingPanels.Count; i++)
             {
                 tabManager.AddNewTab(settingPanels[i].Panel.PanelName, out var tab, useLocalization, settingPanels[i].Panel.Panel);
-                if (settingPanels[i].Use)
+                if (settingPanels[i].UseTutorial)
                 {
                     var panelTuto = Instantiate(panelTutoPrefab, tab.transform).GetComponent<PanelTuto>();
                     panelTuto.Set(settingPanels[i].LocalisedKey, settingPanels[i].TutoPosition);

@@ -46,6 +46,12 @@ namespace umi3dBrowsers.displayer
             image.color = normalColor;
         }
 
+        public void Init(ButtonStyle buttonStyle)
+        {
+            if (buttonStyle != null)
+                Init(buttonStyle.NormalColor, buttonStyle.HoverColor, buttonStyle.SelectedColor);
+        }
+
         public void Click()
         {
             OnClick?.Invoke();

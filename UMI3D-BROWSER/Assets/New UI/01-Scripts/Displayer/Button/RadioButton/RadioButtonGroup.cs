@@ -18,6 +18,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace umi3dBrowsers.displayer
@@ -33,6 +34,8 @@ namespace umi3dBrowsers.displayer
         [SerializeField] private Color HoverColor;
         [SerializeField] private Color SelectedColor;
 
+        [Header("Events")]
+        [SerializeField] private UnityEvent OnElementSelected;
 
         int _panelStartId;
         UMI3DUI_Button _selected;
@@ -51,6 +54,8 @@ namespace umi3dBrowsers.displayer
                         _selected = radio;
                     }
                     OnSelectedButtonChanged?.Invoke(radio, radio.ID);
+
+                    OnElementSelected?.Invoke();
                 });
 
                 radio.SubDisplayer.Init(NormalColor, HoverColor, SelectedColor);
@@ -58,11 +63,29 @@ namespace umi3dBrowsers.displayer
             }
 
             buttons[_panelStartId].SubDisplayer.Click();
+
+            OnSelectedButtonChanged += (button, id) =>
+            {
+                foreach (var radio in buttons)
+                {
+                    if (radio.ID == id) continue;
+
+                    radio.Deselect();
+                }
+            };
         }
 
         public void ActivateButtonWithId(int id)
         {
             _panelStartId = id;
+        }
+
+        public void DeselectAll()
+        {
+            foreach (var radio in buttons)
+            {
+                radio.Deselect();
+            }
         }
     }
 }

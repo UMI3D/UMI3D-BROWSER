@@ -93,20 +93,9 @@ namespace inetum.unityUtils.math
         /// <returns></returns>
         public static bool IsBetween(this float angle, float min, float max)
         {
-            if (min > 360f)
-            {
-                min %= 360f;
-            }
-
-            if (max > 360f)
-            {
-                max %= 360f;
-            }
-
-            if (angle > 360f)
-            {
-                angle %= 360f;
-            }
+            ZeroTo360(ref min);
+            ZeroTo360(ref max);
+            ZeroTo360(ref angle);
 
             if (min < max)
             {
@@ -115,6 +104,26 @@ namespace inetum.unityUtils.math
             else
             {
                 return min < angle || angle < max;
+            }
+        }
+
+        /// <summary>
+        /// Restrict <paramref name="angle"/> to [0, 360].
+        /// </summary>
+        /// <param name="angle">The angle in degree.</param>
+        public static void ZeroTo360(ref float angle)
+        {
+            if (angle > 360f)
+            {
+                // Restrict the angle to [0, 360].
+                angle %= 360f;
+            }
+            else if (angle < 0)
+            {
+                // Restrict the angle to [-360, 360].
+                angle %= 360f;
+                // Restrict the angle to [0, 360].
+                angle += 360f;
             }
         }
     }

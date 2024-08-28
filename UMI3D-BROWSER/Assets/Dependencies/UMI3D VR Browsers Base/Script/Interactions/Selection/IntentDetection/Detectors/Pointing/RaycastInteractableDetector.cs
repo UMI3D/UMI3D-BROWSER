@@ -38,7 +38,7 @@ namespace umi3dBrowsers.interaction.selection.intentdetector
         /// <inheritdoc/>
         protected override void SetDetectionMethod()
         {
-            detectionMethod = new RaycastDetectionMethod<InteractableContainer>() { blocker = IsABlocker };
+            detectionMethod = new InteractableRaycastDetectionMethod();// new RaycastDetectionMethod<InteractableContainer>() { blocker = IsABlocker };
         }
     }
 }

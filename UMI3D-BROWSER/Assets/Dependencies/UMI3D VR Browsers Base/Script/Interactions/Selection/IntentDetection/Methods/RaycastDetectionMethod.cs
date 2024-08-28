@@ -25,10 +25,13 @@ namespace umi3dBrowsers.interaction.selection.intentdetector.method
     /// <typeparam name="T"></typeparam>
     public class RaycastDetectionMethod<T> : AbstractDetectionMethod<T> where T : MonoBehaviour
     {
+
+        public RaySelectionZone<T>.RaySelectionBlocker blocker = null;
+
         /// <inheritdoc/>
         public override T PredictTarget()
         {
-            var raySelection = new RaySelectionZone<T>(controllerTransform.position, controllerTransform.forward);
+            var raySelection = new RaySelectionZone<T>(controllerTransform.position, controllerTransform.forward) { blocker = blocker };
             var closestActiveInteractable = raySelection.GetClosestInZone();
             return closestActiveInteractable;
         }

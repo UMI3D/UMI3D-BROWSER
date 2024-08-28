@@ -13,6 +13,8 @@ limitations under the License.
 
 using umi3d.cdk.interaction;
 using umi3dBrowsers.interaction.selection.intentdetector.method;
+using umi3dVRBrowsersBase.interactions.selection.cursor;
+using UnityEngine;
 
 namespace umi3dBrowsers.interaction.selection.intentdetector
 {
@@ -21,10 +23,22 @@ namespace umi3dBrowsers.interaction.selection.intentdetector
     /// </summary>
     public class RaycastInteractableDetector : AbstractPointingInteractableDetector
     {
+
+        /// <summary>
+        /// Test if a collider should block a raycast
+        /// </summary>
+        /// <param name="hit"></param>
+        /// <returns></returns>
+        private bool IsABlocker(RaycastHit hit)
+        {
+            var container = hit.transform.GetComponentInParent<NodeContainer>();
+            return container?.instance.IsBlockingInteraction ?? false;
+        }
+
         /// <inheritdoc/>
         protected override void SetDetectionMethod()
         {
-            detectionMethod = new RaycastDetectionMethod<InteractableContainer>();
+            detectionMethod = new RaycastDetectionMethod<InteractableContainer>() { blocker = IsABlocker };
         }
     }
 }

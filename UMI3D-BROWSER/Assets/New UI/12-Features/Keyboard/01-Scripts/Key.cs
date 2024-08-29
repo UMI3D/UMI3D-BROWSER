@@ -68,10 +68,10 @@ namespace umi3d.browserRuntime.ui.keyboard
                 return;
             }
 
-            //UnityEngine.Debug.Log($"[Key] down");
+            UnityEngine.Debug.Log($"[Key] down");
             buttonPressed = true;
             pointerDown.OnPointerDown(eventData);
-            NotificationHub.Default.Notify(this, KeyboardNotificationKeys.AskPreviewFocus);
+            //NotificationHub.Default.Notify(this, KeyboardNotificationKeys.AskPreviewFocus);
         }
 
         public void OnPointerUp(PointerEventData eventData)
@@ -82,7 +82,7 @@ namespace umi3d.browserRuntime.ui.keyboard
             }
 
             // Don't work yet
-            //UnityEngine.Debug.Log($"[Key] up");
+            UnityEngine.Debug.Log($"[Key] up");
             buttonPressed = false;
             pointerDown.OnPointerUp(eventData);
             PointerUp?.Invoke();

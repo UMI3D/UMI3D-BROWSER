@@ -194,6 +194,7 @@ namespace umi3d.cdk.interaction
             }
 
             currentTool = tool;
+            currentToolId = tool.id;
         }
 
 
@@ -241,6 +242,7 @@ namespace umi3d.cdk.interaction
                 associatedInputs.Remove((tool.id, tool.environmentId));
             }
             currentTool = null;
+            currentToolId = null;
         }
 
         /// <summary>
@@ -273,6 +275,7 @@ namespace umi3d.cdk.interaction
                 }
             }
             currentTool = tool;
+            currentToolId = tool.id;
         }
     }
 }

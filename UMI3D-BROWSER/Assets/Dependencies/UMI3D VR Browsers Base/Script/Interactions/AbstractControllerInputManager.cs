@@ -98,10 +98,6 @@ namespace umi3dVRBrowsersBase.interactions
                     return GetJoystickButtonDown(controller);
                 case ActionType.Teleport:
                     return GetTeleportDown(controller);
-                case ActionType.RightSnapTurn:
-                    return GetRightSnapTurn(controller);
-                case ActionType.LeftSnapTurn:
-                    return GetLeftSnapTurn(controller);
                 default:
                     break;
             }
@@ -217,9 +213,6 @@ namespace umi3dVRBrowsersBase.interactions
         public abstract bool GetTeleportDown(ControllerType controller);
 
         public abstract bool GetTeleportUp(ControllerType controller);
-
-        public abstract bool GetRightSnapTurn(ControllerType controller);
-        public abstract bool GetLeftSnapTurn(ControllerType controller);
 
         #endregion
 

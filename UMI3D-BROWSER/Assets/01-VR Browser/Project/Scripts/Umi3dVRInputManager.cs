@@ -245,49 +245,6 @@ namespace umi3d.picoBrowser
                     return false;
             }
         }
-
-        public override bool GetRightSnapTurn(ControllerType controller)
-        {
-            var res = GetJoystick(controller);
-
-            if (res)
-            {
-                (float pole, float magnitude) = GetJoystickPoleAndMagnitude(controller);
-
-                if ((pole >= 0 && pole < 20) || (pole > 340 && pole <= 360))
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-
-            return res;
-        }
-
-        public override bool GetLeftSnapTurn(ControllerType controller)
-        {
-            var res = GetJoystick(controller);
-
-            if (res)
-            {
-                (float pole, float magnitude) = GetJoystickPoleAndMagnitude(controller);
-
-                if (pole > 160 && pole <= 200)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-
-            return res;
-        }
-
         private (float, float) GetJoystickPoleAndMagnitude(ControllerType controller)
         {
             var getAxis = GetJoystickAxis(controller);

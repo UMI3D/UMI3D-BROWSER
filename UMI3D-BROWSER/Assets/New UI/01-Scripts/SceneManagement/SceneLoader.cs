@@ -14,8 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using umi3d.browserRuntime.conditionalCompilation;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -29,40 +31,34 @@ namespace umi3dBrowsers.sceneManagement
         /// <summary>
         /// Name of the scene to load.
         /// </summary>
-        public string sceneToLoad;
-
-        /// <summary>
-        /// Mode used to load the scene.
-        /// </summary>
-        public LoadSceneMode loadSceneMode;
-
-        public bool setNewSceneAsActive = true;
-
-        [SerializeField] private Camera debugCamera;
+        [SerializeField] private MultiDeviceReference<List<SceneToLoad>> scenesToLoad;
 
         private void Start()
         {
-            if (debugCamera != null) debugCamera.gameObject.SetActive(false);   
-
-            if (setNewSceneAsActive)
-            {             
-                StartCoroutine(LoadScene());
+            foreach(var sceneToLoad in scenesToLoad.Reference)
+            {
+                if (sceneToLoad.SetNewSceneAsActive)
+                {
+                    StartCoroutine(LoadScene(sceneToLoad));
+                }
+                else
+                {
+                    SceneManager.LoadScene(sceneToLoad.SceneName, sceneToLoad.LoadSceneMode);            
+                }
             }
-            else 
-                SceneManager.LoadScene(sceneToLoad, loadSceneMode);
         }
 
         /// <summary>
         /// Loads asynchronously a scene.
         /// </summary>
         /// <returns></returns>
-        private IEnumerator LoadScene()
+        private IEnumerator LoadScene(SceneToLoad sceneToLoad)
         {
-            AsyncOperation indicator = SceneManager.LoadSceneAsync(sceneToLoad, loadSceneMode);
+            AsyncOperation indicator = SceneManager.LoadSceneAsync(sceneToLoad.SceneName, sceneToLoad.LoadSceneMode);
 
             yield return new WaitUntil(() => indicator.isDone);
 
-            SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneToLoad));
+            SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneToLoad.SceneName));         
         }
 
         public void ReloadScene()
@@ -72,15 +68,34 @@ namespace umi3dBrowsers.sceneManagement
 
         private IEnumerator _ReloadScene()
         {
-            AsyncOperation indicator = SceneManager.UnloadSceneAsync(sceneToLoad);
+            foreach(var sceneToLoad in scenesToLoad.Reference)
+            {
+                if (sceneToLoad.AlwaysReload)
+                {
+                    AsyncOperation indicator = SceneManager.UnloadSceneAsync(sceneToLoad.SceneName);
 
-            yield return new WaitUntil(() => indicator.isDone);
+                    yield return new WaitUntil(() => indicator.isDone);
 
-            indicator = SceneManager.LoadSceneAsync(sceneToLoad, loadSceneMode);
+                    indicator = SceneManager.LoadSceneAsync(sceneToLoad.SceneName, sceneToLoad.LoadSceneMode);
 
-            yield return new WaitUntil(() => indicator.isDone);
+                    yield return new WaitUntil(() => indicator.isDone);
 
-            SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneToLoad));
+                    SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneToLoad.SceneName));
+                }
+            }
+        }
+
+        [Serializable]
+        public class SceneToLoad
+        {
+            [SerializeField] private string sceneName;
+            public string SceneName => sceneName;
+            [SerializeField] private LoadSceneMode loadSceneMode;
+            public LoadSceneMode LoadSceneMode => loadSceneMode;
+            [SerializeField] private bool setNewSceneAsActive = true;
+            public bool SetNewSceneAsActive => setNewSceneAsActive;
+            [SerializeField] private bool alwaysReload = true;
+            public bool AlwaysReload => alwaysReload;
         }
     }
 }

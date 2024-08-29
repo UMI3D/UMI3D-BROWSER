@@ -323,8 +323,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1536569664}
-  - component: {fileID: 1536569665}
   - component: {fileID: 1536569663}
+  - component: {fileID: 1536569665}
   m_Layer: 0
   m_Name: MainThreadDispatcher
   m_TagString: Untagged
@@ -368,13 +368,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 1536569662}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0160d3c340a7c9c48806b4d7115ca627, type: 3}
+  m_Script: {fileID: 11500000, guid: 9dbe35d013cad8c408289c6f5e217a1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneToLoad: ConnectionScene(new)
-  loadSceneMode: 1
-  setNewSceneAsActive: 1
-  debugCamera: {fileID: 0}
+  scenesToLoad:
+    pcRef:
+    - sceneName: ConnectionScene(new)
+      loadSceneMode: 1
+      setNewSceneAsActive: 1
+      alwaysReload: 0
+    xrRef:
+    - sceneName: ConnectionScene(new)
+      loadSceneMode: 1
+      setNewSceneAsActive: 1
+      alwaysReload: 0
 --- !u!1 &1779150102
 GameObject:
   m_ObjectHideFlags: 0

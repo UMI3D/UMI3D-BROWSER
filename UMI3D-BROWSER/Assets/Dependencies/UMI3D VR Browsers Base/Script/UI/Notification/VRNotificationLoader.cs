@@ -83,7 +83,7 @@ namespace umi3dVRBrowsersBase.ui.notification
 
                 UMI3DNodeInstance obj = UMI3DEnvironmentLoader.GetNode(UMI3DGlobalID.EnvironmentId, notificationOnObjectDto.objectId);
 
-                notification.SetParent(obj?.gameObject.transform, Vector3.zero, Quaternion.identity);
+                notification.SetParent(obj?.GameObject.transform, Vector3.zero, Quaternion.identity);
 
                 notification.Init(dto);
                 UMI3DEnvironmentLoader.RegisterNodeInstance(UMI3DGlobalID.EnvironmentId, dto.id, dto, notification.gameObject);

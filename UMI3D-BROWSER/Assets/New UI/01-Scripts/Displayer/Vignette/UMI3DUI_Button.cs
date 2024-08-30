@@ -91,6 +91,8 @@ namespace umi3dBrowsers.displayer
 
             if (!isSelected)
                 ActivateList(objectToEnableOnHover, false);
+            else
+                ActivateListNoCrossOver(objectToEnableOnHover, objectToEnableOnClick, false);
         }
 
         public override void OnDeselect(BaseEventData eventData)
@@ -132,6 +134,26 @@ namespace umi3dBrowsers.displayer
                     if (obj != null)
                         obj.SetActive(isIt);
         }
+
+        private void ActivateListNoCrossOver(List<GameObject> list1, List<GameObject> list2, bool isIt)
+        {
+            if (list1 == null) return;
+            if (list2 == null)
+            {
+                ActivateList(list1, isIt); 
+                return; 
+            }
+
+            foreach (var obj in list1)
+            {
+
+                if (obj != null)
+                    if(!list2.Contains(obj))
+                        obj.SetActive(isIt);
+
+            }
+        }
+
     }
 }
 

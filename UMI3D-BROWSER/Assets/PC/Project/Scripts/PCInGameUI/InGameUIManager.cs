@@ -34,10 +34,12 @@ namespace umi3dBrowsers.ingame_ui
             {
                 if (mainInGamePanel.gameObject.activeSelf)
                 {
+                    Cursor.lockState = CursorLockMode.Locked;
                     mainInGamePanel.gameObject.SetActive(false);
                 }
                 else
                 {
+                    Cursor.lockState = CursorLockMode.Confined;
                     mainInGamePanel.gameObject.SetActive(true);
                 }
             }

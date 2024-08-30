@@ -19,13 +19,17 @@ namespace umi3dBrowsers.ingame_ui
         [SerializeField] private InGamePanelLinker inGamePanelLinker;
         [SerializeField] private InGameLinker inGameLinker;
 
+        [Header("Debug")]
+        [SerializeField] private bool debugMode;
+
         private void Awake()
         {
             openCloseInGamePanel.Enable();
             openCloseInGamePanel.performed += i => ToggleInGamePanel();
             inGamePanelLinker.OnOpenClosePanel += () => ToggleInGamePanel();
             inGameLinker.OnEnableDisableInGameUI += isEnable => gameObject.SetActive(isEnable);
-            gameObject.SetActive(inGameLinker.IsEnable);
+            if (!debugMode)
+                gameObject.SetActive(inGameLinker.IsEnable);
         }
 
         private void ToggleInGamePanel()

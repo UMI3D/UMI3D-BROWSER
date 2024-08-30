@@ -120,6 +120,11 @@ namespace umi3dBrowsers.displayer
             if (_subDisplayer != null)
                 _subDisplayer.Click();
 
+            if (relatedButtonStyles != null)
+                foreach (var style in relatedButtonStyles)
+                    if (style != null)
+                        style.Click();
+
             isSelected = true;
             ActivateList(objectToEnableOnClick, true);
 

@@ -41,6 +41,11 @@ namespace umi3dBrowsers.displayer
         private bool _isSelected;
         private bool _hovered;
 
+        private void Awake()
+        {
+            if (image == null) image = GetComponent<Image>();
+            if (image == null) Debug.Log("No Image", this);
+        }
         public void Init(Color normalColor, Color hoverColor, Color selectedColor)
         {
             this.normalColor = normalColor;

@@ -50,21 +50,18 @@ namespace umi3d.browserRuntime.navigation
         {
             actionMovementTiming = new();
             actionMovementTiming.DebounceTime = () => debounceTime;
-
-            leftHandSnapTurn.action.performed += SnapTurn;
-            rightHandSnapTurn.action.performed += SnapTurn;
         }
 
         void OnEnable()
         {
-            leftHandSnapTurn.action.Enable();
-            rightHandSnapTurn.action.Enable();
+            leftHandSnapTurn.action.performed += SnapTurn;
+            rightHandSnapTurn.action.performed += SnapTurn;
         }
 
         void OnDisable()
         {
-            leftHandSnapTurn.action.Disable();
-            rightHandSnapTurn.action.Disable();
+            leftHandSnapTurn.action.performed -= SnapTurn;
+            rightHandSnapTurn.action.performed -= SnapTurn;
         }
 
         void SnapTurn(InputAction.CallbackContext context)

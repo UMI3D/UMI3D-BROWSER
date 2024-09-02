@@ -25,6 +25,10 @@ namespace umi3d.browserRuntime.NotificationKeys
         /// Notification sent when a snap turn will be performed.
         /// </summary>
         public const string SnapTurn = "LocomotionNotificationKeysSnapTurn";
+        /// <summary>
+        /// Notification sent when a teleportation will be performed.
+        /// </summary>
+        public const string Teleportation = "LocomotionNotificationKeysTeleportation";
 
         public static class Info
         {
@@ -43,6 +47,37 @@ namespace umi3d.browserRuntime.NotificationKeys
             /// See Notification key: <see cref="SnapTurn"/>
             /// </summary>
             public const string TurnAmount = "LocomotionNotificationKeysTurnAmount";
+
+            /// <summary>
+            /// The controller responsible of the locomotion.<br/>
+            /// Value is <see cref="umi3d.browserRuntime.NotificationKeys.Controller"/>.<br/>
+            /// <br/>
+            /// See Notification key: <see cref="Teleportation"/>
+            /// </summary>
+            public const string Controller = "LocomotionNotificationKeysController";
+
+            /// <summary>
+            /// The phase of the input responsible of the locomotion.<br/>
+            /// <br/>
+            /// <list type="bullet">
+            /// <item>InputActionPhase.Started: Initiate the teleportation - Active the teleporting arc.</item>
+            /// <item>InputActionPhase.Performed: Retrieve the targeted position - Get the targeted area and hide the teleporting arc.</item>
+            /// <item>InputActionPhase.Waiting: Perform the teleportation - Teleport the target at a given position.</item>
+            /// <item>InputActionPhase.Canceled: Cancel the teleportation - Hide the teleporting arc and do not move.</item>
+            /// </list>
+            /// Value is <see cref="InputActionPhase"/>.<br/>
+            /// <br/>
+            /// See Notification key: <see cref="Teleportation"/>
+            /// </summary>
+            public const string ActionPhase = "LocomotionNotificationKeysActionPhase";
+
+            /// <summary>
+            /// The position where the player will be moved.<br/>
+            /// Value is <see cref="Vector3"/>.<br/>
+            /// <br/>
+            /// See Notification key: <see cref="Teleportation"/>
+            /// </summary>
+            public const string Position = "LocomotionNotificationKeysPosition";
         }
     }
 }

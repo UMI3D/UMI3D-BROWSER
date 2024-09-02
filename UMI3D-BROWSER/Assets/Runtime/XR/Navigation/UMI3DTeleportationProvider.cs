@@ -1,5 +1,5 @@
 ﻿/*
-Copyright 2019 - 2022 Inetum
+Copyright 2019 - 2024 Inetum
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,10 +15,11 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
-using umi3d.browserRuntime.player;
-using umi3dVRBrowsersBase.interactions;
-using umi3dVRBrowsersBase.navigation;
+using System.Collections;
+using System.Collections.Generic;
+using umi3d.browserRuntime.NotificationKeys;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 
 namespace umi3d.browserRuntime.navigation
@@ -28,95 +29,166 @@ namespace umi3d.browserRuntime.navigation
     /// </summary>
     public class UMI3DTeleportationProvider : MonoBehaviour
     {
-        /// <summary>
-        /// Left teleportation arc preview.
-        /// </summary>
-        [SerializeField] TeleportArc leftArc;
-        /// <summary>
-        /// Right teleportation arc preview.
-        /// </summary>
-        [SerializeField] TeleportArc rightArc;
+        [Header("Controller Actions")]
+        [Tooltip("The reference to the action to start the teleport aiming mode for this controller.")]
+        [SerializeField] InputActionReference leftHandTeleportModeActivate;
+        [Tooltip("The reference to the action to cancel the teleport aiming mode for this controller.")]
+        [SerializeField] InputActionReference leftHandTeleportModeCancel;
+        [Space]
+        [Tooltip("The reference to the action to start the teleport aiming mode for this controller.")]
+        [SerializeField] InputActionReference rightHandTeleportModeActivate;
+        [Tooltip("The reference to the action to cancel the teleport aiming mode for this controller.")]
+        [SerializeField] InputActionReference rightHandTeleportModeCancel;
 
-        /// <summary>
-        /// The amount of time that UMI3D waits before performing another action.
-        /// </summary>
+        [Header("Settings")]
+        [Tooltip("The amount of time that locomotion waits before performing another action.")]
         [SerializeField] float debounceTime = .3f;
-
-        UMI3DVRPlayer player;
 
         ActionMovementTiming actionMovementTiming;
 
-        AbstractControllerInputManager input => AbstractControllerInputManager.Instance;
+        Coroutine coroutine;
+        bool isPerforming;
+
+        Dictionary<string, System.Object> info = new();
 
         void Awake()
         {
-            Linker
-                .Get<UMI3DVRPlayer>(nameof(UMI3DVRPlayer))
-                .linked += (player, isSet) =>
-                {
-                    this.player = isSet ? player : null;
-                };
-
             actionMovementTiming = new();
             actionMovementTiming.DebounceTime = () => debounceTime;
+
+            leftHandTeleportModeActivate.action.performed += ActiveLeftTeleportation;
+            rightHandTeleportModeActivate.action.performed += ActiveRightTeleportation;
+            leftHandTeleportModeActivate.action.canceled += StopLeftTeleportation;
+            rightHandTeleportModeActivate.action.canceled += StopRightTeleportation;
+
+
+            leftHandTeleportModeCancel.action.performed += CancelLeftTeleportation;
+            leftHandTeleportModeCancel.action.performed += CancelLeftTeleportation;
         }
 
-        void Update()
+        void ActiveLeftTeleportation(InputAction.CallbackContext context)
         {
-            if (player == null)
+            if (debounceTime == 0f)
             {
-                return;
+                ActiveTeleportation(Controller.LeftHand);
             }
-
-            if (actionMovementTiming.CanPerformAction())
+            else
             {
-                if (input.GetTeleportDown(ControllerType.LeftHandController))
+                if (coroutine != null)
                 {
-                    leftArc.Display();
-                }
-                else if (input.GetTeleportUp(ControllerType.LeftHandController))
-                {
-                    Teleport(leftArc.GetPointedPoint());
-
-                    leftArc.Hide();
+                    return;
                 }
 
-                if (input.GetTeleportDown(ControllerType.RightHandController))
-                {
-                    rightArc.Display();
-                }
-                else if (input.GetTeleportUp(ControllerType.RightHandController))
-                {
-                    Teleport(rightArc.GetPointedPoint());
-
-                    rightArc.Hide();
-                }
-            } else
-            {
-                if (input.GetTeleportUp(ControllerType.LeftHandController))
-                {
-                    leftArc.Hide();
-                }
-                if (input.GetTeleportUp(ControllerType.RightHandController))
-                {
-                    rightArc.Hide();
-                }
+                coroutine = StartCoroutine(ActiveTeleportationCoroutine(Controller.LeftHand));
             }
         }
-
-        /// <summary>
-        /// Teleports player.
-        /// </summary>
-        void Teleport(Vector3? position)
+        void ActiveRightTeleportation(InputAction.CallbackContext context)
         {
-            if (!position.HasValue || player == null)
+            if (debounceTime == 0f)
             {
-                return;
+                ActiveTeleportation(Controller.RightHand);
             }
+            else
+            {
+                if (coroutine != null)
+                {
+                    return;
+                }
 
-            PlayerTransformUtils.MovePlayerAndCenterCamera(player.transform, player.mainCamera.transform, position.Value);
+                coroutine = StartCoroutine(ActiveTeleportationCoroutine(Controller.RightHand));
+            }
+        }
+        void ActiveTeleportation(Controller controller)
+        {
+            isPerforming = true;
+            info[LocomotionNotificationKeys.Info.Controller] = controller;
+            info[LocomotionNotificationKeys.Info.ActionPhase] = InputActionPhase.Started;
+            NotificationHub.Default.Notify(
+                this,
+                LocomotionNotificationKeys.Teleportation,
+                info
+            );
+        }
+        IEnumerator ActiveTeleportationCoroutine(Controller controller)
+        {
+            ActiveTeleportation(controller);
 
             actionMovementTiming.ResetDebounceTime();
+
+            while (isPerforming)
+            {
+                yield return null;
+            }
+            while (!actionMovementTiming.CanPerformAction())
+            {
+                yield return null;
+            }
+
+            coroutine = null;
         }
+
+        void StopLeftTeleportation(InputAction.CallbackContext context)
+        {
+            StopTeleportation(Controller.LeftHand);
+        }
+        void StopRightTeleportation(InputAction.CallbackContext context)
+        {
+            StopTeleportation(Controller.RightHand);
+        }
+        void StopTeleportation(Controller controller)
+        {
+            info[LocomotionNotificationKeys.Info.Controller] = controller;
+            info[LocomotionNotificationKeys.Info.ActionPhase] = InputActionPhase.Performed;
+            NotificationHub.Default.Notify(
+                this,
+                LocomotionNotificationKeys.Teleportation,
+                info
+            );
+            isPerforming = false;
+        }
+
+        void CancelLeftTeleportation(InputAction.CallbackContext context)
+        {
+            CancelTeleportation(Controller.LeftHand);
+        }
+        void CancelRightTeleportation(InputAction.CallbackContext context)
+        {
+            CancelTeleportation(Controller.RightHand);
+        }
+        void CancelTeleportation(Controller controller)
+        {
+            isPerforming = false;
+            info[LocomotionNotificationKeys.Info.Controller] = controller;
+            info[LocomotionNotificationKeys.Info.ActionPhase] = InputActionPhase.Canceled;
+            NotificationHub.Default.Notify(
+                this,
+                LocomotionNotificationKeys.Teleportation,
+                info
+            );
+        }
+
+#if UNITY_EDITOR
+
+        [ContextMenu("Test Active Left")]
+        void TestActiveLeftController()
+        {
+            UnityEngine.Debug.Log($"Test Active left controller");
+            ActiveTeleportation(Controller.LeftHand);
+        }
+
+        [ContextMenu("Test Stop Left")]
+        void TestStopLeftController()
+        {
+            UnityEngine.Debug.Log($"Test Stop left controller");
+            StopTeleportation(Controller.LeftHand);
+        }
+
+        [ContextMenu("Test Cancel Left")]
+        void TestCancelLeftController()
+        {
+            UnityEngine.Debug.Log($"Test Cancel left controller");
+            CancelTeleportation(Controller.LeftHand);
+        }
+#endif
     }
 }

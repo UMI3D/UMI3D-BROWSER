@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace umi3d
+namespace umi3d.browserRuntime.xr
 {
     /// <summary>
     /// Use this class to mediate the controllers and their associated interactors and input actions under different interaction states.

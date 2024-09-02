@@ -97,21 +97,12 @@ namespace umi3d.browserRuntime.player
         {
             // Link is made at the end of the OnEnable method so that all the set up has been made.
             linker.Link(this);
-
-            NotificationHub.Default.Subscribe(
-                this,
-                LocomotionNotificationKeys.SnapTurn,
-                null,
-                SnapTurn
-            );
         }
 
         void OnDisable()
         {
             // Unlink when disabled.
             linker.Link(null, false);
-
-            NotificationHub.Default.Unsubscribe(this, LocomotionNotificationKeys.SnapTurn);
         }
 
         IEnumerator CenterCamera()
@@ -123,36 +114,7 @@ namespace umi3d.browserRuntime.player
             PlayerTransformUtils.CenterCamera(mainCamera.transform.parent, mainCamera.transform);
         }
 
-        void SnapTurn(Notification notification)
-        {
-            if (!notification.TryGetInfoT(LocomotionNotificationKeys.Info.Direction, out int direction))
-            {
-                UnityEngine.Debug.LogError($"[UMI3DVRPlayer] LocomotionNotificationKeys.Info.Direction keys missing");
-                return;
-            }
-
-            if (!notification.TryGetInfoT(LocomotionNotificationKeys.Info.TurnAmount, out float turnAmount))
-            {
-                UnityEngine.Debug.LogError($"[UMI3DVRPlayer] LocomotionNotificationKeys.Info.TurnAmount keys missing");
-                return;
-            }
-
-            float angle = 0f;
-            if (direction == 0)
-            {
-                angle = 180f;
-            }
-            else if (direction == 1)
-            {
-                angle = -turnAmount;
-            }
-            else
-            {
-                angle = turnAmount;
-            }
-
-            PlayerTransformUtils.SnapTurn(transform, mainCamera.transform, angle);
-        }
+        
 
         [ContextMenu("Leave")]
         void DebugLeave()

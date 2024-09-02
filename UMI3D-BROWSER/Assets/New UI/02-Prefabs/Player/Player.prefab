@@ -97,6 +97,7 @@ GameObject:
   - component: {fileID: 4478533175215608580}
   - component: {fileID: 5481750014503510893}
   - component: {fileID: 7132735958748874842}
+  - component: {fileID: 5034366315994486536}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -190,6 +191,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   linker: {fileID: 11400000, guid: 68ff1a90a5151924e867698a4e1d3a2d, type: 2}
+--- !u!114 &5034366315994486536
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4883313436918982358}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 231eec4acb4a577439627a5ecb5064d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isSnapTurnTarget: 1
+  teleportationTarget: 1
+  mainCamera: {fileID: 0}
 --- !u!1 &4989430032758259270
 GameObject:
   m_ObjectHideFlags: 0

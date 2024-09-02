@@ -55,15 +55,28 @@ namespace umi3d.browserRuntime.navigation
         {
             actionMovementTiming = new();
             actionMovementTiming.DebounceTime = () => debounceTime;
+        }
 
+        void OnEnable()
+        {
             leftHandTeleportModeActivate.action.performed += ActiveLeftTeleportation;
             rightHandTeleportModeActivate.action.performed += ActiveRightTeleportation;
             leftHandTeleportModeActivate.action.canceled += StopLeftTeleportation;
             rightHandTeleportModeActivate.action.canceled += StopRightTeleportation;
 
+            leftHandTeleportModeCancel.action.performed += CancelLeftTeleportation;
+            rightHandTeleportModeCancel.action.performed += CancelRightTeleportation;
+        }
 
-            leftHandTeleportModeCancel.action.performed += CancelLeftTeleportation;
-            leftHandTeleportModeCancel.action.performed += CancelLeftTeleportation;
+        void OnDisable()
+        {
+            leftHandTeleportModeActivate.action.performed -= ActiveLeftTeleportation;
+            rightHandTeleportModeActivate.action.performed -= ActiveRightTeleportation;
+            leftHandTeleportModeActivate.action.canceled -= StopLeftTeleportation;
+            rightHandTeleportModeActivate.action.canceled -= StopRightTeleportation;
+
+            leftHandTeleportModeCancel.action.performed -= CancelLeftTeleportation;
+            rightHandTeleportModeCancel.action.performed -= CancelRightTeleportation;
         }
 
         void ActiveLeftTeleportation(InputAction.CallbackContext context)

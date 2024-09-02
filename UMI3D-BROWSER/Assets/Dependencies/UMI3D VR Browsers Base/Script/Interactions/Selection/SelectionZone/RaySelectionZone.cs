@@ -18,7 +18,7 @@ using UnityEngine;
 namespace umi3dBrowsers.interaction.selection.zoneselection
 {
     /// <summary>
-    /// Seleciton zone defined by a ray
+    /// Selection zone defined by a ray
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class RaySelectionZone<T> : AbstractSelectionZone<T> where T : MonoBehaviour
@@ -32,6 +32,9 @@ namespace umi3dBrowsers.interaction.selection.zoneselection
         /// Origin of the ray
         /// </summary>
         public Vector3 origin;
+
+        public delegate bool RaySelectionBlocker(RaycastHit hit);
+        public RaySelectionBlocker blocker;
 
         public RaySelectionZone(Vector3 origin, Vector3 direction)
         {
@@ -59,18 +62,19 @@ namespace umi3dBrowsers.interaction.selection.zoneselection
         {
             (RaycastHit[] hits, int hitCount) hitsInfo = umi3d.common.Physics.RaycastAll(origin, direction);
             var objectsOnRay = new List<T>();
+
             for (int i = 0; i < hitsInfo.hitCount; i++)
             {
                 var hit = hitsInfo.hits[i];
-                var interContainer = hit.transform.GetComponent<T>();
-                if (interContainer == null)
-                {
-                    interContainer = hit.transform.GetComponentInParent<T>();
-                }
+                var interContainer = hit.transform.GetComponentInParent<T>();
+                
                 if (interContainer != null)
                 {
                     objectsOnRay.Add(interContainer);
                 }
+
+                if (blocker != null && blocker(hit))
+                    break;
             }
 
             return objectsOnRay;
@@ -164,11 +168,7 @@ namespace umi3dBrowsers.interaction.selection.zoneselection
                 {
                     continue;
                 }
-                var obj = hit.transform.GetComponent<T>();
-                if (obj == null) //looking for a componenent in parent
-                {
-                    obj = hit.transform.GetComponentInParent<T>();
-                }
+                var obj = hit.transform.GetComponentInParent<T>();
                 if (obj != null)
                 {
                     if (objectsOnRay.ContainsKey(obj))
@@ -183,6 +183,9 @@ namespace umi3dBrowsers.interaction.selection.zoneselection
                         objectsOnRay.Add(obj, hit);
                     }
                 }
+
+                if (blocker != null && blocker(hit))
+                    break;
             }
 
             return objectsOnRay;

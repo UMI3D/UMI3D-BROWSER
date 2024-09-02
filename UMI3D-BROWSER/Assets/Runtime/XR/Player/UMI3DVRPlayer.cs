@@ -17,7 +17,6 @@ limitations under the License.
 using inetum.unityUtils;
 using System.Collections;
 using umi3d.browserRuntime.navigation;
-using umi3d.browserRuntime.NotificationKeys;
 using umi3d.cdk;
 using umi3d.cdk.collaboration.userCapture;
 using umi3d.cdk.navigation;
@@ -70,9 +69,7 @@ namespace umi3d.browserRuntime.player
                 this,
                 mainCamera.transform,
                 xrOrigin.transform,
-                personalSkeletonContainer.transform,
-                snapTurn,
-                umi3dTeleportationProvider
+                personalSkeletonContainer.transform
             );
             navigation.Init(navigationDelegate);
 

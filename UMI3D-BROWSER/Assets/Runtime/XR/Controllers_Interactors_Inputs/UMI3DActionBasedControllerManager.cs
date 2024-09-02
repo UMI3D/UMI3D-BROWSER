@@ -14,8 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
 using System.Collections;
 using System.Collections.Generic;
+using umi3d.browserRuntime.NotificationKeys;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -33,13 +35,14 @@ namespace umi3d.browserRuntime.xr
         //[Tooltip("If true, continuous movement will be enabled. If false, teleport will enabled.")]
         //bool m_SmoothMotionEnabled;
 
-        [SerializeField]
         [Tooltip("The reference to the action to start the teleport aiming mode for this controller.")]
-        InputActionReference m_TeleportModeActivate;
+        [SerializeField] InputActionReference m_TeleportModeActivate;
 
-        [SerializeField]
         [Tooltip("The reference to the action to cancel the teleport aiming mode for this controller.")]
-        InputActionReference m_TeleportModeCancel;
+        [SerializeField] InputActionReference m_TeleportModeCancel;
+
+        [Tooltip("Whether the teleportation is enabled with this controller.")]
+        [SerializeField] bool enableTeleportation;
 
         //[SerializeField]
         //[Tooltip("The reference to the action of moving the XR Origin with this controller.")]
@@ -51,9 +54,11 @@ namespace umi3d.browserRuntime.xr
         //[Tooltip("If true, continuous turn will be enabled. If false, snap turn will be enabled. Note: If smooth motion is enabled and enable strafe is enabled on the continuous move provider, turn will be overriden in favor of strafe.")]
         //bool m_SmoothTurnEnabled;
 
-        [SerializeField]
         [Tooltip("The reference to the action of snap turning the XR Origin with this controller.")]
-        InputActionReference m_SnapTurn;
+        [SerializeField] InputActionReference m_SnapTurn;
+
+        [Tooltip("Whether the snap turn is enabled with this controller.")]
+        [SerializeField] bool enableSnapTurn;
 
         //[SerializeField]
         //[Tooltip("The reference to the action of continuous turning the XR Origin with this controller.")]
@@ -69,14 +74,86 @@ namespace umi3d.browserRuntime.xr
         //[Tooltip("The reference to the action of scrolling UI with this controller.")]
         //InputActionReference m_UIScroll;
 
-        void Awake()
+        ControllerType controllerType;
+
+        public bool EnableTeleportation
         {
-            
+            get => enableTeleportation;
+            set
+            {
+                SetEnabled(m_TeleportModeActivate, value);
+                SetEnabled(m_TeleportModeCancel, value);
+                enableTeleportation = value;
+            }
         }
 
-        void EnableOrDisableNavigation()
+        public bool EnableSnapTurn
         {
+            get => enableSnapTurn;
+            set
+            {
+                SetEnabled(m_SnapTurn, value);
+                enableSnapTurn = value;
+            }
+        }
 
+        private void Awake()
+        {
+            controllerType = GetComponent<ControllerType>();
+        }
+
+        void OnEnable()
+        {
+            NotificationHub.Default.Subscribe(
+                this,
+                LocomotionNotificationKeys.System,
+                null,
+                EnableOrDisableNavigation
+            );
+
+            if (enableTeleportation)
+            {
+                EnableAction(m_TeleportModeActivate);
+                EnableAction(m_TeleportModeCancel);
+            }
+
+            if (enableSnapTurn)
+            {
+                EnableAction(m_SnapTurn);
+            }
+        }
+
+        void OnDisable()
+        {
+            NotificationHub.Default.Unsubscribe(this, LocomotionNotificationKeys.System);
+
+            DisableAction(m_TeleportModeActivate);
+            DisableAction(m_TeleportModeCancel);
+            DisableAction(m_SnapTurn);
+        }
+
+        void EnableOrDisableNavigation(Notification notification)
+        {
+            if (!notification.TryGetInfoT(LocomotionNotificationKeys.Info.Controller, out Controller controller))
+            {
+                return;
+            }
+
+            if (controller != controllerType.controller && controller != Controller.LeftAndRight)
+            {
+                // This controller is not the target of the notification.
+                return;
+            }
+
+            if (notification.TryGetInfoT(LocomotionNotificationKeys.Info.SnapTurnActiveState, out ActiveState snapTurnState, false))
+            {
+                EnableSnapTurn = snapTurnState == ActiveState.Enable;
+            }
+
+            if (notification.TryGetInfoT(LocomotionNotificationKeys.Info.TeleportationActiveState, out ActiveState teleportationState, false))
+            {
+                EnableTeleportation = teleportationState == ActiveState.Enable;
+            }
         }
 
         #region Actions

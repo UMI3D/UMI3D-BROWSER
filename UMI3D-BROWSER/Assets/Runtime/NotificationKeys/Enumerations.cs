@@ -25,6 +25,29 @@ namespace umi3d.browserRuntime.NotificationKeys
     public enum Controller
     {
         LeftHand,
-        RightHand
+        RightHand, 
+        LeftAndRight
+    }
+
+    /// <summary>
+    /// Active state of an object.
+    /// </summary>
+    public enum ActiveState
+    {
+        Enable,
+        Disable
+    }
+
+    /// <summary>
+    /// The locomotion types.
+    /// </summary>
+    [Flags]
+    public enum LocomotionType
+    {
+        None = 0,
+        SnapTurn = 1,
+        ContinuousTurn = 1 << 1,
+        Teleportation = 1 << 2,
+        Move = 1 << 3,
     }
 }

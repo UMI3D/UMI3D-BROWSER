@@ -25,10 +25,16 @@ namespace umi3d.browserRuntime.NotificationKeys
         /// Notification sent when a snap turn will be performed.
         /// </summary>
         public const string SnapTurn = "LocomotionNotificationKeysSnapTurn";
+
         /// <summary>
         /// Notification sent when a teleportation will be performed.
         /// </summary>
         public const string Teleportation = "LocomotionNotificationKeysTeleportation";
+
+        /// <summary>
+        /// Notification sent when the locomotion system will change.
+        /// </summary>
+        public const string System = "LocomotionNotificationKeysSystem";
 
         public static class Info
         {
@@ -52,7 +58,8 @@ namespace umi3d.browserRuntime.NotificationKeys
             /// The controller responsible of the locomotion.<br/>
             /// Value is <see cref="umi3d.browserRuntime.NotificationKeys.Controller"/>.<br/>
             /// <br/>
-            /// See Notification key: <see cref="Teleportation"/>
+            /// See Notification key: <see cref="Teleportation"/><br/>
+            /// See Notification key: <see cref="System"/>
             /// </summary>
             public const string Controller = "LocomotionNotificationKeysController";
 
@@ -78,6 +85,22 @@ namespace umi3d.browserRuntime.NotificationKeys
             /// See Notification key: <see cref="Teleportation"/>
             /// </summary>
             public const string Position = "LocomotionNotificationKeysPosition";
+
+            /// <summary>
+            /// The active state of the snap turn.<br/>
+            /// Value is <see cref="umi3d.browserRuntime.NotificationKeys.ActiveState"/>.<br/>
+            /// <br/>
+            /// See Notification key: <see cref="System"/>
+            /// </summary>
+            public const string SnapTurnActiveState = "LocomotionNotificationKeysSnapTurnActiveState";
+
+            /// <summary>
+            /// The active state of the teleportation.<br/>
+            /// Value is <see cref="umi3d.browserRuntime.NotificationKeys.ActiveState"/>.<br/>
+            /// <br/>
+            /// See Notification key: <see cref="System"/>
+            /// </summary>
+            public const string TeleportationActiveState = "LocomotionNotificationKeysTeleportationActiveState";
         }
     }
 }

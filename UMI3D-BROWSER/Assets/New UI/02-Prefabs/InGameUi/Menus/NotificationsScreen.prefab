@@ -165,16 +165,16 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 5015745269509790766}
-  - {fileID: 1663095541877568794}
-  - {fileID: 7723219225523230231}
-  - {fileID: 8851008783644148736}
   - {fileID: 8766544097611231261}
   - {fileID: 5885184759874208097}
   - {fileID: 1878485767124072929}
   - {fileID: 5663040516849169128}
   - {fileID: 2812639598938861345}
   - {fileID: 8926347263506665580}
+  - {fileID: 5015745269509790766}
+  - {fileID: 1663095541877568794}
+  - {fileID: 7723219225523230231}
+  - {fileID: 8851008783644148736}
   m_Father: {fileID: 2435706259688398966}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -207,7 +207,7 @@ MonoBehaviour:
   m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
-  m_ReverseArrangement: 0
+  m_ReverseArrangement: 1
 --- !u!114 &6863599652815345715
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -725,6 +725,7 @@ GameObject:
   - component: {fileID: 6605715014765231314}
   - component: {fileID: 3390103056316559607}
   - component: {fileID: 3075508186718479660}
+  - component: {fileID: 7732600168753888622}
   m_Layer: 5
   m_Name: NotificationsContainer
   m_TagString: Untagged
@@ -810,6 +811,21 @@ MonoBehaviour:
   plusButton: {fileID: 9098701580757021116}
   minusButton: {fileID: 5743121281516244744}
   visibleElements: 8
+--- !u!114 &7732600168753888622
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4090254388739675050}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 799ae774dfd401044835585b549078e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  content: {fileID: 6844907047073002452}
+  notificationPrefab: {fileID: 751161709065877071, guid: e0057edff2be555478919c4f05a79d73,
+    type: 3}
 --- !u!1 &4779231844682234010
 GameObject:
   m_ObjectHideFlags: 0

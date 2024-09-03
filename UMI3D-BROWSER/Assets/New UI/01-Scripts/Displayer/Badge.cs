@@ -25,6 +25,8 @@ public class Badge : MonoBehaviour
     [SerializeField] RectTransform textTransform;
     [SerializeField] RectTransform backgroundTransform;
     [SerializeField] float padding = 10f;
+    [SerializeField] bool isHorizontal = true;
+    [SerializeField] bool isVertical = true;
 
     private UIColliderScaller scaller;
 
@@ -49,7 +51,8 @@ public class Badge : MonoBehaviour
     [ContextMenu("UpdateUI")]
     private void OnGUI()
     {
-        backgroundTransform.sizeDelta = new Vector2(textTransform.sizeDelta.x + 2f * padding, textTransform.sizeDelta.y + padding);
+        backgroundTransform.sizeDelta = new Vector2(isHorizontal ? textTransform.sizeDelta.x + 2f * padding : backgroundTransform.sizeDelta.x,
+            isVertical ? textTransform.sizeDelta.y + 2f * padding : backgroundTransform.sizeDelta.y);
         scaller?.ScaleCollider();
     }
 }

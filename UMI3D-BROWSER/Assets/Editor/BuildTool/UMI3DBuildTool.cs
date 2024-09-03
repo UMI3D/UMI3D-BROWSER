@@ -129,6 +129,8 @@ namespace umi3d.browserEditor.BuildTool
             );
             _uMI3DConfigurator = new UMI3DConfigurator(loadingParameters);
 
+            versionModel.UpdateSDKVersion();
+
             targetModel.applyTargetOptionsHandler += ApplyTargetOptions;
             targetModel.buildSelectedTargetHandler += BuildSelectedTargets;
             targetModel.target_VTA = target_VTA;
@@ -220,6 +222,7 @@ namespace umi3d.browserEditor.BuildTool
         void BuildSelectedTargets(params TargetDto[] target)
         {
             versionModel.UpdateOldVersion();
+            versionModel.UpdateSDKVersion();
             for (int i = 0; i < target.Length; i++)
             {
                 ApplyTargetOptions(target[i].Target);

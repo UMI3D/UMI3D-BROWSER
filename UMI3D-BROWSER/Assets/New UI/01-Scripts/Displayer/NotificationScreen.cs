@@ -53,7 +53,7 @@ namespace umi3dBrowsers.displayer
         {
             var notificationGameObject = Instantiate(notificationPrefab, content);
             var notification = notificationGameObject.GetComponent<NotificationElement>();
-            notification.Init(notificationDto.content);
+            notification.Init(notificationDto);
         }
     }
 }

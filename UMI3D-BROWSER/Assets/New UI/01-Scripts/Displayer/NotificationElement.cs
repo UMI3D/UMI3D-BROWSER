@@ -14,7 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System;
 using TMPro;
+using umi3d.cdk;
+using umi3d.common;
+using umi3d.common.interaction;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -28,6 +32,10 @@ namespace umi3dBrowsers.displayer
         [SerializeField] private Image badge;
         [SerializeField] private Color badgeColorNew;
         [SerializeField] private Color badgeColorRead;
+        [Header("Buttons")]
+        [SerializeField] private Transform buttonsContainer;
+        [SerializeField] private GameObject buttonPrefab;
+        [SerializeField] private int buttonPadding;
 
         public bool IsRead { 
             get => IsRead; 
@@ -39,11 +47,33 @@ namespace umi3dBrowsers.displayer
 
         private bool isRead;
 
-        public void Init(string descriptionText)
+        public void Init(NotificationDto notificationDto)
         {
             IsRead = false;
-            description.text = descriptionText;
-            descriptionComplete.text = descriptionText;
+            description.text = notificationDto.content;
+            descriptionComplete.text = notificationDto.content;
+
+            RectTransform buttonTransform = buttonPrefab.transform as RectTransform;
+            descriptionComplete.margin = notificationDto.callback.Length > 0 ? new Vector4(0, 0, 0, buttonTransform.sizeDelta.y + 2 * buttonPadding) : Vector4.zero;
+
+            for (int i = 0; i < notificationDto.callback.Length; i++)
+            {
+                var buttonGameObject = Instantiate(buttonPrefab, buttonsContainer);
+                buttonGameObject.GetComponentInChildren<SimpleButton>().OnClick.AddListener(() => {
+                    var callbackDto = new NotificationCallbackDto() {
+                        id = notificationDto.id,
+                        callback = i == 0
+                    };
+                    UMI3DClientServer.SendRequest(callbackDto, true);
+                });
+                buttonGameObject.GetComponentInChildren<TMP_Text>().text = notificationDto.callback[i];
+            }
+        }
+
+        private void RemoveButtons()
+        {
+            foreach (Transform child in buttonsContainer)
+                Destroy(child);
         }
     }
 }

@@ -80,7 +80,7 @@ namespace umi3dVRBrowsersBase.interactions.input
         private void VRInput_onStateUp()
         {
             if (PlayerMenuManager.Instance.IsMenuHovered
-                || (Keyboard.Instance?.IsOpen ?? false))
+                || (KeyboardWebView.Instance?.IsOpen ?? false))
                 return;
 
             onActionUp.Invoke();
@@ -95,7 +95,7 @@ namespace umi3dVRBrowsersBase.interactions.input
         private void VRInput_onStateDown()
         {
             if (PlayerMenuManager.Instance.IsMenuHovered
-                || (Keyboard.Instance?.IsOpen ?? false))
+                || (KeyboardWebView.Instance?.IsOpen ?? false))
                 return;
 
             onActionDown.Invoke();

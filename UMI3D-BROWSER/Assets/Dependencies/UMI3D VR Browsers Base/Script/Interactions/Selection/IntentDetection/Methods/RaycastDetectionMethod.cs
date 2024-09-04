@@ -14,6 +14,7 @@ limitations under the License.
 using System.Collections.Generic;
 using umi3d.cdk.interaction;
 using umi3dBrowsers.interaction.selection.zoneselection;
+using umi3dVRBrowsersBase.interactions.selection.cursor;
 using UnityEngine;
 
 namespace umi3dBrowsers.interaction.selection.intentdetector.method
@@ -24,10 +25,13 @@ namespace umi3dBrowsers.interaction.selection.intentdetector.method
     /// <typeparam name="T"></typeparam>
     public class RaycastDetectionMethod<T> : AbstractDetectionMethod<T> where T : MonoBehaviour
     {
+
+        public RaySelectionZone<T>.RaySelectionBlocker blocker = null;
+
         /// <inheritdoc/>
         public override T PredictTarget()
         {
-            var raySelection = new RaySelectionZone<T>(controllerTransform.position, controllerTransform.forward);
+            var raySelection = new RaySelectionZone<T>(controllerTransform.position, controllerTransform.forward) { blocker = blocker };
             var closestActiveInteractable = raySelection.GetClosestInZone();
             return closestActiveInteractable;
         }
@@ -42,13 +46,24 @@ namespace umi3dBrowsers.interaction.selection.intentdetector.method
         /// <inheritdoc/>
         public override InteractableContainer PredictTarget()
         {
-            var raySelection = new RaySelectionZone<InteractableContainer>(controllerTransform.position, controllerTransform.forward);
+            var raySelection = new RaySelectionZone<InteractableContainer>(controllerTransform.position, controllerTransform.forward) { blocker = IsABlocker };
             var objWithRaycastHits = raySelection.GetObjectsOnRayWithRayCastHits();
             var objWithRaycastHitsSorted = SortInteractable(objWithRaycastHits);
             if (objWithRaycastHitsSorted.Count > 0)
                 return objWithRaycastHitsSorted[0];
             else
                 return null;
+        }
+
+        /// <summary>
+        /// Test if a collider should block a raycast
+        /// </summary>
+        /// <param name="hit"></param>
+        /// <returns></returns>
+        private bool IsABlocker(RaycastHit hit)
+        {
+            var container = hit.transform.GetComponentInParent<NodeContainer>();
+            return container?.instance.IsBlockingInteraction ?? false;
         }
 
         /// <summary>

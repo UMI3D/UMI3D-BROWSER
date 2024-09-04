@@ -150,7 +150,7 @@ namespace inetum.unityUtils.math
 
             // Converts the radians to degrees
             angle *= Mathf.Rad2Deg;
-            
+
             ZeroTo360(ref angle);
 
             return angle;

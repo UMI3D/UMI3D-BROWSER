@@ -6284,7 +6284,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2db2b9e0fda807f4688ac35f275b5663, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  elasticFollow: {fileID: 0}
   connectionToImmersiveLinker: {fileID: 11400000, guid: 68ff1a90a5151924e867698a4e1d3a2d,
     type: 2}
 --- !u!1 &3103591715346689481
@@ -22925,6 +22924,7 @@ GameObject:
   - component: {fileID: 1150264702805340451}
   - component: {fileID: 4801898426655380395}
   - component: {fileID: 5439540977158732055}
+  - component: {fileID: 5808788909536300095}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -23021,6 +23021,25 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &5808788909536300095
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9039433611476283325}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7951c64acb0fa62458bf30a60089fe2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 0
+  m_CheckFor2DOcclusion: 0
+  m_CheckFor3DOcclusion: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RaycastTriggerInteraction: 1
 --- !u!1 &9045694570236336967
 GameObject:
   m_ObjectHideFlags: 0

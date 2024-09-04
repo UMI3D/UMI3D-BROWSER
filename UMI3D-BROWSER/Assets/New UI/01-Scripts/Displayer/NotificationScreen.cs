@@ -14,6 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System.Collections.Generic;
+using umi3d.baseBrowser.notification;
 using umi3d.common;
 using UnityEngine;
 
@@ -23,11 +25,28 @@ namespace umi3dBrowsers.displayer
     {
         [SerializeField] private Transform content;
         [SerializeField] private GameObject notificationPrefab;
+        [SerializeField] private NotificationLoader notificationLoader;
+
+        private List<NotificationElement> notificationElements = new List<NotificationElement>();
 
         private void Awake()
         {
-            //foreach (Transform child in content)
-            //    Destroy(child);
+            foreach (Transform child in content)
+                Destroy(child);
+
+            notificationLoader.Notification2DReceived += AddNotification;
+        }
+
+        private void OnDestroy()
+        {
+            notificationLoader.Notification2DReceived -= AddNotification;
+        }
+
+        private void OnDisable()
+        {
+            foreach (var element in notificationElements)
+                if (!element.IsRead)
+                    element.IsRead = true;
         }
 
         public void AddNotification(NotificationDto notificationDto)

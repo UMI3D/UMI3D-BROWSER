@@ -23,6 +23,7 @@ namespace umi3dBrowsers.displayer
     public class NotificationElement : MonoBehaviour
     {
         [SerializeField] private TMP_Text description;
+        [SerializeField] private TMP_Text descriptionComplete;
         [Header("Badge")]
         [SerializeField] private Image badge;
         [SerializeField] private Color badgeColorNew;
@@ -42,6 +43,7 @@ namespace umi3dBrowsers.displayer
         {
             IsRead = false;
             description.text = descriptionText;
+            descriptionComplete.text = descriptionText;
         }
     }
 }

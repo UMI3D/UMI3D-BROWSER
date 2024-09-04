@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 3093925778333416427}
   - component: {fileID: 4550753580476496706}
   m_Layer: 5
-  m_Name: GameObject
+  m_Name: CompleteNotification
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -179,6 +179,7 @@ GameObject:
   - component: {fileID: 4044699968087321909}
   - component: {fileID: 5424798755437669878}
   - component: {fileID: 1516279408018297783}
+  - component: {fileID: 2506890863409639988}
   m_Layer: 5
   m_Name: NotificationElement
   m_TagString: Untagged
@@ -302,6 +303,23 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+--- !u!114 &2506890863409639988
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 751161709065877071}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c0e27cebcadce94082acc0b9d0e6a21, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  description: {fileID: 8340411198859870703}
+  descriptionComplete: {fileID: 9061988131650342904}
+  badge: {fileID: 3501253467289434896}
+  badgeColorNew: {r: 0.28235295, g: 0.28235295, b: 0.28235295, a: 1}
+  badgeColorRead: {r: 0.019607844, g: 0.79607844, b: 0.84313726, a: 1}
 --- !u!1 &1019236425469307831
 GameObject:
   m_ObjectHideFlags: 0
@@ -315,7 +333,7 @@ GameObject:
   - component: {fileID: 9061988131650342904}
   - component: {fileID: 3082182032436558027}
   m_Layer: 5
-  m_Name: NotificationText (1)
+  m_Name: CompleteNotificationText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

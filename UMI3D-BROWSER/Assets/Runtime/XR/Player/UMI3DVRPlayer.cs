@@ -69,9 +69,7 @@ namespace umi3d.browserRuntime.player
                 this,
                 mainCamera.transform,
                 xrOrigin.transform,
-                personalSkeletonContainer.transform,
-                snapTurn,
-                umi3dTeleportationProvider
+                personalSkeletonContainer.transform
             );
             navigation.Init(navigationDelegate);
 
@@ -112,6 +110,8 @@ namespace umi3d.browserRuntime.player
             // Center the camera at the position of the player.
             PlayerTransformUtils.CenterCamera(mainCamera.transform.parent, mainCamera.transform);
         }
+
+        
 
         [ContextMenu("Leave")]
         void DebugLeave()

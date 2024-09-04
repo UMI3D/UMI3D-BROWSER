@@ -22,7 +22,7 @@ namespace umi3d.browserRuntime.navigation
     public class ActionMovementTiming 
     {
         /// <summary>
-        /// The amount of time that UMI3D waits before performing another action.
+        /// The amount of time that class waits before performing another action.
         /// </summary>
         public Func<float> DebounceTime;
         float timeSinceLastAction = 0f;

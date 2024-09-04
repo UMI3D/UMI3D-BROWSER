@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 using System;
+using System.Collections;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.UX
@@ -39,30 +40,32 @@ namespace umi3d.browserRuntime.UX
     public interface IFollowable
     {
         /// <summary>
-        /// Editor container for organizing purpose.
+        /// Editor container for organizing purpose.<br/>
+        /// <br/>
+        /// With these components you can track the translation and rotation speed.
         /// </summary>
         [Serializable]
-        public struct FollowTranslationByPositionComponents
+        public struct FollowSpeedComponents
         {
-            [Header("Required for initialisation")]
-            [SerializeField] public float SmoothTranslationSpeed;
-            [SerializeField] public Vector3 Offset;
-            [Space()]
-            [SerializeField] public Vector3 TranslationTarget;
+            [Tooltip("Translation speed of the follower.")]
+            public float SmoothTranslationSpeed;
+
+            [Tooltip("Rotation speed of the follower.")]
+            public float SmoothRotationSpeed;
         }
 
         /// <summary>
-        /// Editor container for organizing purpose.
+        /// Editor container for organizing purpose.<br/>
+        /// <br/>
+        /// With these components you can track the translation offset distance and rotation.
         /// </summary>
         [Serializable]
-        public struct FollowTranslationByDistanceAndRotationComponents
+        public struct OffsetDistanceRotationComponents
         {
-            [Header("Required for initialisation")]
-            [SerializeField] public float SmoothTranslationSpeed;
-            [SerializeField] public float OffsetDistance;
-            [SerializeField] public Vector3 OffsetRotation;
-            [Space()]
-            [SerializeField] public Vector3 TranslationTarget;
+            [Tooltip("Follower's offset distance from the target.")]
+            public float OffsetDistance;
+            [Tooltip("Follower's offset rotation from the target.")]
+            public Vector3 OffsetRotation;
 
             /// <summary>
             /// Compute the offset position via <see cref="OffsetDistance"/> and <see cref="OffsetRotation"/>.
@@ -84,29 +87,47 @@ namespace umi3d.browserRuntime.UX
         /// Editor container for organizing purpose.
         /// </summary>
         [Serializable]
-        public struct FollowRotationComponents
+        public struct TranslationComponents
         {
-            [Header("Required for initialisation")]
-            [SerializeField] public float SmoothRotationSpeed;
-            [Space()]
-            [SerializeField] public Vector3 RotationTarget;
+            [Tooltip("Translation filter.")]
+            public Vector3 filter;
+            [Tooltip("Lazy translation guardian sphere radius.")]
+            public float lazyGuardianRadius;
+            [Tooltip("Lazy translation guardian center.")]
+            [HideInInspector] public Vector3 currentGuardianCenter;
+            [Tooltip("Lazy translation coroutine.")]
+            [HideInInspector] public Coroutine lazyCoroutine;
         }
 
         /// <summary>
-        /// The speed of this to translate toward <see cref="TranslationTarget"/>.
+        /// Editor container for organizing purpose.
         /// </summary>
-        float SmoothTranslationSpeed { get; set; }
-        /// <summary>
-        /// The speed of this to rotate toward <see cref="RotationTarget"/>.
-        /// </summary>
-        float SmoothRotationSpeed { get; set; }
+        [Serializable]
+        public struct RotationComponents
+        {
+            [Tooltip("Rotation filter.")]
+            public Vector3 filter;
+            [Tooltip("Lazy rotation arc percentage.")]
+            public float lazyArcPct;
+            [Tooltip("Current center of the lazy rotation arc.")]
+            [HideInInspector] public Vector3 currentArcCenter;
+            [Tooltip("Lazy rotation coroutine.")]
+            [HideInInspector] public Coroutine lazyCoroutine;
+
+            /// <summary>
+            /// Current center of the lazy rotation arc.
+            /// </summary>
+            public Quaternion CurrentArcCenter
+            {
+                get => Quaternion.Euler(currentArcCenter);
+                set => currentArcCenter = value.eulerAngles;
+            }
+        }
+
+        #region Translation
 
         /// <summary>
-        /// The offset added to <see cref="TranslationTarget"/> when translating.
-        /// </summary>
-        Vector3 Offset { get; set; }
-        /// <summary>
-        /// The <see cref="Offset"/> as a distance and a rotation.
+        /// Return a distance and a rotation from an offset.
         /// 
         /// <para>
         /// <code>
@@ -120,113 +141,123 @@ namespace umi3d.browserRuntime.UX
         /// </code>
         /// </para>
         /// </summary>
-        (float distance, Vector3 rotation) OffsetDistanceRotation
+        (float distance, Vector3 rotation) OffsetToDistanceRotation(Vector3 offset)
         {
-            get =>
-                (
-                    Offset.magnitude,
-                    Quaternion
-                        .FromToRotation(new Vector3(0f, 0f, Offset.magnitude), Offset)
-                        .eulerAngles
+            return (
+                offset.magnitude,
+                Quaternion
+                    .FromToRotation(new Vector3(0f, 0f, offset.magnitude), offset)
+                    .eulerAngles
             );
-            set => Offset = Quaternion.Euler(value.rotation) * new Vector3(0f, 0f, value.distance);
         }
 
         /// <summary>
-        /// Translation target.
+        /// Return the offset from a distance and a rotation.
         /// 
         /// <para>
-        /// The actual position of the target will be <see cref="TranslationTarget"/> + <see cref="Offset"/>.
+        /// <code>
+        ///     ^
+        ///     |   x : Offset
+        ///     |  /                    
+        ///     |a/                     / = Distance
+        ///     |/                      a = rotation
+        ///     o -------------> 
+        /// Translation Target
+        /// </code>
         /// </para>
         /// </summary>
-        Vector3 TranslationTarget { get; set; }
-        /// <summary>
-        /// Rotation target.
-        /// </summary>
-        Quaternion RotationTarget { get; set; }
-
-        /// <summary>
-        /// Current position of this.
-        /// </summary>
-        Vector3 CurrentPosition
+        Vector3 DistanceRotationToOffset(float distance, Vector3 rotation)
         {
-            get
-            {
-                if (this is not MonoBehaviour mono) return Vector3.zero;
-                return mono.transform.localPosition;
-            }
+            return Quaternion.Euler(rotation) * new Vector3(0f, 0f, distance);
         }
 
         /// <summary>
-        /// Current rotation of this.
+        /// Translate from <see cref="CurrentPosition"/> toward <paramref name="position"/> with an offset of <paramref name="offset"/> at <see cref="SmoothTranslationSpeed"/> speed.<br/>
+        /// <br/>
+        /// If <paramref name="animationSpeed"/> is more than 0 then the translation is animated at <see cref="SmoothRotationSpeed"/> speed.<br/>
+        /// This method should be used in a monobehaviour's LateUpdate method if <paramref name="animationSpeed"/> is more than 0.<br/>
         /// </summary>
-        Quaternion CurrentRotation
-        {
-            get
-            {
-                if (this is not MonoBehaviour mono) return Quaternion.identity;
-                return mono.transform.localRotation;
-            }
-        }
-
-        #region Translation
-
-        /// <summary>
-        /// Translate this toward <paramref name="translation"/> with an offset of <paramref name="offset"/> at <see cref="SmoothTranslationSpeed"/> speed.
-        /// 
-        /// <para>
-        /// Set <see cref="TranslationTarget"/> with <paramref name="translation"/> and <see cref="Offset"/> with <paramref name="offset"/>.
-        /// </para>
-        /// </summary>
-        /// <param name="translation"></param>
+        /// <param name="position"></param>
+        /// <param name="animationSpeed"></param>
         /// <param name="offset"></param>
-        void Translate(Vector3 translation, Vector3 offset)
+        /// <param name="filter"></param>
+        void TranslateToward(Vector3 position, float animationSpeed = 0f, Vector3? offset = null, Vector3? filter = null)
         {
             if (this is not MonoBehaviour mono) return;
 
-            TranslationTarget = translation;
-            Offset = offset;
-            Translate();
+            // Get the translation from the current position to the new position.
+            Vector3 translation = position - mono.transform.localPosition;
+
+            // Filter the translation.
+            if (filter.HasValue)
+            {
+                translation = Vector3.Scale(translation, filter.Value);
+            }
+
+            // Get the new position with the filtered translation.
+            position = mono.transform.localPosition + translation;
+
+            if (offset == null)
+            {
+                offset = Vector3.zero;
+            }
+
+            if (animationSpeed > 0)
+            {
+                mono.transform.localPosition = Vector3.Lerp
+                (
+                    mono.transform.position,
+                    position + offset.Value,
+                    animationSpeed * Time.deltaTime
+                );
+            }
+            else
+            {
+                mono.transform.localPosition = position + offset.Value;
+            }
         }
 
         /// <summary>
-        /// Translate this toward <paramref name="translation"/> with an offset of <see cref="Offset"/> at <see cref="SmoothTranslationSpeed"/> speed.
+        /// Translate of <paramref name="translation"/> with an offset of <paramref name="offset"/> at <see cref="SmoothTranslationSpeed"/> speed.<br/>
+        /// <br/>
+        /// If <paramref name="animationSpeed"/> is more than 0 then the translation is animated at <see cref="SmoothRotationSpeed"/> speed.<br/>
+        /// This method should be used in a monobehaviour's LateUpdate method if <paramref name="animationSpeed"/> is more than 0.<br/>
         /// </summary>
         /// <param name="translation"></param>
-        void Translate(Vector3 translation)
+        /// <param name="animationSpeed"></param>
+        /// <param name="offset"></param>
+        /// <param name="filter"></param>
+        void Translate(Vector3 translation, float animationSpeed = 0f, Vector3? offset = null, Vector3? filter = null)
         {
             if (this is not MonoBehaviour mono) return;
 
-            TranslationTarget = translation;
-            Translate();
-        }
+            // Filter the translation.
+            if (filter.HasValue)
+            {
+                translation = Vector3.Scale(translation, filter.Value);
+            }
 
-        /// <summary>
-        /// Translate this toward <see cref="TranslationTarget"/> + <see cref="Offset"/> at <see cref="SmoothTranslationSpeed"/> speed.
-        /// <para>
-        /// This method should be used in a monobehaviour's LateUpdate method.
-        /// </para>
-        /// </summary>
-        void Translate()
-        {
-            if (this is not MonoBehaviour mono) return;
+            // Get the new position with the filtered translation.
+            Vector3 position = mono.transform.localPosition + translation;
 
-            mono.transform.localPosition = Vector3.Lerp
-            (
-                CurrentPosition,
-                TranslationTarget + Offset,
-                SmoothTranslationSpeed * Time.deltaTime
-            );
-        }
+            if (offset == null)
+            {
+                offset = Vector3.zero;
+            }
 
-        /// <summary>
-        /// Translate this toward <see cref="TranslationTarget"/> without delay.
-        /// </summary>
-        void TranslateImmediately()
-        {
-            if (this is not MonoBehaviour mono) return;
-
-            mono.transform.localPosition = TranslationTarget + Offset;
+            if (animationSpeed > 0)
+            {
+                mono.transform.localPosition = Vector3.Lerp
+                (
+                    mono.transform.position,
+                    position + offset.Value,
+                    animationSpeed * Time.deltaTime
+                );
+            }
+            else
+            {
+                mono.transform.localPosition = position + offset.Value;
+            }
         }
 
         #endregion
@@ -234,173 +265,79 @@ namespace umi3d.browserRuntime.UX
         #region Rotation
 
         /// <summary>
-        /// Rotate this by <paramref name="rotation"/> filtered with <paramref name="filter"/> if it matches the condition of the sequences.
-        /// 
-        /// <para>
-        /// Divide a circle in <paramref name="sequences"/> sequences. Rotate toward the corresponding sequence.
-        /// </para>
-        /// <example>
-        /// To rotate horizontally (Y axis) toward 4 positions, copy and past this piece of code.
-        /// <code>
-        ///     (this as IFollowable).Rotate(rotation, Vector3.up, 4);
-        /// </code>
-        /// </example>
+        /// Rotate from the current rotation toward <paramref name="rotation"/>.<br/>
+        /// <br/>
+        /// If <paramref name="animationSpeed"/> is more than 0 then the rotation is animated at <see cref="SmoothRotationSpeed"/> speed.<br/>
+        /// This method should be used in a monobehaviour's LateUpdate method if <paramref name="animationSpeed"/> is more than 0.<br/>
+        /// <br/>
+        /// The rotation is filtered with <paramref name="filter"/>. A filter of x = 0, y = 1, z = 0 means that the only allowed rotation is on the y axis.
         /// </summary>
         /// <param name="rotation"></param>
+        /// <param name="withAnimation"></param>
         /// <param name="filter"></param>
-        /// <param name="sequences"></param>
-        void Rotate(Quaternion rotation, Vector3 filter, int sequences)
+        void RotateToward(Quaternion endRotation, float animationSpeed = 0f, Vector3? filter = null)
         {
-            if (sequences <= 0) sequences = 1;
-            // Length of a sequence.
-            var sequence = 360f / (float)sequences;
-            // Half of the length of a sequence.
-            var halfSequence = sequence / 2f;
+            if (this is not MonoBehaviour mono) return;
 
-            var _rotation = Quaternion.identity;
-            _rotation.eulerAngles = Vector3.Scale(filter, rotation.eulerAngles);
+            Quaternion _rotation = endRotation * Quaternion.Inverse(mono.transform.localRotation);
 
-            /// <summary>
-            ///       |<- sequence->|
-            /// ------|--]---0---]--|-------
-            ///         min     max
-            ///       |<->| = hysteresis
-            /// </summary>
-            void SetRotation(float angle, float current, Action<float> rotate, bool log)
+            if (filter.HasValue)
             {
-                // Delay compared with min and max of a sequence.
-                const float hysteresis = 20f;
-
-                var min = -halfSequence + hysteresis;
-                var max = halfSequence - hysteresis;
-                var middle = 0f;
-                for (int i = 0; i <= sequences; i++)
-                {
-                    if (log) UnityEngine.Debug.Log($"{i}: {min}, {max}, {angle}, {middle}");
-                    if
-                    (
-                        angle <= max
-                        && angle > min
-                    )
-                    {
-                        rotate(middle);
-                        return;
-                    }
-                    min += sequence;
-                    max += sequence;
-                    middle += sequence;
-                }
-                rotate(current);
+                _rotation.eulerAngles = Vector3.Scale(filter.Value, _rotation.eulerAngles);
             }
 
-            SetRotation
-            (
-                _rotation.eulerAngles.x,
-                RotationTarget.eulerAngles.x,
-                middle =>
-                {
-                    _rotation.eulerAngles = new Vector3
-                    (
-                        middle,
-                        _rotation.eulerAngles.y,
-                        _rotation.eulerAngles.z
-                    );
-                }, false);
+            // Get the end rotation after adding the rotation to the current rotation.
+            endRotation = mono.transform.localRotation * _rotation;
 
-            SetRotation
-            (
-                _rotation.eulerAngles.y,
-                RotationTarget.eulerAngles.y,
-                middle =>
-                {
-                    _rotation.eulerAngles = new Vector3
-                    (
-                        _rotation.eulerAngles.x,
-                        middle,
-                        _rotation.eulerAngles.z
-                    );
-                }, false);
-
-            SetRotation
-            (
-                _rotation.eulerAngles.z,
-                RotationTarget.eulerAngles.z,
-                middle =>
-                {
-                    _rotation.eulerAngles = new Vector3
-                    (
-                        _rotation.eulerAngles.x,
-                        _rotation.eulerAngles.y,
-                        middle
-                    );
-                }, false);
-
-            Rotate(_rotation);
+            if (animationSpeed > 0)
+            {
+                mono.transform.localRotation = Quaternion.Lerp(
+                    mono.transform.localRotation,
+                    endRotation,
+                    animationSpeed * Time.deltaTime
+                );
+            }
+            else
+            {
+                mono.transform.localRotation = endRotation;
+            }
         }
 
         /// <summary>
-        /// Rotate this toward <paramref name="rotation"/> filtered with <paramref name="filter"/> at <see cref="SmoothRotationSpeed"/> speed.
-        /// 
-        /// <para>
-        /// Set <see cref="RotationTarget"/> with <paramref name="rotation"/>. This method should be used in a monobehaviour's LateUpdate method.
-        /// </para>
-        /// <example>
-        /// To filtered the rotation on the Y axi copy and past the following piece of code:
-        /// <code>
-        ///     (this as IFollowable).Rotate(rotation, Vector3.up);
-        /// </code>
-        /// </example>
+        /// Rotate of <paramref name="rotation"/>.<br/>
+        /// <br/>
+        /// If <paramref name="animationSpeed"/> is more than 0 then the rotation is animated at <see cref="SmoothRotationSpeed"/> speed.<br/>
+        /// This method should be used in a monobehaviour's LateUpdate method if <paramref name="animationSpeed"/> is more than 0.<br/>
+        /// <br/>
+        /// The rotation is filtered with <paramref name="filter"/>. A filter of x = 0, y = 1, z = 0 means that the only allowed rotation is on the y axis.
         /// </summary>
         /// <param name="rotation"></param>
+        /// <param name="withAnimation"></param>
         /// <param name="filter"></param>
-        void Rotate(Quaternion rotation, Vector3 filter)
-        {
-            var _rotation = Quaternion.identity;
-            _rotation.eulerAngles = Vector3.Scale(filter, rotation.eulerAngles);
-
-            Rotate(_rotation);
-        }
-
-        /// <summary>
-        /// Rotate this toward <paramref name="rotation"/> at <see cref="SmoothRotationSpeed"/> speed.
-        /// 
-        /// <para>
-        /// Set <see cref="RotationTarget"/> with <paramref name="rotation"/>. This method should be used in a monobehaviour's LateUpdate method.
-        /// </para>
-        /// </summary>
-        /// <param name="rotation"></param>
-        void Rotate(Quaternion rotation)
+        void Rotate(Quaternion rotation, float animationSpeed = 0f, Vector3? filter = null)
         {
             if (this is not MonoBehaviour mono) return;
 
-            RotationTarget = rotation;
-            Rotate();
-        }
+            if (filter.HasValue)
+            {
+                rotation.eulerAngles = Vector3.Scale(filter.Value, rotation.eulerAngles);
+            }
 
-        /// <summary>
-        /// Rotate this toward <see cref="RotationTarget"/> at <see cref="SmoothRotationSpeed"/> speed.
-        /// 
-        /// <para>
-        /// This method should be used in a monobehaviour's LateUpdate method.
-        /// </para>
-        /// </summary>
-        void Rotate()
-        {
-            if (this is not MonoBehaviour mono) return;
+            // Get the end rotation after adding the rotation to the current rotation.
+            Quaternion endRotation = mono.transform.localRotation * rotation;
 
-            mono.transform.localRotation = Quaternion.Lerp(CurrentRotation, RotationTarget, SmoothRotationSpeed * Time.deltaTime);
-        }
-
-        /// <summary>
-        /// Rotate toward <see cref="RotationTarget"/> without delay.
-        /// </summary>
-        /// <param name="rotation"></param>
-        void RotateImmediately(Quaternion rotation)
-        {
-            if (this is not MonoBehaviour mono) return;
-
-            RotationTarget = rotation;
-            mono.transform.localRotation = RotationTarget;
+            if (animationSpeed > 0)
+            {
+                mono.transform.localRotation = Quaternion.Lerp(
+                    mono.transform.localRotation,
+                    endRotation,
+                    animationSpeed * Time.deltaTime
+                );
+            }
+            else
+            {
+                mono.transform.localRotation = endRotation;
+            }
         }
 
         #endregion

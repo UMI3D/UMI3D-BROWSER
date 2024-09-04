@@ -1,5 +1,5 @@
 ﻿/*
-Copyright 2019 - 2022 Inetum
+Copyright 2019 - 2024 Inetum
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,67 +15,135 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
-using umi3d.browserRuntime.player;
-using umi3dVRBrowsersBase.interactions;
+using inetum.unityUtils.math;
+using System.Collections;
+using System.Collections.Generic;
+using umi3d.browserRuntime.NotificationKeys;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace umi3d.browserRuntime.navigation
 {
     public class UMI3DSnapTurnProvider : MonoBehaviour
     {
+        [Header("Controller Actions")]
+        [Tooltip("The reference to the action of snap turning the XR Origin with this controller.")]
+        [SerializeField] InputActionReference leftHandSnapTurn;
+        [Tooltip("The reference to the action of snap turning the XR Origin with this controller.")]
+        [SerializeField] InputActionReference rightHandSnapTurn;
+
+        [Header("Settings")]
+        [Tooltip("The amount of degree that locomotion turn.")]
         [SerializeField] float turnAmount = 45;
-
-        /// <summary>
-        /// The amount of time that UMI3D waits before performing another action.
-        /// </summary>
+        [Tooltip("The amount of time that locomotion waits before performing another action.")]
         [SerializeField] float debounceTime = .3f;
+        [Tooltip("Whether the player can turn around by snap turning.")]
+        [SerializeField] bool enableTurnAround = true;
 
-        UMI3DVRPlayer player;
+        Coroutine coroutine;
 
         ActionMovementTiming actionMovementTiming;
 
-        AbstractControllerInputManager input => AbstractControllerInputManager.Instance;
+        Dictionary<string, System.Object> info = new();
 
-        bool turnLeft => input.GetLeftSnapTurn(ControllerType.LeftHandController)
-            || input.GetLeftSnapTurn(ControllerType.RightHandController);
-
-        bool turnRight => input.GetRightSnapTurn(ControllerType.LeftHandController)
-            || input.GetRightSnapTurn(ControllerType.RightHandController);
-
-        private void Awake()
+        void Awake()
         {
-            Linker
-                .Get<UMI3DVRPlayer>(nameof(UMI3DVRPlayer))
-                .linked += (player, isSet) =>
-                {
-                    this.player = isSet ? player : null;
-                };
-
             actionMovementTiming = new();
             actionMovementTiming.DebounceTime = () => debounceTime;
         }
 
-        private void Update()
+        void OnEnable()
         {
-            if (player == null)
+            leftHandSnapTurn.action.performed += SnapTurn;
+            rightHandSnapTurn.action.performed += SnapTurn;
+        }
+
+        void OnDisable()
+        {
+            leftHandSnapTurn.action.performed -= SnapTurn;
+            rightHandSnapTurn.action.performed -= SnapTurn;
+        }
+
+        void SnapTurn(InputAction.CallbackContext context)
+        {
+            if (coroutine != null)
             {
                 return;
             }
 
-            if (actionMovementTiming.CanPerformAction())
+            coroutine = StartCoroutine(SnapTurnCoroutine());
+        }
+
+        IEnumerator SnapTurnCoroutine()
+        {
+            if (!IsRotating(out float angle))
             {
-                if (turnLeft)
-                {
-                    PlayerTransformUtils.SnapTurn(player.transform, player.mainCamera.transform, -turnAmount);
+                coroutine = null;
+                yield break;
+            }
 
-                    actionMovementTiming.ResetDebounceTime();
-                }
-                else if (turnRight)
-                {
-                    PlayerTransformUtils.SnapTurn(player.transform, player.mainCamera.transform, turnAmount);
+            info[LocomotionNotificationKeys.Info.Direction] = RotationDirection(angle);
+            info[LocomotionNotificationKeys.Info.TurnAmount] = turnAmount;
+            NotificationHub.Default.Notify(
+                this,
+                LocomotionNotificationKeys.SnapTurn,
+                info
+            );
 
-                    actionMovementTiming.ResetDebounceTime();
-                }
+            actionMovementTiming.ResetDebounceTime();
+
+            while (!actionMovementTiming.CanPerformAction())
+            {
+                yield return null;
+            }
+
+            coroutine = null;
+        }
+
+        Vector2 ReadInput()
+        {
+            var leftHandValue = leftHandSnapTurn.action?.ReadValue<Vector2>() ?? Vector2.zero;
+            var rightHandValue = rightHandSnapTurn.action?.ReadValue<Vector2>() ?? Vector2.zero;
+
+            return leftHandValue + rightHandValue;
+        }
+
+        bool IsRotating(out float angle)
+        {
+            Vector2 axis = ReadInput();
+
+            if (axis.x == 0 && axis.y == 0)
+            {
+                // No rotation. It should not happen.
+                angle = float.NaN;
+                return false;
+            }
+
+            axis = axis.normalized;
+            angle = axis.Vector2Degree();
+            // Subtract 90° so that 0 is below (0, -1).
+            angle -= 90f;
+            RotationUtils.ZeroTo360(ref angle);
+
+            return true;
+        }
+
+        int RotationDirection(float angle)
+        {
+            if (angle < 45f || 315f < angle)
+            {
+                // Turn around.
+                return 0;
+            }
+            else if (angle < 180)
+            {
+                // Turn left.
+                return 1;
+            }
+            else
+            {
+                // Turn right.
+                return 2;
             }
         }
     }

@@ -17,7 +17,6 @@ using System.Collections.Generic;
 using System.Linq;
 using umi3d.cdk;
 using umi3d.cdk.interaction;
-using umi3d.cdk.userCapture.pose;
 using umi3d.common;
 using umi3dBrowsers.interaction.selection;
 using umi3dBrowsers.interaction.selection.cursor;
@@ -251,6 +250,17 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
             return obj != null && distance < maxLength;
         }
 
+        /// <summary>
+        /// Test if a collider should block a raycast
+        /// </summary>
+        /// <param name="hit"></param>
+        /// <returns></returns>
+        private bool IsABlocker(RaycastHit hit)
+        {
+            var container = hit.transform.GetComponentInParent<NodeContainer>();
+            return container?.instance.IsBlockingInteraction ?? false;
+        }
+
         public void Update()
         {
             // Priority on touch UI
@@ -263,7 +273,7 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
             }
 
             raycastHelperSelectable = new RaySelectionZone<Selectable>(transform.position, transform.up);
-            raycastHelperInteractable = new RaySelectionZone<InteractableContainer>(transform.position, transform.up);
+            raycastHelperInteractable = new RaySelectionZone<InteractableContainer>(transform.position, transform.up) { blocker = IsABlocker };
             raycastHelperElement = new RaySelectionZone<AbstractClientInteractableElement>(transform.position, transform.up);
 
             //Update impact point position

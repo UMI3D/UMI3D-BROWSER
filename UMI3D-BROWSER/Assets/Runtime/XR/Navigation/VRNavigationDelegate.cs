@@ -14,11 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
+using System.Collections.Generic;
+using umi3d.browserRuntime.NotificationKeys;
 using umi3d.cdk;
 using umi3d.cdk.navigation;
 using umi3d.common;
-using umi3dVRBrowsersBase.interactions;
-using umi3dVRBrowsersBase.navigation;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.navigation
@@ -30,8 +31,6 @@ namespace umi3d.browserRuntime.navigation
         Transform cameraTransform;
         Transform playerTransform;
         Transform personalSkeletonContainer;
-        UMI3DSnapTurnProvider snapTurn;
-        UMI3DTeleportationProvider umi3dTeleportationProvider;
 
         /// <summary>
         /// Is player active ?
@@ -41,13 +40,13 @@ namespace umi3d.browserRuntime.navigation
         public bool vehicleFreeHead = false;
         public UMI3DNodeInstance globalFrame;
 
+        Dictionary<string, System.Object> info = new();
+
         public void Init(
             UnityEngine.Object context,
             Transform cameraTransform,
             Transform playerTransform,
-            Transform personalSkeletonContainer,
-            UMI3DSnapTurnProvider snapTurn,
-            UMI3DTeleportationProvider umi3dTeleportationProvider
+            Transform personalSkeletonContainer
         )
         {
             logger.MainContext = context;
@@ -56,23 +55,26 @@ namespace umi3d.browserRuntime.navigation
             this.cameraTransform = cameraTransform;
             this.playerTransform = playerTransform;
             this.personalSkeletonContainer = personalSkeletonContainer;
-
-            this.snapTurn = snapTurn;
-            this.umi3dTeleportationProvider = umi3dTeleportationProvider;
         }
 
         public void Activate() 
         {
             isActive = true;
-            snapTurn.enabled = true;
-            umi3dTeleportationProvider.enabled = true;
+
+            info[LocomotionNotificationKeys.Info.Controller] = Controller.LeftAndRight;
+            info[LocomotionNotificationKeys.Info.SnapTurnActiveState] = ActiveState.Enable;
+            info[LocomotionNotificationKeys.Info.TeleportationActiveState] = ActiveState.Enable;
+            NotificationHub.Default.Notify(this, LocomotionNotificationKeys.System, info);
         }
 
         public void Disable() 
         {
             isActive = false;
-            snapTurn.enabled = false;
-            umi3dTeleportationProvider.enabled = false;
+
+            info[LocomotionNotificationKeys.Info.Controller] = Controller.LeftAndRight;
+            info[LocomotionNotificationKeys.Info.SnapTurnActiveState] = ActiveState.Disable;
+            info[LocomotionNotificationKeys.Info.TeleportationActiveState] = ActiveState.Disable;
+            NotificationHub.Default.Notify(this, LocomotionNotificationKeys.System, info);
         }
 
         public void ViewpointTeleport(ulong environmentId, ViewpointTeleportDto data)

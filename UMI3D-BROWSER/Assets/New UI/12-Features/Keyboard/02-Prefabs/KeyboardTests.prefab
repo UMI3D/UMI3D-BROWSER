@@ -10,7 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 709994198251524077}
   - component: {fileID: 4691611775256575713}
-  m_Layer: 0
+  - component: {fileID: 1194594151365185143}
+  m_Layer: 5
   m_Name: KeyboardTests
   m_TagString: EditorOnly
   m_Icon: {fileID: 0}
@@ -42,5 +43,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b2be9371100d5fa43ba4e1740d5478e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1194594151365185143
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5811685428191528346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00a56ab5090a41445833d7cd13993315, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

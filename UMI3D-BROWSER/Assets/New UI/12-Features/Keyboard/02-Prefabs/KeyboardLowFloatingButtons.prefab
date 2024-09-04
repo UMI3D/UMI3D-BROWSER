@@ -10,7 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 5924171545417480528}
   - component: {fileID: 2330106865451099240}
-  m_Layer: 0
+  - component: {fileID: 3333318797139869521}
+  m_Layer: 5
   m_Name: KeyboardLowFloatingButtons
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -60,6 +61,25 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &3333318797139869521
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8202105651649859919}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7951c64acb0fa62458bf30a60089fe2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 0
+  m_CheckFor2DOcclusion: 0
+  m_CheckFor3DOcclusion: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RaycastTriggerInteraction: 1
 --- !u!1001 &1741502912566570498
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -183,6 +203,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Quit
       objectReference: {fileID: 0}
+    - target: {fileID: 1278514031943565970, guid: d265882dd9af1674cb90c00dfe7d4649,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 4032303156467274208, guid: d265882dd9af1674cb90c00dfe7d4649,
         type: 3}
       propertyPath: m_Colors.m_NormalColor.b
@@ -239,10 +264,20 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 21300000, guid: 950f54e9d87370647aac828d3e362813,
         type: 3}
+    - target: {fileID: 5212466566481786469, guid: d265882dd9af1674cb90c00dfe7d4649,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 7531718044258188436, guid: d265882dd9af1674cb90c00dfe7d4649,
         type: 3}
       propertyPath: m_text
       value: quit
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763559430649961779, guid: d265882dd9af1674cb90c00dfe7d4649,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -250,7 +285,7 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1278514031943565970, guid: d265882dd9af1674cb90c00dfe7d4649,
         type: 3}
-      insertIndex: -1
+      insertIndex: 9
       addedObject: {fileID: 108811212585329780}
   m_SourcePrefab: {fileID: 100100000, guid: d265882dd9af1674cb90c00dfe7d4649, type: 3}
 --- !u!224 &595038882384009125 stripped

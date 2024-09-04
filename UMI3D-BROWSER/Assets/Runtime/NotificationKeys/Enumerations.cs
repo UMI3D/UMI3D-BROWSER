@@ -17,26 +17,37 @@ limitations under the License.
 using System;
 using UnityEngine;
 
-namespace umi3d.browserRuntime.navigation
+namespace umi3d.browserRuntime.NotificationKeys
 {
-    public class ActionMovementTiming 
+    /// <summary>
+    /// The types of controller.
+    /// </summary>
+    public enum Controller
     {
-        /// <summary>
-        /// The amount of time that class waits before performing another action.
-        /// </summary>
-        public Func<float> DebounceTime;
-        float timeSinceLastAction = 0f;
+        LeftHand,
+        RightHand, 
+        LeftAndRight
+    }
 
-        public bool CanPerformAction()
-        {
-            timeSinceLastAction += Time.deltaTime;
+    /// <summary>
+    /// Active state of an object.
+    /// </summary>
+    public enum ActiveState
+    {
+        Enable,
+        Disable
+    }
 
-            return timeSinceLastAction >= (DebounceTime?.Invoke() ?? 0f);
-        }
-
-        public void ResetDebounceTime()
-        {
-            timeSinceLastAction = 0f;
-        }
+    /// <summary>
+    /// The locomotion types.
+    /// </summary>
+    [Flags]
+    public enum LocomotionType
+    {
+        None = 0,
+        SnapTurn = 1,
+        ContinuousTurn = 1 << 1,
+        Teleportation = 1 << 2,
+        Move = 1 << 3,
     }
 }

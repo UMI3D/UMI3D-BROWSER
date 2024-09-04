@@ -96,12 +96,6 @@ namespace umi3dVRBrowsersBase.interactions
                     return GetSecondaryButtonDown(controller);
                 case ActionType.JoystickButton:
                     return GetJoystickButtonDown(controller);
-                case ActionType.Teleport:
-                    return GetTeleportDown(controller);
-                case ActionType.RightSnapTurn:
-                    return GetRightSnapTurn(controller);
-                case ActionType.LeftSnapTurn:
-                    return GetLeftSnapTurn(controller);
                 default:
                     break;
             }
@@ -128,8 +122,6 @@ namespace umi3dVRBrowsersBase.interactions
                     return GetSecondaryButtonUp(controller);
                 case ActionType.JoystickButton:
                     return GetJoystickButtonUp(controller);
-                case ActionType.Teleport:
-                    return GetTeleportUp(controller);
                 default:
                     break;
             }
@@ -212,17 +204,6 @@ namespace umi3dVRBrowsersBase.interactions
 
         #endregion
 
-        #region Teleport Button
-
-        public abstract bool GetTeleportDown(ControllerType controller);
-
-        public abstract bool GetTeleportUp(ControllerType controller);
-
-        public abstract bool GetRightSnapTurn(ControllerType controller);
-        public abstract bool GetLeftSnapTurn(ControllerType controller);
-
-        #endregion
-
 
         /// <summary>
         /// Make a controller vibrate.
@@ -232,121 +213,6 @@ namespace umi3dVRBrowsersBase.interactions
         /// <param name="vibrationFrequency"></param>
         /// <param name="vibrationAmplitude"></param>
         public abstract void VibrateController(ControllerType controller, float vibrationDuration, float vibrationFrequency, float vibrationAmplitude);
-
-
-        #region Unity Callback
-
-        Array ControllerTypes = Enum.GetValues(typeof(ControllerType));
-
-        protected override void Awake()
-        {
-            base.Awake();
-
-            foreach (ControllerType ctrl in ControllerTypes)
-            {
-                isJoystick.Add(ctrl, false);
-                isJoystickDown.Add(ctrl, false);
-                isJoystickUp.Add(ctrl, false);
-            }
-        }
-
-        protected virtual void Update()
-        {
-            foreach (ControllerType ctrl in ControllerTypes)
-            {
-                Vector2 axis = GetJoystickAxis(ctrl);
-
-                if (axis.magnitude > .1f)
-                {
-                    if (!isJoystick[ctrl])
-                    {
-                        isJoystickDown[ctrl] = true;
-                    }
-                    else
-                    {
-                        isJoystickDown[ctrl] = false;
-                    }
-
-                    isJoystick[ctrl] = true;
-                    isJoystickUp[ctrl] = false;
-                }
-                else
-                {
-                    if (isJoystick[ctrl])
-                    {
-                        isJoystick[ctrl] = false;
-                        isJoystickUp[ctrl] = true;
-                    }
-                    else
-                    {
-                        isJoystickUp[ctrl] = false;
-                    }
-
-                    isJoystickDown[ctrl] = false;
-                }
-            }
-        }
-
-        #endregion
-
-        #region Joystick
-
-        protected Dictionary<ControllerType, bool> isJoystick = new Dictionary<ControllerType, bool>();
-
-        protected Dictionary<ControllerType, bool> isJoystickDown = new Dictionary<ControllerType, bool>();
-
-        protected Dictionary<ControllerType, bool> isJoystickUp = new Dictionary<ControllerType, bool>();
-
-        /// <summary>
-        /// Returns current axis of <paramref name="controller"/> joystick.
-        /// </summary>
-        /// <param name="controller"></param>
-        /// <returns></returns>
-        public abstract Vector2 GetJoystickAxis(ControllerType controller);
-
-        /// <summary>
-        /// Returns true if <paramref name="controller"/> joystick starts being used.
-        /// </summary>
-        /// <param name="controller"></param>
-        /// <returns></returns>
-        public bool GetJoystickDown(ControllerType controller)
-        {
-            if (isJoystickDown.ContainsKey(controller))
-                return isJoystickDown[controller];
-
-            Debug.LogError("Internal error, unkown controller " + controller);
-            return false;
-        }
-
-        /// <summary>
-        /// Returns true if <paramref name="controller"/> joystick is being used.
-        /// </summary>
-        /// <param name="controller"></param>
-        /// <returns></returns>
-        public bool GetJoystick(ControllerType controller)
-        {
-            if (isJoystick.ContainsKey(controller))
-                return isJoystickDown[controller];
-
-            Debug.LogError("Internal error, unkown controller " + controller);
-            return false;
-        }
-
-        /// <summary>
-        /// Returns true if <paramref name="controller"/> joystick is being used.
-        /// </summary>
-        /// <param name="controller"></param>
-        /// <returns></returns>
-        public bool GetJoystickUp(ControllerType controller)
-        {
-            if (isJoystickUp.ContainsKey(controller))
-                return isJoystickUp[controller];
-
-            Debug.LogError("Internal error, unkown controller " + controller);
-            return false;
-        }
-
-        #endregion
 
         #endregion
     }
@@ -369,10 +235,7 @@ namespace umi3dVRBrowsersBase.interactions
         Grab,
         PrimaryButton,
         SecondaryButton,
-        JoystickButton,
-        Teleport,
-        RightSnapTurn,
-        LeftSnapTurn
+        JoystickButton
     }
 
     /// <summary>

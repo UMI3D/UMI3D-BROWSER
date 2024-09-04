@@ -14,29 +14,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System;
+using System.Collections;
+using System.Collections.Generic;
+using umi3d.browserRuntime.NotificationKeys;
 using UnityEngine;
 
-namespace umi3d.browserRuntime.navigation
+namespace umi3d.browserRuntime.xr
 {
-    public class ActionMovementTiming 
+    public class ControllerType : MonoBehaviour
     {
-        /// <summary>
-        /// The amount of time that class waits before performing another action.
-        /// </summary>
-        public Func<float> DebounceTime;
-        float timeSinceLastAction = 0f;
-
-        public bool CanPerformAction()
-        {
-            timeSinceLastAction += Time.deltaTime;
-
-            return timeSinceLastAction >= (DebounceTime?.Invoke() ?? 0f);
-        }
-
-        public void ResetDebounceTime()
-        {
-            timeSinceLastAction = 0f;
-        }
+        public Controller controller;
     }
 }

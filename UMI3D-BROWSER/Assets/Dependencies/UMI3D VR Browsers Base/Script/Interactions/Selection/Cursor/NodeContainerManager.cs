@@ -1,0 +1,45 @@
+﻿/*
+Copyright 2019 - 2023 Inetum
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+using umi3d.cdk;
+using Unity.VisualScripting;
+using UnityEngine;
+
+namespace umi3dVRBrowsersBase.interactions.selection.cursor
+{
+    class NodeContainerManager : MonoBehaviour
+    {
+        protected void Start()
+        {
+            UMI3DEnvironmentLoader.Instance.onNodeGameObjectSet += Instance_onNodeGameObjectSet;
+        }
+
+        protected void OnDestroy()
+        {
+            UMI3DEnvironmentLoader.Instance.onNodeGameObjectSet -= Instance_onNodeGameObjectSet;
+        }
+
+        private void Instance_onNodeGameObjectSet(UMI3DNodeInstance node, GameObject old)
+        {
+            NodeContainer container;
+            if (old != null)
+            {
+                container = old.GetComponent<NodeContainer>();
+                if (container != null)
+                    GameObject.Destroy(container);
+            }
+            container = node.GameObject.GetOrAddComponent<NodeContainer>();
+            container.instance = node;
+        }
+    }
+}

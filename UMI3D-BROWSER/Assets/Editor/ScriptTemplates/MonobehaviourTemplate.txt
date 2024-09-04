@@ -18,14 +18,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class #SCRIPTNAME# : MonoBehaviour
+namespace umi3d
 {
-    
-    void Awake()
+    public class #SCRIPTNAME# : MonoBehaviour
     {
+        void Awake()
+        {
         
+        }
     }
-
 }
-       
-

@@ -67,8 +67,6 @@ namespace umi3d.picoBrowser
             public void IncrementFrame() => Frame++;
         }
 
-        public Dictionary<ControllerType, bool> isTeleportDown = new Dictionary<ControllerType, bool>();
-
         [HideInInspector]
         public UnityEngine.XR.InputDevice LeftController;
         [HideInInspector]
@@ -80,11 +78,6 @@ namespace umi3d.picoBrowser
             Application.targetFrameRate = 72;
 
             base.Awake();
-
-            foreach (ControllerType ctrl in Enum.GetValues(typeof(ControllerType)))
-            {
-                isTeleportDown.Add(ctrl, false);
-            }
         }
 
         private void Start()
@@ -93,10 +86,8 @@ namespace umi3d.picoBrowser
             RightController = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
         }
 
-        protected override void Update()
+        protected void Update()
         {
-            base.Update();
-
             bool value;
 
             GrabLeftState.IncrementFrame();
@@ -184,24 +175,6 @@ namespace umi3d.picoBrowser
 
         #region Joystick
 
-        public override Vector2 GetJoystickAxis(ControllerType controller)
-        {
-            Vector2 value;
-            switch (controller)
-            {
-                case ControllerType.LeftHandController:
-                    LeftController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.primary2DAxis, out value);
-                    break;
-                case ControllerType.RightHandController:
-                    RightController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.primary2DAxis, out value);
-                    break;
-                default:
-                    return Vector2.zero;
-            }
-
-            return value;
-        }
-
         [HideInInspector]
         public PressState JoystickLeftButtonState;
         [HideInInspector]
@@ -244,78 +217,6 @@ namespace umi3d.picoBrowser
                 default:
                     return false;
             }
-        }
-
-        public override bool GetRightSnapTurn(ControllerType controller)
-        {
-            var res = GetJoystick(controller);
-
-            if (res)
-            {
-                (float pole, float magnitude) = GetJoystickPoleAndMagnitude(controller);
-
-                if ((pole >= 0 && pole < 20) || (pole > 340 && pole <= 360))
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-
-            return res;
-        }
-
-        public override bool GetLeftSnapTurn(ControllerType controller)
-        {
-            var res = GetJoystick(controller);
-
-            if (res)
-            {
-                (float pole, float magnitude) = GetJoystickPoleAndMagnitude(controller);
-
-                if (pole > 160 && pole <= 200)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-
-            return res;
-        }
-
-        private (float, float) GetJoystickPoleAndMagnitude(ControllerType controller)
-        {
-            var getAxis = GetJoystickAxis(controller);
-
-            Vector2 axis = getAxis.normalized;
-            float pole = 0.0f;
-
-            if (axis.x != 0)
-                pole = Mathf.Atan(axis.y / axis.x);
-            else
-                if (axis.y == 0)
-                pole = 0;
-            else if (axis.y > 0)
-                pole = Mathf.PI / 2;
-            else
-                pole = -Mathf.PI / 2;
-
-            pole *= Mathf.Rad2Deg;
-
-            if (axis.x < 0)
-                if (axis.y >= 0)
-                    pole = 180 - Mathf.Abs(pole);
-                else
-                    pole = 180 + Mathf.Abs(pole);
-            else if (axis.y < 0)
-                pole = 360 + pole;
-
-            return (pole, getAxis.magnitude);
         }
 
         #endregion
@@ -460,41 +361,6 @@ namespace umi3d.picoBrowser
         }
 
         #endregion
-
-        public override bool GetTeleportDown(ControllerType controller)
-        {
-            var res = GetJoystickDown(controller);
-
-            if (res)
-            {
-
-                (float pole, float magnitude) = GetJoystickPoleAndMagnitude(controller);
-
-                if ((pole > 20 && pole < 160))
-                {
-                    isTeleportDown[controller] = true;
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-
-            return res;
-        }
-
-        public override bool GetTeleportUp(ControllerType controller)
-        {
-            var res = GetJoystickUp(controller) && isTeleportDown[controller];
-
-            if (res)
-            {
-                isTeleportDown[controller] = false;
-            }
-
-            return res;
-        }
 
         public override void VibrateController(ControllerType controller, float vibrationDuration, float vibrationFrequency, float vibrationAmplitude)
         {

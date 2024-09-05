@@ -56,6 +56,11 @@ namespace umi3d.browserRuntime.NotificationKeys
         /// </summary>
         public const string OpenOrClose = "KeyboardOpenOrClose";
 
+        /// <summary>
+        /// Notification sent when the animations settings will change.
+        /// </summary>
+        public const string AnimationSettings = "KeyboardAnimationSettings";
+
         public static class Info
         {
             /// <summary>
@@ -132,7 +137,8 @@ namespace umi3d.browserRuntime.NotificationKeys
             /// Whether the opening or closing is animated.<br/>
             /// Value is <see cref="bool"/>.<br/>
             /// <br/>
-            /// See Notification key: <see cref="OpenOrClose"/>
+            /// See Notification key: <see cref="OpenOrClose"/><br/>
+            /// See Notification key: <see cref="AnimationSettings"/><br/>
             /// </summary>
             public const string WithAnimation = "WithAnimation";
 
@@ -159,6 +165,14 @@ namespace umi3d.browserRuntime.NotificationKeys
             /// See Notification key: <see cref="OpenOrClose"/>
             /// </summary>
             public const string PhaseOneStartTimePercentage = "PhaseOneStartTimePercentage";
+
+            /// <summary>
+            /// The type of animation.<br/>
+            /// Value is <see cref="NotificationKeys.KeyboardAnimationType"/>.<br/>
+            /// <br/>
+            /// See Notification key: <see cref="AnimationSettings"/><br/>
+            /// </summary>
+            public const string AnimationType = "AnimationType";
         }
     }
 }

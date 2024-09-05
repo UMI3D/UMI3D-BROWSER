@@ -24,16 +24,45 @@ namespace umi3d.browserRuntime.ui.keyboard
 {
     public class KeyboardVersionTest : MonoBehaviour
     {
+        Notifier versionNotifier;
+
         void Start()
         {
-            NotificationHub.Default.Notify(
+            versionNotifier = NotificationHub.Default.GetNotifier(
                 this,
                 KeyboardNotificationKeys.ChangeVersion,
+                null,
                 new()
                 {
                     { KeyboardNotificationKeys.Info.Version, "AZERTY" }
                 }
             );
+
+            versionNotifier.Notify();
         }
+
+        public void SwitchToAzerty(bool isAzerty)
+        {
+            versionNotifier[KeyboardNotificationKeys.Info.Version] = isAzerty ? "AZERTY" : "QWERTY";
+            versionNotifier.Notify();
+        }
+
+#if UNITY_EDITOR
+        [ContextMenu("Test Switch To Azerty")]
+        void TestSwitchToAzerty()
+        {
+            UnityEngine.Debug.Log($"test switch to Azerty");
+            versionNotifier[KeyboardNotificationKeys.Info.Version] = "AZERTY";
+            versionNotifier.Notify();
+        }
+
+        [ContextMenu("Test Switch To Qwerty")]
+        void TestSwitchToQwerty()
+        {
+            UnityEngine.Debug.Log($"test switch to Qwerty");
+            versionNotifier[KeyboardNotificationKeys.Info.Version] = "QWERTY";
+            versionNotifier.Notify();
+        }
+#endif
     }
 }

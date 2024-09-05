@@ -121,6 +121,14 @@ namespace umi3d.browserRuntime.NotificationKeys
             public const string Version = "Version";
 
             /// <summary>
+            /// The pointer event data related of the interaction.<br/>
+            /// Value is <see cref="PointerEventData"/>.<br/>
+            /// <br/>
+            /// See Notification key: <see cref="KeyHovered"/>
+            /// </summary>
+            public const string PointerEventData = "PointerEventData";
+
+            /// <summary>
             /// Whether the opening or closing is animated.<br/>
             /// Value is <see cref="bool"/>.<br/>
             /// <br/>

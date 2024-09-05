@@ -34,6 +34,9 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         PointerDownBehaviour pointerDown;
 
+        Notifier keyUpNotifier;
+        Notifier keyEnterNotifier;
+
         void Awake()
         {
             button = GetComponent<Button>();
@@ -49,6 +52,16 @@ namespace umi3d.browserRuntime.ui.keyboard
             }
             // Disable to avoid pointer event to be trigger directly from the pointerDownBehaviour class.
             pointerDown.enabled = false;
+
+            keyUpNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                KeyboardNotificationKeys.KeyClicked
+            );
+
+            keyEnterNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                KeyboardNotificationKeys.KeyHovered
+            );
         }
 
         private void OnEnable()
@@ -81,17 +94,12 @@ namespace umi3d.browserRuntime.ui.keyboard
                 return;
             }
 
-            // Don't work yet
             UnityEngine.Debug.Log($"[Key] up");
             buttonPressed = false;
             pointerDown.OnPointerUp(eventData);
             PointerUp?.Invoke();
 
-            NotificationHub.Default.Notify(
-              this,
-              KeyboardNotificationKeys.KeyClicked,
-              null
-          );
+            keyUpNotifier.Notify();
         }
         
         public void OnPointerEnter(PointerEventData eventData)
@@ -101,14 +109,8 @@ namespace umi3d.browserRuntime.ui.keyboard
                 return;
             }
 
-            NotificationHub.Default.Notify(
-                this,
-                KeyboardNotificationKeys.KeyHovered,
-                null
-            );
-
-            // Don't work yet
-            //UnityEngine.Debug.Log($"[Key] enter");
+            keyEnterNotifier[KeyboardNotificationKeys.Info.PointerEventData] = eventData;
+            keyEnterNotifier.Notify();
         }
 
         public void OnPointerExit(PointerEventData eventData)
@@ -118,8 +120,6 @@ namespace umi3d.browserRuntime.ui.keyboard
                 return;
             }
 
-            // Don't work yet
-            //UnityEngine.Debug.Log($"[Key] exit");
             pointerDown.OnPointerExit(eventData);
         }
     }

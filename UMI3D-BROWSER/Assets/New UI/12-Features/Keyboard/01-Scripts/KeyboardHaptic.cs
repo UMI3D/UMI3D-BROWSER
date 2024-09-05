@@ -19,11 +19,17 @@ using System.Collections;
 using System.Collections.Generic;
 using umi3d.browserRuntime.NotificationKeys;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.XR.Interaction.Toolkit.UI;
+using UnityEngine.XR.Interaction.Toolkit;
 
 namespace umi3d.browserRuntime.ui.keyboard
 {
     public class KeyboardHaptic : MonoBehaviour
     {
+        [SerializeField] float amplitude = .1f;
+        [SerializeField] float duration = .1f;
+
         void OnEnable()
         {
             NotificationHub.Default.Subscribe(
@@ -41,7 +47,16 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         void Haptic(Notification notification)
         {
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.PointerEventData, out PointerEventData pointerEventData))
+            {
+                return;
+            }
 
+            if (pointerEventData is TrackedDeviceEventData trackedDeviceEventData
+                && trackedDeviceEventData.interactor is XRBaseControllerInteractor xrInteractor)
+            {
+                xrInteractor.SendHapticImpulse(amplitude, duration);
+            }
         }
     }
 }

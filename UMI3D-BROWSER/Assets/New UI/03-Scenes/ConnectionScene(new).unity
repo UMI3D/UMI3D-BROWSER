@@ -735,10 +735,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9dbe35d013cad8c408289c6f5e217a1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneToLoad: MainImmersive(new)
-  loadSceneMode: 1
-  setNewSceneAsActive: 1
-  debugCamera: {fileID: 0}
+  scenesToLoad:
+    pcRef:
+    - sceneName: MainImmersive(new)
+      loadSceneMode: 1
+      setNewSceneAsActive: 1
+      alwaysReload: 1
+    - sceneName: PC_InGameUI
+      loadSceneMode: 1
+      setNewSceneAsActive: 0
+      alwaysReload: 0
+    xrRef:
+    - sceneName: MainImmersive(new)
+      loadSceneMode: 1
+      setNewSceneAsActive: 1
+      alwaysReload: 1
 --- !u!1001 &4857492397505455108
 PrefabInstance:
   m_ObjectHideFlags: 0

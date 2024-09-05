@@ -22,6 +22,7 @@ using umi3d.baseBrowser.cursor;
 using umi3d.cdk;
 using umi3dBrowsers.data.ui;
 using umi3dBrowsers.linker;
+using umi3dBrowsers.linker.ingameui;
 using umi3dBrowsers.linker.ui;
 using umi3dBrowsers.sceneManagement;
 using umi3dBrowsers.services.connection;
@@ -72,6 +73,7 @@ namespace umi3dBrowsers
         [SerializeField] private ConnectionToImmersiveLinker connectionToImmersiveLinker;
         [SerializeField] private ConnectionServiceLinker connectionServiceLinker;
         [SerializeField] private MenuNavigationLinker m_menuNavigationLinker;
+        [SerializeField] private InGameLinker inGameLinker;
         [SerializeField] private PanelData m_mainMenuPanel;
         [SerializeField] private PanelData m_formPanel;
         [SerializeField] private PopupLinker m_popupLinker;
@@ -130,12 +132,14 @@ namespace umi3dBrowsers
 
                 ShowUI();
                 m_menuNavigationLinker.ShowPanel(m_mainMenuPanel);
+                inGameLinker.EnableDisableInGameUI(false);
                 connectionProcessorService.Disconnect();
                 mainContainerLinker.Loader.ReloadScene();
             };
 
             UMI3DEnvironmentLoader.Instance.onEnvironmentLoaded?.AddListener(() => {
                 BaseCursor.SetMovement(this, BaseCursor.CursorMovement.Center);
+                inGameLinker.EnableDisableInGameUI(true);
             } );
         }
 
@@ -177,6 +181,7 @@ namespace umi3dBrowsers
             connectionServiceLinker.OnAsksToLoadLibrairies += (ids, action) => action?.Invoke(true);
 
             m_menuNavigationLinker.ShowStartPanel();
+            inGameLinker.EnableDisableInGameUI(false);
         }
 
         /// <summary>

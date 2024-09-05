@@ -19,6 +19,7 @@ using System.Collections;
 using System.Collections.Generic;
 using umi3d.common.interaction;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -30,6 +31,20 @@ namespace umi3dBrowsers.displayer
         public ISubDisplayer SubDisplayer => _subDisplayer;
         public event Action OnHoverEnter;
         public event Action OnHoverExit;
+        public event Action OnDeselected;
+
+        [Header("Selection")]
+        [SerializeField] private List<GameObject> objectToEnableOnHover;
+        [SerializeField] private bool autoUnHover;
+        [SerializeField] private List<GameObject> objectToEnableOnClick;
+        [SerializeField] private bool autoDeselect;
+
+        [Header("Styles")]
+        [SerializeField] private bool autoInitStyles = true;
+        [SerializeField] private List<ButtonStyle> relatedButtonStyles;
+
+        private bool isSelected;
+
 
         private int id;
         public int ID => id;    
@@ -38,8 +53,13 @@ namespace umi3dBrowsers.displayer
         protected override void Awake()
         {
             _subDisplayer = GetComponent<ISubDisplayer>();
-            if (_subDisplayer == null) return;
-            onClick.AddListener(_subDisplayer.Click);
+
+            onClick.AddListener(() => Select());
+
+            if (relatedButtonStyles != null && autoInitStyles)
+                foreach (var style in relatedButtonStyles)
+                    if (style != null)
+                        style.Init(_subDisplayer as ButtonStyle);
         }
 
         public override void OnPointerEnter(PointerEventData eventData)
@@ -48,6 +68,13 @@ namespace umi3dBrowsers.displayer
             OnHoverEnter?.Invoke();
             if (_subDisplayer == null) return;
             _subDisplayer.HoverEnter(eventData);
+
+            if (relatedButtonStyles != null) 
+                foreach (var style in relatedButtonStyles)
+                    if(style != null)
+                        style.HoverEnter(eventData);
+
+            ActivateList(objectToEnableOnHover, true);
         }
 
         public override void OnPointerExit(PointerEventData eventData)
@@ -56,7 +83,82 @@ namespace umi3dBrowsers.displayer
             OnHoverExit?.Invoke();
             if (_subDisplayer == null) return;
             _subDisplayer.HoverExit(eventData);
+
+            if (relatedButtonStyles != null && !isSelected)
+                foreach (var style in relatedButtonStyles)
+                    if (style != null)
+                        style.HoverExit(eventData);
+
+            if (!isSelected)
+                ActivateList(objectToEnableOnHover, false);
+            else
+                ActivateListNoCrossOver(objectToEnableOnHover, objectToEnableOnClick, false);
         }
+
+        public override void OnDeselect(BaseEventData eventData)
+        {
+            if (autoDeselect)
+            {
+                isSelected = false;
+                ActivateList(objectToEnableOnClick, false);
+            }
+        }
+
+        public void Deselect()
+        {
+            isSelected = false;
+            ActivateList(objectToEnableOnClick, false);
+            _subDisplayer.Disable();
+            if (relatedButtonStyles != null)
+                foreach (var style in relatedButtonStyles)
+                    if (style != null)
+                        style.Disable();
+        }
+
+        public override void Select()
+        {
+            if (_subDisplayer != null)
+                _subDisplayer.Click();
+
+            if (relatedButtonStyles != null)
+                foreach (var style in relatedButtonStyles)
+                    if (style != null)
+                        style.Click();
+
+            isSelected = true;
+            ActivateList(objectToEnableOnClick, true);
+
+            if (autoUnHover)
+                ActivateList(objectToEnableOnHover, false);
+        }
+
+        private void ActivateList(List<GameObject> list, bool isIt)
+        {
+            if (list != null)
+                foreach (var obj in list)
+                    if (obj != null)
+                        obj.SetActive(isIt);
+        }
+
+        private void ActivateListNoCrossOver(List<GameObject> list1, List<GameObject> list2, bool isIt)
+        {
+            if (list1 == null) return;
+            if (list2 == null)
+            {
+                ActivateList(list1, isIt); 
+                return; 
+            }
+
+            foreach (var obj in list1)
+            {
+
+                if (obj != null)
+                    if(!list2.Contains(obj))
+                        obj.SetActive(isIt);
+
+            }
+        }
+
     }
 }
 

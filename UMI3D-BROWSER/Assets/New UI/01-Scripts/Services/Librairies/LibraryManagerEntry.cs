@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using TMPro;
+using umi3d.cdk.collaboration;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -27,5 +28,10 @@ namespace umi3dBrowsers.services.librairies
 
         public Button DeleteButton => deleteButton;
         public TextMeshProUGUI LibLabel => libLabel;
+
+        private void OnEnable()
+        {
+            deleteButton.gameObject.SetActive(UMI3DCollaborationClientServer.Environement == null);
+        }
     }
 }

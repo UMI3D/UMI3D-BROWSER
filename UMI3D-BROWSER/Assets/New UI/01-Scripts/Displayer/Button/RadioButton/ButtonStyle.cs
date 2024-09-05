@@ -31,19 +31,34 @@ namespace umi3dBrowsers.displayer
 
         [Header("Style")]
         [SerializeField] private Image image;
-        [SerializeField] private Color NormalColor;
-        [SerializeField] private Color HoverColor;
-        [SerializeField] private Color SelectedColor;
+        [SerializeField] private Color normalColor;
+        public Color NormalColor => normalColor;
+        [SerializeField] private Color hoverColor;
+        public Color HoverColor => hoverColor;
+        [SerializeField] private Color selectedColor;
+        public Color SelectedColor => selectedColor;
 
         private bool _isSelected;
+        private bool _hovered;
 
+        private void Awake()
+        {
+            if (image == null) image = GetComponent<Image>();
+            if (image == null) Debug.Log("No Image", this);
+        }
         public void Init(Color normalColor, Color hoverColor, Color selectedColor)
         {
-            this.NormalColor = normalColor;
-            this.HoverColor = hoverColor;
-            this.SelectedColor = selectedColor;
+            this.normalColor = normalColor;
+            this.hoverColor = hoverColor;
+            this.selectedColor = selectedColor;
 
             image.color = normalColor;
+        }
+
+        public void Init(ButtonStyle buttonStyle)
+        {
+            if (buttonStyle != null)
+                Init(buttonStyle.normalColor, buttonStyle.hoverColor, buttonStyle.selectedColor);
         }
 
         public void Click()
@@ -52,11 +67,11 @@ namespace umi3dBrowsers.displayer
             if (_isSelected)
             {
                 _isSelected = false;
-                image.color = NormalColor;
+                image.color = normalColor;
             }
             else
             {
-                image.color = SelectedColor;
+                image.color = selectedColor;
                 _isSelected = true;
             }
         }
@@ -64,20 +79,49 @@ namespace umi3dBrowsers.displayer
         public void Disable()
         {
             _isSelected = false;
-            image.color = NormalColor;
+            image.color = normalColor;
         }
 
         public void HoverEnter(PointerEventData eventData)
         {
             if(!_isSelected)
-                image.color = HoverColor;
+                image.color = hoverColor;
             OnHover?.Invoke();
+
+            _hovered = true;
         }
 
         public void HoverExit(PointerEventData eventData)
         {
             if (!_isSelected)
-                image.color = NormalColor;
+                image.color = normalColor;
+
+            _hovered = false;
+        }
+
+        internal void SetNormalColor(Color overrideColor)
+        {
+            normalColor = overrideColor;
+        }
+
+        internal void SetHoverColor(Color overrideColor)
+        {
+            hoverColor = overrideColor;
+        }
+
+        internal void SetSelectedColor(Color overrideColor)
+        {
+            selectedColor = overrideColor;
+        }
+
+        internal void applyColor()
+        {
+            if(_isSelected)
+                image.color= selectedColor;
+            else if(_hovered)
+                image.color = hoverColor;
+            else
+                image.color = normalColor;
         }
     }
 }

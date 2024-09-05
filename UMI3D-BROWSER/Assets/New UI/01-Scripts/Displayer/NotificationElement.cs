@@ -38,7 +38,7 @@ namespace umi3dBrowsers.displayer
         [SerializeField] private int buttonPadding;
 
         public bool IsRead { 
-            get => IsRead; 
+            get => isRead; 
             set {
                 isRead = value;
                 badge.color = value ? badgeColorRead : badgeColorNew;

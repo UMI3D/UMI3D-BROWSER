@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System;
 using System.Collections.Generic;
 using umi3d.baseBrowser.notification;
 using umi3d.common;
@@ -27,13 +28,13 @@ namespace umi3dBrowsers.displayer
         [SerializeField] private GameObject notificationPrefab;
         [SerializeField] private NotificationLoader notificationLoader;
 
-        private List<NotificationElement> notificationElements = new List<NotificationElement>();
+        public Action OnNotificationReceived;
+        public Action OnNotificationScreenOpened;
+
+        private List<NotificationElement> _notificationElements = new List<NotificationElement>();
 
         private void Awake()
         {
-            foreach (Transform child in content)
-                Destroy(child);
-
             notificationLoader.Notification2DReceived += AddNotification;
         }
 
@@ -42,9 +43,14 @@ namespace umi3dBrowsers.displayer
             notificationLoader.Notification2DReceived -= AddNotification;
         }
 
+        private void OnEnable()
+        {
+            OnNotificationScreenOpened?.Invoke();
+        }
+
         private void OnDisable()
         {
-            foreach (var element in notificationElements)
+            foreach (var element in _notificationElements)
                 if (!element.IsRead)
                     element.IsRead = true;
         }
@@ -54,6 +60,19 @@ namespace umi3dBrowsers.displayer
             var notificationGameObject = Instantiate(notificationPrefab, content);
             var notification = notificationGameObject.GetComponent<NotificationElement>();
             notification.Init(notificationDto);
+            _notificationElements.Add(notification);
+            OnNotificationReceived?.Invoke();
         }
+
+#if UNITY_EDITOR
+        [ContextMenu("Add Notification")]
+        private void AddNotificationDebug()
+        {
+            NotificationDto notification = new NotificationDto();
+            notification.content = "Test content";
+            notification.callback = new [] { "Yes", "No" };
+            AddNotification(notification);
+        }
+#endif
     }
 }

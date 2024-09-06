@@ -253,76 +253,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2589146329567477905, guid: 33b00739fcb2e704582ae7dc517b83a4,
-        type: 3}
-      propertyPath: m_ValidColorGradient.atime0
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2589146329567477905, guid: 33b00739fcb2e704582ae7dc517b83a4,
-        type: 3}
-      propertyPath: m_ValidColorGradient.atime1
-      value: 65535
-      objectReference: {fileID: 0}
-    - target: {fileID: 2589146329567477905, guid: 33b00739fcb2e704582ae7dc517b83a4,
-        type: 3}
-      propertyPath: m_ValidColorGradient.ctime0
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2589146329567477905, guid: 33b00739fcb2e704582ae7dc517b83a4,
-        type: 3}
-      propertyPath: m_ValidColorGradient.ctime1
-      value: 65535
-      objectReference: {fileID: 0}
-    - target: {fileID: 2589146329567477905, guid: 33b00739fcb2e704582ae7dc517b83a4,
-        type: 3}
-      propertyPath: m_ValidColorGradient.key0.a
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2589146329567477905, guid: 33b00739fcb2e704582ae7dc517b83a4,
-        type: 3}
-      propertyPath: m_ValidColorGradient.key1.a
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2589146329567477905, guid: 33b00739fcb2e704582ae7dc517b83a4,
-        type: 3}
-      propertyPath: m_ValidColorGradient.key1.g
-      value: 0.627451
-      objectReference: {fileID: 0}
-    - target: {fileID: 2589146329567477905, guid: 33b00739fcb2e704582ae7dc517b83a4,
-        type: 3}
-      propertyPath: m_ValidColorGradient.key1.r
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2589146329567477905, guid: 33b00739fcb2e704582ae7dc517b83a4,
-        type: 3}
-      propertyPath: m_ValidColorGradient.m_ColorSpace
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3689386652515998200, guid: 33b00739fcb2e704582ae7dc517b83a4,
-        type: 3}
-      propertyPath: m_ValidColorGradient.ctime1
-      value: 65535
-      objectReference: {fileID: 0}
-    - target: {fileID: 3689386652515998200, guid: 33b00739fcb2e704582ae7dc517b83a4,
-        type: 3}
-      propertyPath: m_ValidColorGradient.key1.a
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3689386652515998200, guid: 33b00739fcb2e704582ae7dc517b83a4,
-        type: 3}
-      propertyPath: m_ValidColorGradient.key1.g
-      value: 0.627451
-      objectReference: {fileID: 0}
-    - target: {fileID: 3689386652515998200, guid: 33b00739fcb2e704582ae7dc517b83a4,
-        type: 3}
-      propertyPath: m_ValidColorGradient.key1.r
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3689386652515998200, guid: 33b00739fcb2e704582ae7dc517b83a4,
-        type: 3}
-      propertyPath: m_ValidColorGradient.m_ColorSpace
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4305257584820075500, guid: 33b00739fcb2e704582ae7dc517b83a4,
         type: 3}
       propertyPath: m_IsActive
@@ -349,12 +279,6 @@ PrefabInstance:
       propertyPath: teleportingLeft
       value: 
       objectReference: {fileID: 0}
-    - target: {fileID: 5481750014503510893, guid: 33b00739fcb2e704582ae7dc517b83a4,
-        type: 3}
-      propertyPath: connectionLinker
-      value: 
-      objectReference: {fileID: 11400000, guid: 68ff1a90a5151924e867698a4e1d3a2d,
-        type: 2}
     - target: {fileID: 5481750014503510893, guid: 33b00739fcb2e704582ae7dc517b83a4,
         type: 3}
       propertyPath: teleportingRight
@@ -387,16 +311,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8046216886114604324, guid: 33b00739fcb2e704582ae7dc517b83a4,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 9184190811178568781, guid: 33b00739fcb2e704582ae7dc517b83a4,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 5503263835280166407, guid: 33b00739fcb2e704582ae7dc517b83a4, type: 3}
@@ -810,7 +724,7 @@ PrefabInstance:
     - target: {fileID: 5365882361262844315, guid: 503d8cf448de25647a3f6a39ab0d9bd9,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -0.000011383886
+      value: 0.000030999432
       objectReference: {fileID: 0}
     - target: {fileID: 5952451189982151364, guid: 503d8cf448de25647a3f6a39ab0d9bd9,
         type: 3}

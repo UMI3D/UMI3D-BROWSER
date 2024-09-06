@@ -16,20 +16,17 @@ limitations under the License.
 
 using UnityEngine;
 
-namespace umi3dVRBrowsersBase.ui.notification
+/// <summary>
+/// Class to represent an UMI3DNotification displayed by a 3D object.
+/// </summary>
+public class Notification3D : AbstractNotification
 {
     /// <summary>
-    /// Class to represent an UMI3DNotification displayed by a 3D object.
+    /// Set world position of node.
     /// </summary>
-    public class Notification3D : AbstractNotification
+    /// <param name="position"></param>
+    public void SetPosition(Vector3 position)
     {
-        /// <summary>
-        /// Set world position of node.
-        /// </summary>
-        /// <param name="position"></param>
-        public void SetPosition(Vector3 position)
-        {
-            transform.position = position;
-        }
+        transform.position = position;
     }
 }

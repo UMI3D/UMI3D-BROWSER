@@ -24,7 +24,6 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using static umi3d.baseBrowser.cursor.BaseCursor;
 using static umi3d.commonScreen.game.GamePanel_C;
-using NotificationLoader = umi3d.baseBrowser.notification.NotificationLoader;
 
 namespace umi3d.baseBrowser.connection
 {

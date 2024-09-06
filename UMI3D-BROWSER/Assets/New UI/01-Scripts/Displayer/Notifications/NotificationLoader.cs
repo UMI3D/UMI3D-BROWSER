@@ -1,5 +1,5 @@
-﻿/*
-Copyright 2019 - 2021 Inetum
+/*
+Copyright 2019 - 2024 Inetum    
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -13,29 +13,31 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-using System.Collections.Specialized;
+
 using System.Threading.Tasks;
 using umi3d.cdk;
 using umi3d.common;
 using UnityEngine;
 
-namespace umi3d.baseBrowser.notification
+namespace umi3dBrowsers.displayer
 {
     [CreateAssetMenu(fileName = "NotificationLoader", menuName = "UMI3D/Notification Loader")]
-    public class NotificationLoader : cdk.NotificationLoader
+    public class NotificationLoader : umi3d.cdk.NotificationLoader
     {
+        public WatchNotification watchNotificationPrefab;
         public Notification3D notification3DPrefab;
-        public event System.Action<common.NotificationDto> Notification2DReceived;
+
+        public event System.Action<NotificationDto> Notification2DReceived;
 
         public override AbstractLoader GetNotificationLoader()
         {
             return new InternalNotificationLoader(this);
         }
 
-        public void Notify(common.NotificationDto dto) { Notification2DReceived?.Invoke(dto); }
+        public void Notify(NotificationDto dto) { Notification2DReceived?.Invoke(dto); }
     }
 
-    public class InternalNotificationLoader : cdk.InternalNotificationLoader
+    public class InternalNotificationLoader : umi3d.cdk.InternalNotificationLoader
     {
         NotificationLoader loader;
 
@@ -46,22 +48,31 @@ namespace umi3d.baseBrowser.notification
 
         public override async Task ReadUMI3DExtension(ReadUMI3DExtensionData value)
         {
-            if (value.dto is common.NotificationOnObjectDto dto3D)
+            if (value.dto is NotificationOnObjectDto notification3DDto)
             {
                 var notif3d = GameObject.Instantiate(loader.notification3DPrefab);
-                notif3d.Parent = cdk.UMI3DEnvironmentLoader.GetNode(value.environmentId, dto3D.objectId)?.GameObject.transform;
+                notif3d.SetParent(UMI3DEnvironmentLoader.GetNode(value.environmentId, notification3DDto.objectId)?.GameObject.transform);
 
-                notif3d.Title = dto3D.title;
-                notif3d.Content = dto3D.content;
-                notif3d.SetNotificationTime(dto3D.duration);
-
-                cdk.UMI3DEnvironmentLoader.RegisterNodeInstance(value.environmentId, dto3D.id, dto3D, notif3d.gameObject).NotifyLoaded();
+                notif3d.Init(notification3DDto);
+                UMI3DEnvironmentLoader.RegisterNodeInstance(value.environmentId, notification3DDto.id, notification3DDto, notif3d.gameObject).NotifyLoaded();
                 return;
             }
             else
             {
+#if UMI3D_PC
                 await base.ReadUMI3DExtension(value);
                 loader.Notify(value.dto as NotificationDto);
+#elif UMI3D_XR
+                Debug.LogError("TODO : only display notification in one watch");
+                foreach (WatchMenu watch in WatchMenu.instances)
+                {
+                    notification = GameObject.Instantiate(loader.watchNotificationPrefab);
+                    notification.SetParent(watch.notificationContainer);
+
+                    notification.Init(dto);
+                    UMI3DEnvironmentLoader.RegisterNodeInstance(UMI3DGlobalID.EnvironmentId, dto.id, dto, notification.gameObject);
+                }
+#endif
             }
         }
     }

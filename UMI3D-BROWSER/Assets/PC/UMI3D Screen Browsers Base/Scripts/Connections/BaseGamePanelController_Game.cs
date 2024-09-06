@@ -91,7 +91,8 @@ namespace umi3d.baseBrowser.connection
 
         protected virtual void InitGame_Notification()
         {
-            NotificationLoader.Notification2DReceived += dto =>
+            // Old UI (new is merged with VR)
+            /*NotificationLoader.Notification2DReceived += dto =>
             {
                 var notification = NotificationCenter_C.AddNotification(dto);
 
@@ -105,7 +106,7 @@ namespace umi3d.baseBrowser.connection
                         notification.Timestamp = $"{int.Parse(time) + 1}min";
                     }).Every(60000);
                 }).ExecuteLater(60000);
-            };
+            };*/
         }
 
         protected virtual void InitGame_Emote()

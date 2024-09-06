@@ -54,8 +54,11 @@ namespace umi3dBrowsers.displayer
             descriptionComplete.text = notificationDto.content;
 
             RectTransform buttonTransform = buttonPrefab.transform as RectTransform;
-            descriptionComplete.margin = notificationDto.callback.Length > 0 ? new Vector4(0, 0, 0, buttonTransform.sizeDelta.y + 2 * buttonPadding) : Vector4.zero;
 
+            if (notificationDto.callback == null)
+                return;
+
+            descriptionComplete.margin = notificationDto.callback.Length > 0 ? new Vector4(0, 0, 0, buttonTransform.sizeDelta.y + 2 * buttonPadding) : Vector4.zero;
             for (int i = 0; i < notificationDto.callback.Length; i++)
             {
                 var buttonGameObject = Instantiate(buttonPrefab, buttonsContainer);

@@ -159,7 +159,7 @@ namespace umi3d.browserRuntime.ui.keyboard
                 return;
             }
 
-            if (isAdding && notification.TryGetInfoT(KeyboardNotificationKeys.Info.Characters, out char character) && character == ' ')
+            if (isAdding && notification.TryGetInfoT(KeyboardNotificationKeys.Info.Characters, out char character, false) && character == ' ')
             {
                 return;
             }

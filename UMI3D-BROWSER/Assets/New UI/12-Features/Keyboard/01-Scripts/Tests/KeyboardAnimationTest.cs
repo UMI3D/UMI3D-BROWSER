@@ -1,4 +1,3 @@
-#if UNITY_EDITOR
 /*
 Copyright 2019 - 2024 Inetum
 
@@ -16,48 +15,53 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
+using MathNet.Numerics.Distributions;
 using System.Collections;
 using System.Collections.Generic;
 using umi3d.browserRuntime.NotificationKeys;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.ui.keyboard
 {
     public class KeyboardAnimationTest : MonoBehaviour
     {
-        [ContextMenu("TestOpenWithAnimation")]
-        void TestOpenWithAnimation()
+        Notifier animationNotifier;
+
+        [SerializeField] Toggle openCloseToggle;
+        [SerializeField] Toggle keyPressToggle;
+
+        void Awake()
         {
-            UnityEngine.Debug.Log($"test open with animation");
-            NotificationHub.Default.Notify(
+            animationNotifier = NotificationHub.Default.GetNotifier(
                 this,
-                KeyboardNotificationKeys.OpenOrClose,
-                new()
-                {
-                    { KeyboardNotificationKeys.Info.IsOpening, true },
-                    { KeyboardNotificationKeys.Info.WithAnimation, true },
-                    { KeyboardNotificationKeys.Info.AnimationTime, 1f },
-                     { KeyboardNotificationKeys.Info.PhaseOneStartTimePercentage, .5f },
-                }
+                KeyboardNotificationKeys.AnimationSettings
             );
         }
 
-        [ContextMenu("TestCloseWithAnimation")]
-        void TestCloseWithAnimation()
+        private void Start()
         {
-            UnityEngine.Debug.Log($"test close with animation");
-            NotificationHub.Default.Notify(
-                this,
-                KeyboardNotificationKeys.OpenOrClose,
-                new()
-                {
-                    { KeyboardNotificationKeys.Info.IsOpening, false },
-                    { KeyboardNotificationKeys.Info.WithAnimation, true },
-                    { KeyboardNotificationKeys.Info.AnimationTime, 1f },
-                    { KeyboardNotificationKeys.Info.PhaseOneStartTimePercentage, .5f },
-                }
-            );
+            animationNotifier[KeyboardNotificationKeys.Info.AnimationType] = KeyboardAnimationType.OpenOrClose;
+            animationNotifier[KeyboardNotificationKeys.Info.WithAnimation] = openCloseToggle.isOn;
+            animationNotifier.Notify();
+
+            animationNotifier[KeyboardNotificationKeys.Info.AnimationType] = KeyboardAnimationType.KeyPress;
+            animationNotifier[KeyboardNotificationKeys.Info.WithAnimation] = keyPressToggle.isOn;
+            animationNotifier.Notify();
+        }
+
+        public void EnableOpenOrCloseAnimation(bool enable)
+        {
+            animationNotifier[KeyboardNotificationKeys.Info.AnimationType] = KeyboardAnimationType.OpenOrClose;
+            animationNotifier[KeyboardNotificationKeys.Info.WithAnimation] = enable;
+            animationNotifier.Notify();
+        }
+
+        public void EnableKeyPressAnimation(bool enable)
+        {
+            animationNotifier[KeyboardNotificationKeys.Info.AnimationType] = KeyboardAnimationType.KeyPress;
+            animationNotifier[KeyboardNotificationKeys.Info.WithAnimation] = enable;
+            animationNotifier.Notify();
         }
     }
 }
-#endif

@@ -510,6 +510,7 @@ MonoBehaviour:
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
   updateOnGUI: 0
+  setCenter: 0
 --- !u!1 &256683680882609324
 GameObject:
   m_ObjectHideFlags: 0
@@ -898,6 +899,7 @@ MonoBehaviour:
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
   updateOnGUI: 0
+  setCenter: 0
 --- !u!114 &1541662393597346666
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2989,6 +2991,7 @@ MonoBehaviour:
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
   updateOnGUI: 0
+  setCenter: 0
 --- !u!1 &1609708644056068709
 GameObject:
   m_ObjectHideFlags: 0
@@ -4010,6 +4013,7 @@ MonoBehaviour:
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
   updateOnGUI: 0
+  setCenter: 0
 --- !u!1 &1933982448339699764
 GameObject:
   m_ObjectHideFlags: 0
@@ -4624,6 +4628,7 @@ MonoBehaviour:
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
   updateOnGUI: 0
+  setCenter: 0
 --- !u!1 &2643014818733085492
 GameObject:
   m_ObjectHideFlags: 0
@@ -4940,6 +4945,7 @@ MonoBehaviour:
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
   updateOnGUI: 0
+  setCenter: 0
 --- !u!1 &3302532379375762911
 GameObject:
   m_ObjectHideFlags: 0
@@ -5116,6 +5122,7 @@ MonoBehaviour:
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
   updateOnGUI: 0
+  setCenter: 0
 --- !u!1 &3420707472624357048
 GameObject:
   m_ObjectHideFlags: 0
@@ -5551,6 +5558,7 @@ MonoBehaviour:
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
   updateOnGUI: 0
+  setCenter: 0
 --- !u!1 &3731306727492312671
 GameObject:
   m_ObjectHideFlags: 0
@@ -6144,6 +6152,7 @@ MonoBehaviour:
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
   updateOnGUI: 0
+  setCenter: 0
 --- !u!1 &4310298055818516002
 GameObject:
   m_ObjectHideFlags: 0
@@ -6357,6 +6366,7 @@ MonoBehaviour:
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
   updateOnGUI: 0
+  setCenter: 0
 --- !u!114 &5943595122015788840
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6786,6 +6796,7 @@ MonoBehaviour:
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
   updateOnGUI: 0
+  setCenter: 0
 --- !u!1 &4674286444402968911
 GameObject:
   m_ObjectHideFlags: 0
@@ -6963,6 +6974,7 @@ MonoBehaviour:
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
   updateOnGUI: 0
+  setCenter: 0
 --- !u!114 &3647440485934872116
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9378,6 +9390,7 @@ MonoBehaviour:
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
   updateOnGUI: 0
+  setCenter: 0
 --- !u!1 &7047402149775287265
 GameObject:
   m_ObjectHideFlags: 0
@@ -9778,6 +9791,7 @@ GameObject:
   - component: {fileID: 5993597205807885341}
   - component: {fileID: 2515138748787878627}
   - component: {fileID: 9009355389932740679}
+  - component: {fileID: 1746058178627754433}
   m_Layer: 5
   m_Name: Content
   m_TagString: Untagged
@@ -9884,6 +9898,25 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &1746058178627754433
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7463751267185381073}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7951c64acb0fa62458bf30a60089fe2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 0
+  m_CheckFor2DOcclusion: 0
+  m_CheckFor3DOcclusion: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RaycastTriggerInteraction: 1
 --- !u!1 &7999216031256866111
 GameObject:
   m_ObjectHideFlags: 0
@@ -10827,6 +10860,7 @@ MonoBehaviour:
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
   updateOnGUI: 0
+  setCenter: 0
 --- !u!1 &8741638520797406913
 GameObject:
   m_ObjectHideFlags: 0
@@ -11016,6 +11050,7 @@ MonoBehaviour:
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
   updateOnGUI: 0
+  setCenter: 0
 --- !u!1 &8889805527991125201
 GameObject:
   m_ObjectHideFlags: 0

@@ -40,7 +40,10 @@ namespace umi3d.browserRuntime.ui.keyboard
             {
                 audioSource = gameObject.AddComponent<AudioSource>();
             }
+        }
 
+        void OnEnable()
+        {
             NotificationHub.Default.Subscribe(
                 this,
                 KeyboardNotificationKeys.KeyHovered,
@@ -56,18 +59,16 @@ namespace umi3d.browserRuntime.ui.keyboard
             );
         }
 
+        void OnDisable()
+        {
+            NotificationHub.Default.Unsubscribe(this, KeyboardNotificationKeys.KeyHovered);
+            NotificationHub.Default.Unsubscribe(this, KeyboardNotificationKeys.KeyClicked);
+        }
+
         void KeyHovered(Notification notification)
         {
             // Play the hover sound.
             audioSource.PlayOneShot(hoverSound);
-
-            // If the pointer is an XR controller then send haptic.
-            if (notification.TryGetInfoT("EventData", out BaseEventData data) 
-                && data is TrackedDeviceEventData trackedDeviceEventData
-                && trackedDeviceEventData.interactor is XRBaseControllerInteractor xrInteractor) 
-            {
-                xrInteractor.SendHapticImpulse(0.1f, 0.1f);
-            }
         }
 
         void KeyClicked(Notification notification)

@@ -39,6 +39,24 @@ namespace umi3d.browserRuntime.NotificationKeys
     }
 
     /// <summary>
+    /// Opening state of an object.
+    /// </summary>
+    public enum OpeningState
+    {
+        Open,
+        Close
+    }
+
+    /// <summary>
+    /// The animation settings for the keyboard.
+    /// </summary>
+    public enum KeyboardAnimationType
+    {
+        OpenOrClose,
+        KeyPress
+    }
+
+    /// <summary>
     /// The locomotion types.
     /// </summary>
     [Flags]

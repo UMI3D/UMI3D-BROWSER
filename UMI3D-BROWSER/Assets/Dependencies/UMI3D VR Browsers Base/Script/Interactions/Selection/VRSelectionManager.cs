@@ -35,8 +35,8 @@ namespace umi3dVRBrowsersBase.interactions.selection
         [Header("Selectors"), Tooltip("Selector for interactables.")]
         public InteractableVRSelector interactableSelector;
 
-        [Tooltip("Selector for selectables.")]
-        public SelectableVRSelector selectableSelector;
+        //[Tooltip("Selector for selectables.")]
+        //public SelectableVRSelector selectableSelector;
 
         [Tooltip("Selector for other customized UI.")]
         public ElementVRSelector elementSelector;
@@ -67,7 +67,7 @@ namespace umi3dVRBrowsersBase.interactions.selection
         public void Update()
         {
             if (interactableSelector.LockedSelector
-                || selectableSelector.LockedSelector
+                //|| selectableSelector.LockedSelector
                 || elementSelector.LockedSelector)
                 return;
 
@@ -76,8 +76,8 @@ namespace umi3dVRBrowsersBase.interactions.selection
             if (elementSelector.activated)
                 possibleSelec.AddRange(elementSelector.GetIntentDetections());  // Preference: Client Element > Selectable > Interactable 
 
-            if (selectableSelector.activated)
-                possibleSelec.AddRange(selectableSelector.GetIntentDetections());
+            //if (selectableSelector.activated)
+            //    possibleSelec.AddRange(selectableSelector.GetIntentDetections());
 
             if (interactableSelector.activated)
                 possibleSelec.AddRange(interactableSelector.GetIntentDetections());
@@ -123,9 +123,10 @@ namespace umi3dVRBrowsersBase.interactions.selection
         private void StartSelection(SelectionIntentData preferedObjectData)
         {
             IIntentSelector appropriateSelector; //getting the right selector for selection
-            if (preferedObjectData is SelectionIntentData<Selectable>)
-                appropriateSelector = selectableSelector;
-            else if (preferedObjectData is SelectionIntentData<AbstractClientInteractableElement>)
+            //if (preferedObjectData is SelectionIntentData<Selectable>)
+            //    appropriateSelector = selectableSelector;
+            //else 
+            if (preferedObjectData is SelectionIntentData<AbstractClientInteractableElement>)
                 appropriateSelector = elementSelector;
             else if (preferedObjectData is SelectionIntentData<InteractableContainer>)
                 appropriateSelector = interactableSelector;

@@ -26,30 +26,57 @@ namespace umi3d.browserRuntime.ui.keyboard
     {
         PointerDownBehaviour pointerDown;
 
-        Dictionary<string, object> info = new()
-        {
-            { KeyboardNotificationKeys.Info.IsOpening, false },
-            { KeyboardNotificationKeys.Info.WithAnimation, true },
-            { KeyboardNotificationKeys.Info.AnimationTime, 1f },
-            { KeyboardNotificationKeys.Info.PhaseOneStartTimePercentage, .5f }
-        };
+        Notifier closeNotifier;
 
         void Awake()
         {
             pointerDown = GetComponent<PointerDownBehaviour>();
 
             pointerDown.pointerClickedSimple += PointerDown;
+
+            closeNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                KeyboardNotificationKeys.OpenOrClose,
+                null,
+                new()
+                {
+                    { KeyboardNotificationKeys.Info.IsOpening, false },
+                    { KeyboardNotificationKeys.Info.WithAnimation, true },
+                    { KeyboardNotificationKeys.Info.AnimationTime, 1f },
+                    { KeyboardNotificationKeys.Info.PhaseOneStartTimePercentage, .5f }
+                }
+            );
+
+            NotificationHub.Default.Subscribe(
+                this,
+                KeyboardNotificationKeys.AnimationSettings,
+                EnableOrDisableAnimation
+            );
+        }
+
+        void EnableOrDisableAnimation(Notification notification)
+        {
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.AnimationType, out KeyboardAnimationType animationType))
+            {
+                return;
+            }
+
+            if (animationType != KeyboardAnimationType.OpenOrClose)
+            {
+                return;
+            }
+
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.WithAnimation, out bool withAnimation))
+            {
+                return;
+            }
+
+            closeNotifier[KeyboardNotificationKeys.Info.WithAnimation] = withAnimation;
         }
 
         void PointerDown()
         {
-            // To update.
-            info[KeyboardNotificationKeys.Info.WithAnimation] = true;
-            NotificationHub.Default.Notify(
-                this,
-                KeyboardNotificationKeys.OpenOrClose,
-                info
-            );
+            closeNotifier.Notify();
         }
     }
 }

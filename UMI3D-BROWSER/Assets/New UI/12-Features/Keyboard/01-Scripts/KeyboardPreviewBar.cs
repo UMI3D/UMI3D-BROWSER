@@ -131,11 +131,11 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         void AddCharacters(Notification notification)
         {
-            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.Characters, out string characters))
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.Characters, out string characters, false))
             {
-                if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.Characters, out char character))
+                if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.Characters, out char character, false))
                 {
-                    UnityEngine.Debug.LogError($"[KeyboardPreviewBar] No characters added.");
+                    notification.LogError(nameof(KeyboardPreviewBar), KeyboardNotificationKeys.Info.Characters, "Character added is neither string not char.");
                     return;
                 }
 

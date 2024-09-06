@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3701017231696944693}
   - component: {fileID: 7518037024614213987}
   - component: {fileID: 2516140412212598465}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Placeholder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -166,7 +166,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2639908064511445006}
   - component: {fileID: 4308211105353020136}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Text Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -220,7 +220,7 @@ GameObject:
   - component: {fileID: 7633080810399206744}
   - component: {fileID: 99908939014455818}
   - component: {fileID: 798646386600466527}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: InputField (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -394,8 +394,9 @@ GameObject:
   - component: {fileID: 5222689189363761125}
   - component: {fileID: 7245925020366175692}
   - component: {fileID: 2168156412773592889}
+  - component: {fileID: 7075633146572669990}
   - component: {fileID: 7705848534967285312}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: KeyboardPreviewBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -462,6 +463,25 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &7075633146572669990
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5110158822969239637}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7951c64acb0fa62458bf30a60089fe2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 0
+  m_CheckFor2DOcclusion: 0
+  m_CheckFor3DOcclusion: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RaycastTriggerInteraction: 1
 --- !u!114 &7705848534967285312
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -485,7 +505,7 @@ GameObject:
   - component: {fileID: 1554991989739615572}
   - component: {fileID: 5884674416345204099}
   - component: {fileID: 4301060104088552983}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}

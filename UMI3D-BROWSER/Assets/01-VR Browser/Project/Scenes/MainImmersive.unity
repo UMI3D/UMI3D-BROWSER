@@ -471,7 +471,7 @@ PrefabInstance:
     - target: {fileID: 5988314907380347006, guid: 6d8cc188ac4cb49419e2616ed25f607d,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -0.000006332092
+      value: 0.0000038610856
       objectReference: {fileID: 0}
     - target: {fileID: 6093459749334264534, guid: 6d8cc188ac4cb49419e2616ed25f607d,
         type: 3}
@@ -710,6 +710,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &659448794 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3191326244962881275, guid: aa50e35a45eaaed43a950ae34ef532dc,
+    type: 3}
+  m_PrefabInstance: {fileID: 1131452852}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &664336720 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4599283922394268718, guid: aa50e35a45eaaed43a950ae34ef532dc,
+    type: 3}
+  m_PrefabInstance: {fileID: 1131452852}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1117158941
 GameObject:
   m_ObjectHideFlags: 0
@@ -786,6 +798,36 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 41837293574652677, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: durationIn
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 41837293574652677, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: durationOut
+      value: 0.035
+      objectReference: {fileID: 0}
+    - target: {fileID: 55039180422295384, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: Ray
+      value: 
+      objectReference: {fileID: 659448794}
+    - target: {fileID: 55039180422295384, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: pokePeriod
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 674109007281843742, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: durationIn
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 674109007281843742, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: durationOut
+      value: 0.035
+      objectReference: {fileID: 0}
     - target: {fileID: 758455039067974444, guid: aa50e35a45eaaed43a950ae34ef532dc,
         type: 3}
       propertyPath: m_MinimumHoldTime
@@ -794,6 +836,26 @@ PrefabInstance:
     - target: {fileID: 758455039067974444, guid: aa50e35a45eaaed43a950ae34ef532dc,
         type: 3}
       propertyPath: m_GestureDetectionInterval
+      value: 0.035
+      objectReference: {fileID: 0}
+    - target: {fileID: 1779574753560929504, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: Ray
+      value: 
+      objectReference: {fileID: 664336720}
+    - target: {fileID: 1779574753560929504, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: pokePeriod
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 1781155167095016675, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: durationIn
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 1781155167095016675, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: durationOut
       value: 0.035
       objectReference: {fileID: 0}
     - target: {fileID: 1809528694589186553, guid: aa50e35a45eaaed43a950ae34ef532dc,
@@ -805,6 +867,31 @@ PrefabInstance:
         type: 3}
       propertyPath: m_GestureDetectionInterval
       value: 0.035
+      objectReference: {fileID: 0}
+    - target: {fileID: 2253305591949363581, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: durationIn
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 2253305591949363581, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: durationOut
+      value: 0.035
+      objectReference: {fileID: 0}
+    - target: {fileID: 2414294997035306730, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: durationIn
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 2414294997035306730, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: durationOut
+      value: 0.035
+      objectReference: {fileID: 0}
+    - target: {fileID: 2834669288815610977, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3134146086695007908, guid: aa50e35a45eaaed43a950ae34ef532dc,
         type: 3}
@@ -831,6 +918,26 @@ PrefabInstance:
       propertyPath: OrientaionPanel
       value: 
       objectReference: {fileID: 1725134124}
+    - target: {fileID: 3683598919586935227, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: durationIn
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 3683598919586935227, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: durationOut
+      value: 0.035
+      objectReference: {fileID: 0}
+    - target: {fileID: 4054425258686219316, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: Ray
+      value: 
+      objectReference: {fileID: 659448794}
+    - target: {fileID: 4054425258686219316, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: pokePeriod
+      value: 0.01
+      objectReference: {fileID: 0}
     - target: {fileID: 4099567960425757809, guid: aa50e35a45eaaed43a950ae34ef532dc,
         type: 3}
       propertyPath: m_MinimumHoldTime
@@ -839,6 +946,41 @@ PrefabInstance:
     - target: {fileID: 4099567960425757809, guid: aa50e35a45eaaed43a950ae34ef532dc,
         type: 3}
       propertyPath: m_GestureDetectionInterval
+      value: 0.035
+      objectReference: {fileID: 0}
+    - target: {fileID: 4120088099262835916, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: Ray
+      value: 
+      objectReference: {fileID: 664336720}
+    - target: {fileID: 4120088099262835916, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: pokePeriod
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 4237091122948040634, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: Ray
+      value: 
+      objectReference: {fileID: 659448794}
+    - target: {fileID: 4237091122948040634, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: pokePeriod
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 4255868001596811061, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: m_DistanceThreshold
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4317963679485313607, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: durationIn
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 4317963679485313607, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: durationOut
       value: 0.035
       objectReference: {fileID: 0}
     - target: {fileID: 4563722139069628583, guid: aa50e35a45eaaed43a950ae34ef532dc,
@@ -926,6 +1068,26 @@ PrefabInstance:
       propertyPath: m_GestureDetectionInterval
       value: 0.035
       objectReference: {fileID: 0}
+    - target: {fileID: 6417656858657896440, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: durationIn
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 6417656858657896440, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: durationOut
+      value: 0.035
+      objectReference: {fileID: 0}
+    - target: {fileID: 6704484310021908982, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: Ray
+      value: 
+      objectReference: {fileID: 659448794}
+    - target: {fileID: 6704484310021908982, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: pokePeriod
+      value: 0.01
+      objectReference: {fileID: 0}
     - target: {fileID: 6807379700560094882, guid: aa50e35a45eaaed43a950ae34ef532dc,
         type: 3}
       propertyPath: m_MinimumHoldTime
@@ -935,6 +1097,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_GestureDetectionInterval
       value: 0.035
+      objectReference: {fileID: 0}
+    - target: {fileID: 7087952811944706474, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: Ray
+      value: 
+      objectReference: {fileID: 664336720}
+    - target: {fileID: 7087952811944706474, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: pokePeriod
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 7399237722055982039, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: Ray
+      value: 
+      objectReference: {fileID: 664336720}
+    - target: {fileID: 7399237722055982039, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: pokePeriod
+      value: 0.01
       objectReference: {fileID: 0}
     - target: {fileID: 7912355339525819892, guid: aa50e35a45eaaed43a950ae34ef532dc,
         type: 3}

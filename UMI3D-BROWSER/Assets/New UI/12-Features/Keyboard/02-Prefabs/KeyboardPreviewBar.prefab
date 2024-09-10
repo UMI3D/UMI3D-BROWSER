@@ -339,7 +339,7 @@ MonoBehaviour:
   m_KeyboardType: 0
   m_LineType: 0
   m_HideMobileInput: 0
-  m_HideSoftKeyboard: 0
+  m_HideSoftKeyboard: 1
   m_CharacterValidation: 0
   m_RegexValue: 
   m_GlobalPointSize: 25
@@ -396,6 +396,7 @@ GameObject:
   - component: {fileID: 2168156412773592889}
   - component: {fileID: 7075633146572669990}
   - component: {fileID: 7705848534967285312}
+  - component: {fileID: 477891438503322222}
   m_Layer: 5
   m_Name: KeyboardPreviewBar
   m_TagString: Untagged
@@ -492,6 +493,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 967dbc8cb4c9721419981e29680b8c8f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &477891438503322222
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5110158822969239637}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90067a287cefe29468a6837c2d6abff2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &8146789203364437166

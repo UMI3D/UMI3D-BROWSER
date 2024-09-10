@@ -15,57 +15,25 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using umi3d.browserRuntime.NotificationKeys;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.keyboard
 {
+    [RequireComponent(typeof(KeyboardPreviewBarSelection))]
     public class KeyboardPreviewBar : MonoBehaviour
     {
         TMPro.TMP_InputField inputField;
+        KeyboardPreviewBarSelection selection;
 
-        /// <summary>
-        /// Start position of the selection.<br/>
-        /// If there is no selection then null.
-        /// </summary>
-        int? SelectionStart = null;
-        /// <summary>
-        /// End position of the selection.<br/>
-        /// If there is no selection then null.
-        /// </summary>
-        int? SelectionEnd = null;
-
-        /// <summary>
-        /// Is text selected.
-        /// </summary>
-        bool isTextSelected
-        {
-            get
-            {
-                return SelectionStart.HasValue && SelectionEnd.HasValue && SelectionStart.Value < SelectionEnd.Value;
-            }
-        }
-
-        private void Awake()
+        void Awake()
         {
             inputField = GetComponentInChildren<TMPro.TMP_InputField>();
+            selection = GetComponent<KeyboardPreviewBarSelection>();
         }
 
         void OnEnable()
         {
-            inputField.onTextSelection.AddListener(SelectText);
-            inputField.onEndTextSelection.AddListener(UnSelectText);
-
-            NotificationHub.Default.Subscribe(
-                this,
-                KeyboardNotificationKeys.AskPreviewFocus,
-                null,
-                Focus
-            );
-
             NotificationHub.Default.Subscribe(
                 this,
                 KeyboardNotificationKeys.AddOrRemoveCharacters,
@@ -76,39 +44,7 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         void OnDisable()
         {
-            inputField.onTextSelection.RemoveListener(SelectText);
-            inputField.onEndTextSelection.RemoveListener(UnSelectText);
-
             NotificationHub.Default.Unsubscribe(this, KeyboardNotificationKeys.AddOrRemoveCharacters);
-        }
-
-        void Focus()
-        {
-            bool onFocusSelectAll = inputField.onFocusSelectAll;
-            inputField.onFocusSelectAll = false;
-            inputField.Select();
-            new Task(async () =>
-            {
-                await Task.Yield();
-                inputField.onFocusSelectAll = onFocusSelectAll;
-            }).Start(TaskScheduler.FromCurrentSynchronizationContext());
-        }
-
-        void SelectText(string str, int pos1, int pos2)
-        {
-            if (inputField.isFocused)
-            {
-                SelectionStart = Mathf.Min(pos1, pos2);
-                //minus one to convert from caret pos to character pos
-                SelectionEnd = Mathf.Max(pos1 - 1, pos2 - 1);
-            }
-        }
-
-        void UnSelectText(string str, int pos1, int pos2)
-        {
-            inputField.stringPosition = pos1;
-            SelectionStart = null;
-            SelectionEnd = null;
         }
 
         void AddOrRemoveCharacters(Notification notification)
@@ -135,7 +71,11 @@ namespace umi3d.browserRuntime.ui.keyboard
             {
                 if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.Characters, out char character, false))
                 {
-                    notification.LogError(nameof(KeyboardPreviewBar), KeyboardNotificationKeys.Info.Characters, "Character added is neither string not char.");
+                    notification.LogError(
+                        nameof(KeyboardPreviewBar), 
+                        KeyboardNotificationKeys.Info.Characters, 
+                        "Character added is neither string not char."
+                    );
                     return;
                 }
 
@@ -144,25 +84,22 @@ namespace umi3d.browserRuntime.ui.keyboard
             
             var text = inputField.text;
 
-            if (!isTextSelected)
+            if (!selection.isTextSelected)
             {
-                inputField.text = text.Insert(inputField.stringPosition, characters);
-                inputField.stringPosition += characters.Length;
+                int caretPosition = selection.stringPosition;
+
+                inputField.text = text.Insert(caretPosition, characters);
+                selection.stringPosition = caretPosition + characters.Length;
             }
             else
             {
-                int start = SelectionStart.Value;
-                int end = SelectionEnd.Value;
+                int start = selection.startPosition;
+                int end = selection.endPosition;
 
                 text = text.Remove(start, end - start + 1);
                 text = text.Insert(start, characters);
                 inputField.text = text;
-
-                inputField.stringPosition = start + 1;
-                inputField.selectionAnchorPosition = start + 1;
-                inputField.selectionFocusPosition = start + 1;
-                SelectionStart = null;
-                SelectionEnd = null;
+                selection.Deselect(start + 1);
             }
         }
 
@@ -174,7 +111,7 @@ namespace umi3d.browserRuntime.ui.keyboard
                 return;
             }
 
-            if (inputField.stringPosition == 0 && !isTextSelected)
+            if (inputField.stringPosition == 0 && !selection.isTextSelected)
             {
                 return;
             }
@@ -184,41 +121,39 @@ namespace umi3d.browserRuntime.ui.keyboard
             // In phase 0: delete only one character or the selected text.
             if (deletionPhase == 0)
             {
-
-                if (!isTextSelected)
+                if (!selection.isTextSelected)
                 {
-                    inputField.stringPosition -= 1;
-                    inputField.text = text.Remove(inputField.stringPosition, 1);
+                    int caretPosition = selection.stringPosition;
+
+                    inputField.text = text.Remove(caretPosition - 1, 1);
+                    selection.stringPosition = caretPosition - 1;
                 }
                 else
                 {
-                    int start = SelectionStart.Value;
-                    int end = SelectionEnd.Value;
+                    int start = selection.startPosition;
+                    int end = selection.endPosition;
 
                     text = text.Remove(start, end - start + 1);
                     inputField.text = text;
-
-                    inputField.stringPosition = start;
-                    inputField.selectionAnchorPosition = start;
-                    inputField.selectionFocusPosition = start;
-                    SelectionStart = null;
-                    SelectionEnd = null;
+                    selection.Deselect(start);
                 }
             }
             // In phase 1: delete world by world.
             else if (deletionPhase == 1)
             {
+                int caretPosition = selection.stringPosition;
+
                 // The part that will be partially deleted.
-                string left = text.Substring(0, inputField.stringPosition);
+                string left = text.Substring(0, caretPosition);
                 // The part that will not be deleted.
-                string right = text.Substring(inputField.stringPosition, text.Length - inputField.stringPosition);
+                string right = text.Substring(caretPosition, text.Length - caretPosition);
 
                 // Remove the trailing spaces.
                 string trimmedLeft = left.TrimEnd();
                 if (trimmedLeft.Length < left.Length)
                 {
                     inputField.text = trimmedLeft + right;
-                    inputField.stringPosition = trimmedLeft.Length;
+                    selection.stringPosition = trimmedLeft.Length;
                     return;
                 }
 
@@ -228,12 +163,12 @@ namespace umi3d.browserRuntime.ui.keyboard
                 if (lastIdxOfSpace == -1)
                 {
                     inputField.text = right;
-                    inputField.stringPosition = 0;
+                    selection.stringPosition = 0;
                 }
                 else
                 {
                     inputField.text = left.Substring(0, lastIdxOfSpace + 1) + right;
-                    inputField.stringPosition = lastIdxOfSpace + 1;
+                    selection.stringPosition = lastIdxOfSpace + 1;
                 }
             }
             else
@@ -243,13 +178,6 @@ namespace umi3d.browserRuntime.ui.keyboard
         }
 
 #if UNITY_EDITOR
-        [ContextMenu("TestFocus")]
-        void TestFocus()
-        {
-            UnityEngine.Debug.Log($"test focus = {inputField.stringPosition}");
-            Focus();
-        }
-
         [ContextMenu("TestAddSimple")]
         void TestAddSimple()
         {

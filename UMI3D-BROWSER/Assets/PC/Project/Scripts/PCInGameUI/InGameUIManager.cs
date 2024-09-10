@@ -25,9 +25,18 @@ namespace umi3dBrowsers.ingame_ui
         private void Awake()
         {
             openCloseInGamePanel.Enable();
+
+            if (inGameLinker.IsEnable == false)
+            {
+                ToggleInGamePanel();
+                gameObject.SetActive(inGameLinker.IsEnable);
+                Cursor.lockState = CursorLockMode.Confined;
+            }
+
             openCloseInGamePanel.performed += i => ToggleInGamePanel();
             inGamePanelLinker.OnOpenClosePanel += () => ToggleInGamePanel();
             inGameLinker.OnEnableDisableInGameUI += isEnable => gameObject.SetActive(isEnable);
+
             if (!debugMode)
                 gameObject.SetActive(inGameLinker.IsEnable);
         }

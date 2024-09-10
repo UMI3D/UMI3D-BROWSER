@@ -19,7 +19,7 @@ using UnityEngine;
 /// <summary>
 /// Class to represent an UMI3DNotification displayed by a 3D object.
 /// </summary>
-public class Notification3D : AbstractNotification
+public class UserNotification3D : AbstractUserNotification
 {
     /// <summary>
     /// Set world position of node.

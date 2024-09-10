@@ -23,7 +23,7 @@ using UnityEngine.UI;
 /// <summary>
 /// Base class to display an UMI3D Notification.
 /// </summary>
-public abstract class AbstractNotification : MonoBehaviour
+public abstract class AbstractUserNotification : MonoBehaviour
 {
     #region Fields
 

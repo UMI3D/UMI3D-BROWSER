@@ -167,10 +167,10 @@ GameObject:
   - component: {fileID: 6659086584531470916}
   - component: {fileID: 6659086584531470917}
   - component: {fileID: 6659086584531470922}
-  - component: {fileID: 2610643556064001369}
   - component: {fileID: 3504702861163747784}
+  - component: {fileID: 6970648979942713943}
   m_Layer: 5
-  m_Name: 3DNotification
+  m_Name: 3DUserNotification
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -244,7 +244,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &6659086584531470922
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -262,22 +262,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &2610643556064001369
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6659086584531470923}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 98c00efe1677e11429c010b39e810f42, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  titleLabel: {fileID: 6659086585369079767}
-  titleContent: {fileID: 6659086584327816301}
-  image: {fileID: 6659086584132149558}
-  destroyButton: {fileID: 1639635663949209675}
 --- !u!114 &3504702861163747784
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -292,6 +276,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   X: 0
   Y: 1
+--- !u!114 &6970648979942713943
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6659086584531470923}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3f75f115df33084c97a592815f437e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  titleLabel: {fileID: 6659086585369079767}
+  titleContent: {fileID: 6659086584327816301}
+  image: {fileID: 6659086584132149558}
+  destroyButton: {fileID: 1639635663949209675}
 --- !u!1 &6659086585038011839
 GameObject:
   m_ObjectHideFlags: 0

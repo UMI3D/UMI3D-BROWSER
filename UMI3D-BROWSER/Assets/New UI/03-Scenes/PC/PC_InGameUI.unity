@@ -243,6 +243,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 12605661}
   m_CullTransparentMesh: 1
+--- !u!114 &75878606 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5702024373651553656, guid: 318b53904dee22c48879fb5b3a97664e,
+    type: 3}
+  m_PrefabInstance: {fileID: 647443848}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 925370a90328bcf4191b0cbae2ae2e09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &89928871
 GameObject:
   m_ObjectHideFlags: 0
@@ -4099,7 +4111,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buttonStyle: {fileID: 841162761}
-  notificationScreen: {fileID: 0}
+  notificationScreen: {fileID: 75878606}
   overrideColor: {r: 0.82745105, g: 0.019607844, b: 0.019607844, a: 1}
 --- !u!224 &897831548 stripped
 RectTransform:

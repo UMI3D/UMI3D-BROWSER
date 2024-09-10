@@ -23,7 +23,7 @@ namespace umi3dBrowsers.ingame_ui.notifications
     {
         [SerializeField] private ButtonStyle buttonStyle;
         [Header("Linker")]
-        [SerializeField] private NotificationScreen notificationScreen;
+        [SerializeField] private UserNotificationScreen notificationScreen;
 
         [Header("Color")]
         [SerializeField] private Color overrideColor;

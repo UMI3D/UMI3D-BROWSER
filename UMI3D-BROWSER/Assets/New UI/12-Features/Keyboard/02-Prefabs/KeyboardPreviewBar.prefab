@@ -220,6 +220,7 @@ GameObject:
   - component: {fileID: 7633080810399206744}
   - component: {fileID: 99908939014455818}
   - component: {fileID: 798646386600466527}
+  - component: {fileID: 8902069769695166185}
   m_Layer: 5
   m_Name: InputField (TMP)
   m_TagString: Untagged
@@ -383,6 +384,18 @@ MonoBehaviour:
   m_isRichTextEditingAllowed: 0
   m_LineLimit: 0
   m_InputValidator: {fileID: 0}
+--- !u!114 &8902069769695166185
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5065454336128507613}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90067a287cefe29468a6837c2d6abff2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5110158822969239637
 GameObject:
   m_ObjectHideFlags: 0
@@ -396,7 +409,6 @@ GameObject:
   - component: {fileID: 2168156412773592889}
   - component: {fileID: 7075633146572669990}
   - component: {fileID: 7705848534967285312}
-  - component: {fileID: 477891438503322222}
   m_Layer: 5
   m_Name: KeyboardPreviewBar
   m_TagString: Untagged
@@ -493,18 +505,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 967dbc8cb4c9721419981e29680b8c8f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &477891438503322222
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5110158822969239637}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 90067a287cefe29468a6837c2d6abff2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &8146789203364437166

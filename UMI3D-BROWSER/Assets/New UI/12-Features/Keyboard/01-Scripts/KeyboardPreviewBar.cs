@@ -20,7 +20,6 @@ using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.keyboard
 {
-    [RequireComponent(typeof(KeyboardPreviewBarSelection))]
     public class KeyboardPreviewBar : MonoBehaviour
     {
         TMPro.TMP_InputField inputField;
@@ -29,7 +28,7 @@ namespace umi3d.browserRuntime.ui.keyboard
         void Awake()
         {
             inputField = GetComponentInChildren<TMPro.TMP_InputField>();
-            selection = GetComponent<KeyboardPreviewBarSelection>();
+            selection = inputField.GetComponent<KeyboardPreviewBarSelection>();
         }
 
         void OnEnable()
@@ -87,16 +86,16 @@ namespace umi3d.browserRuntime.ui.keyboard
             if (!selection.isTextSelected)
             {
                 int caretPosition = selection.stringPosition;
-
+                UnityEngine.Debug.Log($"add simple : {caretPosition} && {selection.startPosition} && {selection.endPosition}");
                 inputField.text = text.Insert(caretPosition, characters);
-                selection.stringPosition = caretPosition + characters.Length;
+                selection.Deselect(caretPosition + characters.Length);
             }
             else
             {
                 int start = selection.startPosition;
                 int end = selection.endPosition;
-
-                text = text.Remove(start, end - start + 1);
+                UnityEngine.Debug.Log($"add: {start} && {end}");
+                text = text.Remove(start, end - start);
                 text = text.Insert(start, characters);
                 inputField.text = text;
                 selection.Deselect(start + 1);
@@ -126,14 +125,14 @@ namespace umi3d.browserRuntime.ui.keyboard
                     int caretPosition = selection.stringPosition;
 
                     inputField.text = text.Remove(caretPosition - 1, 1);
-                    selection.stringPosition = caretPosition - 1;
+                    selection.Deselect(caretPosition - 1);
                 }
                 else
                 {
                     int start = selection.startPosition;
                     int end = selection.endPosition;
 
-                    text = text.Remove(start, end - start + 1);
+                    text = text.Remove(start, end - start);
                     inputField.text = text;
                     selection.Deselect(start);
                 }
@@ -153,7 +152,7 @@ namespace umi3d.browserRuntime.ui.keyboard
                 if (trimmedLeft.Length < left.Length)
                 {
                     inputField.text = trimmedLeft + right;
-                    selection.stringPosition = trimmedLeft.Length;
+                    selection.Deselect(trimmedLeft.Length);
                     return;
                 }
 
@@ -163,12 +162,12 @@ namespace umi3d.browserRuntime.ui.keyboard
                 if (lastIdxOfSpace == -1)
                 {
                     inputField.text = right;
-                    selection.stringPosition = 0;
+                    selection.Deselect(0);
                 }
                 else
                 {
                     inputField.text = left.Substring(0, lastIdxOfSpace + 1) + right;
-                    selection.stringPosition = lastIdxOfSpace + 1;
+                    selection.Deselect(lastIdxOfSpace + 1);
                 }
             }
             else

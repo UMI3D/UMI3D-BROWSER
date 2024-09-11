@@ -25,6 +25,7 @@ public class SocialScreen : MonoBehaviour
     [SerializeField] private GameObject socialPrefab;
 
     private List<SocialElement> _users;
+    private Dictionary<ulong, SocialElement> _allUsersRemembered;
 
     private void Awake()
     {
@@ -67,9 +68,19 @@ public class SocialScreen : MonoBehaviour
             u.transform.SetAsLastSibling();
     }
 
-    private SocialElement CreateUser(UMI3DUser u)
+    private SocialElement CreateUser(UMI3DUser user)
     {
-        return Instantiate(socialPrefab, content).GetComponent<SocialElement>();
+        var socialElement = Instantiate(socialPrefab, content).GetComponent<SocialElement>();
+        socialElement.User = user;
+        if (_allUsersRemembered.ContainsKey(user.id))
+            socialElement.UserVolume = _allUsersRemembered[user.id].UserVolume;
+        else
+        {
+            socialElement.UserVolume = 100f;
+            _allUsersRemembered.Add(user.id, socialElement);
+        }
+
+        return socialElement;
     }
 
     private void Remove(UMI3DUser user)

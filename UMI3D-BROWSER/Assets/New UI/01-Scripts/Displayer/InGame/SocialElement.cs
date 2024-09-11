@@ -17,22 +17,41 @@ limitations under the License.
 using TMPro;
 using umi3d.cdk.collaboration;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SocialElement : MonoBehaviour
 {
     [SerializeField] private TMP_Text nameText;
     [SerializeField] private TMP_Text placeText;
+    [SerializeField] private Slider volumeSlider;
 
     public UMI3DUser User { 
         get => _user;
-        private set {
+        set {
             _user = value;
             Update();
         }
     }
     public string UserName => _user.login;
+    public float UserVolume { 
+        get => _volume; 
+        set {
+            _volume = value;
+            volumeSlider.SetValueWithoutNotify(value);
+        }
+    }
 
     private UMI3DUser _user;
+    private float _volume = 100;
+
+    private void Awake()
+    {
+        volumeSlider.minValue = 0;
+        volumeSlider.maxValue = 100;
+        volumeSlider.onValueChanged.AddListener(newValue => {
+            _volume = newValue;
+        });
+    }
 
     private void Update()
     {

@@ -16,6 +16,7 @@ limitations under the License.
 
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using umi3d.cdk.collaboration;
 using UnityEngine;
 
@@ -23,6 +24,7 @@ public class SocialScreen : MonoBehaviour
 {
     [SerializeField] private Transform content;
     [SerializeField] private GameObject socialPrefab;
+    [SerializeField] private TMP_InputField searchField;
 
     private List<SocialElement> _users;
     private Dictionary<ulong, SocialElement> _allUsersRemembered;
@@ -30,11 +32,14 @@ public class SocialScreen : MonoBehaviour
     private void Awake()
     {
         Clear();
+
         UMI3DEnvironmentClient.EnvironementJoinned.AddListener(Clear);
         UMI3DUser.OnUserMicrophoneStatusUpdated.AddListener(UpdateUserList);
         UMI3DUser.OnUserAvatarStatusUpdated.AddListener(UpdateUserList);
         UMI3DUser.OnUserAttentionStatusUpdated.AddListener(UpdateUserList);
         UMI3DUser.OnRemoveUser.AddListener(Remove);
+
+        searchField.onValueChanged.AddListener(Search);
     }
 
     private void Clear()
@@ -66,6 +71,19 @@ public class SocialScreen : MonoBehaviour
     {
         foreach (var u in _users)
             u.transform.SetAsLastSibling();
+    }
+
+    private void Search(string name)
+    {
+        if (name == null || name == string.Empty)
+        {
+            foreach (var user in _users)
+                user.gameObject.SetActive(true);
+            return;
+        }
+
+        foreach (var user in _users)
+            user.gameObject.SetActive(user.UserName.Contains(name));
     }
 
     private SocialElement CreateUser(UMI3DUser user)

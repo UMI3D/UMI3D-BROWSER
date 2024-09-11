@@ -25,6 +25,7 @@ public class SocialScreen : MonoBehaviour
     [SerializeField] private Transform content;
     [SerializeField] private GameObject socialPrefab;
     [SerializeField] private TMP_InputField searchField;
+    [SerializeField] private TMP_Text numberOfParticipantText;
 
     private List<SocialElement> _users;
     private Dictionary<ulong, SocialElement> _allUsersRemembered;
@@ -40,6 +41,8 @@ public class SocialScreen : MonoBehaviour
         UMI3DUser.OnRemoveUser.AddListener(Remove);
 
         searchField.onValueChanged.AddListener(Search);
+
+        numberOfParticipantText.text = $" {_users.Count + 1}";
     }
 
     private void Clear()
@@ -59,6 +62,8 @@ public class SocialScreen : MonoBehaviour
             .ToList();
 
         Filter();
+
+        numberOfParticipantText.text = $" {_users.Count + 1}";
     }
 
     private void Filter()
@@ -109,5 +114,7 @@ public class SocialScreen : MonoBehaviour
         var userToRemove = _users.FirstOrDefault(u => {  return u?.User == user; });
         _users.Remove(userToRemove);
         Destroy(userToRemove.gameObject);
+
+        numberOfParticipantText.text = $" {_users.Count + 1}";
     }
 }

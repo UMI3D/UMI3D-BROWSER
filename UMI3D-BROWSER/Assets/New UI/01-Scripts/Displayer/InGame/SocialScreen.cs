@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -26,9 +27,12 @@ public class SocialScreen : MonoBehaviour
     [SerializeField] private GameObject socialPrefab;
     [SerializeField] private TMP_InputField searchField;
     [SerializeField] private TMP_Text numberOfParticipantText;
+    [SerializeField] private TMP_Text timeSpentText;
 
     private List<SocialElement> _users;
     private Dictionary<ulong, SocialElement> _allUsersRemembered;
+
+    private DateTime _startTime;
 
     private void Awake()
     {
@@ -45,6 +49,15 @@ public class SocialScreen : MonoBehaviour
         numberOfParticipantText.text = $" {_users.Count + 1}";
     }
 
+    private void Update()
+    {
+        if (!enabled)
+            return;
+
+        var time = DateTime.Now - _startTime;
+        timeSpentText.text = $" {time.ToString("hh")}:{time.ToString("mm")}:{time.ToString("ss")}";
+    }
+
     private void Clear()
     {
         if (_users != null)
@@ -52,6 +65,8 @@ public class SocialScreen : MonoBehaviour
                 Destroy(u.gameObject);
 
         _users = new List<SocialElement>();
+
+        _startTime = DateTime.Now;
     }
 
     private void UpdateUserList(UMI3DUser user)

@@ -71,6 +71,12 @@ namespace umi3dVRBrowsersBase.interactions.selection
                 || elementSelector.LockedSelector)
                 return;
 
+            if (interactableSelector.proximitySelection || selectableSelector.proximitySelection || elementSelector.proximitySelection)
+                pointingCursor.enabled = false;
+
+            else
+                pointingCursor.enabled = true;
+
             // Retrieves propositions from selectors
             var possibleSelec = new List<SelectionIntentData>();
             if (elementSelector.activated)

@@ -26,7 +26,7 @@ namespace umi3dBrowsers.interaction.selection.zoneselection
         /// Associated collider defining the selection zone
         /// </summary>
         [Tooltip("Collider defining the selection zone")]
-        public SphereCollider zoneCollider;
+        public CapsuleCollider zoneCollider;
 
         /// <summary>
         /// Objects that are currently in the collider.
@@ -36,7 +36,7 @@ namespace umi3dBrowsers.interaction.selection.zoneselection
         protected void Awake()
         {
             if (zoneCollider == null)
-                zoneCollider = GetComponentInChildren<SphereCollider>();
+                zoneCollider = GetComponentInChildren<CapsuleCollider>();
         }
 
         protected void FixedUpdate()

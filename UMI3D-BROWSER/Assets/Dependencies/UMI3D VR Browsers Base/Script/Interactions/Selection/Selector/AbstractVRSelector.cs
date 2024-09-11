@@ -343,12 +343,16 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
         /// <returns></returns>
         public abstract SelectionIntentData CreateSelectionIntentData(T obj, DetectionOrigin origin);
 
+        public bool proximitySelection = false;
+
         /// <summary>
         /// Retrieve the best proposition for each detector of a selector
         /// </summary>
         /// <returns></returns>
         public virtual IEnumerable<SelectionIntentData> GetIntentDetections()
         {
+            proximitySelection = false;
+
             foreach (var detector in ProximityDetectors) // priority for proximity
             {
                 if (!detector.isRunning || SelectionParadigmMode is SelectionParadigm.POINTING_ONLY)
@@ -358,7 +362,10 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
                 var detectionInfo = CreateSelectionIntentData(objToSelectProximity, DetectionOrigin.PROXIMITY);
                 detectionCacheProximity.Add(detectionInfo);
                 if (CanSelect(objToSelectProximity))
+                {
                     selectionPropositions.AddLast(detectionInfo);
+                    proximitySelection = true;
+                }
             }
 
             foreach (var detector in PointingDetectors)

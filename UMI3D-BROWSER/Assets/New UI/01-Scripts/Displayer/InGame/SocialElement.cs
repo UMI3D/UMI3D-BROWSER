@@ -38,11 +38,19 @@ public class SocialElement : MonoBehaviour
         set {
             _volume = value;
             volumeSlider.SetValueWithoutNotify(value);
+
+            var vg = UserVolumeToVG(value);
+            AudioManager.Instance.SetGainForUser(_user, vg.gain);
+            AudioManager.Instance.SetVolumeForUser(_user, vg.volume);
         }
     }
 
     private UMI3DUser _user;
     private float _volume = 100;
+
+    private const float logBase = 1.5f;
+    private const float factor = 5f / 2f;
+    private const float factor2 = 5f / 2f;
 
     private void Awake()
     {
@@ -58,4 +66,13 @@ public class SocialElement : MonoBehaviour
         nameText.text = UserName;
         placeText.text = $"({UMI3DCollaborationClientServer.Environement.name})";
     }
+
+    private (float volume, float gain) UserVolumeToVG(float volume)
+    {
+        if (volume <= 100f)
+            return (volume / 100f, 1);
+        else
+            return (1, GainFactor(volume / 100));
+    }
+    private float GainFactor(float gain) { return (Mathf.Pow(logBase, (gain - 1) * factor) - 1) * factor2 + 1; }
 }

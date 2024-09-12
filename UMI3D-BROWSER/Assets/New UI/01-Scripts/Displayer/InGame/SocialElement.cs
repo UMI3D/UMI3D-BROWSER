@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using TMPro;
+using umi3d.baseBrowser.extension;
 using umi3d.cdk.collaboration;
 using UnityEngine;
 using UnityEngine.UI;
@@ -63,7 +64,7 @@ public class SocialElement : MonoBehaviour
 
     private void Update()
     {
-        nameText.text = UserName;
+        nameText.text = UserName.CapitalizeAllWord();
         placeText.text = $"({UMI3DCollaborationClientServer.Environement.name})";
     }
 

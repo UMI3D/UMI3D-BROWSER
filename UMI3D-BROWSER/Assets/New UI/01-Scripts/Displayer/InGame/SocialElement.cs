@@ -25,6 +25,10 @@ public class SocialElement : MonoBehaviour
     [SerializeField] private TMP_Text nameText;
     [SerializeField] private TMP_Text placeText;
     [SerializeField] private Slider volumeSlider;
+    [SerializeField] private Image volumeImage;
+    [SerializeField] private Button muteButton;
+    [SerializeField] private Sprite volumeSprite;
+    [SerializeField] private Sprite volumeMuteSprite;
 
     public UMI3DUser User { 
         get => _user;
@@ -33,21 +37,33 @@ public class SocialElement : MonoBehaviour
             Update();
         }
     }
-    public string UserName => _user.login;
+    public string UserName => _user?.login;
     public float UserVolume { 
         get => _volume; 
         set {
             _volume = value;
-            volumeSlider.SetValueWithoutNotify(value);
+            if (value > 0)
+                IsMute = false;
+            SetVolume();
+            UpdateDisplayVolume();
+        }
+    }
 
-            var vg = UserVolumeToVG(value);
-            AudioManager.Instance.SetGainForUser(_user, vg.gain);
-            AudioManager.Instance.SetVolumeForUser(_user, vg.volume);
+    public bool IsMute
+    {
+        get => _isMute || _volume <= 0;
+        set {
+            _isMute = value;
+            if (!value && _volume <= 0)
+                _volume = 100;
+            SetVolume();
+            UpdateDisplayVolume();
         }
     }
 
     private UMI3DUser _user;
     private float _volume = 100;
+    private bool _isMute = false;
 
     private const float logBase = 1.5f;
     private const float factor = 5f / 2f;
@@ -58,14 +74,34 @@ public class SocialElement : MonoBehaviour
         volumeSlider.minValue = 0;
         volumeSlider.maxValue = 100;
         volumeSlider.onValueChanged.AddListener(newValue => {
-            _volume = newValue;
+            UserVolume = newValue;
         });
     }
 
     private void Update()
     {
         nameText.text = UserName.CapitalizeAllWord();
-        placeText.text = $"({UMI3DCollaborationClientServer.Environement.name})";
+        placeText.text = $"({UMI3DCollaborationClientServer.Environement?.name})";
+    }
+
+    public void ToggleMute()
+    {
+        IsMute = !IsMute;
+    }
+
+    private void SetVolume()
+    {
+        var volume = IsMute ? 0 : _volume;
+        volumeSlider.SetValueWithoutNotify(volume);
+
+        var vg = UserVolumeToVG(volume);
+        AudioManager.Instance.SetGainForUser(_user, vg.gain);
+        AudioManager.Instance.SetVolumeForUser(_user, vg.volume);
+    }
+
+    private void UpdateDisplayVolume()
+    {
+        volumeImage.sprite = IsMute ? volumeMuteSprite : volumeSprite;
     }
 
     private (float volume, float gain) UserVolumeToVG(float volume)

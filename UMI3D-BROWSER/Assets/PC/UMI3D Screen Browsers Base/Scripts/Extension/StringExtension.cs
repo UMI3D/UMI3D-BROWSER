@@ -19,6 +19,8 @@ namespace umi3d.baseBrowser.extension
     {
         public static string CapitalizeAndRemoveSpace(this string s)
         {
+            if (s == null || s == string.Empty)
+                return "";
             var words = s.Split(" ");
             var valueFormated = "";
             foreach (var word in words)
@@ -30,6 +32,8 @@ namespace umi3d.baseBrowser.extension
         }
         public static string CapitalizeAllWord(this string s)
         {
+            if (s == null || s == string.Empty)
+                return "";
             var words = s.Split(" ");
             var valueFormated = "";
             foreach (var word in words)

@@ -118,10 +118,14 @@ public class SocialScreen : MonoBehaviour
         var socialElement = Instantiate(socialPrefab, content).GetComponent<SocialElement>();
         socialElement.User = user;
         if (_allUsersRemembered.ContainsKey(user.id))
+        {
             socialElement.UserVolume = _allUsersRemembered[user.id].UserVolume;
+            socialElement.IsMute = _allUsersRemembered[user.id].IsMute;
+        }
         else
         {
             socialElement.UserVolume = 100f;
+            socialElement.IsMute = false;
             _allUsersRemembered.Add(user.id, socialElement);
         }
 

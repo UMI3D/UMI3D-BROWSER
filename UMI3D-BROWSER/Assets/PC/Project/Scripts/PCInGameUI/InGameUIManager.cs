@@ -32,7 +32,8 @@ namespace umi3dBrowsers.ingame_ui
             if (inGameLinker.IsEnable == false)
             {
                 ToggleInGamePanel();
-                gameObject.SetActive(inGameLinker.IsEnable);
+                if (!debugMode)
+                    gameObject.SetActive(inGameLinker.IsEnable);
                 Cursor.lockState = CursorLockMode.Confined;
             }
 

@@ -85,7 +85,6 @@ namespace umi3d.browserRuntime.ui.keyboard
 
             if (!selection.isTextSelected)
             {
-                UnityEngine.Debug.Log($"add '{characters}' && {characters.Length}");
                 int caretPosition = selection.stringPosition;
 
                 inputField.text = text.Insert(caretPosition, characters);
@@ -111,7 +110,7 @@ namespace umi3d.browserRuntime.ui.keyboard
                 return;
             }
 
-            if (inputField.stringPosition == 0 && !selection.isTextSelected)
+            if (selection.stringPosition == 0 && !selection.isTextSelected)
             {
                 return;
             }

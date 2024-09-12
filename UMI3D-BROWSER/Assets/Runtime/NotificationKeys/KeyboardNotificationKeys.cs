@@ -22,6 +22,11 @@ namespace umi3d.browserRuntime.NotificationKeys
     public static class KeyboardNotificationKeys 
     {
         /// <summary>
+        /// Notification sent when a text field has been selected.
+        /// </summary>
+        public const string TextFieldSelected = "KeyboardNotificationKeysTextFieldSelected";
+
+        /// <summary>
         /// Notification sent when an object ask for the focus of the preview bar.
         /// </summary>
         public const string AskPreviewFocus = "KeyboardAskPreviewFocus";

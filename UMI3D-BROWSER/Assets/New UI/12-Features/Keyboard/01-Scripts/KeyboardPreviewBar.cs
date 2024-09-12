@@ -28,7 +28,7 @@ namespace umi3d.browserRuntime.ui.keyboard
         void Awake()
         {
             inputField = GetComponentInChildren<TMPro.TMP_InputField>();
-            selection = inputField.GetComponent<KeyboardPreviewBarSelection>();
+            selection = GetComponentInChildren<KeyboardPreviewBarSelection>();
         }
 
         void OnEnable()

@@ -20,7 +20,7 @@ using umi3dVRBrowsersBase.interactions;
 /// <summary>
 /// Class to display an UMI3D Notification in the <see cref="watchMenu.WatchMenu"/>.
 /// </summary>
-public class WatchNotification : AbstractNotification
+public class WatchNotification : AbstractUserNotification
 {
     /// <summary>
     /// <inheritdoc/>

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using umi3d.baseBrowser.cursor;
 using umi3d.baseBrowser.inputs.interactions;
+using umi3d.cdk.collaboration;
 using umi3dBrowsers.linker.ingameui;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -28,9 +29,19 @@ namespace umi3dBrowsers.ingame_ui
         private void Awake()
         {
             openCloseInGamePanel.Enable();
+
+            if (inGameLinker.IsEnable == false)
+            {
+                ToggleInGamePanel();
+                if (!debugMode)
+                    gameObject.SetActive(inGameLinker.IsEnable);
+                Cursor.lockState = CursorLockMode.Confined;
+            }
+
             openCloseInGamePanel.performed += i => ToggleInGamePanel();
             inGamePanelLinker.OnOpenClosePanel += () => ToggleInGamePanel();
             inGameLinker.OnEnableDisableInGameUI += isEnable => gameObject.SetActive(isEnable);
+
             if (!debugMode)
                 gameObject.SetActive(inGameLinker.IsEnable);
 

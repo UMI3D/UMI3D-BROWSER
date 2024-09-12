@@ -24,7 +24,7 @@ using UnityEngine.UI;
 
 namespace umi3dBrowsers.displayer
 {
-    public class NotificationElement : MonoBehaviour
+    public class UserNotificationElement : MonoBehaviour
     {
         [SerializeField] private TMP_Text description;
         [SerializeField] private TMP_Text descriptionComplete;

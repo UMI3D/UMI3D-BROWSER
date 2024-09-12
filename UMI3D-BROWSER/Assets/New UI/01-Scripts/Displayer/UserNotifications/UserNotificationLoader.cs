@@ -21,11 +21,11 @@ using UnityEngine;
 
 namespace umi3dBrowsers.displayer
 {
-    [CreateAssetMenu(fileName = "NotificationLoader", menuName = "UMI3D/Notification Loader")]
-    public class NotificationLoader : umi3d.cdk.NotificationLoader
+    [CreateAssetMenu(fileName = "UserNotificationLoader", menuName = "UMI3D/User Notification Loader")]
+    public class UserNotificationLoader : umi3d.cdk.NotificationLoader
     {
         public WatchNotification watchNotificationPrefab;
-        public Notification3D notification3DPrefab;
+        public UserNotification3D notification3DPrefab;
 
         public event System.Action<NotificationDto> Notification2DReceived;
 
@@ -39,9 +39,9 @@ namespace umi3dBrowsers.displayer
 
     public class InternalNotificationLoader : umi3d.cdk.InternalNotificationLoader
     {
-        NotificationLoader loader;
+        UserNotificationLoader loader;
 
-        public InternalNotificationLoader(NotificationLoader loader)
+        public InternalNotificationLoader(UserNotificationLoader loader)
         {
             this.loader = loader;
         }

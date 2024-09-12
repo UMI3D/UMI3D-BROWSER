@@ -21,16 +21,16 @@ using UnityEngine;
 
 namespace umi3dBrowsers.displayer
 {
-    public class NotificationScreen : MonoBehaviour
+    public class UserNotificationScreen : MonoBehaviour
     {
         [SerializeField] private Transform content;
         [SerializeField] private GameObject notificationPrefab;
-        [SerializeField] private NotificationLoader notificationLoader;
+        [SerializeField] private UserNotificationLoader notificationLoader;
 
         public Action OnNotificationReceived;
         public Action OnNotificationScreenOpened;
 
-        private List<NotificationElement> _notificationElements = new List<NotificationElement>();
+        private List<UserNotificationElement> _notificationElements = new List<UserNotificationElement>();
 
         private void Awake()
         {
@@ -57,7 +57,7 @@ namespace umi3dBrowsers.displayer
         public void AddNotification(NotificationDto notificationDto)
         {
             var notificationGameObject = Instantiate(notificationPrefab, content);
-            var notification = notificationGameObject.GetComponent<NotificationElement>();
+            var notification = notificationGameObject.GetComponent<UserNotificationElement>();
             notification.Init(notificationDto);
             _notificationElements.Add(notification);
             OnNotificationReceived?.Invoke();

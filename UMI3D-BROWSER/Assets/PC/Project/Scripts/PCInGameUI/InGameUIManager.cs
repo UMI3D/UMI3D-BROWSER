@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using umi3d.baseBrowser.cursor;
 using umi3d.baseBrowser.inputs.interactions;
+using umi3d.cdk.collaboration;
 using umi3dBrowsers.linker.ingameui;
 using UnityEngine;
 using UnityEngine.InputSystem;

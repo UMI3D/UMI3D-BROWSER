@@ -30,7 +30,7 @@ public class SocialScreen : MonoBehaviour
     [SerializeField] private TMP_Text timeSpentText;
 
     private List<SocialElement> _users;
-    private Dictionary<ulong, SocialElement> _allUsersRemembered;
+    private Dictionary<ulong, SocialElement> _allUsersRemembered = new();
 
     private DateTime _startTime;
 
@@ -39,14 +39,11 @@ public class SocialScreen : MonoBehaviour
         Clear();
 
         UMI3DEnvironmentClient.EnvironementJoinned.AddListener(Clear);
-        UMI3DUser.OnUserMicrophoneStatusUpdated.AddListener(UpdateUserList);
-        UMI3DUser.OnUserAvatarStatusUpdated.AddListener(UpdateUserList);
-        UMI3DUser.OnUserAttentionStatusUpdated.AddListener(UpdateUserList);
+        UMI3DUser.OnNewUser.AddListener(Add);
+        //UMI3DUser.OnUserMicrophoneStatusUpdated.AddListener(UpdateUserList);
         UMI3DUser.OnRemoveUser.AddListener(Remove);
 
         searchField.onValueChanged.AddListener(Search);
-
-        numberOfParticipantText.text = $" {_users.Count + 1}";
     }
 
     private void Update()
@@ -64,20 +61,30 @@ public class SocialScreen : MonoBehaviour
             foreach (var u in _users)
                 Destroy(u.gameObject);
 
-        _users = new List<SocialElement>();
-
         _startTime = DateTime.Now;
-    }
 
-    private void UpdateUserList(UMI3DUser user)
-    {
+        _users = new List<SocialElement>();
         _users = UMI3DCollaborationEnvironmentLoader.Instance.JoinnedUserList
             .Where(u => !u.isClient)
             .Select(CreateUser)
             .ToList();
+        UpdateUserList();
+    }
 
+    private void Add(UMI3DUser user)
+    {
+        if (user.isClient || _users.Any(u => u.User.id == user.id))
+            return;
+        Debug.Log("Add");
+        var socialElement = CreateUser(user);
+        _users.Add(socialElement);
+
+        UpdateUserList();
+    }
+
+    private void UpdateUserList(UMI3DUser user = null)
+    {
         Filter();
-
         numberOfParticipantText.text = $" {_users.Count + 1}";
     }
 
@@ -123,13 +130,17 @@ public class SocialScreen : MonoBehaviour
 
     private void Remove(UMI3DUser user)
     {
+        Debug.Log("Remove");
         if (_users == null)
             return;
 
-        var userToRemove = _users.FirstOrDefault(u => {  return u?.User == user; });
+        var userToRemove = _users.FirstOrDefault(u => {  return u?.User.id == user.id; });
+        if (userToRemove == null)
+            return;
+
         _users.Remove(userToRemove);
         Destroy(userToRemove.gameObject);
 
-        numberOfParticipantText.text = $" {_users.Count + 1}";
+        UpdateUserList();
     }
 }

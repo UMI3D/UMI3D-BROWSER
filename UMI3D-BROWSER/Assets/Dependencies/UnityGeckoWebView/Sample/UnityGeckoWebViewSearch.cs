@@ -14,38 +14,56 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
 using System.Text.RegularExpressions;
+using umi3d.browserRuntime.NotificationKeys;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace com.inetum.unitygeckowebview.samples
 {
-
     public class UnityGeckoWebViewSearch : MonoBehaviour
     {
-
         /// <summary>
         /// Regex to check if a string is an url or not.
         /// </summary>
         private Regex validateURLRegex = new Regex("^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$");
 
-        [SerializeField]
-        private UnityGeckoWebView webView;
+        TMPro.TMP_InputField searchField;
 
-        [SerializeField]
-        private InputField searchField;
+        Notifier searchNotifier;
+
+        void Awake()
+        {
+            searchField = GetComponent<TMPro.TMP_InputField>();
+
+            searchNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                WebviewNotificationKeys.Search,
+                null,
+                new()
+            );
+        }
 
         public void Search()
         {
-            Debug.Assert(searchField != null);
-            Debug.Assert(webView != null);
+            string search = searchField.text;
 
-            if (validateURLRegex.IsMatch(searchField.text))
-                webView.LoadUrl(searchField.text);
-            else if (searchField.text.EndsWith(".com") || searchField.text.EndsWith(".net") || searchField.text.EndsWith(".fr") || searchField.text.EndsWith(".org"))
-                webView.LoadUrl("http://" + searchField.text);
+            if (validateURLRegex.IsMatch(search))
+            {
+                // Nothing to do.
+            }
+            else if (search.EndsWith(".com") || search.EndsWith(".net") || search.EndsWith(".fr") || search.EndsWith(".org"))
+            {
+                search = "http://" + search;
+            }
             else
-                webView.LoadUrl("https://www.google.com/search?q=" + searchField.text);
+            {
+                search = "https://www.google.com/search?q=" + search;
+            }
+
+            searchNotifier[WebviewNotificationKeys.Info.URL] = search;
+            searchNotifier.Notify();
         }
 
         public void OnUrlLoaded(string url)

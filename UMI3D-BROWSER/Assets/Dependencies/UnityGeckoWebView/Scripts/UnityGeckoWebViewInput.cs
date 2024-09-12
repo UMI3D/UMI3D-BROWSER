@@ -24,15 +24,14 @@ namespace com.inetum.unitygeckowebview
     /// <summary>
     /// Manages screen touches for <see cref="UnityGeckoWebView"/>.
     /// </summary>
+    [RequireComponent(typeof(AndroidJavaWebview))]
+    [RequireComponent(typeof(UnityGeckoWebViewRendering))]
     public class UnityGeckoWebViewInput : UnityEngine.UI.Selectable, IPointerMoveHandler
     {
         #region Fields
 
         [SerializeField, Tooltip("Rect Transform associated to webview raw image transform.")]
         private RectTransform rawImageRectTransform;
-
-        [SerializeField]
-        private UnityGeckoWebView webView;
 
         [SerializeField, Tooltip("Simulate a click when a short pointer down is detected ?")]
         private bool simulateClick = false;
@@ -48,6 +47,9 @@ namespace com.inetum.unitygeckowebview
         public UnityEvent<Vector2> onPointerUp = new();
 
         #region Data
+
+        AndroidJavaWebview javaWebView;
+        UnityGeckoWebViewRendering webviewRendering;
 
         /// <summary>
         /// World coordinates of raw image corners.
@@ -74,6 +76,9 @@ namespace com.inetum.unitygeckowebview
 
         protected override void Awake()
         {
+            javaWebView = GetComponent<AndroidJavaWebview>();
+            webviewRendering = GetComponent<UnityGeckoWebViewRendering>();
+
             Debug.Assert(rawImageRectTransform != null, "RecTransform can not be null");
         }
 
@@ -99,18 +104,18 @@ namespace com.inetum.unitygeckowebview
 
                 if (Time.time - lastUp < clickTime / 1000f)
                 {
-                    webView.PointerDown(localPosition.x, localPosition.y, pointerId);
+                    javaWebView.PointerDown(localPosition.x, localPosition.y, pointerId);
                     await Task.Delay(40);
-                    webView.PointerUp(localPosition.x, localPosition.y, pointerId);
+                    javaWebView.PointerUp(localPosition.x, localPosition.y, pointerId);
                 }
                 else
                 {
-                    webView.PointerDown(localPosition.x, localPosition.y, pointerId);
+                    javaWebView.PointerDown(localPosition.x, localPosition.y, pointerId);
                 }
             }
             else
             {
-                webView.PointerDown(localPosition.x, localPosition.y, pointerId);
+                javaWebView.PointerDown(localPosition.x, localPosition.y, pointerId);
             }
         }
 
@@ -123,7 +128,7 @@ namespace com.inetum.unitygeckowebview
         {
             Vector3 localPosition = WorldToLocal(worldHitPoint);
 
-            webView.PointerMove(localPosition.x, localPosition.y, pointerId);
+            javaWebView.PointerMove(localPosition.x, localPosition.y, pointerId);
         }
 
         public override void OnPointerUp(PointerEventData eventData)
@@ -134,7 +139,7 @@ namespace com.inetum.unitygeckowebview
         public void OnPointerUp(Vector3 worldHitPoint, int pointerId)
         {
             Vector3 localPosition = WorldToLocal(worldHitPoint);
-            webView.PointerUp(localPosition.x, localPosition.y, pointerId);
+            javaWebView.PointerUp(localPosition.x, localPosition.y, pointerId);
 
             onPointerUp.Invoke(localPosition);
 
@@ -144,15 +149,15 @@ namespace com.inetum.unitygeckowebview
         public void OnClick(Vector3 worldHitPoint, int pointerId)
         {
             Vector3 localPosition = WorldToLocal(worldHitPoint);
-            webView.Click(localPosition.x, localPosition.y, pointerId);
+            javaWebView.Click(localPosition.x, localPosition.y, pointerId);
         }
 
         private Vector3 WorldToLocal(Vector3 worldPosition)
         {
             Vector3 localPosition = worldPosition - coordinates[0];
 
-            localPosition.x = Vector3.Dot(localPosition, right.normalized) / right.magnitude * webView.width;
-            localPosition.y = Vector3.Dot(localPosition, up.normalized) / up.magnitude * webView.height;
+            localPosition.x = Vector3.Dot(localPosition, right.normalized) / right.magnitude * webviewRendering.width;
+            localPosition.y = Vector3.Dot(localPosition, up.normalized) / up.magnitude * webviewRendering.height;
 
             return localPosition;
         }

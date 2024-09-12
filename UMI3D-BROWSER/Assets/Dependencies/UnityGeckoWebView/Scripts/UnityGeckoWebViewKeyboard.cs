@@ -14,31 +14,40 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace com.inetum.unitygeckowebview
 {
-    /// <summary>
-    /// Represents <see cref="UnityGeckoWebView"/> bounds to optimize its rendering (only renderer it if visible). 
-    /// </summary>
-    public class UnityGeckoWebViewBounds : MonoBehaviour
+    public class UnityGeckoWebViewKeyboard : MonoBehaviour
     {
-        UnityGeckoWebViewRendering webviewRendering;
+        AndroidJavaWebview javaWebview;
+
+        bool useSearchInput = false;
 
         void Awake()
         {
-            webviewRendering = GetComponentInParent<UnityGeckoWebViewRendering>();
-            Debug.Assert(webviewRendering != null, "Web view should not be null");
+        
         }
 
-        void OnBecameVisible()
+
+        public void EnterText(string text)
         {
-            webviewRendering?.StartRendering();
+            if (!useSearchInput)
+                javaWebview.EnterText(text);
         }
 
-        void OnBecameInvisible()
+        public void DeleteCharacter()
         {
-            webviewRendering?.StopRendering();
+            if (!useSearchInput)
+                javaWebview.DeleteCharacter();
+        }
+
+        public void EnterCharacter()
+        {
+            if (!useSearchInput)
+                javaWebview.EnterCharacter();
         }
     }
 }

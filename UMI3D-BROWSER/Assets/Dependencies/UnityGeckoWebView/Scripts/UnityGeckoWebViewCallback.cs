@@ -39,7 +39,7 @@ namespace com.inetum.unitygeckowebview
             if (webView is null)
                 return;
 
-            UnityGeckoWebView.actionsToRunOnMainThread.Enqueue(() => webView.OnTextInputSelected?.Invoke());
+            UnityGeckoWebView.actionsToRunOnMainThread.Enqueue(webView.TextInputSelected);
         }
 
         /// <summary>

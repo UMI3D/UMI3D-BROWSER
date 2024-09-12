@@ -321,18 +321,6 @@ namespace umi3d.browserRuntime.ui.keyboard
             UnityEngine.Debug.Log($"test deselection = {stringPosition} && {startPosition} && {endPosition}");
             Deselect(1);
         }
-
-        //[ContextMenu("Test character width")]
-        //void TestCharacterWidth()
-        //{
-        //    UnityEngine.Debug.Log($"test deselection = {inputField.stringPosition} && {inputField.selectionAnchorPosition} && {inputField.selectionFocusPosition}");
-            
-        //    string text = "Hello, world!";
-        //    Vector2 preferredValues = textTMP.GetPreferredValues(text);
-        //    float textWidthInPoints = preferredValues.x;
-
-        //    Debug.Log("La largeur du mot '" + text + "' est " + textWidthInPoints);
-        //}
 #endif
     }
 }

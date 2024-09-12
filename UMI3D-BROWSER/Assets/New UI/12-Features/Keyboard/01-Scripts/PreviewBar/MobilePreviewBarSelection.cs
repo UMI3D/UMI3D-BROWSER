@@ -125,16 +125,15 @@ namespace umi3d.browserRuntime.ui.keyboard
                 return;
             }
 
+            // Set position.
             string prefix = inputField.text.Substring(0, startPosition);
-            float prefixWidth = textTMP.GetPreferredValues(prefix).x;
-            UnityEngine.Debug.Log($"selection position = {prefixWidth}");
+            float prefixWidth = textTMP.GetTextSize(prefix).x;
             Vector2 position = selectionRT.anchoredPosition;
             selectionRT.anchoredPosition = new(prefixWidth, position.y);
 
-            UnityEngine.Debug.Log($"selection {startPosition} && {endPosition - startPosition}");
+            // Set size.
             string selection = inputField.text.Substring(startPosition, endPosition - startPosition);
-            float selectionWidth = textTMP.GetPreferredValues(selection).x;
-            UnityEngine.Debug.Log($"selection width = {selectionWidth} && {startPosition} && {endPosition - startPosition}");
+            float selectionWidth = textTMP.GetTextSize(selection).x;
             selectionRT.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, selectionWidth);
 
             ShowSelection();
@@ -153,7 +152,6 @@ namespace umi3d.browserRuntime.ui.keyboard
 
             string prefix = inputField.text.Substring(0, stringPosition);
             float prefixWidth = textTMP.GetTextSize(prefix).x;
-
             Vector2 position = caretRT.anchoredPosition;
             caretRT.anchoredPosition = new(prefixWidth, position.y);
 
@@ -186,7 +184,6 @@ namespace umi3d.browserRuntime.ui.keyboard
             {
                 Vector2 localPosition = textAreaRT.PointerRelativeToUI(eventData, RectTransformExtensions.Pivot.TopLeft);
                 int caretPosition = PointerPositionToCaretPosition(localPosition);
-                UnityEngine.Debug.Log($"simple {localPosition} && {caretPosition}");
 
                 Deselect(caretPosition);
             }

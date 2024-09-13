@@ -15,25 +15,33 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
+using System.Collections;
+using System.Collections.Generic;
 using umi3d.browserRuntime.NotificationKeys;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace umi3d.browserRuntime.ui.keyboard
 {
-    public class KeyboardPreviewBar : MonoBehaviour
+    public class KeyboardTMPInputFieldLinker : MonoBehaviour, IPointerDownHandler
     {
+        [Tooltip("Whether the input field wait for the submit but to be pressed to update the text.")]
+        [SerializeField] bool waitForSubmit = false;
+
         TMPro.TMP_InputField inputField;
-        KeyboardPreviewBarSelection selection;
+        UMI3DInputFieldSelection selection;
+
+        bool isSelected;
+        string text;
 
         void Awake()
         {
-            inputField = GetComponentInChildren<TMPro.TMP_InputField>();
-            UnityEngine.Debug.Assert(inputField != null, $"inputField is null");
-            selection = GetComponentInChildren<KeyboardPreviewBarSelection>();
-            if (selection == null)
-            {
-                inputField.gameObject.AddComponent<KeyboardPreviewBarSelection>();
-            }
+            inputField = GetComponent<TMPro.TMP_InputField>();
+
+            selection = new(this);
+            selection.Blur();
+
+            text = inputField.text;
         }
 
         void OnEnable()
@@ -44,15 +52,60 @@ namespace umi3d.browserRuntime.ui.keyboard
                 null,
                 AddOrRemoveCharacters
             );
+
+            inputField.onValueChanged.AddListener(ValueChanged);
+
+            selection.OnEnable();
         }
 
         void OnDisable()
         {
             NotificationHub.Default.Unsubscribe(this, KeyboardNotificationKeys.AddOrRemoveCharacters);
+
+            inputField.onValueChanged.RemoveListener(ValueChanged);
+
+            selection.OnDisable();
+        }
+
+        public void OnPointerDown(PointerEventData eventData)
+        {
+            if (!isSelected)
+            {
+                isSelected = true;
+                if (!waitForSubmit)
+                {
+                    selection.Focus();
+                }
+
+                NotificationHub.Default.Notify(
+                    this,
+                    KeyboardNotificationKeys.TextFieldSelected
+                );
+            }
+        }
+
+        void ValueChanged(string text)
+        {
+            this.text = text;
+        }
+
+        void EnterKeyPressed(Notification notification)
+        {
+
         }
 
         void AddOrRemoveCharacters(Notification notification)
         {
+            if (waitForSubmit)
+            {
+                return;
+            }
+
+            if (!isSelected)
+            {
+                return;
+            }
+
             if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.IsAddingCharacters, out bool isAdding))
             {
                 return;
@@ -75,8 +128,8 @@ namespace umi3d.browserRuntime.ui.keyboard
                 if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.Characters, out char character, false))
                 {
                     notification.LogError(
-                        nameof(KeyboardPreviewBar), 
-                        KeyboardNotificationKeys.Info.Characters, 
+                        nameof(KeyboardPreviewBar),
+                        KeyboardNotificationKeys.Info.Characters,
                         "Character added is neither string not char."
                     );
                     return;
@@ -84,7 +137,7 @@ namespace umi3d.browserRuntime.ui.keyboard
 
                 characters = character.ToString();
             }
-            
+
             var text = inputField.text;
 
             if (!selection.isTextSelected)
@@ -179,75 +232,5 @@ namespace umi3d.browserRuntime.ui.keyboard
                 UnityEngine.Debug.LogError($"[KeyboardPreviewBar] Deletion phase case unhandled.");
             }
         }
-
-#if UNITY_EDITOR
-        [ContextMenu("TestAddSimple")]
-        void TestAddSimple()
-        {
-            char a = 'a';
-            char z = 'z';
-            char random = 'a';
-
-            random = (char)Random.Range(a, z);
-            UnityEngine.Debug.Log($"Test add {random}");
-            AddCharacters(new Notification("", null, new() { 
-                { "Characters", random.ToString() } }));
-        }
-
-        [ContextMenu("TestAddSpace")]
-        void TestAddSpace()
-        {
-            UnityEngine.Debug.Log($"Test add space");
-            AddCharacters(new Notification("", null, new() {
-                { "Characters", ' ' } }));
-        }
-
-        [ContextMenu("TestAddMultiple")]
-        void TestAddMultiple()
-        {
-            char a = 'a';
-            char z = 'z';
-            char random = 'a';
-
-            random = (char)Random.Range(a, z);
-            UnityEngine.Debug.Log($"Test add {random}");
-            AddCharacters(new Notification("", null, new() {
-                { "Characters", random.ToString() } }));
-
-            random = (char)Random.Range(a, z);
-            UnityEngine.Debug.Log($"Test add {random}");
-            AddCharacters(new Notification("", null, new() {
-                { "Characters", random.ToString() } }));
-
-            random = (char)Random.Range(a, z);
-            UnityEngine.Debug.Log($"Test add {random}");
-            AddCharacters(new Notification("", null, new() {
-                { "Characters", random } }));
-
-            random = (char)Random.Range(a, z);
-            UnityEngine.Debug.Log($"Test add {random}");
-            AddCharacters(new Notification("", null, new() {
-                { "Characters", random.ToString() } }));
-
-            random = (char)Random.Range(a, z);
-            UnityEngine.Debug.Log($"Test add {random}");
-            AddCharacters(new Notification("", null, new() {
-                { "Characters", random } }));
-        }
-
-        [ContextMenu("TestRemovePhase0")]
-        void TestRemovePhase0()
-        {
-            RemoveCharacters(new Notification("", null, new() {
-                { "DeletionPhase", 0 } }));
-        }
-
-        [ContextMenu("TestRemovePhase1")]
-        void TestRemovePhase1()
-        {
-            RemoveCharacters(new Notification("", null, new() {
-                { "DeletionPhase", 1 } }));
-        }
-#endif
     }
 }

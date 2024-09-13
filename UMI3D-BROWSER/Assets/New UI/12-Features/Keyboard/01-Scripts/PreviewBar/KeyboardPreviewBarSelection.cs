@@ -32,10 +32,10 @@ namespace umi3d.browserRuntime.ui.keyboard
             Mobile
         }
         [SerializeField] SelectionType selectionType = SelectionType.Mobile;
-        DesktopPreviewBarSelection desktopPreviewBarSelection;
-        MobilePreviewBarSelection mobilePreviewBarSelection;
+        TMPInputFieldSelection tmpInputFieldSelection;
+        UMI3DInputFieldSelection umi3dInputFieldSelection;
 #else
-        BasePreviewBarSelection previewBarSelection;
+        BaseInputFieldSelection previewBarSelection;
 #endif
 
         /// <summary>
@@ -48,8 +48,8 @@ namespace umi3d.browserRuntime.ui.keyboard
 #if UNITY_EDITOR
                 return selectionType switch
                 {
-                    SelectionType.Desktop => desktopPreviewBarSelection.isTextSelected,
-                    SelectionType.Mobile => mobilePreviewBarSelection.isTextSelected
+                    SelectionType.Desktop => tmpInputFieldSelection.isTextSelected,
+                    SelectionType.Mobile => umi3dInputFieldSelection.isTextSelected
                 };
 #else
                 return previewBarSelection.isTextSelected;
@@ -67,8 +67,8 @@ namespace umi3d.browserRuntime.ui.keyboard
 #if UNITY_EDITOR
                 return selectionType switch
                 {
-                    SelectionType.Desktop => desktopPreviewBarSelection.startPosition,
-                    SelectionType.Mobile => mobilePreviewBarSelection.startPosition
+                    SelectionType.Desktop => tmpInputFieldSelection.startPosition,
+                    SelectionType.Mobile => umi3dInputFieldSelection.startPosition
                 };
 #else
                 return previewBarSelection.startPosition;
@@ -80,10 +80,10 @@ namespace umi3d.browserRuntime.ui.keyboard
                 switch (selectionType)
                 {
                     case SelectionType.Desktop:
-                        desktopPreviewBarSelection.startPosition = value;
+                        tmpInputFieldSelection.startPosition = value;
                         break;
                     case SelectionType.Mobile:
-                        mobilePreviewBarSelection.startPosition = value;
+                        umi3dInputFieldSelection.startPosition = value;
                         break;
                     default:
                         break;
@@ -104,8 +104,8 @@ namespace umi3d.browserRuntime.ui.keyboard
 #if UNITY_EDITOR
                 return selectionType switch
                 {
-                    SelectionType.Desktop => desktopPreviewBarSelection.endPosition,
-                    SelectionType.Mobile => mobilePreviewBarSelection.endPosition
+                    SelectionType.Desktop => tmpInputFieldSelection.endPosition,
+                    SelectionType.Mobile => umi3dInputFieldSelection.endPosition
                 };
 #else
                 return previewBarSelection.endPosition;
@@ -117,10 +117,10 @@ namespace umi3d.browserRuntime.ui.keyboard
                 switch (selectionType)
                 {
                     case SelectionType.Desktop:
-                        desktopPreviewBarSelection.endPosition = value;
+                        tmpInputFieldSelection.endPosition = value;
                         break;
                     case SelectionType.Mobile:
-                        mobilePreviewBarSelection.endPosition = value;
+                        umi3dInputFieldSelection.endPosition = value;
                         break;
                     default:
                         break;
@@ -141,8 +141,8 @@ namespace umi3d.browserRuntime.ui.keyboard
 #if UNITY_EDITOR
                 return selectionType switch
                 {
-                    SelectionType.Desktop => desktopPreviewBarSelection.stringPosition,
-                    SelectionType.Mobile => mobilePreviewBarSelection.stringPosition
+                    SelectionType.Desktop => tmpInputFieldSelection.stringPosition,
+                    SelectionType.Mobile => umi3dInputFieldSelection.stringPosition
                 };
 #else
                 return previewBarSelection.stringPosition;
@@ -154,10 +154,10 @@ namespace umi3d.browserRuntime.ui.keyboard
                 switch (selectionType)
                 {
                     case SelectionType.Desktop:
-                        desktopPreviewBarSelection.stringPosition = value;
+                        tmpInputFieldSelection.stringPosition = value;
                         break;
                     case SelectionType.Mobile:
-                        mobilePreviewBarSelection.stringPosition = value;
+                        umi3dInputFieldSelection.stringPosition = value;
                         break;
                     default:
                         break;
@@ -173,12 +173,12 @@ namespace umi3d.browserRuntime.ui.keyboard
             inputField = GetComponentInChildren<TMP_InputField>();
 
 #if UNITY_EDITOR
-            desktopPreviewBarSelection = new(this);
-            mobilePreviewBarSelection = new(this);
+            tmpInputFieldSelection = new(this);
+            umi3dInputFieldSelection = new(this);
 #elif UNITY_STANDALONE_WIN
-            previewBarSelection = new DesktopPreviewBarSelection(this);
+            previewBarSelection = new TMPInputFieldSelection(this);
 #else
-            previewBarSelection = new MobilePreviewBarSelection(this);
+            previewBarSelection = new UMI3DInputFieldSelection(this);
 #endif
         }
 
@@ -195,10 +195,10 @@ namespace umi3d.browserRuntime.ui.keyboard
             switch (selectionType)
             {
                 case SelectionType.Desktop:
-                    desktopPreviewBarSelection.OnEnable();
+                    tmpInputFieldSelection.OnEnable();
                     break;
                 case SelectionType.Mobile:
-                    mobilePreviewBarSelection.OnEnable();
+                    umi3dInputFieldSelection.OnEnable();
                     break;
                 default:
                     break;
@@ -216,10 +216,10 @@ namespace umi3d.browserRuntime.ui.keyboard
             switch (selectionType)
             {
                 case SelectionType.Desktop:
-                    desktopPreviewBarSelection.OnDisable();
+                    tmpInputFieldSelection.OnDisable();
                     break;
                 case SelectionType.Mobile:
-                    mobilePreviewBarSelection.OnDisable();
+                    umi3dInputFieldSelection.OnDisable();
                     break;
                 default:
                     break;
@@ -240,10 +240,10 @@ namespace umi3d.browserRuntime.ui.keyboard
             switch (selectionType)
             {
                 case SelectionType.Desktop:
-                    desktopPreviewBarSelection.Focus();
+                    tmpInputFieldSelection.Focus();
                     break;
                 case SelectionType.Mobile:
-                    mobilePreviewBarSelection.Focus();
+                    umi3dInputFieldSelection.Focus();
                     break;
                 default:
                     break;
@@ -264,16 +264,40 @@ namespace umi3d.browserRuntime.ui.keyboard
             switch (selectionType)
             {
                 case SelectionType.Desktop:
-                    desktopPreviewBarSelection.Select(start, end);
+                    tmpInputFieldSelection.Select(start, end);
                     break;
                 case SelectionType.Mobile:
-                    mobilePreviewBarSelection.Select(start, end);
+                    umi3dInputFieldSelection.Select(start, end);
                     break;
                 default:
                     break;
             }
 #else
             previewBarSelection.Select(start, end);
+#endif
+        }
+
+        /// <summary>
+        /// Make a selection without notifying.
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        public void SelectWithoutNotify(int start, int end)
+        {
+#if UNITY_EDITOR
+            switch (selectionType)
+            {
+                case SelectionType.Desktop:
+                    tmpInputFieldSelection.SelectWithoutNotify(start, end);
+                    break;
+                case SelectionType.Mobile:
+                    umi3dInputFieldSelection.SelectWithoutNotify(start, end);
+                    break;
+                default:
+                    break;
+            }
+#else
+            previewBarSelection.SelectWithoutNotify(start, end);
 #endif
         }
 
@@ -287,16 +311,40 @@ namespace umi3d.browserRuntime.ui.keyboard
             switch (selectionType)
             {
                 case SelectionType.Desktop:
-                    desktopPreviewBarSelection.Deselect(newCaretPosition);
+                    tmpInputFieldSelection.Deselect(newCaretPosition);
                     break;
                 case SelectionType.Mobile:
-                    mobilePreviewBarSelection.Deselect(newCaretPosition);
+                    umi3dInputFieldSelection.Deselect(newCaretPosition);
                     break;
                 default:
                     break;
             }
 #else
             previewBarSelection.Deselect(newCaretPosition);
+#endif
+        }
+
+
+        /// <summary>
+        /// Deselect and place the caret at <paramref name="newCaretPosition"/> without notifying.
+        /// </summary>
+        /// <param name="newCaretPosition"></param>
+        public void DeselectWithoutNotify(int newCaretPosition)
+        {
+#if UNITY_EDITOR
+            switch (selectionType)
+            {
+                case SelectionType.Desktop:
+                    tmpInputFieldSelection.DeselectWithoutNotify(newCaretPosition);
+                    break;
+                case SelectionType.Mobile:
+                    umi3dInputFieldSelection.DeselectWithoutNotify(newCaretPosition);
+                    break;
+                default:
+                    break;
+            }
+#else
+            previewBarSelection.DeselectWithoutNotify(newCaretPosition);
 #endif
         }
 

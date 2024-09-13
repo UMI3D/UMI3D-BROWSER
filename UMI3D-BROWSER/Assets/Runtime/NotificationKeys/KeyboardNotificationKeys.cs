@@ -27,6 +27,16 @@ namespace umi3d.browserRuntime.NotificationKeys
         public const string TextFieldSelected = "KeyboardNotificationKeysTextFieldSelected";
 
         /// <summary>
+        /// Notification sent when the enter key is pressed.
+        /// </summary>
+        public const string EnterKeyPressed = "KeyboardNotificationKeysEnterKeyPressed";
+
+        /// <summary>
+        /// Notification sent when the input field is selected.
+        /// </summary>
+        public const string InputFieldSelection = "KeyboardNotificationKeysInputFieldSelection";
+
+        /// <summary>
         /// Notification sent when an object ask for the focus of the preview bar.
         /// </summary>
         public const string AskPreviewFocus = "KeyboardAskPreviewFocus";
@@ -68,6 +78,14 @@ namespace umi3d.browserRuntime.NotificationKeys
 
         public static class Info
         {
+            /// <summary>
+            /// The position of the caret if value is int or the selection if value is (int, int).<br/>
+            /// Value is <see cref="int"/> or (<see cref="int"/>, <see cref="int"/>).<br/>
+            /// <br/>
+            /// See Notification key: <see cref="InputFieldSelection"/>
+            /// </summary>
+            public const string SelectionPositions = "SelectionPositions";
+
             /// <summary>
             /// Whether some characters will be added or removed.<br/>
             /// If true then characters will be added. Else characters will be removed.<br/>

@@ -55,20 +55,14 @@ namespace umi3d.cdk.collaboration
         private bool pingReceived = false;
         private bool CheckForBandWidthRunning = false;
 
-        // Définir un événement pour signaler un événement important
-        public delegate void OnImportantEvent(UserGuardianDto guardianData);
-        public static event OnImportantEvent ImportantEventOccurred;
-
-        public delegate void OnLBEGroupEvent(LBEGroupDto lBEGroupData);
+        public delegate void OnLBEGroupEvent(SendLBEGroupRequestDTO lBEGroupData);
         public static event OnLBEGroupEvent LBEGroupEventOccurred;
 
-        public delegate void OnAddLBEGroupEvent(AddUserLBEGroupDTO addUserLBEGroupDTO);
+        public delegate void OnAddLBEGroupEvent(AddUserGroupOperationsDto addUserLBEGroupDTO);
         public static event OnAddLBEGroupEvent AddLBEGroupEvent;
 
-        public delegate void OnDelLBEGroupEvent(DelUserLBEGroupDto delUserLBEGroupDto);
+        public delegate void OnDelLBEGroupEvent(DelUserGroupOperationsDto delUserLBEGroupDto);
         public static event OnDelLBEGroupEvent DelLBEGroupEvent;
-
-        //private GuardianManager guardianManager;
 
         private UMI3DUser GetUserByNetWorkId(uint nid)
         {
@@ -570,29 +564,19 @@ namespace umi3d.cdk.collaboration
                         PoseManager.Instance.ChangeEnvironmentPoseCondition(operation.environmentId, validateEnvironmentPoseCondition.Id, validateEnvironmentPoseCondition.ShouldBeValidated);
                     });
                     break;
-                case SendGuardianRequestDto guardianRequestDto:
+                case AddUserGroupOperationsDto addUserLBEGroupDTO:
                     MainThreadManager.Run(() =>
                     {
-                        UserGuardianDto guardianData = guardianRequestDto.guardianData;
-
-                        // Simuler un événement important
-                        if (ImportantEventOccurred != null)
-                            ImportantEventOccurred(guardianData);
-                    });
-                    break;
-                case AddUserLBEGroupDTO addUserLBEGroupDTO:
-                    MainThreadManager.Run(() =>
-                    {
-                        AddUserLBEGroupDTO addlBEGroupDto = addUserLBEGroupDTO;
+                        AddUserGroupOperationsDto addlBEGroupDto = addUserLBEGroupDTO;
                         if (AddLBEGroupEvent != null)
                             AddLBEGroupEvent(addlBEGroupDto);
                     });
                     break;
 
-                case DelUserLBEGroupDto delUserLBEGroupDTO:
+                case DelUserGroupOperationsDto delUserLBEGroupDTO:
                     MainThreadManager.Run(() =>
                     {
-                        DelUserLBEGroupDto dellBEGroupDto = delUserLBEGroupDTO;
+                        DelUserGroupOperationsDto dellBEGroupDto = delUserLBEGroupDTO;
                         if (DelLBEGroupEvent != null)
                             DelLBEGroupEvent(dellBEGroupDto);
                     });
@@ -605,7 +589,6 @@ namespace umi3d.cdk.collaboration
 
         public async Task<bool> PerformOperation(uint operationId, ByteContainer container)
         {
-
             switch (operationId)
             {
                 case UMI3DOperationKeys.FlyingNavigationMode:
@@ -768,72 +751,47 @@ namespace umi3d.cdk.collaboration
                         });
                         break;
                     }
-                case UMI3DOperationKeys.SetGuardianRequest:
-                    MainThreadManager.Run(() =>
-                    {
-                        SendGuardianRequestDto userGuardianDto = UMI3DSerializer.Read<SendGuardianRequestDto>(container);
-
-                        Debug.Log("Remi : Received SendGuardianRequestDto");
-
-                        foreach (ARAnchorDto anchor in userGuardianDto.guardianData.anchorAR)
-                        {
-                            Debug.Log("Remi : -> ANCHOR : " + anchor.position + " + " + anchor.position + " + " + anchor.trackableId);
-                        }
-
-                        var userguardian = new UserGuardianDto
-                        {
-                            anchorAR = userGuardianDto.guardianData.anchorAR
-                        };
-
-                        if (ImportantEventOccurred != null)
-                            ImportantEventOccurred(userguardian);
-                    });
-                    break;
                 case UMI3DOperationKeys.SetLBEGroupRequest:
                     MainThreadManager.Run(() =>
                     {
-                        Debug.Log("REMI : Received SetLBEGroupRequest");
+                        Debug.Log("REMY : SetLBEGroupRequest ");
 
                         SendLBEGroupRequestDTO lBEGroupRequestDTO = UMI3DSerializer.Read<SendLBEGroupRequestDTO>(container);
 
-                        foreach (ulong userAR in lBEGroupRequestDTO.lBEGroupData.UserAR)
+                        Debug.Log("REMY : SetLBEGroupRequest lBEGroupRequestDTO.anchorAR -> " + lBEGroupRequestDTO.anchorAR.Count);
+
+
+                        for (int i = 0; i <lBEGroupRequestDTO.anchorAR.Count; i++)
                         {
-                            Debug.Log("REMY : -> userAR : " + userAR);
+                            Debug.Log("REMY : SetLBEGroupRequest -> " + lBEGroupRequestDTO.anchorAR);
+
                         }
 
-                        foreach (ulong userVR in lBEGroupRequestDTO.lBEGroupData.UserVR)
+                        var lBEGroup = new SendLBEGroupRequestDTO()
                         {
-                            Debug.Log("REMY : -> userVR : " + userVR);
-                        }
-
-                        var lBEGroup = new LBEGroupDto
-                        {
-                            GroupId = lBEGroupRequestDTO.lBEGroupData.GroupId,
-                            UserAR = lBEGroupRequestDTO.lBEGroupData.UserAR,
-                            UserVR = lBEGroupRequestDTO.lBEGroupData.UserVR,
-                            userGuardianDto = lBEGroupRequestDTO.lBEGroupData.userGuardianDto
+                            GroupId = lBEGroupRequestDTO.GroupId,
+                            UserAR = lBEGroupRequestDTO.UserAR,
+                            UserVR = lBEGroupRequestDTO.UserVR,
+                            anchorAR = lBEGroupRequestDTO.anchorAR
                         };
 
                         if (LBEGroupEventOccurred != null)
                             LBEGroupEventOccurred(lBEGroup);
+
+                        Debug.Log("REMY : SetLBEGroupRequest lBEGroup -> " + lBEGroup.anchorAR.Count);
+
 
                     });
                     break;
                 case UMI3DOperationKeys.SetNewUserLBE:
                     MainThreadManager.Run(() =>
                     {
-                        Debug.Log("REMY : Received AddUserLBEGroupDTO");
-
                         AddUserGroupOperationsDto addUserLBEGroupDTO = UMI3DSerializer.Read<AddUserGroupOperationsDto>(container);
 
-                        Debug.Log("REMY : Received AddUserLBEGroupDTO -> " + addUserLBEGroupDTO.AddUserLBEGroup.UserId);
-                        Debug.Log("REMY : Received AddUserLBEGroupDTO -> " + addUserLBEGroupDTO.AddUserLBEGroup.IsUserAR);
-
-
-                        var addUser = new AddUserLBEGroupDTO
+                        var addUser = new AddUserGroupOperationsDto()
                         {
-                            UserId = addUserLBEGroupDTO.AddUserLBEGroup.UserId,
-                            IsUserAR = addUserLBEGroupDTO.AddUserLBEGroup.IsUserAR
+                            UserId = addUserLBEGroupDTO.UserId,
+                            IsUserAR = addUserLBEGroupDTO.IsUserAR
                         };
 
                         if (AddLBEGroupEvent != null)
@@ -844,16 +802,11 @@ namespace umi3d.cdk.collaboration
                 case UMI3DOperationKeys.DeleteUserLBE:
                     MainThreadManager.Run(() =>
                     {
-                        Debug.Log("REMY : Received DelUserLBEGroupDto");
-
                         DelUserGroupOperationsDto delUserLBEGroupDTO = UMI3DSerializer.Read<DelUserGroupOperationsDto>(container);
 
-                        Debug.Log("REMY : Received DelUserLBEGroupDto -> " + delUserLBEGroupDTO.delUserLBEGroupDto.UserId);
-
-
-                        var delUser = new DelUserLBEGroupDto
+                        var delUser = new DelUserGroupOperationsDto()
                         {
-                            UserId = delUserLBEGroupDTO.delUserLBEGroupDto.UserId,
+                            UserId = delUserLBEGroupDTO.UserId,
                         };
 
                         if (DelLBEGroupEvent != null)

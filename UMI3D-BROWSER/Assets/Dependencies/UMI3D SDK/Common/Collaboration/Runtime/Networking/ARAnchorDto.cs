@@ -16,9 +16,5 @@ namespace umi3d.common.lbe.description
         /// </summary>
         public Vector4Dto rotation { get; set; }
 
-        /// <summary>
-        /// Id anchor.
-        /// </summary>
-        public ulong trackableId { get; set; }
     }
 }

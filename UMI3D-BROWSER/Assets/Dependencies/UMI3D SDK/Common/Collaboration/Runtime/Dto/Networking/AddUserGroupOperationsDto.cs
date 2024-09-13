@@ -4,8 +4,8 @@ using UnityEngine;
 
 namespace umi3d.common.lbe
 {
-    public class AddUserGroupOperationsDto : UMI3DDto
+    public class AddUserGroupOperationsDto : AbstractUserLBEOperationDto
     {
-        public AddUserLBEGroupDTO AddUserLBEGroup { get; set; }
+        public bool IsUserAR { get; set; }
     }
 }

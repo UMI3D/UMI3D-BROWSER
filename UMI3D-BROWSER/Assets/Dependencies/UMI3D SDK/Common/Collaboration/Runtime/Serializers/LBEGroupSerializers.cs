@@ -11,59 +11,6 @@ namespace umi3d.common.lbe
 
         public bool? IsCountable<T>()
         {
-            return typeof(T) == typeof(LBEGroupDto) ? true : null;
-        }
-
-        public bool Read<T>(ByteContainer container, out bool readable, out T result)
-        {
-            if (typeof(T) == typeof(LBEGroupDto))
-            {
-                uint groupId = UMI3DSerializer.Read<uint>(container);
-                List<ulong> UserAR = UMI3DSerializer.ReadList<ulong>(container);
-                List<ulong> userVR = UMI3DSerializer.ReadList<ulong>(container);
-                readable = UMI3DSerializer.TryRead(container, out uint Key);
-                UserGuardianDto userGuardianDto = UMI3DSerializer.Read<UserGuardianDto>(container);
-
-                if (readable)
-                {
-                    var lBEGroup = new LBEGroupDto()
-                    {
-                        GroupId = groupId,
-                        UserAR = UserAR,
-                        UserVR = userVR,
-                        userGuardianDto = userGuardianDto
-                    };
-                    readable = true;
-                    result = (T)Convert.ChangeType(lBEGroup, typeof(T));
-                    return true;
-                }
-            }
-            result = default(T);
-            readable = false;
-            return false;
-        }
-
-        public bool Write<T>(T value, out Bytable bytable, params object[] parameters)
-        {
-            if (value is LBEGroupDto c)
-            {
-                bytable = UMI3DSerializer.Write(UMI3DOperationKeys.SetLBEGroupRequest)
-                    + UMI3DSerializer.Write(c.GroupId)
-                    + UMI3DSerializer.WriteCollection(c.UserAR)
-                    + UMI3DSerializer.WriteCollection(c.UserVR)
-                    + UMI3DSerializer.Write(c.userGuardianDto);
-                return true;
-            }
-
-            bytable = null;
-            return false;
-        }
-    }
-
-    public class LBEGroupSerializersID : UMI3DSerializerModule
-    {
-        public bool? IsCountable<T>()
-        {
             return typeof(T) == typeof(SendLBEGroupRequestDTO) ? true : null;
         }
 
@@ -72,17 +19,24 @@ namespace umi3d.common.lbe
             if (typeof(T) == typeof(SendLBEGroupRequestDTO))
             {
                 readable = UMI3DSerializer.TryRead(container, out uint Key);
-                readable &= UMI3DSerializer.TryRead(container, out LBEGroupDto lBEGroupDto);
+
+                uint groupId = UMI3DSerializer.Read<uint>(container);
+                List<ulong> userAR = UMI3DSerializer.ReadList<ulong>(container);
+                List<ulong> userVR = UMI3DSerializer.ReadList<ulong>(container);
+                List<ARAnchorDto> anchorAR = UMI3DSerializer.ReadList<ARAnchorDto>(container);
+
 
                 if (readable && Key == UMI3DOperationKeys.SetLBEGroupRequest)
                 {
-                    var sendLBEGroupRequest = new SendLBEGroupRequestDTO
+                    var lBEGroup = new SendLBEGroupRequestDTO()
                     {
-                        lBEGroupData = lBEGroupDto
+                        GroupId = groupId,
+                        UserAR = userAR,
+                        UserVR = userVR,
+                        anchorAR = anchorAR
                     };
-
                     readable = true;
-                    result = (T)Convert.ChangeType(sendLBEGroupRequest, typeof(T));
+                    result = (T)Convert.ChangeType(lBEGroup, typeof(T));
                     return true;
                 }
             }
@@ -94,10 +48,13 @@ namespace umi3d.common.lbe
 
         public bool Write<T>(T value, out Bytable bytable, params object[] parameters)
         {
-            if (value is SendLBEGroupRequestDTO s)
+            if (value is SendLBEGroupRequestDTO c)
             {
                 bytable = UMI3DSerializer.Write(UMI3DOperationKeys.SetLBEGroupRequest)
-                    + UMI3DSerializer.Write(s.lBEGroupData);
+                    + UMI3DSerializer.Write(c.GroupId)
+                    + UMI3DSerializer.WriteCollection(c.UserAR)
+                    + UMI3DSerializer.WriteCollection(c.UserVR)
+                    + UMI3DSerializer.WriteCollection(c.anchorAR);
                 return true;
             }
 

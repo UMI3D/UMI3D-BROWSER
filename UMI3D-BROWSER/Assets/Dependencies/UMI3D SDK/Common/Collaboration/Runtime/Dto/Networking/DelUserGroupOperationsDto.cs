@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 namespace umi3d.common.lbe
 {
-    public class DelUserGroupOperationsDto : UMI3DDto
+    public class DelUserGroupOperationsDto : AbstractUserLBEOperationDto
     {
-        public DelUserLBEGroupDto delUserLBEGroupDto { get; set; }
     }
 }

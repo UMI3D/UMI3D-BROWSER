@@ -14,17 +14,20 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
 using System;
 using TMPro;
+using umi3d.browserRuntime.NotificationKeys;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.ui.keyboard
 {
-    public abstract class BasePreviewBarSelection 
+    public abstract class BaseInputFieldSelection 
     {
         protected MonoBehaviour context;
         protected TMP_InputField inputField;
+
+        Notifier selectionNotifier;
 
         /// <summary>
         /// Is text selected.
@@ -46,14 +49,35 @@ namespace umi3d.browserRuntime.ui.keyboard
         /// </summary>
         public abstract int stringPosition { get; set; }
 
-        public BasePreviewBarSelection(MonoBehaviour context) 
+        public BaseInputFieldSelection(MonoBehaviour context) 
         {
             this.context = context;
+
+            selectionNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                KeyboardNotificationKeys.InputFieldSelection,
+                null,
+                null
+            );
         }
 
-        public abstract void OnEnable();
+        public virtual void OnEnable()
+        {
+            NotificationHub.Default.Subscribe(
+                this,
+                KeyboardNotificationKeys.InputFieldSelection,
+                new FilterByRef(FilterType.AcceptAllExcept, this),
+                PreviewSelection
+            );
+        }
 
-        public abstract void OnDisable();
+        public virtual void OnDisable()
+        {
+            NotificationHub.Default.Unsubscribe(
+                this,
+                KeyboardNotificationKeys.InputFieldSelection
+            );
+        }
 
         /// <summary>
         /// Focus the preview bar.<br/>
@@ -78,6 +102,19 @@ namespace umi3d.browserRuntime.ui.keyboard
         /// <param name="start"></param>
         /// <param name="end"></param>
         public void Select(int start, int end)
+        {
+            SelectWithoutNotify(start, end);
+
+            selectionNotifier[KeyboardNotificationKeys.Info.SelectionPositions] = (start, end);
+            selectionNotifier.Notify();
+        }
+
+        /// <summary>
+        /// Make a selection without notifying.
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        public void SelectWithoutNotify(int start, int end)
         {
             if (inputField.text.Length == 0)
             {
@@ -109,6 +146,18 @@ namespace umi3d.browserRuntime.ui.keyboard
         /// <param name="newCaretPosition"></param>
         public void Deselect(int newCaretPosition)
         {
+            DeselectWithoutNotify(newCaretPosition);
+
+            selectionNotifier[KeyboardNotificationKeys.Info.SelectionPositions] = newCaretPosition;
+            selectionNotifier.Notify();
+        }
+
+        /// <summary>
+        /// Deselect and place the caret at <paramref name="newCaretPosition"/> without notifying.
+        /// </summary>
+        /// <param name="newCaretPosition"></param>
+        public void DeselectWithoutNotify(int newCaretPosition)
+        {
             newCaretPosition = newCaretPosition < 0 ? 0 : newCaretPosition;
 
             stringPosition = newCaretPosition;
@@ -130,6 +179,23 @@ namespace umi3d.browserRuntime.ui.keyboard
 
             UpdateSelection();
             UpdateCaret();
+        }
+
+        void PreviewSelection(Notification notification)
+        {
+            if (notification.TryGetInfoT(KeyboardNotificationKeys.Info.SelectionPositions, out int caretPosition, false))
+            {
+                DeselectWithoutNotify(caretPosition);
+                return;
+            }
+
+            if (notification.TryGetInfoT(KeyboardNotificationKeys.Info.SelectionPositions, out (int, int) selectionPositions, false))
+            {
+                SelectWithoutNotify(selectionPositions.Item1, selectionPositions.Item2);
+                return;
+            }
+
+            notification.LogError(nameof(KeyboardTMPInputFieldLinker), KeyboardNotificationKeys.Info.SelectionPositions, $"Selection positions is neither int nor (int, int).");
         }
     }
 }

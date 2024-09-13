@@ -25,7 +25,7 @@ using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.ui.keyboard
 {
-    public class MobilePreviewBarSelection : BasePreviewBarSelection
+    public class UMI3DInputFieldSelection : BaseInputFieldSelection
     {
         PointerDownBehaviour pointerDown;
 
@@ -59,7 +59,7 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         public override int stringPosition { get; set; }
 
-        public MobilePreviewBarSelection(MonoBehaviour context) : base(context)
+        public UMI3DInputFieldSelection(MonoBehaviour context) : base(context)
         {
             inputField = context.GetComponentInChildren<TMP_InputField>();
 
@@ -102,12 +102,14 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         public override void OnEnable()
         {
+            base.OnEnable();
             inputField.interactable = false;
             pointerDown.pointerClicked += OnPointerDown;
         }
 
         public override void OnDisable()
         {
+            base.OnDisable();
             pointerDown.pointerClicked -= OnPointerDown;
         }
 
@@ -115,6 +117,12 @@ namespace umi3d.browserRuntime.ui.keyboard
         {
             HideSelection();
             StartCaretBlinking();
+        }
+
+        public void Blur()
+        {
+            HideSelection();
+            StopCaretBLinking();
         }
 
         public override void UpdateSelection()

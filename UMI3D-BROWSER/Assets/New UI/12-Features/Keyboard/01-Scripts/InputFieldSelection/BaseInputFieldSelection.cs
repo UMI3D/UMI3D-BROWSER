@@ -24,6 +24,21 @@ namespace umi3d.browserRuntime.ui.keyboard
 {
     public abstract class BaseInputFieldSelection 
     {
+        /// <summary>
+        /// Whether this selection is the keyboard preview bar.
+        /// </summary>
+        public bool isPreviewBar = false;
+
+        /// <summary>
+        /// Whether this selection is being used.
+        /// </summary>
+        public bool isActive => isPreviewBar || activeSelection == this;
+
+        static BaseInputFieldSelection activeSelection;
+
+        /// <summary>
+        /// Whether the caret or the selection are available.
+        /// </summary>
         public virtual bool allowSelection { get; set; } = false;
 
         protected MonoBehaviour context;
@@ -57,7 +72,7 @@ namespace umi3d.browserRuntime.ui.keyboard
 
             selectionNotifier = NotificationHub.Default.GetNotifier(
                 this,
-                KeyboardNotificationKeys.InputFieldSelection,
+                KeyboardNotificationKeys.TextFieldSelected,
                 null,
                 null
             );
@@ -67,7 +82,7 @@ namespace umi3d.browserRuntime.ui.keyboard
         {
             NotificationHub.Default.Subscribe(
                 this,
-                KeyboardNotificationKeys.InputFieldSelection,
+                KeyboardNotificationKeys.TextFieldSelected,
                 new FilterByRef(FilterType.AcceptAllExcept, this),
                 PreviewSelection
             );
@@ -77,19 +92,19 @@ namespace umi3d.browserRuntime.ui.keyboard
         {
             NotificationHub.Default.Unsubscribe(
                 this,
-                KeyboardNotificationKeys.InputFieldSelection
+                KeyboardNotificationKeys.TextFieldSelected
             );
         }
 
         /// <summary>
-        /// Focus the preview bar.<br/>
+        /// Focus the input field.<br/>
         /// <br/>
         /// Display the caret and hide selection.
         /// </summary>
         public abstract void Focus();
 
         /// <summary>
-        /// Unfocus the preview bar.<br/>
+        /// Unfocus the input field.<br/>
         /// <br/>
         /// Hide the caret and hide selection.
         /// </summary>
@@ -112,10 +127,18 @@ namespace umi3d.browserRuntime.ui.keyboard
         /// <param name="end"></param>
         public void Select(int start, int end)
         {
-            SelectWithoutNotify(start, end);
+            UnityEngine.Debug.Log($"select", context);
+            activeSelection = this;
 
-            selectionNotifier[KeyboardNotificationKeys.Info.SelectionPositions] = (start, end);
+            selectionNotifier[KeyboardNotificationKeys.Info.IsActivation] = isActive;
+            selectionNotifier[KeyboardNotificationKeys.Info.SelectionPositions] = allowSelection ? (start, end) : null;
+            selectionNotifier[KeyboardNotificationKeys.Info.InputFieldText] = inputField.text;
             selectionNotifier.Notify();
+
+            if (allowSelection)
+            {
+                SelectWithoutNotify(start, end);
+            }
         }
 
         /// <summary>
@@ -155,10 +178,18 @@ namespace umi3d.browserRuntime.ui.keyboard
         /// <param name="newCaretPosition"></param>
         public void Deselect(int newCaretPosition)
         {
-            DeselectWithoutNotify(newCaretPosition);
+            UnityEngine.Debug.Log($"deselect {newCaretPosition}", context);
+            activeSelection = this;
 
-            selectionNotifier[KeyboardNotificationKeys.Info.SelectionPositions] = newCaretPosition;
+            selectionNotifier[KeyboardNotificationKeys.Info.IsActivation] = isActive;
+            selectionNotifier[KeyboardNotificationKeys.Info.SelectionPositions] = allowSelection ? newCaretPosition : null;
+            selectionNotifier[KeyboardNotificationKeys.Info.InputFieldText] = inputField.text;
             selectionNotifier.Notify();
+
+            if (allowSelection)
+            {
+                DeselectWithoutNotify(newCaretPosition);
+            }
         }
 
         /// <summary>
@@ -192,24 +223,31 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         void PreviewSelection(Notification notification)
         {
-            if (!allowSelection)
+            if (!isActive || !allowSelection)
             {
                 return;
             }
+
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.InputFieldText, out string text))
+            {
+                return;
+            }
+
+            inputField.text = text;
 
             if (notification.TryGetInfoT(KeyboardNotificationKeys.Info.SelectionPositions, out int caretPosition, false))
             {
                 DeselectWithoutNotify(caretPosition);
-                return;
             }
-
-            if (notification.TryGetInfoT(KeyboardNotificationKeys.Info.SelectionPositions, out (int, int) selectionPositions, false))
+            else if (notification.TryGetInfoT(KeyboardNotificationKeys.Info.SelectionPositions, out (int, int) selectionPositions, false))
             {
                 SelectWithoutNotify(selectionPositions.Item1, selectionPositions.Item2);
+            }
+            else
+            {
+                notification.LogError(nameof(KeyboardTMPInputFieldLinker), KeyboardNotificationKeys.Info.SelectionPositions, $"Selection positions is neither int nor (int, int).");
                 return;
             }
-
-            notification.LogError(nameof(KeyboardTMPInputFieldLinker), KeyboardNotificationKeys.Info.SelectionPositions, $"Selection positions is neither int nor (int, int).");
         }
     }
 }

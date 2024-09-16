@@ -166,11 +166,6 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         void OnPointerDown(Notification notification)
         {
-            if (!allowSelection)
-            {
-                return;
-            }
-
             if (!notification.TryGetInfoT(PointerDownBehaviour.NKPointerEvent, out PointerEventData eventData))
             {
                 return;

@@ -23,7 +23,7 @@ using UnityEngine.EventSystems;
 
 namespace umi3d.browserRuntime.ui.keyboard
 {
-    public class KeyboardTMPInputFieldLinker : MonoBehaviour, IPointerDownHandler
+    public class KeyboardTMPInputFieldLinker : MonoBehaviour
     {
         [Tooltip("Whether the input field wait for the submit but to be pressed to update the text.")]
         [SerializeField] bool waitForSubmit = false;
@@ -31,7 +31,6 @@ namespace umi3d.browserRuntime.ui.keyboard
         TMPro.TMP_InputField inputField;
         UMI3DInputFieldSelection selection;
 
-        bool isSelected;
         string text;
 
         void Awake()
@@ -40,6 +39,7 @@ namespace umi3d.browserRuntime.ui.keyboard
 
             selection = new(this);
             selection.Blur();
+            selection.allowSelection = !waitForSubmit;
 
             text = inputField.text;
         }
@@ -49,7 +49,6 @@ namespace umi3d.browserRuntime.ui.keyboard
             NotificationHub.Default.Subscribe(
                 this,
                 KeyboardNotificationKeys.AddOrRemoveCharacters,
-                null,
                 AddOrRemoveCharacters
             );
 
@@ -67,21 +66,15 @@ namespace umi3d.browserRuntime.ui.keyboard
             selection.OnDisable();
         }
 
-        public void OnPointerDown(PointerEventData eventData)
+        public void Select()
         {
-            if (!isSelected)
-            {
-                isSelected = true;
-                if (!waitForSubmit)
-                {
-                    selection.Focus();
-                }
+            
+        }
 
-                NotificationHub.Default.Notify(
-                    this,
-                    KeyboardNotificationKeys.TextFieldSelected
-                );
-            }
+        public void Unselect()
+        {
+            selection.Blur();
+            selection.allowSelection = false;
         }
 
         void ValueChanged(string text)
@@ -96,12 +89,7 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         void AddOrRemoveCharacters(Notification notification)
         {
-            if (waitForSubmit)
-            {
-                return;
-            }
-
-            if (!isSelected)
+            if (!selection.isActive || waitForSubmit)
             {
                 return;
             }

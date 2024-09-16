@@ -174,14 +174,18 @@ namespace umi3d.browserRuntime.ui.keyboard
 
 #if UNITY_EDITOR
             tmpInputFieldSelection = new(this);
+            tmpInputFieldSelection.isPreviewBar = true;
             tmpInputFieldSelection.allowSelection = true;
             umi3dInputFieldSelection = new(this);
+            umi3dInputFieldSelection.isPreviewBar = true;
             umi3dInputFieldSelection.allowSelection = true;
 #elif UNITY_STANDALONE_WIN
             previewBarSelection = new TMPInputFieldSelection(this);
+            previewBarSelection.isPreviewBar = true;
             previewBarSelection.allowSelection = true;
 #else
             previewBarSelection = new UMI3DInputFieldSelection(this);
+            previewBarSelection.isPreviewBar = true;
             previewBarSelection.allowSelection = true;
 #endif
         }
@@ -351,7 +355,6 @@ namespace umi3d.browserRuntime.ui.keyboard
             previewBarSelection.Deselect(newCaretPosition);
 #endif
         }
-
 
         /// <summary>
         /// Deselect and place the caret at <paramref name="newCaretPosition"/> without notifying.

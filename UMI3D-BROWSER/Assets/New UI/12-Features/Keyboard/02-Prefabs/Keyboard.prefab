@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 9140303088298995420}
   - component: {fileID: 3311514701170151072}
   - component: {fileID: 7663205815219897652}
+  - component: {fileID: 3085866335617368463}
   m_Layer: 5
   m_Name: Keyboard
   m_TagString: Untagged
@@ -101,6 +102,19 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &3085866335617368463
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2720059266705271761}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc69c1c32ff774e44a362ff33049e804, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isOpen: 0
 --- !u!1001 &127547356744046984
 PrefabInstance:
   m_ObjectHideFlags: 0

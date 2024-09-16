@@ -61,7 +61,7 @@ namespace umi3d.browserRuntime.ui.keyboard
         void Start()
         {
             openOrCloseNotifier[KeyboardNotificationKeys.Info.IsOpening] = isOpen;
-            openOrCloseNotifier[KeyboardNotificationKeys.Info.WithAnimation] = true;
+            openOrCloseNotifier[KeyboardNotificationKeys.Info.WithAnimation] = false;
             openOrCloseNotifier.Notify();
         }
 

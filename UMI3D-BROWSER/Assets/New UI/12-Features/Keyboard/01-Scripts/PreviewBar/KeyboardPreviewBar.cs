@@ -34,6 +34,7 @@ namespace umi3d.browserRuntime.ui.keyboard
             {
                 inputField.gameObject.AddComponent<KeyboardPreviewBarSelection>();
             }
+            selection.Blur();
         }
 
         void OnEnable()

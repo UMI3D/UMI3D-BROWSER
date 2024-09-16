@@ -174,11 +174,15 @@ namespace umi3d.browserRuntime.ui.keyboard
 
 #if UNITY_EDITOR
             tmpInputFieldSelection = new(this);
+            tmpInputFieldSelection.allowSelection = true;
             umi3dInputFieldSelection = new(this);
+            umi3dInputFieldSelection.allowSelection = true;
 #elif UNITY_STANDALONE_WIN
             previewBarSelection = new TMPInputFieldSelection(this);
+            previewBarSelection.allowSelection = true;
 #else
             previewBarSelection = new UMI3DInputFieldSelection(this);
+            previewBarSelection.allowSelection = true;
 #endif
         }
 
@@ -250,6 +254,30 @@ namespace umi3d.browserRuntime.ui.keyboard
             }
 #else
             previewBarSelection.Focus();
+#endif
+        }
+
+        /// <summary>
+        /// Unfocus the preview bar.<br/>
+        /// <br/>
+        /// Hide the caret and hide selection.
+        /// </summary>
+        public void Blur()
+        {
+#if UNITY_EDITOR
+            switch (selectionType)
+            {
+                case SelectionType.Desktop:
+                    tmpInputFieldSelection.Blur();
+                    break;
+                case SelectionType.Mobile:
+                    umi3dInputFieldSelection.Blur();
+                    break;
+                default:
+                    break;
+            }
+#else
+            previewBarSelection.Blur();
 #endif
         }
 

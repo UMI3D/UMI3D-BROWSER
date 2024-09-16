@@ -24,6 +24,8 @@ namespace umi3d.browserRuntime.ui.keyboard
 {
     public abstract class BaseInputFieldSelection 
     {
+        public virtual bool allowSelection { get; set; } = false;
+
         protected MonoBehaviour context;
         protected TMP_InputField inputField;
 
@@ -85,6 +87,13 @@ namespace umi3d.browserRuntime.ui.keyboard
         /// Display the caret and hide selection.
         /// </summary>
         public abstract void Focus();
+
+        /// <summary>
+        /// Unfocus the preview bar.<br/>
+        /// <br/>
+        /// Hide the caret and hide selection.
+        /// </summary>
+        public abstract void Blur();
 
         /// <summary>
         /// Update the selection position and width.
@@ -183,6 +192,11 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         void PreviewSelection(Notification notification)
         {
+            if (!allowSelection)
+            {
+                return;
+            }
+
             if (notification.TryGetInfoT(KeyboardNotificationKeys.Info.SelectionPositions, out int caretPosition, false))
             {
                 DeselectWithoutNotify(caretPosition);

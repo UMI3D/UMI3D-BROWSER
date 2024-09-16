@@ -96,8 +96,6 @@ namespace umi3d.browserRuntime.ui.keyboard
             selectionRT.pivot = new(0f, 0.5f);
             selectionRT.offsetMin = new(selectionRT.offsetMin.x, 0f);
             selectionRT.offsetMax = new(selectionRT.offsetMax.x, 0f);
-
-            Focus();
         }
 
         public override void OnEnable()
@@ -119,7 +117,7 @@ namespace umi3d.browserRuntime.ui.keyboard
             StartCaretBlinking();
         }
 
-        public void Blur()
+        public override void Blur()
         {
             HideSelection();
             StopCaretBLinking();
@@ -168,6 +166,11 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         void OnPointerDown(Notification notification)
         {
+            if (!allowSelection)
+            {
+                return;
+            }
+
             if (!notification.TryGetInfoT(PointerDownBehaviour.NKPointerEvent, out PointerEventData eventData))
             {
                 return;

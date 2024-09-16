@@ -23,6 +23,8 @@ namespace umi3d.browserRuntime.ui.keyboard
 {
     public class TMPInputFieldSelection : BaseInputFieldSelection
     {
+        public override bool allowSelection { get => inputField.interactable; set => inputField.interactable = value; }
+
         public override int startPosition
         {
             get
@@ -87,7 +89,7 @@ namespace umi3d.browserRuntime.ui.keyboard
         public override void OnEnable()
         {
             base.OnEnable();
-            inputField.interactable = true;
+            allowSelection = true;
         }
 
         public override void OnDisable()
@@ -105,6 +107,10 @@ namespace umi3d.browserRuntime.ui.keyboard
                 await Task.Yield();
                 inputField.onFocusSelectAll = onFocusSelectAll;
             }).Start(TaskScheduler.FromCurrentSynchronizationContext());
+        }
+
+        public override void Blur()
+        {
         }
 
         public override void UpdateSelection()

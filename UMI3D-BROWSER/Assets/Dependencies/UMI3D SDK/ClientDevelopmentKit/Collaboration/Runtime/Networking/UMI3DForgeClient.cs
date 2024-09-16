@@ -55,7 +55,7 @@ namespace umi3d.cdk.collaboration
         private bool pingReceived = false;
         private bool CheckForBandWidthRunning = false;
 
-        public delegate void OnLBEGroupEvent(SendLBEGroupRequestDTO lBEGroupData);
+        public delegate void OnLBEGroupEvent(LBEGroupSyncRequestDTO  lBEGroupData);
         public static event OnLBEGroupEvent LBEGroupEventOccurred;
 
         public delegate void OnAddLBEGroupEvent(AddUserGroupOperationsDto addUserLBEGroupDTO);
@@ -756,29 +756,29 @@ namespace umi3d.cdk.collaboration
                     {
                         Debug.Log("REMY : SetLBEGroupRequest ");
 
-                        SendLBEGroupRequestDTO lBEGroupRequestDTO = UMI3DSerializer.Read<SendLBEGroupRequestDTO>(container);
+                        LBEGroupSyncRequestDTO  lBEGroupRequestDTO = UMI3DSerializer.Read<LBEGroupSyncRequestDTO >(container);
 
-                        Debug.Log("REMY : SetLBEGroupRequest lBEGroupRequestDTO.anchorAR -> " + lBEGroupRequestDTO.anchorAR.Count);
+                        Debug.Log("REMY : SetLBEGroupRequest lBEGroupRequestDTO.anchorAR -> " + lBEGroupRequestDTO.ARAnchors.Count);
 
 
-                        for (int i = 0; i <lBEGroupRequestDTO.anchorAR.Count; i++)
+                        for (int i = 0; i <lBEGroupRequestDTO.ARAnchors.Count; i++)
                         {
-                            Debug.Log("REMY : SetLBEGroupRequest -> " + lBEGroupRequestDTO.anchorAR);
+                            Debug.Log("REMY : SetLBEGroupRequest -> " + lBEGroupRequestDTO.ARAnchors);
 
                         }
 
-                        var lBEGroup = new SendLBEGroupRequestDTO()
+                        var lBEGroup = new LBEGroupSyncRequestDTO ()
                         {
-                            GroupId = lBEGroupRequestDTO.GroupId,
+                            LBEGroupId = lBEGroupRequestDTO.LBEGroupId,
                             UserAR = lBEGroupRequestDTO.UserAR,
                             UserVR = lBEGroupRequestDTO.UserVR,
-                            anchorAR = lBEGroupRequestDTO.anchorAR
+                            ARAnchors = lBEGroupRequestDTO.ARAnchors
                         };
 
                         if (LBEGroupEventOccurred != null)
                             LBEGroupEventOccurred(lBEGroup);
 
-                        Debug.Log("REMY : SetLBEGroupRequest lBEGroup -> " + lBEGroup.anchorAR.Count);
+                        Debug.Log("REMY : SetLBEGroupRequest lBEGroup -> " + lBEGroup.ARAnchors.Count);
 
 
                     });
@@ -811,12 +811,6 @@ namespace umi3d.cdk.collaboration
 
                         if (DelLBEGroupEvent != null)
                             DelLBEGroupEvent(delUser);
-                    });
-                    break;
-                case UMI3DOperationKeys.ARAnchorBrowserRequest:
-                    MainThreadManager.Run(() =>
-                    {
-                        
                     });
                     break;
 

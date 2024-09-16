@@ -10,9 +10,9 @@ namespace umi3d.common.lbe
 {
     public class UserGuardianDto : AbstractBrowserRequestDto
     {
-        public List<ARAnchorDto> anchorAR { get; set; }
+        public List<ARAnchorDto> ARAnchors { get; set; }
 
-        public uint AR { get; set; }
+        public uint ARiD { get; set; }
     }
 }
 

@@ -9,7 +9,6 @@ namespace umi3d.common.lbe.guardian
 {
     public class UserGuardianSerializers : UMI3DSerializerModule
     {
-
         public bool? IsCountable<T>()
         {
             return typeof(T) == typeof(UserGuardianDto) ? true : null;
@@ -19,18 +18,16 @@ namespace umi3d.common.lbe.guardian
         {
             if (typeof(T) == typeof(UserGuardianDto))
             {
-                //readable = UMI3DSerializer.TryRead(container, out List<ARAnchorDto> anchorARList);
-
-                List<ARAnchorDto> anchorARList = UMI3DSerializer.ReadList<ARAnchorDto>(container);
+                List<ARAnchorDto> ARAnchors = UMI3DSerializer.ReadList<ARAnchorDto>(container);
                 float offsetGuardian = UMI3DSerializer.Read<float>(container);
-                uint aR = UMI3DSerializer.Read<uint>(container);
+                uint ARid = UMI3DSerializer.Read<uint>(container);
 
-                if (anchorARList != null)
+                if (ARAnchors != null)
                 {
                     var userguardian = new UserGuardianDto
                     {
-                        anchorAR = anchorARList,
-                        AR = aR
+                        ARAnchors = ARAnchors,
+                        ARiD = ARid
                     };
 
                     readable = true;
@@ -46,12 +43,11 @@ namespace umi3d.common.lbe.guardian
 
         public bool Write<T>(T value, out Bytable bytable, params object[] parameters)
         {
-
             if (value is UserGuardianDto c)
             {
                 bytable = UMI3DSerializer.Write(UMI3DOperationKeys.GuardianBrowserRequest)
-                    + UMI3DSerializer.WriteCollection(c.anchorAR)
-                    + UMI3DSerializer.Write(c.AR);
+                    + UMI3DSerializer.WriteCollection(c.ARAnchors)
+                    + UMI3DSerializer.Write(c.ARiD);
                 return true;
             }
 

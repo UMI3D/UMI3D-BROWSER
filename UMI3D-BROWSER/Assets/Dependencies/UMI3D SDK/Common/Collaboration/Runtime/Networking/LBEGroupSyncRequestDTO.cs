@@ -4,21 +4,21 @@ using UnityEngine;
 
 namespace umi3d.common.lbe.description
 {
-    public class SendLBEGroupRequestDTO : AbstractOperationDto
+    public class LBEGroupSyncRequestDTO  : AbstractOperationDto
     {
-        public uint GroupId { get; set; }
+        public uint LBEGroupId { get; set; }
 
         public List<ulong> UserAR { get; set; }
 
         public List<ulong> UserVR { get; set; }
 
-        public List<ARAnchorDto> anchorAR { get; set; }
+        public List<ARAnchorDto> ARAnchors { get; set; }
 
-        public SendLBEGroupRequestDTO()
+        public LBEGroupSyncRequestDTO ()
         {
             UserAR = new List<ulong>();
             UserVR = new List<ulong>();
-            anchorAR = new List<ARAnchorDto>();
+            ARAnchors = new List<ARAnchorDto>();
         }
     }
 }

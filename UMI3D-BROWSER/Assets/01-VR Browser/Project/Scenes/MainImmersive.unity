@@ -518,7 +518,7 @@ PrefabInstance:
     - target: {fileID: 5988314907380347006, guid: 6d8cc188ac4cb49419e2616ed25f607d,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -0.000010574183
+      value: -0.000006226681
       objectReference: {fileID: 0}
     - target: {fileID: 6093459749334264534, guid: 6d8cc188ac4cb49419e2616ed25f607d,
         type: 3}
@@ -816,6 +816,18 @@ CapsuleCollider:
   m_Height: 1.81
   m_Direction: 2
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1031339523 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8115534291381536199, guid: aa50e35a45eaaed43a950ae34ef532dc,
+    type: 3}
+  m_PrefabInstance: {fileID: 1131452852}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82bc72d2ecc8add47b2fe00d40318500, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1117158941
 GameObject:
   m_ObjectHideFlags: 0
@@ -1272,6 +1284,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5161054918967749134, guid: aa50e35a45eaaed43a950ae34ef532dc,
+        type: 3}
+      propertyPath: XRInputModalityManager
+      value: 
+      objectReference: {fileID: 1031339523}
     - target: {fileID: 5251917496136701977, guid: aa50e35a45eaaed43a950ae34ef532dc,
         type: 3}
       propertyPath: zoneCollider

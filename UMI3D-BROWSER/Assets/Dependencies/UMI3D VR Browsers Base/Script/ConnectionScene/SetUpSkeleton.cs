@@ -26,6 +26,7 @@ using umi3dVRBrowsersBase.ikManagement;
 using umi3dVRBrowsersBase.interactions;
 using umi3dVRBrowsersBase.navigation;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit.Inputs;
 
 namespace umi3dVRBrowsersBase.connection
 {
@@ -109,6 +110,8 @@ namespace umi3dVRBrowsersBase.connection
         public event System.Action SetupDone;
         public event System.Action SkeletonResized;
 
+        public XRInputModalityManager XRInputModalityManager;
+
         #endregion
 
         #region Methods
@@ -131,7 +134,11 @@ namespace umi3dVRBrowsersBase.connection
                 Surface.enabled = false;
             });
 
-            SwitchTrackerToController();
+            if (XRInputModalityManager != null && XRInputModalityManager.currentInputMode.Value == XRInputModalityManager.InputMode.TrackedHand)
+                SwitchTrackerToHandTracking();
+
+            else 
+                SwitchTrackerToController();
         }
 
         /// <summary>

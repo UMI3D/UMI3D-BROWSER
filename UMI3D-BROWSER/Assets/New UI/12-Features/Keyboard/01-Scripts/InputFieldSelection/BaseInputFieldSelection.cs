@@ -84,7 +84,7 @@ namespace umi3d.browserRuntime.ui.keyboard
                 this,
                 KeyboardNotificationKeys.TextFieldSelected,
                 new FilterByRef(FilterType.AcceptAllExcept, this),
-                PreviewSelection
+                TextFieldSelected
             );
         }
 
@@ -127,14 +127,7 @@ namespace umi3d.browserRuntime.ui.keyboard
         /// <param name="end"></param>
         public void Select(int start, int end)
         {
-            if (!isPreviewBar)
-            {
-                if (activeSelection != null)
-                {
-                    activeSelection.Blur();
-                }
-                activeSelection = this;
-            }
+            ActivateInternal();
 
             selectionNotifier[KeyboardNotificationKeys.Info.IsActivation] = isActive;
             selectionNotifier[KeyboardNotificationKeys.Info.SelectionPositions] = allowSelection ? (start, end) : null;
@@ -184,14 +177,7 @@ namespace umi3d.browserRuntime.ui.keyboard
         /// <param name="newCaretPosition"></param>
         public void Deselect(int newCaretPosition)
         {
-            if (!isPreviewBar)
-            {
-                if (activeSelection != null)
-                {
-                    activeSelection.Blur();
-                }
-                activeSelection = this;
-            }
+            ActivateInternal();
 
             selectionNotifier[KeyboardNotificationKeys.Info.IsActivation] = isActive;
             selectionNotifier[KeyboardNotificationKeys.Info.SelectionPositions] = allowSelection ? newCaretPosition : null;
@@ -233,7 +219,40 @@ namespace umi3d.browserRuntime.ui.keyboard
             UpdateCaret();
         }
 
-        void PreviewSelection(Notification notification)
+        /// <summary>
+        /// Deactivate the current active selection and active this if this is not preview bar. If allow selection then display the caet at <see cref="stringPosition"/>.
+        /// </summary>
+        public void Activate()
+        {
+            Deselect(stringPosition);
+        }
+
+        /// <summary>
+        /// Deactivate the current active selection and active this if this is not preview bar.
+        /// </summary>
+        void ActivateInternal()
+        {
+            if (isPreviewBar)
+            {
+                return;
+            }
+
+            if (!isActive && activeSelection != null)
+            {
+                // If this selection is not activated but an active selection is registered then deactivate it.
+                activeSelection.Blur();
+            }
+
+            activeSelection = this;
+        }
+
+        public void Deactivate()
+        {
+            activeSelection.Blur();
+            activeSelection = null;
+        }
+
+        void TextFieldSelected(Notification notification)
         {
             if (!isActive || !allowSelection)
             {
@@ -242,6 +261,19 @@ namespace umi3d.browserRuntime.ui.keyboard
 
             if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.InputFieldText, out string text))
             {
+                return;
+            }
+
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.IsActivation, out bool isActivation) || !isActivation)
+            {
+                if (!isPreviewBar)
+                {
+                    Deactivate();
+                }
+                else
+                {
+                    inputField.text = text;
+                }
                 return;
             }
 

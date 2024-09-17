@@ -28,6 +28,7 @@ namespace umi3d.browserRuntime.ui.keyboard
         public bool isOpen = true;
 
         Notifier openOrCloseNotifier;
+        Notifier selectionNotifier;
 
         bool withAnimation = true;
         float animationTime = 1f;
@@ -46,6 +47,13 @@ namespace umi3d.browserRuntime.ui.keyboard
                     { KeyboardNotificationKeys.Info.PhaseOneStartTimePercentage, phaseOneStartTimePercentage }
                 }
             );
+
+            selectionNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                KeyboardNotificationKeys.TextFieldSelected,
+                null,
+                null
+            );
         }
 
         void Start()
@@ -59,6 +67,18 @@ namespace umi3d.browserRuntime.ui.keyboard
         {
             NotificationHub.Default.Subscribe(
                 this,
+                KeyboardNotificationKeys.AnimationSettings,
+                EnableOrDisableAnimation
+            );
+
+            NotificationHub.Default.Subscribe(
+                this,
+                KeyboardNotificationKeys.SpecialKeyPressed,
+                SpecialKeyPressed
+            );
+
+            NotificationHub.Default.Subscribe(
+                this,
                 KeyboardNotificationKeys.TextFieldSelected,
                 null,
                 TextFieldSelected
@@ -67,7 +87,64 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         void OnDisable()
         {
+            NotificationHub.Default.Unsubscribe(this, KeyboardNotificationKeys.AnimationSettings);
+
+            NotificationHub.Default.Unsubscribe(this, KeyboardNotificationKeys.SpecialKeyPressed);
+
             NotificationHub.Default.Unsubscribe(this, KeyboardNotificationKeys.TextFieldSelected);
+        }
+
+        void Close()
+        {
+            isOpen = false;
+
+            openOrCloseNotifier[KeyboardNotificationKeys.Info.IsOpening] = isOpen;
+            openOrCloseNotifier[KeyboardNotificationKeys.Info.WithAnimation] = withAnimation;
+            openOrCloseNotifier.Notify();
+
+            selectionNotifier[KeyboardNotificationKeys.Info.IsActivation] = false;
+            selectionNotifier[KeyboardNotificationKeys.Info.SelectionPositions] = null;
+            selectionNotifier[KeyboardNotificationKeys.Info.InputFieldText] = null;
+            selectionNotifier.Notify();
+        }
+
+        void Open()
+        {
+            isOpen = true;
+
+            openOrCloseNotifier[KeyboardNotificationKeys.Info.IsOpening] = isOpen;
+            openOrCloseNotifier[KeyboardNotificationKeys.Info.WithAnimation] = withAnimation;
+            openOrCloseNotifier.Notify();
+        }
+
+        void EnableOrDisableAnimation(Notification notification)
+        {
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.AnimationType, out KeyboardAnimationType animationType))
+            {
+                return;
+            }
+
+            if (animationType != KeyboardAnimationType.OpenOrClose)
+            {
+                return;
+            }
+
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.WithAnimation, out bool withAnimation))
+            {
+                return;
+            }
+
+            this.withAnimation = withAnimation;
+        }
+
+        void SpecialKeyPressed(Notification notification)
+        {
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.SpecialKey, out SpecialKey key) || key != SpecialKey.Quit)
+            {
+                return;
+            }
+
+            Close();
         }
 
         void TextFieldSelected(Notification notification)
@@ -84,21 +161,13 @@ namespace umi3d.browserRuntime.ui.keyboard
 
             if (!isOpen && isActivation)
             {
-                isOpen = true;
-
-                openOrCloseNotifier[KeyboardNotificationKeys.Info.IsOpening] = isOpen;
-                openOrCloseNotifier[KeyboardNotificationKeys.Info.WithAnimation] = withAnimation;
-                openOrCloseNotifier.Notify();
+                Open();
                 return;
             }
 
             if (isOpen && !isActivation)
             {
-                isOpen = false;
-
-                openOrCloseNotifier[KeyboardNotificationKeys.Info.IsOpening] = isOpen;
-                openOrCloseNotifier[KeyboardNotificationKeys.Info.WithAnimation] = withAnimation;
-                openOrCloseNotifier.Notify();
+                Close();
                 return;
             }
         }

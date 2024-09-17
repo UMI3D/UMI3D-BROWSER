@@ -27,9 +27,9 @@ namespace umi3d.browserRuntime.NotificationKeys
         public const string TextFieldSelected = "KeyboardNotificationKeysTextFieldSelected";
 
         /// <summary>
-        /// Notification sent when the enter key is pressed.
+        /// Notification sent when a special key is pressed.
         /// </summary>
-        public const string EnterKeyPressed = "KeyboardNotificationKeysEnterKeyPressed";
+        public const string SpecialKeyPressed = "KeyboardNotificationKeysSpecialKeyPressed";
 
         /// <summary>
         /// Notification sent when an object ask for the focus of the preview bar.
@@ -96,6 +96,14 @@ namespace umi3d.browserRuntime.NotificationKeys
             /// See Notification key: <see cref="TextFieldSelected"/>
             /// </summary>
             public const string InputFieldText = "InputFieldText";
+
+            /// <summary>
+            /// The special key pressed.<br/>
+            /// Value is <see cref="umi3d.browserRuntime.NotificationKeys.SpecialKey"/>.<br/>
+            /// <br/>
+            /// See Notification key: <see cref="SpecialKeyPressed"/>
+            /// </summary>
+            public const string SpecialKey = "SpecialKey";
 
             /// <summary>
             /// Whether some characters will be added or removed.<br/>

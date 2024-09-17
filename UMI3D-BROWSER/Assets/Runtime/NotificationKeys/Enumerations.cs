@@ -57,6 +57,15 @@ namespace umi3d.browserRuntime.NotificationKeys
     }
 
     /// <summary>
+    /// The keyboard special keys.
+    /// </summary>
+    public enum SpecialKey
+    {
+        Enter,
+        Quit
+    }
+
+    /// <summary>
     /// The locomotion types.
     /// </summary>
     [Flags]

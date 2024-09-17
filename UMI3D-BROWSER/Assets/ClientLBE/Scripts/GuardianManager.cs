@@ -35,7 +35,7 @@ namespace ClientLBE
         [Header("GUARDIAN")]
         public GameObject pointAnchor; // Référence au prefab pour la création des ancres du guardian
         private GameObject GuardianMesh; //Référence pour stocker le mesh du guardian
-        public GameObject GuardianParent; 
+        private GameObject GuardianParent; 
         public Material MatGuardian; // Matériau pour le rendu du guardian
         
         private List<Vector3> localVertexPositions = new List<Vector3>();
@@ -57,7 +57,7 @@ namespace ClientLBE
         public GameObject CollabSkeletonScene;
         public Material specificMaterial;
 
-        public GameObject OrientationPanel;
+        public CanvasGroup OrientationScenePanel;
         public float OrientationCalibreur;
 
         private List<ARPlane> planesToCalibrate = new List<ARPlane>();
@@ -270,14 +270,17 @@ namespace ClientLBE
             if (arg)
             {
                 Calibreur.SetActive(false);
-                Calibreur = null;
-                for (int i = 0; i < planesToCalibrate.Count; i++)
-                {
-                    planesToCalibrate[i].gameObject.SetActive(true);
-                }
 
-                Calibreur = planesToCalibrate[0].gameObject;
+                if (planesToCalibrate.Count > 0)
+                {
+                    for (int i = 0; i < planesToCalibrate.Count; i++)
+                    {
+                        planesToCalibrate[i].gameObject.SetActive(true);
+                    }
+                    Calibreur = planesToCalibrate[0].gameObject;
+                }
             }
+
             else
             {
                 Calibreur = null;
@@ -290,9 +293,9 @@ namespace ClientLBE
                 Calibreur = ManualCalibreur ;
                 Calibreur.SetActive(true);
 
-                if (OrientationPanel.activeSelf == true && OrientationPanel.GetComponent<CanvasGroup>().alpha == 1)
+                if (OrientationScenePanel.gameObject.activeSelf == true && OrientationScenePanel.alpha == 1)
                 {
-                    OrientationPanel.GetComponent<GetPlayerOrientationPanel>().ClosePanel();
+                    OrientationScenePanel.GetComponent<GetPlayerOrientationPanel>().ClosePanel();
                 }
             }
         }
@@ -311,7 +314,7 @@ namespace ClientLBE
         {
             Calibreur.transform.Rotate(Calibreur.transform.rotation.x, OrientationCalibreur, Calibreur.transform.rotation.z, Space.World);
 
-            OrientationPanel.SetActive(false);
+            OrientationScenePanel.gameObject.SetActive(false);
         }
         public IEnumerator CalibrationScene()
         {

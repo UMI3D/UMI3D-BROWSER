@@ -760,13 +760,6 @@ namespace umi3d.cdk.collaboration
 
                         Debug.Log("REMY : SetLBEGroupRequest lBEGroupRequestDTO.anchorAR -> " + lBEGroupRequestDTO.ARAnchors.Count);
 
-
-                        for (int i = 0; i <lBEGroupRequestDTO.ARAnchors.Count; i++)
-                        {
-                            Debug.Log("REMY : SetLBEGroupRequest -> " + lBEGroupRequestDTO.ARAnchors);
-
-                        }
-
                         var lBEGroup = new LBEGroupSyncRequestDTO ()
                         {
                             LBEGroupId = lBEGroupRequestDTO.LBEGroupId,
@@ -777,10 +770,6 @@ namespace umi3d.cdk.collaboration
 
                         if (LBEGroupEventOccurred != null)
                             LBEGroupEventOccurred(lBEGroup);
-
-                        Debug.Log("REMY : SetLBEGroupRequest lBEGroup -> " + lBEGroup.ARAnchors.Count);
-
-
                     });
                     break;
                 case UMI3DOperationKeys.SetNewUserLBE:

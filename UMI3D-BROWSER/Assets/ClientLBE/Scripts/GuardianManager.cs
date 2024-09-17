@@ -122,6 +122,13 @@ namespace ClientLBE
             }
         }
 
+        void LBEGroupEvent(LBEGroupSyncRequestDTO LbeGroupDtoData)
+        {
+            lBEGroupDto = LbeGroupDtoData;
+            CreatGuardianServer(lBEGroupDto.ARAnchors);
+            AddCapsulesToCurrentARUsers();   
+        }
+
         void AddUserLBEGroup(AddUserGroupOperationsDto addUserLBEGroupDTO)
         {
             Debug.Log("REMY : Add User -> userID : " + addUserLBEGroupDTO.UserId + " -> isUseAR : " + addUserLBEGroupDTO.IsUserAR);
@@ -129,7 +136,7 @@ namespace ClientLBE
             if (addUserLBEGroupDTO.IsUserAR == true)
             {
                 lBEGroupDto.UserAR.Add(addUserLBEGroupDTO.UserId);
-                AddCapsulesToCurrentARUsers(lBEGroupDto);
+                AddCapsulesToCurrentARUsers();
             }
             else
             {
@@ -141,9 +148,9 @@ namespace ClientLBE
         {
             Debug.Log("REMY : Delete User -> " + delUserLBEGroupDto.UserId);
 
-            foreach (ulong userIDAR in lBEGroupDto.UserAR)
+            foreach (ulong userIdAR in lBEGroupDto.UserAR)
             {
-                if(userIDAR == delUserLBEGroupDto.UserId)
+                if(userIdAR == delUserLBEGroupDto.UserId)
                 {
                     lBEGroupDto.UserAR.Remove(delUserLBEGroupDto.UserId);
                     return;
@@ -153,9 +160,9 @@ namespace ClientLBE
                     Debug.Log("REMY : Not user AR leave");
                 }
             }
-            foreach (ulong userIDVR in lBEGroupDto.UserVR)
+            foreach (ulong userIdVR in lBEGroupDto.UserVR)
             {
-                if (userIDVR == delUserLBEGroupDto.UserId)
+                if (userIdVR == delUserLBEGroupDto.UserId)
                 {
                     lBEGroupDto.UserVR.Remove(delUserLBEGroupDto.UserId);
                     return;
@@ -172,19 +179,22 @@ namespace ClientLBE
             StartCoroutine(GetARPlanes());
         }
 
-        private void AddCapsulesToCurrentARUsers(LBEGroupSyncRequestDTO  lBEGroupDto)
+        private void AddCapsulesToCurrentARUsers()
         {
+            Debug.Log("REMY : Add capsule");
+
             foreach (var userId in lBEGroupDto.UserAR)
             {
                 var skeleton = CollaborationSkeletonsManager.Instance.GetCollaborativeSkeleton((UMI3DGlobalID.EnvironmentId, userId)) as AbstractSkeleton;
 
                 if (skeleton != null)
                 {
+                    Debug.Log("REMY : Add capsule : " + userId);
                     AddCapsuleToBone(skeleton, BoneType.Hips);
                 }
                 else
                 {
-                    Debug.LogWarning($"Utilisateur AR avec l'ID: {userId} non trouvé dans la scène.");
+                    Debug.LogWarning($"Utilisateur AR avec l'ID : {userId} non trouvé dans la scène.");
                 }
             }
         }
@@ -371,13 +381,6 @@ namespace ClientLBE
                 planesToCalibrate[i].gameObject.SetActive(false);
             }
         }        
-
-        void LBEGroupEvent(LBEGroupSyncRequestDTO  LbeGroupDtoData)
-        {
-            lBEGroupDto = LbeGroupDtoData;
-            CreatGuardianServer(lBEGroupDto.ARAnchors);
-            AddCapsulesToCurrentARUsers(lBEGroupDto);
-        }
 
         public void GetGuardianArea()
         {

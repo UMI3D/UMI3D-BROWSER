@@ -31,8 +31,6 @@ namespace umi3d.browserRuntime.ui.keyboard
         TMPro.TMP_InputField inputField;
         UMI3DInputFieldSelection selection;
 
-        string text;
-
         void Awake()
         {
             inputField = GetComponent<TMPro.TMP_InputField>();
@@ -40,8 +38,6 @@ namespace umi3d.browserRuntime.ui.keyboard
             selection = new(this);
             selection.Blur();
             selection.allowSelection = !waitForSubmit;
-
-            text = inputField.text;
         }
 
         void OnEnable()
@@ -52,16 +48,12 @@ namespace umi3d.browserRuntime.ui.keyboard
                 AddOrRemoveCharacters
             );
 
-            inputField.onValueChanged.AddListener(ValueChanged);
-
             selection.OnEnable();
         }
 
         void OnDisable()
         {
             NotificationHub.Default.Unsubscribe(this, KeyboardNotificationKeys.AddOrRemoveCharacters);
-
-            inputField.onValueChanged.RemoveListener(ValueChanged);
 
             selection.OnDisable();
         }
@@ -77,11 +69,6 @@ namespace umi3d.browserRuntime.ui.keyboard
             selection.allowSelection = false;
         }
 
-        void ValueChanged(string text)
-        {
-            this.text = text;
-        }
-
         void EnterKeyPressed(Notification notification)
         {
 
@@ -89,23 +76,39 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         void AddOrRemoveCharacters(Notification notification)
         {
-            if (!selection.isActive || waitForSubmit)
+            if (!selection.isActive)
             {
                 return;
             }
 
-            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.IsAddingCharacters, out bool isAdding))
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.TextFieldTextUpdate, out TextFieldTextUpdate textUpdate))
             {
                 return;
             }
 
-            if (isAdding)
+            switch (textUpdate)
             {
-                AddCharacters(notification);
-            }
-            else
-            {
-                RemoveCharacters(notification);
+                case TextFieldTextUpdate.AddCharacters:
+                    if (!waitForSubmit)
+                    {
+                        AddCharacters(notification);
+                    }
+                    break;
+                case TextFieldTextUpdate.RemoveCharacters:
+                    if (!waitForSubmit)
+                    {
+                        RemoveCharacters(notification);
+                    }
+                    break;
+                case TextFieldTextUpdate.SubmitText:
+                    if (waitForSubmit)
+                    {
+                        SubmitText(notification);
+                    }
+                    break;
+                default:
+                    UnityEngine.Debug.LogError($"Unhandled case.");
+                    break;
             }
         }
 
@@ -126,7 +129,7 @@ namespace umi3d.browserRuntime.ui.keyboard
                 characters = character.ToString();
             }
 
-            var text = inputField.text;
+            string text = inputField.text;
 
             if (!selection.isTextSelected)
             {
@@ -219,6 +222,26 @@ namespace umi3d.browserRuntime.ui.keyboard
             {
                 UnityEngine.Debug.LogError($"[KeyboardPreviewBar] Deletion phase case unhandled.");
             }
+        }
+
+        void SubmitText(Notification notification)
+        {
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.Characters, out string characters, false))
+            {
+                if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.Characters, out char character, false))
+                {
+                    notification.LogError(
+                        nameof(KeyboardPreviewBar),
+                        KeyboardNotificationKeys.Info.Characters,
+                        "Character added is neither string not char."
+                    );
+                    return;
+                }
+
+                characters = character.ToString();
+            }
+
+            inputField.text = characters;
         }
     }
 }

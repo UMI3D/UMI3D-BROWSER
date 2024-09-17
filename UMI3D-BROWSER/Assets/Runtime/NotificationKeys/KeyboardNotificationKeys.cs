@@ -106,13 +106,12 @@ namespace umi3d.browserRuntime.NotificationKeys
             public const string SpecialKey = "SpecialKey";
 
             /// <summary>
-            /// Whether some characters will be added or removed.<br/>
-            /// If true then characters will be added. Else characters will be removed.<br/>
-            /// Value is <see cref="bool"/>.<br/>
+            /// How the text of a text field will be updated.<br/>
+            /// Value is <see cref="umi3d.browserRuntime.NotificationKeys.TextFieldTextUpdate"/>.<br/>
             /// <br/>
             /// See Notification key: <see cref="AddOrRemoveCharacters"/>
             /// </summary>
-            public const string IsAddingCharacters = "IsAddingCharacters";
+            public const string TextFieldTextUpdate = "TextFieldTextUpdate";
 
             /// <summary>
             /// The characters added.<br/>

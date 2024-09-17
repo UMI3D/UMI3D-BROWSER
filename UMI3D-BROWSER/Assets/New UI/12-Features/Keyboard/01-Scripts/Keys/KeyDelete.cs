@@ -36,7 +36,7 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         Dictionary<string, object> info = new()
         {
-            { KeyboardNotificationKeys.Info.IsAddingCharacters, false },
+            { KeyboardNotificationKeys.Info.TextFieldTextUpdate, TextFieldTextUpdate.RemoveCharacters },
             { KeyboardNotificationKeys.Info.DeletionPhase, 0 }
         };
 

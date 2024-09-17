@@ -153,13 +153,14 @@ namespace umi3d.browserRuntime.ui.keyboard
                 return;
             }
 
-            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.IsAddingCharacters, out bool isAdding))
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.TextFieldTextUpdate, out TextFieldTextUpdate textUpdate))
             {
-                UnityEngine.Debug.LogError($"[KeyShift] No KeyboardNotificationKeys.Info.IsAddingCharacters keys.");
                 return;
             }
 
-            if (isAdding && notification.TryGetInfoT(KeyboardNotificationKeys.Info.Characters, out char character, false) && character == ' ')
+            if (textUpdate == TextFieldTextUpdate.AddCharacters 
+                && notification.TryGetInfoT(KeyboardNotificationKeys.Info.Characters, out char character, false) 
+                && character == ' ')
             {
                 return;
             }

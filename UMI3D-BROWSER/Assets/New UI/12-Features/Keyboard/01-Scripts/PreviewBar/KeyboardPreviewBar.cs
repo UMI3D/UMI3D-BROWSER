@@ -25,6 +25,8 @@ namespace umi3d.browserRuntime.ui.keyboard
         TMPro.TMP_InputField inputField;
         KeyboardPreviewBarSelection selection;
 
+        Notifier submitTextNotifier;
+
         void Awake()
         {
             inputField = GetComponentInChildren<TMPro.TMP_InputField>();
@@ -35,6 +37,11 @@ namespace umi3d.browserRuntime.ui.keyboard
                 inputField.gameObject.AddComponent<KeyboardPreviewBarSelection>();
             }
             selection.Blur();
+
+            submitTextNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                KeyboardNotificationKeys.AddOrRemoveCharacters
+            );
         }
 
         void OnEnable()
@@ -42,8 +49,14 @@ namespace umi3d.browserRuntime.ui.keyboard
             NotificationHub.Default.Subscribe(
                 this,
                 KeyboardNotificationKeys.AddOrRemoveCharacters,
-                null,
+                new FilterByRef(FilterType.AcceptAllExcept, this),
                 AddOrRemoveCharacters
+            );
+
+            NotificationHub.Default.Subscribe(
+                this,
+                KeyboardNotificationKeys.SpecialKeyPressed,
+                SpecialKeyPressed
             );
         }
 
@@ -54,18 +67,25 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         void AddOrRemoveCharacters(Notification notification)
         {
-            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.IsAddingCharacters, out bool isAdding))
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.TextFieldTextUpdate, out TextFieldTextUpdate textUpdate))
             {
                 return;
             }
 
-            if (isAdding)
+            switch (textUpdate)
             {
-                AddCharacters(notification);
-            }
-            else
-            {
-                RemoveCharacters(notification);
+                case TextFieldTextUpdate.AddCharacters:
+                    AddCharacters(notification);
+                    break;
+                case TextFieldTextUpdate.RemoveCharacters:
+                    RemoveCharacters(notification);
+                    break;
+                case TextFieldTextUpdate.SubmitText:
+                    UnityEngine.Debug.LogError($"Unhandled case.");
+                    break;
+                default:
+                    UnityEngine.Debug.LogError($"Unhandled case.");
+                    break;
             }
         }
 
@@ -179,6 +199,18 @@ namespace umi3d.browserRuntime.ui.keyboard
             {
                 UnityEngine.Debug.LogError($"[KeyboardPreviewBar] Deletion phase case unhandled.");
             }
+        }
+
+        void SpecialKeyPressed(Notification notification)
+        {
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.SpecialKey, out SpecialKey specialKey) || specialKey != SpecialKey.Enter)
+            {
+                return;
+            }
+            
+            submitTextNotifier[KeyboardNotificationKeys.Info.TextFieldTextUpdate] = TextFieldTextUpdate.SubmitText;
+            submitTextNotifier[KeyboardNotificationKeys.Info.Characters] = inputField.text;
+            submitTextNotifier.Notify();
         }
 
 #if UNITY_EDITOR

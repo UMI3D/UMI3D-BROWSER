@@ -178,8 +178,8 @@ namespace umi3d.browserRuntime.ui.keyboard
                     int end = selection.endPosition;
 
                     text = text.Remove(start, end - start);
-                    inputField.text = text;
                     selection.DeselectWithoutNotify(start);
+                    inputField.text = text;
                 }
             }
             // In phase 1: delete world by world.

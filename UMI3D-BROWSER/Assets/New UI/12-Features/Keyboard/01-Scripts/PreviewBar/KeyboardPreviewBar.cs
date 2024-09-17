@@ -36,12 +36,16 @@ namespace umi3d.browserRuntime.ui.keyboard
             {
                 inputField.gameObject.AddComponent<KeyboardPreviewBarSelection>();
             }
-            selection.Blur();
 
             submitTextNotifier = NotificationHub.Default.GetNotifier(
                 this,
                 KeyboardNotificationKeys.AddOrRemoveCharacters
             );
+        }
+
+        void Start()
+        {
+            selection.Blur();
         }
 
         void OnEnable()

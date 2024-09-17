@@ -38,7 +38,7 @@ public class XRInputModalityListener : MonoBehaviour
         InputDevice rightController = queryResult.Count > 0 ? queryResult[0] : default;
         queryResult.Clear();
 
-        if (leftController != default)
+        if (rightController != default)
             ((Umi3dVRInputManager)Umi3dVRInputManager.Instance).AddPhysicalDevice(ControllerType.RightHandController, rightController);
     }
 

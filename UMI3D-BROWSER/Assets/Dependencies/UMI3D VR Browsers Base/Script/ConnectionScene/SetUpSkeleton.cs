@@ -24,6 +24,7 @@ using umi3d.common;
 using umi3d.common.userCapture;
 using umi3dVRBrowsersBase.ikManagement;
 using umi3dVRBrowsersBase.interactions;
+using umi3dVRBrowsersBase.interactions.selection.cursor;
 using umi3dVRBrowsersBase.navigation;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit.Inputs;
@@ -137,8 +138,11 @@ namespace umi3dVRBrowsersBase.connection
             if (XRInputModalityManager != null && XRInputModalityManager.currentInputMode.Value == XRInputModalityManager.InputMode.TrackedHand)
                 SwitchTrackerToHandTracking();
 
-            else 
+            else
+            {
                 SwitchTrackerToController();
+                XRInputModalityManager.rightHand.SetActive(false);
+            }
         }
 
         /// <summary>

@@ -10,15 +10,14 @@ namespace ClientLBE
         [SerializeField]
         [Tooltip("Button to manage orientation scene.")]
         private UnityEngine.UI.Toggle AutomatiqueCalibrationToggle;
-        public GuardianManager guardianManager;
+        private GuardianManager guardianManager;
+       
         public GameObject OrientationPanel;
 
         void Start()
         {
             Assert.IsNotNull(AutomatiqueCalibrationToggle);
-
             AutomatiqueCalibrationToggle.onValueChanged.AddListener(SwitchOrientationPanel);
-            guardianManager = GameObject.FindObjectOfType<GuardianManager>();
         }
 
         public void SwitchOrientationPanel(bool arg)
@@ -28,15 +27,10 @@ namespace ClientLBE
 
         private IEnumerator EnsureGuardianManagerAndToggle(bool arg)
         {
-            if (guardianManager == null)
+            while (guardianManager == null)
             {
-                yield return new WaitForSeconds(0.1f);
-
                 guardianManager = GameObject.FindObjectOfType<GuardianManager>();
-                if (guardianManager == null)
-                {
-                    yield break;
-                }
+                yield return new WaitForEndOfFrame();
             }
 
             guardianManager.ToggleCalibrationScene(arg);

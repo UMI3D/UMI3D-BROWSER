@@ -17,6 +17,7 @@ using BeardedManStudios.Forge.Networking.Unity;
 using umi3d.cdk.collaboration.userCapture;
 using umi3d.cdk.userCapture;
 using umi3d.common.userCapture;
+using System.Linq;
 
 namespace ClientLBE
 {
@@ -56,12 +57,12 @@ namespace ClientLBE
         public GameObject CollabSkeletonScene;
         public Material specificMaterial;
 
-        public GameObject OrientaionPanel;
+        public GameObject OrientationPanel;
         public float OrientationCalibreur;
 
         private List<ARPlane> planesToCalibrate = new List<ARPlane>();
 
-
+        private LBEGroupSyncRequestDTO lBEGroupDto = new LBEGroupSyncRequestDTO ();
 
         #endregion
 
@@ -70,7 +71,7 @@ namespace ClientLBE
         public void Start()
         {
             //Desactivation du calibreur manuel
-            if(AutomatiqueCalibration == true)
+            if (AutomatiqueCalibration == true)
             {
                 Calibreur.SetActive(false);
                 Calibreur = null;
@@ -80,12 +81,13 @@ namespace ClientLBE
             StartCoroutine(GetARPlanes());
 
             UMI3DEnvironmentLoader.Instance.onEnvironmentLoaded.AddListener(() => StartCalibrationScene());
-            CollaborationSkeletonsManager.Instance.CollaborativeSkeletonCreated += OnCollaborativeSkeletonCreated;
         }
 
         void OnEnable()
         {
-            UMI3DForgeClient.ImportantEventOccurred += HandleImportantEvent;
+            UMI3DForgeClient.LBEGroupEventOccurred += LBEGroupEvent;
+            UMI3DForgeClient.AddLBEGroupEvent += AddUserLBEGroup;
+            UMI3DForgeClient.DelLBEGroupEvent += DelUserLBEGroup;
 
             if (arPlaneManager != null)
             {
@@ -95,11 +97,65 @@ namespace ClientLBE
 
         void OnDisable()
         {
-            UMI3DForgeClient.ImportantEventOccurred -= HandleImportantEvent;
+            UMI3DForgeClient.LBEGroupEventOccurred -= LBEGroupEvent;
+            UMI3DForgeClient.AddLBEGroupEvent -= AddUserLBEGroup;
+            UMI3DForgeClient.DelLBEGroupEvent -= DelUserLBEGroup;
 
             if (arPlaneManager != null)
             {
                 arPlaneManager.planesChanged -= OnPlanesChanged;
+            }
+        }
+
+        void LBEGroupEvent(LBEGroupSyncRequestDTO LbeGroupDtoData)
+        {
+            lBEGroupDto = LbeGroupDtoData;
+            CreatGuardianServer(lBEGroupDto.ARAnchors);
+            AddCapsulesToCurrentARUsers();   
+        }
+
+        void AddUserLBEGroup(AddUserGroupOperationsDto addUserLBEGroupDTO)
+        {
+            Debug.Log("REMY : Add User -> userID : " + addUserLBEGroupDTO.UserId + " -> isUseAR : " + addUserLBEGroupDTO.IsUserAR);
+
+            if (addUserLBEGroupDTO.IsUserAR == true)
+            {
+                lBEGroupDto.UserAR.Add(addUserLBEGroupDTO.UserId);
+                AddCapsulesToCurrentARUsers();
+            }
+            else
+            {
+                lBEGroupDto.UserVR.Add(addUserLBEGroupDTO.UserId);
+            }
+        }
+
+        void DelUserLBEGroup(DelUserGroupOperationsDto delUserLBEGroupDto)
+        {
+            Debug.Log("REMY : Delete User -> " + delUserLBEGroupDto.UserId);
+
+            foreach (ulong userIdAR in lBEGroupDto.UserAR)
+            {
+                if(userIdAR == delUserLBEGroupDto.UserId)
+                {
+                    lBEGroupDto.UserAR.Remove(delUserLBEGroupDto.UserId);
+                    return;
+                }
+                else
+                {
+                    Debug.Log("REMY : Not user AR leave");
+                }
+            }
+            foreach (ulong userIdVR in lBEGroupDto.UserVR)
+            {
+                if (userIdVR == delUserLBEGroupDto.UserId)
+                {
+                    lBEGroupDto.UserVR.Remove(delUserLBEGroupDto.UserId);
+                    return;
+                }
+                else
+                {
+                    Debug.Log("REMY : Not user VR leave");
+                }
             }
         }
 
@@ -108,20 +164,23 @@ namespace ClientLBE
             StartCoroutine(GetARPlanes());
         }
 
-        private void OnCollaborativeSkeletonCreated(ulong userId)
+        private void AddCapsulesToCurrentARUsers()
         {
+            Debug.Log("REMY : Add capsule");
 
-            // Récupérer le squelette de cet utilisateur
-            var skeleton = CollaborationSkeletonsManager.Instance.GetCollaborativeSkeleton((UMI3DGlobalID.EnvironmentId, userId)) as AbstractSkeleton;
+            foreach (var userId in lBEGroupDto.UserAR)
+            {
+                var skeleton = CollaborationSkeletonsManager.Instance.GetCollaborativeSkeleton((UMI3DGlobalID.EnvironmentId, userId)) as AbstractSkeleton;
 
-            if (skeleton != null)
-            {
-                // Ajouter une capsule
-                AddCapsuleToBone(skeleton, BoneType.Hips);
-            }
-            else
-            {
-                Debug.LogWarning("Bone non trouvé pour cet utilisateur.");
+                if (skeleton != null)
+                {
+                    Debug.Log("REMY : Add capsule : " + userId);
+                    AddCapsuleToBone(skeleton, BoneType.Hips);
+                }
+                else
+                {
+                    Debug.LogWarning($"Utilisateur AR avec l'ID : {userId} non trouvé dans la scène.");
+                }
             }
         }
 
@@ -153,8 +212,8 @@ namespace ClientLBE
 
         public IEnumerator GetARPlanes()
         {
-            //Délais d'attente pour que arPlaneManager.trackables retuourne des ARplanes
-            yield return new WaitForSeconds(0.5f);
+            //Délais d'attente pour que arPlaneManager.trackables retourne des ARplanes
+            yield return new WaitForSeconds(0.7f);
 
             List<ARPlane> planesToDestroy = new List<ARPlane>();
 
@@ -199,7 +258,7 @@ namespace ClientLBE
 
                 else
                 {
-                    Debug.LogWarning("Plusieurs ARPlane détecté. Seulement un seul ARPlane doit être sélectionner pour servir de calibrer. Modifier la configuration de votre environnement");
+                    Debug.LogWarning("Plusieurs ARPlane détecté. Seulement un seul ARPlane doit être sélectionner pour servir de calibreur. Modifier la configuration de votre environnement");
                 }
             }    
         }
@@ -208,7 +267,7 @@ namespace ClientLBE
         {
             AutomatiqueCalibration = arg;
 
-            if (arg == true)
+            if (arg)
             {
                 Calibreur.SetActive(false);
                 Calibreur = null;
@@ -219,20 +278,21 @@ namespace ClientLBE
 
                 Calibreur = planesToCalibrate[0].gameObject;
             }
-            else if (arg == false)
+            else
             {
                 Calibreur = null;
+
                 for (int i = 0; i < planesToCalibrate.Count; i++)
                 {
                     planesToCalibrate[i].gameObject.SetActive(false);
                 }
+
                 Calibreur = ManualCalibreur ;
                 Calibreur.SetActive(true);
 
-                if(OrientaionPanel.activeSelf == true && OrientaionPanel.GetComponent<CanvasGroup>().alpha == 1)
+                if (OrientationPanel.activeSelf == true && OrientationPanel.GetComponent<CanvasGroup>().alpha == 1)
                 {
-                    OrientaionPanel.GetComponent<GetPlayerOrientationPanel>().ClosePanel();
-
+                    OrientationPanel.GetComponent<GetPlayerOrientationPanel>().ClosePanel();
                 }
             }
         }
@@ -251,11 +311,10 @@ namespace ClientLBE
         {
             Calibreur.transform.Rotate(Calibreur.transform.rotation.x, OrientationCalibreur, Calibreur.transform.rotation.z, Space.World);
 
-            OrientaionPanel.SetActive(false);
+            OrientationPanel.SetActive(false);
         }
         public IEnumerator CalibrationScene()
         {
-
             yield return null;
             yield return null;
 
@@ -271,7 +330,6 @@ namespace ClientLBE
                 if (parent != null)
                 {
                     Scene = parent;
-
 
                     Calibreur.transform.rotation = new Quaternion(0.0f, Calibreur.transform.rotation.y, 0.0f, Calibreur.transform.rotation.w);
                     Calibreur.transform.SetParent(null, true);
@@ -309,13 +367,7 @@ namespace ClientLBE
             {
                 planesToCalibrate[i].gameObject.SetActive(false);
             }
-        }
-
-        //Création du guardian à partir des données du serveur
-        void HandleImportantEvent(UserGuardianDto userGuardianDto)
-        {
-            CreatGuardianServer(userGuardianDto);
-        }
+        }        
 
         public void GetGuardianArea()
         {
@@ -323,7 +375,7 @@ namespace ClientLBE
             {
                 // Créer une nouvelle instance de UserGuardianDto
                 userGuardianDto = new UserGuardianDto();
-                userGuardianDto.anchorAR = new List<ARAnchorDto>();
+                userGuardianDto.ARAnchors = new List<ARAnchorDto>();
             }
 
             List<XRInputSubsystem> inputSubsystems = new List<XRInputSubsystem>();
@@ -393,25 +445,20 @@ namespace ClientLBE
                 for (int i = 0; i < guardianAnchors.Count; i++)
                 {
                     ARAnchorDto newAnchor = new ARAnchorDto();
-                    string trackIdIn = i.ToString();
 
-
-                    if (ulong.TryParse(trackIdIn, out ulong trackIdOut))
-                    {
-                        newAnchor.trackableId = trackIdOut;
-                    }
-
-                    if(localVertexPositions.Count != 8)
+                    if (localVertexPositions.Count != 8)
                     {
                         Debug.LogError("Le nombre de Coordonnée n'est pas égal à 8");
                     }
 
                     newAnchor.position = new Vector3Dto { X = localVertexPositions[i].x, Y = localVertexPositions[i].y, Z = localVertexPositions[i].z };
                     newAnchor.rotation = new Vector4Dto { X = localVertexRotations[i].x, Y = localVertexRotations[i].y, Z = localVertexRotations[i].z, W = localVertexRotations[i].w };
-
-                    userGuardianDto.anchorAR.Add(newAnchor);
-                    userGuardianDto.OffsetGuardian = Vector3.Distance(Calibreur.transform.position, this.transform.position);
+               
+                    userGuardianDto.ARAnchors.Add(newAnchor);              
                 }
+
+                var loadingParameters = UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DLoadingParameters;
+                userGuardianDto.ARiD = loadingParameters.BrowserType;
             }
         }
 
@@ -421,7 +468,7 @@ namespace ClientLBE
             UMI3DClientServer.SendRequest(userGuardianDto, reliable: true);
         }
 
-        public void CreatGuardianServer(UserGuardianDto GuardianDto)
+        public void CreatGuardianServer(List<ARAnchorDto> GuardianDto)
         {
             //Clean data first guardian in connection
             if (GuardianMesh != null)
@@ -448,7 +495,7 @@ namespace ClientLBE
             List<Vector3> VerticePos = new List<Vector3>();
             List<Quaternion> VerticeRot = new List<Quaternion>();
 
-            foreach (var point in GuardianDto.anchorAR)
+            foreach (var point in GuardianDto)
             {
                 VerticePos.Add(new Vector3(point.position.X, point.position.Y, point.position.Z));
                 VerticeRot.Add(new Quaternion(point.rotation.X, point.rotation.Y, point.rotation.Z, point.rotation.W));

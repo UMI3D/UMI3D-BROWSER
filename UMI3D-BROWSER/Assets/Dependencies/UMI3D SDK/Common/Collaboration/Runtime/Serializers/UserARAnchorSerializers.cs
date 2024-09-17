@@ -19,13 +19,11 @@ namespace umi3d.common.lbe.guardian
 
             if (typeof(T) == typeof(ARAnchorDto))
             {
-                if (UMI3DSerializer.TryRead(container, out ulong trackableId)
-                    && UMI3DSerializer.TryRead(container, out Vector3Dto position)
+                if (UMI3DSerializer.TryRead(container, out Vector3Dto position)
                     && UMI3DSerializer.TryRead(container, out Vector4Dto rotation))
                 {
                     var arAnchorDto = new ARAnchorDto
                     {
-                        trackableId = trackableId,
                         position = position,
                         rotation = rotation,
                     };
@@ -45,9 +43,7 @@ namespace umi3d.common.lbe.guardian
         {
             if (value is ARAnchorDto c)
             {
-                // Ecriture de la liste anchorAR
-                bytable = UMI3DSerializer.Write(c.trackableId)
-                    + UMI3DSerializer.Write(c.position)
+                bytable = UMI3DSerializer.Write(c.position)
                     + UMI3DSerializer.Write(c.rotation);
                 return true;
             }

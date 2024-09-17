@@ -55,11 +55,14 @@ namespace umi3d.cdk.collaboration
         private bool pingReceived = false;
         private bool CheckForBandWidthRunning = false;
 
-        // Définir un événement pour signaler un événement important
-        public delegate void OnImportantEvent(UserGuardianDto guardianData);
-        public static event OnImportantEvent ImportantEventOccurred;
+        public delegate void OnLBEGroupEvent(LBEGroupSyncRequestDTO  lBEGroupData);
+        public static event OnLBEGroupEvent LBEGroupEventOccurred;
 
-        //private GuardianManager guardianManager;
+        public delegate void OnAddLBEGroupEvent(AddUserGroupOperationsDto addUserLBEGroupDTO);
+        public static event OnAddLBEGroupEvent AddLBEGroupEvent;
+
+        public delegate void OnDelLBEGroupEvent(DelUserGroupOperationsDto delUserLBEGroupDto);
+        public static event OnDelLBEGroupEvent DelLBEGroupEvent;
 
         private UMI3DUser GetUserByNetWorkId(uint nid)
         {
@@ -561,17 +564,22 @@ namespace umi3d.cdk.collaboration
                         PoseManager.Instance.ChangeEnvironmentPoseCondition(operation.environmentId, validateEnvironmentPoseCondition.Id, validateEnvironmentPoseCondition.ShouldBeValidated);
                     });
                     break;
-                case SendGuardianRequestDto guardianRequestDto:
+                case AddUserGroupOperationsDto addUserLBEGroupDTO:
                     MainThreadManager.Run(() =>
                     {
-                        Debug.Log("Remi : Get transaction dto !! ");
-                        UserGuardianDto guardianData = guardianRequestDto.guardianData;
-
-                        // Simuler un événement important
-                        if (ImportantEventOccurred != null)
-                            ImportantEventOccurred(guardianData);
+                        AddUserGroupOperationsDto addlBEGroupDto = addUserLBEGroupDTO;
+                        if (AddLBEGroupEvent != null)
+                            AddLBEGroupEvent(addlBEGroupDto);
                     });
+                    break;
 
+                case DelUserGroupOperationsDto delUserLBEGroupDTO:
+                    MainThreadManager.Run(() =>
+                    {
+                        DelUserGroupOperationsDto dellBEGroupDto = delUserLBEGroupDTO;
+                        if (DelLBEGroupEvent != null)
+                            DelLBEGroupEvent(dellBEGroupDto);
+                    });
                     break;
                 default:
                     return false;
@@ -581,10 +589,6 @@ namespace umi3d.cdk.collaboration
 
         public async Task<bool> PerformOperation(uint operationId, ByteContainer container)
         {
-
-
-            Debug.Log("Remi : Operation ID" + operationId);
-
             switch (operationId)
             {
                 case UMI3DOperationKeys.FlyingNavigationMode:
@@ -747,35 +751,55 @@ namespace umi3d.cdk.collaboration
                         });
                         break;
                     }
-                case UMI3DOperationKeys.SetGuardianRequest:
+                case UMI3DOperationKeys.SetLBEGroupRequest:
                     MainThreadManager.Run(() =>
                     {
-                        Debug.Log("Remi : Get transaction NO dto SetGuardianRequest !! ");
+                        Debug.Log("REMY : SetLBEGroupRequest ");
 
-                        SendGuardianRequestDto userGuardianDto = UMI3DSerializer.Read<SendGuardianRequestDto>(container);
+                        LBEGroupSyncRequestDTO  lBEGroupRequestDTO = UMI3DSerializer.Read<LBEGroupSyncRequestDTO >(container);
 
-                        Debug.Log("Remi : Received SendGuardianRequestDto");
-                        Debug.Log("Remi : Number of anchor DTOs received: " + userGuardianDto.guardianData.anchorAR.Count);
+                        Debug.Log("REMY : SetLBEGroupRequest lBEGroupRequestDTO.anchorAR -> " + lBEGroupRequestDTO.ARAnchors.Count);
 
-                        foreach (ARAnchorDto anchor in userGuardianDto.guardianData.anchorAR)
+                        var lBEGroup = new LBEGroupSyncRequestDTO ()
                         {
-                            Debug.Log("Remi : -> ANCHOR : " + anchor.position + " + " + anchor.position + " + " + anchor.trackableId);
-                        }
-
-                        var userguardian = new UserGuardianDto
-                        {
-                            anchorAR = userGuardianDto.guardianData.anchorAR
+                            LBEGroupId = lBEGroupRequestDTO.LBEGroupId,
+                            UserAR = lBEGroupRequestDTO.UserAR,
+                            UserVR = lBEGroupRequestDTO.UserVR,
+                            ARAnchors = lBEGroupRequestDTO.ARAnchors
                         };
 
-                        if (ImportantEventOccurred != null)
-                            ImportantEventOccurred(userguardian);
+                        if (LBEGroupEventOccurred != null)
+                            LBEGroupEventOccurred(lBEGroup);
+                    });
+                    break;
+                case UMI3DOperationKeys.SetNewUserLBE:
+                    MainThreadManager.Run(() =>
+                    {
+                        AddUserGroupOperationsDto addUserLBEGroupDTO = UMI3DSerializer.Read<AddUserGroupOperationsDto>(container);
+
+                        var addUser = new AddUserGroupOperationsDto()
+                        {
+                            UserId = addUserLBEGroupDTO.UserId,
+                            IsUserAR = addUserLBEGroupDTO.IsUserAR
+                        };
+
+                        if (AddLBEGroupEvent != null)
+                            AddLBEGroupEvent(addUser);
                     });
                     break;
 
-                case UMI3DOperationKeys.ARAnchorBrowserRequest:
+                case UMI3DOperationKeys.DeleteUserLBE:
                     MainThreadManager.Run(() =>
                     {
-                        
+                        DelUserGroupOperationsDto delUserLBEGroupDTO = UMI3DSerializer.Read<DelUserGroupOperationsDto>(container);
+
+                        var delUser = new DelUserGroupOperationsDto()
+                        {
+                            UserId = delUserLBEGroupDTO.UserId,
+                        };
+
+                        if (DelLBEGroupEvent != null)
+                            DelLBEGroupEvent(delUser);
                     });
                     break;
 

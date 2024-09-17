@@ -127,8 +127,14 @@ namespace umi3d.browserRuntime.ui.keyboard
         /// <param name="end"></param>
         public void Select(int start, int end)
         {
-            UnityEngine.Debug.Log($"select", context);
-            activeSelection = this;
+            if (!isPreviewBar)
+            {
+                if (activeSelection != null)
+                {
+                    activeSelection.Blur();
+                }
+                activeSelection = this;
+            }
 
             selectionNotifier[KeyboardNotificationKeys.Info.IsActivation] = isActive;
             selectionNotifier[KeyboardNotificationKeys.Info.SelectionPositions] = allowSelection ? (start, end) : null;
@@ -178,8 +184,14 @@ namespace umi3d.browserRuntime.ui.keyboard
         /// <param name="newCaretPosition"></param>
         public void Deselect(int newCaretPosition)
         {
-            UnityEngine.Debug.Log($"deselect {newCaretPosition}", context);
-            activeSelection = this;
+            if (!isPreviewBar)
+            {
+                if (activeSelection != null)
+                {
+                    activeSelection.Blur();
+                }
+                activeSelection = this;
+            }
 
             selectionNotifier[KeyboardNotificationKeys.Info.IsActivation] = isActive;
             selectionNotifier[KeyboardNotificationKeys.Info.SelectionPositions] = allowSelection ? newCaretPosition : null;

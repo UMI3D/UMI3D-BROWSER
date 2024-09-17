@@ -26,64 +26,34 @@ namespace QuestBrowser.WebView
 {
     public class WebView : AbstractUMI3DWebView
     {
-        #region Fields
-
-        [SerializeField]
-        private UnityGeckoWebViewInput input = null;
-
-        [SerializeField]
-        private Canvas webViewCanvas = null;
-        [SerializeField]
-        private CanvasScaler webViewCanvasScaler = null;
-
-        [SerializeField]
-        private RectTransform bottomBarContainer = null;
-
-        [SerializeField]
-        private RectTransform backButton = null;
-
-        [SerializeField]
-        private RectTransform homeButton = null;
-
-        [SerializeField]
-        private RectTransform synchronizeRectTransform = null;
-
-        [SerializeField]
-        private RectTransform forwardButton = null;
-
-        [SerializeField]
-        private RectTransform topBarContainer = null;
-
-        [SerializeField]
-        private RectTransform searchButton = null;
-
-        [SerializeField]
-        private UnityGeckoWebView webView = null;
-
-        [SerializeField]
-        private RectTransform container = null;
-
-        [SerializeField]
-        private RectTransform textureTransform = null;
-
-        [SerializeField]
-        private RectTransform searchFieldTransform;
-
-        [SerializeField]
-        private InputField searchField;
-
-        [SerializeField]
-        private RectTransform keyboard;
+        [SerializeField] Canvas webViewCanvas = null;
+        [SerializeField] CanvasScaler webViewCanvasScaler = null;
+        [SerializeField] RectTransform bottomBarContainer = null;
+        [SerializeField] RectTransform backButton = null;
+        [SerializeField] RectTransform homeButton = null;
+        [SerializeField] RectTransform synchronizeRectTransform = null;
+        [SerializeField] RectTransform forwardButton = null;
+        [SerializeField] RectTransform topBarContainer = null;
+        [SerializeField] RectTransform searchButton = null;
+        [SerializeField] RectTransform container = null;
+        [SerializeField] RectTransform textureTransform = null;
+        [SerializeField] RectTransform searchFieldTransform;
+        [SerializeField] InputField searchField;
 
         [Space]
+
         [SerializeField, Tooltip("Delay to send current url and scroll offset when user synchronizes his content. In seconds")]
         float synchronizationDelay = 2f;
 
         [SerializeField, Tooltip("A feedback to show user he's currently sharing its content")]
         GameObject syncFeedback;
 
-        private bool isSynchronizing;
-        private bool IsSynchronizing
+        AndroidJavaWebview javaWebview;
+        UnityGeckoWebViewRendering webviewRendering;
+        UnityGeckoWebViewInput input;
+
+        bool isSynchronizing;
+        bool IsSynchronizing
         {
             get => isSynchronizing;
             set
@@ -92,18 +62,11 @@ namespace QuestBrowser.WebView
                 syncFeedback.SetActive(value);
             }
         }
-
-        private int currentScrollXPosition, currentScrollYPosition;
-
-        private bool useSearchInput = false;
-
-        private string previousUrl, lastLoadedUrl;
-
-        private ulong id;
-
-        private bool isInit = false;
-
-        #endregion
+        int currentScrollXPosition, currentScrollYPosition;
+       
+        string previousUrl, lastLoadedUrl;
+        ulong id;
+        bool isInit = false;
 
         #region Methods
 
@@ -114,10 +77,15 @@ namespace QuestBrowser.WebView
             id = dto.id;
         }
 
+        void Awake()
+        {
+            javaWebview = GetComponentInChildren<AndroidJavaWebview>();
+            webviewRendering = GetComponentInChildren<UnityGeckoWebViewRendering>();
+            input = GetComponentInChildren<UnityGeckoWebViewInput>();
+        }
+
         protected void Start()
         {
-            //keyboard.Hide();
-
             webViewCanvasScaler.dynamicPixelsPerUnit = 3;
             webViewCanvas.sortingOrder = 1;
 
@@ -132,15 +100,15 @@ namespace QuestBrowser.WebView
         /// If user is synchronizing his view, send his current url and scroll offset.
         /// </summary>
         /// <returns></returns>
-        private IEnumerator SynchronizationCoroutine()
+        IEnumerator SynchronizationCoroutine()
         {
             var wait = new WaitForSeconds(synchronizationDelay);
 
             while (true)
             {
 
-                int scrollY = webView.GetScrollY();
-                int scrollX = webView.GetScrollX();
+                int scrollY = javaWebview.GetScrollY();
+                int scrollX = javaWebview.GetScrollX();
 
                 if (currentScrollXPosition != scrollX || currentScrollYPosition != scrollY)
                 {
@@ -161,10 +129,7 @@ namespace QuestBrowser.WebView
             }
         }
 
-        public void ToggleOnSearchInput()
-        {
-            useSearchInput = true;
-        }
+        
 
         protected override void OnCanInteractChanged(bool canInteract)
         {
@@ -184,12 +149,6 @@ namespace QuestBrowser.WebView
 
             bottomBarContainer.position = (corners[1] + corners[2]) / 2f;
             topBarContainer.position = (corners[0] + corners[3]) / 2f;
-
-            keyboard.position = new Vector3(
-                keyboard.position.x,
-                bottomBarContainer.position.y,
-                keyboard.position.z
-            );
 
             topBarContainer.localScale = new Vector3(topBarContainer.localScale.x,
                 topBarContainer.localScale.y / container.localScale.y, topBarContainer.localScale.z);
@@ -226,7 +185,7 @@ namespace QuestBrowser.WebView
 
         protected override void OnTextureSizeChanged(Vector2 size)
         {
-            webView.ChangeTextureSize((int)size.x, (int)size.y);
+            webviewRendering.ChangeTextureSize((int)size.x, (int)size.y);
         }
 
         protected async override void OnUrlChanged(string url)
@@ -236,7 +195,7 @@ namespace QuestBrowser.WebView
             while (!isInit)
                 await UMI3DAsyncManager.Yield();
 
-            webView.LoadUrl(url);
+            javaWebview.LoadUrl(url);
 
             if (url == previousUrl)
             {
@@ -251,7 +210,7 @@ namespace QuestBrowser.WebView
         {
             try
             {
-                webView.SetScroll((int)scroll.x, (int)scroll.y);
+                javaWebview.SetScroll((int)scroll.x, (int)scroll.y);
             }
             catch (Exception ex)
             {
@@ -262,48 +221,27 @@ namespace QuestBrowser.WebView
             }
         }
 
-        public void EnterText(string text)
-        {
-            if (!useSearchInput)
-                webView.EnterText(text);
-        }
+        
 
-        public void DeleteCharacter()
-        {
-            if (!useSearchInput)
-                webView.DeleteCharacter();
-        }
-
-        public void EnterCharacter()
-        {
-            if (!useSearchInput)
-                webView.EnterCharacter();
-        }
+        
 
         public void OnUrlLoaded(string url)
         {
             isInit = true;
 
-            if (searchField != null)
-            {
-                searchField.text = url;
-            }
-
-            var request = new WebViewUrlChangedRequestDto
-            {
-                url = url,
-                webViewId = id
-            };
-
             lastLoadedUrl = url;
 
-            UMI3DClientServer.SendRequest(request, true);
+            UMI3DClientServer.SendRequest(
+                new WebViewUrlChangedRequestDto
+                {
+                    url = url,
+                    webViewId = id
+                }, 
+                true
+            );
         }
 
-        public void OnPointerDown(Vector2 pointer)
-        {
-            useSearchInput = false;
-        }
+        
 
         public void ToggleSynchronization()
         {

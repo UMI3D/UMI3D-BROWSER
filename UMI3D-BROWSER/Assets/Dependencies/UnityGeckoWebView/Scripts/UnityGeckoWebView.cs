@@ -16,48 +16,58 @@ limitations under the License.
 
 using inetum.unityUtils;
 using System;
-using System.Collections;
-using umi3d.browserRuntime.NotificationKeys;
-using Unity.Collections;
-using Unity.Profiling;
+using System.Text.RegularExpressions;
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.UI;
 
 namespace com.inetum.unitygeckowebview
 {
     [RequireComponent(typeof(AndroidJavaWebview))]
     public class UnityGeckoWebView : MonoBehaviour
     {
+        public static System.Collections.Generic.Queue<Action> actionsToRunOnMainThread = new();
+
+        /// <summary>
+        /// Regex to check if a string is an url or not.
+        /// </summary>
+        Regex validateURLRegex = new("^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$");
+
         /// <summary>
         /// The android webview.
         /// </summary>
         AndroidJavaWebview webview;
 
-        public static System.Collections.Generic.Queue<Action> actionsToRunOnMainThread = new();
-
-       
-        [Tooltip("Notifies that a web page has started loading.")]
-        public UnityEvent<string> OnUrlStartedLoading = new();
-
+        Notifier loadingNotifier;
 
         void Awake()
         {
             webview = GetComponent<AndroidJavaWebview>();
+
+            loadingNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                GeckoWebViewNotificationKeys.Loading
+            );
         }
 
         void OnEnable()
         {
             NotificationHub.Default.Subscribe(
                 this,
-                "Search",
-                LoadUrl
+                GeckoWebViewNotificationKeys.History,
+                HistoryButtonPressed
+            );
+
+            NotificationHub.Default.Subscribe(
+                this,
+                GeckoWebViewNotificationKeys.Search,
+                Search
             );
         }
 
         void OnDisable()
         {
-            NotificationHub.Default.Unsubscribe(this, "Search");
+            NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.History);
+
+            NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.Search);
         }
 
         void OnApplicationPause(bool pause)
@@ -79,24 +89,71 @@ namespace com.inetum.unitygeckowebview
             }
         }
 
-        
-
         /// <summary>
         /// Notify all subscribers that a text field has been selected.
         /// </summary>
         public void TextInputSelected()
         {
-            NotificationHub.Default.Notify(
-                this,
-                KeyboardNotificationKeys.TextFieldSelected
-            );
+            //NotificationHub.Default.Notify(
+            //    this,
+            //    KeyboardNotificationKeys.TextFieldSelected
+            //);
         }
 
-        void LoadUrl(Notification notification)
+        /// <summary>
+        /// Notify all subscribers that a web page has started loading.
+        /// </summary>
+        /// <param name="url"></param>
+        public void LoadingHasStarted(string url)
         {
-            if (!notification.TryGetInfoT("URL", out string url))
+            loadingNotifier[GeckoWebViewNotificationKeys.Info.URL] = url;
+            loadingNotifier.Notify();
+        }
+
+        void HistoryButtonPressed(Notification notification)
+        {
+            if (!notification.TryGetInfoT(GeckoWebViewNotificationKeys.Info.BackwardOrForward, out History historyType))
             {
                 return;
+            }
+
+            switch (historyType)
+            {
+                case History.Backward:
+                    webview.GoBack();
+                    break;
+                case History.Forward:
+                    webview.GoForward();
+                    break;
+                default:
+                    UnityEngine.Debug.LogError($"Unhandled case.");
+                    break;
+            }
+        }
+
+        void Search(Notification notification)
+        {
+            if (!notification.TryGetInfoT(GeckoWebViewNotificationKeys.Info.URL, out string url))
+            {
+                return;
+            }
+
+            LoadURLInternal(url);
+        }
+
+        void LoadURLInternal(string url)
+        {
+            if (validateURLRegex.IsMatch(url))
+            {
+                // Nothing to do.
+            }
+            else if (url.EndsWith(".com") || url.EndsWith(".net") || url.EndsWith(".fr") || url.EndsWith(".org"))
+            {
+                url = "http://" + url;
+            }
+            else
+            {
+                url = "https://www.google.com/search?q=" + url;
             }
 
             webview.LoadUrl(url);

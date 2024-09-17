@@ -14,50 +14,46 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace com.inetum.unitygeckowebview
 {
-    public class UnityGeckoWebViewKeyboard : MonoBehaviour
+    [RequireComponent(typeof(Button))]
+    public class BackwardForwardButton : MonoBehaviour
     {
-        AndroidJavaWebview javaWebview;
+        [SerializeField] History buttonType;
 
-        bool useSearchInput = false;
+        Button button;
+        Notifier backwardForwardNotifier;
 
         void Awake()
         {
-        
+            button = GetComponent<Button>();
+
+            backwardForwardNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                GeckoWebViewNotificationKeys.History
+            );
         }
 
-
-        public void EnterText(string text)
+        void OnEnable()
         {
-            if (!useSearchInput)
-                javaWebview.EnterText(text);
+            button.onClick.AddListener(Click);
         }
 
-        public void DeleteCharacter()
+        void OnDisable()
         {
-            if (!useSearchInput)
-                javaWebview.DeleteCharacter();
+            button.onClick.RemoveListener(Click);
         }
 
-        public void EnterCharacter()
+        void Click()
         {
-            if (!useSearchInput)
-                javaWebview.EnterCharacter();
-        }
-
-        public void ToggleOnSearchInput()
-        {
-            useSearchInput = true;
-        }
-
-        public void OnPointerDown(Vector2 pointer)
-        {
-            useSearchInput = false;
+            backwardForwardNotifier[GeckoWebViewNotificationKeys.Info.BackwardOrForward] = buttonType;
+            backwardForwardNotifier.Notify();
         }
     }
 }

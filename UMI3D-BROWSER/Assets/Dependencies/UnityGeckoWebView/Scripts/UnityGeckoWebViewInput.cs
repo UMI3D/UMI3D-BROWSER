@@ -18,20 +18,23 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace com.inetum.unitygeckowebview
 {
     /// <summary>
     /// Manages screen touches for <see cref="UnityGeckoWebView"/>.
     /// </summary>
+    [RequireComponent(typeof(RawImage))]
     [RequireComponent(typeof(AndroidJavaWebview))]
     [RequireComponent(typeof(UnityGeckoWebViewRendering))]
-    public class UnityGeckoWebViewInput : UnityEngine.UI.Selectable, IPointerMoveHandler
+    public class UnityGeckoWebViewInput : Selectable, IPointerMoveHandler
     {
         #region Fields
 
-        [SerializeField, Tooltip("Rect Transform associated to webview raw image transform.")]
-        private RectTransform rawImageRectTransform;
+        RectTransform rawImageRectTransform;
+        AndroidJavaWebview javaWebView;
+        UnityGeckoWebViewRendering webviewRendering;
 
         [SerializeField, Tooltip("Simulate a click when a short pointer down is detected ?")]
         private bool simulateClick = false;
@@ -41,15 +44,8 @@ namespace com.inetum.unitygeckowebview
         /// </summary>
         public UnityEvent<Vector2> onPointerDown = new();
 
-        /// <summary>
-        /// Event triggered when a a pointer up event is detected. Pointer coordinates in pixels.
-        /// </summary>
-        public UnityEvent<Vector2> onPointerUp = new();
-
         #region Data
 
-        AndroidJavaWebview javaWebView;
-        UnityGeckoWebViewRendering webviewRendering;
 
         /// <summary>
         /// World coordinates of raw image corners.
@@ -61,12 +57,12 @@ namespace com.inetum.unitygeckowebview
         /// <summary>
         /// Last time a up trigger was performed.
         /// </summary>
-        private float lastUp = 0;
+        float lastUp = 0;
 
         /// <summary>
         /// Time to consider that a trigger is a click.
         /// </summary>
-        private const int clickTime = 200;
+        const int clickTime = 200;
 
         #endregion
 
@@ -76,10 +72,9 @@ namespace com.inetum.unitygeckowebview
 
         protected override void Awake()
         {
+            rawImageRectTransform = GetComponent<RectTransform>();
             javaWebView = GetComponent<AndroidJavaWebview>();
             webviewRendering = GetComponent<UnityGeckoWebViewRendering>();
-
-            Debug.Assert(rawImageRectTransform != null, "RecTransform can not be null");
         }
 
         public override void OnPointerDown(PointerEventData eventData)
@@ -121,27 +116,14 @@ namespace com.inetum.unitygeckowebview
 
         public void OnPointerMove(PointerEventData eventData)
         {
-            OnPointerMove(eventData.pointerCurrentRaycast.worldPosition, eventData.pointerId);
-        }
-
-        public void OnPointerMove(Vector3 worldHitPoint, int pointerId)
-        {
-            Vector3 localPosition = WorldToLocal(worldHitPoint);
-
-            javaWebView.PointerMove(localPosition.x, localPosition.y, pointerId);
+            Vector3 localPosition = WorldToLocal(eventData.pointerCurrentRaycast.worldPosition);
+            javaWebView.PointerMove(localPosition.x, localPosition.y, eventData.pointerId);
         }
 
         public override void OnPointerUp(PointerEventData eventData)
         {
-            OnPointerUp(eventData.pointerCurrentRaycast.worldPosition, eventData.pointerId);
-        }
-
-        public void OnPointerUp(Vector3 worldHitPoint, int pointerId)
-        {
-            Vector3 localPosition = WorldToLocal(worldHitPoint);
-            javaWebView.PointerUp(localPosition.x, localPosition.y, pointerId);
-
-            onPointerUp.Invoke(localPosition);
+            Vector3 localPosition = WorldToLocal(eventData.pointerCurrentRaycast.worldPosition);
+            javaWebView.PointerUp(localPosition.x, localPosition.y, eventData.pointerId);
 
             lastUp = Time.time;
         }
@@ -152,7 +134,7 @@ namespace com.inetum.unitygeckowebview
             javaWebView.Click(localPosition.x, localPosition.y, pointerId);
         }
 
-        private Vector3 WorldToLocal(Vector3 worldPosition)
+        Vector3 WorldToLocal(Vector3 worldPosition)
         {
             Vector3 localPosition = worldPosition - coordinates[0];
 

@@ -50,7 +50,7 @@ namespace com.inetum.unitygeckowebview
             if (webView is null)
                 return;
 
-            UnityGeckoWebView.actionsToRunOnMainThread.Enqueue(() => webView.OnUrlStartedLoading?.Invoke(url));
+            UnityGeckoWebView.actionsToRunOnMainThread.Enqueue(() => webView.LoadingHasStarted(url));
         }
     }
 }

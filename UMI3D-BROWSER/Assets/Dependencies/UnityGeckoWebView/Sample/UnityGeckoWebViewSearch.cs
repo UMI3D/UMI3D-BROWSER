@@ -15,20 +15,13 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
-using System.Text.RegularExpressions;
-using umi3d.browserRuntime.NotificationKeys;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace com.inetum.unitygeckowebview.samples
 {
+    [RequireComponent(typeof(TMPro.TMP_InputField))]
     public class UnityGeckoWebViewSearch : MonoBehaviour
     {
-        /// <summary>
-        /// Regex to check if a string is an url or not.
-        /// </summary>
-        private Regex validateURLRegex = new Regex("^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$");
-
         TMPro.TMP_InputField searchField;
 
         Notifier searchNotifier;
@@ -39,39 +32,38 @@ namespace com.inetum.unitygeckowebview.samples
 
             searchNotifier = NotificationHub.Default.GetNotifier(
                 this,
-                WebviewNotificationKeys.Search,
-                null,
-                new()
+                GeckoWebViewNotificationKeys.Search
             );
+        }
+
+        void OnEnable()
+        {
+            NotificationHub.Default.Subscribe(
+                this,
+                GeckoWebViewNotificationKeys.Loading,
+                Loading
+            );
+        }
+
+        void OnDisable()
+        {
+            NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.Loading);
+        }
+
+        void Loading(Notification notification)
+        {
+            if (!notification.TryGetInfoT(GeckoWebViewNotificationKeys.Info.URL, out string url))
+            {
+                return;
+            }
+
+            searchField.SetTextWithoutNotify(url);
         }
 
         public void Search()
         {
-            string search = searchField.text;
-
-            if (validateURLRegex.IsMatch(search))
-            {
-                // Nothing to do.
-            }
-            else if (search.EndsWith(".com") || search.EndsWith(".net") || search.EndsWith(".fr") || search.EndsWith(".org"))
-            {
-                search = "http://" + search;
-            }
-            else
-            {
-                search = "https://www.google.com/search?q=" + search;
-            }
-
-            searchNotifier[WebviewNotificationKeys.Info.URL] = search;
+            searchNotifier[GeckoWebViewNotificationKeys.Info.URL] = searchField.text;
             searchNotifier.Notify();
-        }
-
-        public void OnUrlLoaded(string url)
-        {
-            if (searchField != null)
-            {
-                searchField.SetTextWithoutNotify(url);
-            }
         }
     }
 }

@@ -28,10 +28,10 @@ namespace com.inetum.unitygeckowebview
     [RequireComponent(typeof(UnityGeckoWebView))]
     public class UnityGeckoWebViewRendering : MonoBehaviour
     {
-        [SerializeField, Tooltip("Start rendering on awake ? If false use StartRenderingMethod to start the process.")]
-        bool initOnStart = true;
-        [SerializeField, Tooltip("Start rendering on awake ? If false use StartRenderingMethod to start the process. If true, init on start must be true too")]
-        bool startRenderingOnAwake = false;
+        [Tooltip("Init the java web view component on start ?")]
+        [SerializeField] bool initOnStart = true;
+        [Tooltip("If false use StartRenderingMethod to start the process. If true, init on start must be true too")]
+        [SerializeField] bool startRenderingOnInit = false;
 
         [Space]
 
@@ -92,7 +92,7 @@ namespace com.inetum.unitygeckowebview
 
             if (initOnStart)
             {
-                Init(startRenderingOnAwake);
+                Init(startRenderingOnInit);
             }
         }
 
@@ -111,7 +111,10 @@ namespace com.inetum.unitygeckowebview
         /// </summary>
         public void Init(bool startRendering)
         {
-            if (isInit) return;
+            if (isInit)
+            {
+                return;
+            }
 
             try
             {
@@ -127,9 +130,11 @@ namespace com.inetum.unitygeckowebview
                         new UnityGeckoWebViewCallback(webview),
                         byteBufferJavaObject
                     );
+                }
 
-                    if (startRendering)
-                        StartRendering();
+                if (startRendering)
+                {
+                    StartRendering();
                 }
 
                 isInit = true;

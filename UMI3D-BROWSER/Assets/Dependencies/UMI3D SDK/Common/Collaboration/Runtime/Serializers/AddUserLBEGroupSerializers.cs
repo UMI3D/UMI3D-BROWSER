@@ -54,4 +54,3 @@ namespace umi3d.common.lbe
         }
     }
 }
-

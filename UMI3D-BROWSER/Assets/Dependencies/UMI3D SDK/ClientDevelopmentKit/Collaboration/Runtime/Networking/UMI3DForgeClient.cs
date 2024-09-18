@@ -466,9 +466,6 @@ namespace umi3d.cdk.collaboration
 
         public async Task<bool> PerformOperation(DtoContainer operation)
         {
-
-            Debug.Log("Remi : Operation DTO");
-
             switch (operation.operation)
             {
                 case NavigationModeRequestDto navigationMode:
@@ -754,11 +751,7 @@ namespace umi3d.cdk.collaboration
                 case UMI3DOperationKeys.SetLBEGroupRequest:
                     MainThreadManager.Run(() =>
                     {
-                        Debug.Log("REMY : SetLBEGroupRequest ");
-
                         LBEGroupSyncRequestDTO  lBEGroupRequestDTO = UMI3DSerializer.Read<LBEGroupSyncRequestDTO >(container);
-
-                        Debug.Log("REMY : SetLBEGroupRequest lBEGroupRequestDTO.anchorAR -> " + lBEGroupRequestDTO.ARAnchors.Count);
 
                         var lBEGroup = new LBEGroupSyncRequestDTO ()
                         {

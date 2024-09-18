@@ -26,7 +26,7 @@ namespace umi3dVRBrowsersBase.connection
     public class SetUpCamera : MonoBehaviour
     {
         #region Fields
-        public TrackedSubskeletonBone Viewpoint;
+        public TrackedSubskeletonBone viewpoint;
 
         private ARCameraManager cameraManager;
 
@@ -40,7 +40,7 @@ namespace umi3dVRBrowsersBase.connection
 
         private void Awake()
         {
-            cameraManager = Viewpoint.GetComponent<ARCameraManager>();
+            cameraManager = viewpoint.GetComponent<ARCameraManager>();
         }
 
         public void SwitchARMR()
@@ -58,9 +58,6 @@ namespace umi3dVRBrowsersBase.connection
             snapTurn.enabled = false;
             rightObs.enabled = false;
             leftObs.enabled = false;
-            Debug.Log("REMI : SwitchToMR");
-
-
         }
 
         private void SwitchToVR()
@@ -70,8 +67,6 @@ namespace umi3dVRBrowsersBase.connection
             snapTurn.enabled = true;
             rightObs.enabled = true;
             leftObs.enabled = true;
-            Debug.Log("REMI : SwitchToVR");
-
         }
 
         #endregion

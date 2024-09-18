@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class GetPlayerOrientationPanel : MonoBehaviour
 {
-    public Transform PlayerCamera;
+    public Transform playerCamera;
     public CanvasGroup canvasGroup;
     public float fadeDuration = 0.5f;
 
     public void OpenPanel()
     {
-        this.transform.position = new Vector3(PlayerCamera.transform.position.x, 0.0f, PlayerCamera.transform.position.z);
+        this.transform.position = new Vector3(playerCamera.transform.position.x, 0.0f, playerCamera.transform.position.z);
         StartCoroutine(FadeCanvasGroup(0f, 1f, fadeDuration));
     }
 

@@ -128,16 +128,11 @@ namespace umi3d.cdk
         public void SetVR()
         {
             browserType = (uint)XRBrowserTypes.VR;
-
-            Debug.Log("REMI : SetVR -> " + browserType);
-
         }
 
         public void SetMR()
         {
             browserType = (uint)XRBrowserTypes.AR;
-            Debug.Log("REMI : SetAR -> " + browserType);
-
         }
 
         public virtual void Init()

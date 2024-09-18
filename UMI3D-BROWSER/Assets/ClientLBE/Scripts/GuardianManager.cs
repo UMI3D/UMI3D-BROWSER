@@ -4,20 +4,16 @@ using UnityEngine;
 using UnityEngine.XR;
 
 using UnityEngine.XR.ARFoundation;
-using TMPro;
 
 using umi3d.common.lbe;
 using umi3d.common.lbe.description;
 
 using umi3d.common;
 using umi3d.cdk;
-using umi3d.common.collaboration.dto.signaling;
 using umi3d.cdk.collaboration;
-using BeardedManStudios.Forge.Networking.Unity;
 using umi3d.cdk.collaboration.userCapture;
 using umi3d.cdk.userCapture;
 using umi3d.common.userCapture;
-using System.Linq;
 
 namespace ClientLBE
 {
@@ -41,14 +37,14 @@ namespace ClientLBE
         private List<Quaternion> localVertexRotations = new List<Quaternion>();
 
         [Header("ANCHOR AR")]
-        public ARAnchorManager anchorManager; // Référence au gestionnaire d'ancres AR
+        public ARAnchorManager AnchorManager; // Référence au gestionnaire d'ancres AR
         private List<Vector3> guardianAnchors = new List<Vector3>(); // Liste pour stocker toutes les ancres du guardian
         private UserGuardianDto userGuardianDto;
 
-        private List<GameObject> TempVerticesTransform = new List<GameObject>();
+        private List<GameObject> tempVerticesTransform = new List<GameObject>();
 
         [Header("CALIBREUR")]
-        public bool AutomatiqueCalibration = false;
+        public bool AutomaticCalibration = false;
         public GameObject Calibreur;
         public GameObject ManualCalibreur;
 
@@ -238,7 +234,7 @@ namespace ClientLBE
                 Debug.LogError("ARPlaneManager not found on this GameObject.");
             }
 
-            if(AutomatiqueCalibration == true)
+            if(AutomaticCalibration == true)
             {
                 if (planesToCalibrate.Count == 1)
                 {
@@ -259,7 +255,7 @@ namespace ClientLBE
 
         public void ToggleCalibrationScene(bool arg)
         {
-            AutomatiqueCalibration = arg;
+            AutomaticCalibration = arg;
 
             if (arg)
             {
@@ -299,12 +295,12 @@ namespace ClientLBE
             StartCoroutine(CalibrationScene());
         }
 
-        public void OrientationChoice(float Orientaion)
+        public void OrientationChoice(float orientation)
         {
-            OrientationCalibreur = Orientaion;
+            OrientationCalibreur = orientation;
         }
 
-        public void CloseOrientaionChoice()
+        public void CloseOrientationChoice()
         {
             Calibreur.transform.Rotate(Calibreur.transform.rotation.x, OrientationCalibreur, Calibreur.transform.rotation.z, Space.World);
 
@@ -315,9 +311,9 @@ namespace ClientLBE
             yield return null;
             yield return null;
 
-            if(AutomatiqueCalibration == true)
+            if(AutomaticCalibration == true)
             {
-                CloseOrientaionChoice();
+                CloseOrientationChoice();
             }
 
             if (Player != null)
@@ -394,7 +390,7 @@ namespace ClientLBE
                 {
                     List<Vector3> MeshAnchor = new List<Vector3>();
 
-                    if (anchorManager != null)
+                    if (AnchorManager != null)
                     {
                         foreach (Vector3 point in boundaryPoints)
                         {
@@ -412,9 +408,9 @@ namespace ClientLBE
                     
                     CreateGuardianMesh(guardianAnchors);
 
-                    if (anchorManager.enabled == false)
+                    if (AnchorManager.enabled == false)
                     {
-                        anchorManager.enabled = true;
+                        AnchorManager.enabled = true;
                     }
 
                     AddAnchorGuardian();
@@ -548,7 +544,7 @@ namespace ClientLBE
                 AnchorGuardianTemp.transform.position = points[i];
                 AnchorGuardianTemp.transform.parent = GuardianMesh.transform;
 
-                TempVerticesTransform.Add(AnchorGuardianTemp);
+                tempVerticesTransform.Add(AnchorGuardianTemp);
             }
 
             // Mesh Properties
@@ -578,13 +574,13 @@ namespace ClientLBE
 
             GuardianMesh.transform.parent = Calibreur.transform;
 
-            for (int i = 0; i < TempVerticesTransform.Count; i++)
+            for (int i = 0; i < tempVerticesTransform.Count; i++)
             {
-                TempVerticesTransform[i].transform.parent = null;
-                TempVerticesTransform[i].transform.parent = Calibreur.transform;
+                tempVerticesTransform[i].transform.parent = null;
+                tempVerticesTransform[i].transform.parent = Calibreur.transform;
 
-                localVertexPositions.Add(new Vector3 (TempVerticesTransform[i].transform.localPosition.x, TempVerticesTransform[i].transform.position.y, TempVerticesTransform[i].transform.localPosition.z));
-                localVertexRotations.Add(TempVerticesTransform[i].transform.localRotation);
+                localVertexPositions.Add(new Vector3 (tempVerticesTransform[i].transform.localPosition.x, tempVerticesTransform[i].transform.position.y, tempVerticesTransform[i].transform.localPosition.z));
+                localVertexRotations.Add(tempVerticesTransform[i].transform.localRotation);
             }
 
             GuardianMesh.transform.parent = null;

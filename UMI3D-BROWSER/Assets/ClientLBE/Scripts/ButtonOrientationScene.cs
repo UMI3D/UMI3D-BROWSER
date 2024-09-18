@@ -5,38 +5,38 @@ public class ButtonOrientationScene : MonoBehaviour
 {
     [SerializeField]
     [Tooltip("Button to manage orientation scene.")]
-    private UnityEngine.UI.Button OrientationSceneButton;
+    private UnityEngine.UI.Button orientationSceneButton;
 
-    private GetPlayerOrientationPanel PanelOrientationScene;
-    private bool OnOffOrientationPanel = false;
+    private GetPlayerOrientationPanel panelOrientationScene;
+    private bool onOffOrientationPanel = false;
 
     private void Start()
     {
-        Assert.IsNotNull(OrientationSceneButton);
+        Assert.IsNotNull(orientationSceneButton);
 
-        OrientationSceneButton.onClick.AddListener(SwitchOrientationPanel);
+        orientationSceneButton.onClick.AddListener(SwitchOrientationPanel);
 
-        PanelOrientationScene = GameObject.FindObjectOfType<GetPlayerOrientationPanel>();
+        panelOrientationScene = GameObject.FindObjectOfType<GetPlayerOrientationPanel>();
     }
 
     [ContextMenu("Turn on/off Orientation panel choice before connection scene.")]
     void SwitchOrientationPanel()
     {
 
-        if (PanelOrientationScene == null)
+        if (panelOrientationScene == null)
         {
-            PanelOrientationScene = GameObject.FindObjectOfType<GetPlayerOrientationPanel>();
+            panelOrientationScene = GameObject.FindObjectOfType<GetPlayerOrientationPanel>();
         }
 
-        OnOffOrientationPanel = !OnOffOrientationPanel;
+        onOffOrientationPanel = !onOffOrientationPanel;
 
-        if (OnOffOrientationPanel)
+        if (onOffOrientationPanel)
         {
-            PanelOrientationScene.OpenPanel();
+            panelOrientationScene.OpenPanel();
         }
         else
         {
-            PanelOrientationScene.ClosePanel();
+            panelOrientationScene.ClosePanel();
         }
     }
 }

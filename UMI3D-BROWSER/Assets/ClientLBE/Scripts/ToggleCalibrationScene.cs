@@ -9,15 +9,15 @@ namespace ClientLBE
     {
         [SerializeField]
         [Tooltip("Button to manage orientation scene.")]
-        private UnityEngine.UI.Toggle AutomatiqueCalibrationToggle;
+        private UnityEngine.UI.Toggle automatiqueCalibrationToggle;
         private GuardianManager guardianManager;
        
-        public GameObject OrientationPanel;
+        public GameObject orientationPanel;
 
         void Start()
         {
-            Assert.IsNotNull(AutomatiqueCalibrationToggle);
-            AutomatiqueCalibrationToggle.onValueChanged.AddListener(SwitchOrientationPanel);
+            Assert.IsNotNull(automatiqueCalibrationToggle);
+            automatiqueCalibrationToggle.onValueChanged.AddListener(SwitchOrientationPanel);
         }
 
         public void SwitchOrientationPanel(bool arg)
@@ -34,7 +34,7 @@ namespace ClientLBE
             }
 
             guardianManager.ToggleCalibrationScene(arg);
-            OrientationPanel.SetActive(arg);
+            orientationPanel.SetActive(arg);
         }
     }
 }

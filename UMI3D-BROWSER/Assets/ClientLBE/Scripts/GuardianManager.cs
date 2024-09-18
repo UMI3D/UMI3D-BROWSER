@@ -1,23 +1,21 @@
+using inetum.unityUtils;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.XR;
-
-using UnityEngine.XR.ARFoundation;
-
-using umi3d.common.lbe;
-using umi3d.common.lbe.description;
-
-using umi3d.common;
 using umi3d.cdk;
 using umi3d.cdk.collaboration;
 using umi3d.cdk.collaboration.userCapture;
 using umi3d.cdk.userCapture;
+using umi3d.common;
+using umi3d.common.lbe;
+using umi3d.common.lbe.description;
 using umi3d.common.userCapture;
+using UnityEngine;
+using UnityEngine.XR;
+using UnityEngine.XR.ARFoundation;
 
 namespace ClientLBE
 {
-    public class GuardianManager : MonoBehaviour
+    public class GuardianManager : SingleBehaviour<GuardianManager>
     {
         #region Fields
 
@@ -26,34 +24,33 @@ namespace ClientLBE
         public Transform PersonnalSketletonContainer;
         public GameObject CameraPlayer;
 
-        private Transform Scene;
+        private Transform scene;
 
         [Header("GUARDIAN")]
-        private GameObject GuardianMesh;
-        private GameObject GuardianParent; 
-        public Material MatGuardian;
-        
+        public Material GuardianMaterial;
+
+        private GameObject guardianMesh;
+        private GameObject guardianParent; 
         private List<Vector3> localVertexPositions = new List<Vector3>();
         private List<Quaternion> localVertexRotations = new List<Quaternion>();
 
         [Header("ANCHOR AR")]
         public ARAnchorManager AnchorManager; // Référence au gestionnaire d'ancres AR
+        
         private List<Vector3> guardianAnchors = new List<Vector3>(); // Liste pour stocker toutes les ancres du guardian
         private UserGuardianDto userGuardianDto;
-
         private List<GameObject> tempVerticesTransform = new List<GameObject>();
 
-        [Header("CALIBREUR")]
-        public bool AutomaticCalibration = false;
-        public GameObject Calibreur;
-        public GameObject ManualCalibreur;
-
-        private ARPlaneManager arPlaneManager;
-        public GameObject CollabSkeletonScene;
+        [Header("CALIBRATOR")]
+        public GameObject ManualCalibrator;
         public Material OcclusionMaterial;
-
         public CanvasGroup OrientationScenePanel;
-        private float OrientationCalibreur;
+
+        private bool automaticCalibration = false;
+        private Transform calibrator;
+        private ARPlaneManager arPlaneManager;
+
+        private float orientationOffset;
 
         private List<ARPlane> planesToCalibrate = new List<ARPlane>();
         private LBEGroupSyncRequestDTO lBEGroupDto = new LBEGroupSyncRequestDTO ();
@@ -65,11 +62,8 @@ namespace ClientLBE
         public void Start()
         {
             //Desactivation du calibreur manuel au start
-            if (AutomatiqueCalibration == true)
-            {
-                Calibreur.SetActive(false);
-                Calibreur = null;
-            }
+            if (automaticCalibration)
+                ManualCalibrator.gameObject.SetActive(false);
 
             arPlaneManager = this.GetComponent<ARPlaneManager>();
             StartCoroutine(GetARPlanes());
@@ -195,8 +189,15 @@ namespace ClientLBE
                 }
             }
             else
-            {
                 Debug.LogWarning("Bone not found.");
+
+        }
+
+        private void ARPlanesActivation(bool activation)
+        {
+            for (int i = 0; i < planesToCalibrate.Count; i++)
+            {
+                planesToCalibrate[i].gameObject.SetActive(activation);
             }
         }
 
@@ -215,13 +216,10 @@ namespace ClientLBE
                 {
 
                     if (plane.transform.position.y >= -0.5f && plane.transform.position.y <= 0.5f || plane.transform.position.y > 1.2f)
-                    {
                         planesToDestroy.Add(plane);
-                    }
+
                     else
-                    {
                         planesToCalibrate.Add(plane);
-                    }
                 }
 
                 foreach (var plane in planesToDestroy)
@@ -230,64 +228,70 @@ namespace ClientLBE
                 }
             }
             else
-            {
                 Debug.LogError("ARPlaneManager not found on this GameObject.");
-            }
 
-            if(AutomaticCalibration == true)
+
+            if (automaticCalibration)
             {
                 if (planesToCalibrate.Count == 1)
                 {
-                    GameObject CalibreurARPlane = new GameObject("Calibreur Plane");
-                    CalibreurARPlane.transform.position = planesToCalibrate[0].transform.position;
-                    CalibreurARPlane.transform.rotation = planesToCalibrate[0].transform.rotation;
+                    GameObject calibratorARPlane = new GameObject("Calibreur Plane");
+                    calibratorARPlane.transform.position = planesToCalibrate[0].transform.position;
+                    calibratorARPlane.transform.rotation = planesToCalibrate[0].transform.rotation;
 
-                    Calibreur = CalibreurARPlane;
-                    Calibreur.transform.parent = Player.transform;
+                    calibrator = calibratorARPlane.transform;
+                    calibrator.transform.parent = Player.transform;
                 }
 
                 else
                 {
                     Debug.LogError("Multiple ARPlane detected. Only one ARPlane should be selected to serve as a calibrator. Change your environment configuration");
-                }
-            }    
-        }
-
-        public void ToggleCalibrationScene(bool arg)
-        {
-            AutomaticCalibration = arg;
-
-            if (arg)
-            {
-                Calibreur.SetActive(false);
-
-                if (planesToCalibrate.Count > 0)
-                {
-                    for (int i = 0; i < planesToCalibrate.Count; i++)
-                    {
-                        planesToCalibrate[i].gameObject.SetActive(true);
-                    }
-                    Calibreur = planesToCalibrate[0].gameObject;
+                    automaticCalibration = false;
+                    SetManualCalibrator();
                 }
             }
 
             else
+                SetManualCalibrator();
+        }
+
+        public void ToggleCalibrationScene(bool value)
+        {
+            automaticCalibration = value;
+
+            if (automaticCalibration)
+                SetARPlaneCalibrator();
+
+            else
+                SetManualCalibrator();
+        }
+
+        private void SetARPlaneCalibrator()
+        {
+            ManualCalibrator.gameObject.SetActive(false);
+
+            if (planesToCalibrate.Count > 0)
             {
-                Calibreur = null;
-
-                for (int i = 0; i < planesToCalibrate.Count; i++)
-                {
-                    planesToCalibrate[i].gameObject.SetActive(false);
-                }
-
-                Calibreur = ManualCalibreur ;
-                Calibreur.SetActive(true);
-
-                if (OrientationScenePanel.gameObject.activeSelf == true && OrientationScenePanel.alpha == 1)
-                {
-                    OrientationScenePanel.GetComponent<GetPlayerOrientationPanel>().ClosePanel();
-                }
+                ARPlanesActivation(true);
+                calibrator = planesToCalibrate[0].transform;
             }
+
+            else
+            {
+                automaticCalibration = false;
+                SetManualCalibrator();
+            }
+        }
+
+        private void SetManualCalibrator()
+        {
+            ARPlanesActivation(false);
+
+            ManualCalibrator.gameObject.SetActive(true);
+            calibrator = ManualCalibrator.transform;
+
+            if (OrientationScenePanel.gameObject.activeSelf == true && OrientationScenePanel.alpha == 1)
+                OrientationScenePanel.GetComponent<GetPlayerOrientationPanel>().ClosePanel();
         }
 
         public void StartCalibrationScene()
@@ -297,12 +301,12 @@ namespace ClientLBE
 
         public void OrientationChoice(float orientation)
         {
-            OrientationCalibreur = orientation;
+            orientationOffset = orientation;
         }
 
         public void CloseOrientationChoice()
         {
-            Calibreur.transform.Rotate(Calibreur.transform.rotation.x, OrientationCalibreur, Calibreur.transform.rotation.z, Space.World);
+            calibrator.transform.Rotate(calibrator.transform.rotation.x, orientationOffset, calibrator.transform.rotation.z, Space.World);
 
             OrientationScenePanel.gameObject.SetActive(false);
         }
@@ -311,7 +315,9 @@ namespace ClientLBE
             yield return null;
             yield return null;
 
-            if(AutomaticCalibration == true)
+            // TODO check the reason we have to wait
+
+            if (automaticCalibration)
             {
                 CloseOrientationChoice();
             }
@@ -322,44 +328,35 @@ namespace ClientLBE
 
                 if (parent != null)
                 {
-                    Scene = parent;
+                    scene = parent;
 
-                    Calibreur.transform.rotation = new Quaternion(0.0f, Calibreur.transform.rotation.y, 0.0f, Calibreur.transform.rotation.w);
-                    Calibreur.transform.SetParent(null, true);
-                    Player.transform.SetParent(Calibreur.transform, true);
+                    calibrator.transform.rotation = new Quaternion(0.0f, calibrator.transform.rotation.y, 0.0f, calibrator.transform.rotation.w);
+                    calibrator.transform.SetParent(null, true);
+                    Player.transform.SetParent(calibrator.transform, true);
 
-                    Vector3 Offset = Vector3.ProjectOnPlane(CameraPlayer.transform.position - Calibreur.transform.position, Vector3.up);
-                    Calibreur.transform.Translate(Offset, Space.World);
+                    Vector3 Offset = Vector3.ProjectOnPlane(CameraPlayer.transform.position - calibrator.transform.position, Vector3.up);
+                    calibrator.transform.Translate(Offset, Space.World);
 
-                    float angle = Vector3.SignedAngle(CameraPlayer.transform.forward, Vector3.ProjectOnPlane(Calibreur.transform.forward, Vector3.up), Vector3.up);
-                    Calibreur.transform.Rotate(0f, -angle, 0f);
+                    float angle = Vector3.SignedAngle(CameraPlayer.transform.forward, Vector3.ProjectOnPlane(calibrator.transform.forward, Vector3.up), Vector3.up);
+                    calibrator.transform.Rotate(0f, -angle, 0f);
 
-                    Player.transform.SetParent(Scene, true);
-                    Calibreur.transform.SetParent(Player.transform, true);
+                    Player.transform.SetParent(scene, true);
+                    calibrator.transform.SetParent(Player.transform, true);
 
                     //Création du Parent des ancres
-                    GuardianParent = new GameObject("Guardian");
-                    GuardianParent.transform.position = new Vector3(Calibreur.transform.position.x, 0.0f, Calibreur.transform.position.z);
+                    guardianParent = new GameObject("Guardian");
+                    guardianParent.transform.position = new Vector3(calibrator.transform.position.x, 0.0f, calibrator.transform.position.z);
 
                     GetGuardianArea();
                 }
                 else
-                {
                     Debug.LogError(Player.name + " has no parents.");
-                }
             }
             else
-            {
                 Debug.LogWarning("No GameObject to check is assigned!");
-            }
 
             arPlaneManager.enabled = false;
-
-            // Désactiver chaque plan
-            for (int i = 0; i<planesToCalibrate.Count; i++)
-            {
-                planesToCalibrate[i].gameObject.SetActive(false);
-            }
+            ARPlanesActivation(false);
         }        
 
         public void GetGuardianArea()
@@ -403,8 +400,8 @@ namespace ClientLBE
                         Debug.LogError("AnchorManager not referenced !");
                     }
                     
-                    GuardianMesh = new GameObject("GuardianMesh");
-                    GuardianMesh.transform.position = Vector3.zero;
+                    guardianMesh = new GameObject("GuardianMesh");
+                    guardianMesh.transform.position = Vector3.zero;
                     
                     CreateGuardianMesh(guardianAnchors);
 
@@ -464,10 +461,10 @@ namespace ClientLBE
         public void CreatGuardianServer(List<ARAnchorDto> GuardianDto)
         {
             // Clear the client's first connection data
-            if (GuardianMesh != null)
+            if (guardianMesh != null)
             {
-                Destroy(GuardianMesh);
-                GuardianMesh = null;
+                Destroy(guardianMesh);
+                guardianMesh = null;
             }
 
             if (guardianAnchors.Count > 0)
@@ -475,7 +472,7 @@ namespace ClientLBE
                 guardianAnchors.Clear();
             }
 
-            if(localVertexPositions.Count >0)
+            if (localVertexPositions.Count >0)
             {
                 localVertexPositions.Clear();
             }
@@ -495,13 +492,13 @@ namespace ClientLBE
                 VerticeRot.Add(new Quaternion(point.rotation.X, point.rotation.Y, point.rotation.Z, point.rotation.W));
             }
 
-            GuardianMesh = new GameObject("GuardianMesh");
-            GuardianMesh.transform.position = Vector3.zero;
+            guardianMesh = new GameObject("GuardianMesh");
+            guardianMesh.transform.position = Vector3.zero;
 
             CreateGuardianMesh(VerticePos);
 
-            GuardianMesh.transform.position = new Vector3(Calibreur.transform.position.x, 0.0f, Calibreur.transform.position.z);
-            GuardianMesh.transform.rotation = Calibreur.transform.rotation;
+            guardianMesh.transform.position = new Vector3(calibrator.transform.position.x, 0.0f, calibrator.transform.position.z);
+            guardianMesh.transform.rotation = calibrator.transform.rotation;
         }
 
         public void AddAnchorGuardian()
@@ -513,7 +510,7 @@ namespace ClientLBE
                 Quaternion basePointRotation = new Quaternion(0f,0f,0f,0f);
                 Pose basePointPose = new Pose(basePointPosition, basePointRotation);
             }
-            GuardianMesh.AddComponent<ARAnchor>();
+            guardianMesh.AddComponent<ARAnchor>();
         }
 
         private void CreateGuardianMesh(List<Vector3> points)
@@ -542,7 +539,7 @@ namespace ClientLBE
                 // Instantiate the prefab at the position of the retrieved point                  
                 GameObject AnchorGuardianTemp = new GameObject("AnchorGuardianTemp");
                 AnchorGuardianTemp.transform.position = points[i];
-                AnchorGuardianTemp.transform.parent = GuardianMesh.transform;
+                AnchorGuardianTemp.transform.parent = guardianMesh.transform;
 
                 tempVerticesTransform.Add(AnchorGuardianTemp);
             }
@@ -557,35 +554,34 @@ namespace ClientLBE
             mesh.Optimize();
 
             // Creation of the mesh renderer and filter
-            MeshFilter meshFilter = GuardianMesh.AddComponent<MeshFilter>();
-            MeshRenderer meshRenderer = GuardianMesh.AddComponent<MeshRenderer>();
+            MeshFilter meshFilter = guardianMesh.AddComponent<MeshFilter>();
+            MeshRenderer meshRenderer = guardianMesh.AddComponent<MeshRenderer>();
             meshFilter.mesh = mesh;
 
-            Material material = MatGuardian;
+            Material material = GuardianMaterial;
             meshRenderer.material = material;
 
             //Add box collider
-            GuardianMesh.AddComponent<BoxCollider>().isTrigger = true;
+            guardianMesh.AddComponent<BoxCollider>().isTrigger = true;
 
-            GuardianMesh.transform.position = Quaternion.Inverse(PersonnalSketletonContainer.transform.rotation) * (GuardianMesh.transform.position) + PersonnalSketletonContainer.transform.position;
-            GuardianMesh.transform.rotation = PersonnalSketletonContainer.transform.rotation;
+            guardianMesh.transform.position = Quaternion.Inverse(PersonnalSketletonContainer.transform.rotation) * (guardianMesh.transform.position) + PersonnalSketletonContainer.transform.position;
+            guardianMesh.transform.rotation = PersonnalSketletonContainer.transform.rotation;
 
-            GuardianMesh.AddComponent<HoverGuardian>().targetMaterial = MatGuardian;
+            guardianMesh.AddComponent<HoverGuardian>().targetMaterial = GuardianMaterial;
 
-            GuardianMesh.transform.parent = Calibreur.transform;
+            guardianMesh.transform.parent = calibrator.transform;
 
             for (int i = 0; i < tempVerticesTransform.Count; i++)
             {
                 tempVerticesTransform[i].transform.parent = null;
-                tempVerticesTransform[i].transform.parent = Calibreur.transform;
+                tempVerticesTransform[i].transform.parent = calibrator.transform;
 
                 localVertexPositions.Add(new Vector3 (tempVerticesTransform[i].transform.localPosition.x, tempVerticesTransform[i].transform.position.y, tempVerticesTransform[i].transform.localPosition.z));
                 localVertexRotations.Add(tempVerticesTransform[i].transform.localRotation);
             }
 
-            GuardianMesh.transform.parent = null;
+            guardianMesh.transform.parent = null;
         }
     }
     #endregion
 }
-

@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -25,7 +26,6 @@ using UnityEngine.UI;
 namespace com.inetum.unitygeckowebview
 {
     [RequireComponent(typeof(AndroidJavaWebview))]
-    [RequireComponent(typeof(UnityGeckoWebView))]
     public class UnityGeckoWebViewRendering : MonoBehaviour
     {
         [Tooltip("Init the java web view component on start ?")]
@@ -58,7 +58,6 @@ namespace com.inetum.unitygeckowebview
         /// The android webview.
         /// </summary>
         AndroidJavaWebview javaWebview;
-        UnityGeckoWebView webview;
         bool isInit = false;
         /// <summary>
         /// Coroutine used to render webview.
@@ -82,8 +81,13 @@ namespace com.inetum.unitygeckowebview
 
         void Awake()
         {
+            if (Application.isEditor)
+            {
+                UnityEngine.Debug.LogError($"The Gecko Web View only works in android.");
+                Destroy(this);
+                return;
+            }
             javaWebview = GetComponent<AndroidJavaWebview>();
-            webview = GetComponent<UnityGeckoWebView>();
         }
 
         void Start()
@@ -96,12 +100,34 @@ namespace com.inetum.unitygeckowebview
             }
         }
 
+        void OnEnable()
+        {
+            NotificationHub.Default.Subscribe(
+                this,
+                GeckoWebViewNotificationKeys.Rendering,
+                RenderingProcess
+            );
+
+            NotificationHub.Default.Subscribe(
+                this,
+                GeckoWebViewNotificationKeys.TextureSizeChanged,
+                TextureSizeChanged
+            );
+        }
+
+        void OnDisable()
+        {
+            NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.Rendering);
+
+            NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.TextureSizeChanged);
+        }
+
         void OnDestroy()
         {
-            javaWebview.Destroy();
-            javaWebview.Dispose();
+            javaWebview?.Destroy();
+            javaWebview?.Dispose();
 
-            byteBufferJavaObject.Dispose();
+            byteBufferJavaObject?.Dispose();
             byteBuffer.Dispose();
         }
 
@@ -120,17 +146,7 @@ namespace com.inetum.unitygeckowebview
             {
                 ChangeTextureSizeInternal();
 
-                using (var baseClass = new AndroidJavaClass("com.inetum.unitygeckowebview.UnityGeckoWebView"))
-                {
-                    javaWebview.webView = baseClass.CallStatic<AndroidJavaObject>(
-                        "createWebView",
-                        width,
-                        height,
-                        useNativeKeyboard,
-                        new UnityGeckoWebViewCallback(webview),
-                        byteBufferJavaObject
-                    );
-                }
+                javaWebview.Init(width, height, useNativeKeyboard, byteBufferJavaObject);
 
                 if (startRendering)
                 {
@@ -239,6 +255,36 @@ namespace com.inetum.unitygeckowebview
 
                 yield return wait;
             }
+        }
+
+        void RenderingProcess(Notification notification)
+        {
+            if (!notification.TryGetInfoT(GeckoWebViewNotificationKeys.Info.RenderingProcess, out Rendering process))
+            {
+                return;
+            }
+
+            switch (process)
+            {
+                case Rendering.Start:
+                    StartRendering();
+                    break;
+                case Rendering.Stop:
+                    StopRendering();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        void TextureSizeChanged(Notification notification)
+        {
+            if (!notification.TryGetInfoT(GeckoWebViewNotificationKeys.Info.Vector2, out Vector2 size))
+            {
+                return;
+            }
+
+            ChangeTextureSize((int)size.x, (int)size.y);
         }
     }
 }

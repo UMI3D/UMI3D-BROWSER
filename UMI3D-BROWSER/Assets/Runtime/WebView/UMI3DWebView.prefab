@@ -222,6 +222,7 @@ GameObject:
   - component: {fileID: 1658294455716995547}
   - component: {fileID: 1565402495587773389}
   - component: {fileID: 3214222763073869539}
+  - component: {fileID: 1052085221526974257}
   m_Layer: 5
   m_Name: SearchButton
   m_TagString: Untagged
@@ -344,6 +345,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &1052085221526974257
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1939373418749542855}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37263b2b31cd15a45a36376699dd1ed7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2070198284515693985
 GameObject:
   m_ObjectHideFlags: 0
@@ -506,12 +519,6 @@ MonoBehaviour:
   m_Interactable: 1
   m_TargetGraphic: {fileID: 0}
   simulateClick: 1
-  onPointerDown:
-    m_PersistentCalls:
-      m_Calls: []
-  onPointerUp:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &2530813685983505172
 GameObject:
   m_ObjectHideFlags: 0
@@ -1189,22 +1196,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 245889b4feadadc4eaadaecd2e80cbef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  webViewCanvas: {fileID: 2132573014255919679}
-  webViewCanvasScaler: {fileID: 487232533394103141}
-  bottomBarContainer: {fileID: 7834805895537501446}
-  backButton: {fileID: 329578662987288571}
-  homeButton: {fileID: 5340838606177795013}
-  synchronizeRectTransform: {fileID: 6674039823212863032}
-  forwardButton: {fileID: 836748838824480232}
-  topBarContainer: {fileID: 8040158899577738633}
-  searchButton: {fileID: 3082752491686530224}
-  container: {fileID: 4503148055620339736}
-  textureTransform: {fileID: 6788902170019657819}
-  searchFieldTransform: {fileID: 0}
-  searchField: {fileID: 0}
-  keyboard: {fileID: 0}
-  synchronizationDelay: 1
-  syncFeedback: {fileID: 774960441967296640}
+  webviewRT: {fileID: 6788902170019657819}
 --- !u!1 &5728610397453441131
 GameObject:
   m_ObjectHideFlags: 0
@@ -1214,6 +1206,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7834805895537501446}
+  - component: {fileID: 5623119685686399344}
   m_Layer: 5
   m_Name: Bottombar
   m_TagString: Untagged
@@ -1245,6 +1238,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -0.5009}
   m_SizeDelta: {x: 0, y: 0.1}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &5623119685686399344
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5728610397453441131}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fc75f0037d9a18409d1f13479b67818, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  barType: 1
 --- !u!1 &5748148133186117241
 GameObject:
   m_ObjectHideFlags: 0
@@ -1548,6 +1554,7 @@ GameObject:
   - component: {fileID: 487232533394103141}
   - component: {fileID: 2257182280490095200}
   - component: {fileID: 5701797214381114824}
+  - component: {fileID: 2487829655622914337}
   m_Layer: 5
   m_Name: WebViewContainer
   m_TagString: Untagged
@@ -1622,7 +1629,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 3
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!114 &2257182280490095200
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1659,6 +1666,18 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RaycastTriggerInteraction: 1
+--- !u!114 &2487829655622914337
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7081791439333535606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a349fa2014685e4ca117377a7df1a86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7616132612263184142
 GameObject:
   m_ObjectHideFlags: 0
@@ -1792,6 +1811,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8040158899577738633}
+  - component: {fileID: 8263181629957203696}
   m_Layer: 5
   m_Name: TopBar
   m_TagString: Untagged
@@ -1821,6 +1841,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0.506}
   m_SizeDelta: {x: 0, y: 0.1}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &8263181629957203696
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8949104969559088664}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fc75f0037d9a18409d1f13479b67818, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  barType: 0
 --- !u!1 &9050493027945696251
 GameObject:
   m_ObjectHideFlags: 0
@@ -1833,6 +1866,7 @@ GameObject:
   - component: {fileID: 8950977684993432360}
   - component: {fileID: 1247610995292631963}
   - component: {fileID: 3375911020430821831}
+  - component: {fileID: 5670509242803505700}
   m_Layer: 5
   m_Name: SynchronizationButton
   m_TagString: Untagged
@@ -1943,8 +1977,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2541948983036470959}
-        m_TargetAssemblyTypeName: QuestBrowser.WebView.WebView, umi3d.runtimeBrowser.android.webView
+      - m_Target: {fileID: 5670509242803505700}
+        m_TargetAssemblyTypeName: com.inetum.unitygeckowebview.SynchronizationButton,
+          UnityGeckoWebView
         m_MethodName: ToggleSynchronization
         m_Mode: 1
         m_Arguments:
@@ -1955,3 +1990,17 @@ MonoBehaviour:
           m_StringArgument: https://www.google.com/
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &5670509242803505700
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9050493027945696251}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edb5ef2decc48f04fb6d9b44f0f8d920, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  webview: {fileID: 2785224138360277133}
+  synchronizationDelay: 2

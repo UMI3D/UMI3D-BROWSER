@@ -14,7 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
 using System;
+using System.Security.Policy;
 using UnityEngine;
 
 namespace com.inetum.unitygeckowebview
@@ -24,7 +26,71 @@ namespace com.inetum.unitygeckowebview
         /// <summary>
         /// Webview handled natively.
         /// </summary>
-        public AndroidJavaObject webView;
+        AndroidJavaObject webView;
+
+        Notifier loadingNotifier;
+        bool isInit = false;
+
+        public bool isNull => webView == null;
+
+        void Awake()
+        {
+            loadingNotifier = NotificationHub.Default.GetNotifier(
+               this,
+               GeckoWebViewNotificationKeys.Loading
+           );
+        }
+
+        void Start()
+        {
+            if (Application.isEditor)
+            {
+                UnityEngine.Debug.LogError($"The Gecko Web View only works in android.");
+                Destroy(this);
+            }
+        }
+
+        void OnEnable()
+        {
+            NotificationHub.Default.Subscribe(
+                this,
+                GeckoWebViewNotificationKeys.ScrollChanged,
+                ScrollChanged
+            );
+
+            NotificationHub.Default.Subscribe(
+                this,
+                GeckoWebViewNotificationKeys.History,
+                HistoryButtonPressed
+            );
+        }
+
+        void OnDisable()
+        {
+            NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.ScrollChanged);
+
+            NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.History);
+        }
+
+        public void Init(int width, int height, bool useNativeKeyboard, AndroidJavaObject byteBufferJavaObject)
+        {
+            if (isInit)
+            {
+                return;
+            }
+
+            using (var baseClass = new AndroidJavaClass("com.inetum.unitygeckowebview.UnityGeckoWebView"))
+            {
+                webView = baseClass.CallStatic<AndroidJavaObject>(
+                    "createWebView",
+                    width,
+                    height,
+                    useNativeKeyboard,
+                    new UnityGeckoWebViewCallback(this),
+                    byteBufferJavaObject
+                );
+            }
+        }
 
         public void GoBack()
         {
@@ -122,11 +188,77 @@ namespace com.inetum.unitygeckowebview
         public void Destroy()
         {
             webView?.Call("destroy");
+            isInit = false;
         }
 
         public void Dispose()
         {
             webView?.Dispose();
+            isInit = false;
         }
+
+        /// <summary>
+        /// Notify all subscribers that a text field has been selected.
+        /// </summary>
+        public void TextInputSelected()
+        {
+            //NotificationHub.Default.Notify(
+            //    this,
+            //    KeyboardNotificationKeys.TextFieldSelected
+            //);
+        }
+
+        /// <summary>
+        /// Notify all subscribers that a web page has started loading.
+        /// </summary>
+        /// <param name="url"></param>
+        public void LoadingHasStarted(string url)
+        {
+            loadingNotifier[GeckoWebViewNotificationKeys.Info.URL] = url;
+            loadingNotifier.Notify();
+        }
+
+        #region Notifications
+
+        void ScrollChanged(Notification notification)
+        {
+            if (!notification.TryGetInfoT(GeckoWebViewNotificationKeys.Info.Vector2, out Vector2 scroll))
+            {
+                return;
+            }
+
+            try
+            {
+                SetScroll((int)scroll.x, (int)scroll.y);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError("Impossible to set offset");
+                Debug.LogException(ex);
+            }
+        }
+
+        void HistoryButtonPressed(Notification notification)
+        {
+            if (!notification.TryGetInfoT(GeckoWebViewNotificationKeys.Info.BackwardOrForward, out History historyType))
+            {
+                return;
+            }
+
+            switch (historyType)
+            {
+                case History.Backward:
+                    GoBack();
+                    break;
+                case History.Forward:
+                    GoForward();
+                    break;
+                default:
+                    UnityEngine.Debug.LogError($"Unhandled case.");
+                    break;
+            }
+        }
+
+        #endregion
     }
 }

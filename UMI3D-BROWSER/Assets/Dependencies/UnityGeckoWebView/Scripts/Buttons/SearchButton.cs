@@ -23,29 +23,20 @@ using UnityEngine.UI;
 namespace com.inetum.unitygeckowebview
 {
     [RequireComponent(typeof(Button))]
-    public class BackwardForwardButton : MonoBehaviour
+    public class SearchButton : MonoBehaviour
     {
-        [SerializeField] History buttonType;
-
         Button button;
         RectTransform rectTransform;
-        Notifier backwardForwardNotifier;
 
         void Awake()
         {
             button = GetComponent<Button>();
-            rectTransform = GetComponent<RectTransform>();
 
-            backwardForwardNotifier = NotificationHub.Default.GetNotifier(
-                this,
-                GeckoWebViewNotificationKeys.History
-            );
+            rectTransform = GetComponent<RectTransform>();
         }
 
         void OnEnable()
         {
-            button.onClick.AddListener(Click);
-
             NotificationHub.Default.Subscribe(
                 this,
                 GeckoWebViewNotificationKeys.SizeChanged,
@@ -61,17 +52,9 @@ namespace com.inetum.unitygeckowebview
 
         void OnDisable()
         {
-            button.onClick.RemoveListener(Click);
-
             NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.SizeChanged);
 
             NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.InteractibilityChanged);
-        }
-
-        void Click()
-        {
-            backwardForwardNotifier[GeckoWebViewNotificationKeys.Info.BackwardOrForward] = buttonType;
-            backwardForwardNotifier.Notify();
         }
 
         void SizeChanged(Notification notification)

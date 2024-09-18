@@ -18,60 +18,38 @@ using inetum.unityUtils;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace com.inetum.unitygeckowebview
 {
-    [RequireComponent(typeof(Button))]
-    public class BackwardForwardButton : MonoBehaviour
+    public class TopBottomBarContainer : MonoBehaviour
     {
-        [SerializeField] History buttonType;
+        enum BarType
+        {
+            Top,
+            Bottom
+        }
 
-        Button button;
+        [SerializeField] BarType barType;
+
         RectTransform rectTransform;
-        Notifier backwardForwardNotifier;
 
         void Awake()
         {
-            button = GetComponent<Button>();
             rectTransform = GetComponent<RectTransform>();
-
-            backwardForwardNotifier = NotificationHub.Default.GetNotifier(
-                this,
-                GeckoWebViewNotificationKeys.History
-            );
         }
 
         void OnEnable()
         {
-            button.onClick.AddListener(Click);
-
             NotificationHub.Default.Subscribe(
                 this,
                 GeckoWebViewNotificationKeys.SizeChanged,
                 SizeChanged
             );
-
-            NotificationHub.Default.Subscribe(
-               this,
-               GeckoWebViewNotificationKeys.InteractibilityChanged,
-               InteractibilityChanged
-           );
         }
 
         void OnDisable()
         {
-            button.onClick.RemoveListener(Click);
-
             NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.SizeChanged);
-
-            NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.InteractibilityChanged);
-        }
-
-        void Click()
-        {
-            backwardForwardNotifier[GeckoWebViewNotificationKeys.Info.BackwardOrForward] = buttonType;
-            backwardForwardNotifier.Notify();
         }
 
         void SizeChanged(Notification notification)
@@ -81,21 +59,28 @@ namespace com.inetum.unitygeckowebview
                 return;
             }
 
-            rectTransform.localScale = new Vector3(
-                rectTransform.localScale.x / size.x,
-                rectTransform.localScale.y,
-                rectTransform.localScale.z
-            );
-        }
-
-        void InteractibilityChanged(Notification notification)
-        {
-            if (!notification.TryGetInfoT(GeckoWebViewNotificationKeys.Info.Interactable, out bool interactable))
+            if (!notification.TryGetInfoT(GeckoWebViewNotificationKeys.Info.CornersPosition, out Vector3[] corners))
             {
                 return;
             }
 
-            button.interactable = interactable;
+            switch (barType)
+            {
+                case BarType.Top:
+                    rectTransform.position = (corners[0] + corners[3]) / 2f;
+                    break;
+                case BarType.Bottom:
+                    rectTransform.position = (corners[1] + corners[2]) / 2f;
+                    break;
+                default:
+                    break;
+            }
+
+            rectTransform.localScale = new Vector3(
+                rectTransform.localScale.x,
+                rectTransform.localScale.y / size.y,
+                rectTransform.localScale.z
+            );
         }
     }
 }

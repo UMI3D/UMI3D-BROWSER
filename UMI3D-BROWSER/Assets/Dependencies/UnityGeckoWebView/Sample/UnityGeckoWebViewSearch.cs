@@ -22,12 +22,14 @@ namespace com.inetum.unitygeckowebview.samples
     [RequireComponent(typeof(TMPro.TMP_InputField))]
     public class UnityGeckoWebViewSearch : MonoBehaviour
     {
+        RectTransform rectTransform;
         TMPro.TMP_InputField searchField;
 
         Notifier searchNotifier;
 
         void Awake()
         {
+            rectTransform = GetComponent<RectTransform>();
             searchField = GetComponent<TMPro.TMP_InputField>();
 
             searchNotifier = NotificationHub.Default.GetNotifier(
@@ -43,11 +45,19 @@ namespace com.inetum.unitygeckowebview.samples
                 GeckoWebViewNotificationKeys.Loading,
                 Loading
             );
+
+            NotificationHub.Default.Subscribe(
+                this,
+                GeckoWebViewNotificationKeys.SizeChanged,
+                SizeChanged
+            );
         }
 
         void OnDisable()
         {
             NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.Loading);
+
+            NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.SizeChanged);
         }
 
         void Loading(Notification notification)
@@ -64,6 +74,20 @@ namespace com.inetum.unitygeckowebview.samples
         {
             searchNotifier[GeckoWebViewNotificationKeys.Info.URL] = searchField.text;
             searchNotifier.Notify();
+        }
+
+        void SizeChanged(Notification notification)
+        {
+            if (!notification.TryGetInfoT(GeckoWebViewNotificationKeys.Info.Vector2, out Vector2 size))
+            {
+                return;
+            }
+
+            rectTransform.localScale = new Vector3(
+                rectTransform.localScale.x / size.x,
+                rectTransform.localScale.y,
+                rectTransform.localScale.z
+            );
         }
     }
 }

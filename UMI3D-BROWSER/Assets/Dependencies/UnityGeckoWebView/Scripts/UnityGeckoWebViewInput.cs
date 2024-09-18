@@ -14,16 +14,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
 using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace com.inetum.unitygeckowebview
 {
     /// <summary>
-    /// Manages screen touches for <see cref="UnityGeckoWebView"/>.
+    /// Manages screen touches for a java web view.
     /// </summary>
     [RequireComponent(typeof(RawImage))]
     [RequireComponent(typeof(AndroidJavaWebview))]
@@ -37,12 +37,7 @@ namespace com.inetum.unitygeckowebview
         UnityGeckoWebViewRendering webviewRendering;
 
         [SerializeField, Tooltip("Simulate a click when a short pointer down is detected ?")]
-        private bool simulateClick = false;
-
-        /// <summary>
-        /// Event triggered when a a pointer down event is detected. Pointer coordinates in pixels.
-        /// </summary>
-        public UnityEvent<Vector2> onPointerDown = new();
+        bool simulateClick = false;
 
         #region Data
 
@@ -68,7 +63,6 @@ namespace com.inetum.unitygeckowebview
 
         #endregion
 
-        #region Methods
 
         protected override void Awake()
         {
@@ -77,47 +71,58 @@ namespace com.inetum.unitygeckowebview
             webviewRendering = GetComponent<UnityGeckoWebViewRendering>();
         }
 
-        public override void OnPointerDown(PointerEventData eventData)
+        protected override void OnEnable()
         {
-            OnPointerDown(eventData.pointerCurrentRaycast.worldPosition, eventData.pointerId);
+            base.OnEnable();
+
+            NotificationHub.Default.Subscribe(
+               this,
+               GeckoWebViewNotificationKeys.InteractibilityChanged,
+               InteractibilityChanged
+           );
         }
 
-        public async void OnPointerDown(Vector3 worldHitPoint, int pointerId)
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+
+            NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.InteractibilityChanged);
+        }
+
+        public override void OnPointerDown(PointerEventData eventData)
         {
             rawImageRectTransform.GetWorldCorners(coordinates);
 
             up = (coordinates[1] - coordinates[0]);
             right = (coordinates[3] - coordinates[0]);
 
-            Vector3 localPosition = WorldToLocal(worldHitPoint);
-
-            onPointerDown.Invoke(localPosition);
-
             if (simulateClick)
             {
-                await Task.Delay(clickTime);
-
-                if (Time.time - lastUp < clickTime / 1000f)
-                {
-                    javaWebView.PointerDown(localPosition.x, localPosition.y, pointerId);
-                    await Task.Delay(40);
-                    javaWebView.PointerUp(localPosition.x, localPosition.y, pointerId);
-                }
-                else
-                {
-                    javaWebView.PointerDown(localPosition.x, localPosition.y, pointerId);
-                }
+                SimulateClick(eventData);
             }
             else
             {
-                javaWebView.PointerDown(localPosition.x, localPosition.y, pointerId);
+                Vector3 localPosition = WorldToLocal(eventData.pointerCurrentRaycast.worldPosition);
+                javaWebView.PointerDown(localPosition.x, localPosition.y, eventData.pointerId);
             }
         }
 
-        public void OnPointerMove(PointerEventData eventData)
+        async void SimulateClick(PointerEventData eventData)
         {
             Vector3 localPosition = WorldToLocal(eventData.pointerCurrentRaycast.worldPosition);
-            javaWebView.PointerMove(localPosition.x, localPosition.y, eventData.pointerId);
+
+            await Task.Delay(clickTime);
+
+            if (Time.time - lastUp < clickTime / 1000f)
+            {
+                javaWebView.PointerDown(localPosition.x, localPosition.y, eventData.pointerId);
+                await Task.Delay(40);
+                javaWebView.PointerUp(localPosition.x, localPosition.y, eventData.pointerId);
+            }
+            else
+            {
+                javaWebView.PointerDown(localPosition.x, localPosition.y, eventData.pointerId);
+            }
         }
 
         public override void OnPointerUp(PointerEventData eventData)
@@ -128,10 +133,23 @@ namespace com.inetum.unitygeckowebview
             lastUp = Time.time;
         }
 
-        public void OnClick(Vector3 worldHitPoint, int pointerId)
+        public void OnPointerMove(PointerEventData eventData)
         {
-            Vector3 localPosition = WorldToLocal(worldHitPoint);
-            javaWebView.Click(localPosition.x, localPosition.y, pointerId);
+            Vector3 localPosition = WorldToLocal(eventData.pointerCurrentRaycast.worldPosition);
+            javaWebView.PointerMove(localPosition.x, localPosition.y, eventData.pointerId);
+        }
+
+        public void OnClick(PointerEventData eventData)
+        {
+            if (simulateClick)
+            {
+                SimulateClick(eventData);
+            }
+            else
+            {
+                Vector3 localPosition = WorldToLocal(eventData.pointerCurrentRaycast.worldPosition);
+                javaWebView.Click(localPosition.x, localPosition.y, eventData.pointerId);
+            }
         }
 
         Vector3 WorldToLocal(Vector3 worldPosition)
@@ -144,6 +162,14 @@ namespace com.inetum.unitygeckowebview
             return localPosition;
         }
 
-        #endregion
+        void InteractibilityChanged(Notification notification)
+        {
+            if (!notification.TryGetInfoT(GeckoWebViewNotificationKeys.Info.Interactable, out bool interactable))
+            {
+                return;
+            }
+
+            this.interactable = interactable;
+        }
     }
 }

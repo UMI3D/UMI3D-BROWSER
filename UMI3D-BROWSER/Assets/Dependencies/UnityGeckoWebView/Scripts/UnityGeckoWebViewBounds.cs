@@ -14,31 +14,36 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
 using UnityEngine;
 
 namespace com.inetum.unitygeckowebview
 {
     /// <summary>
-    /// Represents <see cref="UnityGeckoWebView"/> bounds to optimize its rendering (only renderer it if visible). 
+    /// Represents the java web view bounds to optimize its rendering (only renderer it if visible). 
     /// </summary>
     public class UnityGeckoWebViewBounds : MonoBehaviour
     {
-        UnityGeckoWebViewRendering webviewRendering;
+        Notifier renderingNotifier;
 
         void Awake()
         {
-            webviewRendering = GetComponentInParent<UnityGeckoWebViewRendering>();
-            Debug.Assert(webviewRendering != null, "Web view should not be null");
+            renderingNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                GeckoWebViewNotificationKeys.Rendering
+            );
         }
 
         void OnBecameVisible()
         {
-            webviewRendering?.StartRendering();
+            renderingNotifier[GeckoWebViewNotificationKeys.Info.RenderingProcess] = Rendering.Start;
+            renderingNotifier.Notify();
         }
 
         void OnBecameInvisible()
         {
-            webviewRendering?.StopRendering();
+            renderingNotifier[GeckoWebViewNotificationKeys.Info.RenderingProcess] = Rendering.Stop;
+            renderingNotifier.Notify();
         }
     }
 }

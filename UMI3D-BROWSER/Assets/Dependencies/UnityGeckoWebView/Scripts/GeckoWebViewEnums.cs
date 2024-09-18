@@ -21,4 +21,13 @@ namespace com.inetum.unitygeckowebview
         Backward,
         Forward
     }
+
+    /// <summary>
+    /// The rendering process.
+    /// </summary>
+    public enum Rendering
+    {
+        Start,
+        Stop
+    }
 }

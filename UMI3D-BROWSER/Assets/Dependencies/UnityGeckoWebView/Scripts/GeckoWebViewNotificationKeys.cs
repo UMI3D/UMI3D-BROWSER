@@ -32,9 +32,39 @@ namespace com.inetum.unitygeckowebview
         public const string Search = "GeckoWebViewNotificationKeysSearch";
 
         /// <summary>
-        /// Notification sent when a search has been initiated.
+        /// Notification sent when the loading of a web page has been made.
         /// </summary>
         public const string Loading = "GeckoWebViewNotificationKeysLoading";
+
+        /// <summary>
+        /// Notification sent when a rendering process will be call.
+        /// </summary>
+        public const string Rendering = "GeckoWebViewNotificationKeysRendering";
+
+        /// <summary>
+        /// Notification sent when the size of the web view will change.
+        /// </summary>
+        public const string SizeChanged = "GeckoWebViewNotificationKeysSizeChanged";
+
+        /// <summary>
+        /// Notification sent when the size of the texture will change.
+        /// </summary>
+        public const string TextureSizeChanged = "GeckoWebViewNotificationKeysTextureSizeChanged";
+
+        /// <summary>
+        /// Notification sent when the scroll value has changed from the server.
+        /// </summary>
+        public const string ScrollChanged = "GeckoWebViewNotificationKeysScrollChanged";
+
+        /// <summary>
+        /// Notification sent when the interactibility will changed.
+        /// </summary>
+        public const string InteractibilityChanged = "GeckoWebViewNotificationKeysInteractibilityChanged";
+
+        /// <summary>
+        /// Notification sent when the synchronization has changed.
+        /// </summary>
+        public const string SynchronizationChanged = "GeckoWebViewNotificationKeysSynchronizationChanged";
 
         public static class Info
         {
@@ -53,6 +83,63 @@ namespace com.inetum.unitygeckowebview
             /// See Notification key: <see cref="Search"/>, <see cref="Loading"/>
             /// </summary>
             public const string URL = "URL";
+
+            /// <summary>
+            /// The rendering process called.<br/>
+            /// Value is <see cref="com.inetum.unitygeckowebview.Rendering"/>.<br/>
+            /// <br/>
+            /// See Notification key: <see cref="Rendering"/>
+            /// </summary>
+            public const string RenderingProcess = "RenderingProcess";
+
+            /// <summary>
+            /// A <see cref="Vector2"/>.<br/>
+            /// Could be the new size or the scrolling value of the web view.<br/>
+            /// Value is <see cref="Vector2"/>.<br/>
+            /// <br/>
+            /// See Notification key: <see cref="SizeChanged"/>, <see cref="TextureSizeChanged"/>, <see cref="ScrollChanged"/>
+            /// </summary>
+            public const string Vector2 = "Vector2";
+
+            /// <summary>
+            /// The position of the corner of the web view.<br/>
+            /// Value is <see cref="Vector3"/>[].<br/>
+            /// <br/>
+            /// See Notification key: <see cref="SizeChanged"/>
+            /// </summary>
+            public const string CornersPosition = "CornerPositions";
+
+            /// <summary>
+            /// Whether the web view is interactable.<br/>
+            /// Value is <see cref="bool"/>.<br/>
+            /// <br/>
+            /// See Notification key: <see cref="InteractibilityChanged"/>
+            /// </summary>
+            public const string Interactable = "Interactable";
+
+            /// <summary>
+            /// Whether the web view is not synchronized with the server.<br/>
+            /// Value is <see cref="bool"/>.<br/>
+            /// <br/>
+            /// See Notification key: <see cref="SynchronizationChanged"/>
+            /// </summary>
+            public const string IsDesynchronized = "IsDesynchronized";
+
+            /// <summary>
+            /// Whether the web view is synchronizing (the user pressed the synchronized button).<br/>
+            /// Value is <see cref="bool"/>.<br/>
+            /// <br/>
+            /// See Notification key: <see cref="SynchronizationChanged"/>
+            /// </summary>
+            public const string IsSynchronizing = "IsSynchronizing";
+
+            /// <summary>
+            /// Whether the user is admin of the web view.<br/>
+            /// Value is <see cref="bool"/>.<br/>
+            /// <br/>
+            /// See Notification key: <see cref="SynchronizationChanged"/>
+            /// </summary>
+            public const string IsAdmin = "IsAdmin";
         }
     }
 }

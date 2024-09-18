@@ -24,9 +24,9 @@ namespace com.inetum.unitygeckowebview
     /// </summary>
     public class UnityGeckoWebViewCallback : AndroidJavaProxy
     {
-        private UnityGeckoWebView webView;
+        private AndroidJavaWebview webView;
 
-        public UnityGeckoWebViewCallback(UnityGeckoWebView webView) : base("com.inetum.unitygeckowebview.UnityGeckoWebViewCallback")
+        public UnityGeckoWebViewCallback(AndroidJavaWebview webView) : base("com.inetum.unitygeckowebview.UnityGeckoWebViewCallback")
         {
             this.webView = webView;
         }

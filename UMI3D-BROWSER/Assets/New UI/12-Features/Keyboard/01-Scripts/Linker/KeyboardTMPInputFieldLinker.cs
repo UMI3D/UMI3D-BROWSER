@@ -19,17 +19,21 @@ using System.Collections;
 using System.Collections.Generic;
 using umi3d.browserRuntime.NotificationKeys;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace umi3d.browserRuntime.ui.keyboard
 {
+    [RequireComponent(typeof(TMPro.TMP_InputField))]
     public class KeyboardTMPInputFieldLinker : MonoBehaviour
     {
+        [Tooltip("Close the keyboard when the submit button is pressed.")]
+        public bool closeOnSubmit = true;
+
         [Tooltip("Whether the input field wait for the submit but to be pressed to update the text.")]
         [SerializeField] bool waitForSubmit = false;
 
         TMPro.TMP_InputField inputField;
         UMI3DInputFieldSelection selection;
+        Notifier selectionNotifier;
 
         void Awake()
         {
@@ -38,6 +42,11 @@ namespace umi3d.browserRuntime.ui.keyboard
             selection = new(this);
             selection.Blur();
             selection.allowSelection = !waitForSubmit;
+
+            selectionNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                KeyboardNotificationKeys.TextFieldSelected
+            );
         }
 
         void OnEnable()
@@ -105,6 +114,11 @@ namespace umi3d.browserRuntime.ui.keyboard
                     {
                         SubmitText(notification);
                     }
+                    UnityEngine.Debug.Log($"message");
+                    selectionNotifier[KeyboardNotificationKeys.Info.IsActivation] = false;
+                    selectionNotifier[KeyboardNotificationKeys.Info.SelectionPositions] = null;
+                    selectionNotifier[KeyboardNotificationKeys.Info.InputFieldText] = null;
+                    selectionNotifier.Notify();
                     break;
                 default:
                     UnityEngine.Debug.LogError($"Unhandled case.");
@@ -152,18 +166,18 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         void RemoveCharacters(Notification notification)
         {
+            if (selection.stringPosition == 0 && !selection.isTextSelected)
+            {
+                return;
+            }
+
             if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.DeletionPhase, out int deletionPhase))
             {
                 UnityEngine.Debug.LogWarning($"[KeyboardPreviewBar] No deletion phase.");
                 return;
             }
 
-            if (selection.stringPosition == 0 && !selection.isTextSelected)
-            {
-                return;
-            }
-
-            var text = inputField.text;
+            string text = inputField.text;
 
             // In phase 0: delete only one character or the selected text.
             if (deletionPhase == 0)

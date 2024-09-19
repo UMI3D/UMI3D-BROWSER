@@ -266,13 +266,13 @@ namespace umi3d.browserRuntime.ui.keyboard
 
             if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.IsActivation, out bool isActivation) || !isActivation)
             {
-                if (!isPreviewBar)
+                if (isPreviewBar)
                 {
-                    Deactivate();
+                    inputField.text = text;
                 }
                 else
                 {
-                    inputField.text = text;
+                    Deactivate();
                 }
                 return;
             }

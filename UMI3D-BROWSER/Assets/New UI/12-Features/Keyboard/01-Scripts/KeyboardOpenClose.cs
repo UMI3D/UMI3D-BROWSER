@@ -50,9 +50,7 @@ namespace umi3d.browserRuntime.ui.keyboard
 
             selectionNotifier = NotificationHub.Default.GetNotifier(
                 this,
-                KeyboardNotificationKeys.TextFieldSelected,
-                null,
-                null
+                KeyboardNotificationKeys.TextFieldSelected
             );
         }
 
@@ -80,7 +78,7 @@ namespace umi3d.browserRuntime.ui.keyboard
             NotificationHub.Default.Subscribe(
                 this,
                 KeyboardNotificationKeys.TextFieldSelected,
-                null,
+                new FilterByRef(FilterType.AcceptAllExcept, this),
                 TextFieldSelected
             );
         }
@@ -101,11 +99,6 @@ namespace umi3d.browserRuntime.ui.keyboard
             openOrCloseNotifier[KeyboardNotificationKeys.Info.IsOpening] = isOpen;
             openOrCloseNotifier[KeyboardNotificationKeys.Info.WithAnimation] = withAnimation;
             openOrCloseNotifier.Notify();
-
-            selectionNotifier[KeyboardNotificationKeys.Info.IsActivation] = false;
-            selectionNotifier[KeyboardNotificationKeys.Info.SelectionPositions] = null;
-            selectionNotifier[KeyboardNotificationKeys.Info.InputFieldText] = null;
-            selectionNotifier.Notify();
         }
 
         void Open()
@@ -145,15 +138,15 @@ namespace umi3d.browserRuntime.ui.keyboard
             }
 
             Close();
+
+            selectionNotifier[KeyboardNotificationKeys.Info.IsActivation] = false;
+            selectionNotifier[KeyboardNotificationKeys.Info.SelectionPositions] = null;
+            selectionNotifier[KeyboardNotificationKeys.Info.InputFieldText] = null;
+            selectionNotifier.Notify();
         }
 
         void TextFieldSelected(Notification notification)
         {
-            if (isOpen)
-            {
-                return;
-            }
-
             if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.IsActivation, out bool isActivation))
             {
                 return;

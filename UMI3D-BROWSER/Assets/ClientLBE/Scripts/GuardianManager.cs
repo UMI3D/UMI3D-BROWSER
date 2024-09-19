@@ -46,7 +46,7 @@ namespace ClientLBE
         public Material OcclusionMaterial;
         public CanvasGroup OrientationScenePanel;
 
-        private bool automaticCalibration = false;
+        private bool automaticCalibration = true;
         private Transform calibrator;
         private ARPlaneManager arPlaneManager;
 
@@ -291,7 +291,7 @@ namespace ClientLBE
             calibrator = ManualCalibrator.transform;
 
             if (OrientationScenePanel.gameObject.activeSelf == true && OrientationScenePanel.alpha == 1)
-                OrientationScenePanel.GetComponent<GetPlayerOrientationPanel>().ClosePanel();
+                OrientationScenePanel.GetComponent<SetPlayerOrientationPanel>().ClosePanel();
         }
 
         public void StartCalibrationScene()

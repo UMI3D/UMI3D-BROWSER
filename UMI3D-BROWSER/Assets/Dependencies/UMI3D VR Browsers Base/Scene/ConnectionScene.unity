@@ -7626,8 +7626,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 675fe4bea565b294d9c8f6846cc5e228, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AutomatiqueCalibrationToggle: {fileID: 568461001}
-  OrientationPanel: {fileID: 1786329160}
+  orientationPanel: {fileID: 1786329166}
 --- !u!65 &568461003
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -17522,7 +17521,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4f61f177198bf347bb86dee16013380, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OrientationSceneButton: {fileID: 1786329163}
 --- !u!1 &1786515640
 GameObject:
   m_ObjectHideFlags: 0

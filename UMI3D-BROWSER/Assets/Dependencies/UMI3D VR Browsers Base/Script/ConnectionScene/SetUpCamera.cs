@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
 using umi3d.cdk;
 using umi3d.cdk.userCapture.tracking;
 using umi3dVRBrowsersBase.interactions;
@@ -23,11 +24,9 @@ using UnityEngine.XR.ARFoundation;
 
 namespace umi3dVRBrowsersBase.connection
 {
-    public class SetUpCamera : MonoBehaviour
+    public class SetUpCamera : SingleBehaviour<SetUpCamera>
     {
         #region Fields
-        public TrackedSubskeletonBone viewpoint;
-
         private ARCameraManager cameraManager;
 
         public SnapTurn snapTurn;
@@ -38,9 +37,9 @@ namespace umi3dVRBrowsersBase.connection
 
         #region Methods
 
-        private void Awake()
+        private void Start()
         {
-            cameraManager = viewpoint.GetComponent<ARCameraManager>();
+            cameraManager = Camera.main.GetComponent<ARCameraManager>();
         }
 
         public void SwitchARMR()

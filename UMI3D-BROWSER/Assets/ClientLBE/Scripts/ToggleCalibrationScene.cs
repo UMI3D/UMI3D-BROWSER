@@ -1,28 +1,24 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Assertions;
+using UnityEngine.UI;
 
 namespace ClientLBE
 {
+    [RequireComponent(typeof(Toggle))]
     public class ToggleCalibrationScene : MonoBehaviour
     {
-        [SerializeField]
-        [Tooltip("Button to manage orientation scene.")]
-        private UnityEngine.UI.Toggle automaticCalibrationToggle;
-       
-        public GameObject orientationPanel;
+        public ButtonOrientationScene orientationPanel;
+        private Toggle automaticCalibrationToggle;
 
         void Start()
         {
-            Assert.IsNotNull(automaticCalibrationToggle);
+            automaticCalibrationToggle = this.GetComponent<Toggle>();
             automaticCalibrationToggle.onValueChanged.AddListener(SwitchOrientationPanel);
         }
 
         public void SwitchOrientationPanel(bool value)
         {
             GuardianManager.Instance.ToggleCalibrationScene(value);
-            orientationPanel.SetActive(value);
+            orientationPanel.gameObject.SetActive(value);
         }
     }
 }

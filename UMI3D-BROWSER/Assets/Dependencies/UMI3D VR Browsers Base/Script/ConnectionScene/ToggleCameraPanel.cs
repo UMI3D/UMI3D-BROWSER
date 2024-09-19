@@ -44,10 +44,7 @@ namespace umi3dVRBrowsersBase.connection
         [ContextMenu("Turn on/off devices cameras.")]
         void SwitchVRMR()
         {
-            SetUpCamera setUp = GameObject.FindObjectOfType<SetUpCamera>();
-            Debug.Assert(setUp != null, "No camera management found.");
-
-            setUp.SwitchARMR();
+            SetUpCamera.Instance.SwitchARMR();
         }
     }
 

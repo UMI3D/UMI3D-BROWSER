@@ -27,6 +27,11 @@ namespace com.inetum.unitygeckowebview
         public const string History = "GeckoWebViewNotificationKeysHistory";
 
         /// <summary>
+        /// Notification sent when a textfield in the web view has been selected.
+        /// </summary>
+        public const string WebViewTextFieldSelected = "GeckoWebViewNotificationKeysWebViewTextFieldSelected";
+
+        /// <summary>
         /// Notification sent when a search will be initiated.
         /// </summary>
         public const string Search = "GeckoWebViewNotificationKeysSearch";

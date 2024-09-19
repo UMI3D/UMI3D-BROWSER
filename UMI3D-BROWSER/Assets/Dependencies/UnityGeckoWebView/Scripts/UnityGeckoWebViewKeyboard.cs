@@ -14,9 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace com.inetum.unitygeckowebview
 {
@@ -24,40 +26,58 @@ namespace com.inetum.unitygeckowebview
     {
         AndroidJavaWebview javaWebview;
 
-        bool useSearchInput = false;
+        bool isWebViewTextFieldSelected = false;
 
-        void Awake()
+        public UnityEvent TextFieldSelected = new();
+
+        void OnEnable()
         {
-        
+            NotificationHub.Default.Subscribe(
+                this,
+                GeckoWebViewNotificationKeys.WebViewTextFieldSelected,
+                WebViewTextFieldSelected
+            );
         }
 
+        void OnDisable()
+        {
+            NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.WebViewTextFieldSelected);
+        }
 
         public void EnterText(string text)
         {
-            if (!useSearchInput)
-                javaWebview.EnterText(text);
+            if (!isWebViewTextFieldSelected)
+            {
+                return;
+            }
+
+            javaWebview.EnterText(text);
         }
 
         public void DeleteCharacter()
         {
-            if (!useSearchInput)
-                javaWebview.DeleteCharacter();
+            if (!isWebViewTextFieldSelected)
+            {
+                return;
+            }
+
+            javaWebview.DeleteCharacter();
         }
 
-        public void EnterCharacter()
+        public void EnterOrSubmit()
         {
-            if (!useSearchInput)
-                javaWebview.EnterCharacter();
+            if (!isWebViewTextFieldSelected)
+            {
+                return;
+            }
+
+            javaWebview.EnterCharacter();
+            isWebViewTextFieldSelected = false;
         }
 
-        public void ToggleOnSearchInput()
+        void WebViewTextFieldSelected()
         {
-            useSearchInput = true;
-        }
-
-        public void OnPointerDown(Vector2 pointer)
-        {
-            useSearchInput = false;
+            isWebViewTextFieldSelected = true;
         }
     }
 }

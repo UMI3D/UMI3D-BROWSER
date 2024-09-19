@@ -15,8 +15,8 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
+using inetum.unityUtils.extensions;
 using System;
-using System.Security.Policy;
 using UnityEngine;
 
 namespace com.inetum.unitygeckowebview
@@ -63,6 +63,12 @@ namespace com.inetum.unitygeckowebview
                 GeckoWebViewNotificationKeys.History,
                 HistoryButtonPressed
             );
+
+            NotificationHub.Default.Subscribe(
+                this,
+                GeckoWebViewNotificationKeys.Search,
+                Search
+            );
         }
 
         void OnDisable()
@@ -70,6 +76,16 @@ namespace com.inetum.unitygeckowebview
             NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.ScrollChanged);
 
             NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.History);
+
+            NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.Search);
+        }
+
+        void OnApplicationPause(bool pause)
+        {
+            if (!pause && !isNull)
+            {
+                NotifyOnResume();
+            }
         }
 
         public void Init(int width, int height, bool useNativeKeyboard, AndroidJavaObject byteBufferJavaObject)
@@ -197,15 +213,17 @@ namespace com.inetum.unitygeckowebview
             isInit = false;
         }
 
+        #region Web view callback
+
         /// <summary>
         /// Notify all subscribers that a text field has been selected.
         /// </summary>
         public void TextInputSelected()
         {
-            //NotificationHub.Default.Notify(
-            //    this,
-            //    KeyboardNotificationKeys.TextFieldSelected
-            //);
+            NotificationHub.Default.Notify(
+                this,
+                GeckoWebViewNotificationKeys.WebViewTextFieldSelected
+            );
         }
 
         /// <summary>
@@ -217,6 +235,8 @@ namespace com.inetum.unitygeckowebview
             loadingNotifier[GeckoWebViewNotificationKeys.Info.URL] = url;
             loadingNotifier.Notify();
         }
+
+        #endregion
 
         #region Notifications
 
@@ -257,6 +277,18 @@ namespace com.inetum.unitygeckowebview
                     UnityEngine.Debug.LogError($"Unhandled case.");
                     break;
             }
+        }
+
+        void Search(Notification notification)
+        {
+            if (!notification.TryGetInfoT(GeckoWebViewNotificationKeys.Info.URL, out string url))
+            {
+                return;
+            }
+
+            url = url.GetValideURL();
+
+            LoadUrl(url);
         }
 
         #endregion

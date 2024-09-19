@@ -372,6 +372,7 @@ GameObject:
   - component: {fileID: 7339341339357372392}
   - component: {fileID: 7292456002812340796}
   - component: {fileID: 2937706906433387927}
+  - component: {fileID: 4189076636828032108}
   m_Layer: 5
   m_Name: RawImage
   m_TagString: Untagged
@@ -519,6 +520,21 @@ MonoBehaviour:
   m_Interactable: 1
   m_TargetGraphic: {fileID: 0}
   simulateClick: 1
+--- !u!114 &4189076636828032108
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2070198284515693985}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd4714f671b3e3b44832fe762a64de55, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TextFieldSelected:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &2530813685983505172
 GameObject:
   m_ObjectHideFlags: 0

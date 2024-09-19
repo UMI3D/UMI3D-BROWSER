@@ -15,53 +15,16 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
+
 using System;
-using System.Text.RegularExpressions;
 using UnityEngine;
 
 namespace com.inetum.unitygeckowebview
 {
-    [RequireComponent(typeof(AndroidJavaWebview))]
     public class UnityGeckoWebView : MonoBehaviour
     {
         public static System.Collections.Generic.Queue<Action> actionsToRunOnMainThread = new();
 
-        /// <summary>
-        /// Regex to check if a string is an url or not.
-        /// </summary>
-        Regex validateURLRegex = new("^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$");
-
-        /// <summary>
-        /// The android webview.
-        /// </summary>
-        AndroidJavaWebview webview;
-
-        void Awake()
-        {
-            webview = GetComponent<AndroidJavaWebview>();
-        }
-
-        void OnEnable()
-        {
-            NotificationHub.Default.Subscribe(
-                this,
-                GeckoWebViewNotificationKeys.Search,
-                Search
-            );
-        }
-
-        void OnDisable()
-        {
-            NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.Search);
-        }
-
-        void OnApplicationPause(bool pause)
-        {
-            if (!pause && !webview.isNull)
-            {
-                webview.NotifyOnResume();
-            }
-        }
 
         void Update()
         {
@@ -74,33 +37,7 @@ namespace com.inetum.unitygeckowebview
             }
         }
 
-        void Search(Notification notification)
-        {
-            if (!notification.TryGetInfoT(GeckoWebViewNotificationKeys.Info.URL, out string url))
-            {
-                return;
-            }
-
-            LoadURLInternal(url);
-        }
-
-        void LoadURLInternal(string url)
-        {
-            if (validateURLRegex.IsMatch(url))
-            {
-                // Nothing to do.
-            }
-            else if (url.EndsWith(".com") || url.EndsWith(".net") || url.EndsWith(".fr") || url.EndsWith(".org"))
-            {
-                url = "http://" + url;
-            }
-            else
-            {
-                url = "https://www.google.com/search?q=" + url;
-            }
-
-            webview.LoadUrl(url);
-        }
+        
     }
 }
 

@@ -82,6 +82,14 @@ namespace umi3d.browserRuntime.NotificationKeys
             public const string IsActivation = "IsActivation";
 
             /// <summary>
+            /// Whether the selection is the preview bar.<br/>
+            /// Value is <see cref="bool"/>.<br/>
+            /// <br/>
+            /// See Notification key: <see cref="TextFieldSelected"/>
+            /// </summary>
+            public const string IsPreviewBar = "IsPreviewBar";
+
+            /// <summary>
             /// The position of the caret if value is int or the selection if value is (int, int).<br/>
             /// Value is <see cref="int"/> or (<see cref="int"/>, <see cref="int"/>).<br/>
             /// <br/>

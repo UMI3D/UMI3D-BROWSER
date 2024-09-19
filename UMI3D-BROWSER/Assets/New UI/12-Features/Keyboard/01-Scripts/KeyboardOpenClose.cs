@@ -140,6 +140,7 @@ namespace umi3d.browserRuntime.ui.keyboard
             Close();
 
             selectionNotifier[KeyboardNotificationKeys.Info.IsActivation] = false;
+            selectionNotifier[KeyboardNotificationKeys.Info.IsPreviewBar] = false;
             selectionNotifier[KeyboardNotificationKeys.Info.SelectionPositions] = null;
             selectionNotifier[KeyboardNotificationKeys.Info.InputFieldText] = null;
             selectionNotifier.Notify();
@@ -147,6 +148,11 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         void TextFieldSelected(Notification notification)
         {
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.IsPreviewBar, out bool isPreviewBar) || isPreviewBar)
+            {
+                return;
+            }
+
             if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.IsActivation, out bool isActivation))
             {
                 return;

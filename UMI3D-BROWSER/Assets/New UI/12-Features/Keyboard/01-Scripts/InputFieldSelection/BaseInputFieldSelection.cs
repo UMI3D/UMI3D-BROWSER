@@ -130,6 +130,7 @@ namespace umi3d.browserRuntime.ui.keyboard
             ActivateInternal();
 
             selectionNotifier[KeyboardNotificationKeys.Info.IsActivation] = isActive;
+            selectionNotifier[KeyboardNotificationKeys.Info.IsPreviewBar] = isPreviewBar;
             selectionNotifier[KeyboardNotificationKeys.Info.SelectionPositions] = allowSelection ? (start, end) : null;
             selectionNotifier[KeyboardNotificationKeys.Info.InputFieldText] = inputField.text;
             selectionNotifier.Notify();
@@ -180,6 +181,7 @@ namespace umi3d.browserRuntime.ui.keyboard
             ActivateInternal();
 
             selectionNotifier[KeyboardNotificationKeys.Info.IsActivation] = isActive;
+            selectionNotifier[KeyboardNotificationKeys.Info.IsPreviewBar] = isPreviewBar;
             selectionNotifier[KeyboardNotificationKeys.Info.SelectionPositions] = allowSelection ? newCaretPosition : null;
             selectionNotifier[KeyboardNotificationKeys.Info.InputFieldText] = inputField.text;
             selectionNotifier.Notify();

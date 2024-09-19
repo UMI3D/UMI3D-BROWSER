@@ -114,8 +114,9 @@ namespace umi3d.browserRuntime.ui.keyboard
                     {
                         SubmitText(notification);
                     }
-                    UnityEngine.Debug.Log($"message");
+
                     selectionNotifier[KeyboardNotificationKeys.Info.IsActivation] = false;
+                    selectionNotifier[KeyboardNotificationKeys.Info.IsPreviewBar] = false;
                     selectionNotifier[KeyboardNotificationKeys.Info.SelectionPositions] = null;
                     selectionNotifier[KeyboardNotificationKeys.Info.InputFieldText] = null;
                     selectionNotifier.Notify();

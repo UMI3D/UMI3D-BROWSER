@@ -13,8 +13,8 @@ limitations under the License.
 using System;
 using umi3d.cdk.menu;
 using umi3d.cdk.menu.view;
+using umi3dBrowsers.player;
 using umi3dVRBrowsersBase.ui.displayers;
-using umi3dVRBrowsersBase.ui.watchMenu;
 using UnityEngine;
 using UnityEngine.UI;
 

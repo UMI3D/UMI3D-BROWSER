@@ -1,4 +1,4 @@
-﻿/*
+/*
 Copyright 2019 - 2021 Inetum
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,10 +28,6 @@ using UnityEngine.Networking;
 
 namespace umi3d.common.collaboration
 {
-
-
-
-
     /// <summary>
     /// Send HTTP requests to the environment server.
     /// </summary>
@@ -44,7 +40,6 @@ namespace umi3d.common.collaboration
 
         abstract protected string httpUrl { get; }
 
-        private readonly ThreadDeserializer deserializer;
         protected readonly T environmentClient;
 
         /// <summary>
@@ -55,12 +50,10 @@ namespace umi3d.common.collaboration
         {
             this.environmentClient = environmentClient;
             UMI3DLogger.Log($"Init HttpClient", scope | DebugScope.Connection);
-            deserializer = new ThreadDeserializer();
         }
 
-        public void Stop()
+        public virtual void Stop()
         {
-            deserializer?.Stop();
         }
 
         /// <summary>
@@ -86,7 +79,7 @@ namespace umi3d.common.collaboration
         /// <param name="connectionDto"></param>
         public static async Task<UMI3DDto> Connect(ConnectionDto connectionDto, string MasterUrl, Func<RequestFailedArgument, bool> shouldTryAgain = null)
         {
-            byte[] bytes = System.Text.Encoding.UTF8.GetBytes(connectionDto.ToJson(Newtonsoft.Json.TypeNameHandling.None));
+            byte[] bytes = System.Text.Encoding.UTF8.GetBytes(connectionDto.ToJson(Newtonsoft.Json.TypeNameHandling.Auto));
 
             using (UnityWebRequest uwr = await _PostRequest(null, null, MasterUrl + UMI3DNetworkingKeys.connect, "application/json", bytes, (e) => shouldTryAgain?.Invoke(e) ?? DefaultShouldTryAgain(e), false))
             {
@@ -111,14 +104,15 @@ namespace umi3d.common.collaboration
                 dto2 = UMI3DDtoSerializer.FromJson<FakePrivateIdentityDto>(text, Newtonsoft.Json.TypeNameHandling.None);
             }
 
-            ConnectionFormDto dto3 = UMI3DDtoSerializer.FromJson<ConnectionFormDto>(text, Newtonsoft.Json.TypeNameHandling.None, new List<JsonConverter>() { new ParameterConverter() });
+            var dto3 = UMI3DDtoSerializer.FromJson<ConnectionFormDto>(text, Newtonsoft.Json.TypeNameHandling.None, new List<JsonConverter>() { new ParameterConverter() });
+            var dto4 = UMI3DDtoSerializer.FromJson<umi3d.common.interaction.form.ConnectionFormDto>(text, TypeNameHandling.None, new List<JsonConverter> { new ReadDivConverter() });
 
             if (dto1 != null && dto1?.globalToken != null && dto1?.connectionDto != null)
                 return dto1;
             else if (dto2 != null && dto2?.GlobalToken != null && dto2?.connectionDto != null)
                 return dto2.ToPrivateIdentity();
             else
-                return dto3;
+                return dto3.fields.Count > 0 ? dto3 : dto4;
 
         }
 
@@ -338,7 +332,7 @@ namespace umi3d.common.collaboration
                     login = login,
                     userId = userId,
                     isServer = isServer,
-                    
+
                 };
             }
         }
@@ -355,7 +349,8 @@ namespace umi3d.common.collaboration
             using (UnityWebRequest uwr = await _GetRequest(this, _HeaderToken, httpUrl + UMI3DNetworkingKeys.connectionInfo, (e) => shouldTryAgain?.Invoke(e) ?? DefaultShouldTryAgain(e), true))
             {
                 UMI3DLogger.Log($"Received Get Identity", scope | DebugScope.Connection);
-                UMI3DDto dto = await deserializer.FromBson(uwr?.downloadHandler.data);
+                byte[] data = uwr?.downloadHandler.data;
+                UMI3DDto dto = await Task.Run(() => UMI3DDtoSerializer.FromBson(data));
                 return dto as UserConnectionDto;
             }
         }
@@ -483,7 +478,8 @@ namespace umi3d.common.collaboration
             using (UnityWebRequest uwr = await _GetRequest(this, _HeaderToken, httpUrl + UMI3DNetworkingKeys.libraries, (e) => shouldTryAgain?.Invoke(e) ?? DefaultShouldTryAgain(e), true))
             {
                 UMI3DLogger.Log($"Received GetLibraries", scope | DebugScope.Connection);
-                UMI3DDto dto = await deserializer.FromBson(uwr?.downloadHandler.data);
+                byte[] data = uwr?.downloadHandler.data;
+                UMI3DDto dto = await Task.Run(() => UMI3DDtoSerializer.FromBson(data));
                 return dto as LibrariesDto;
             }
         }
@@ -500,7 +496,8 @@ namespace umi3d.common.collaboration
             using (UnityWebRequest uwr = await _PostRequest(this, _HeaderToken, httpUrl + UMI3DNetworkingKeys.entity, null, id.ToBson(), (e) => shouldTryAgain?.Invoke(e) ?? DefaultShouldTryAgain(e), true))
             {
                 UMI3DLogger.Log($"Received PostEntity", scope | DebugScope.Connection);
-                UMI3DDto dto = await deserializer.FromBson(uwr?.downloadHandler.data);
+                byte[] data = uwr?.downloadHandler.data;
+                UMI3DDto dto = await Task.Run(() => UMI3DDtoSerializer.FromBson(data));
                 return dto as LoadEntityDto;
             }
         }
@@ -528,7 +525,7 @@ namespace umi3d.common.collaboration
         /// <param name="callback">Action to be call when the request succeed.</param>
         /// <param name="onError">Action to be call when the request fail.</param>
         /// <param name="useParameterInsteadOfHeader">If true, sets authorization via parameters instead of header</param>
-        public async Task<byte[]> SendGetPrivate(string url, bool useParameterInsteadOfHeader, Func<RequestFailedArgument, bool> shouldTryAgain = null)
+        public async Task<byte[]> SendGetPrivate(string url, bool useParameterInsteadOfHeader, Func<RequestFailedArgument, bool> shouldTryAgain = null, Progress progress = null)
         {
             UMI3DLogger.Log($"Send GetPrivate {url}", scope | DebugScope.Connection);
 
@@ -540,12 +537,12 @@ namespace umi3d.common.collaboration
             while (i < 10)
             {
                 i++;
-                using (UnityWebRequest uwr = await _GetRequest(this, _HeaderToken, url, (e) => shouldTryAgain?.Invoke(e) ?? DefaultShouldTryAgain(e), !useParameterInsteadOfHeader))
+                using (UnityWebRequest uwr = await _GetRequest(this, _HeaderToken, url, (e) => shouldTryAgain?.Invoke(e) ?? DefaultShouldTryAgain(e), !useParameterInsteadOfHeader, null, 0, progress))
                 {
                     UMI3DLogger.Log($"Received GetPrivate {url}\n{uwr?.responseCode}\n{uwr?.url}", scope | DebugScope.Connection);
                     if (uwr?.responseCode != 204)
                         return uwr?.downloadHandler.data;
-                    UMI3DLogger.Log($"Resend GetPrivate Because responce code was 204 {url}", scope | DebugScope.Connection);
+                    UMI3DLogger.Log($"Resend GetPrivate Because response code was 204 {url}", scope | DebugScope.Connection);
                     await UMI3DAsyncManager.Delay(1000);
                 }
             }
@@ -557,12 +554,11 @@ namespace umi3d.common.collaboration
             return url;
         }
 
-
         #endregion
 
         #region environement
         /// <summary>
-        /// Send request using GET method to get the Environement.
+        /// Send request using GET method to get the Environment.
         /// </summary>
         /// <param name="callback">Action to be call when the request succeed.</param>
         /// <param name="onError">Action to be call when the request fail.</param>
@@ -572,7 +568,8 @@ namespace umi3d.common.collaboration
             using (UnityWebRequest uwr = await _GetRequest(this, _HeaderToken, httpUrl + UMI3DNetworkingKeys.environment, (e) => shouldTryAgain?.Invoke(e) ?? DefaultShouldTryAgain(e), true))
             {
                 UMI3DLogger.Log($"Received GetEnvironment", scope | DebugScope.Connection);
-                UMI3DDto dto = await deserializer.FromBson(uwr?.downloadHandler.data);
+                byte[] data = uwr?.downloadHandler.data;
+                UMI3DDto dto = await Task.Run(() => UMI3DDtoSerializer.FromBson(data));
                 return dto as GlTFEnvironmentDto;
             }
         }
@@ -589,7 +586,8 @@ namespace umi3d.common.collaboration
             using (UnityWebRequest uwr = await _PostRequest(this, _HeaderToken, httpUrl + UMI3DNetworkingKeys.join, null, join.ToBson(), (e) => shouldTryAgain?.Invoke(e) ?? DefaultShouldTryAgain(e), true))
             {
                 UMI3DLogger.Log($"Received PostJoin", scope | DebugScope.Connection);
-                UMI3DDto dto = await deserializer.FromBson(uwr?.downloadHandler.data);
+                byte[] data = uwr?.downloadHandler.data;
+                UMI3DDto dto = await Task.Run(() => UMI3DDtoSerializer.FromBson(data));
                 return dto as EnterDto;
             }
         }
@@ -675,7 +673,7 @@ namespace umi3d.common.collaboration
         /// <param name="callback">Action to be call when the request succeed.</param>
         /// <param name="onError">Action to be call when the request fail.</param>
         /// <returns></returns>
-        protected static async Task<UnityWebRequest> _GetRequest(AbstractHttpClient<T> instance, string HeaderToken, string url, Func<RequestFailedArgument, bool> ShouldTryAgain, bool UseCredential = false, List<(string, string)> headers = null, int tryCount = 0)
+        protected static async Task<UnityWebRequest> _GetRequest(AbstractHttpClient<T> instance, string HeaderToken, string url, Func<RequestFailedArgument, bool> ShouldTryAgain, bool UseCredential = false, List<(string, string)> headers = null, int tryCount = 0, Progress progress = null)
         {
             var www = UnityWebRequest.Get(url);
             if (UseCredential) www.SetRequestHeader(UMI3DNetworkingKeys.Authorization, HeaderToken);
@@ -686,10 +684,45 @@ namespace umi3d.common.collaboration
                     www.SetRequestHeader(item.Item1, item.Item2);
                 }
             }
+
             DateTime date = DateTime.UtcNow;
+
+            float lastMetricTime = Time.time;
+            float startRequestTime = lastMetricTime;
+            ulong lastNumberOfDownloadedBytes = 0;
+
+            string currentStateMessage = progress?.currentState;
+
             UnityWebRequestAsyncOperation operation = www.SendWebRequest();
+
+            if (!string.IsNullOrWhiteSpace(HeaderToken))
+            {
+                progress?.SetStatus($"{currentStateMessage} : requesting download authorization");
+            }
+
+            bool hasDownloadStarted = false;
+
             while (!operation.isDone)
+            {
+                if (!string.IsNullOrWhiteSpace(HeaderToken) && www.url != url && !hasDownloadStarted)
+                {
+                    hasDownloadStarted = true;
+                    progress?.SetStatus($"{currentStateMessage} : download authorization granted");
+                }
+
+                if (Time.time > lastMetricTime + .2f)
+                {
+                    ulong nbBytes = www.downloadedBytes - lastNumberOfDownloadedBytes;
+                    progress?.SetStatus($"{currentStateMessage} ({GetDownloadSpeed(nbBytes, .2f)} - {Math.Round((www.downloadProgress * 100), 2)} %)");
+
+                    lastMetricTime = Time.time;
+                    lastNumberOfDownloadedBytes = www.downloadedBytes;
+                }
+
                 await UMI3DAsyncManager.Yield();
+            }
+
+            progress?.SetStatus(currentStateMessage);
 
 #if UNITY_2020_1_OR_NEWER
             if (www.result > UnityWebRequest.Result.Success)
@@ -702,6 +735,7 @@ namespace umi3d.common.collaboration
                     ?? throw new Umi3dNetworkingException(www, "Failed to get "));
 
             }
+
             return www;
         }
 
@@ -776,6 +810,27 @@ namespace umi3d.common.collaboration
             //requestU.SetRequestHeader("access_token", UMI3DClientServer.GetToken(null));
             return requestU;
         }
+
+        private const int MEGA_BYTES_TO_BYTES = 1024 * 1024;
+        private const int K_BYTES_TO_BYTES = 1024;
+        /// <summary>
+        /// Returns download speed for a given nb of bytes downloaded during a delta time.
+        /// </summary>
+        /// <param name="nbOfBytesDownloaded"></param>
+        /// <param name="deltaTime"></param>
+        /// <returns></returns>
+        public static string GetDownloadSpeed(ulong nbOfBytesDownloaded, float deltaTime)
+        {
+            float speed = nbOfBytesDownloaded / deltaTime; // bytes/s
+
+            if (speed > MEGA_BYTES_TO_BYTES)
+                return Math.Round(speed / MEGA_BYTES_TO_BYTES, 1) + " Mo/s";
+            else if (speed > K_BYTES_TO_BYTES)
+                return Math.Round(speed / K_BYTES_TO_BYTES, 1) + " Ko/s";
+            else
+                return Math.Round(speed, 1) + " o/s";
+        }
+
         #endregion
     }
 }

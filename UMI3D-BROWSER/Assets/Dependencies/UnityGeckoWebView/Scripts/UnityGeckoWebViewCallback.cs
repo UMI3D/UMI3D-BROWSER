@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
 using UnityEngine;
 
 namespace com.inetum.unitygeckowebview
@@ -35,6 +36,9 @@ namespace com.inetum.unitygeckowebview
         /// </summary>
         public void onTextInputSelected()
         {
+            if (webView is null)
+                return;
+
             UnityGeckoWebView.actionsToRunOnMainThread.Enqueue(() => webView.OnTextInputSelected?.Invoke());
         }
 
@@ -43,6 +47,9 @@ namespace com.inetum.unitygeckowebview
         /// </summary>
         public void onUrlStartedLoading(string url)
         {
+            if (webView is null)
+                return;
+
             UnityGeckoWebView.actionsToRunOnMainThread.Enqueue(() => webView.OnUrlStartedLoading?.Invoke(url));
         }
     }

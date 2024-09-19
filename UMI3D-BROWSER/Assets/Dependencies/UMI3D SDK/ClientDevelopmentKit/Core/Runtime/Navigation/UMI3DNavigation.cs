@@ -41,6 +41,7 @@ namespace umi3d.cdk.navigation
 
         public void Init(params INavigationDelegate[] navigationDelegates)
         {
+            navigations = new();
             navigations.AddRange(navigationDelegates);
             currentNav = navigations.FirstOrDefault();
             currentNav.Activate();
@@ -77,6 +78,9 @@ namespace umi3d.cdk.navigation
 
             switch (dto)
             {
+                case ViewpointTeleportDto viewpointTeleportDto:
+                    currentNav.ViewpointTeleport(environmentId, viewpointTeleportDto);
+                    break;
                 case TeleportDto teleportDto:
                     currentNav.Teleport(environmentId, teleportDto);
                     break;

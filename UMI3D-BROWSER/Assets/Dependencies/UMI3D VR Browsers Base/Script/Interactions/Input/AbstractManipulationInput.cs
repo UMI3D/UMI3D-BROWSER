@@ -143,7 +143,7 @@ namespace umi3dVRBrowsersBase.interactions.input
                 associatedManipulationDof = dofs;
                 base.Associate(environmentId, manipulation, dofs, toolId, hoveredObjectId);
 
-                GameObject frame = UMI3DEnvironmentLoader.GetNode(environmentId, manipulation.frameOfReference).gameObject;
+                GameObject frame = UMI3DEnvironmentLoader.GetNode(environmentId, manipulation.frameOfReference).GameObject;
                 if (frame == null)
                     throw new System.Exception("No frame of reference found for this manipulation");
                 else
@@ -222,8 +222,7 @@ namespace umi3dVRBrowsersBase.interactions.input
         /// </summary>
         protected virtual void ActivationButton_onStateUp()
         {
-            if (PlayerMenuManager.Instance.parameterGear.IsHovered 
-                || PlayerMenuManager.Instance.IsMenuHovered)
+            if (PlayerMenuManager.Instance.IsMenuHovered)
                 return;
 
             if (messageSenderCoroutine != null)
@@ -242,8 +241,7 @@ namespace umi3dVRBrowsersBase.interactions.input
         /// </summary>
         protected virtual void ActivationButton_onStateDown()
         {
-            if (PlayerMenuManager.Instance.parameterGear.IsHovered 
-                || PlayerMenuManager.Instance.IsMenuHovered)
+            if (PlayerMenuManager.Instance.IsMenuHovered)
                 return;
 
             if (messageSenderCoroutine != null)

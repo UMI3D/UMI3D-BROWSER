@@ -165,6 +165,7 @@ namespace umi3d.cdk.collaboration
         public class UserInfo
         {
             public ConnectionFormDto formdto;
+            public umi3d.common.interaction.form.ConnectionFormDto divForm;
             public UserConnectionAnswerDto answerDto;
 
             public string AudioPassword;
@@ -172,9 +173,9 @@ namespace umi3d.cdk.collaboration
             public UserInfo()
             {
                 formdto = new ConnectionFormDto();
+                divForm = new common.interaction.form.ConnectionFormDto();
                 answerDto = new UserConnectionAnswerDto();
                 AudioPassword = null;
-
             }
 
             public void Set(UserConnectionDto dto)
@@ -209,6 +210,7 @@ namespace umi3d.cdk.collaboration
                     parameters = param
                 };
                 this.formdto = dto.parameters;
+                this.divForm = dto.divForm;
                 this.AudioPassword = dto.audioPassword;
             }
         }
@@ -227,6 +229,7 @@ namespace umi3d.cdk.collaboration
             this.disconected = false;
             this.connectionDto = connectionDto;
             this.version = new UMI3DVersion.Version(connectionDto.version);
+            UMI3DSerializer.version = this.version;
             this.worldControllerClient = worldControllerClient;
 
             this.progress = progress;
@@ -357,6 +360,9 @@ namespace umi3d.cdk.collaboration
                 GameObject.Destroy(ForgeClient.gameObject);
                 ForgeClient = null;
             }
+
+            HttpClient.Stop();
+
             return true;
         }
 
@@ -523,7 +529,13 @@ namespace umi3d.cdk.collaboration
                 if (Ok)
                 {
                     //UMI3DLogger.Log($"Update Identity parameters {UserDto.formdto} ", scope | DebugScope.Connection);
-                    if (UserDto.formdto != null)
+                    if (UserDto.divForm != null)
+                    {
+                        var param = await UMI3DCollaborationClientServer.Instance.Identifier.GetParameterDtos(UserDto.divForm);
+                        UserDto.answerDto.divFormAnswer = param;
+                        await HttpClient.SendPostUpdateIdentity(UserDto.answerDto);
+                    }
+                    else if (UserDto.formdto != null)
                     {
                         FormAnswerDto param = await UMI3DCollaborationClientServer.Instance.Identifier.GetParameterDtos(UserDto.formdto);
                         UserDto.answerDto.parameters = param;
@@ -621,7 +633,7 @@ namespace umi3d.cdk.collaboration
             await (UMI3DEnvironmentLoader.Instance.Load(environement, LoadProgress));
             UpdateProgress.AddComplete();
             UMI3DLogger.Log($"Load ended, Teleport and set status to active", scope | DebugScope.Connection);
-            UMI3DNavigation.currentNav.Teleport(UMI3DGlobalID.EnvironmentId,new TeleportDto() { position = enter.userPosition, rotation = enter.userRotation });
+            UMI3DNavigation.currentNav.Teleport(UMI3DGlobalID.EnvironmentId, new TeleportDto() { position = enter.userPosition, rotation = enter.userRotation });
             EnvironementLoaded.Invoke();
             UserDto.answerDto.status = statusToBeSet;
             UMI3DCollaborationClientServer.transactionPending = await HttpClient.SendPostUpdateIdentity(UserDto.answerDto, null);
@@ -659,10 +671,10 @@ namespace umi3d.cdk.collaboration
         }
 
         /// <inheritdoc/>
-        public async Task<byte[]> GetFile(string url, bool useParameterInsteadOfHeader)
+        public async Task<byte[]> GetFile(string url, bool useParameterInsteadOfHeader, Progress progress = null)
         {
             //UMI3DLogger.Log($"GetFile {url}", scope);
-            return await HttpClient.SendGetPrivate(url, useParameterInsteadOfHeader);
+            return await HttpClient.SendGetPrivate(url, useParameterInsteadOfHeader, null, progress);
         }
 
         /// <inheritdoc/>

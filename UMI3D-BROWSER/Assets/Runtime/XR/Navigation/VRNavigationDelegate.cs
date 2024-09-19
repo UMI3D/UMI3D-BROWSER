@@ -14,6 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
+using System.Collections.Generic;
+using umi3d.browserRuntime.NotificationKeys;
 using umi3d.cdk;
 using umi3d.cdk.navigation;
 using umi3d.common;
@@ -37,6 +40,8 @@ namespace umi3d.browserRuntime.navigation
         public bool vehicleFreeHead = false;
         public UMI3DNodeInstance globalFrame;
 
+        Dictionary<string, System.Object> info = new();
+
         public void Init(
             UnityEngine.Object context,
             Transform cameraTransform,
@@ -55,23 +60,50 @@ namespace umi3d.browserRuntime.navigation
         public void Activate() 
         {
             isActive = true;
+
+            info[LocomotionNotificationKeys.Info.Controller] = Controller.LeftAndRight;
+            info[LocomotionNotificationKeys.Info.SnapTurnActiveState] = ActiveState.Enable;
+            info[LocomotionNotificationKeys.Info.TeleportationActiveState] = ActiveState.Enable;
+            NotificationHub.Default.Notify(this, LocomotionNotificationKeys.System, info);
         }
 
         public void Disable() 
         {
             isActive = false;
+
+            info[LocomotionNotificationKeys.Info.Controller] = Controller.LeftAndRight;
+            info[LocomotionNotificationKeys.Info.SnapTurnActiveState] = ActiveState.Disable;
+            info[LocomotionNotificationKeys.Info.TeleportationActiveState] = ActiveState.Disable;
+            NotificationHub.Default.Notify(this, LocomotionNotificationKeys.System, info);
+        }
+
+        public void ViewpointTeleport(ulong environmentId, ViewpointTeleportDto data)
+        {
+            personalSkeletonContainer.rotation = data.rotation.Quaternion();
+            if (cameraTransform != null)
+            {
+                float angle = Vector3.SignedAngle(
+                    personalSkeletonContainer.forward,
+                    Vector3.ProjectOnPlane(
+                        cameraTransform.forward,
+                        Vector3.up
+                    ),
+                    Vector3.up
+                );
+                personalSkeletonContainer.Rotate(0, -angle, 0);
+            }
+
+            personalSkeletonContainer.position = data.position.Struct();
+            if (cameraTransform != null)
+            {
+                Vector3 translation = personalSkeletonContainer.position - cameraTransform.position;
+                personalSkeletonContainer.Translate(translation, Space.World);
+            }
         }
 
         public void Teleport(ulong environmentId, TeleportDto data)
         {
-            if (!isActive)
-            {
-                return;
-            }
-
-           
-
-            personalSkeletonContainer.rotation = data.rotation.Quaternion() * Quaternion.Inverse(UMI3DLoadingHandler.Instance.transform.rotation);
+            personalSkeletonContainer.rotation = data.rotation.Quaternion();
             if (cameraTransform != null)
             {
                 float angle = Vector3.SignedAngle(
@@ -93,7 +125,6 @@ namespace umi3d.browserRuntime.navigation
                 );
                 personalSkeletonContainer.Translate(translation, Space.World);
             }
-
         }
 
         public void Navigate(ulong environmentId, NavigateDto data)

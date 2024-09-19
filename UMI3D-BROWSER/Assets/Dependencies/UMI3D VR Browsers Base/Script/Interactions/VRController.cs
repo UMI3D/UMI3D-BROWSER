@@ -103,8 +103,6 @@ namespace umi3dVRBrowsersBase.interactions
 
             if (currentTool == tool) // It means projection succedded
             {
-                PlayerMenuManager.Instance.MenuHeader.DisplayControllerButton(true, type, tool.name);
-
                 tool.onProjected(bone.BoneType);
             }
         }
@@ -179,13 +177,13 @@ namespace umi3dVRBrowsersBase.interactions
                             {
                                 var toolInputs = new List<AbstractUMI3DInput>();
                                 AbstractUMI3DInput[] buffer;
-                                if (associatedInputs.TryGetValue(tool.id, out buffer))
+                                if (associatedInputs.TryGetValue((tool.id,tool.environmentId), out buffer))
                                 {
                                     toolInputs = new List<AbstractUMI3DInput>(buffer);
-                                    associatedInputs.Remove(tool.id);
+                                    associatedInputs.Remove((tool.id, tool.environmentId));
                                 }
                                 toolInputs.Add(newInput);
-                                associatedInputs.Add(tool.id, toolInputs.ToArray());
+                                associatedInputs.Add((tool.id, tool.environmentId), toolInputs.ToArray());
                             }
                             else
                                 throw new System.Exception("Internal Error");
@@ -224,13 +222,13 @@ namespace umi3dVRBrowsersBase.interactions
                         {
                             var toolInputs = new List<AbstractUMI3DInput>();
                             AbstractUMI3DInput[] buffer;
-                            if (associatedInputs.TryGetValue(tool.id, out buffer))
+                            if (associatedInputs.TryGetValue((tool.id, tool.environmentId), out buffer))
                             {
                                 toolInputs = new List<AbstractUMI3DInput>(buffer);
-                                associatedInputs.Remove(tool.id);
+                                associatedInputs.Remove((tool.id, tool.environmentId));
                             }
                             toolInputs.Add(newInput);
-                            associatedInputs.Add(tool.id, toolInputs.ToArray());
+                            associatedInputs.Add((tool.id, tool.environmentId), toolInputs.ToArray());
                         }
                         else
                             throw new System.Exception("Internal Error");
@@ -263,13 +261,13 @@ namespace umi3dVRBrowsersBase.interactions
             AbstractUMI3DInput[] inputs = projectionMemory.Project(this, UMI3DGlobalID.EnvironmentId, interactions.FindAll(inter => inter is AbstractParameterDto).ToArray(), tool.id, hoveredObjectId);
             var toolInputs = new List<AbstractUMI3DInput>();
 
-            if (associatedInputs.TryGetValue(tool.id, out AbstractUMI3DInput[] buffer))
+            if (associatedInputs.TryGetValue((tool.id, tool.environmentId), out AbstractUMI3DInput[] buffer))
             {
                 toolInputs = new List<AbstractUMI3DInput>(buffer);
-                associatedInputs.Remove(tool.id);
+                associatedInputs.Remove((tool.id, tool.environmentId));
             }
             toolInputs.AddRange(inputs);
-            associatedInputs.Add(tool.id, toolInputs.ToArray());
+            associatedInputs.Add((tool.id, tool.environmentId), toolInputs.ToArray());
         }
 
         /// <summary>
@@ -281,9 +279,6 @@ namespace umi3dVRBrowsersBase.interactions
         {
             base.Release(tool, reason);
             tool.onReleased(bone.BoneType);
-
-            PlayerMenuManager.Instance.CtrlToolMenu.ClearBindingList(type);
-            PlayerMenuManager.Instance.MenuHeader.DisplayControllerButton(false, type, string.Empty);
         }
 
         #endregion

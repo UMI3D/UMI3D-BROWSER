@@ -14,11 +14,12 @@ limitations under the License.
 using System;
 using System.Collections.Generic;
 using umi3d.cdk.interaction;
-using umi3d.cdk.userCapture.pose;
 using umi3d.common;
 using umi3dBrowsers.interaction.selection;
 using umi3dBrowsers.interaction.selection.intentdetector;
 using umi3dBrowsers.interaction.selection.projector;
+using umi3dBrowsers.linker;
+using umi3dVRBrowsersBase.ui;
 using UnityEngine;
 
 namespace umi3dVRBrowsersBase.interactions.selection.selector
@@ -42,11 +43,6 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
 
         #region constructors
 
-        private InteractableVRSelector() : base()
-        {
-            projector = new InteractableProjector();
-        }
-
         /// <inheritdoc/>
         [HideInInspector]
         public class InteractableSelectionData : SelectionIntentData<InteractableContainer>
@@ -60,6 +56,22 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
         #endregion constructors
 
         #region lifecycle
+        protected override void Awake()
+        {
+            base.Awake();
+            simLinker.OnSimReady += sim =>
+            {
+                projector = new InteractableProjector()
+                {
+                    sim = sim
+                };
+            };
+        }
+
+        protected override void Start()
+        {
+            base.Start();
+        }
 
         protected override void Update()
         {

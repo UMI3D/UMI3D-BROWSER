@@ -79,9 +79,8 @@ namespace umi3dVRBrowsersBase.interactions.input
         /// <see cref="Associate(AbstractInteractionDto)"/>
         private void VRInput_onStateUp()
         {
-            if (PlayerMenuManager.Instance.parameterGear.IsHovered
-                || PlayerMenuManager.Instance.IsMenuHovered
-                || (Keyboard.Instance?.IsOpen ?? false))
+            if (PlayerMenuManager.Instance.IsMenuHovered
+                || (KeyboardWebView.Instance?.IsOpen ?? false))
                 return;
 
             onActionUp.Invoke();
@@ -95,9 +94,8 @@ namespace umi3dVRBrowsersBase.interactions.input
         /// <see cref="Associate(AbstractInteractionDto)"/>
         private void VRInput_onStateDown()
         {
-            if (PlayerMenuManager.Instance.parameterGear.IsHovered
-                || PlayerMenuManager.Instance.IsMenuHovered
-                || (Keyboard.Instance?.IsOpen ?? false))
+            if (PlayerMenuManager.Instance.IsMenuHovered
+                || (KeyboardWebView.Instance?.IsOpen ?? false))
                 return;
 
             onActionDown.Invoke();

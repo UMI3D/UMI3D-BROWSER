@@ -14,10 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
 using System.Collections;
 using System.Collections.Generic;
-using umi3dVRBrowsersBase.connection;
+using umi3d.browserRuntime.NotificationKeys;
+using umi3d.browserRuntime.xr;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace umi3dVRBrowsersBase.navigation
 {
@@ -72,43 +75,100 @@ namespace umi3dVRBrowsersBase.navigation
         /// </summary>
         private List<GameObject> displayers = new List<GameObject>();
 
+        ControllerType controllerType;
+        Dictionary<string, System.Object> info = new();
+
         #endregion
 
         #region Methods
 
-        protected virtual void Awake()
+        void Awake()
         {
+            controllerType = GetComponentInParent<ControllerType>();
+
             for (int i = 0; i < arcMaxLength / stepLength + 1; i++)
             {
                 GameObject disp = Instantiate(stepDisplayerPrefab, this.transform);
                 disp.SetActive(false);
                 displayers.Add(disp);
             }
-
-            LoadingScreenDisplayer.OnLoadingScreenDislayed.AddListener(() =>
-            {
-                isLoadingScreenDisplayed = true;
-            });
-
-            LoadingScreenDisplayer.OnLoadingScreenHidden.AddListener(() =>
-            {
-                isLoadingScreenDisplayed = false;
-            });
         }
 
-        bool isLoadingScreenDisplayed = false;
+        void OnEnable()
+        {
+            NotificationHub.Default.Subscribe(
+                this,
+                LocomotionNotificationKeys.Teleportation,
+                null,
+                Teleport
+            );
+        }
+
+        void OnDisable()
+        {
+            NotificationHub.Default.Unsubscribe(LocomotionNotificationKeys.Teleportation);
+        }
+
+        void Teleport(Notification notification)
+        {
+            if (notification.Publisher is TeleportArc)
+            {
+                // If this trigger this notification then return.
+                return;
+            }
+
+            if (!notification.TryGetInfoT(LocomotionNotificationKeys.Info.Controller, out Controller controller))
+            {
+                return;
+            }
+
+            if (!notification.TryGetInfoT(LocomotionNotificationKeys.Info.ActionPhase, out InputActionPhase phase))
+            {
+                return;
+            }
+
+            if (controller != controllerType.controller)
+            {
+                // This controller is not the target of the notification.
+                return;
+            }
+
+            if (phase == InputActionPhase.Started)
+            {
+                Display();
+            }
+            else if (phase == InputActionPhase.Performed)
+            {
+                Vector3? position = GetPointedPoint();
+
+                if (!position.HasValue)
+                {
+                    Hide();
+                    return;
+                }
+
+                info[LocomotionNotificationKeys.Info.ActionPhase] = InputActionPhase.Waiting;
+                info[LocomotionNotificationKeys.Info.Position] = position.Value;
+                NotificationHub.Default.Notify(
+                    this,
+                    LocomotionNotificationKeys.Teleportation,
+                    info
+                );
+
+                Hide();
+            }
+            else
+            {
+                Hide();
+            }
+        }
 
         /// <summary>
         /// Displays teleportation arc.
         /// </summary>
         [ContextMenu("Display")]
-        public void Display()
+        void Display()
         {
-            if (isLoadingScreenDisplayed)
-            {
-                return;
-            }
-
             if (updateRoutine != null)
                 return;
 
@@ -119,7 +179,7 @@ namespace umi3dVRBrowsersBase.navigation
         /// Hides teleportation arc.
         /// </summary>
         [ContextMenu("Hide")]
-        public void Hide()
+        void Hide()
         {
             if (updateRoutine == null)
                 return;
@@ -137,7 +197,7 @@ namespace umi3dVRBrowsersBase.navigation
         /// Tries to find impact point.
         /// </summary>
         /// <returns></returns>
-        public Vector3? GetPointedPoint()
+        Vector3? GetPointedPoint()
         {
             if (impactPoint.activeSelf)
                 return impactPoint.transform.position;
@@ -150,7 +210,7 @@ namespace umi3dVRBrowsersBase.navigation
         /// </summary>
         /// <param name="distanceFromStartAlongArc"></param>
         /// <returns></returns>
-        private Vector3 GetArcPoint(float distanceFromStartAlongArc)
+        Vector3 GetArcPoint(float distanceFromStartAlongArc)
         {
             return Physics.gravity * distanceFromStartAlongArc * distanceFromStartAlongArc
                 + rayStartPoint.forward * raySpeed * distanceFromStartAlongArc
@@ -161,7 +221,7 @@ namespace umi3dVRBrowsersBase.navigation
         /// Udpates arc display.
         /// </summary>
         /// <returns></returns>
-        private IEnumerator UpdateArc()
+        IEnumerator UpdateArc()
         {
             while (true)
             {

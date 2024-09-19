@@ -276,7 +276,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 6306864101918098934}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: umi3dVRBrowsersBase.ui.watchMenu.WatchMenu, Assembly-CSharp
         m_MethodName: Open
         m_Mode: 1
@@ -564,7 +564,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 5411572366268182620}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: ToggleDisplayPlayerMenu
         m_Mode: 1
@@ -722,7 +722,7 @@ MonoBehaviour:
   onClicked:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6306864101918098934}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: Open
         m_Mode: 1
@@ -847,7 +847,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 5411572366268182620}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: ToggleSettingsMenuDisplay
         m_Mode: 1
@@ -985,7 +985,7 @@ MonoBehaviour:
   onClicked:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6306864101918098934}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: Leave
         m_Mode: 1
@@ -1248,7 +1248,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 5411572366268182620}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: SetMicStatus
         m_Mode: 6
@@ -1394,7 +1394,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 5411572366268182620}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: SetAvatarStatus
         m_Mode: 6
@@ -1492,7 +1492,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 6306864101918098934}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: SetMicStatus
         m_Mode: 6
@@ -1766,7 +1766,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 6306864101918098934}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: ToggleSettingsMenuDisplay
         m_Mode: 1
@@ -1912,7 +1912,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 6306864101918098934}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: SetSoundStatus
         m_Mode: 6
@@ -2137,7 +2137,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 5411572366268182620}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: umi3dVRBrowsersBase.ui.watchMenu.WatchMenu, Assembly-CSharp
         m_MethodName: Open
         m_Mode: 1
@@ -2789,7 +2789,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2270830835987029779}
   - component: {fileID: 6785794928486041094}
-  - component: {fileID: 8573875925099406061}
+  - component: {fileID: 1782540143017712207}
   m_Layer: 0
   m_Name: PersonalSkeleton
   m_TagString: Untagged
@@ -2827,7 +2827,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   trackedSkeleton: {fileID: 8122493912497929325}
   hipsAnchor: {fileID: 2380105925281183156}
---- !u!114 &8573875925099406061
+--- !u!114 &1782540143017712207
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2836,25 +2836,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 3290370842411280240}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 813c4fa37e44fdb42a809e34bb536a3f, type: 3}
+  m_Script: {fileID: 11500000, guid: cd198e3712d12e647a79784e8e611bf3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  trackedSkeleton: {fileID: 8122493912497929325}
+  linker: {fileID: 11400000, guid: 68ff1a90a5151924e867698a4e1d3a2d, type: 2}
+  skeletonContainer: {fileID: 2270830835987029779}
   trackers:
-  - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   Joint: {fileID: 6214535397883207152}
   Surface: {fileID: 4230522372026819353}
-  Viewpoint: {fileID: 0}
   LeftWatch: {fileID: 6803227662513041128}
   RightWatch: {fileID: 5892810496740008749}
-  OVRAnchor: {fileID: 0}
-  skeletonContainer: {fileID: 2270830835987029779}
   FootTargetBehavior: {fileID: 6942374478926416421}
   Neck: {fileID: 2705249298229989849}
   smoothRotationSpeed: 0.1
   maxAngleBeforeRotating: 50
+  debugJointAndSurface: 0
 --- !u!1 &3297583686306207810
 GameObject:
   m_ObjectHideFlags: 0
@@ -2963,7 +2961,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 5411572366268182620}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: SetAvatarStatus
         m_Mode: 6
@@ -3553,7 +3551,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 5411572366268182620}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: ToggleSettingsMenuDisplay
         m_Mode: 1
@@ -3789,7 +3787,7 @@ MonoBehaviour:
   onClicked:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5411572366268182620}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: Open
         m_Mode: 1
@@ -4061,7 +4059,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 6306864101918098934}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: ToggleSettingsMenuDisplay
         m_Mode: 1
@@ -4199,7 +4197,7 @@ MonoBehaviour:
   onClicked:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5411572366268182620}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: Leave
         m_Mode: 1
@@ -4393,7 +4391,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 5411572366268182620}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: SetSoundStatus
         m_Mode: 6
@@ -4491,7 +4489,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 5411572366268182620}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: SetSoundStatus
         m_Mode: 6
@@ -4589,7 +4587,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 6306864101918098934}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: SetSoundStatus
         m_Mode: 6
@@ -4865,7 +4863,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5777212892059426515}
-  - component: {fileID: 6306864101918098934}
   - component: {fileID: 7905228026459241278}
   - component: {fileID: 6322814591342906551}
   m_Layer: 0
@@ -4894,27 +4891,6 @@ Transform:
   - {fileID: 4784258676759457039}
   m_Father: {fileID: 3789748033151784995}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 180}
---- !u!114 &6306864101918098934
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5892810496740008749}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8d3b996bc309bc24eb5a851a1561e228, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  menuDisplayManager: {fileID: 7905228026459241278}
-  associatedController: 0
-  pinMenuButton: {fileID: 1547313787374973159}
-  playerMenuButton: {fileID: 8723810260610621811}
-  settingsMenuRoot: {fileID: 3138333904033527885}
-  setMicButton: {fileID: 4017021153696942264}
-  setSoundButton: {fileID: 4635505119721754978}
-  setAvatarButton: {fileID: 5737836368848463749}
-  notificationContainer: {fileID: 4784258676759457039}
 --- !u!114 &7905228026459241278
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5127,7 +5103,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 6306864101918098934}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: SetMicStatus
         m_Mode: 6
@@ -5225,7 +5201,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 5411572366268182620}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: SetMicStatus
         m_Mode: 6
@@ -5884,7 +5860,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9180787748719252660}
-  - component: {fileID: 5411572366268182620}
   - component: {fileID: 2258145073749746892}
   - component: {fileID: 7714492942635435524}
   m_Layer: 0
@@ -5913,27 +5888,6 @@ Transform:
   - {fileID: 7573522695183843276}
   m_Father: {fileID: 3770806721287205255}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 180}
---- !u!114 &5411572366268182620
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6803227662513041128}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8d3b996bc309bc24eb5a851a1561e228, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  menuDisplayManager: {fileID: 2258145073749746892}
-  associatedController: 0
-  pinMenuButton: {fileID: 1903940956311611488}
-  playerMenuButton: {fileID: 8260512638051378290}
-  settingsMenuRoot: {fileID: 33335932630861083}
-  setMicButton: {fileID: 8467345278047271726}
-  setSoundButton: {fileID: 3160846004692749291}
-  setAvatarButton: {fileID: 6114930158491708014}
-  notificationContainer: {fileID: 7573522695183843276}
 --- !u!114 &2258145073749746892
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6283,7 +6237,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 6306864101918098934}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: ToggleDisplayPlayerMenu
         m_Mode: 1
@@ -6477,7 +6431,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 5411572366268182620}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: umi3dVRBrowsersBase.ui.watchMenu.WatchMenu, Assembly-CSharp
         m_MethodName: Close
         m_Mode: 1
@@ -6623,7 +6577,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 5411572366268182620}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: ToggleDisplayPlayerMenu
         m_Mode: 1
@@ -6872,7 +6826,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 6306864101918098934}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: umi3dVRBrowsersBase.ui.watchMenu.WatchMenu, Assembly-CSharp
         m_MethodName: Close
         m_Mode: 1
@@ -7018,7 +6972,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 6306864101918098934}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: ToggleDisplayPlayerMenu
         m_Mode: 1
@@ -7401,7 +7355,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 6306864101918098934}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: SetAvatarStatus
         m_Mode: 6
@@ -7749,7 +7703,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 6306864101918098934}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: SetAvatarStatus
         m_Mode: 6

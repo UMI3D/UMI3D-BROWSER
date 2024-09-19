@@ -31,8 +31,8 @@ namespace umi3dVRBrowsersBase.ikManagement
 
         private void Start()
         {
-            LeftTracker.isActif = false;
-            RightTracker.isActif = false;
+            LeftTracker.isActive = false;
+            RightTracker.isActive = false;
         }
 
         private void Update()
@@ -55,8 +55,8 @@ namespace umi3dVRBrowsersBase.ikManagement
                 = SkeletonAnimator.GetBoneTransform(
                     HumanBodyBones.RightFoot
                 ).position;
-            LeftTracker.isActif = true;
-            RightTracker.isActif = true;
+            LeftTracker.isActive = true;
+            RightTracker.isActive = true;
         }
     }
 }

@@ -24,6 +24,8 @@ using umi3d.cdk.collaboration.userCapture.binding;
 using umi3d.common;
 using umi3d.common.interaction;
 using UnityEngine;
+using umi3d.cdk.userCapture.tracking;
+using umi3d.cdk.userCapture.tracking.constraint;
 
 namespace umi3d.cdk.collaboration
 {
@@ -38,6 +40,7 @@ namespace umi3d.cdk.collaboration
         [SerializeField]
         private bool collaborationUserCaptureActivated;
         public bool CollaborationUserCaptureActivated => collaborationUserCaptureActivated;
+        public bool SetCollaborationUserCaptureActivated(bool value) => collaborationUserCaptureActivated = value;
 
         [SerializeField]
         private GameObject collabTrackedSkeleton;
@@ -78,6 +81,7 @@ namespace umi3d.cdk.collaboration
             .SetNext(new UMI3DVolumeLoader())
             .SetNext(new UMI3DUINodeLoader())
             .SetNext(new PoseClipLoader())
+            .SetNext(new BoneConstraintLoader())
             .SetNext(new PoseAnimatorLoader())
             .SetNext(new emotes.UMI3DEmotesConfigLoader())
             .SetNext(new emotes.UMI3DEmoteLoader())

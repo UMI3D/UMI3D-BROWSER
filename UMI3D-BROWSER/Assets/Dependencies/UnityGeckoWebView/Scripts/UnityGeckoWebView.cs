@@ -13,10 +13,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using Unity.Collections;
 using Unity.Profiling;
 using UnityEngine;
@@ -48,20 +47,6 @@ namespace com.inetum.unitygeckowebview
 
         [SerializeField, Tooltip("If true, webview will try to open native keyboard to edit focus text inputs.")]
         private bool useNativeKeyboard = true;
-
-        [Space]
-
-        [SerializeField, Tooltip("If true, webview will use a whitelist")]
-        private bool useWhitelist = false;
-
-        [SerializeField, Tooltip("List of domains to whitelist")]
-        private string[] whitelist = new string[0];
-
-        [SerializeField, Tooltip("If true, webview will use a blacklist")]
-        private bool useBlacklist = false;
-
-        [SerializeField, Tooltip("List of domains to blacklist")]
-        private string[] blacklist = new string[0];
 
         [Space]
 
@@ -164,11 +149,6 @@ namespace com.inetum.unitygeckowebview
                 {
                     webView = baseClass.CallStatic<AndroidJavaObject>("createWebView", width, height, useNativeKeyboard, unityCallback, byteBufferJavaObject);
 
-                    UseWhiteList(useWhitelist);
-                    UseBlackList(useBlacklist);
-                    SetWhiteList(whitelist);
-                    SetBlackList(blacklist);
-
                     if (startRendering)
                         StartRendering();
                 }
@@ -221,8 +201,6 @@ namespace com.inetum.unitygeckowebview
         /// <param name="height"></param>
         public void ChangeTextureSize(int width, int height)
         {
-            // Make the Application crash.
-            return;
             this.width = width;
             this.height = height;
 
@@ -381,42 +359,19 @@ namespace com.inetum.unitygeckowebview
             webView?.Call("scroll", scrollX, scrollY);
         }
 
-        #endregion
-
-        #region Whitelist/Blacklist
-
-        public void UseWhiteList(bool useWhitelist)
+        public void SetScroll(int scrollX, int scrollY)
         {
-            webView?.Call("setUseWhiteList", useWhitelist);
+            webView?.Call("setScroll", scrollX, scrollY);
         }
 
-        public void UseBlackList(bool useBlacklist)
+        public int GetScrollY()
         {
-            webView?.Call("setUseBlackList", useBlacklist);
+            return webView?.Call<int>("getScrollY") ?? 0;
         }
 
-        /// <summary>
-        /// Set domains to whitelist.
-        /// </summary>
-        /// <param name="domains"></param>
-        public void SetWhiteList(IEnumerable<string> domains)
+        public int GetScrollX()
         {
-            if (domains == null)
-                return;
-
-            webView?.Call("setWhiteList", domains.ToArray());
-        }
-
-        /// <summary>
-        /// Set domains to blacklist.
-        /// </summary>
-        /// <param name="domains"></param>
-        public void SetBlackList(IEnumerable<string> domains)
-        {
-            if (domains == null)
-                return;
-
-            webView?.Call("setBlackList", domains.ToArray());
+            return webView?.Call<int>("getScrollX") ?? 0;
         }
 
         #endregion
@@ -424,5 +379,4 @@ namespace com.inetum.unitygeckowebview
         #endregion
     }
 }
-
 

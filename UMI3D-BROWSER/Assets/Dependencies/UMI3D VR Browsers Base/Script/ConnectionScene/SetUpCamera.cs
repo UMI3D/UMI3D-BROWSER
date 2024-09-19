@@ -15,10 +15,9 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
+using umi3d.browserRuntime.navigation;
 using umi3d.cdk;
-using umi3d.cdk.userCapture.tracking;
 using umi3dVRBrowsersBase.interactions;
-using umi3dVRBrowsersBase.navigation;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 
@@ -29,7 +28,7 @@ namespace umi3dVRBrowsersBase.connection
         #region Fields
         private ARCameraManager cameraManager;
 
-        public SnapTurn snapTurn;
+        public UMI3DSnapTurnProvider snapTurn;
         public VRInputObserver rightObs;
         public VRInputObserver leftObs;
 

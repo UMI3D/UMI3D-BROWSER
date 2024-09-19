@@ -54,8 +54,8 @@ namespace umi3dVRBrowsersBase.navigation
 
         protected virtual void Awake()
         {
-            LoadingScreenDisplayer.OnLoadingScreenDislayed.AddListener(() => isLoadingScreenDisplayed = true);
-            LoadingScreenDisplayer.OnLoadingScreenHidden.AddListener(() => isLoadingScreenDisplayed = false);
+            //LoadingScreenDisplayer.OnLoadingScreenDislayed.AddListener(() => isLoadingScreenDisplayed = true);
+            //LoadingScreenDisplayer.OnLoadingScreenHidden.AddListener(() => isLoadingScreenDisplayed = false);
         }
 
         // Individual or group teleportation based on the isGroupTeleport flag
@@ -68,20 +68,22 @@ namespace umi3dVRBrowsersBase.navigation
                 return;
             }
 
-            Vector3? position = arc.GetPointedPoint();
-            if (position.HasValue)
-            {
-                if (GroupTeleportation.isGroupTeleport)
-                {
-                    Debug.Log("Teleporting.Teleport.isGroupTeleport=true");
-                    groupTeleportation.TeleportGroup(position.Value, teleportingObject.transform, centerEyeAnchor.transform);
-                }
-                else
-                {
-                    Debug.Log("Teleporting.Teleport.isGroupTeleport=false");
-                    TeleportIndividual(position.Value);
-                }
-            }
+            Debug.LogError("Commented when merged");
+
+            //Vector3? position = arc.GetPointedPoint();
+            //if (position.HasValue)
+            //{
+            //    if (GroupTeleportation.isGroupTeleport)
+            //    {
+            //        Debug.Log("Teleporting.Teleport.isGroupTeleport=true");
+            //        groupTeleportation.TeleportGroup(position.Value, teleportingObject.transform, centerEyeAnchor.transform);
+            //    }
+            //    else
+            //    {
+            //        Debug.Log("Teleporting.Teleport.isGroupTeleport=false");
+            //        TeleportIndividual(position.Value);
+            //    }
+            //}
         }
 
         // Function of individual teleportation

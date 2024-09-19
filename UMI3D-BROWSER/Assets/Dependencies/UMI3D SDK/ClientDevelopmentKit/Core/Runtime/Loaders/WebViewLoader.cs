@@ -57,7 +57,7 @@ namespace umi3d.cdk
             var dto = (node.dto as GlTFNodeDto)?.extensions?.umi3d as UMI3DWebViewDto;
             if (dto == null) return false;
 
-            AbstractUMI3DWebView webView = node.gameObject.GetComponentInChildren<AbstractUMI3DWebView>();
+            AbstractUMI3DWebView webView = node.GameObject.GetComponentInChildren<AbstractUMI3DWebView>();
             if (webView == null)
             {
                 UMI3DLogger.Log("Webview should not be null on " + node.transform.name, scope);
@@ -80,6 +80,9 @@ namespace umi3d.cdk
                 case UMI3DPropertyKeys.WebViewUrl:
                     webView.url = dto.url = (string)data.property.value;
                     break;
+                case UMI3DPropertyKeys.WebViewScrollOffset:
+                    webView.scrollOffset = dto.scrollOffset = (Vector2Dto)data.property.value;
+                    break;
                 case UMI3DPropertyKeys.WebViewCanUrlBeForced:
                     webView.canUrlBeForced = dto.canUrlBeForced = (bool)data.property.value;
                     break;
@@ -95,6 +98,9 @@ namespace umi3d.cdk
                 case UMI3DPropertyKeys.WebViewBlackList:
                     webView.blackList = dto.blackList = (List<string>)data.property.value;
                     break;
+                case UMI3DPropertyKeys.WebViewIsAdmin:
+                    webView.isAdmin = dto.isAdmin = (bool)data.property.value;
+                    break;
                 default:
                     return false;
             }
@@ -104,12 +110,12 @@ namespace umi3d.cdk
 
         public override async Task<bool> SetUMI3DProperty(SetUMI3DPropertyContainerData data)
         {
-            var node = data.entity as UMI3DNodeInstance;
-            if (node == null) return false;
+            if (data.entity is not UMI3DNodeInstance node) return false;
+
             var dto = (node.dto as GlTFNodeDto)?.extensions?.umi3d as UMI3DWebViewDto;
             if (dto == null) return false;
 
-            AbstractUMI3DWebView webView = node.gameObject.GetComponentInChildren<AbstractUMI3DWebView>();
+            AbstractUMI3DWebView webView = node.GameObject.GetComponentInChildren<AbstractUMI3DWebView>();
             if (webView == null)
             {
                 UMI3DLogger.Log("Webview should not be null on " + node.transform.name, scope);
@@ -132,6 +138,9 @@ namespace umi3d.cdk
                 case UMI3DPropertyKeys.WebViewUrl:
                     webView.url = dto.url = UMI3DSerializer.Read<string>(data.container);
                     break;
+                case UMI3DPropertyKeys.WebViewScrollOffset:
+                    webView.scrollOffset = dto.scrollOffset = UMI3DSerializer.Read<Vector2Dto>(data.container);
+                    break;
                 case UMI3DPropertyKeys.WebViewCanUrlBeForced:
                     webView.canUrlBeForced = dto.canUrlBeForced = UMI3DSerializer.Read<bool>(data.container);
                     break;
@@ -146,6 +155,9 @@ namespace umi3d.cdk
                     break;
                 case UMI3DPropertyKeys.WebViewBlackList:
                     webView.blackList = dto.blackList = UMI3DSerializer.ReadList<string>(data.container);
+                    break;
+                case UMI3DPropertyKeys.WebViewIsAdmin:
+                    webView.isAdmin = dto.isAdmin = UMI3DSerializer.Read<bool>(data.container);
                     break;
                 default:
                     return false;

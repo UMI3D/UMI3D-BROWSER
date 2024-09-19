@@ -101,7 +101,7 @@ namespace umi3d.cdk
             unityMainThreadDispatcher = UnityMainThreadDispatcherManager.Instance;
         }
 
-        public UMI3DAnimatorAnimation(ulong environmentId, 
+        public UMI3DAnimatorAnimation(ulong environmentId,
                                       UMI3DAnimatorAnimationDto dto,
                                       ICoroutineService coroutineService,
                                       IUnityMainThreadDispatcher unityMainThreadDispatcher) : base(environmentId, dto)
@@ -132,7 +132,7 @@ namespace umi3d.cdk
                             ApplyParameter(entry.Key, param);
                         }
 
-                        animator = (n as UMI3DNodeInstance)?.gameObject.GetComponentInChildren<Animator>();
+                        animator = (n as UMI3DNodeInstance)?.GameObject.GetComponentInChildren<Animator>();
                         if (animator != null)
                             animator.Rebind();
                     });
@@ -193,13 +193,13 @@ namespace umi3d.cdk
                 IsPaused = true;
                 return;
             }
-            
+
             if (dto.stateName != string.Empty) // an empty state name corresponds to a self-caring animator.
             {
                 animator.Play(dto.stateName, layer: 0, normalizedTime: nTime);
                 trackingAnimationCoroutine ??= coroutineService.AttachCoroutine(TrackEnd());
             }
-                
+
             IsPaused = false;
             UMI3DClientServer.Instance.OnLeavingEnvironment.AddListener(StopTracking);
         }
@@ -426,12 +426,9 @@ namespace umi3d.cdk
             {
                 node = n as UMI3DNodeInstance;
                 if (node is not null)
-                    animator = node.gameObject.GetComponentInChildren<Animator>();
+                    animator = node.GameObject.GetComponentInChildren<Animator>();
                 if (animator != null && dto.playing)
                     Start();
-
-                MainThreadDispatcher.UnityMainThreadDispatcher.Instance().Enqueue(debugClip);
-
             });
         }
 

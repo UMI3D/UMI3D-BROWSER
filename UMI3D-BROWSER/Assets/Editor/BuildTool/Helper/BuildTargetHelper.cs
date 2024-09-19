@@ -43,6 +43,9 @@ namespace umi3d.browserEditor.BuildTool
                 case E_Target.SteamXR:
                     ChangeDeviceConditionalCompilation(MultiDevice.XR);
                     break;
+                case E_Target.Windows:
+                    ChangeDeviceConditionalCompilation(MultiDevice.PC);
+                    break;
                 default:
                     break;
             }
@@ -60,6 +63,11 @@ namespace umi3d.browserEditor.BuildTool
                     return ChangeBuildTarget(
                         BuildTargetGroup.Standalone,
                         BuildTarget.StandaloneWindows64
+                    );
+                case E_Target.Windows:
+                    return ChangeBuildTarget(
+                        BuildTargetGroup.Standalone,
+                        BuildTarget.StandaloneWindows
                     );
                 default:
                     return -1;

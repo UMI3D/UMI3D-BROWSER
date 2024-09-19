@@ -15,16 +15,14 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
-
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+using umi3d.cdk.userCapture.description;
 using umi3d.common;
 using umi3d.common.userCapture;
 using umi3d.common.userCapture.animation;
 using umi3d.common.userCapture.description;
-
 using UnityEngine;
 
 namespace umi3d.cdk.userCapture.animation
@@ -89,7 +87,7 @@ namespace umi3d.cdk.userCapture.animation
             UMI3DNodeInstance nodeInstance = environmentManager.GetNodeInstance(environmentId, skeletonNodeDto.id);  //node exists because of base call of ReadUMI3DExtensiun
 
             // a skeleton node should contain an animator
-            Animator animator = nodeInstance.gameObject.GetComponentInChildren<Animator>();
+            Animator animator = nodeInstance.GameObject.GetComponentInChildren<Animator>();
             if (animator == null)
             {
                 UMI3DLogger.LogWarning($"Cannot load skeleton animation {skeletonNodeDto.id}. No animator was found on node for user {skeletonNodeDto.userId}. ", DEBUG_SCOPE);
@@ -106,17 +104,19 @@ namespace umi3d.cdk.userCapture.animation
                 return;
             }
 
-            var modelTracker = nodeInstance.gameObject.GetOrAddComponent<ModelTracker>();
+            var modelTracker = nodeInstance.GameObject.GetOrAddComponent<ModelTracker>();
             modelTracker.animatorsToRebind.Add(animator);
 
             // hide the model if it has any renderers
-            foreach (var renderer in nodeInstance.gameObject.GetComponentsInChildren<Renderer>())
+            foreach (var renderer in nodeInstance.GameObject.GetComponentsInChildren<Renderer>())
                 renderer.gameObject.layer = LayerMask.NameToLayer("Invisible");
 
             // scale the subskeleton to fit the scale of the user
             nodeInstance.transform.localScale = personalSkeletonService.PersonalSkeleton.worldSize;
 
-            _ = Task.Run(async () => // task is required to load asynchronously while not blocking the loading process
+            Task attachtask = WaitAndAttach(); // do not await purposefully
+
+            async Task WaitAndAttach()
             {
                 // get animation related to the skeleton node
                 Queue<UMI3DAnimatorAnimation> animations = new(skeletonNodeDto.relatedAnimationsId.Length);
@@ -133,10 +133,33 @@ namespace umi3d.cdk.userCapture.animation
                     UMI3DLogger.LogWarning($"Skeleton of user {skeletonNodeDto.userId} not found. Cannot attach skeleton node.", DEBUG_SCOPE);
                     return;
                 }
+
+                // cull animators of other skeletons when they are not visible
+                if (parentSkeleton is not IPersonalSkeleton)
+                {
+                    parentSkeleton.VisibilityChanged += AutoCullAnimator;
+
+                    void AutoCullAnimator(bool isVisible)
+                    {
+                        if (animator == null)
+                            return;
+
+                        if (isVisible && animator.cullingMode != AnimatorCullingMode.AlwaysAnimate)
+                        {
+                            animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+                            animator.Update(0);
+                        }
+                        else if (!isVisible && animator.cullingMode != AnimatorCullingMode.CullCompletely)
+                        {
+                            animator.cullingMode = AnimatorCullingMode.CullCompletely;
+                        }
+                    }
+                }
+
                 ISubskeletonDescriptionInterpolationPlayer player = new SubskeletonDescriptionInterpolationPlayer(skeletonMapper, skeletonNodeDto.IsInterpolable, parentSkeleton);
                 AnimatedSubskeleton animationSubskeleton = new AnimatedSubskeleton(skeletonNodeDto, player, skeletonMapper, animations.ToArray(), skeletonNodeDto.animatorSelfTrackedParameters);
                 AttachToSkeleton(parentSkeleton, animationSubskeleton);
-            });
+            };
             nodeInstance.Delete = () => Delete(skeletonNodeDto.userId);
 
             await Task.CompletedTask;

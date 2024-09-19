@@ -18,7 +18,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using umi3d.cdk.collaboration.emotes;
-using umi3dVRBrowsersBase.ui.watchMenu;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -61,6 +60,8 @@ namespace umi3dVRBrowsersBase.ui
             Background = new Color_C() { Color = new Color(0.5215687f, 0.7686275f, 0.7686275f) };
 
             WindowName = new Text_C("Reactions");
+            WindowName.Go.SetActive(false);
+            Debug.LogError("TODO : Revert fix which disables ui not added to canvas");
             var windowNameSize = Background.RectT.sizeDelta;
             windowNameSize /= 1.5f;
             windowNameSize.y = 13f;
@@ -70,12 +71,16 @@ namespace umi3dVRBrowsersBase.ui
             WindowName.TextPro.alignment = TMPro.TextAlignmentOptions.Center;
 
             Close = new CloseButton();
+            Close.Cross.Go.SetActive(false);
+            Debug.LogError("TODO : Revert fix which disables ui not added to canvas");
             Close.Button.RectT.localPosition = new Vector3(43f, 43, 0);
             Close.Clicked += Hide;
 
             Separator = new Separator_C();
             Separator.RectT.sizeDelta = new Vector2(100f, .5f);
             Separator.RectT.localPosition = new Vector3(0f, 36f, 0f);
+            Separator.Go.SetActive(false);
+            Debug.LogError("TODO : Revert fix which disables ui not added to canvas");
 
             EmoteButton1 = new EmoteButton();
             EmoteButton2 = new EmoteButton();

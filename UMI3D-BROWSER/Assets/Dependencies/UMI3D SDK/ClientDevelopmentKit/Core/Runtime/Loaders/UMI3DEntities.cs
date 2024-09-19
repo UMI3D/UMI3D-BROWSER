@@ -85,7 +85,7 @@ namespace umi3d.cdk
             WaitUntilEntityLoaded(id, entityLoaded, entityFailedToLoad);
 
             while (!finished)
-                await UMI3DAsyncManager.Yield(tokens);
+                await UMI3DAsyncManager.Yield(tokens, false);
             if (error)
                 throw new Umi3dException($"Failed to load entity. Entity id: {id}.");
 
@@ -254,13 +254,13 @@ namespace umi3d.cdk
                 node = entities[id] as UMI3DNodeInstance;
                 if (node == null)
                     throw new Exception($"id:{id} found but the value was of type {entities[id].GetType()}");
-                if (node.gameObject != instance)
+                if (node.GameObject != instance)
                     UnityEngine.Object.Destroy(instance);
                 return node;
             }
             else
             {
-                node = new UMI3DNodeInstance(EnvironmentId, () => NotifyEntityLoad(id), id) { gameObject = instance, dto = dto, Delete = delete };
+                node = new UMI3DNodeInstance(EnvironmentId, () => NotifyEntityLoad(id), id) { GameObject = instance, dto = dto, Delete = delete };
                 entities.Add(id, node);
             }
 
@@ -329,6 +329,8 @@ namespace umi3d.cdk
         {
             if (entities.ContainsKey(entityId))
             {
+                entityFilters.Remove(entityId);
+
                 UMI3DEntityInstance entity = entities[entityId];
 
                 if (entity.Object is UMI3DAbstractAnimation animation)
@@ -340,7 +342,7 @@ namespace umi3d.cdk
                 {
                     var node = entity as UMI3DNodeInstance;
                     node.ClearBeforeDestroy();
-                    UnityEngine.Object.Destroy(node.gameObject);
+                    UnityEngine.Object.Destroy(node.GameObject);
                 }
                 entities[entityId].Delete?.Invoke();
                 entities.Remove(entityId);
@@ -366,7 +368,6 @@ namespace umi3d.cdk
         public void Clear()
         {
             entityFilters.Clear();
-
             foreach (ulong entity in entities.ToList().Select(p => { return p.Key; }))
             {
                 DeleteEntity(entity, null);
@@ -398,6 +399,12 @@ namespace umi3d.cdk
                 {
                     foreach (ulong property in entityFilters[entityId].Keys)
                     {
+                        if (entityId == 0 || !entities.ContainsKey(entityId))
+                        {
+                            Debug.LogWarning($"[Interpolation] Warning: Entity {entityId} does not exist.");
+                            continue;
+                        }
+
                         UMI3DEntityInstance node = GetEntityInstance(entityId);
                         IExtrapolator extrapolator = entityFilters[entityId][property];
 

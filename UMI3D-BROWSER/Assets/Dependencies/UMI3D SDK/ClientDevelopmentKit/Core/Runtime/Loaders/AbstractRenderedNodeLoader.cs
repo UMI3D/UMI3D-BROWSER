@@ -585,7 +585,7 @@ namespace umi3d.cdk
                 yield return new WaitForSeconds(0.2f);
             }
 
-            if (node == null || node.gameObject == null || matEntity == null)
+            if (node == null || node.GameObject == null || matEntity == null)
             {
                 UMI3DLogger.LogWarning("object has been removed during material loading ", scope);
                 yield break;
@@ -624,7 +624,7 @@ namespace umi3d.cdk
                 List<Renderer> modelMeshs = UMI3DEnvironmentLoader.GetNode(node.EnvironmentId, ((SubModelDto)((GlTFNodeDto)node.dto).extensions.umi3d).modelId).renderers;
 
                 //    Renderer[] childRenderers = node.gameObject.GetComponentsInChildren<Renderer>();
-                node.renderers = node.gameObject.GetComponentsInChildren<Renderer>().Where((r) => modelMeshs.Contains(r)).ToList();
+                node.renderers = node.GameObject.GetComponentsInChildren<Renderer>().Where((r) => modelMeshs.Contains(r)).ToList();
                 UMI3DLogger.LogWarning("Renderers list was empty, That should not happen", scope);
                 return node.renderers;
             }
@@ -632,7 +632,7 @@ namespace umi3d.cdk
             {
                 if (node.renderers != null && node.renderers.Count > 0)
                     return node.renderers;
-                node.renderers = new List<Renderer>() { node.gameObject.GetComponent<LineRenderer>() };
+                node.renderers = new List<Renderer>() { node.GameObject.GetComponent<LineRenderer>() };
                 return node.renderers;
 
             }

@@ -159,9 +159,9 @@ namespace umi3dVRBrowsersBase.connection
             while (!TryResizeSkeleton()) //wait for camera to be positioned
                 yield return null;
 
-            FootTargetBehavior.SetFootTargets();
+            //FootTargetBehavior.SetFootTargets();
             
-            trackers.ForEach(x => trackedSkeleton.ReplaceController(x.distantController));
+            trackers.ForEach(x => trackedSkeleton.ReplaceController(x.Controller));
             trackedSkeleton.bones.Add(BoneType.Viewpoint, Viewpoint);
 
             isSetup = true;
@@ -192,9 +192,9 @@ namespace umi3dVRBrowsersBase.connection
             handsTrackingTrackers.ForEach(x => {
                 if (controllerTrackers.Contains(x))
                     return;
-                trackedSkeleton.RemoveController(x.distantController.boneType);
+                trackedSkeleton.RemoveController(x.Controller.boneType);
             });
-            controllerTrackers.ForEach(x => trackedSkeleton.ReplaceController(x.distantController));
+            controllerTrackers.ForEach(x => trackedSkeleton.ReplaceController(x.Controller));
         }
 
         public void SwitchTrackerToHandTracking()
@@ -202,9 +202,9 @@ namespace umi3dVRBrowsersBase.connection
             controllerTrackers.ForEach(x => {
                 if (handsTrackingTrackers.Contains(x))
                     return;
-                trackedSkeleton.RemoveController(x.distantController.boneType);
+                trackedSkeleton.RemoveController(x.Controller.boneType);
             });
-            handsTrackingTrackers.ForEach(x => trackedSkeleton.ReplaceController(x.distantController));
+            handsTrackingTrackers.ForEach(x => trackedSkeleton.ReplaceController(x.Controller));
         }
 
         /// <summary>

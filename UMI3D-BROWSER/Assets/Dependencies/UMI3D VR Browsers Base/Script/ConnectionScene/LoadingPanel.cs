@@ -62,14 +62,14 @@ namespace umi3dVRBrowsersBase.connection
 
         private void OnEnable()
         {
-            LoadingScreenDisplayer.OnLoadingScreenDislayed.AddListener(HideObjects);
-            LoadingScreenDisplayer.OnLoadingScreenHidden.AddListener(DisplayObjectHidden);
+            //LoadingScreenDisplayer.OnLoadingScreenDislayed.AddListener(HideObjects);
+            //LoadingScreenDisplayer.OnLoadingScreenHidden.AddListener(DisplayObjectHidden);
         }
 
         private void OnDisable()
         {
-            LoadingScreenDisplayer.OnLoadingScreenDislayed.RemoveListener(HideObjects);
-            LoadingScreenDisplayer.OnLoadingScreenHidden.RemoveListener(DisplayObjectHidden);
+            //LoadingScreenDisplayer.OnLoadingScreenDislayed.RemoveListener(HideObjects);
+            //LoadingScreenDisplayer.OnLoadingScreenHidden.RemoveListener(DisplayObjectHidden);
         }
 
         private void HideObjects()
@@ -108,11 +108,11 @@ namespace umi3dVRBrowsersBase.connection
         /// </summary>
         public void SetLoadingScreen()
         {
-            ConnectionMenuManager.instance.HideNextNavigationButton();
-            ConnectionMenuManager.instance.HidePreviousNavigationButton();
+            //ConnectionMenuManager.instance.HideNextNavigationButton();
+            //ConnectionMenuManager.instance.HidePreviousNavigationButton();
 
             //SetLightningSettings.ResetLightningSettings();
-            LoadingScreenDisplayer.Instance.Display();
+            //LoadingScreenDisplayer.Instance.Display();
             foreach (GameObject o in objectsToHide)
                 o.SetActive(false);
         }
@@ -128,7 +128,7 @@ namespace umi3dVRBrowsersBase.connection
         /// </summary>
         public void HideLoadingScreen()
         {
-            LoadingScreenDisplayer.Instance.Hide();
+            //LoadingScreenDisplayer.Instance.Hide();
         }
 
         /// <summary>

@@ -1,0 +1,418 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: UMI3D_inetum_en
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: en
+  m_SharedData: {fileID: 11400000, guid: 9f0d3ba07a8a50b468417e87e9b261f7, type: 2}
+  m_Metadata:
+    m_Items:
+    - rid: 2971575680132972557
+  m_TableData:
+  - m_Id: 13012500480
+    m_Localized: Connect to an
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26509770752
+    m_Localized: Intraverse Portal
+    m_Metadata:
+      m_Items:
+      - rid: 2971575680132972557
+  - m_Id: 10488088784277504
+    m_Localized: Settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10488428535484416
+    m_Localized: 'Choose your '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10488572781793280
+    m_Localized: language
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10493159135776768
+    m_Localized: Loading
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10492962011877376
+    m_Localized: ' '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10496364611637248
+    m_Localized: < BACK
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10497556200820736
+    m_Localized: Storage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10498347120726016
+    m_Localized: Favorites
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10498537097531392
+    m_Localized: Last
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12612049487794176
+    m_Localized: Please stand up for a better virtual reality experience
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12650868941524992
+    m_Localized: Language
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12652002649313280
+    m_Localized: Theme
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12652156743847936
+    m_Localized: General
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12652466606444544
+    m_Localized: Audio
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12652520981401600
+    m_Localized: Graphics
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12652621619531776
+    m_Localized: Comfort
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12653276090339328
+    m_Localized: Environment's volume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12653414720475136
+    m_Localized: Conversation's volume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12653536179130368
+    m_Localized: Mic enable/disable
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12653748377358336
+    m_Localized: On
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12653813967884288
+    m_Localized: Off
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12653872205795328
+    m_Localized: Fade when teleport
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12655763975311360
+    m_Localized: Fade when reorient
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12655937237815296
+    m_Localized: Fading speed when teleport
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12656830091890688
+    m_Localized: Quality
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12657033410777088
+    m_Localized: High
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12657100288954368
+    m_Localized: Medium
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12657196883775488
+    m_Localized: Low
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12693249573261312
+    m_Localized: Close application
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12693354141454336
+    m_Localized: Do you want to close the application ?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12693615874412544
+    m_Localized: Cancel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12693695754932224
+    m_Localized: Close
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12694216075120640
+    m_Localized: Connection to a server
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12694495050862592
+    m_Localized: 'Trying to connect to : {url}
+
+      It may take some time.'
+    m_Metadata:
+      m_Items:
+      - rid: 2971575680132972557
+  - m_Id: 12694711418228736
+    m_Localized: It may take some time.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12695101417197568
+    m_Localized: 'Are you sure you want to delete the Worlds below :'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12695450748194816
+    m_Localized: Data that is shared by other worlds will not be deleted.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12695679828496384
+    m_Localized: Yes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12695738141904896
+    m_Localized: No
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12940733908766720
+    m_Localized: '{libCount:p:{} library|{} libraries} are required'
+    m_Metadata:
+      m_Items:
+      - rid: 2971575680132972557
+  - m_Id: 12941132921294848
+    m_Localized: Download {libCount:plural:{} library|{} libraries} and connect to
+      the server ?
+    m_Metadata:
+      m_Items:
+      - rid: 2971575680132972557
+  - m_Id: 12942352343879680
+    m_Localized: Accept
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12942599023480832
+    m_Localized: Deny
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12942798542327808
+    m_Localized: Error
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12943102830694400
+    m_Localized: Resum
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12943482973048832
+    m_Localized: Failed to connect to server
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12943776737906688
+    m_Localized: 'Browser was not able to connect to:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12944171585490944
+    m_Localized: Report a bug
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12944438972370944
+    m_Localized: Reporting a bug when you have encountered a problem with the UMI3D
+      browser allows ours developers to improve it and help you.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12946337561825280
+    m_Localized: Your email address
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12947084596727808
+    m_Localized: How often does it happen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12947946790440960
+    m_Localized: Title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12948327826182144
+    m_Localized: Send
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12948574405120000
+    m_Localized: The world took too long to respond.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12987291855024128
+    m_Localized: Please enter an URL.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13695049655283712
+    m_Localized: Url mismatch.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13695580083744768
+    m_Localized: No Intance of UMI3DCollaborationServer.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13695937836904448
+    m_Localized: Redirection already in progress.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15146468170166272
+    m_Localized: "\"Did you know? A gate lets you move from one environment to another.
+      \nClick on one of them using the trigger button on the front of your controller
+      to teleport.\""
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15146470917435392
+    m_Localized: Did you know? Private conversation zones allow users to chat without
+      being overheard by others. Each private conversation zone has a button you
+      can use to activate or deactivate the isolated mode.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15146472460939264
+    m_Localized: 'In Intraverse, you can interact with most elements in two ways:
+      from a distance, using your joystick as a pointer, or in direct contact, touching
+      the element with your hand. '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15146473622761472
+    m_Localized: 'To move around the virtual environment, you need to teleport. Use
+      your controller as a pointer to aim at a spot on the ground, and push the joystick
+      on top of your controller. When visual feedback appears, release the joystick. '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15196229862584320
+    m_Localized: 'Error : {error}'
+    m_Metadata:
+      m_Items:
+      - rid: 2971575680132972557
+  - m_Id: 15196589641592832
+    m_Localized: Server Error
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15196595660419072
+    m_Localized: 'Check the information entered.
+
+
+
+      If you are sure of your
+      information, contact your network administrator.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15478005809967104
+    m_Localized: 'Are you sure you want to delete : {worldName}'
+    m_Metadata:
+      m_Items:
+      - rid: 2971575680132972557
+  - m_Id: 15489937870843904
+    m_Localized: 'Are you sure you want to delete : {libName}'
+    m_Metadata:
+      m_Items:
+      - rid: 2971575680132972557
+  - m_Id: 16214024800858112
+    m_Localized: Login
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16214026478579712
+    m_Localized: Pin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17734499221794816
+    m_Localized: Destination
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17734539466141696
+    m_Localized: Password
+    m_Metadata:
+      m_Items: []
+  - m_Id: 23844897808977920
+    m_Localized: UI Animations
+    m_Metadata:
+      m_Items: []
+  - m_Id: 45632519451504640
+    m_Localized: Next
+    m_Metadata:
+      m_Items: []
+  - m_Id: 45639385036419072
+    m_Localized: Redo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 45653897881907200
+    m_Localized: This connection link can be found un the "My Profile" section of
+      the Intraverse web portal.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 45654253776990208
+    m_Localized: The central thumbnails section shows the Intraverse portails you
+      have already visited.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 45654577963134976
+    m_Localized: You can scroll between the thumbnails using the two navigation arrows.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 45654838853038080
+    m_Localized: The "Last" tab shows the most recently visited Intraverse portals.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 45655094416175104
+    m_Localized: The "Favorites" tab shows your favorite Intraverse portals.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 45655303166685184
+    m_Localized: You can use the switch button to change the thumbnails from a grid
+      of 2 to 8.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 45655674530361344
+    m_Localized: The settings button allows you to manage browser settings such as
+      language, audio, graphics quality, ect.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 45656191314751488
+    m_Localized: The storage button lets you manage the space taken up by the different
+      worlds installed, or uninstall them.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 45656193382543360
+    m_Localized: You can use the help button at any time to view the details of the
+      page you are on.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 45661928153739264
+    m_Localized: This tab lets you change the browser general settings.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 45661930125062144
+    m_Localized: Click here to go back to the previous page.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 59770923852238848
+    m_Localized: Do you want to leave the environment ?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 59771304317554688
+    m_Localized: Stay
+    m_Metadata:
+      m_Items: []
+  - m_Id: 59771496714473472
+    m_Localized: Leave
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 2971575680132972557
+      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries: 00001b2c0600000000d0c36787f92d0000d0c34ee4f92d0000101c7493192d000070e2fae3fc35000070220e2afd36000070623404083700

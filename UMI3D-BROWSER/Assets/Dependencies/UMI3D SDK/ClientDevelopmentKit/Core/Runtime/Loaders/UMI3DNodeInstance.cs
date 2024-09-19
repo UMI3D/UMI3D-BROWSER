@@ -28,8 +28,8 @@ namespace umi3d.cdk
     /// </summary>
     public class UMI3DNodeInstance : UMI3DEntityInstance
     {
-        public GameObject gameObject;
-        public virtual Transform transform => gameObject.transform;
+        private GameObject gameObject;
+        public virtual Transform transform => GameObject.transform;
 
         private bool isPartOfNavmesh = false;
 
@@ -71,6 +71,25 @@ namespace umi3d.cdk
             }
         }
 
+        private bool isBlockingInteraction = false;
+
+        /// <summary>
+        /// Is this node preventing interaction behind it ?
+        /// </summary>
+        public bool IsBlockingInteraction
+        {
+            get => isBlockingInteraction;
+
+            set
+            {
+                if (isBlockingInteraction != value)
+                {
+                    isBlockingInteraction = value;
+                    UMI3DEnvironmentLoader.Instance.SetNodeBlockingInteraction(this);
+                }
+            }
+        }
+
         /// <summary>
         /// Event call when the transform is updated.
         /// </summary>
@@ -81,8 +100,8 @@ namespace umi3d.cdk
         public override string ToString()
         {
             if (dto is GlTFNodeDto gltf)
-                return $"UMI3DNodeInstance [{dto} : {gltf.name} : {gltf.extensions?.umi3d} : {Object} : {gameObject}]";
-            return $"UMI3DNodeInstance [{dto} : {Object} : {gameObject}]";
+                return $"UMI3DNodeInstance [{dto} : {gltf.name} : {gltf.extensions?.umi3d} : {Object} : {GameObject}]";
+            return $"UMI3DNodeInstance [{dto} : {Object} : {GameObject}]";
         }
 
         public bool updatePose = true;
@@ -143,19 +162,34 @@ namespace umi3d.cdk
             set => _subNodeInstances = value;
         }
 
+        public GameObject GameObject
+        {
+            get => gameObject; set
+            {
+                var old = gameObject;
+                gameObject = value;
+                UMI3DEnvironmentLoader.Instance.SetNodeNodeGameObject(this, old);
+            }
+        }
+
         /// <summary>
-        /// Clean all loaded data before destroying <see cref="gameObject"/>.
+        /// Clean all loaded data before destroying <see cref="GameObject"/>.
         /// </summary>
         public virtual async void ClearBeforeDestroy()
         {
-            if (scene != null && scene.isLoaded)
+            if (scene == null)
+                return;
+
+            if (scene.isLoaded)
             {
                 var op = SceneManager.UnloadSceneAsync(scene);
+                if (op != null)
+                {
+                    while (op != null && !op.isDone)
+                        await UMI3DAsyncManager.Yield();
 
-                while (!op.isDone)
-                    await UMI3DAsyncManager.Yield();
-
-                LightProbes.TetrahedralizeAsync();
+                    LightProbes.TetrahedralizeAsync();
+                }
             }
         }
     }

@@ -17,6 +17,7 @@ using UnityEngine;
 using umi3d.cdk;
 using System.Threading.Tasks;
 using inetum.unityUtils.multiTarget;
+using com.inetum.unitygeckowebview;
 
 namespace umi3d.runtimeBrowser.webView
 {
@@ -30,6 +31,8 @@ namespace umi3d.runtimeBrowser.webView
             {
                 return null;
             }
+
+            MetaQuestSoundWorkAround.SetAudioWorkAround();
 
             GameObject go = Instantiate(template.Reference);
             AbstractUMI3DWebView view = go.GetComponent<AbstractUMI3DWebView>();

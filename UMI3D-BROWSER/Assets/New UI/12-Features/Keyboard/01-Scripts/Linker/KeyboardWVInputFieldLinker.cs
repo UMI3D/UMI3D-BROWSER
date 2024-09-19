@@ -25,8 +25,11 @@ namespace umi3d.browserRuntime.ui.keyboard
 {
     public class KeyboardWVInputFieldLinker : MonoBehaviour
     {
+        [Tooltip("Event raised when text has been added.")]
         public UnityEvent<string> addText = new();
+        [Tooltip("Event raised when the delete button is pressed.")]
         public UnityEvent deleteCharacter = new();
+        [Tooltip("Event raised when the enter or submit button is pressed.")]
         public UnityEvent enterOrSubmit = new();
 
         bool isSelected = false;

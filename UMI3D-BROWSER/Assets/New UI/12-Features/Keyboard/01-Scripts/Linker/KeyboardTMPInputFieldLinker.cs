@@ -19,6 +19,7 @@ using System.Collections;
 using System.Collections.Generic;
 using umi3d.browserRuntime.NotificationKeys;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace umi3d.browserRuntime.ui.keyboard
 {
@@ -30,6 +31,9 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         [Tooltip("Whether the input field wait for the submit but to be pressed to update the text.")]
         [SerializeField] bool waitForSubmit = false;
+
+        [Tooltip("Event raised when the enter or submit button is pressed.")]
+        public UnityEvent enterOrSubmit = new();
 
         TMPro.TMP_InputField inputField;
         UMI3DInputFieldSelection selection;
@@ -65,22 +69,6 @@ namespace umi3d.browserRuntime.ui.keyboard
             NotificationHub.Default.Unsubscribe(this, KeyboardNotificationKeys.AddOrRemoveCharacters);
 
             selection.OnDisable();
-        }
-
-        public void Select()
-        {
-            
-        }
-
-        public void Unselect()
-        {
-            selection.Blur();
-            selection.allowSelection = false;
-        }
-
-        void EnterKeyPressed(Notification notification)
-        {
-
         }
 
         void AddOrRemoveCharacters(Notification notification)
@@ -120,6 +108,8 @@ namespace umi3d.browserRuntime.ui.keyboard
                     selectionNotifier[KeyboardNotificationKeys.Info.SelectionPositions] = null;
                     selectionNotifier[KeyboardNotificationKeys.Info.InputFieldText] = null;
                     selectionNotifier.Notify();
+
+                    enterOrSubmit.Invoke();
                     break;
                 default:
                     UnityEngine.Debug.LogError($"Unhandled case.");

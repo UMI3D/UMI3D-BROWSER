@@ -423,6 +423,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   closeOnSubmit: 1
   waitForSubmit: 0
+  enterOrSubmit:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1458485348}
+        m_TargetAssemblyTypeName: com.inetum.unitygeckowebview.samples.UnityGeckoWebViewSearch,
+          UnityGeckoWebView
+        m_MethodName: Search
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1458485348 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8322200513812233305, guid: b6491c8639f557a43ae863de8aebe17e,
+    type: 3}
+  m_PrefabInstance: {fileID: 1958011474}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1458485341}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03dea62f7fda3bf4daeebeb408d7519e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1514268391 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2070198284515693985, guid: b6491c8639f557a43ae863de8aebe17e,
@@ -2633,17 +2661,17 @@ PrefabInstance:
     - target: {fileID: 177469666256748591, guid: b6491c8639f557a43ae863de8aebe17e,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.45000002
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 177469666256748591, guid: b6491c8639f557a43ae863de8aebe17e,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.45000002
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 177469666256748591, guid: b6491c8639f557a43ae863de8aebe17e,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.45000002
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 177469666256748591, guid: b6491c8639f557a43ae863de8aebe17e,
         type: 3}

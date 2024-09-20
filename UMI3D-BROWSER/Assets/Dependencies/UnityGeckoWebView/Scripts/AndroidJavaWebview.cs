@@ -18,6 +18,7 @@ using inetum.unityUtils;
 using inetum.unityUtils.extensions;
 using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace com.inetum.unitygeckowebview
 {
@@ -28,18 +29,9 @@ namespace com.inetum.unitygeckowebview
         /// </summary>
         AndroidJavaObject webView;
 
-        Notifier loadingNotifier;
         bool isInit = false;
 
         public bool isNull => webView == null;
-
-        void Awake()
-        {
-            loadingNotifier = NotificationHub.Default.GetNotifier(
-               this,
-               GeckoWebViewNotificationKeys.Loading
-           );
-        }
 
         void Start()
         {
@@ -212,31 +204,6 @@ namespace com.inetum.unitygeckowebview
             webView?.Dispose();
             isInit = false;
         }
-
-        #region Web view callback
-
-        /// <summary>
-        /// Notify all subscribers that a text field has been selected.
-        /// </summary>
-        public void TextInputSelected()
-        {
-            NotificationHub.Default.Notify(
-                this,
-                GeckoWebViewNotificationKeys.WebViewTextFieldSelected
-            );
-        }
-
-        /// <summary>
-        /// Notify all subscribers that a web page has started loading.
-        /// </summary>
-        /// <param name="url"></param>
-        public void LoadingHasStarted(string url)
-        {
-            loadingNotifier[GeckoWebViewNotificationKeys.Info.URL] = url;
-            loadingNotifier.Notify();
-        }
-
-        #endregion
 
         #region Notifications
 

@@ -17,6 +17,7 @@ limitations under the License.
 using inetum.unityUtils;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -30,39 +31,43 @@ namespace com.inetum.unitygeckowebview
     [RequireComponent(typeof(UnityGeckoWebViewRendering))]
     public class UnityGeckoWebViewInput : Selectable, IPointerMoveHandler
     {
-        #region Fields
+        [Space]
+
+        [Tooltip("Event raised when the pointer is down. Parameter is coordinates in pixels.")]
+        public UnityEvent<Vector2> pointerDown = new();
+
+        [Tooltip("Event raised when a text field has been selected in the web view.")]
+        public UnityEvent textFieldSelected = new();
+        [Tooltip("Event raised when the pointer is down without selected a text field in the web view.")]
+        public UnityEvent textFieldUnSelected = new();
+
+        [SerializeField, Tooltip("Simulate a click when a short pointer down is detected ?")]
+        bool simulateClick = false;
 
         RectTransform rawImageRectTransform;
         AndroidJavaWebview javaWebView;
         UnityGeckoWebViewRendering webviewRendering;
 
-        [SerializeField, Tooltip("Simulate a click when a short pointer down is detected ?")]
-        bool simulateClick = false;
+        bool textSelectedLastFrame = false;
 
         #region Data
-
 
         /// <summary>
         /// World coordinates of raw image corners.
         /// </summary>
         Vector3[] coordinates = new Vector3[4];
-
         Vector3 up, right;
 
         /// <summary>
         /// Last time a up trigger was performed.
         /// </summary>
         float lastUp = 0;
-
         /// <summary>
         /// Time to consider that a trigger is a click.
         /// </summary>
         const int clickTime = 200;
 
         #endregion
-
-        #endregion
-
 
         protected override void Awake()
         {
@@ -76,10 +81,16 @@ namespace com.inetum.unitygeckowebview
             base.OnEnable();
 
             NotificationHub.Default.Subscribe(
-               this,
-               GeckoWebViewNotificationKeys.InteractibilityChanged,
-               InteractibilityChanged
-           );
+                this,
+                GeckoWebViewNotificationKeys.InteractibilityChanged,
+                InteractibilityChanged
+            );
+
+            NotificationHub.Default.Subscribe(
+                this,
+                GeckoWebViewNotificationKeys.WebViewTextFieldSelected,
+                WebViewTextFieldSelected
+            );
         }
 
         protected override void OnDisable()
@@ -87,6 +98,9 @@ namespace com.inetum.unitygeckowebview
             base.OnDisable();
 
             NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.InteractibilityChanged);
+
+
+            NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.WebViewTextFieldSelected);
         }
 
         public override void OnPointerDown(PointerEventData eventData)
@@ -99,57 +113,60 @@ namespace com.inetum.unitygeckowebview
             if (simulateClick)
             {
                 SimulateClick(eventData);
+                return;
             }
-            else
-            {
-                Vector3 localPosition = WorldToLocal(eventData.pointerCurrentRaycast.worldPosition);
-                javaWebView.PointerDown(localPosition.x, localPosition.y, eventData.pointerId);
-            }
+
+            Vector3 localPosition = WorldToLocal(eventData.pointerCurrentRaycast.worldPosition);
+            pointerDown.Invoke(localPosition);
+            javaWebView.PointerDown(localPosition.x, localPosition.y, eventData.pointerId);
+            RaiseSelectionEvent();
         }
 
         async void SimulateClick(PointerEventData eventData)
         {
-            Vector3 localPosition = WorldToLocal(eventData.pointerCurrentRaycast.worldPosition);
-
             await Task.Delay(clickTime);
+
+            Vector3 localPosition = WorldToLocal(eventData.pointerCurrentRaycast.worldPosition);
+            pointerDown.Invoke(localPosition);
+            javaWebView.PointerDown(localPosition.x, localPosition.y, eventData.pointerId);
+            UnityEngine.Debug.Log($"SimulateClick");
+            RaiseSelectionEvent();
 
             if (Time.time - lastUp < clickTime / 1000f)
             {
-                javaWebView.PointerDown(localPosition.x, localPosition.y, eventData.pointerId);
                 await Task.Delay(40);
                 javaWebView.PointerUp(localPosition.x, localPosition.y, eventData.pointerId);
             }
+        }
+
+        async void RaiseSelectionEvent()
+        {
+            textSelectedLastFrame = false;
+
+            await Task.Delay(1000);
+
+            if (textSelectedLastFrame)
+            {
+                textFieldSelected.Invoke();
+            }
             else
             {
-                javaWebView.PointerDown(localPosition.x, localPosition.y, eventData.pointerId);
+                textFieldUnSelected.Invoke();
             }
         }
 
         public override void OnPointerUp(PointerEventData eventData)
         {
+            lastUp = Time.time;
+
             Vector3 localPosition = WorldToLocal(eventData.pointerCurrentRaycast.worldPosition);
             javaWebView.PointerUp(localPosition.x, localPosition.y, eventData.pointerId);
-
-            lastUp = Time.time;
         }
 
         public void OnPointerMove(PointerEventData eventData)
         {
             Vector3 localPosition = WorldToLocal(eventData.pointerCurrentRaycast.worldPosition);
             javaWebView.PointerMove(localPosition.x, localPosition.y, eventData.pointerId);
-        }
-
-        public void OnClick(PointerEventData eventData)
-        {
-            if (simulateClick)
-            {
-                SimulateClick(eventData);
-            }
-            else
-            {
-                Vector3 localPosition = WorldToLocal(eventData.pointerCurrentRaycast.worldPosition);
-                javaWebView.Click(localPosition.x, localPosition.y, eventData.pointerId);
-            }
         }
 
         Vector3 WorldToLocal(Vector3 worldPosition)
@@ -170,6 +187,11 @@ namespace com.inetum.unitygeckowebview
             }
 
             this.interactable = interactable;
+        }
+
+        void WebViewTextFieldSelected()
+        {
+            textSelectedLastFrame = true;
         }
     }
 }

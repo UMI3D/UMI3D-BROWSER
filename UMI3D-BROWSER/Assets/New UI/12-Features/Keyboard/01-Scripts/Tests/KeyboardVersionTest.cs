@@ -24,26 +24,37 @@ namespace umi3d.browserRuntime.ui.keyboard
 {
     public class KeyboardVersionTest : MonoBehaviour
     {
+        [SerializeField] TMPro.TMP_Dropdown dropdown;
+
         Notifier versionNotifier;
 
         void Start()
         {
             versionNotifier = NotificationHub.Default.GetNotifier(
                 this,
-                KeyboardNotificationKeys.ChangeVersion,
-                null,
-                new()
-                {
-                    { KeyboardNotificationKeys.Info.Version, "AZERTY" }
-                }
+                KeyboardNotificationKeys.ChangeVersion
             );
 
+            int index = dropdown != null ? dropdown.value : 0;
+
+            versionNotifier[KeyboardNotificationKeys.Info.Version] = index == 0 ? "AZERTY" : "QWERTY";
             versionNotifier.Notify();
+
         }
 
-        public void SwitchToAzerty(bool isAzerty)
+        void OnEnable()
         {
-            versionNotifier[KeyboardNotificationKeys.Info.Version] = isAzerty ? "AZERTY" : "QWERTY";
+            dropdown?.onValueChanged.AddListener(ValueChanged);
+        }
+
+        void OnDisable()
+        {
+            dropdown?.onValueChanged.RemoveListener(ValueChanged);
+        }
+
+        public void ValueChanged(int index)
+        {
+            versionNotifier[KeyboardNotificationKeys.Info.Version] = index == 0 ? "AZERTY" : "QWERTY";
             versionNotifier.Notify();
         }
 

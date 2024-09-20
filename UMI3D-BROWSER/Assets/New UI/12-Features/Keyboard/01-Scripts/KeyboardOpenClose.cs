@@ -142,7 +142,7 @@ namespace umi3d.browserRuntime.ui.keyboard
             selectionNotifier[KeyboardNotificationKeys.Info.IsActivation] = false;
             selectionNotifier[KeyboardNotificationKeys.Info.IsPreviewBar] = false;
             selectionNotifier[KeyboardNotificationKeys.Info.SelectionPositions] = null;
-            selectionNotifier[KeyboardNotificationKeys.Info.InputFieldText] = null;
+            selectionNotifier[KeyboardNotificationKeys.Info.InputFieldText] = "";
             selectionNotifier.Notify();
         }
 

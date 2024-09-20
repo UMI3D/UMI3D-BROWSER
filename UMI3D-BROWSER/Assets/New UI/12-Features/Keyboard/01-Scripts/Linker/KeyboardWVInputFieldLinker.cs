@@ -33,6 +33,15 @@ namespace umi3d.browserRuntime.ui.keyboard
         public UnityEvent enterOrSubmit = new();
 
         bool isSelected = false;
+        Notifier selectionNotifier;
+
+        void Awake()
+        {
+            selectionNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                KeyboardNotificationKeys.TextFieldSelected
+            );
+        }
 
         void OnEnable()
         {
@@ -41,11 +50,55 @@ namespace umi3d.browserRuntime.ui.keyboard
                 KeyboardNotificationKeys.AddOrRemoveCharacters,
                 AddOrRemoveCharacters
             );
+
+            NotificationHub.Default.Subscribe(
+                this,
+                KeyboardNotificationKeys.TextFieldSelected,
+                new FilterByRef(FilterType.AcceptAllExcept, this),
+                TextFieldSelected
+            );
         }
 
         void OnDisable()
         {
             NotificationHub.Default.Unsubscribe(this, KeyboardNotificationKeys.AddOrRemoveCharacters);
+
+            NotificationHub.Default.Unsubscribe(this, KeyboardNotificationKeys.TextFieldSelected);
+        }
+
+        public void WebViewTextFieldSelected()
+        {
+            if (isSelected)
+            {
+                return;
+            }
+            isSelected = true;
+
+            selectionNotifier[KeyboardNotificationKeys.Info.IsActivation] = true;
+            selectionNotifier[KeyboardNotificationKeys.Info.IsPreviewBar] = false;
+            selectionNotifier[KeyboardNotificationKeys.Info.SelectionPositions] = null;
+            selectionNotifier[KeyboardNotificationKeys.Info.InputFieldText] = null;
+            selectionNotifier.Notify();
+        }
+
+        public void WebViewTextFieldUnselected()
+        {
+            if (!isSelected)
+            {
+                return;
+            }
+            isSelected = false;
+
+            selectionNotifier[KeyboardNotificationKeys.Info.IsActivation] = false;
+            selectionNotifier[KeyboardNotificationKeys.Info.IsPreviewBar] = false;
+            selectionNotifier[KeyboardNotificationKeys.Info.SelectionPositions] = null;
+            selectionNotifier[KeyboardNotificationKeys.Info.InputFieldText] = "";
+            selectionNotifier.Notify();
+        }
+
+        void TextFieldSelected(Notification notification)
+        {
+            isSelected = false;
         }
 
         void AddOrRemoveCharacters(Notification notification)

@@ -72,9 +72,7 @@ namespace umi3d.browserRuntime.ui.keyboard
 
             selectionNotifier = NotificationHub.Default.GetNotifier(
                 this,
-                KeyboardNotificationKeys.TextFieldSelected,
-                null,
-                null
+                KeyboardNotificationKeys.TextFieldSelected
             );
         }
 
@@ -266,20 +264,35 @@ namespace umi3d.browserRuntime.ui.keyboard
                 return;
             }
 
-            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.IsActivation, out bool isActivation) || !isActivation)
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.IsActivation, out bool isActivation))
             {
-                if (isPreviewBar)
-                {
-                    inputField.text = text;
-                }
-                else
-                {
-                    Deactivate();
-                }
                 return;
             }
 
-            inputField.text = text;
+            if (isPreviewBar)
+            {
+                // Hide or display preview bar.
+                inputField.textViewport.gameObject.SetActive(text != null);
+                inputField.targetGraphic?.gameObject.SetActive(text != null);
+
+                inputField.text = text;
+
+                if (!isActivation && string.IsNullOrEmpty(inputField.text))
+                {
+                    DeselectWithoutNotify(0);
+                    return;
+                }
+            }
+            else
+            {
+                if (!isActivation || text == null)
+                {
+                    Deactivate();
+                    return;
+                }
+
+                inputField.text = text;
+            }
 
             if (notification.TryGetInfoT(KeyboardNotificationKeys.Info.SelectionPositions, out int caretPosition, false))
             {

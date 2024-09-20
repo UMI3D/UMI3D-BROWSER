@@ -66,7 +66,7 @@ namespace umi3d.browserRuntime.ui.keyboard
             pointerDown = context.gameObject.AddComponent<PointerDownBehaviour>();
             pointerDown.isSimpleClick = false;
 
-            textAreaRT = inputField.transform.GetChild(0).GetComponent<RectTransform>();
+            textAreaRT = inputField.textViewport;
             textTMP = inputField.textComponent;
 
             GameObject caretGO = new("MobileCaret");

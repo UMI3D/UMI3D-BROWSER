@@ -186,16 +186,16 @@ namespace umi3d.browserRuntime.ui.keyboard
                 return;
             }
 
-            if (count == 1)
+            if (count == 2)
+            {
+                Select(0, inputField.text.Length);
+            }
+            else
             {
                 Vector2 localPosition = textAreaRT.PointerRelativeToUI(eventData, RectTransformExtensions.Pivot.TopLeft);
                 int caretPosition = PointerPositionToCaretPosition(localPosition);
 
                 Deselect(caretPosition);
-            }
-            else if (count == 2)
-            {
-                Select(0, inputField.text.Length);
             }
         }
 

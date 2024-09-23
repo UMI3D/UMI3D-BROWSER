@@ -21,9 +21,9 @@ using umi3d.common;
 using umi3d.common.interaction;
 using UnityEngine;
 
-namespace QuestBrowser.WebView
+namespace umi3d.browserRuntime.android
 {
-    public class WebView : AbstractUMI3DWebView
+    public class UMI3DUnityGeckoWebView : AbstractUMI3DWebView
     {
         [SerializeField] RectTransform webviewRT = null;
        

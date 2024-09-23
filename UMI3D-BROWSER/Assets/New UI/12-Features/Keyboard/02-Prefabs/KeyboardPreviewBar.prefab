@@ -637,6 +637,7 @@ GameObject:
   - component: {fileID: 4731567424125522683}
   - component: {fileID: 7856231509342713797}
   - component: {fileID: 7182690782176615182}
+  - component: {fileID: 6634811627475389832}
   m_Layer: 5
   m_Name: Background
   m_TagString: Untagged
@@ -701,3 +702,24 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!65 &6634811627475389832
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8673145203486291859}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 730, y: 55, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}

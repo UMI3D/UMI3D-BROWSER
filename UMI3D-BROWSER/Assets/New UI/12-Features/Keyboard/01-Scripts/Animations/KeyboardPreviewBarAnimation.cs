@@ -40,6 +40,8 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         TMPro.TMP_InputField inputField;
 
+        BoxCollider boxCollider;
+
         void Awake()
         {
             inputField = GetComponentInChildren<TMPro.TMP_InputField>();
@@ -59,6 +61,8 @@ namespace umi3d.browserRuntime.ui.keyboard
                .SetApplyValue<float>(x => tART.localScale = new(x, x, x))
                .SetEasing(Easings.EaseInCirc)
                .SetLerp<float>(Easings.Lerp);
+
+            boxCollider = GetComponentInChildren<BoxCollider>();
         }
 
         void OnEnable()
@@ -117,6 +121,8 @@ namespace umi3d.browserRuntime.ui.keyboard
                 backgroundAnimation.ApplyValue(isOpening ? width : 0f);
                 textAreaAnimation.ApplyValue(isOpening ? 1f : 0f);
             }
+
+            boxCollider.enabled = isOpening;
         }
 
         IEnumerator Opening(float animationTime)

@@ -35,6 +35,8 @@ namespace umi3d.browserRuntime.ui.keyboard
         /// </summary>
         float width;
 
+        BoxCollider boxCollider;
+
         void Awake()
         {
             RectTransform rectTransform = GetComponent<RectTransform>();
@@ -47,6 +49,8 @@ namespace umi3d.browserRuntime.ui.keyboard
                 .SetApplyValue<float>(x => rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, x))
                 .SetEasing(Easings.EaseInCirc)
                 .SetLerp<float>(Easings.Lerp);
+
+            boxCollider = GetComponent<BoxCollider>();
         }
 
         void OnEnable()
@@ -68,25 +72,21 @@ namespace umi3d.browserRuntime.ui.keyboard
         {
             if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.IsOpening, out bool isOpening))
             {
-                UnityEngine.Debug.LogError($"[KeyboardBackgroundAnimation] no KeyboardNotificationKeys.Info.IsOpening key.");
                 return;
             }
 
             if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.AnimationTime, out float animationTime))
             {
-                UnityEngine.Debug.LogError($"[KeyboardBackgroundAnimation] no KeyboardNotificationKeys.Info.AnimationTime key.");
                 return;
             }
 
             if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.PhaseOneStartTimePercentage, out float phaseOnePct))
             {
-                UnityEngine.Debug.LogError($"[KeyboardBackgroundAnimation] no KeyboardNotificationKeys.Info.PhaseOneStartTimePercentage key.");
                 return;
             }
 
             if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.WithAnimation, out bool isAnimated))
             {
-                UnityEngine.Debug.LogError($"[KeyboardBackgroundAnimation] no KeyboardNotificationKeys.Info.WithAnimation key.");
                 return;
             }
 
@@ -108,6 +108,8 @@ namespace umi3d.browserRuntime.ui.keyboard
             {
                 animation.ApplyValue(isOpening ? width : 0f);
             }
+
+            boxCollider.enabled = isOpening;
         }
 
         IEnumerator Opening(float animationTime)

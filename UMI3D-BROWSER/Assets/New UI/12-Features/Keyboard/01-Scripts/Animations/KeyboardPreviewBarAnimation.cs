@@ -117,7 +117,6 @@ namespace umi3d.browserRuntime.ui.keyboard
                 backgroundAnimation.ApplyValue(isOpening ? width : 0f);
                 textAreaAnimation.ApplyValue(isOpening ? 1f : 0f);
             }
-            inputField.interactable = isOpening;
         }
 
         IEnumerator Opening(float animationTime)

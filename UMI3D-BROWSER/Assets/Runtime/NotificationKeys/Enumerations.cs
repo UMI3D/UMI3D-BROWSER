@@ -66,6 +66,15 @@ namespace umi3d.browserRuntime.NotificationKeys
     }
 
     /// <summary>
+    /// The localisation version of the keyboard.
+    /// </summary>
+    public enum KeyboardLocalisationVersion
+    {
+        QWERTY,
+        AZERTY
+    }
+
+    /// <summary>
     /// How the text of a text field will be updated.
     /// </summary>
     public enum TextFieldTextUpdate

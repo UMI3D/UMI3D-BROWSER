@@ -82,15 +82,14 @@ namespace umi3dBrowsers.ingame_ui
             {
                 if (mainInGamePanel.gameObject.activeSelf)
                 {
-                    Cursor.lockState = CursorLockMode.Locked;
-                    BaseCursor.SetMovement(this, CursorMovement.Center);
                     mainInGamePanel.gameObject.SetActive(false);
+                    BaseCursor.SetMovement(this, CursorMovement.Center);
+                    BaseCursor.State = CursorState.Default;
                 }
                 else
                 {
-                    Cursor.lockState = CursorLockMode.Confined;
-                    BaseCursor.SetMovement(this, CursorMovement.Free);
                     mainInGamePanel.gameObject.SetActive(true);
+                    BaseCursor.SetMovement(this, CursorMovement.Free);
                 }
             }
         }

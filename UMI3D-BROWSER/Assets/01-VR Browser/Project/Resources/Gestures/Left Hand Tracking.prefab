@@ -1306,6 +1306,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   teleportingObject: {fileID: 0}
   centerEyeAnchor: {fileID: 0}
+  calibrateur: {fileID: 0}
   arc: {fileID: 3385496997422760385}
 --- !u!1 &1472331801940587976
 GameObject:
@@ -3345,8 +3346,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   deactivationRequesters: 
+  simLinker: {fileID: 0}
   selectionFeedbackHandler: {fileID: 3155153888495321373}
   SelectionParadigmMode: 0
+  proximitySelection: 0
   pointingDetectors:
   - {fileID: 802299532211083586}
   proximityDetectors:
@@ -4566,6 +4569,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5219065156205625701}
   - component: {fileID: 504247734211059271}
+  - component: {fileID: 2018188050193039067}
   m_Layer: 0
   m_Name: LeftHand Mesh
   m_TagString: Untagged
@@ -4667,6 +4671,24 @@ SkinnedMeshRenderer:
     m_Center: {x: 0.008882426, y: -0.016739514, z: 0.0781125}
     m_Extent: {x: 0.08261519, y: 0.056081634, z: 0.10162346}
   m_DirtyAABB: 0
+--- !u!114 &2018188050193039067
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6559800175269842296}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 0
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!1 &6628453583199751956
 GameObject:
   m_ObjectHideFlags: 0
@@ -4893,8 +4915,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boneType: 6
-  isActif: 1
-  isOverrider: 1
 --- !u!1 &6857604584387638286
 GameObject:
   m_ObjectHideFlags: 0
@@ -5538,8 +5558,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   deactivationRequesters: 
+  simLinker: {fileID: 0}
   selectionFeedbackHandler: {fileID: 8623440049783364741}
   SelectionParadigmMode: 0
+  proximitySelection: 0
   pointingDetectors:
   - {fileID: 5658490650638129999}
   proximityDetectors:
@@ -6129,8 +6151,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   deactivationRequesters: 
+  simLinker: {fileID: 0}
   selectionFeedbackHandler: {fileID: 3432406978657161659}
   SelectionParadigmMode: 0
+  proximitySelection: 0
   pointingDetectors:
   - {fileID: 3319083820073364391}
   proximityDetectors:

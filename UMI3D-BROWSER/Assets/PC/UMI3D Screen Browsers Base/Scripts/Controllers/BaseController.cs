@@ -47,6 +47,7 @@ namespace umi3d.baseBrowser.Controller
         protected InteractionMapper InteractionMapper;
         [SerializeField]
         protected Transform CameraTransform;
+        public LeftClickParametersInteraction LeftClickParametersInteraction;
 
         [Header("Actions' parents")]
         public GameObject ParameterActions;
@@ -89,6 +90,8 @@ namespace umi3d.baseBrowser.Controller
 
         protected int m_navigationDirect = 0;
         protected AutoProjectOnHover reason = new AutoProjectOnHover();
+
+        public event System.Action OnRelease;
 
         public static event System.Action<ulong> HoverEnter;
         public static event System.Action<ulong> HoverUpdate;
@@ -239,6 +242,7 @@ namespace umi3d.baseBrowser.Controller
                 RemoveForceProjectionReleaseButton();
             }
             tool.onReleased(interactionBoneType);
+            OnRelease?.Invoke();
         }
         /// <summary>
         /// <inheritdoc/>

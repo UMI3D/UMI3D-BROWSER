@@ -64,6 +64,8 @@ namespace umi3dBrowsers.displayer
                 loader.Notify(value.dto as NotificationDto);
 #elif UMI3D_XR
                 Debug.LogError("TODO : only display notification in one watch");
+                var dto = value.dto as NotificationDto;
+                AbstractNotification notification;
                 foreach (WatchMenu watch in WatchMenu.instances)
                 {
                     notification = GameObject.Instantiate(loader.watchNotificationPrefab);

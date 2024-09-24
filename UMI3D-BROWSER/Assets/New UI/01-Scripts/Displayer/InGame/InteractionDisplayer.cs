@@ -18,7 +18,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using umi3d.baseBrowser.Controller;
 using umi3d.baseBrowser.inputs.interactions;
+using umi3d.common.interaction;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -29,6 +31,7 @@ public class InteractionDisplayer : MonoBehaviour
     [SerializeField] private GameObject mappingPrefab;
     [SerializeField] private List<InputAction> inputKeys;
     [SerializeField] private List<Sprite> inputSprites;
+    [SerializeField] private Sprite leftClickSprite;
 
     private Dictionary<string, InteractionMappingDisplayer> _rows;
 
@@ -36,6 +39,8 @@ public class InteractionDisplayer : MonoBehaviour
     {
         KeyboardInteraction.Mapped += Show;
         KeyboardInteraction.Unmapped += Hide;
+        BaseController.Instance.OnAddParameter += ShowParameters;
+        BaseController.Instance.OnRelease += Hide;
 
         _rows = new ();
 
@@ -47,6 +52,8 @@ public class InteractionDisplayer : MonoBehaviour
     {
         KeyboardInteraction.Mapped -= Show;
         KeyboardInteraction.Unmapped -= Hide;
+        BaseController.Instance.OnAddParameter -= ShowParameters;
+        BaseController.Instance.OnRelease -= Hide;
     }
 
     private void Show(KeyboardInteraction interaction, string name, InputAction action)
@@ -79,11 +86,31 @@ public class InteractionDisplayer : MonoBehaviour
         _rows.Add(name, interactionMappingDisplayer);
     }
 
-    private void Hide(KeyboardInteraction interaction = null)
+    private void Hide(KeyboardInteraction interaction)
+    {
+        Hide();
+    }
+
+    private void Hide()
     {
         gameObject.SetActive(false);
         foreach (var row in _rows)
             Destroy(row.Value.gameObject);
         _rows.Clear();
+    }
+
+    private void ShowParameters(AbstractParameterDto dto)
+    {
+        if (gameObject.activeInHierarchy)
+            return;
+
+        gameObject.SetActive(true);
+        interactionText.text = "Interaction";
+
+        var interactionMappingDisplayer = Instantiate(mappingPrefab, mappingContent).GetComponent<InteractionMappingDisplayer>();
+        interactionMappingDisplayer.Initialize("Modify");
+        interactionMappingDisplayer.Add(leftClickSprite);
+
+        _rows.Add("Modify", interactionMappingDisplayer);
     }
 }

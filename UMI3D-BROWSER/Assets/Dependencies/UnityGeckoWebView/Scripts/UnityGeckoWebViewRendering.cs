@@ -87,6 +87,7 @@ namespace com.inetum.unitygeckowebview
                 Destroy(this);
                 return;
             }
+
             javaWebview = GetComponent<AndroidJavaWebview>();
         }
 
@@ -108,9 +109,8 @@ namespace com.inetum.unitygeckowebview
                 RenderingProcess
             );
 
-            NotificationHub.Default.Subscribe(
-                this,
-                GeckoWebViewNotificationKeys.TextureSizeChanged,
+            NotificationHub.Default.Subscribe<GeckoWebViewNotificationKeys.TextureSizeChanged>(
+                this, 
                 TextureSizeChanged
             );
         }
@@ -119,7 +119,7 @@ namespace com.inetum.unitygeckowebview
         {
             NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.Rendering);
 
-            NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.TextureSizeChanged);
+            NotificationHub.Default.Unsubscribe<GeckoWebViewNotificationKeys.TextureSizeChanged>(this);
         }
 
         void OnDestroy()
@@ -279,7 +279,7 @@ namespace com.inetum.unitygeckowebview
 
         void TextureSizeChanged(Notification notification)
         {
-            if (!notification.TryGetInfoT(GeckoWebViewNotificationKeys.Info.Vector2, out Vector2 size))
+            if (!notification.TryGetInfoT(GeckoWebViewNotificationKeys.TextureSizeChanged.Size, out Vector2 size))
             {
                 return;
             }

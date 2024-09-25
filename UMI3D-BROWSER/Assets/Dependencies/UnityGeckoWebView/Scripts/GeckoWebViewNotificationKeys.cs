@@ -14,12 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
 using System;
 using UnityEngine;
 
 namespace com.inetum.unitygeckowebview
 {
-    public static class GeckoWebViewNotificationKeys 
+    public static class GeckoWebViewNotificationKeys
     {
         /// <summary>
         /// Notification sent when one of the history button is pressed.
@@ -46,30 +47,82 @@ namespace com.inetum.unitygeckowebview
         /// </summary>
         public const string Rendering = "GeckoWebViewNotificationKeysRendering";
 
-        /// <summary>
-        /// Notification sent when the size of the web view will change.
-        /// </summary>
-        public const string SizeChanged = "GeckoWebViewNotificationKeysSizeChanged";
 
         /// <summary>
-        /// Notification sent when the size of the texture will change.
+        /// Notification sent when the size of the web view change.
         /// </summary>
-        public const string TextureSizeChanged = "GeckoWebViewNotificationKeysTextureSizeChanged";
+        public class WebViewSizeChanged
+        {
+            /// <summary>
+            /// The new scale of the web view.<br/>
+            /// Value is <see cref="Vector2"/>.
+            /// </summary>
+            public const string Scale = "Scale";
+        }
+
 
         /// <summary>
-        /// Notification sent when the scroll value has changed from the server.
+        /// Notification sent when the size of the texture change.
         /// </summary>
-        public const string ScrollChanged = "GeckoWebViewNotificationKeysScrollChanged";
+        public class TextureSizeChanged
+        {
+            /// <summary>
+            /// The new size of the texture.<br/>
+            /// Value is <see cref="Vector2"/>.
+            /// </summary>
+            public const string Size = "Size";
+        }
+
+
+        /// <summary>
+        /// Notification sent when the scroll value changed from the server.
+        /// </summary>
+        public class ScrollChanged
+        {
+            /// <summary>
+            /// The scrolling value of the web view.<br/>
+            /// Value is <see cref="Vector2"/>.
+            /// </summary>
+            public const string Scroll = "Scroll";
+        }
+
 
         /// <summary>
         /// Notification sent when the interactibility will changed.
         /// </summary>
         public const string InteractibilityChanged = "GeckoWebViewNotificationKeysInteractibilityChanged";
 
+
         /// <summary>
-        /// Notification sent when the synchronization has changed.
+        /// Notification sent when the synchronization change.
         /// </summary>
-        public const string SynchronizationChanged = "GeckoWebViewNotificationKeysSynchronizationChanged";
+        public class SynchronizationChanged
+        {
+            /// <summary>
+            /// Whether the web view is not synchronized with the server.<br/>
+            /// Value is <see cref="bool"/>.
+            /// </summary>
+            public const string IsDesynchronized = "IsDesynchronized";
+
+            /// <summary>
+            /// Whether the web view is synchronizing (the user pressed the synchronized button).<br/>
+            /// Value is <see cref="bool"/>.
+            /// </summary>
+            public const string IsSynchronizing = "IsSynchronizing";
+
+            /// <summary>
+            /// Whether the user is admin of the web view.<br/>
+            /// Value is <see cref="bool"/>.
+            /// </summary>
+            public const string IsAdmin = "IsAdmin";
+
+            /// <summary>
+            /// The delta scrolling value of the web view.<br/>
+            /// Value is <see cref="Vector2"/>.
+            /// </summary>
+            public const string Scroll = "Scroll";
+        }
+
 
         public static class Info
         {
@@ -98,23 +151,6 @@ namespace com.inetum.unitygeckowebview
             public const string RenderingProcess = "RenderingProcess";
 
             /// <summary>
-            /// A <see cref="Vector2"/>.<br/>
-            /// Could be the new size or the scrolling value of the web view.<br/>
-            /// Value is <see cref="Vector2"/>.<br/>
-            /// <br/>
-            /// See Notification key: <see cref="SizeChanged"/>, <see cref="TextureSizeChanged"/>, <see cref="ScrollChanged"/>
-            /// </summary>
-            public const string Vector2 = "Vector2";
-
-            /// <summary>
-            /// The position of the corner of the web view.<br/>
-            /// Value is <see cref="Vector3"/>[].<br/>
-            /// <br/>
-            /// See Notification key: <see cref="SizeChanged"/>
-            /// </summary>
-            public const string CornersPosition = "CornerPositions";
-
-            /// <summary>
             /// Whether the web view is interactable.<br/>
             /// Value is <see cref="bool"/>.<br/>
             /// <br/>
@@ -122,29 +158,7 @@ namespace com.inetum.unitygeckowebview
             /// </summary>
             public const string Interactable = "Interactable";
 
-            /// <summary>
-            /// Whether the web view is not synchronized with the server.<br/>
-            /// Value is <see cref="bool"/>.<br/>
-            /// <br/>
-            /// See Notification key: <see cref="SynchronizationChanged"/>
-            /// </summary>
-            public const string IsDesynchronized = "IsDesynchronized";
-
-            /// <summary>
-            /// Whether the web view is synchronizing (the user pressed the synchronized button).<br/>
-            /// Value is <see cref="bool"/>.<br/>
-            /// <br/>
-            /// See Notification key: <see cref="SynchronizationChanged"/>
-            /// </summary>
-            public const string IsSynchronizing = "IsSynchronizing";
-
-            /// <summary>
-            /// Whether the user is admin of the web view.<br/>
-            /// Value is <see cref="bool"/>.<br/>
-            /// <br/>
-            /// See Notification key: <see cref="SynchronizationChanged"/>
-            /// </summary>
-            public const string IsAdmin = "IsAdmin";
+            
         }
     }
 }

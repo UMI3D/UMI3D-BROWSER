@@ -25,8 +25,6 @@ namespace umi3d.browserRuntime.android
 {
     public class UMI3DUnityGeckoWebView : AbstractUMI3DWebView
     {
-        [SerializeField] RectTransform webviewRT = null;
-       
         string lastLoadedUrl;
         ulong id;
         bool isInit = false;
@@ -38,36 +36,29 @@ namespace umi3d.browserRuntime.android
         Notifier interactibilityNotifier;
         Notifier synchronizationNotifier;
 
-        #region Methods
-
         void Awake()
         {
-            UnityEngine.Debug.Assert(webviewRT != null, $"Web view rectTransform is not referenced.");
-
             searchNotifier = NotificationHub.Default.GetNotifier(
                 this,
                 GeckoWebViewNotificationKeys.Search
             );
-            textureSizeChangedNotifier = NotificationHub.Default.GetNotifier(
-                this,
-                GeckoWebViewNotificationKeys.TextureSizeChanged
-            );
-            sizeChangedNotifier = NotificationHub.Default.GetNotifier(
-                this,
-                GeckoWebViewNotificationKeys.SizeChanged
-            );
-            ScrollNotifier = NotificationHub.Default.GetNotifier(
-                this,
-                GeckoWebViewNotificationKeys.ScrollChanged
-            );
+
+            textureSizeChangedNotifier = NotificationHub.Default
+                .GetNotifier<GeckoWebViewNotificationKeys.TextureSizeChanged>(this);
+
+            sizeChangedNotifier = NotificationHub.Default
+                .GetNotifier<GeckoWebViewNotificationKeys.WebViewSizeChanged>(this);
+
+            ScrollNotifier = NotificationHub.Default
+                .GetNotifier<GeckoWebViewNotificationKeys.ScrollChanged>(this);
+
             interactibilityNotifier = NotificationHub.Default.GetNotifier(
                 this,
                 GeckoWebViewNotificationKeys.InteractibilityChanged
             );
-            synchronizationNotifier = NotificationHub.Default.GetNotifier(
-                this,
-                GeckoWebViewNotificationKeys.SynchronizationChanged
-            );
+
+            synchronizationNotifier = NotificationHub.Default
+                .GetNotifier<GeckoWebViewNotificationKeys.SynchronizationChanged>(this);
         }
 
         void OnEnable()
@@ -78,9 +69,8 @@ namespace umi3d.browserRuntime.android
                 UrlLoaded
             );
 
-            NotificationHub.Default.Subscribe(
+            NotificationHub.Default.Subscribe<GeckoWebViewNotificationKeys.SynchronizationChanged>(
                 this,
-                GeckoWebViewNotificationKeys.SynchronizationChanged,
                 new FilterByRef(FilterType.AcceptAllExcept, this),
                 Synchronize
             );
@@ -90,7 +80,7 @@ namespace umi3d.browserRuntime.android
         {
             NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.Loading);
 
-            NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.SynchronizationChanged);
+            NotificationHub.Default.Unsubscribe<GeckoWebViewNotificationKeys.SynchronizationChanged>(this);
         }
 
         public override void Init(UMI3DWebViewDto dto)
@@ -108,17 +98,13 @@ namespace umi3d.browserRuntime.android
 
         protected override void OnSizeChanged(Vector2 size)
         {
-            Vector3[] corners = new Vector3[4];
-            webviewRT.GetWorldCorners(corners);
-
-            sizeChangedNotifier[GeckoWebViewNotificationKeys.Info.Vector2] = size;
-            sizeChangedNotifier[GeckoWebViewNotificationKeys.Info.CornersPosition] = corners;
+            sizeChangedNotifier[GeckoWebViewNotificationKeys.WebViewSizeChanged.Scale] = size;
             sizeChangedNotifier.Notify();
         }
 
         protected override void OnTextureSizeChanged(Vector2 size)
         {
-            textureSizeChangedNotifier[GeckoWebViewNotificationKeys.Info.Vector2] = size;
+            textureSizeChangedNotifier[GeckoWebViewNotificationKeys.TextureSizeChanged.Size] = size;
             textureSizeChangedNotifier.Notify();
         }
 
@@ -128,7 +114,7 @@ namespace umi3d.browserRuntime.android
         /// <param name="url"></param>
         protected async override void OnUrlChanged(string url)
         {
-            synchronizationNotifier[GeckoWebViewNotificationKeys.Info.IsDesynchronized] = false;
+            synchronizationNotifier[GeckoWebViewNotificationKeys.SynchronizationChanged.IsDesynchronized] = false;
             synchronizationNotifier.Notify();
 
             while (!isInit)
@@ -142,13 +128,13 @@ namespace umi3d.browserRuntime.android
 
         protected override void OnAdminStatusChanged(bool status)
         {
-            synchronizationNotifier[GeckoWebViewNotificationKeys.Info.IsAdmin] = status;
+            synchronizationNotifier[GeckoWebViewNotificationKeys.SynchronizationChanged.IsAdmin] = status;
             synchronizationNotifier.Notify();
         }
 
         protected override void OnScrollOffsetChanged(Vector2 scroll)
         {
-            ScrollNotifier[GeckoWebViewNotificationKeys.Info.Vector2] = scroll;
+            ScrollNotifier[GeckoWebViewNotificationKeys.ScrollChanged.Scroll] = scroll;
             ScrollNotifier.Notify();
         }
 
@@ -175,7 +161,7 @@ namespace umi3d.browserRuntime.android
 
         void Synchronize(Notification notification)
         {
-            if (!notification.TryGetInfoT(GeckoWebViewNotificationKeys.Info.IsSynchronizing, out bool isSynchronizing))
+            if (!notification.TryGetInfoT(GeckoWebViewNotificationKeys.SynchronizationChanged.IsSynchronizing, out bool isSynchronizing))
             {
                 return;
             }
@@ -192,7 +178,7 @@ namespace umi3d.browserRuntime.android
                 return;
             }
 
-            if (!notification.TryGetInfoT(GeckoWebViewNotificationKeys.Info.Vector2, out Vector2 scroll))
+            if (!notification.TryGetInfoT(GeckoWebViewNotificationKeys.SynchronizationChanged.Scroll, out Vector2 scroll))
             {
                 return;
             }
@@ -212,6 +198,14 @@ namespace umi3d.browserRuntime.android
             }
         }
 
-        #endregion
+#if UNITY_EDITOR
+
+        [ContextMenu("Test Change Size")]
+        void TestChangeSize()
+        {
+
+        }
+
+#endif
     }
 }

@@ -40,40 +40,22 @@ namespace com.inetum.unitygeckowebview
 
         void OnEnable()
         {
-            NotificationHub.Default.Subscribe(
-                this,
-                GeckoWebViewNotificationKeys.SizeChanged,
+            NotificationHub.Default.Subscribe<GeckoWebViewNotificationKeys.WebViewSizeChanged>(
+                this, 
                 SizeChanged
             );
         }
 
         void OnDisable()
         {
-            NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.SizeChanged);
+            NotificationHub.Default.Unsubscribe<GeckoWebViewNotificationKeys.WebViewSizeChanged>(this);
         }
 
         void SizeChanged(Notification notification)
         {
-            if (!notification.TryGetInfoT(GeckoWebViewNotificationKeys.Info.Vector2, out Vector2 size))
+            if (!notification.TryGetInfoT(GeckoWebViewNotificationKeys.WebViewSizeChanged.Scale, out Vector2 size))
             {
                 return;
-            }
-
-            if (!notification.TryGetInfoT(GeckoWebViewNotificationKeys.Info.CornersPosition, out Vector3[] corners))
-            {
-                return;
-            }
-
-            switch (barType)
-            {
-                case BarType.Top:
-                    rectTransform.position = (corners[0] + corners[3]) / 2f;
-                    break;
-                case BarType.Bottom:
-                    rectTransform.position = (corners[1] + corners[2]) / 2f;
-                    break;
-                default:
-                    break;
             }
 
             rectTransform.localScale = new Vector3(

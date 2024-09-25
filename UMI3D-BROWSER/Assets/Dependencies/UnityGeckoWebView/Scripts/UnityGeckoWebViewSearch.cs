@@ -46,9 +46,8 @@ namespace com.inetum.unitygeckowebview.samples
                 Loading
             );
 
-            NotificationHub.Default.Subscribe(
+            NotificationHub.Default.Subscribe<GeckoWebViewNotificationKeys.WebViewSizeChanged>(
                 this,
-                GeckoWebViewNotificationKeys.SizeChanged,
                 SizeChanged
             );
         }
@@ -57,7 +56,7 @@ namespace com.inetum.unitygeckowebview.samples
         {
             NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.Loading);
 
-            NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.SizeChanged);
+            NotificationHub.Default.Unsubscribe<GeckoWebViewNotificationKeys.WebViewSizeChanged>(this);
         }
 
         void Loading(Notification notification)
@@ -78,13 +77,15 @@ namespace com.inetum.unitygeckowebview.samples
 
         void SizeChanged(Notification notification)
         {
-            if (!notification.TryGetInfoT(GeckoWebViewNotificationKeys.Info.Vector2, out Vector2 size))
+            if (!notification.TryGetInfoT(GeckoWebViewNotificationKeys.WebViewSizeChanged.Scale, out Vector2 size))
             {
                 return;
             }
 
+            float ratio = size.x / size.y;
+
             rectTransform.localScale = new Vector3(
-                rectTransform.localScale.x / size.x,
+                rectTransform.localScale.x / ratio,
                 rectTransform.localScale.y,
                 rectTransform.localScale.z
             );

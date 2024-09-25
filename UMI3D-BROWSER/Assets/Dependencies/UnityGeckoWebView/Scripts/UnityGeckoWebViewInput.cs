@@ -28,7 +28,6 @@ namespace com.inetum.unitygeckowebview
     /// </summary>
     [RequireComponent(typeof(RawImage))]
     [RequireComponent(typeof(AndroidJavaWebview))]
-    [RequireComponent(typeof(UnityGeckoWebViewRendering))]
     public class UnityGeckoWebViewInput : Selectable, IPointerMoveHandler
     {
         [Space]
@@ -46,7 +45,8 @@ namespace com.inetum.unitygeckowebview
 
         RectTransform rawImageRectTransform;
         AndroidJavaWebview javaWebView;
-        UnityGeckoWebViewRendering webviewRendering;
+
+        int TextureWidth, TextureHeight;
 
         bool textSelectedLastFrame = false;
 
@@ -71,9 +71,15 @@ namespace com.inetum.unitygeckowebview
 
         protected override void Awake()
         {
+            if (Application.isEditor)
+            {
+                UnityEngine.Debug.LogError($"The Gecko Web View only works in android.");
+                Destroy(this);
+                return;
+            }
+
             rawImageRectTransform = GetComponent<RectTransform>();
             javaWebView = GetComponent<AndroidJavaWebview>();
-            webviewRendering = GetComponent<UnityGeckoWebViewRendering>();
         }
 
         protected override void OnEnable()
@@ -91,6 +97,11 @@ namespace com.inetum.unitygeckowebview
                 GeckoWebViewNotificationKeys.WebViewTextFieldSelected,
                 WebViewTextFieldSelected
             );
+
+            NotificationHub.Default.Subscribe<GeckoWebViewNotificationKeys.TextureSizeChanged>(
+                this,
+                TextureSizeChanged
+            );
         }
 
         protected override void OnDisable()
@@ -99,8 +110,9 @@ namespace com.inetum.unitygeckowebview
 
             NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.InteractibilityChanged);
 
-
             NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.WebViewTextFieldSelected);
+
+            NotificationHub.Default.Unsubscribe<GeckoWebViewNotificationKeys.TextureSizeChanged>(this);
         }
 
         public override void OnPointerDown(PointerEventData eventData)
@@ -173,10 +185,21 @@ namespace com.inetum.unitygeckowebview
         {
             Vector3 localPosition = worldPosition - coordinates[0];
 
-            localPosition.x = Vector3.Dot(localPosition, right.normalized) / right.magnitude * webviewRendering.width;
-            localPosition.y = Vector3.Dot(localPosition, up.normalized) / up.magnitude * webviewRendering.height;
+            localPosition.x = Vector3.Dot(localPosition, right.normalized) / right.magnitude * TextureWidth;
+            localPosition.y = Vector3.Dot(localPosition, up.normalized) / up.magnitude * TextureHeight;
 
             return localPosition;
+        }
+
+        void TextureSizeChanged(Notification notification)
+        {
+            if (!notification.TryGetInfoT(GeckoWebViewNotificationKeys.TextureSizeChanged.Size, out Vector2 size))
+            {
+                return;
+            }
+
+            TextureWidth = (int)size.x;
+            TextureHeight = (int)size.y;
         }
 
         void InteractibilityChanged(Notification notification)

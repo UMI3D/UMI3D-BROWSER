@@ -37,9 +37,8 @@ namespace com.inetum.unitygeckowebview
 
         void OnEnable()
         {
-            NotificationHub.Default.Subscribe(
-                this,
-                GeckoWebViewNotificationKeys.SizeChanged,
+            NotificationHub.Default.Subscribe<GeckoWebViewNotificationKeys.WebViewSizeChanged>(
+                this, 
                 SizeChanged
             );
 
@@ -52,20 +51,22 @@ namespace com.inetum.unitygeckowebview
 
         void OnDisable()
         {
-            NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.SizeChanged);
+            NotificationHub.Default.Unsubscribe<GeckoWebViewNotificationKeys.WebViewSizeChanged>(this);
 
             NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.InteractibilityChanged);
         }
 
         void SizeChanged(Notification notification)
         {
-            if (!notification.TryGetInfoT(GeckoWebViewNotificationKeys.Info.Vector2, out Vector2 size))
+            if (!notification.TryGetInfoT(GeckoWebViewNotificationKeys.WebViewSizeChanged.Scale, out Vector2 size))
             {
                 return;
             }
 
+            float ratio = size.x / size.y;
+
             rectTransform.localScale = new Vector3(
-                rectTransform.localScale.x / size.x,
+                rectTransform.localScale.x / ratio,
                 rectTransform.localScale.y,
                 rectTransform.localScale.z
             );

@@ -68,10 +68,8 @@ namespace com.inetum.unitygeckowebview
             button.interactable = false;
             IsDesynchronized = false;
 
-            synchronizationNotifier = NotificationHub.Default.GetNotifier(
-                this,
-                GeckoWebViewNotificationKeys.SynchronizationChanged
-            );
+            synchronizationNotifier = NotificationHub.Default
+                .GetNotifier<GeckoWebViewNotificationKeys.SynchronizationChanged>(this);
         }
 
         void Start()
@@ -81,9 +79,8 @@ namespace com.inetum.unitygeckowebview
 
         void OnEnable()
         {
-            NotificationHub.Default.Subscribe(
-                this,
-                GeckoWebViewNotificationKeys.SizeChanged,
+            NotificationHub.Default.Subscribe<GeckoWebViewNotificationKeys.WebViewSizeChanged>(
+                this, 
                 SizeChanged
             );
 
@@ -93,40 +90,41 @@ namespace com.inetum.unitygeckowebview
                InteractibilityChanged
            );
 
-            NotificationHub.Default.Subscribe(
+            NotificationHub.Default.Subscribe<GeckoWebViewNotificationKeys.SynchronizationChanged>(
                this,
-               GeckoWebViewNotificationKeys.SynchronizationChanged,
                SynchronizationChanged
            );
         }
 
         void OnDisable()
         {
-            NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.SizeChanged);
+            NotificationHub.Default.Unsubscribe<GeckoWebViewNotificationKeys.WebViewSizeChanged>(this);
 
             NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.InteractibilityChanged);
 
-            NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.SynchronizationChanged);
+            NotificationHub.Default.Unsubscribe<GeckoWebViewNotificationKeys.SynchronizationChanged>(this);
         }
 
         public void ToggleSynchronization()
         {
             IsDesynchronized = !IsDesynchronized;
 
-            synchronizationNotifier[GeckoWebViewNotificationKeys.Info.IsSynchronizing] = true;
-            synchronizationNotifier[GeckoWebViewNotificationKeys.Info.Vector2] = new Vector2(float.NaN, float.NaN);
+            synchronizationNotifier[GeckoWebViewNotificationKeys.SynchronizationChanged.IsSynchronizing] = true;
+            synchronizationNotifier[GeckoWebViewNotificationKeys.SynchronizationChanged.Scroll] = new Vector2(float.NaN, float.NaN);
             synchronizationNotifier.Notify();
         }
 
         void SizeChanged(Notification notification)
         {
-            if (!notification.TryGetInfoT(GeckoWebViewNotificationKeys.Info.Vector2, out Vector2 size))
+            if (!notification.TryGetInfoT(GeckoWebViewNotificationKeys.WebViewSizeChanged.Scale, out Vector2 size))
             {
                 return;
             }
 
+            float ratio = size.x / size.y;
+
             rectTransform.localScale = new Vector3(
-                rectTransform.localScale.x / size.x,
+                rectTransform.localScale.x / ratio,
                 rectTransform.localScale.y,
                 rectTransform.localScale.z
             );
@@ -146,12 +144,12 @@ namespace com.inetum.unitygeckowebview
 
         void SynchronizationChanged(Notification notification)
         {
-            if (!notification.TryGetInfoT(GeckoWebViewNotificationKeys.Info.IsAdmin, out bool isAdmin))
+            if (!notification.TryGetInfoT(GeckoWebViewNotificationKeys.SynchronizationChanged.IsAdmin, out bool isAdmin))
             {
                 return;
             }
 
-            if (!notification.TryGetInfoT(GeckoWebViewNotificationKeys.Info.IsDesynchronized, out bool isDesynchronized))
+            if (!notification.TryGetInfoT(GeckoWebViewNotificationKeys.SynchronizationChanged.IsDesynchronized, out bool isDesynchronized))
             {
                 return;
             }
@@ -180,8 +178,8 @@ namespace com.inetum.unitygeckowebview
                     currentScrollXPosition = scrollX;
                     currentScrollYPosition = scrollY;
 
-                    synchronizationNotifier[GeckoWebViewNotificationKeys.Info.IsSynchronizing] = false;
-                    synchronizationNotifier[GeckoWebViewNotificationKeys.Info.Vector2] = new Vector2(scrollX, scrollY);
+                    synchronizationNotifier[GeckoWebViewNotificationKeys.SynchronizationChanged.IsSynchronizing] = false;
+                    synchronizationNotifier[GeckoWebViewNotificationKeys.SynchronizationChanged.Scroll] = new Vector2(scrollX, scrollY);
                     synchronizationNotifier.Notify();
                 }
 

@@ -17,14 +17,12 @@ limitations under the License.
 using inetum.unityUtils;
 
 using System;
-using UnityEngine;
 
 namespace com.inetum.unitygeckowebview
 {
-    public class UnityGeckoWebView : MonoBehaviour
+    public class UnityGeckoWebViewMainThreadDispatcher : PersistentSingleBehaviour<UnityGeckoWebViewMainThreadDispatcher>
     {
-        public static System.Collections.Generic.Queue<Action> actionsToRunOnMainThread = new();
-
+        public System.Collections.Generic.Queue<Action> actionsToRunOnMainThread = new();
 
         void Update()
         {
@@ -36,8 +34,6 @@ namespace com.inetum.unitygeckowebview
                 }
             }
         }
-
-        
     }
 }
 

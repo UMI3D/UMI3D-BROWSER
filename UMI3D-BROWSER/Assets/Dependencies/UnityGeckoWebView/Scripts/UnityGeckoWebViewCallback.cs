@@ -25,13 +25,19 @@ namespace com.inetum.unitygeckowebview
     /// </summary>
     public class UnityGeckoWebViewCallback : AndroidJavaProxy
     {
-        AndroidJavaWebview webView;
+        WebviewContainer webView;
 
+        Notifier webViewTextFieldSelected;
         Notifier loadingNotifier;
 
-        public UnityGeckoWebViewCallback(AndroidJavaWebview webView) : base("com.inetum.unitygeckowebview.UnityGeckoWebViewCallback")
+        public UnityGeckoWebViewCallback(WebviewContainer webView) : base("com.inetum.unitygeckowebview.UnityGeckoWebViewCallback")
         {
             this.webView = webView;
+
+            webViewTextFieldSelected = NotificationHub.Default.GetNotifier(
+                this,
+                GeckoWebViewNotificationKeys.WebViewTextFieldSelected
+            );
 
             loadingNotifier = NotificationHub.Default.GetNotifier(
                 this,
@@ -47,7 +53,7 @@ namespace com.inetum.unitygeckowebview
             if (webView is null)
                 return;
 
-            UnityGeckoWebView.actionsToRunOnMainThread.Enqueue(TextInputSelected);
+            UnityGeckoWebViewMainThreadDispatcher.Instance.actionsToRunOnMainThread.Enqueue(TextInputSelected);
         }
 
         /// <summary>
@@ -58,7 +64,7 @@ namespace com.inetum.unitygeckowebview
             if (webView is null)
                 return;
 
-            UnityGeckoWebView.actionsToRunOnMainThread.Enqueue(() => LoadingHasStarted(url));
+            UnityGeckoWebViewMainThreadDispatcher.Instance.actionsToRunOnMainThread.Enqueue(() => LoadingHasStarted(url));
         }
 
         /// <summary>
@@ -66,10 +72,7 @@ namespace com.inetum.unitygeckowebview
         /// </summary>
         public void TextInputSelected()
         {
-            NotificationHub.Default.Notify(
-                this,
-                GeckoWebViewNotificationKeys.WebViewTextFieldSelected
-            );
+            webViewTextFieldSelected.Notify();
         }
 
         /// <summary>

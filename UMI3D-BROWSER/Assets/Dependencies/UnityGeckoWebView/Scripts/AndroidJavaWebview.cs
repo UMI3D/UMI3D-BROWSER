@@ -18,7 +18,6 @@ using inetum.unityUtils;
 using inetum.unityUtils.extensions;
 using System;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace com.inetum.unitygeckowebview
 {
@@ -29,9 +28,16 @@ namespace com.inetum.unitygeckowebview
         /// </summary>
         AndroidJavaObject webView;
 
+        WebviewContainer webViewContainer;
+
         bool isInit = false;
 
         public bool isNull => webView == null;
+
+        private void Awake()
+        {
+            webViewContainer = GetComponentInParent<WebviewContainer>();
+        }
 
         void Start()
         {
@@ -44,9 +50,8 @@ namespace com.inetum.unitygeckowebview
 
         void OnEnable()
         {
-            NotificationHub.Default.Subscribe(
+            NotificationHub.Default.Subscribe<GeckoWebViewNotificationKeys.ScrollChanged>(
                 this,
-                GeckoWebViewNotificationKeys.ScrollChanged,
                 ScrollChanged
             );
 
@@ -65,7 +70,7 @@ namespace com.inetum.unitygeckowebview
 
         void OnDisable()
         {
-            NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.ScrollChanged);
+            NotificationHub.Default.Unsubscribe<GeckoWebViewNotificationKeys.ScrollChanged>(this);
 
             NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.History);
 
@@ -94,7 +99,7 @@ namespace com.inetum.unitygeckowebview
                     width,
                     height,
                     useNativeKeyboard,
-                    new UnityGeckoWebViewCallback(this),
+                    new UnityGeckoWebViewCallback(webViewContainer),
                     byteBufferJavaObject
                 );
             }
@@ -209,7 +214,7 @@ namespace com.inetum.unitygeckowebview
 
         void ScrollChanged(Notification notification)
         {
-            if (!notification.TryGetInfoT(GeckoWebViewNotificationKeys.Info.Vector2, out Vector2 scroll))
+            if (!notification.TryGetInfoT(GeckoWebViewNotificationKeys.ScrollChanged.Scroll, out Vector2 scroll))
             {
                 return;
             }

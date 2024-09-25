@@ -16,7 +16,6 @@ limitations under the License.
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace inetum.unityUtils
 {
@@ -89,6 +88,15 @@ namespace inetum.unityUtils
             }
         }
 
+        public void Subscribe<T>(
+            Object subscriber,
+            INotificationFilter publishersFilter,
+            Action<Notification> action
+        )
+        {
+            Subscribe(subscriber, typeof(T).FullName, publishersFilter, action);
+        }
+
         public void Subscribe(
             Object subscriber, 
             string id,
@@ -97,6 +105,15 @@ namespace inetum.unityUtils
         )
         {
             Subscribe(subscriber, id, publishersFilter, notification => action());
+        }
+
+        public void Subscribe<T>(
+            Object subscriber,
+            INotificationFilter publishersFilter,
+            Action action
+        )
+        {
+            Subscribe(subscriber, typeof(T).FullName, publishersFilter, action);
         }
 
         public void Subscribe(
@@ -108,6 +125,14 @@ namespace inetum.unityUtils
             Subscribe(subscriber, id, null, action);
         }
 
+        public void Subscribe<T>(
+            Object subscriber,
+            Action<Notification> action
+        )
+        {
+            Subscribe(subscriber, typeof(T).FullName, null, action);
+        }
+
         public void Subscribe(
             Object subscriber,
             string id,
@@ -115,6 +140,14 @@ namespace inetum.unityUtils
         )
         {
             Subscribe(subscriber, id, null, action);
+        }
+
+        public void Subscribe<T>(
+            Object subscriber,
+            Action action
+        )
+        {
+            Subscribe(subscriber, typeof(T).FullName, action);
         }
 
         public void Unsubscribe(Object subscriber)
@@ -206,6 +239,11 @@ namespace inetum.unityUtils
             }
         }
 
+        public void Unsubscribe<T>(Object subscriber)
+        {
+            Unsubscribe(subscriber, typeof(T).FullName);
+        }
+
         public int Notify(
             Object publisher,
             string id,
@@ -253,6 +291,15 @@ namespace inetum.unityUtils
             return observers;
         }
 
+        public int Notify<T>(
+            Object publisher,
+            INotificationFilter subscribersFilter,
+            Dictionary<string, Object> info = null
+        )
+        {
+            return Notify(publisher, typeof(T).FullName, subscribersFilter, info);
+        }
+
         public int Notify(
             Object publisher, 
             string id, 
@@ -260,6 +307,14 @@ namespace inetum.unityUtils
         )
         {
             return Notify(publisher, id, null, info);
+        }
+
+        public int Notify<T>(
+            Object publisher,
+            Dictionary<string, Object> info = null
+        )
+        {
+            return Notify(publisher, typeof(T).FullName, info);
         }
 
         public Notifier GetNotifier(
@@ -276,6 +331,15 @@ namespace inetum.unityUtils
                 info,
                 this
             );
+        }
+
+        public Notifier GetNotifier<T>(
+            Object publisher,
+            INotificationFilter subscribersFilter = null,
+            Dictionary<string, Object> info = null
+        )
+        {
+            return GetNotifier(publisher, typeof(T).FullName, subscribersFilter, info);
         }
 
         /// <summary>

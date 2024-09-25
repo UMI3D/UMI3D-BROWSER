@@ -25,10 +25,27 @@ namespace umi3d.browserRuntime.ui.keyboard
         TMPro.TMP_InputField inputField;
         KeyboardPreviewBarSelection selection;
 
+        Notifier submitTextNotifier;
+
         void Awake()
         {
             inputField = GetComponentInChildren<TMPro.TMP_InputField>();
+            UnityEngine.Debug.Assert(inputField != null, $"inputField is null");
             selection = GetComponentInChildren<KeyboardPreviewBarSelection>();
+            if (selection == null)
+            {
+                inputField.gameObject.AddComponent<KeyboardPreviewBarSelection>();
+            }
+
+            submitTextNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                KeyboardNotificationKeys.AddOrRemoveCharacters
+            );
+        }
+
+        void Start()
+        {
+            selection.Blur();
         }
 
         void OnEnable()
@@ -36,8 +53,14 @@ namespace umi3d.browserRuntime.ui.keyboard
             NotificationHub.Default.Subscribe(
                 this,
                 KeyboardNotificationKeys.AddOrRemoveCharacters,
-                null,
+                new FilterByRef(FilterType.AcceptAllExcept, this),
                 AddOrRemoveCharacters
+            );
+
+            NotificationHub.Default.Subscribe(
+                this,
+                KeyboardNotificationKeys.SpecialKeyPressed,
+                SpecialKeyPressed
             );
         }
 
@@ -48,19 +71,25 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         void AddOrRemoveCharacters(Notification notification)
         {
-            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.IsAddingCharacters, out bool isAdding))
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.TextFieldTextUpdate, out TextFieldTextUpdate textUpdate))
             {
-                UnityEngine.Debug.LogError($"[KeyboardPreviewBar] No KeyboardNotificationKeys.Info.IsAddingCharacters.");
                 return;
             }
 
-            if (isAdding)
+            switch (textUpdate)
             {
-                AddCharacters(notification);
-            }
-            else
-            {
-                RemoveCharacters(notification);
+                case TextFieldTextUpdate.AddCharacters:
+                    AddCharacters(notification);
+                    break;
+                case TextFieldTextUpdate.RemoveCharacters:
+                    RemoveCharacters(notification);
+                    break;
+                case TextFieldTextUpdate.SubmitText:
+                    UnityEngine.Debug.LogError($"Unhandled case.");
+                    break;
+                default:
+                    UnityEngine.Debug.LogError($"Unhandled case.");
+                    break;
             }
         }
 
@@ -88,7 +117,7 @@ namespace umi3d.browserRuntime.ui.keyboard
                 int caretPosition = selection.stringPosition;
 
                 inputField.text = text.Insert(caretPosition, characters);
-                selection.Deselect(caretPosition + characters.Length);
+                selection.DeselectWithoutNotify(caretPosition + characters.Length);
             }
             else
             {
@@ -98,7 +127,7 @@ namespace umi3d.browserRuntime.ui.keyboard
                 text = text.Remove(start, end - start);
                 text = text.Insert(start, characters);
                 inputField.text = text;
-                selection.Deselect(start + 1);
+                selection.DeselectWithoutNotify(start + 1);
             }
         }
 
@@ -125,7 +154,7 @@ namespace umi3d.browserRuntime.ui.keyboard
                     int caretPosition = selection.stringPosition;
 
                     inputField.text = text.Remove(caretPosition - 1, 1);
-                    selection.Deselect(caretPosition - 1);
+                    selection.DeselectWithoutNotify(caretPosition - 1);
                 }
                 else
                 {
@@ -133,8 +162,8 @@ namespace umi3d.browserRuntime.ui.keyboard
                     int end = selection.endPosition;
 
                     text = text.Remove(start, end - start);
+                    selection.DeselectWithoutNotify(start);
                     inputField.text = text;
-                    selection.Deselect(start);
                 }
             }
             // In phase 1: delete world by world.
@@ -152,7 +181,7 @@ namespace umi3d.browserRuntime.ui.keyboard
                 if (trimmedLeft.Length < left.Length)
                 {
                     inputField.text = trimmedLeft + right;
-                    selection.Deselect(trimmedLeft.Length);
+                    selection.DeselectWithoutNotify(trimmedLeft.Length);
                     return;
                 }
 
@@ -162,18 +191,30 @@ namespace umi3d.browserRuntime.ui.keyboard
                 if (lastIdxOfSpace == -1)
                 {
                     inputField.text = right;
-                    selection.Deselect(0);
+                    selection.DeselectWithoutNotify(0);
                 }
                 else
                 {
                     inputField.text = left.Substring(0, lastIdxOfSpace + 1) + right;
-                    selection.Deselect(lastIdxOfSpace + 1);
+                    selection.DeselectWithoutNotify(lastIdxOfSpace + 1);
                 }
             }
             else
             {
                 UnityEngine.Debug.LogError($"[KeyboardPreviewBar] Deletion phase case unhandled.");
             }
+        }
+
+        void SpecialKeyPressed(Notification notification)
+        {
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.SpecialKey, out SpecialKey specialKey) || specialKey != SpecialKey.Enter)
+            {
+                return;
+            }
+            
+            submitTextNotifier[KeyboardNotificationKeys.Info.TextFieldTextUpdate] = TextFieldTextUpdate.SubmitText;
+            submitTextNotifier[KeyboardNotificationKeys.Info.Characters] = inputField.text;
+            submitTextNotifier.Notify();
         }
 
 #if UNITY_EDITOR

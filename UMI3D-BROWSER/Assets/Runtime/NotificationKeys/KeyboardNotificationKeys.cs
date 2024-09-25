@@ -22,6 +22,16 @@ namespace umi3d.browserRuntime.NotificationKeys
     public static class KeyboardNotificationKeys 
     {
         /// <summary>
+        /// Notification sent when a text field has been selected.
+        /// </summary>
+        public const string TextFieldSelected = "KeyboardNotificationKeysTextFieldSelected";
+
+        /// <summary>
+        /// Notification sent when a special key is pressed.
+        /// </summary>
+        public const string SpecialKeyPressed = "KeyboardNotificationKeysSpecialKeyPressed";
+
+        /// <summary>
         /// Notification sent when an object ask for the focus of the preview bar.
         /// </summary>
         public const string AskPreviewFocus = "KeyboardAskPreviewFocus";
@@ -64,13 +74,52 @@ namespace umi3d.browserRuntime.NotificationKeys
         public static class Info
         {
             /// <summary>
-            /// Whether some characters will be added or removed.<br/>
-            /// If true then characters will be added. Else characters will be removed.<br/>
+            /// Whether the selection of the input field active it.<br/>
             /// Value is <see cref="bool"/>.<br/>
+            /// <br/>
+            /// See Notification key: <see cref="TextFieldSelected"/>
+            /// </summary>
+            public const string IsActivation = "IsActivation";
+
+            /// <summary>
+            /// Whether the selection is the preview bar.<br/>
+            /// Value is <see cref="bool"/>.<br/>
+            /// <br/>
+            /// See Notification key: <see cref="TextFieldSelected"/>
+            /// </summary>
+            public const string IsPreviewBar = "IsPreviewBar";
+
+            /// <summary>
+            /// The position of the caret if value is int or the selection if value is (int, int).<br/>
+            /// Value is <see cref="int"/> or (<see cref="int"/>, <see cref="int"/>).<br/>
+            /// <br/>
+            /// See Notification key: <see cref="TextFieldSelected"/>
+            /// </summary>
+            public const string SelectionPositions = "SelectionPositions";
+
+            /// <summary>
+            /// The text of the input field.<br/>
+            /// Value is <see cref="string"/>.<br/>
+            /// <br/>
+            /// See Notification key: <see cref="TextFieldSelected"/>
+            /// </summary>
+            public const string InputFieldText = "InputFieldText";
+
+            /// <summary>
+            /// The special key pressed.<br/>
+            /// Value is <see cref="umi3d.browserRuntime.NotificationKeys.SpecialKey"/>.<br/>
+            /// <br/>
+            /// See Notification key: <see cref="SpecialKeyPressed"/>
+            /// </summary>
+            public const string SpecialKey = "SpecialKey";
+
+            /// <summary>
+            /// How the text of a text field will be updated.<br/>
+            /// Value is <see cref="umi3d.browserRuntime.NotificationKeys.TextFieldTextUpdate"/>.<br/>
             /// <br/>
             /// See Notification key: <see cref="AddOrRemoveCharacters"/>
             /// </summary>
-            public const string IsAddingCharacters = "IsAddingCharacters";
+            public const string TextFieldTextUpdate = "TextFieldTextUpdate";
 
             /// <summary>
             /// The characters added.<br/>

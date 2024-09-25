@@ -26,57 +26,28 @@ namespace umi3d.browserRuntime.ui.keyboard
     {
         PointerDownBehaviour pointerDown;
 
-        Notifier closeNotifier;
+        Notifier quitKeyPressedNotifier;
 
         void Awake()
         {
             pointerDown = GetComponent<PointerDownBehaviour>();
-
+            pointerDown.isSimpleClick = true;
             pointerDown.pointerClickedSimple += PointerDown;
 
-            closeNotifier = NotificationHub.Default.GetNotifier(
+            quitKeyPressedNotifier = NotificationHub.Default.GetNotifier(
                 this,
-                KeyboardNotificationKeys.OpenOrClose,
+                KeyboardNotificationKeys.SpecialKeyPressed,
                 null,
                 new()
                 {
-                    { KeyboardNotificationKeys.Info.IsOpening, false },
-                    { KeyboardNotificationKeys.Info.WithAnimation, true },
-                    { KeyboardNotificationKeys.Info.AnimationTime, 1f },
-                    { KeyboardNotificationKeys.Info.PhaseOneStartTimePercentage, .5f }
+                    { KeyboardNotificationKeys.Info.SpecialKey, SpecialKey.Quit }
                 }
             );
-
-            NotificationHub.Default.Subscribe(
-                this,
-                KeyboardNotificationKeys.AnimationSettings,
-                EnableOrDisableAnimation
-            );
-        }
-
-        void EnableOrDisableAnimation(Notification notification)
-        {
-            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.AnimationType, out KeyboardAnimationType animationType))
-            {
-                return;
-            }
-
-            if (animationType != KeyboardAnimationType.OpenOrClose)
-            {
-                return;
-            }
-
-            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.WithAnimation, out bool withAnimation))
-            {
-                return;
-            }
-
-            closeNotifier[KeyboardNotificationKeys.Info.WithAnimation] = withAnimation;
         }
 
         void PointerDown()
         {
-            closeNotifier.Notify();
+            quitKeyPressedNotifier.Notify();
         }
     }
 }

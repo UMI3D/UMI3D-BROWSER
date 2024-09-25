@@ -21,8 +21,10 @@ using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.keyboard
 {
-    public class DesktopPreviewBarSelection : BasePreviewBarSelection
+    public class TMPInputFieldSelection : BaseInputFieldSelection
     {
+        public override bool allowSelection { get => inputField.interactable; set => inputField.interactable = value; }
+
         public override int startPosition
         {
             get
@@ -79,18 +81,20 @@ namespace umi3d.browserRuntime.ui.keyboard
             }
         }
 
-        public DesktopPreviewBarSelection(MonoBehaviour context) : base(context)
+        public TMPInputFieldSelection(MonoBehaviour context) : base(context)
         {
             inputField = context.GetComponentInChildren<TMP_InputField>();
         }
 
         public override void OnEnable()
         {
-            inputField.interactable = true;
+            base.OnEnable();
+            allowSelection = true;
         }
 
         public override void OnDisable()
         {
+            base.OnDisable();
         }
 
         public override void Focus()
@@ -103,6 +107,10 @@ namespace umi3d.browserRuntime.ui.keyboard
                 await Task.Yield();
                 inputField.onFocusSelectAll = onFocusSelectAll;
             }).Start(TaskScheduler.FromCurrentSynchronizationContext());
+        }
+
+        public override void Blur()
+        {
         }
 
         public override void UpdateSelection()

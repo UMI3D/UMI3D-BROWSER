@@ -25,7 +25,7 @@ using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.ui.keyboard
 {
-    public class MobilePreviewBarSelection : BasePreviewBarSelection
+    public class UMI3DInputFieldSelection : BaseInputFieldSelection
     {
         PointerDownBehaviour pointerDown;
 
@@ -59,14 +59,14 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         public override int stringPosition { get; set; }
 
-        public MobilePreviewBarSelection(MonoBehaviour context) : base(context)
+        public UMI3DInputFieldSelection(MonoBehaviour context) : base(context)
         {
             inputField = context.GetComponentInChildren<TMP_InputField>();
 
             pointerDown = context.gameObject.AddComponent<PointerDownBehaviour>();
             pointerDown.isSimpleClick = false;
 
-            textAreaRT = inputField.transform.GetChild(0).GetComponent<RectTransform>();
+            textAreaRT = inputField.textViewport;
             textTMP = inputField.textComponent;
 
             GameObject caretGO = new("MobileCaret");
@@ -96,18 +96,18 @@ namespace umi3d.browserRuntime.ui.keyboard
             selectionRT.pivot = new(0f, 0.5f);
             selectionRT.offsetMin = new(selectionRT.offsetMin.x, 0f);
             selectionRT.offsetMax = new(selectionRT.offsetMax.x, 0f);
-
-            Focus();
         }
 
         public override void OnEnable()
         {
+            base.OnEnable();
             inputField.interactable = false;
             pointerDown.pointerClicked += OnPointerDown;
         }
 
         public override void OnDisable()
         {
+            base.OnDisable();
             pointerDown.pointerClicked -= OnPointerDown;
         }
 
@@ -115,6 +115,12 @@ namespace umi3d.browserRuntime.ui.keyboard
         {
             HideSelection();
             StartCaretBlinking();
+        }
+
+        public override void Blur()
+        {
+            HideSelection();
+            StopCaretBLinking();
         }
 
         public override void UpdateSelection()
@@ -180,16 +186,16 @@ namespace umi3d.browserRuntime.ui.keyboard
                 return;
             }
 
-            if (count == 1)
+            if (count == 2)
+            {
+                Select(0, inputField.text.Length);
+            }
+            else
             {
                 Vector2 localPosition = textAreaRT.PointerRelativeToUI(eventData, RectTransformExtensions.Pivot.TopLeft);
                 int caretPosition = PointerPositionToCaretPosition(localPosition);
 
                 Deselect(caretPosition);
-            }
-            else if (count == 2)
-            {
-                Select(0, inputField.text.Length);
             }
         }
 

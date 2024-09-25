@@ -22,6 +22,9 @@ using UnityEngine.UI;
 
 namespace com.inetum.unitygeckowebview
 {
+    /// <summary>
+    /// The purpose of the button is to send the url and the scroll position of the web page to the others users.
+    /// </summary>
     [RequireComponent(typeof(Button))]
     public class SynchronizationButton : MonoBehaviour
     {
@@ -38,7 +41,7 @@ namespace com.inetum.unitygeckowebview
 
         RectTransform rectTransform;
 
-        bool isInteractable;
+        bool isInteractable = true;
 
         bool isDesynchronized;
         bool IsDesynchronized
@@ -50,11 +53,16 @@ namespace com.inetum.unitygeckowebview
                 feedbackImage.gameObject.SetActive(value);
             }
         }
-        bool isAdmin;
+        bool isAdmin = false;
 
         Notifier synchronizationNotifier;
 
         int currentScrollXPosition, currentScrollYPosition;
+
+        /// <summary>
+        /// Initial local scale of the object.
+        /// </summary>
+        Vector3 localScale;
 
         void Awake()
         {
@@ -70,6 +78,8 @@ namespace com.inetum.unitygeckowebview
 
             synchronizationNotifier = NotificationHub.Default
                 .GetNotifier<GeckoWebViewNotificationKeys.SynchronizationChanged>(this);
+
+            localScale = rectTransform.localScale;
         }
 
         void Start()
@@ -90,6 +100,11 @@ namespace com.inetum.unitygeckowebview
                InteractibilityChanged
            );
 
+            NotificationHub.Default.Subscribe<GeckoWebViewNotificationKeys.SynchronizationAdministrationChanged>(
+               this,
+               SynchronizationAdministrationChanged
+           );
+
             NotificationHub.Default.Subscribe<GeckoWebViewNotificationKeys.SynchronizationChanged>(
                this,
                SynchronizationChanged
@@ -101,6 +116,8 @@ namespace com.inetum.unitygeckowebview
             NotificationHub.Default.Unsubscribe<GeckoWebViewNotificationKeys.WebViewSizeChanged>(this);
 
             NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.InteractibilityChanged);
+
+            NotificationHub.Default.Unsubscribe<GeckoWebViewNotificationKeys.SynchronizationAdministrationChanged>(this);
 
             NotificationHub.Default.Unsubscribe<GeckoWebViewNotificationKeys.SynchronizationChanged>(this);
         }
@@ -124,9 +141,9 @@ namespace com.inetum.unitygeckowebview
             float ratio = size.x / size.y;
 
             rectTransform.localScale = new Vector3(
-                rectTransform.localScale.x / ratio,
-                rectTransform.localScale.y,
-                rectTransform.localScale.z
+                localScale.x / ratio,
+                localScale.y,
+                localScale.z
             );
         }
 
@@ -142,22 +159,26 @@ namespace com.inetum.unitygeckowebview
             button.interactable = isInteractable && isAdmin;
         }
 
-        void SynchronizationChanged(Notification notification)
+        void SynchronizationAdministrationChanged(Notification notification)
         {
-            if (!notification.TryGetInfoT(GeckoWebViewNotificationKeys.SynchronizationChanged.IsAdmin, out bool isAdmin))
-            {
-                return;
-            }
-
-            if (!notification.TryGetInfoT(GeckoWebViewNotificationKeys.SynchronizationChanged.IsDesynchronized, out bool isDesynchronized))
+            if (!notification.TryGetInfoT(GeckoWebViewNotificationKeys.SynchronizationAdministrationChanged.IsAdmin, out bool isAdmin))
             {
                 return;
             }
 
             this.isAdmin = isAdmin;
-            IsDesynchronized = this.isDesynchronized;
 
             button.interactable = isInteractable && isAdmin;
+        }
+
+        void SynchronizationChanged(Notification notification)
+        {
+            if (!notification.TryGetInfoT(GeckoWebViewNotificationKeys.SynchronizationChanged.IsDesynchronized, out bool isDesynchronized))
+            {
+                return;
+            }
+
+            IsDesynchronized = this.isDesynchronized;
         }
 
         /// <summary>

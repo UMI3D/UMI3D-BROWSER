@@ -31,6 +31,11 @@ namespace com.inetum.unitygeckowebview
         RectTransform rectTransform;
         Notifier homeNotifier;
 
+        /// <summary>
+        /// Initial local scale of the object.
+        /// </summary>
+        Vector3 localScale;
+
         void Awake()
         {
             button = GetComponent<Button>();
@@ -40,6 +45,8 @@ namespace com.inetum.unitygeckowebview
                 this,
                 GeckoWebViewNotificationKeys.Search
             );
+
+            localScale = rectTransform.localScale;
         }
 
         void OnEnable()
@@ -83,9 +90,9 @@ namespace com.inetum.unitygeckowebview
             float ratio = size.x / size.y;
 
             rectTransform.localScale = new Vector3(
-                rectTransform.localScale.x / ratio,
-                rectTransform.localScale.y,
-                rectTransform.localScale.z
+                localScale.x / ratio,
+                localScale.y,
+                localScale.z
             );
         }
 

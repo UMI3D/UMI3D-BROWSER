@@ -30,39 +30,5 @@ namespace com.inetum.unitygeckowebview
         }
 
         [SerializeField] BarType barType;
-
-        RectTransform rectTransform;
-
-        void Awake()
-        {
-            rectTransform = GetComponent<RectTransform>();
-        }
-
-        void OnEnable()
-        {
-            NotificationHub.Default.Subscribe<GeckoWebViewNotificationKeys.WebViewSizeChanged>(
-                this, 
-                SizeChanged
-            );
-        }
-
-        void OnDisable()
-        {
-            NotificationHub.Default.Unsubscribe<GeckoWebViewNotificationKeys.WebViewSizeChanged>(this);
-        }
-
-        void SizeChanged(Notification notification)
-        {
-            if (!notification.TryGetInfoT(GeckoWebViewNotificationKeys.WebViewSizeChanged.Scale, out Vector2 size))
-            {
-                return;
-            }
-
-            rectTransform.localScale = new Vector3(
-                rectTransform.localScale.x,
-                rectTransform.localScale.y / size.y,
-                rectTransform.localScale.z
-            );
-        }
     }
 }

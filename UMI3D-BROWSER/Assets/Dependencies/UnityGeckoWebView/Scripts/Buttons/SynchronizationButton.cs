@@ -23,7 +23,10 @@ using UnityEngine.UI;
 namespace com.inetum.unitygeckowebview
 {
     /// <summary>
-    /// The purpose of the button is to send the url and the scroll position of the web page to the others users.
+    /// The purpose of the button is to send the url and the scroll position of the web page to the others users.<br/>
+    /// <br/>
+    /// When the admin click that button the record of the page start. The red dot appears to tell the user that its web page is shared to others.<br/>
+    /// When another admin try to synch its page or if the user click one more time on the sync button then the synchronization stopped. The red button disappears.
     /// </summary>
     [RequireComponent(typeof(Button))]
     public class SynchronizationButton : MonoBehaviour
@@ -33,26 +36,39 @@ namespace com.inetum.unitygeckowebview
         [Tooltip("Delay to send current url and scroll offset when user synchronizes his content. In seconds")]
         [SerializeField] float synchronizationDelay = 2f;
 
+        RectTransform rectTransform;
+
         Button button;
         /// <summary>
         /// A feedback to show user he's currently sharing its content.
         /// </summary>
-        Image feedbackImage;
+        Image recordPageFeedback;
 
-        RectTransform rectTransform;
-
+        /// <summary>
+        /// Whether the interaction with the synch button is allowed.
+        /// </summary>
         bool isInteractable = true;
 
-        bool isDesynchronized;
-        bool IsDesynchronized
+        /// <summary>
+        /// Whether the web page is recorded.
+        /// </summary>
+        bool isRecording = false;
+        bool IsRecording
         {
-            get => isDesynchronized;
+            get => isRecording;
             set
             {
-                isDesynchronized = value;
-                feedbackImage.gameObject.SetActive(value);
+                isRecording = value;
+                recordPageFeedback.gameObject.SetActive(value);
+                synchronizationNotifier[GeckoWebViewNotificationKeys.SynchronizationChanged.IsRecording] = value;
+                synchronizationNotifier[GeckoWebViewNotificationKeys.SynchronizationChanged.Scroll] = new Vector2(currentScrollXPosition, currentScrollYPosition);
+                synchronizationNotifier.Notify();
             }
         }
+
+        /// <summary>
+        /// Whether the user is a web view administrator.
+        /// </summary>
         bool isAdmin = false;
 
         Notifier synchronizationNotifier;
@@ -69,17 +85,17 @@ namespace com.inetum.unitygeckowebview
             UnityEngine.Debug.Assert(webview != null, $"Java web view is not referenced.");
 
             button = GetComponent<Button>();
-            feedbackImage = transform.GetChild(0).GetComponent<Image>();
+            recordPageFeedback = transform.GetChild(0).GetComponent<Image>();
 
             rectTransform = GetComponent<RectTransform>();
 
-            button.interactable = false;
-            IsDesynchronized = false;
+            localScale = rectTransform.localScale;
 
             synchronizationNotifier = NotificationHub.Default
                 .GetNotifier<GeckoWebViewNotificationKeys.SynchronizationChanged>(this);
 
-            localScale = rectTransform.localScale;
+            button.interactable = false;
+            IsRecording = false;
         }
 
         void Start()
@@ -91,7 +107,7 @@ namespace com.inetum.unitygeckowebview
         {
             NotificationHub.Default.Subscribe<GeckoWebViewNotificationKeys.WebViewSizeChanged>(
                 this, 
-                SizeChanged
+                WebViewSizeChanged
             );
 
             NotificationHub.Default.Subscribe(
@@ -105,10 +121,12 @@ namespace com.inetum.unitygeckowebview
                SynchronizationAdministrationChanged
            );
 
-            NotificationHub.Default.Subscribe<GeckoWebViewNotificationKeys.SynchronizationChanged>(
+            NotificationHub.Default.Subscribe<GeckoWebViewNotificationKeys.Desynchronization>(
                this,
-               SynchronizationChanged
+               Desynchronization
            );
+
+            button.onClick.AddListener(ToggleSynchronization);
         }
 
         void OnDisable()
@@ -119,26 +137,24 @@ namespace com.inetum.unitygeckowebview
 
             NotificationHub.Default.Unsubscribe<GeckoWebViewNotificationKeys.SynchronizationAdministrationChanged>(this);
 
-            NotificationHub.Default.Unsubscribe<GeckoWebViewNotificationKeys.SynchronizationChanged>(this);
+            NotificationHub.Default.Unsubscribe<GeckoWebViewNotificationKeys.Desynchronization>(this);
+
+            button.onClick.RemoveListener(ToggleSynchronization);
         }
 
         public void ToggleSynchronization()
         {
-            IsDesynchronized = !IsDesynchronized;
-
-            synchronizationNotifier[GeckoWebViewNotificationKeys.SynchronizationChanged.IsSynchronizing] = true;
-            synchronizationNotifier[GeckoWebViewNotificationKeys.SynchronizationChanged.Scroll] = new Vector2(float.NaN, float.NaN);
-            synchronizationNotifier.Notify();
+            IsRecording = !IsRecording;
         }
 
-        void SizeChanged(Notification notification)
+        void WebViewSizeChanged(Notification notification)
         {
-            if (!notification.TryGetInfoT(GeckoWebViewNotificationKeys.WebViewSizeChanged.Scale, out Vector2 size))
+            if (!notification.TryGetInfoT(GeckoWebViewNotificationKeys.WebViewSizeChanged.Scale, out Vector2 scale))
             {
                 return;
             }
 
-            float ratio = size.x / size.y;
+            float ratio = scale.x / scale.y;
 
             rectTransform.localScale = new Vector3(
                 localScale.x / ratio,
@@ -168,17 +184,18 @@ namespace com.inetum.unitygeckowebview
 
             this.isAdmin = isAdmin;
 
+            button.targetGraphic.enabled = isAdmin;
+            if (!isAdmin)
+            {
+                IsRecording = false;
+            }
+
             button.interactable = isInteractable && isAdmin;
         }
 
-        void SynchronizationChanged(Notification notification)
+        void Desynchronization(Notification notification)
         {
-            if (!notification.TryGetInfoT(GeckoWebViewNotificationKeys.SynchronizationChanged.IsDesynchronized, out bool isDesynchronized))
-            {
-                return;
-            }
-
-            IsDesynchronized = this.isDesynchronized;
+            IsRecording = false;
         }
 
         /// <summary>
@@ -199,9 +216,12 @@ namespace com.inetum.unitygeckowebview
                     currentScrollXPosition = scrollX;
                     currentScrollYPosition = scrollY;
 
-                    synchronizationNotifier[GeckoWebViewNotificationKeys.SynchronizationChanged.IsSynchronizing] = false;
-                    synchronizationNotifier[GeckoWebViewNotificationKeys.SynchronizationChanged.Scroll] = new Vector2(scrollX, scrollY);
-                    synchronizationNotifier.Notify();
+                    if (IsRecording)
+                    {
+                        synchronizationNotifier[GeckoWebViewNotificationKeys.SynchronizationChanged.IsRecording] = true;
+                        synchronizationNotifier[GeckoWebViewNotificationKeys.SynchronizationChanged.Scroll] = new Vector2(scrollX, scrollY);
+                        synchronizationNotifier.Notify();
+                    }
                 }
 
                 yield return wait;

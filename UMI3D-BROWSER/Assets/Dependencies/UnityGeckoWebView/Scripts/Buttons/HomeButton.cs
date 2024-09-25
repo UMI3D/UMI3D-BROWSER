@@ -55,7 +55,7 @@ namespace com.inetum.unitygeckowebview
 
             NotificationHub.Default.Subscribe<GeckoWebViewNotificationKeys.WebViewSizeChanged>(
                this,
-               SizeChanged
+               WebViewSizeChanged
            );
 
             NotificationHub.Default.Subscribe(
@@ -80,14 +80,14 @@ namespace com.inetum.unitygeckowebview
             homeNotifier.Notify();
         }
 
-        void SizeChanged(Notification notification)
+        void WebViewSizeChanged(Notification notification)
         {
-            if (!notification.TryGetInfoT(GeckoWebViewNotificationKeys.WebViewSizeChanged.Scale, out Vector2 size))
+            if (!notification.TryGetInfoT(GeckoWebViewNotificationKeys.WebViewSizeChanged.Scale, out Vector2 scale))
             {
                 return;
             }
 
-            float ratio = size.x / size.y;
+            float ratio = scale.x / scale.y;
 
             rectTransform.localScale = new Vector3(
                 localScale.x / ratio,

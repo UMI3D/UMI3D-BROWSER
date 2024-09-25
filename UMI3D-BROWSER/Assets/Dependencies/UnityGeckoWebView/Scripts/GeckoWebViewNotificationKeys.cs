@@ -94,33 +94,44 @@ namespace com.inetum.unitygeckowebview
 
 
         /// <summary>
-        /// Notification sent when the synchronization change.
+        /// Notification sent when the synchronization administration change.
         /// </summary>
-        public class SynchronizationChanged
+        public class SynchronizationAdministrationChanged
         {
-            /// <summary>
-            /// Whether the web view is not synchronized with the server.<br/>
-            /// Value is <see cref="bool"/>.
-            /// </summary>
-            public const string IsDesynchronized = "IsDesynchronized";
-
-            /// <summary>
-            /// Whether the web view is synchronizing (the user pressed the synchronized button).<br/>
-            /// Value is <see cref="bool"/>.
-            /// </summary>
-            public const string IsSynchronizing = "IsSynchronizing";
-
             /// <summary>
             /// Whether the user is admin of the web view.<br/>
             /// Value is <see cref="bool"/>.
             /// </summary>
             public const string IsAdmin = "IsAdmin";
+        }
+
+
+        /// <summary>
+        /// Notification sent when the synchronization change.
+        /// </summary>
+        public class SynchronizationChanged
+        {
+            /// <summary>
+            /// Whether the web view is being recorded.<br/>
+            /// Value is <see cref="bool"/>.
+            /// </summary>
+            public const string IsRecording = "IsRecording";
 
             /// <summary>
             /// The delta scrolling value of the web view.<br/>
             /// Value is <see cref="Vector2"/>.
             /// </summary>
             public const string Scroll = "Scroll";
+        }
+
+
+        /// <summary>
+        /// Notification sent when the user's web view is desynchronize.<br/>
+        /// <br/>
+        /// Usually a desynchronization happen when another admin synchronize its web view.
+        /// </summary>
+        public class Desynchronization
+        {
         }
 
 

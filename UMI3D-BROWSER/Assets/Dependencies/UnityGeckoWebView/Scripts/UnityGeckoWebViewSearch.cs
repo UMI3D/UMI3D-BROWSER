@@ -23,19 +23,34 @@ namespace com.inetum.unitygeckowebview.samples
     public class UnityGeckoWebViewSearch : MonoBehaviour
     {
         RectTransform rectTransform;
+        RectTransform parentRectTransform;
         TMPro.TMP_InputField searchField;
 
         Notifier searchNotifier;
+
+        /// <summary>
+        /// Initial local scale of the object.
+        /// </summary>
+        Vector3 localScale;
+        /// <summary>
+        /// Width ratio compared to its parent.
+        /// </summary>
+        float widthRatio;
 
         void Awake()
         {
             rectTransform = GetComponent<RectTransform>();
             searchField = GetComponent<TMPro.TMP_InputField>();
+            parentRectTransform = transform.parent.GetComponent<RectTransform>();
 
             searchNotifier = NotificationHub.Default.GetNotifier(
                 this,
                 GeckoWebViewNotificationKeys.Search
             );
+
+            localScale = rectTransform.localScale;
+
+            widthRatio = rectTransform.rect.width / parentRectTransform.rect.width;
         }
 
         void OnEnable()
@@ -48,7 +63,7 @@ namespace com.inetum.unitygeckowebview.samples
 
             NotificationHub.Default.Subscribe<GeckoWebViewNotificationKeys.WebViewSizeChanged>(
                 this,
-                SizeChanged
+                WebViewSizeChanged
             );
         }
 
@@ -75,20 +90,22 @@ namespace com.inetum.unitygeckowebview.samples
             searchNotifier.Notify();
         }
 
-        void SizeChanged(Notification notification)
+        void WebViewSizeChanged(Notification notification)
         {
-            if (!notification.TryGetInfoT(GeckoWebViewNotificationKeys.WebViewSizeChanged.Scale, out Vector2 size))
+            if (!notification.TryGetInfoT(GeckoWebViewNotificationKeys.WebViewSizeChanged.Scale, out Vector2 scale))
             {
                 return;
             }
 
-            float ratio = size.x / size.y;
+            float ratio = scale.x / scale.y;
 
             rectTransform.localScale = new Vector3(
-                rectTransform.localScale.x / ratio,
-                rectTransform.localScale.y,
-                rectTransform.localScale.z
+                localScale.x / ratio,
+                localScale.y,
+                localScale.z
             );
+
+            rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, parentRectTransform.rect.width * scale.y * widthRatio);
         }
     }
 }

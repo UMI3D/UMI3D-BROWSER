@@ -34,7 +34,8 @@ namespace umi3d.browserRuntime.android
         Notifier sizeChangedNotifier;
         Notifier ScrollNotifier;
         Notifier interactibilityNotifier;
-        Notifier synchronizationNotifier;
+        Notifier synchronizationAdministrationNotifier;
+        Notifier desynchronizeNotifier;
 
         void Awake()
         {
@@ -57,8 +58,11 @@ namespace umi3d.browserRuntime.android
                 GeckoWebViewNotificationKeys.InteractibilityChanged
             );
 
-            synchronizationNotifier = NotificationHub.Default
-                .GetNotifier<GeckoWebViewNotificationKeys.SynchronizationChanged>(this);
+            synchronizationAdministrationNotifier = NotificationHub.Default
+                .GetNotifier<GeckoWebViewNotificationKeys.SynchronizationAdministrationChanged>(this);
+
+            desynchronizeNotifier = NotificationHub.Default
+                .GetNotifier<GeckoWebViewNotificationKeys.Desynchronization>(this);
         }
 
         void OnEnable()
@@ -109,13 +113,12 @@ namespace umi3d.browserRuntime.android
         }
 
         /// <summary>
-        /// Method called when the url changed because of a synchronisation.
+        /// Method called when the url changed because another user (administrator) synchronize its web view.
         /// </summary>
         /// <param name="url"></param>
         protected async override void OnUrlChanged(string url)
         {
-            synchronizationNotifier[GeckoWebViewNotificationKeys.SynchronizationChanged.IsDesynchronized] = false;
-            synchronizationNotifier.Notify();
+            desynchronizeNotifier.Notify();
 
             while (!isInit)
             {
@@ -128,8 +131,8 @@ namespace umi3d.browserRuntime.android
 
         protected override void OnAdminStatusChanged(bool status)
         {
-            synchronizationNotifier[GeckoWebViewNotificationKeys.SynchronizationChanged.IsAdmin] = status;
-            synchronizationNotifier.Notify();
+            synchronizationAdministrationNotifier[GeckoWebViewNotificationKeys.SynchronizationAdministrationChanged.IsAdmin] = status;
+            synchronizationAdministrationNotifier.Notify();
         }
 
         protected override void OnScrollOffsetChanged(Vector2 scroll)
@@ -161,7 +164,7 @@ namespace umi3d.browserRuntime.android
 
         void Synchronize(Notification notification)
         {
-            if (!notification.TryGetInfoT(GeckoWebViewNotificationKeys.SynchronizationChanged.IsSynchronizing, out bool isSynchronizing))
+            if (!notification.TryGetInfoT(GeckoWebViewNotificationKeys.SynchronizationChanged.IsRecording, out bool isSynchronizing))
             {
                 return;
             }
@@ -197,15 +200,5 @@ namespace umi3d.browserRuntime.android
                 return;
             }
         }
-
-#if UNITY_EDITOR
-
-        [ContextMenu("Test Change Size")]
-        void TestChangeSize()
-        {
-
-        }
-
-#endif
     }
 }

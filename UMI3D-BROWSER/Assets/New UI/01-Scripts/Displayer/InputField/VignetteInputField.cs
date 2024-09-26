@@ -20,125 +20,47 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace umi3dBrowsers.displayer
 {
-    public class VignetteInputField : MonoBehaviour, ISubDisplayer
+    public class VignetteInputField : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
-        [Header("Animation")]
-        [SerializeField] private float animationDuration = 0.5f;
-        [SerializeField] private float _animationValue;
-        [SerializeField] private AnimationCurve _animationCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
-        private Coroutine _easeInOutCoroutine;
-
-        [Header("obj")]
-        [SerializeField] private TMP_UMI3DUIInputField inputField;
-        [SerializeField] private ImageButtonDisplayer ImageButtonDisplayer;
+        [SerializeField] GameObject pen;
+        TMP_InputField inputField;
+        Image background;
 
         public string Text { get => inputField.text; set => inputField.text = value; }
-        public TMP_UMI3DUIInputField InputField => inputField;
+        public TMP_InputField InputField => inputField;
 
-        public event Action OnClick;
         public event Action OnDisabled;
         public event Action OnHover;
-        public event Action OnHoverExit;
 
         private void Awake()
         {
-            inputField.onSelect.AddListener((a) => Click());
-            inputField.onDeselect.AddListener(InputFieldDeselected);
-            
+            inputField = GetComponent<TMP_InputField>();
+            background = GetComponent<Image>();
 
-            if (ImageButtonDisplayer)
-            {
-                ImageButtonDisplayer.OnHoverEnter += (a) => HoverEnter(a);
-                ImageButtonDisplayer.OnHoverExit += (a) => HoverExit(a);
-                ImageButtonDisplayer.OnClick.AddListener(Click);
-            }
+            pen.SetActive(false);
+            background.enabled = false;
         }
 
-        private void OnEnable()
+        void OnDisable()
         {
-            if (_easeInOutCoroutine != null)
-            {
-                StopCoroutine(_easeInOutCoroutine);
-                _easeInOutCoroutine = null;
-            }
-
-            _easeInOutCoroutine = StartCoroutine(EaseInOut(true));
+            OnDisabled?.Invoke();
         }
 
-        private void OnDisable()
-        {
-            if (_easeInOutCoroutine != null)
-            {
-                StopCoroutine(_easeInOutCoroutine);
-                _easeInOutCoroutine = null;
-            }
-        }
-
-        public void Click()
-        {
-            OnClick?.Invoke();
-            //backGroundCanvasGroup.alpha = 0;
-        }
-
-        public void Disable()
-        {
-            if (_easeInOutCoroutine != null)
-            {
-                StopCoroutine(_easeInOutCoroutine);
-                _easeInOutCoroutine = null;
-            }
-
-            if (gameObject.activeSelf)
-            {
-                _easeInOutCoroutine = StartCoroutine(EaseInOut(false));
-            }
-        }
-
-        public void HoverEnter(PointerEventData eventData)
+        public void OnPointerEnter(PointerEventData eventData)
         {
             OnHover?.Invoke();
+            pen.SetActive(true);
+            background.enabled = true;
         }
 
-        public void HoverExit(PointerEventData eventData)
+        public void OnPointerExit(PointerEventData eventData)
         {
-            OnHoverExit?.Invoke();
-        }
-
-        private void InputFieldDeselected(string arg0)
-        {
-            //backGroundCanvasGroup.alpha = 1f;
-        }
-
-        private IEnumerator EaseInOut(bool isEnabeling)
-        {
-            float startValue = _animationValue;
-            float endValue = isEnabeling ? 1 : 0;
-
-            float time = 0;
-            if (animationDuration > 0)
-            {
-                while (time < animationDuration)
-                {
-                    time += Time.deltaTime;
-
-                    float lerpFactor = _animationCurve.Evaluate(time / animationDuration);
-                    float currentValue = _animationValue = Mathf.Lerp(startValue, endValue, lerpFactor);
-
-                    //backGroundCanvasGroup.alpha = currentValue;
-
-                    yield return null;
-                }
-            }
-
-            if (!isEnabeling) OnDisabled?.Invoke();
-        }
-
-        public void Init(Color normalColor, Color hoverColor, Color selectedColor)
-        {
-
+            pen.SetActive(false);
+            background.enabled = false;
         }
     }
 }

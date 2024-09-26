@@ -26,44 +26,6 @@ namespace umi3dBrowsers.displayer
 {
     public class TMP_UMI3DUIInputField : TMP_InputField
     {
-        Action<PointerEventData> hoverEnterCallBack;
-        Action<PointerEventData> hoverExitCallBack;
-
-        public event Action<string> OnTextChanged;
-
-        protected override void OnDisable()
-        {
-            Keyboard.Instance?.CancelAndClose();
-        }
-
-        public void SetCallBacks(Action<PointerEventData> hoverEnterCallBack, Action<PointerEventData> hoverExitCallBack)
-        {
-            this.hoverEnterCallBack = hoverEnterCallBack;
-            this.hoverExitCallBack = hoverExitCallBack;
-        }
-
-        public override void OnPointerEnter(PointerEventData eventData)
-        {
-            hoverEnterCallBack?.Invoke(eventData);
-        }
-
-        public override void OnPointerExit(PointerEventData eventData)
-        {
-            hoverExitCallBack?.Invoke(eventData);
-        }
-
-        public override void OnSelect(BaseEventData eventData)
-        {
-            base.OnSelect(eventData);
-
-            if (Keyboard.Instance != null)
-            {
-                InputSelected();
-            }
-            else
-                Debug.Log($"<color=cyan>Please make sure you've got a key board</color>", this);
-        }
-
         public override void OnDeselect(BaseEventData eventData)
         {
             base.OnDeselect(eventData);
@@ -72,20 +34,6 @@ namespace umi3dBrowsers.displayer
             {
                 placeholder.gameObject.SetActive(true);
             }
-        }
-
-        public override void OnUpdateSelected(BaseEventData eventData)
-        {
-            base.OnUpdateSelected(eventData);
-        }
-
-        private void InputSelected()
-        {
-            Keyboard.Instance?.OpenKeyboard(this, res =>
-            {
-                text = res;
-                OnTextChanged?.Invoke(res);
-            });
         }
     }
 }

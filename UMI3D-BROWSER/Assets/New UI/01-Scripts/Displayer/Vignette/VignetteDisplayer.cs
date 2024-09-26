@@ -48,11 +48,6 @@ namespace umi3dBrowsers.displayer
         [Space]
         [SerializeField] VignetteInputField inputFieldBackground;
 
-
-        [Header("Input field backgroung")]
-        [SerializeField] private Image IF_background;
-        [SerializeField] private Image pen;
-
         [Header("Animation")]
         [SerializeField] private float hoverExitDelay;
 
@@ -67,24 +62,14 @@ namespace umi3dBrowsers.displayer
         public event Action OnDisabled;
         public event Action OnHover;
 
-        private TMP_Text inputFieldText;
 
         private bool m_usesFavoriteButton = true;
         private bool m_usesDeleteButton = true;
-        public TMP_Text InputFieldText {
-            get {
-                if (inputFieldText == null)
-                    inputFieldText = inputFieldBackground.GetComponentInChildren<TMP_Text>();
-                return inputFieldText;
-            }
-        }
 
         private void Awake()
         {
             transprentColor.a = 0;
             DisableSubComponents();
-            pen.gameObject.SetActive(false);
-            IF_background.enabled = false;
 
             if (m_usesFavoriteButton)
                 likeButton.OnHover += () => vignetteState = VignetteState.HoveringSubElement;
@@ -92,13 +77,6 @@ namespace umi3dBrowsers.displayer
                 trashButton.OnHover += () => vignetteState = VignetteState.HoveringSubElement;
             inputFieldBackground.OnHover += () => {
                 vignetteState = VignetteState.HoveringSubElement;
-
-                pen.gameObject.SetActive(true);
-                IF_background.enabled = true;
-            };
-            inputFieldBackground.OnHoverExit += () => {
-                pen.gameObject.SetActive(false);
-                IF_background.enabled = false;
             };
 
             if (m_usesFavoriteButton)
@@ -122,7 +100,7 @@ namespace umi3dBrowsers.displayer
                 vignetteImage = pImage;
 
             vignetteImage.color = normalImageColor;
-            InputFieldText.color = normalImageColor;
+            inputFieldBackground.InputField.textComponent.color = normalImageColor;
         }
 
         internal void SetSprite(Sprite sprite)
@@ -153,7 +131,7 @@ namespace umi3dBrowsers.displayer
 
         public void SetupRenameButton(Action<string> onRename)
         {
-            inputFieldBackground.InputField.OnTextChanged += onRename;
+            inputFieldBackground.InputField.onValueChanged.AddListener(value => onRename(value));
         }
 
         public void HoverEnter(PointerEventData eventData)
@@ -163,7 +141,7 @@ namespace umi3dBrowsers.displayer
             vignetteState = VignetteState.Hovering;
 
             vignetteImage.color = hoverImageColor;
-            InputFieldText.color = hoverImageColor;
+            inputFieldBackground.InputField.textComponent.color = hoverImageColor;
 
             if (m_usesFavoriteButton)
                 likeButton.gameObject.SetActive(true);
@@ -178,7 +156,7 @@ namespace umi3dBrowsers.displayer
                 StartCoroutine(HoverDelay());
 
             vignetteImage.color = normalImageColor;
-            InputFieldText.color = normalImageColor;
+            inputFieldBackground.InputField.textComponent.color = normalImageColor;
         }
 
         public void Click()
@@ -189,7 +167,6 @@ namespace umi3dBrowsers.displayer
                 likeButton.Disable();
             if (m_usesDeleteButton)
                 trashButton.Disable();
-            inputFieldBackground.Disable();
         }
 
         private void DisableSubComponents()

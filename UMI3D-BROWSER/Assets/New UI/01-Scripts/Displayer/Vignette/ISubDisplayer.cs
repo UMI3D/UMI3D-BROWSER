@@ -23,7 +23,6 @@ namespace umi3dBrowsers.displayer
 {
     public interface ISubDisplayer
     {
-        event Action OnClick;
         event Action OnDisabled;
         event Action OnHover;
 

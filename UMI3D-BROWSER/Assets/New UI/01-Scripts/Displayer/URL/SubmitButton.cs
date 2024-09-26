@@ -23,7 +23,7 @@ limitations under the License.
 */
 namespace umi3dBrowsers.displayer
 {
-    [RequireComponent(typeof(UMI3DUI_Button), typeof(UIColliderScaller))]
+    [RequireComponent(typeof(UMI3DUI_Button))]
     public class SubmitButton : MonoBehaviour, ISubDisplayer
     {
         public event Action OnClick;

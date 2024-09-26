@@ -19,6 +19,7 @@ using TMPro;
 using umi3d.baseBrowser.Controller;
 using umi3d.baseBrowser.cursor;
 using umi3d.common.interaction;
+using umi3dBrowsers.displayer;
 using UnityEngine;
 using static umi3d.baseBrowser.cursor.BaseCursor;
 
@@ -26,6 +27,7 @@ public class ParameterMenuDisplayer : MonoBehaviour
 {
     [SerializeField] private Transform content;
     [SerializeField] private GameObject stringParameterDisplayPrefab;
+    [SerializeField] private GameObject booleanParameterDisplayPrefab;
 
     private void Awake()
     {
@@ -60,7 +62,26 @@ public class ParameterMenuDisplayer : MonoBehaviour
             {
                 var stringGameObject = Instantiate(stringParameterDisplayPrefab, content);
                 stringGameObject.GetComponentInChildren<TMP_Text>().text = stringParameter.name;
-                stringGameObject.GetComponentInChildren<TMP_InputField>().text = stringParameter.value;
+                var inputfield = stringGameObject.GetComponentInChildren<TMP_InputField>();
+                inputfield.text = stringParameter.value;
+                inputfield.onSubmit.AddListener(newValue => {
+                    stringParameter.value = newValue;
+                });
+                return;
+            }
+            case BooleanParameterDto booleanParameter:
+            {
+                GameObject booleanGameObject = Instantiate(booleanParameterDisplayPrefab, content);
+                booleanGameObject.GetComponentInChildren<TMP_Text>().text = booleanParameter.name;
+                var toggle = booleanGameObject.GetComponentInChildren<ToggleSwitch>();
+                if (toggle.CurrentValue == booleanParameter.value)
+                    toggle.Click();
+                toggle.onToggleOn.AddListener(() => {
+                    booleanParameter.value = true;
+                });
+                toggle.onToggleOff.AddListener(() => {
+                    booleanParameter.value = false;
+                });
                 return;
             }
             default:

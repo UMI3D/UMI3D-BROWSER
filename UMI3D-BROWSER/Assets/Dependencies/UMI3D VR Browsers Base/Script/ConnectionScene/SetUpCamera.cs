@@ -31,10 +31,6 @@ namespace umi3dVRBrowsersBase.connection
         #region Fields
         private ARCameraManager cameraManager;
 
-        public UMI3DSnapTurnProvider snapTurn;
-        public VRInputObserver rightObs;
-        public VRInputObserver leftObs;
-
         public MainContainerLinker mainContainerLinker;
 
         Dictionary<string, System.Object> info = new();

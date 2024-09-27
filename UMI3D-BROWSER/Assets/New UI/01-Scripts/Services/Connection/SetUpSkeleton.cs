@@ -26,6 +26,7 @@ using Unity.XR.CoreUtils;
 using UnityEngine;
 using umi3d.cdk.userCapture.tracking.constraint;
 using UnityEngine.XR;
+using UnityEngine.XR.Interaction.Toolkit.Inputs;
 
 namespace umi3dBrowsers.connection
 {
@@ -42,7 +43,14 @@ namespace umi3dBrowsers.connection
         /// </summary>
         public Transform skeletonContainer;
 
-        public List<Tracker> trackers = new List<Tracker>();
+        public List<Tracker> controllerIKTrackers = new List<Tracker>();
+
+        public List<Tracker> handTrackingIKTrackers = new List<Tracker>();
+        public List<FingerTracker> handTrackingFingerTrackers = new List<FingerTracker>();
+
+        public List<Tracker> AdditionnalTrackers = new List<Tracker>();
+
+        List<ITracker> handTrackingTrackers = new();
 
         public SkinnedMeshRenderer Joint, Surface;
         public GameObject LeftWatch, RightWatch;
@@ -66,6 +74,8 @@ namespace umi3dBrowsers.connection
         /// If users turn their heads more than this angle, the reset of fthe body will turn too.
         /// </summary>
         public float maxAngleBeforeRotating = 50;
+
+        public XRInputModalityManager XRInputModalityManager;
 
         [SerializeField]
         bool debugJointAndSurface = false;
@@ -112,6 +122,9 @@ namespace umi3dBrowsers.connection
             RightWatch.SetActive(false);
             linker.SetSetUpSkeleton(this);
 
+            handTrackingTrackers.AddRange(handTrackingIKTrackers);
+            handTrackingTrackers.AddRange(handTrackingFingerTrackers);
+
             Linker
                 .Get<UMI3DVRPlayer>(nameof(UMI3DVRPlayer))
                 .linked += (player, isSet) =>
@@ -124,13 +137,13 @@ namespace umi3dBrowsers.connection
                         mainCameraTransform = player?.mainCamera.transform ?? null;
                         viewpointTSB = player?.mainCamera.GetComponent<TrackedSubskeletonBone>() ?? null;
                         viewpointTracker = player?.mainCamera.GetComponent<Tracker>() ?? null;
-                        trackers.Add(viewpointTracker);
+                        AdditionnalTrackers.Add(viewpointTracker);
                     }
                     else
                     {
-                        if (trackers.Contains(viewpointTracker))
+                        if (AdditionnalTrackers.Contains(viewpointTracker))
                         {
-                            trackers.Remove(viewpointTracker);
+                            AdditionnalTrackers.Remove(viewpointTracker);
                         }
                         playerTransform = null;
                         xrOrigin = null;
@@ -154,6 +167,38 @@ namespace umi3dBrowsers.connection
             {
                 shouldNotRotateHips = false;
             };
+
+            if (XRInputModalityManager != null && XRInputModalityManager.currentInputMode.Value == XRInputModalityManager.InputMode.TrackedHand)
+                SwitchTrackerToHandTracking();
+            else
+                SwitchTrackerToController();
+                //XRInputModalityManager.rightHand.SetActive(false);
+        }
+
+        public void SwitchTrackerToController()
+        {
+            handTrackingIKTrackers.ForEach(x => {
+                if (controllerIKTrackers.Contains(x))
+                    return;
+                trackedSkeleton.RemoveController(x.Controller.boneType);
+            });
+
+            handTrackingFingerTrackers.ForEach(x => {
+                trackedSkeleton.RemoveController(x.Controller.boneType);
+            });
+            
+            controllerIKTrackers.ForEach(x => trackedSkeleton.ReplaceController(x.Controller));
+        }
+
+        public void SwitchTrackerToHandTracking()
+        {
+            controllerIKTrackers.ForEach(x => {
+                if (handTrackingIKTrackers.Contains(x))
+                    return;
+                trackedSkeleton.RemoveController(x.Controller.boneType);
+            });
+
+            handTrackingTrackers.ForEach(x => trackedSkeleton.ReplaceController(x.Controller));
         }
 
         bool shouldNotRotateHips = false;
@@ -181,7 +226,7 @@ namespace umi3dBrowsers.connection
 
             FootTargetBehavior.SetFootTargets();
 
-            trackers.ForEach(x => trackedSkeleton.ReplaceController(x));
+            AdditionnalTrackers.ForEach(x => trackedSkeleton.ReplaceController(x));
             trackedSkeleton.bones.Add(BoneType.Viewpoint, viewpointTSB);
 
             isSetup = true;

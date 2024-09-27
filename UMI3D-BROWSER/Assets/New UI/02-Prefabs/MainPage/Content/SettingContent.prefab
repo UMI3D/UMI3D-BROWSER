@@ -301,7 +301,7 @@ MonoBehaviour:
   - Panel:
       panel: {fileID: 1808870448261405348}
       panelName: param_general
-    Use: 1
+    UseTutorial: 0
     LocalisedKey: pageTip_generalSettings
     TutoPosition: {x: 0, y: -20}
   useLocalization: 1
@@ -458,6 +458,12 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+  objectToEnableOnHover: []
+  autoUnHover: 0
+  objectToEnableOnClick: []
+  autoDeselect: 0
+  autoInitStyles: 1
+  relatedButtonStyles: []
 --- !u!114 &6612203478367639236
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -471,9 +477,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   image: {fileID: 1698166873140687624}
-  NormalColor: {r: 0, g: 0, b: 0, a: 0}
-  HoverColor: {r: 0, g: 0, b: 0, a: 0}
-  SelectedColor: {r: 0, g: 0, b: 0, a: 0}
+  normalColor: {r: 0, g: 0, b: 0, a: 0}
+  hoverColor: {r: 0, g: 0, b: 0, a: 0}
+  selectedColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!65 &4017182840439589479
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -510,6 +516,7 @@ MonoBehaviour:
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
   updateOnGUI: 0
+  setCenter: 0
 --- !u!1 &256683680882609324
 GameObject:
   m_ObjectHideFlags: 0
@@ -898,6 +905,7 @@ MonoBehaviour:
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
   updateOnGUI: 0
+  setCenter: 0
 --- !u!114 &1541662393597346666
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -942,6 +950,12 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+  objectToEnableOnHover: []
+  autoUnHover: 0
+  objectToEnableOnClick: []
+  autoDeselect: 0
+  autoInitStyles: 1
+  relatedButtonStyles: []
 --- !u!114 &565294924631027045
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2171,9 +2185,13 @@ MonoBehaviour:
   buttons:
   - {fileID: 8636032149920969231}
   - {fileID: 1693168502571499159}
+  defaultActivationID: 0
   NormalColor: {r: 0.18039216, g: 0.18039216, b: 0.18039216, a: 1}
   HoverColor: {r: 0.34509805, g: 0.34509805, b: 0.34509805, a: 1}
   SelectedColor: {r: 0.34509805, g: 0.34509805, b: 0.34509805, a: 1}
+  OnElementSelected:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1234864888920804899
 GameObject:
   m_ObjectHideFlags: 0
@@ -2937,6 +2955,12 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+  objectToEnableOnHover: []
+  autoUnHover: 0
+  objectToEnableOnClick: []
+  autoDeselect: 0
+  autoInitStyles: 1
+  relatedButtonStyles: []
 --- !u!114 &2275986590124893224
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2950,9 +2974,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   image: {fileID: 8440728112770593583}
-  NormalColor: {r: 0, g: 0, b: 0, a: 0}
-  HoverColor: {r: 0, g: 0, b: 0, a: 0}
-  SelectedColor: {r: 0, g: 0, b: 0, a: 0}
+  normalColor: {r: 0, g: 0, b: 0, a: 0}
+  hoverColor: {r: 0, g: 0, b: 0, a: 0}
+  selectedColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!65 &5672325665166479784
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2989,6 +3013,7 @@ MonoBehaviour:
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
   updateOnGUI: 0
+  setCenter: 0
 --- !u!1 &1609708644056068709
 GameObject:
   m_ObjectHideFlags: 0
@@ -3069,9 +3094,13 @@ MonoBehaviour:
   buttons:
   - {fileID: 4541855948446806790}
   - {fileID: 1379160279611100862}
+  defaultActivationID: 0
   NormalColor: {r: 0.20000002, g: 0.20000002, b: 0.20000002, a: 1}
   HoverColor: {r: 0.34509805, g: 0.34509805, b: 0.34509805, a: 1}
   SelectedColor: {r: 0.34509805, g: 0.34509805, b: 0.34509805, a: 1}
+  OnElementSelected:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1667616162823515995
 GameObject:
   m_ObjectHideFlags: 0
@@ -3958,6 +3987,12 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+  objectToEnableOnHover: []
+  autoUnHover: 0
+  objectToEnableOnClick: []
+  autoDeselect: 0
+  autoInitStyles: 1
+  relatedButtonStyles: []
 --- !u!114 &3561086714457857946
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3971,9 +4006,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   image: {fileID: 7174647927538859092}
-  NormalColor: {r: 0, g: 0, b: 0, a: 0}
-  HoverColor: {r: 0, g: 0, b: 0, a: 0}
-  SelectedColor: {r: 0, g: 0, b: 0, a: 0}
+  normalColor: {r: 0, g: 0, b: 0, a: 0}
+  hoverColor: {r: 0, g: 0, b: 0, a: 0}
+  selectedColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!65 &8208585999162112194
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4010,6 +4045,7 @@ MonoBehaviour:
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
   updateOnGUI: 0
+  setCenter: 0
 --- !u!1 &1933982448339699764
 GameObject:
   m_ObjectHideFlags: 0
@@ -4572,6 +4608,12 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+  objectToEnableOnHover: []
+  autoUnHover: 0
+  objectToEnableOnClick: []
+  autoDeselect: 0
+  autoInitStyles: 1
+  relatedButtonStyles: []
 --- !u!114 &4229047959763535352
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4585,9 +4627,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   image: {fileID: 1600769253144172672}
-  NormalColor: {r: 0, g: 0, b: 0, a: 0}
-  HoverColor: {r: 0, g: 0, b: 0, a: 0}
-  SelectedColor: {r: 0, g: 0, b: 0, a: 0}
+  normalColor: {r: 0, g: 0, b: 0, a: 0}
+  hoverColor: {r: 0, g: 0, b: 0, a: 0}
+  selectedColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!65 &6081055882651233492
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4624,6 +4666,7 @@ MonoBehaviour:
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
   updateOnGUI: 0
+  setCenter: 0
 --- !u!1 &2643014818733085492
 GameObject:
   m_ObjectHideFlags: 0
@@ -4940,6 +4983,7 @@ MonoBehaviour:
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
   updateOnGUI: 0
+  setCenter: 0
 --- !u!1 &3302532379375762911
 GameObject:
   m_ObjectHideFlags: 0
@@ -5064,6 +5108,12 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+  objectToEnableOnHover: []
+  autoUnHover: 0
+  objectToEnableOnClick: []
+  autoDeselect: 0
+  autoInitStyles: 1
+  relatedButtonStyles: []
 --- !u!114 &2100535534335303510
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5077,9 +5127,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   image: {fileID: 7214109927527604338}
-  NormalColor: {r: 0, g: 0, b: 0, a: 0}
-  HoverColor: {r: 0, g: 0, b: 0, a: 0}
-  SelectedColor: {r: 0, g: 0, b: 0, a: 0}
+  normalColor: {r: 0, g: 0, b: 0, a: 0}
+  hoverColor: {r: 0, g: 0, b: 0, a: 0}
+  selectedColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!65 &5119391935412882739
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5116,6 +5166,7 @@ MonoBehaviour:
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
   updateOnGUI: 0
+  setCenter: 0
 --- !u!1 &3420707472624357048
 GameObject:
   m_ObjectHideFlags: 0
@@ -5372,9 +5423,13 @@ MonoBehaviour:
   buttons:
   - {fileID: 9004362785552406973}
   - {fileID: 3237951283821788721}
+  defaultActivationID: 0
   NormalColor: {r: 0.18039216, g: 0.18039216, b: 0.18039216, a: 1}
   HoverColor: {r: 0.34509805, g: 0.34509805, b: 0.34509805, a: 1}
   SelectedColor: {r: 0.34509805, g: 0.34509805, b: 0.34509805, a: 1}
+  OnElementSelected:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &3619957363764937177
 GameObject:
   m_ObjectHideFlags: 0
@@ -5499,6 +5554,12 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+  objectToEnableOnHover: []
+  autoUnHover: 0
+  objectToEnableOnClick: []
+  autoDeselect: 0
+  autoInitStyles: 1
+  relatedButtonStyles: []
 --- !u!114 &4964503484962676684
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5512,9 +5573,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   image: {fileID: 1803964251648820030}
-  NormalColor: {r: 0, g: 0, b: 0, a: 0}
-  HoverColor: {r: 0, g: 0, b: 0, a: 0}
-  SelectedColor: {r: 0, g: 0, b: 0, a: 0}
+  normalColor: {r: 0, g: 0, b: 0, a: 0}
+  hoverColor: {r: 0, g: 0, b: 0, a: 0}
+  selectedColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!65 &6798969982246688742
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5551,6 +5612,7 @@ MonoBehaviour:
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
   updateOnGUI: 0
+  setCenter: 0
 --- !u!1 &3731306727492312671
 GameObject:
   m_ObjectHideFlags: 0
@@ -6144,6 +6206,7 @@ MonoBehaviour:
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
   updateOnGUI: 0
+  setCenter: 0
 --- !u!1 &4310298055818516002
 GameObject:
   m_ObjectHideFlags: 0
@@ -6305,6 +6368,12 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+  objectToEnableOnHover: []
+  autoUnHover: 0
+  objectToEnableOnClick: []
+  autoDeselect: 0
+  autoInitStyles: 1
+  relatedButtonStyles: []
 --- !u!114 &7160145783948757201
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6318,9 +6387,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   image: {fileID: 8239795348126699083}
-  NormalColor: {r: 0, g: 0, b: 0, a: 0}
-  HoverColor: {r: 0, g: 0, b: 0, a: 0}
-  SelectedColor: {r: 0, g: 0, b: 0, a: 0}
+  normalColor: {r: 0, g: 0, b: 0, a: 0}
+  hoverColor: {r: 0, g: 0, b: 0, a: 0}
+  selectedColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!65 &616465948185268247
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6357,6 +6426,7 @@ MonoBehaviour:
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
   updateOnGUI: 0
+  setCenter: 0
 --- !u!114 &5943595122015788840
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6734,6 +6804,12 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+  objectToEnableOnHover: []
+  autoUnHover: 0
+  objectToEnableOnClick: []
+  autoDeselect: 0
+  autoInitStyles: 1
+  relatedButtonStyles: []
 --- !u!114 &7345487460817719794
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6747,9 +6823,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   image: {fileID: 8357081700067136852}
-  NormalColor: {r: 0, g: 0, b: 0, a: 0}
-  HoverColor: {r: 0, g: 0, b: 0, a: 0}
-  SelectedColor: {r: 0, g: 0, b: 0, a: 0}
+  normalColor: {r: 0, g: 0, b: 0, a: 0}
+  hoverColor: {r: 0, g: 0, b: 0, a: 0}
+  selectedColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!65 &1840997708351938505
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6786,6 +6862,7 @@ MonoBehaviour:
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
   updateOnGUI: 0
+  setCenter: 0
 --- !u!1 &4674286444402968911
 GameObject:
   m_ObjectHideFlags: 0
@@ -6911,6 +6988,12 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+  objectToEnableOnHover: []
+  autoUnHover: 0
+  objectToEnableOnClick: []
+  autoDeselect: 0
+  autoInitStyles: 1
+  relatedButtonStyles: []
 --- !u!114 &7567439228307624552
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6924,9 +7007,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   image: {fileID: 1404825102897005598}
-  NormalColor: {r: 0, g: 0, b: 0, a: 0}
-  HoverColor: {r: 0, g: 0, b: 0, a: 0}
-  SelectedColor: {r: 0, g: 0, b: 0, a: 0}
+  normalColor: {r: 0, g: 0, b: 0, a: 0}
+  hoverColor: {r: 0, g: 0, b: 0, a: 0}
+  selectedColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!65 &389095826614910327
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6963,6 +7046,7 @@ MonoBehaviour:
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
   updateOnGUI: 0
+  setCenter: 0
 --- !u!114 &3647440485934872116
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8042,9 +8126,13 @@ MonoBehaviour:
   - {fileID: 810507598925381234}
   - {fileID: 3596687322269301352}
   - {fileID: 6431067448221406539}
+  defaultActivationID: 0
   NormalColor: {r: 0.15686275, g: 0.15686275, b: 0.15686275, a: 1}
   HoverColor: {r: 0.34509805, g: 0.34509805, b: 0.34509805, a: 1}
   SelectedColor: {r: 0.34509805, g: 0.34509805, b: 0.34509805, a: 1}
+  OnElementSelected:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &6150157343465744055
 GameObject:
   m_ObjectHideFlags: 0
@@ -9326,6 +9414,12 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+  objectToEnableOnHover: []
+  autoUnHover: 0
+  objectToEnableOnClick: []
+  autoDeselect: 0
+  autoInitStyles: 1
+  relatedButtonStyles: []
 --- !u!114 &5833764122660339864
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9339,9 +9433,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   image: {fileID: 7839473616893594267}
-  NormalColor: {r: 0, g: 0, b: 0, a: 0}
-  HoverColor: {r: 0, g: 0, b: 0, a: 0}
-  SelectedColor: {r: 0, g: 0, b: 0, a: 0}
+  normalColor: {r: 0, g: 0, b: 0, a: 0}
+  hoverColor: {r: 0, g: 0, b: 0, a: 0}
+  selectedColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!65 &1901544592272309469
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -9378,6 +9472,7 @@ MonoBehaviour:
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
   updateOnGUI: 0
+  setCenter: 0
 --- !u!1 &7047402149775287265
 GameObject:
   m_ObjectHideFlags: 0
@@ -9964,9 +10059,13 @@ MonoBehaviour:
   buttons:
   - {fileID: 5607919933090434860}
   - {fileID: 153222113907764342}
+  defaultActivationID: 0
   NormalColor: {r: 0.18039216, g: 0.18039216, b: 0.18039216, a: 1}
   HoverColor: {r: 0.34509805, g: 0.34509805, b: 0.34509805, a: 1}
   SelectedColor: {r: 0.34509805, g: 0.34509805, b: 0.34509805, a: 1}
+  OnElementSelected:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &8002818045089505794
 GameObject:
   m_ObjectHideFlags: 0
@@ -10004,8 +10103,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -29.997498}
-  m_SizeDelta: {x: 0, y: -60.005}
+  m_AnchoredPosition: {x: 0, y: -4.9974985}
+  m_SizeDelta: {x: 0, y: -10.005003}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &3395343360280198232
 CanvasRenderer:
@@ -10775,6 +10874,12 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+  objectToEnableOnHover: []
+  autoUnHover: 0
+  objectToEnableOnClick: []
+  autoDeselect: 0
+  autoInitStyles: 1
+  relatedButtonStyles: []
 --- !u!114 &3352327546747380945
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10788,9 +10893,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   image: {fileID: 8983352997610835571}
-  NormalColor: {r: 0, g: 0, b: 0, a: 0}
-  HoverColor: {r: 0, g: 0, b: 0, a: 0}
-  SelectedColor: {r: 0, g: 0, b: 0, a: 0}
+  normalColor: {r: 0, g: 0, b: 0, a: 0}
+  hoverColor: {r: 0, g: 0, b: 0, a: 0}
+  selectedColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!65 &2450330687320008320
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -10827,6 +10932,7 @@ MonoBehaviour:
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
   updateOnGUI: 0
+  setCenter: 0
 --- !u!1 &8741638520797406913
 GameObject:
   m_ObjectHideFlags: 0
@@ -11016,6 +11122,7 @@ MonoBehaviour:
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
   updateOnGUI: 0
+  setCenter: 0
 --- !u!1 &8889805527991125201
 GameObject:
   m_ObjectHideFlags: 0

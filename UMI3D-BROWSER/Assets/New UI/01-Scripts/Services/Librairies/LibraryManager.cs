@@ -14,11 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using Pico.Platform;
 using System.Collections.Generic;
 using umi3d.cdk;
+using umi3d.cdk.collaboration;
 using umi3dBrowsers.data.ui;
-using umi3dBrowsers.displayer;
 using umi3dBrowsers.linker.ui;
 using UnityEngine;
 using UnityEngine.UI;
@@ -34,6 +33,7 @@ namespace umi3dBrowsers.services.librairies
         [SerializeField] private PopupData deleteLibPopup;
         [SerializeField] private SimpleButton buttonUp;
         [SerializeField] private SimpleButton buttonDown;
+        [SerializeField] private SimpleButton buttonDeleteAll;
 
         /// <summary>
         /// Prefab used to represent a library in the menu.
@@ -61,8 +61,26 @@ namespace umi3dBrowsers.services.librairies
         /// </summary>
         private int indexOfCurrentTopEntryDisplayed = 0;
 
+        private void Awake()
+        {
+            buttonDeleteAll.OnClick.AddListener(() => {
+                popupLinker.SetArguments(deleteLibPopup, new() { { "libCount", currentEntries.Count } });
+                popupLinker.Show(deleteLibPopup, "empty", "popup_deleteLibs_description",
+                    ("popup_cancel", () => popupLinker.CloseAll()),
+                    ("popup_yes", () => {
+                        foreach (var entry in currentEntries)
+                            entry.Delete();
+                        UpdateContent();
+                        popupLinker.CloseAll();
+                    }
+                )
+                );
+            });
+        }
+
         private void OnEnable()
         {
+            buttonDeleteAll.gameObject.SetActive(UMI3DCollaborationClientServer.Environement == null);
             UpdateContent();
         }
 
@@ -106,14 +124,16 @@ namespace umi3dBrowsers.services.librairies
                     //Could be done with lib.path if needed
 
                     //4.Bind the button to unistall this lib
-                    entry.DeleteButton.onClick.AddListener(() =>
-                    {
+                    entry.DeleteLib += () => {
+                        lib.applications.Remove(app.Key);
+                        UMI3DResourcesManager.RemoveLibrary(lib.library);
+                    };
+                    entry.DeleteButton.onClick.AddListener(() => {
                         popupLinker.SetArguments(deleteLibPopup, new() { { "libName", lib.key } });
                         popupLinker.Show(deleteLibPopup, "empty", "popup_deleteLib_description",
                             ("popup_cancel", () => popupLinker.CloseAll()),
                             ("popup_yes", () => {
-                                lib.applications.Remove(app.Key);
-                                UMI3DResourcesManager.RemoveLibrary(lib.library);
+                                entry.Delete();
                                 UpdateContent();
                                 popupLinker.CloseAll();
                             }

@@ -6,6 +6,7 @@ using umi3d.baseBrowser.inputs.interactions;
 using umi3d.cdk.collaboration;
 using umi3dBrowsers.linker.ingameui;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using static umi3d.baseBrowser.cursor.BaseCursor;
 
@@ -45,20 +46,34 @@ namespace umi3dBrowsers.ingame_ui
             if (!debugMode)
                 gameObject.SetActive(inGameLinker.IsEnable);
 
+            BaseCursor.SetMovement(this, CursorMovement.Free);
+        }
 
+        private void OnEnable()
+        {
+            KeyboardShortcut.AddUpListener(ShortcutEnum.FreeCursor, FreeCursor);
+            BaseCursor.SetMovement(this, CursorMovement.Center);
+            BaseCursor.State = CursorState.Default;
+        }
 
-            KeyboardShortcut.AddUpListener(ShortcutEnum.FreeCursor, () => {
-                if (mainInGamePanel.gameObject.activeSelf)
-                    return;
+        private void OnDisable()
+        {
+            KeyboardShortcut.RemoveUpListener(ShortcutEnum.FreeCursor, FreeCursor);
+            BaseCursor.SetMovement(this, CursorMovement.Free);
+        }
 
-                if (BaseCursor.Movement == CursorMovement.Center)
-                    BaseCursor.SetMovement(this, CursorMovement.Free);
-                else
-                {
-                    BaseCursor.SetMovement(this, CursorMovement.Center);
-                    BaseCursor.State = CursorState.Default;
-                }
-            });
+        private void FreeCursor()
+        {
+            if (mainInGamePanel.gameObject.activeSelf)
+                return;
+
+            if (BaseCursor.Movement == CursorMovement.Center)
+                BaseCursor.SetMovement(this, CursorMovement.Free);
+            else
+            {
+                BaseCursor.SetMovement(this, CursorMovement.Center);
+                BaseCursor.State = CursorState.Default;
+            }
         }
 
         private void ToggleInGamePanel()
@@ -67,15 +82,14 @@ namespace umi3dBrowsers.ingame_ui
             {
                 if (mainInGamePanel.gameObject.activeSelf)
                 {
-                    Cursor.lockState = CursorLockMode.Locked;
-                    BaseCursor.SetMovement(this, CursorMovement.Center);
                     mainInGamePanel.gameObject.SetActive(false);
+                    BaseCursor.SetMovement(this, CursorMovement.Center);
+                    BaseCursor.State = CursorState.Default;
                 }
                 else
                 {
-                    Cursor.lockState = CursorLockMode.Confined;
-                    BaseCursor.SetMovement(this, CursorMovement.Free);
                     mainInGamePanel.gameObject.SetActive(true);
+                    BaseCursor.SetMovement(this, CursorMovement.Free);
                 }
             }
         }

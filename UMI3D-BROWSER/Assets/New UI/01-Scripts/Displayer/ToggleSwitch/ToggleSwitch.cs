@@ -42,8 +42,8 @@ namespace umi3dBrowsers.displayer
         private Coroutine _animationSliderCoroutine;
 
         [Header("Events")]
-        [SerializeField] private UnityEvent onToggleOn;
-        [SerializeField] private UnityEvent onToggleOff;
+        public UnityEvent onToggleOn;
+        public UnityEvent onToggleOff;
         [SerializeField] private Action onTransitionEffet;
 
         [Header("Elements to recolor")]

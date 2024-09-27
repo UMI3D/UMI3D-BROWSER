@@ -147,15 +147,64 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 3866976804092458281, guid: 36a976f98d042f444bad8fb3f09a8a8d,
         type: 3}
+    - target: {fileID: 5737028900505413031, guid: f4d8c12ad9571464087a7bb922bc48bb,
+        type: 3}
+      propertyPath: LeftClickParametersInteraction
+      value: 
+      objectReference: {fileID: 654858137801913921}
     - target: {fileID: 5737028900505413034, guid: f4d8c12ad9571464087a7bb922bc48bb,
         type: 3}
       propertyPath: m_Name
       value: Controllers
       objectReference: {fileID: 0}
+    - target: {fileID: 5737028901777104616, guid: f4d8c12ad9571464087a7bb922bc48bb,
+        type: 3}
+      propertyPath: Key.m_SingletonActionBindings.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5737028901777104616, guid: f4d8c12ad9571464087a7bb922bc48bb,
+        type: 3}
+      propertyPath: Key.m_SingletonActionBindings.Array.data[0].m_Id
+      value: ed1d1cc8-f996-4d87-85a4-06554ffeac9b
+      objectReference: {fileID: 0}
+    - target: {fileID: 5737028901777104616, guid: f4d8c12ad9571464087a7bb922bc48bb,
+        type: 3}
+      propertyPath: Key.m_SingletonActionBindings.Array.data[1].m_Id
+      value: d2593cd2-3512-408c-9f87-d3847195e7dc
+      objectReference: {fileID: 0}
+    - target: {fileID: 5737028901777104616, guid: f4d8c12ad9571464087a7bb922bc48bb,
+        type: 3}
+      propertyPath: Key.m_SingletonActionBindings.Array.data[0].m_Path
+      value: <Mouse>/leftButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 5737028901777104616, guid: f4d8c12ad9571464087a7bb922bc48bb,
+        type: 3}
+      propertyPath: Key.m_SingletonActionBindings.Array.data[1].m_Path
+      value: <Keyboard>/q
+      objectReference: {fileID: 0}
+    - target: {fileID: 5737028901777104616, guid: f4d8c12ad9571464087a7bb922bc48bb,
+        type: 3}
+      propertyPath: Key.m_SingletonActionBindings.Array.data[1].m_Action
+      value: Key
+      objectReference: {fileID: 0}
+    - target: {fileID: 5737028901777104616, guid: f4d8c12ad9571464087a7bb922bc48bb,
+        type: 3}
+      propertyPath: Key.m_SingletonActionBindings.Array.data[0].m_Interactions
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5737028901777104616, guid: f4d8c12ad9571464087a7bb922bc48bb,
+        type: 3}
+      propertyPath: Key.m_SingletonActionBindings.Array.data[1].m_Interactions
+      value: Press(behavior=2)
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5737028900505413034, guid: f4d8c12ad9571464087a7bb922bc48bb,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 654858137801913921}
     - targetCorrespondingSourceObject: {fileID: 5544760081601926436, guid: f4d8c12ad9571464087a7bb922bc48bb,
         type: 3}
       insertIndex: -1
@@ -167,6 +216,24 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 5993178554287749343}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2067725382735961461 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5737028900505413034, guid: f4d8c12ad9571464087a7bb922bc48bb,
+    type: 3}
+  m_PrefabInstance: {fileID: 5993178554287749343}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &654858137801913921
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2067725382735961461}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b91bfdf45e591974d89dc60c46034c92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &2067725382735961466 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5737028900505413029, guid: f4d8c12ad9571464087a7bb922bc48bb,

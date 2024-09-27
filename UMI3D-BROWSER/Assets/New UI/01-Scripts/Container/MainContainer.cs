@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 using TMPro;
 using umi3d.baseBrowser.cursor;
 using umi3d.cdk;
+using umi3d.cdk.collaboration;
 using umi3dBrowsers.data.ui;
 using umi3dBrowsers.linker;
 using umi3dBrowsers.linker.ingameui;
@@ -138,9 +139,12 @@ namespace umi3dBrowsers
             };
 
             UMI3DEnvironmentLoader.Instance.onEnvironmentLoaded?.AddListener(() => {
-                BaseCursor.SetMovement(this, BaseCursor.CursorMovement.Center);
                 inGameLinker.EnableDisableInGameUI(true);
             } );
+
+            UMI3DCollaborationClientServer.Instance.OnRedirectionStarted?.AddListener(() => {
+                inGameLinker.EnableDisableInGameUI(false);
+            });
         }
 
         private void Start()

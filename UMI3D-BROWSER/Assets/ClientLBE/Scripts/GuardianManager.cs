@@ -21,7 +21,7 @@ namespace ClientLBE
 
         [Header("CALIBRATION SCENE")]
         public GameObject Player;
-        public Transform PersonnalSketletonContainer;
+        public Transform PersonnalSkeletonContainer;
         public GameObject CameraPlayer;
 
         private Transform scene;
@@ -564,8 +564,8 @@ namespace ClientLBE
             //Add box collider
             guardianMesh.AddComponent<BoxCollider>().isTrigger = true;
 
-            guardianMesh.transform.position = Quaternion.Inverse(PersonnalSketletonContainer.transform.rotation) * (guardianMesh.transform.position) + PersonnalSketletonContainer.transform.position;
-            guardianMesh.transform.rotation = PersonnalSketletonContainer.transform.rotation;
+            guardianMesh.transform.position = Quaternion.Inverse(PersonnalSkeletonContainer.transform.rotation) * (guardianMesh.transform.position) + PersonnalSkeletonContainer.transform.position;
+            guardianMesh.transform.rotation = PersonnalSkeletonContainer.transform.rotation;
 
             guardianMesh.AddComponent<HoverGuardian>().targetMaterial = GuardianMaterial;
 

@@ -372,7 +372,8 @@ GameObject:
   - component: {fileID: 4858537099442997487}
   - component: {fileID: 2962629962332229765}
   - component: {fileID: 3250383489103136755}
-  - component: {fileID: 1778165998742552666}
+  - component: {fileID: 4342372148401031615}
+  - component: {fileID: 5840864903653453692}
   m_Layer: 5
   m_Name: OrientationScenePanel
   m_TagString: Untagged
@@ -486,7 +487,19 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RaycastTriggerInteraction: 1
---- !u!114 &1778165998742552666
+--- !u!225 &4342372148401031615
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1299080551220748938}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &5840864903653453692
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -495,10 +508,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1299080551220748938}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fd45fa81319569f44883850c5d432f14, type: 3}
+  m_Script: {fileID: 11500000, guid: 2534bd74c5a0b394981cf6aeb599c5a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerCamera: {fileID: 0}
+  playerCamera: {fileID: 0}
+  fadeDuration: 0.5
 --- !u!1 &1517045642891765739
 GameObject:
   m_ObjectHideFlags: 0

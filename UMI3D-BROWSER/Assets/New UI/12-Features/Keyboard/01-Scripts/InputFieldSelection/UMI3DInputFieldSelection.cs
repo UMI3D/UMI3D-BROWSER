@@ -171,11 +171,6 @@ namespace umi3d.browserRuntime.ui.keyboard
             Vector2 position = caretRT.anchoredPosition;
             caretRT.anchoredPosition = new(prefixWidth + alignOffset, position.y);
 
-            if (!isPreviewBar)
-            {
-                UnityEngine.Debug.Log($"Update caret: {stringPosition} && {prefix} && {prefixWidth}");
-            }
-
             StartCaretBlinking();
         }
 

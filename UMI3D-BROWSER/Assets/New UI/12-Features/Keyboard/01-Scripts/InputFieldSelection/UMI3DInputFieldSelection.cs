@@ -133,7 +133,7 @@ namespace umi3d.browserRuntime.ui.keyboard
 
             // Set position.
             // Get the width of the portion of the text before the selection.
-            string prefix = inputField.text.Substring(0, startPosition);
+            string prefix = GetRenderSubstring(0, startPosition);
             float prefixWidth = textTMP.GetTextSize(prefix).x;
 
             // Get the offset due to alignment settings.
@@ -143,7 +143,7 @@ namespace umi3d.browserRuntime.ui.keyboard
             selectionRT.anchoredPosition = new(prefixWidth + alignOffset, position.y);
 
             // Set size.
-            string selection = inputField.text.Substring(startPosition, endPosition - startPosition);
+            string selection = GetRenderSubstring(startPosition, endPosition - startPosition);
             float selectionWidth = textTMP.GetTextSize(selection).x;
             selectionRT.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, selectionWidth);
 
@@ -162,7 +162,7 @@ namespace umi3d.browserRuntime.ui.keyboard
             }
 
             // Get the width of the portion of the text before the position of the caret.
-            string prefix = inputField.text.Substring(0, stringPosition);
+            string prefix = GetRenderSubstring(0, stringPosition);
             float prefixWidth = textTMP.GetTextSize(prefix).x;
 
             // Get the offset due to alignment settings.
@@ -177,6 +177,16 @@ namespace umi3d.browserRuntime.ui.keyboard
             }
 
             StartCaretBlinking();
+        }
+
+        string GetRenderSubstring(int startIndex, int length)
+        {
+            if (inputField.contentType == TMP_InputField.ContentType.Password)
+            {
+                return new string('*', length);
+            }
+
+            return inputField.text.Substring(startIndex, length);
         }
 
         void OnPointerDown(Notification notification)

@@ -132,10 +132,15 @@ namespace umi3d.browserRuntime.ui.keyboard
             }
 
             // Set position.
+            // Get the width of the portion of the text before the selection.
             string prefix = inputField.text.Substring(0, startPosition);
             float prefixWidth = textTMP.GetTextSize(prefix).x;
+
+            // Get the offset due to alignment settings.
+            float alignOffset = inputField.GetAlignmentOffset();
+
             Vector2 position = selectionRT.anchoredPosition;
-            selectionRT.anchoredPosition = new(prefixWidth, position.y);
+            selectionRT.anchoredPosition = new(prefixWidth + alignOffset, position.y);
 
             // Set size.
             string selection = inputField.text.Substring(startPosition, endPosition - startPosition);
@@ -156,10 +161,20 @@ namespace umi3d.browserRuntime.ui.keyboard
                 return;
             }
 
+            // Get the width of the portion of the text before the position of the caret.
             string prefix = inputField.text.Substring(0, stringPosition);
             float prefixWidth = textTMP.GetTextSize(prefix).x;
+
+            // Get the offset due to alignment settings.
+            float alignOffset = inputField.GetAlignmentOffset();
+
             Vector2 position = caretRT.anchoredPosition;
-            caretRT.anchoredPosition = new(prefixWidth, position.y);
+            caretRT.anchoredPosition = new(prefixWidth + alignOffset, position.y);
+
+            if (!isPreviewBar)
+            {
+                UnityEngine.Debug.Log($"Update caret: {stringPosition} && {prefix} && {prefixWidth}");
+            }
 
             StartCaretBlinking();
         }

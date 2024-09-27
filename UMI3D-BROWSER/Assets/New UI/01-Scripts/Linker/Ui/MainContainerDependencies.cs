@@ -16,7 +16,7 @@ namespace umi3dBrowsers.linker
         private void Awake()
         {
             mainContainerLinker.SetSkyBoxTransform(skyBox);
-            mainContainerLinker.SetDirectiionalLight(directionalLight);
+            mainContainerLinker.SetDirectionalLight(directionalLight);
             mainContainerLinker.SetLoader(sceneLoader);
             mainContainerLinker.SetSpawner(spawner);
         }

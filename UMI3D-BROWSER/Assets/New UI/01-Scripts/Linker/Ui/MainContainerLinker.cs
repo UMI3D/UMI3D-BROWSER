@@ -19,9 +19,9 @@ namespace umi3dBrowsers.linker
 
         private Light directionalLight;
         public Light DirectionalLight => directionalLight;
-        public void SetDirectiionalLight(Light directiionalLight)
+        public void SetDirectionalLight(Light directionalLight)
         {
-            this.directionalLight = directiionalLight;
+            this.directionalLight = directionalLight;
         }
 
         private SceneLoader loader;

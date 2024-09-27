@@ -15,11 +15,14 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
+using umi3d.browserRuntime.NotificationKeys;
 using umi3d.browserRuntime.navigation;
 using umi3d.cdk;
+using umi3dBrowsers.linker;
 using umi3dVRBrowsersBase.interactions;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
+using System.Collections.Generic;
 
 namespace umi3dVRBrowsersBase.connection
 {
@@ -32,6 +35,9 @@ namespace umi3dVRBrowsersBase.connection
         public VRInputObserver rightObs;
         public VRInputObserver leftObs;
 
+        public MainContainerLinker mainContainerLinker;
+
+        Dictionary<string, System.Object> info = new();
         #endregion
 
         #region Methods
@@ -39,6 +45,9 @@ namespace umi3dVRBrowsersBase.connection
         private void Start()
         {
             cameraManager = Camera.main.GetComponent<ARCameraManager>();
+
+            if (mainContainerLinker == null)
+                Debug.LogError("No MainContainerLinker reference.");
         }
 
         public void SwitchARMR()
@@ -52,19 +61,29 @@ namespace umi3dVRBrowsersBase.connection
         private void SwitchToMR()
         {
             cameraManager.enabled = true;
+
             (UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DLoadingParameters).SetMR();
-            snapTurn.enabled = false;
-            rightObs.enabled = false;
-            leftObs.enabled = false;
+
+            info[LocomotionNotificationKeys.Info.Controller] = Controller.LeftAndRight;
+            info[LocomotionNotificationKeys.Info.SnapTurnActiveState] = ActiveState.Disable;
+            info[LocomotionNotificationKeys.Info.TeleportationActiveState] = ActiveState.Disable;
+            NotificationHub.Default.Notify(this, LocomotionNotificationKeys.System, info);
+
+            mainContainerLinker.Skybox.gameObject.SetActive(false);
         }
 
         private void SwitchToVR()
         {
             cameraManager.enabled = false;
+
             (UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DLoadingParameters).SetVR();
-            snapTurn.enabled = true;
-            rightObs.enabled = true;
-            leftObs.enabled = true;
+
+            info[LocomotionNotificationKeys.Info.Controller] = Controller.LeftAndRight;
+            info[LocomotionNotificationKeys.Info.SnapTurnActiveState] = ActiveState.Enable;
+            info[LocomotionNotificationKeys.Info.TeleportationActiveState] = ActiveState.Enable;
+            NotificationHub.Default.Notify(this, LocomotionNotificationKeys.System, info);
+
+            mainContainerLinker.Skybox.gameObject.SetActive(true);
         }
 
         #endregion

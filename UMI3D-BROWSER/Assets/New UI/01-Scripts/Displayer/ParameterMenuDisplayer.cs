@@ -20,6 +20,7 @@ using TMPro;
 using umi3d.baseBrowser.Controller;
 using umi3d.baseBrowser.cursor;
 using umi3d.baseBrowser.parameters;
+using umi3d.cdk;
 using umi3d.common.interaction;
 using umi3dBrowsers.displayer;
 using UnityEngine;
@@ -73,6 +74,7 @@ public class ParameterMenuDisplayer : MonoBehaviour
                 inputfield.text = stringParameter.value;
                 inputfield.onSubmit.AddListener(newValue => {
                     stringParameter.value = newValue;
+                    SendRequest(stringParameter);
                 });
                 return;
             }
@@ -81,13 +83,15 @@ public class ParameterMenuDisplayer : MonoBehaviour
                 GameObject booleanGameObject = Instantiate(booleanParameterDisplayPrefab, content);
                 booleanGameObject.GetComponentInChildren<TMP_Text>().text = booleanParameter.name;
                 var toggle = booleanGameObject.GetComponentInChildren<ToggleSwitch>();
-                if (toggle.CurrentValue == booleanParameter.value)
+                if (toggle.CurrentValue != booleanParameter.value)
                     toggle.Click();
                 toggle.onToggleOn.AddListener(() => {
                     booleanParameter.value = true;
+                    SendRequest(booleanParameter);
                 });
                 toggle.onToggleOff.AddListener(() => {
                     booleanParameter.value = false;
+                    SendRequest(booleanParameter);
                 });
                 return;
             }
@@ -102,6 +106,7 @@ public class ParameterMenuDisplayer : MonoBehaviour
                 slider.wholeNumbers = false;
                 slider.onValueChanged.AddListener(newValue => {
                     sliderParameter.value = newValue;
+                    SendRequest(sliderParameter);
                 });
                 return;
             }
@@ -116,6 +121,7 @@ public class ParameterMenuDisplayer : MonoBehaviour
                 slider.wholeNumbers = true;
                 slider.onValueChanged.AddListener(newValue => {
                     sliderParameter.value = (int)newValue;
+                    SendRequest(sliderParameter);
                 });
                 return;
             }
@@ -128,6 +134,7 @@ public class ParameterMenuDisplayer : MonoBehaviour
                     dropdownParameter.possibleValues.IndexOf(dropdownParameter.value));
                 dropdown.OnClick += () => {
                     dropdownParameter.value = dropdown.GetValue();
+                    SendRequest(dropdownParameter);
                 };
                 return;
             }
@@ -135,5 +142,13 @@ public class ParameterMenuDisplayer : MonoBehaviour
                 break;
         }
         Debug.LogWarning($"Parameter type not found : {parameter}", this);
+    }
+
+    private void SendRequest(AbstractParameterDto parameter)
+    {
+        UMI3DClientServer.SendRequest(new ParameterSettingRequestDto() {
+            id = parameter.id,
+            parameter = parameter,
+        }, true);
     }
 }

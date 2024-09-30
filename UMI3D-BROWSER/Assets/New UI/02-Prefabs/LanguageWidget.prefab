@@ -37,7 +37,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 57, y: -101}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 100, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2475501223755920172
 MonoBehaviour:
@@ -91,7 +91,9 @@ MonoBehaviour:
     type: 3}
   menuNavigationLinker: {fileID: 11400000, guid: 438855b4a25630a4db523fe93ebc1ca5,
     type: 2}
-  nextPanel: {fileID: 11400000, guid: 32ef96e010a5b524f85fa64333e8ad80, type: 2}
+  nextPanel:
+    pcRef: {fileID: 0}
+    xrRef: {fileID: 0}
   OnSupportedLanguageValidated:
     m_PersistentCalls:
       m_Calls:

@@ -15,7 +15,7 @@ limitations under the License.
 */
 using System;
 using System.Collections.Generic;
-using umi3dVRBrowsersBase.connection;
+using umi3dBrowsers.connection;
 using UnityEngine;
 using UnityEngine.XR.Hands;
 

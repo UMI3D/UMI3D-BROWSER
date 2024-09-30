@@ -94,8 +94,8 @@ MonoBehaviour:
   parentTransform: {fileID: 0}
   contentTransform: {fileID: 872419171109489960}
   popupTransform: {fileID: 0}
-  skyBoxTransform: {fileID: 0}
-  directionalLight: {fileID: 0}
+  mainContainerLinker: {fileID: 11400000, guid: 4537bbeeb4ba60b4b8a9569e6cd5ced4,
+    type: 2}
   navBar: {fileID: 7070198400081121391}
   navBarButtonsColors:
     m_NormalColor: {r: 0.6132076, g: 0.6132076, b: 0.6132076, a: 1}
@@ -105,7 +105,8 @@ MonoBehaviour:
     m_DisabledColor: {r: 0.6132076, g: 0.6132076, b: 0.6132076, a: 1}
     m_ColorMultiplier: 0
     m_FadeDuration: 0
-  Top: {fileID: 8946560785847830639}
+  Logo: {fileID: 0}
+  Title: {fileID: 0}
   PageTipButton: {fileID: 7615639279650551968}
   backButton: {fileID: 3662172910005927321}
   cancelConnectionButton: {fileID: 730105756633722992}
@@ -113,8 +114,6 @@ MonoBehaviour:
   versionText: {fileID: 3517630640617138178}
   connectionProcessorService: {fileID: 0}
   tween: {fileID: 0}
-  spawner: {fileID: 0}
-  sceneLoader: {fileID: 0}
   PageTipDisplayer: {fileID: 5096754268962807536}
   connectionToImmersiveLinker: {fileID: 11400000, guid: 68ff1a90a5151924e867698a4e1d3a2d,
     type: 2}
@@ -122,6 +121,7 @@ MonoBehaviour:
     type: 2}
   m_menuNavigationLinker: {fileID: 11400000, guid: 438855b4a25630a4db523fe93ebc1ca5,
     type: 2}
+  inGameLinker: {fileID: 0}
   m_mainMenuPanel: {fileID: 11400000, guid: d93821e62456d954aa41c0d28cb2533c, type: 2}
   m_formPanel: {fileID: 11400000, guid: 82c638b25a48a1f45a6e6ed287ff7eb1, type: 2}
   m_popupLinker: {fileID: 11400000, guid: 6791a9e677b43dd4fb1d319da7708082, type: 2}
@@ -1274,12 +1274,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &8946560785847830639 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2058616089079356166, guid: d1dc13346723a324ca0d31cf86ee52e6,
-    type: 3}
-  m_PrefabInstance: {fileID: 6969669858935755625}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7446505770211015565
 PrefabInstance:
   m_ObjectHideFlags: 0

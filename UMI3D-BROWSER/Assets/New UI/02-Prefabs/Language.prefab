@@ -202,6 +202,12 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+  objectToEnableOnHover: []
+  autoUnHover: 0
+  objectToEnableOnClick: []
+  autoDeselect: 0
+  autoInitStyles: 1
+  relatedButtonStyles: []
 --- !u!114 &4091496519142942823
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -215,9 +221,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _params:
-    SupportedLanguages: 0
-    languageDual: 
-    language: 
+    SupportedLanguages: {fileID: 0}
     languageFlag: {fileID: 0}
   flagImage: {fileID: 4009260704966468097}
   dualText: {fileID: 4544152233404068472}
@@ -272,6 +276,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54201f7897bbda644b218cb41fa75e97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  scaleHorizontalRT: 0
+  childRT: {fileID: 0}
+  updateOnGUI: 0
+  setCenter: 0
 --- !u!1 &8365409551679942530
 GameObject:
   m_ObjectHideFlags: 0

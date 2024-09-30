@@ -1181,6 +1181,11 @@ PrefabInstance:
       propertyPath: m_TrackedTransform
       value: 
       objectReference: {fileID: 8141930279390804461}
+    - target: {fileID: 5051064082787748696, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
+        type: 3}
+      propertyPath: m_ClearFlags
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5051064084671288343, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
         type: 3}
       propertyPath: m_Name
@@ -2174,6 +2179,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2fe94ff0e1453e4689e30b2a6316e14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &6220768029946134914 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1656893087020903303, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
+    type: 3}
+  m_PrefabInstance: {fileID: 4659797260771895813}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 482466726570982930}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82bc72d2ecc8add47b2fe00d40318500, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &6306365063363391223 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1670370880847398130, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
@@ -2591,6 +2608,11 @@ PrefabInstance:
       propertyPath: trackers.Array.size
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1782540143017712207, guid: 3d69241fd025e034aa1947ec87717f98,
+        type: 3}
+      propertyPath: XRInputModalityManager
+      value: 
+      objectReference: {fileID: 6220768029946134914}
     - target: {fileID: 1782540143017712207, guid: 3d69241fd025e034aa1947ec87717f98,
         type: 3}
       propertyPath: trackers.Array.data[0]

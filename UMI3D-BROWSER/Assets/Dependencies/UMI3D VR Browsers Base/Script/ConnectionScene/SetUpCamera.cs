@@ -57,6 +57,8 @@ namespace umi3dVRBrowsersBase.connection
         private void SwitchToMR()
         {
             cameraManager.enabled = true;
+            Camera.main.clearFlags = CameraClearFlags.SolidColor;
+            Camera.main.backgroundColor = Color.black;
 
             (UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DLoadingParameters).SetMR();
 
@@ -71,6 +73,7 @@ namespace umi3dVRBrowsersBase.connection
         private void SwitchToVR()
         {
             cameraManager.enabled = false;
+            Camera.main.clearFlags = CameraClearFlags.Skybox;
 
             (UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DLoadingParameters).SetVR();
 

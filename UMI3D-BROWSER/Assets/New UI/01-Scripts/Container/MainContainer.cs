@@ -46,6 +46,8 @@ namespace umi3dBrowsers
 
         [Header("Navigation-navbar")]
         [SerializeField] private GameObject navBar;
+        [SerializeField] private GameObject navBarLBE;
+
         [Space]
         [SerializeField] private ColorBlock navBarButtonsColors = new ColorBlock();
         [Space]
@@ -82,10 +84,18 @@ namespace umi3dBrowsers
 
         private void Awake()
         {
+
             navBarButtonsColors.colorMultiplier = 1.0f;
 
-            var local = PlayerPrefsManager.GetLocalisationLocal();
-            LocalizationSettings.SelectedLocale = local ?? LocalizationSettings.ProjectLocale;
+            //Attendre l'initialisation des variables
+            LocalizationSettings.InitializationOperation.Completed += (operation) =>
+            {
+                var local = PlayerPrefsManager.GetLocalisationLocal() ?? LocalizationSettings.ProjectLocale;
+                LocalizationSettings.SelectedLocale = local;
+            };
+
+           // var local = PlayerPrefsManager.GetLocalisationLocal();
+           // LocalizationSettings.SelectedLocale = local ?? LocalizationSettings.ProjectLocale;
 
             m_menuNavigationLinker.Initialize(contentTransform);
             m_menuNavigationLinker.OnSetCancelButtonActive += (active) => cancelConnectionButton.gameObject.SetActive(active);
@@ -95,6 +105,7 @@ namespace umi3dBrowsers
                 Title.SetActive(panel.DisplayTop);
                 title.SetTitle(panel.TitleType, panel.TitlePrefix, panel.TitleSuffix);
                 navBar.SetActive(panel.DisplayNavbar);
+                navBarLBE.SetActive(panel.DisplayNavbarLBE);
                 backButton.gameObject.SetActive(panel.DisplayBack);
 
                 var hasTuto = panelTutoManager != null && panelTutoManager.Count > 0;   
@@ -114,6 +125,8 @@ namespace umi3dBrowsers
                     PageTipButton.onClick.AddListener(() => PageTipDisplayer.Show(panelTutoManager));
                 }
             };
+
+            Debug.Log("REMY : END MenuNavigationLinker !");
 
             m_popupLinker.Initialize(popupTransform);
 

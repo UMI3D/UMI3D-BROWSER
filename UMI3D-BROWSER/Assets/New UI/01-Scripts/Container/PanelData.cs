@@ -27,6 +27,7 @@ namespace umi3dBrowsers.data.ui
         [Header("Parameters")]
         [SerializeField] private bool m_displayTop;
         [SerializeField] private bool m_displayNavbar;
+        [SerializeField] private bool m_displayNavbarLBE;
         [SerializeField] private bool m_displayBack;
         [SerializeField] private bool m_canBeReturnedTo;
         [Header("Title")]
@@ -38,6 +39,9 @@ namespace umi3dBrowsers.data.ui
 
         public bool DisplayTop => m_displayTop;
         public bool DisplayNavbar => m_displayNavbar;
+
+        public bool DisplayNavbarLBE => m_displayNavbarLBE;
+
         public bool DisplayBack => m_displayBack;
         public bool CanBeReturnedTo => m_canBeReturnedTo;
 

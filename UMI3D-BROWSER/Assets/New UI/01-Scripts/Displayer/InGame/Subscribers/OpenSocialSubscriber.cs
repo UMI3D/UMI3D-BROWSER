@@ -16,11 +16,14 @@ limitations under the License.
 
 using inetum.unityUtils;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace umi3dBrowsers.displayer.ingame
 {
-    public class MainInGamePanel : MonoBehaviour
+    public class OpenSocialSubscriber : MonoBehaviour
     {
+        [SerializeField] private Button button;
+
         private void Awake()
         {
             NotificationHub.Default.Subscribe(this, UiInGameNotificationKeys.ShowSocialPanel, Show);
@@ -33,8 +36,7 @@ namespace umi3dBrowsers.displayer.ingame
 
         private void Show()
         {
-            this.gameObject.SetActive(true);
+            button.onClick?.Invoke();
         }
     }
 }
-

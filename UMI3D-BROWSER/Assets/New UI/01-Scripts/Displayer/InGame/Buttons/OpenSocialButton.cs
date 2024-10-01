@@ -16,25 +16,27 @@ limitations under the License.
 
 using inetum.unityUtils;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace umi3dBrowsers.displayer.ingame
 {
-    public class MainInGamePanel : MonoBehaviour
+    public class OpenSocialButton : MonoBehaviour
     {
+        [SerializeField] private Button button;
+
         private void Awake()
         {
-            NotificationHub.Default.Subscribe(this, UiInGameNotificationKeys.ShowSocialPanel, Show);
+            button.onClick.AddListener(OpenSocial);
         }
 
         private void OnDestroy()
         {
-            NotificationHub.Default.Unsubscribe(this);
+            button.onClick.RemoveListener(OpenSocial);
         }
 
-        private void Show()
+        private void OpenSocial()
         {
-            this.gameObject.SetActive(true);
+            NotificationHub.Default.Notify(this, UiInGameNotificationKeys.ShowSocialPanel);
         }
     }
 }
-

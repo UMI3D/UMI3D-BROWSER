@@ -153,6 +153,15 @@ namespace umi3d.browserRuntime.pc
             // Minimize the window when 'WindowsManagerNotificationKey.Minimize' is sent.
             NotificationHub.Default.Subscribe(
                 typeof(WindowsManager).FullName,
+                WindowsManagerNotificationKey.Hide,
+                null,
+                Hide
+            );
+
+
+            // Minimize the window when 'WindowsManagerNotificationKey.Minimize' is sent.
+            NotificationHub.Default.Subscribe(
+                typeof(WindowsManager).FullName,
                 WindowsManagerNotificationKey.Minimize,
                 null,
                 Minimize
@@ -184,6 +193,7 @@ namespace umi3d.browserRuntime.pc
 
         public static void Update()
         {
+#if !UNITY_EDITOR && UNITY_STANDALONE
             if (nextFullScreenMode != fullScreenMode)
             {
                 return;
@@ -203,7 +213,7 @@ namespace umi3d.browserRuntime.pc
             {
                 SwitchFullScreen(IsWindowInFullScreen);
             }
-
+#endif
         }
 
         /// <summary>
@@ -300,6 +310,12 @@ namespace umi3d.browserRuntime.pc
         {
 #if UNITY_STANDALONE_WIN
             ShowWindow(window, SW_SHOWMAXIMIZED);
+#endif
+        }
+        static void Hide()
+        {
+#if UNITY_STANDALONE_WIN
+            ShowWindow(window, SW_HIDE);
 #endif
         }
 

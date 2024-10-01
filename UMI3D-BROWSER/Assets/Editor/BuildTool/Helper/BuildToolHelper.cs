@@ -20,6 +20,7 @@ using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.Build.Reporting;
+using UnityEngine;
 using UnityEngine.Assertions;
 
 namespace umi3d.browserEditor.BuildTool
@@ -117,9 +118,11 @@ namespace umi3d.browserEditor.BuildTool
                         name += ".apk";
                         break;
                     case E_Target.SteamXR:
+                    case E_Target.Windows:
                         name += ".exe";
                         break;
                     default:
+                        Debug.LogError("Unhandled case");
                         break;
                 }
             }

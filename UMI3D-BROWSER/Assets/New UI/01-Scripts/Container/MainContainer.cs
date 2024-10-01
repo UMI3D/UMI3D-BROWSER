@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -80,9 +81,15 @@ namespace umi3dBrowsers
         [SerializeField] private PopupLinker m_popupLinker;
         [SerializeField] private PopupData m_tryConnectPopup;
         [SerializeField] private PopupData m_connectionErrorPopup;
+        [SerializeField] private PopupData m_quittingPopup;
+
+        private Notifier m_quittingNotifier;
 
         private void Awake()
         {
+            m_quittingNotifier = NotificationHub.Default.GetNotifier(this, QuittingManagerNotificationKey.QuittingConfirmation);
+            NotificationHub.Default.Subscribe(this, QuittingManagerNotificationKey.RequestToQuit, PopupQuit);
+
             navBarButtonsColors.colorMultiplier = 1.0f;
 
             var local = PlayerPrefsManager.GetLocalisationLocal();
@@ -145,6 +152,27 @@ namespace umi3dBrowsers
             UMI3DCollaborationClientServer.Instance.OnRedirectionStarted?.AddListener(() => {
                 inGameLinker.EnableDisableInGameUI(false);
             });
+        }
+
+        private void OnDestroy()
+        {
+            NotificationHub.Default.Unsubscribe(this, QuittingManagerNotificationKey.RequestToQuit);
+        }
+
+        private void PopupQuit()
+        {
+            Debug.Log("PopupQuit");
+            m_popupLinker.Show(m_quittingPopup, "Quit", "",
+                ("Quit", () => {
+                    m_quittingNotifier[QuittingManagerNotificationKey.QuittingConfirmationInfo.Confirmation] = true;
+                    m_quittingNotifier.Notify();
+                }),
+                ("Cancel", () => {
+                    m_quittingNotifier[QuittingManagerNotificationKey.QuittingConfirmationInfo.Confirmation] = false;
+                    m_quittingNotifier.Notify();
+                    m_popupLinker.CloseAll();
+                }
+            ));
         }
 
         private void Start()

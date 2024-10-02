@@ -19,6 +19,8 @@ namespace umi3d.baseBrowser.inputs.interactions
     public abstract class BaseTouchInteraction<InteractionType> : BaseInteraction<InteractionType>
         where InteractionType : common.interaction.AbstractInteractionDto
     {
+        public ButtonMenuItem MenuItem => menuItem;
+
         protected ButtonMenuItem menuItem;
         protected bool m_isDown;
 

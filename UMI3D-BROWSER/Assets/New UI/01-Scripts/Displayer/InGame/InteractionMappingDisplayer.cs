@@ -14,9 +14,24 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
-public class Dropdownsdsdhfj : MonoBehaviour
+public class InteractionMappingDisplayer : MonoBehaviour
 {
+    [SerializeField] private TMP_Text actionName;
+    [SerializeField] private Transform keyContent;
+    [SerializeField] private GameObject keyPrefab;
 
+    public void Initialize(string name)
+    {
+        actionName.text = name;
+    }
+
+    public void Add(Sprite sprite)
+    {
+        Instantiate(keyPrefab, keyContent).GetComponent<Image>().sprite = sprite;
+    }
 }

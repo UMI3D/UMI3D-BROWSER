@@ -116,9 +116,6 @@ namespace umi3dBrowsers.connection
 
         private void Awake()
         {
-            Joint.enabled = debugJointAndSurface;
-            Surface.enabled = debugJointAndSurface;
-
             LeftWatch.SetActive(false);
             RightWatch.SetActive(false);
             linker.SetSetUpSkeleton(this);
@@ -230,6 +227,9 @@ namespace umi3dBrowsers.connection
         
         public IEnumerator SetupSkeleton()
         {
+            Joint.enabled = debugJointAndSurface;
+            Surface.enabled = debugJointAndSurface;
+
             while (!isPlayerSet)
             {
                 yield return null;

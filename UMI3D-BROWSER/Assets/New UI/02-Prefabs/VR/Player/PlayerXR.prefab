@@ -526,6 +526,36 @@ PrefabInstance:
       propertyPath: m_Name
       value: OrientationScenePanel
       objectReference: {fileID: 0}
+    - target: {fileID: 2507290554101273724, guid: e7f00e3f273d02b42ac4f1bed8d117ee,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 878342686118182184}
+    - target: {fileID: 2507290554101273724, guid: e7f00e3f273d02b42ac4f1bed8d117ee,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OrientationChoice
+      objectReference: {fileID: 0}
+    - target: {fileID: 2940120192196545906, guid: e7f00e3f273d02b42ac4f1bed8d117ee,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 878342686118182184}
+    - target: {fileID: 2940120192196545906, guid: e7f00e3f273d02b42ac4f1bed8d117ee,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OrientationChoice
+      objectReference: {fileID: 0}
+    - target: {fileID: 3118078770234553411, guid: e7f00e3f273d02b42ac4f1bed8d117ee,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 878342686118182184}
+    - target: {fileID: 3118078770234553411, guid: e7f00e3f273d02b42ac4f1bed8d117ee,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OrientationChoice
+      objectReference: {fileID: 0}
     - target: {fileID: 3675128684882961823, guid: e7f00e3f273d02b42ac4f1bed8d117ee,
         type: 3}
       propertyPath: m_Pivot.x
@@ -625,6 +655,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4858537099442997487, guid: e7f00e3f273d02b42ac4f1bed8d117ee,
+        type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5588383515758352409, guid: e7f00e3f273d02b42ac4f1bed8d117ee,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 878342686118182184}
+    - target: {fileID: 5588383515758352409, guid: e7f00e3f273d02b42ac4f1bed8d117ee,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OrientationChoice
       objectReference: {fileID: 0}
     - target: {fileID: 5840864903653453692, guid: e7f00e3f273d02b42ac4f1bed8d117ee,
         type: 3}
@@ -1086,6 +1131,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2899fdfb51dac134d92ec81632429a04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &878342686118182184 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5519844068936865581, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
+    type: 3}
+  m_PrefabInstance: {fileID: 4659797260771895813}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d028af21d4933f04492005d052464cf0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &1058418002643235486 stripped

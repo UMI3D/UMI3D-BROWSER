@@ -27,6 +27,7 @@ using UnityEngine;
 using umi3d.cdk.userCapture.tracking.constraint;
 using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit.Inputs;
+using System;
 
 namespace umi3dBrowsers.connection
 {
@@ -115,9 +116,6 @@ namespace umi3dBrowsers.connection
 
         private void Awake()
         {
-            Joint.enabled = debugJointAndSurface;
-            Surface.enabled = debugJointAndSurface;
-
             LeftWatch.SetActive(false);
             RightWatch.SetActive(false);
             linker.SetSetUpSkeleton(this);
@@ -171,34 +169,53 @@ namespace umi3dBrowsers.connection
             if (XRInputModalityManager != null && XRInputModalityManager.currentInputMode.Value == XRInputModalityManager.InputMode.TrackedHand)
                 SwitchTrackerToHandTracking();
             else
+            {
                 SwitchTrackerToController();
-                //XRInputModalityManager.rightHand.SetActive(false);
+                XRInputModalityManager.rightHand.SetActive(false);
+            }
         }
 
         public void SwitchTrackerToController()
         {
-            handTrackingIKTrackers.ForEach(x => {
-                if (controllerIKTrackers.Contains(x))
-                    return;
-                trackedSkeleton.RemoveController(x.Controller.boneType);
-            });
-
-            handTrackingFingerTrackers.ForEach(x => {
-                trackedSkeleton.RemoveController(x.Controller.boneType);
-            });
-            
-            controllerIKTrackers.ForEach(x => trackedSkeleton.ReplaceController(x.Controller));
+            try
+            {
+                Debug.Log("SWITCH TRACKER 1");
+                handTrackingIKTrackers.ForEach(x => {
+                    if (controllerIKTrackers.Contains(x))
+                        return;
+                    trackedSkeleton.RemoveController(x.Controller.boneType);
+                });
+                Debug.Log("SWITCH TRACKER 2");
+                handTrackingFingerTrackers.ForEach(x =>
+                {
+                    trackedSkeleton.RemoveController(x.Controller.boneType);
+                });
+                Debug.Log("SWITCH TRACKER 3");
+                controllerIKTrackers.ForEach(x => trackedSkeleton.ReplaceController(x.Controller));
+                Debug.Log("SWITCH TRACKER 4");
+            }
+            catch (Exception e)
+            {
+                Debug.LogError("SWITCH " + e.ToString());
+            }
         }
 
         public void SwitchTrackerToHandTracking()
         {
-            controllerIKTrackers.ForEach(x => {
-                if (handTrackingIKTrackers.Contains(x))
-                    return;
-                trackedSkeleton.RemoveController(x.Controller.boneType);
-            });
+            try
+            {
+                controllerIKTrackers.ForEach(x => {
+                    if (handTrackingIKTrackers.Contains(x))
+                        return;
+                    trackedSkeleton.RemoveController(x.Controller.boneType);
+                });
 
-            handTrackingTrackers.ForEach(x => trackedSkeleton.ReplaceController(x.Controller));
+                handTrackingTrackers.ForEach(x => trackedSkeleton.ReplaceController(x.Controller));
+            }
+            catch (Exception e)
+            {
+                Debug.LogError("HAND SWITCH " + e.ToString());
+            }
         }
 
         bool shouldNotRotateHips = false;
@@ -210,6 +227,9 @@ namespace umi3dBrowsers.connection
         
         public IEnumerator SetupSkeleton()
         {
+            Joint.enabled = debugJointAndSurface;
+            Surface.enabled = debugJointAndSurface;
+
             while (!isPlayerSet)
             {
                 yield return null;

@@ -25,6 +25,8 @@ namespace umi3d.baseBrowser.Controller
 {
     public partial class BaseController
     {
+        public event Action<AbstractParameterDto> OnAddParameter;
+
         public override List<AbstractUMI3DInput> inputs
         {
             get
@@ -193,6 +195,7 @@ namespace umi3d.baseBrowser.Controller
         /// <exception cref="System.NotImplementedException"></exception>
         public override AbstractUMI3DInput FindInput(AbstractParameterDto param, bool unused = true)
         {
+            OnAddParameter?.Invoke(param);
             if (param is FloatRangeParameterDto) return FindInput(floatRangeParameterInputs, i => i.IsAvailable(), ParameterActions);
             else if (param is FloatParameterDto) return FindInput(floatParameterInputs, i => i.IsAvailable(), ParameterActions);
             else if (param is IntegerParameterDto) return FindInput(intParameterInputs, i => i.IsAvailable());

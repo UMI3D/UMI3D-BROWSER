@@ -367,7 +367,7 @@ namespace umi3d.picoBrowser
             //PXR_Input.SendHapticImpulse(controller == ControllerType.LeftHandController ? PXR_Input.VibrateType.LeftController : PXR_Input.VibrateType.RightController, vibrationAmplitude, (int)vibrationDuration, (int)vibrationFrequency);
         }
 
-        internal void AddPhysicalDevice(ControllerType leftHandController, InputDevice leftController)
+        public void AddPhysicalDevice(ControllerType controllerType, InputDevice device)
         {
             throw new NotImplementedException();
         }

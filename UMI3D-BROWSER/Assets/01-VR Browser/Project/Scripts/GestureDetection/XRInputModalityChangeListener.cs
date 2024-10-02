@@ -31,15 +31,15 @@ public class XRInputModalityListener : MonoBehaviour
         InputDevice leftController = queryResult.Count > 0 ? queryResult[0] : default;
         queryResult.Clear();
 
-        if (leftController != default)
-            ((Umi3dVRInputManager)Umi3dVRInputManager.Instance).AddPhysicalDevice(ControllerType.LeftHandController, leftController);
+        //if (leftController != default)
+        //    ((Umi3dVRInputManager)Umi3dVRInputManager.Instance).AddPhysicalDevice(ControllerType.LeftHandController, leftController);
 
         InputDevices.GetDevicesWithCharacteristics(InputDeviceCharacteristics.Right | InputDeviceCharacteristics.Controller | InputDeviceCharacteristics.HeldInHand, queryResult);
         InputDevice rightController = queryResult.Count > 0 ? queryResult[0] : default;
         queryResult.Clear();
 
-        if (rightController != default)
-            ((Umi3dVRInputManager)Umi3dVRInputManager.Instance).AddPhysicalDevice(ControllerType.RightHandController, rightController);
+        //if (rightController != default)
+        //    ((Umi3dVRInputManager)Umi3dVRInputManager.Instance).AddPhysicalDevice(ControllerType.RightHandController, rightController);
     }
 
     void AddHandDevices()
@@ -52,17 +52,17 @@ public class XRInputModalityListener : MonoBehaviour
         InputDevice leftController = queryResult.Count > 0 ? queryResult[0] : default;
         queryResult.Clear();
 
-        if (leftController != default)
-            ((Umi3dVRInputManager)Umi3dVRInputManager.Instance).AddHandTrackedDevice(ControllerType.LeftHandController, leftController);
+        //if (leftController != default)
+        //    ((Umi3dVRInputManager)Umi3dVRInputManager.Instance).AddHandTrackedDevice(ControllerType.LeftHandController, leftController);
 
         InputDevices.GetDevicesWithCharacteristics(InputDeviceCharacteristics.Right | InputDeviceCharacteristics.HandTracking, queryResult);
         InputDevice rightController = queryResult.Count > 0 ? queryResult[0] : default;
         queryResult.Clear();
 
-        if (rightController != default)
-            ((Umi3dVRInputManager)Umi3dVRInputManager.Instance).AddHandTrackedDevice(ControllerType.RightHandController, rightController);
+        //if (rightController != default)
+        //    ((Umi3dVRInputManager)Umi3dVRInputManager.Instance).AddHandTrackedDevice(ControllerType.RightHandController, rightController);
 
-        foreach (VRGestureDevice gestureDevice in UnityEngine.Object.FindObjectsOfType<VRGestureDevice>(true))
-            ((Umi3dVRInputManager)Umi3dVRInputManager.Instance).AddHandTrackedGestureDevice(gestureDevice);
+        //foreach (VRGestureDevice gestureDevice in UnityEngine.Object.FindObjectsOfType<VRGestureDevice>(true))
+        //    ((Umi3dVRInputManager)Umi3dVRInputManager.Instance).AddHandTrackedGestureDevice(gestureDevice);
     }
 }

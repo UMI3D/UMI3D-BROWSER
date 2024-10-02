@@ -16,10 +16,8 @@ limitations under the License.
 
 using System.Collections;
 using umi3d.cdk;
-using umi3d.cdk.userCapture.pose;
 using umi3d.common;
 using umi3d.common.interaction;
-using umi3dVRBrowsersBase.ui.keyboard;
 using umi3dVRBrowsersBase.ui.playerMenu;
 using UnityEngine;
 using UnityEngine.Events;

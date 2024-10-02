@@ -23,6 +23,7 @@ namespace ClientLBE
         public GameObject Player;
         public Transform PersonnalSkeletonContainer;
         public GameObject CameraPlayer;
+        public GameObject Repere;
 
         private Transform scene;
 
@@ -173,11 +174,8 @@ namespace ClientLBE
                 GameObject capsule = GameObject.CreatePrimitive(PrimitiveType.Capsule);
 
                 capsule.transform.SetParent(skeleton.HipsAnchor);  
-
                 capsule.transform.localPosition = new Vector3 (boneTransform.Position.x, 0f, boneTransform.Position.z);
-
                 capsule.transform.localPosition = new Vector3(0f, 0f, 0f);
-
                 capsule.transform.localRotation = boneTransform.Rotation;
                 capsule.transform.localScale = new Vector3(capsule.transform.localScale.x/1.25f, capsule.transform.localScale.y, capsule.transform.localScale.z/ 1.25f); // Ajustez si nécessaire
 
@@ -208,9 +206,12 @@ namespace ClientLBE
 
             List<ARPlane> planesToDestroy = new List<ARPlane>();
 
+
             if (arPlaneManager != null)
             {
                 var trackables = arPlaneManager.trackables;
+
+                Debug.Log("REMY : List trackables -> " + trackables.count);
 
                 foreach (var plane in trackables)
                 {
@@ -233,19 +234,39 @@ namespace ClientLBE
 
             if (automaticCalibration)
             {
+                Debug.Log("REMY : List planesToCalibrate -> " + planesToCalibrate.Count);
+
                 if (planesToCalibrate.Count == 1)
                 {
+
+                    ARPlane selectedPlane = planesToCalibrate[0];
+
                     GameObject calibratorARPlane = new GameObject("Calibreur Plane");
                     calibratorARPlane.transform.position = planesToCalibrate[0].transform.position;
                     calibratorARPlane.transform.rotation = planesToCalibrate[0].transform.rotation;
 
                     calibrator = calibratorARPlane.transform;
                     calibrator.transform.parent = Player.transform;
+
+                    Debug.Log("REMY : Transform ARPlane -> " + calibratorARPlane.transform.position +" + Player transform -> " + Player.transform.position);
+
+                    //Instantiate(Repere, calibratorARPlane.transform.position, Quaternion.identity);
+
+                    // Ajouter des instances de "Repere" à chaque sommet du mesh de l'ARPlane
+                    Mesh mesh = selectedPlane.GetComponent<MeshFilter>().mesh;
+                    Vector3[] vertices = mesh.vertices;
+
+                    foreach (var vertex in vertices)
+                    {
+                        Vector3 worldPosition = selectedPlane.transform.TransformPoint(vertex);
+                        Instantiate(Repere, worldPosition, Quaternion.identity);
+                    }
+
                 }
 
                 else
                 {
-                    Debug.LogError("Multiple ARPlane detected. Only one ARPlane should be selected to serve as a calibrator. Change your environment configuration");
+                    Debug.LogError("REMY : Multiple ARPlane detected. Only one ARPlane should be selected to serve as a calibrator. Change your environment configuration");
                     automaticCalibration = false;
                     SetManualCalibrator();
                 }

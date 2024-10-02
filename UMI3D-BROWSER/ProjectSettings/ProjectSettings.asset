@@ -13,7 +13,7 @@ PlayerSettings:
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: DefaultCompany
-  productName: UMI3D Browser XR Beta
+  productName: UMI3D Browser XR Alpha
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.12156863, g: 0.12156863, b: 0.1254902, a: 1}
@@ -136,7 +136,7 @@ PlayerSettings:
   vulkanEnableLateAcquireNextImage: 0
   vulkanEnableCommandBufferRecycling: 1
   loadStoreDebugModeEnabled: 0
-  bundleVersion: 'b_MR_HandTracking_3_5_121_240930 Sdk: b_2_9_0_240826'
+  bundleVersion: 'a_AR_With_Hand_Tracking_3_6_583_241002 Sdk: b_2_9_0_240826'
   preloadedAssets:
   - {fileID: 11400000, guid: eac67687cb7c1d54bbbd3823149b2e20, type: 2}
   - {fileID: 11400000, guid: e59b6234cb787d0408401706e76f9100, type: 2}
@@ -163,14 +163,14 @@ PlayerSettings:
   androidSupportedAspectRatio: 1
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
-    Android: com.inetum.OculusQuestBrowser.Beta
+    Android: com.inetum.OculusQuestBrowser.Alpha
   buildNumber:
     Standalone: 0
     VisionOS: 0
     iPhone: 0
     tvOS: 0
   overrideDefaultApplicationIdentifier: 1
-  AndroidBundleVersionCode: 30621
+  AndroidBundleVersionCode: 31183
   AndroidMinSdkVersion: 27
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1

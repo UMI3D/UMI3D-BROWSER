@@ -32,6 +32,11 @@ namespace umi3dBrowsers.displayer.ingame
             button.onClick.AddListener(Mute);
         }
 
+        private void OnEnable()
+        {
+            UpdateIcon();
+        }
+
         private void OnDestroy()
         {
             button.onClick.RemoveListener(Mute);
@@ -40,6 +45,11 @@ namespace umi3dBrowsers.displayer.ingame
         private void Mute()
         {
             MicrophoneListener.mute = !MicrophoneListener.mute;
+            UpdateIcon();
+        }
+
+        private void UpdateIcon()
+        {
             icon.sprite = MicrophoneListener.mute ? muteSprite : unmuteSprite;
         }
     }

@@ -250,7 +250,6 @@ namespace ClientLBE
 
                     Debug.Log("REMY : Transform ARPlane -> " + calibratorARPlane.transform.position +" + Player transform -> " + Player.transform.position);
 
-                    //Instantiate(Repere, calibratorARPlane.transform.position, Quaternion.identity);
 
                     // Ajouter des instances de "Repere" à chaque sommet du mesh de l'ARPlane
                     Mesh mesh = selectedPlane.GetComponent<MeshFilter>().mesh;
@@ -336,6 +335,9 @@ namespace ClientLBE
             yield return null;
             yield return null;
 
+            yield return new WaitForSeconds(5f);
+            Debug.Log("REMY : After 5 second");
+
             // TODO check the reason we have to wait
 
             if (automaticCalibration)
@@ -367,6 +369,8 @@ namespace ClientLBE
                     //Création du Parent des ancres
                     guardianParent = new GameObject("Guardian");
                     guardianParent.transform.position = new Vector3(calibrator.transform.position.x, 0.0f, calibrator.transform.position.z);
+
+                    Instantiate(Repere, guardianParent.transform.position, Quaternion.identity);
 
                     GetGuardianArea();
                 }

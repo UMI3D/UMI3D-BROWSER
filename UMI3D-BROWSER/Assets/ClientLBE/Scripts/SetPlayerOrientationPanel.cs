@@ -17,13 +17,18 @@ namespace ClientLBE
         private void Start()
         {
             canvasGroup = this.GetComponent<CanvasGroup>();
+
+            for (int i = 0; i < ButonCollider.Count; i++)
+            {
+                ButonCollider[i].enabled = false;
+            }
         }
 
         public void OpenPanel()
         {
             for(int i = 0; i<ButonCollider.Count; i++)
             {
-                ButonCollider[0].enabled = true;
+                ButonCollider[i].enabled = true;
             }
 
             this.transform.position = new Vector3(playerCamera.transform.position.x, 0.0f, playerCamera.transform.position.z);
@@ -34,7 +39,7 @@ namespace ClientLBE
         {
             for (int i = 0; i < ButonCollider.Count; i++)
             {
-                ButonCollider[0].enabled = false;
+                ButonCollider[i].enabled = false;
             }
             StartCoroutine(FadeCanvasGroup(1f, 0f, fadeDuration));
         }

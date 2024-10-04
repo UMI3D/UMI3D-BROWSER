@@ -49,6 +49,6 @@ namespace umi3dBrowsers.displayer.ingame
         /// <summary>
         /// Show the Emote Panel
         /// </summary>
-        public static readonly string ShownEmotePanel = "show-emote-panel";
+        public static readonly string ToggleEmotePanel = "show-emote-panel";
     }
 }

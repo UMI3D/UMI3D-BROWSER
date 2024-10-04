@@ -58,7 +58,7 @@ namespace umi3dBrowsers.displayer.ingame
 
             EmoteManager.Instance.EmotesLoaded += Setup;
 
-            NotificationHub.Default.Subscribe(this, UiInGameNotificationKeys.ShownEmotePanel, Toggle);
+            NotificationHub.Default.Subscribe(this, UiInGameNotificationKeys.ToggleEmotePanel, Toggle);
 
             gameObject.SetActive(false);
         }

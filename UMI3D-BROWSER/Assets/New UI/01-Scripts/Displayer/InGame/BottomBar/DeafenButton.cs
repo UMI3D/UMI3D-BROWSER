@@ -14,26 +14,25 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils.audio;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace umi3dBrowsers.displayer.ingame
 {
-    public class DeafenButton : MonoBehaviour
+    public class DeafenButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         [SerializeField] private Button button;
         [SerializeField] private Image icon;
-        [SerializeField] private Sprite undeafenSprite;
-        [SerializeField] private Sprite deafenSprite;
+        [SerializeField] private Sprite audioOnSprite;
+        [SerializeField] private Sprite audioOffSprite;
 
-        private float _oldConversationVolume;
-        private float _oldEnvironmentVolume;
+        private float m_BaseVolume;
 
+        private bool IsAudioOn => AudioListener.volume > .0f;
         private void Awake()
         {
-            _oldConversationVolume = 0;
-            _oldEnvironmentVolume = 0;
+            m_BaseVolume = 100.0f;
             button.onClick.AddListener(Deafen);
         }
 
@@ -44,11 +43,26 @@ namespace umi3dBrowsers.displayer.ingame
 
         private void Deafen()
         {
-            AudioMixerControl.SetVolume(AudioMixerControl.Group.Conversation, _oldConversationVolume);
-            AudioMixerControl.SetVolume(AudioMixerControl.Group.Environment, _oldEnvironmentVolume);
-            icon.sprite = _oldEnvironmentVolume > 0 ? undeafenSprite : deafenSprite;
-            _oldConversationVolume = _oldConversationVolume == 0 ? 100 : 0;
-            _oldEnvironmentVolume = _oldEnvironmentVolume == 0 ? 100 : 0;
+            if (AudioListener.volume > 0)
+                m_BaseVolume = AudioListener.volume;
+
+            AudioListener.volume = IsAudioOn ? .0f : m_BaseVolume;
+            UpdateIcon();
+        }
+
+        private void UpdateIcon()
+        {
+            icon.sprite = IsAudioOn ? audioOnSprite : audioOffSprite;
+        }
+
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            icon.sprite = !IsAudioOn ? audioOnSprite : audioOffSprite;
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            UpdateIcon();
         }
     }
 }

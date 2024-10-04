@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,20 +24,29 @@ namespace umi3dBrowsers.displayer.ingame
     public class OpenEmoteButton : MonoBehaviour
     {
         [SerializeField] private Button button;
+        [SerializeField] private GameObject activeBackground;
 
         private void Awake()
         {
             button.onClick.AddListener(OpenEmote);
+            NotificationHub.Default.Subscribe(this, UiInGameNotificationKeys.ToggleEmotePanel, ToogleBackground);
+            activeBackground.SetActive(false);
         }
 
         private void OnDestroy()
         {
             button.onClick.RemoveListener(OpenEmote);
+            NotificationHub.Default.Unsubscribe(this);
         }
 
         private void OpenEmote()
         {
-            NotificationHub.Default.Notify(this, UiInGameNotificationKeys.ShownEmotePanel);
+            NotificationHub.Default.Notify(this, UiInGameNotificationKeys.ToggleEmotePanel);
+        }
+
+        private void ToogleBackground(Notification notification)
+        {
+            activeBackground.SetActive(!activeBackground.activeSelf);
         }
     }
 }

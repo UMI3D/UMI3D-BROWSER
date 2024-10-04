@@ -16,16 +16,19 @@ limitations under the License.
 
 using umi3d.cdk.collaboration;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace umi3dBrowsers.displayer.ingame
 {
-    public class MuteButton : MonoBehaviour
+    public class MuteButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         [SerializeField] private Button button;
         [SerializeField] private Image icon;
         [SerializeField] private Sprite unmuteSprite;
         [SerializeField] private Sprite muteSprite;
+
+        private bool m_IsClicked;
 
         private void Awake()
         {
@@ -46,11 +49,24 @@ namespace umi3dBrowsers.displayer.ingame
         {
             MicrophoneListener.mute = !MicrophoneListener.mute;
             UpdateIcon();
+            EventSystem.current.SetSelectedGameObject(null);
         }
 
         private void UpdateIcon()
         {
             icon.sprite = MicrophoneListener.mute ? muteSprite : unmuteSprite;
+        }
+
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            icon.sprite = !MicrophoneListener.mute ? muteSprite : unmuteSprite;
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            if (m_IsClicked)
+                return;
+            UpdateIcon();
         }
     }
 }

@@ -334,7 +334,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 3.1090717, y: 19}
-  m_SizeDelta: {x: 20, y: 20}
+  m_SizeDelta: {x: 24, y: 24}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &72316779
 MonoBehaviour:
@@ -1086,6 +1086,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a67c2acdfbadf3e47b0b4e00d21537a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  infoText: {fileID: 14239727}
   button: {fileID: 248655157}
   hoverBorder: {fileID: 1551390968}
   icon: {fileID: 672085689}
@@ -1237,6 +1238,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a67c2acdfbadf3e47b0b4e00d21537a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  infoText: {fileID: 14239727}
   button: {fileID: 295205333}
   hoverBorder: {fileID: 1147975129}
   icon: {fileID: 1783803707}
@@ -2855,6 +2857,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a67c2acdfbadf3e47b0b4e00d21537a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  infoText: {fileID: 14239727}
   button: {fileID: 473396302}
   hoverBorder: {fileID: 2047776139}
   icon: {fileID: 2018592958}
@@ -4057,7 +4060,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -3.1091104, y: 19}
-  m_SizeDelta: {x: 20, y: 20}
+  m_SizeDelta: {x: 24, y: 24}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &672085689
 MonoBehaviour:
@@ -4592,6 +4595,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a67c2acdfbadf3e47b0b4e00d21537a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  infoText: {fileID: 14239727}
   button: {fileID: 803050422}
   hoverBorder: {fileID: 1160788594}
   icon: {fileID: 1416564857}
@@ -6593,6 +6597,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a67c2acdfbadf3e47b0b4e00d21537a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  infoText: {fileID: 14239727}
   button: {fileID: 1297180499}
   hoverBorder: {fileID: 170121551}
   icon: {fileID: 72316779}
@@ -7483,6 +7488,50 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!1 &1432432511
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1432432513}
+  - component: {fileID: 1432432512}
+  m_Layer: 0
+  m_Name: UMI3DClientServer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1432432512
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1432432511}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b13949bbb663ade4abfcf627a6e7cb65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1432432513
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1432432511}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1460446019
 GameObject:
   m_ObjectHideFlags: 0
@@ -7593,7 +7642,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 18.6269}
-  m_SizeDelta: {x: 20, y: 20}
+  m_SizeDelta: {x: 24, y: 24}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1483329861
 MonoBehaviour:
@@ -7870,6 +7919,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a67c2acdfbadf3e47b0b4e00d21537a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  infoText: {fileID: 14239727}
   button: {fileID: 1489184300}
   hoverBorder: {fileID: 544510494}
   icon: {fileID: 1483329861}
@@ -8910,7 +8960,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 3, y: 19}
-  m_SizeDelta: {x: 20, y: 20}
+  m_SizeDelta: {x: 24, y: 24}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1783803707
 MonoBehaviour:
@@ -9735,7 +9785,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 17.179117}
-  m_SizeDelta: {x: 20, y: 20}
+  m_SizeDelta: {x: 24, y: 24}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2018592958
 MonoBehaviour:
@@ -10568,7 +10618,7 @@ PrefabInstance:
     - target: {fileID: 2665707191214698736, guid: 5c63613f6a78ab74d89e1c9deec8e35d,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 241
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2665707191214698736, guid: 5c63613f6a78ab74d89e1c9deec8e35d,
         type: 3}
@@ -10721,7 +10771,7 @@ PrefabInstance:
     - target: {fileID: 3712882817880114157, guid: 6f4dc3c714aec7b409bef6d521fbba08,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 133
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3712882817880114157, guid: 6f4dc3c714aec7b409bef6d521fbba08,
         type: 3}
@@ -10992,3 +11042,4 @@ SceneRoots:
   m_Roots:
   - {fileID: 213132175}
   - {fileID: 698236964}
+  - {fileID: 1432432513}

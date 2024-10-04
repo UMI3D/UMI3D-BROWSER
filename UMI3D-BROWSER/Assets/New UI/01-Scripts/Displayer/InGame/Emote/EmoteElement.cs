@@ -14,21 +14,27 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using TMPro;
 using umi3d.cdk.collaboration.emotes;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Localization.Components;
 using UnityEngine.UI;
 
 namespace umi3dBrowsers.displayer.ingame
 {
     public class EmoteElement : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
+        [SerializeField] private LocalizeStringEvent infoText;
         [SerializeField] private Button button;
         [SerializeField] private Image hoverBorder;
         [SerializeField] private Image icon;
 
+        private Emote m_Emote = null;
+
         public void Set(Emote emote)
         {
+            m_Emote = emote;
             button.onClick.RemoveAllListeners();
             button.onClick.AddListener(() => EmoteManager.Instance.PlayEmote(emote));
             icon.sprite = emote.icon;
@@ -50,6 +56,7 @@ namespace umi3dBrowsers.displayer.ingame
                 return;
 
             hoverBorder.gameObject.SetActive(true);
+            infoText.SetEntry(m_Emote.Label);
         }
 
         public void OnPointerExit(PointerEventData eventData)
@@ -58,6 +65,7 @@ namespace umi3dBrowsers.displayer.ingame
                 return;
 
             hoverBorder.gameObject.SetActive(false);
+            infoText.SetEntry("select-emote");
         }
     }
 }

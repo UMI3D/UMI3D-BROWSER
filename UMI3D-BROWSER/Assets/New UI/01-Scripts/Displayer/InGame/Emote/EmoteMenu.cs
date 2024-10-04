@@ -57,6 +57,7 @@ namespace umi3dBrowsers.displayer.ingame
             });
 
             EmoteManager.Instance.EmotesLoaded += Setup;
+            EmoteManager.Instance.EmoteEnded += CloseEmoteMenu;
 
             NotificationHub.Default.Subscribe(this, UiInGameNotificationKeys.ToggleEmotePanel, Toggle);
 
@@ -66,6 +67,14 @@ namespace umi3dBrowsers.displayer.ingame
         private void OnDestroy()
         {
             EmoteManager.Instance.EmotesLoaded -= Setup;
+            EmoteManager.Instance.EmoteEnded -= CloseEmoteMenu;
+
+            NotificationHub.Default.Unsubscribe(this);
+        }
+
+        private void CloseEmoteMenu(Emote emote)
+        {
+            NotificationHub.Default.Notify(this, UiInGameNotificationKeys.ToggleEmotePanel);
         }
 
         private void Toggle()

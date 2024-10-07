@@ -14,18 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
-using UnityEngine;
-using UnityEngine.EventSystems;
-
-namespace umi3d.browserRuntime.ui.tablet.audio
+namespace umi3d.browserRuntime.ui.inGame
 {
-    public class TabletAudioButton : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler
+    /// <summary>
+    /// Notification Key used for the Ui in game (Inside an environment)
+    /// </summary>
+    public static class InGameNotificationKeys
     {
-        public void OnPointerClick(PointerEventData eventData)
-            => NotificationHub.Default.Notify(this, TabletNotificationKeys.PlayHoverSound);
-
-        public void OnPointerEnter(PointerEventData eventData)
-            => NotificationHub.Default.Notify(this, TabletNotificationKeys.PlayClickSound);
+        public static readonly string PlayHoverSound = "inGame-playSound-hover";
+        public static readonly string PlayClickSound = "inGame-playSound-click";
     }
 }

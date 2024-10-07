@@ -15,11 +15,10 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace umi3dBrowsers.displayer.ingame
+namespace umi3d.browserRuntime.ui.inGame.emote
 {
     public class OpenEmoteButton : MonoBehaviour
     {
@@ -28,25 +27,31 @@ namespace umi3dBrowsers.displayer.ingame
 
         private void Awake()
         {
-            button.onClick.AddListener(OpenEmote);
-            NotificationHub.Default.Subscribe(this, UiInGameNotificationKeys.ToggleEmotePanel, ToogleBackground);
+            button.onClick.AddListener(ToggleEmote);
+            NotificationHub.Default.Subscribe(this, EmoteNotificationKeys.Open, ShowBackground);
+            NotificationHub.Default.Subscribe(this, EmoteNotificationKeys.Close, HideBackground);
             activeBackground.SetActive(false);
         }
 
         private void OnDestroy()
         {
-            button.onClick.RemoveListener(OpenEmote);
+            button.onClick.RemoveListener(ToggleEmote);
             NotificationHub.Default.Unsubscribe(this);
         }
 
-        private void OpenEmote()
+        private void ToggleEmote()
         {
-            NotificationHub.Default.Notify(this, UiInGameNotificationKeys.ToggleEmotePanel);
+            NotificationHub.Default.Notify(this, activeBackground.activeSelf ? EmoteNotificationKeys.Close : EmoteNotificationKeys.Open);
         }
 
-        private void ToogleBackground(Notification notification)
+        private void ShowBackground()
         {
-            activeBackground.SetActive(!activeBackground.activeSelf);
+            activeBackground.SetActive(true);
+        }
+
+        private void HideBackground()
+        {
+            activeBackground.SetActive(false);
         }
     }
 }

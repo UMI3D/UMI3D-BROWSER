@@ -16,25 +16,16 @@ limitations under the License.
 
 using inetum.unityUtils;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-namespace umi3dBrowsers.displayer.ingame
+namespace umi3d.browserRuntime.ui.inGame.tablet.audio
 {
-    public class MainInGamePanel : MonoBehaviour
+    public class TabletAudioButton : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler
     {
-        private void Awake()
-        {
-            NotificationHub.Default.Subscribe(this, UiInGameNotificationKeys.ShowSocialPanel, Show);
-        }
+        public void OnPointerClick(PointerEventData eventData)
+            => NotificationHub.Default.Notify(this, TabletNotificationKeys.PlayHoverSound);
 
-        private void OnDestroy()
-        {
-            NotificationHub.Default.Unsubscribe(this);
-        }
-
-        private void Show()
-        {
-            this.gameObject.SetActive(true);
-        }
+        public void OnPointerEnter(PointerEventData eventData)
+            => NotificationHub.Default.Notify(this, TabletNotificationKeys.PlayClickSound);
     }
 }
-

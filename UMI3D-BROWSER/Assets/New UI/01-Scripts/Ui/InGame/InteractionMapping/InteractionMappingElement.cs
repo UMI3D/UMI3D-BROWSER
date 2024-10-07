@@ -14,29 +14,26 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
-using umi3d.browserRuntime.notificationKeys;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace umi3d.browserRuntime.ui.windowBar
+namespace umi3d.browserRuntime.ui.inGame.interactionMapping
 {
-    public class HideApplicationButton : MonoBehaviour
+    public class InteractionMappingElement : MonoBehaviour
     {
-        [SerializeField] private Button button;
-        private void Awake()
+        [SerializeField] private TMP_Text actionName;
+        [SerializeField] private Transform keyContent;
+        [SerializeField] private GameObject keyPrefab;
+
+        public void Initialize(string name)
         {
-            button.onClick.AddListener(Hide);
+            actionName.text = name;
         }
 
-        private void OnDestroy()
+        public void Add(Sprite sprite)
         {
-            button.onClick.RemoveListener(Hide);
-        }
-
-        private void Hide()
-        {
-            NotificationHub.Default.Notify(this, WindowsManagerNotificationKey.Hide);
+            Instantiate(keyPrefab, keyContent).GetComponent<Image>().sprite = sprite;
         }
     }
 }

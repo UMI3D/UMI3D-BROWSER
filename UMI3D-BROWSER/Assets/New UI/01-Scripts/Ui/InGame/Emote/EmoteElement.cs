@@ -21,7 +21,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.Localization.Components;
 using UnityEngine.UI;
 
-namespace umi3dBrowsers.displayer.ingame
+namespace umi3d.browserRuntime.ui.inGame.emote
 {
     public class EmoteElement : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
@@ -30,9 +30,9 @@ namespace umi3dBrowsers.displayer.ingame
         [SerializeField] private Image hoverBorder;
         [SerializeField] private Image icon;
 
-        private Emote m_Emote = null;
+        private umi3d.cdk.collaboration.emotes.Emote m_Emote = null;
 
-        public void Set(Emote emote)
+        public void Set(umi3d.cdk.collaboration.emotes.Emote emote)
         {
             m_Emote = emote;
             button.onClick.RemoveAllListeners();

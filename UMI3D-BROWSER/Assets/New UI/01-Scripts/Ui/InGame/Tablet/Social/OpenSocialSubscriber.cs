@@ -18,7 +18,7 @@ using inetum.unityUtils;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace umi3dBrowsers.displayer.ingame
+namespace umi3d.browserRuntime.ui.inGame.tablet.social
 {
     public class OpenSocialSubscriber : MonoBehaviour
     {
@@ -26,7 +26,7 @@ namespace umi3dBrowsers.displayer.ingame
 
         private void Awake()
         {
-            NotificationHub.Default.Subscribe(this, UiInGameNotificationKeys.ShowSocialPanel, Show);
+            NotificationHub.Default.Subscribe(this, TabletNotificationKeys.OpenSocial, Show);
         }
 
         private void OnDestroy()

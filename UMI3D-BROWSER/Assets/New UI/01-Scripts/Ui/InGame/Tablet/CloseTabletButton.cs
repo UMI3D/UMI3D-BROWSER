@@ -18,25 +18,24 @@ using inetum.unityUtils;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace umi3dBrowsers.displayer.ingame
+namespace umi3d.browserRuntime.ui.inGame.tablet
 {
-    public class OpenSocialButton : MonoBehaviour
+    [RequireComponent(typeof(Button))]
+    public class CloseTabletButton : MonoBehaviour
     {
-        [SerializeField] private Button button;
-
         private void Awake()
         {
-            button.onClick.AddListener(OpenSocial);
+            GetComponent<Button>().onClick.AddListener(CloseTablet);
         }
 
         private void OnDestroy()
         {
-            button.onClick.RemoveListener(OpenSocial);
+            GetComponent<Button>().onClick.RemoveListener(CloseTablet);
         }
 
-        private void OpenSocial()
+        private void CloseTablet()
         {
-            NotificationHub.Default.Notify(this, UiInGameNotificationKeys.ShowSocialPanel);
+            NotificationHub.Default.Notify(this, TabletNotificationKeys.Close);
         }
     }
 }

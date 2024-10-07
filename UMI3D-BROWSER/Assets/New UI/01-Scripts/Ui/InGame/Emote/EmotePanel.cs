@@ -20,9 +20,9 @@ using umi3d.cdk.collaboration.emotes;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace umi3dBrowsers.displayer.ingame
+namespace umi3d.browserRuntime.ui.inGame.emote
 {
-    public class EmoteMenu : MonoBehaviour
+    public class EmotePanel : MonoBehaviour
     {
         [SerializeField] private List<EmoteElement> elements;
         [SerializeField] private Button leftButton;
@@ -59,7 +59,8 @@ namespace umi3dBrowsers.displayer.ingame
             EmoteManager.Instance.EmotesLoaded += Setup;
             EmoteManager.Instance.EmoteEnded += CloseEmoteMenu;
 
-            NotificationHub.Default.Subscribe(this, UiInGameNotificationKeys.ToggleEmotePanel, Toggle);
+            NotificationHub.Default.Subscribe(this, EmoteNotificationKeys.Open, Open);
+            NotificationHub.Default.Subscribe(this, EmoteNotificationKeys.Close, Close);
 
             gameObject.SetActive(false);
         }
@@ -72,24 +73,29 @@ namespace umi3dBrowsers.displayer.ingame
             NotificationHub.Default.Unsubscribe(this);
         }
 
-        private void CloseEmoteMenu(Emote emote)
+        private void CloseEmoteMenu(umi3d.cdk.collaboration.emotes.Emote emote)
         {
-            NotificationHub.Default.Notify(this, UiInGameNotificationKeys.ToggleEmotePanel);
+            NotificationHub.Default.Notify(this, EmoteNotificationKeys.Close);
         }
 
-        private void Toggle()
+        private void Open()
         {
-            gameObject.SetActive(!gameObject.activeSelf);
+            gameObject.SetActive(true);
         }
 
-        private void Setup(IReadOnlyList<Emote> emotes)
+        private void Close()
+        {
+            gameObject.SetActive(false);
+        }
+
+        private void Setup(IReadOnlyList<umi3d.cdk.collaboration.emotes.Emote> emotes)
         {
             PrepareListOfEmote(emotes);
             currentEmotePage = 0;
             UpdateEmotePage();
         }
 
-        private void PrepareListOfEmote(IReadOnlyList<Emote> emotes)
+        private void PrepareListOfEmote(IReadOnlyList<umi3d.cdk.collaboration.emotes.Emote> emotes)
         {
             lstEmotes.Clear();
             for (int i = 0; i < emotes.Count; i++)

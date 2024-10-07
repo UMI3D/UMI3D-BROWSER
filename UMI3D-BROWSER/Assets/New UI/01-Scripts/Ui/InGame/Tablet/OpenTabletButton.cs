@@ -15,29 +15,36 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
-using umi3d.browserRuntime.notificationKeys;
-using umi3d.browserRuntime.pc;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace umi3d.browserRuntime.ui.windowBar
+namespace umi3d.browserRuntime.ui.inGame.tablet
 {
-    public class MinimizeMaximizeApplicationButton : MonoBehaviour
+    [RequireComponent(typeof(Button))]
+    public class OpenTabletButton : MonoBehaviour
     {
-        [SerializeField] private Button button;
+
         private void Awake()
         {
-            button.onClick.AddListener(MinimizeOrMaximize);
+            GetComponent<Button>().onClick.AddListener(OpenTablet);
+            NotificationHub.Default.Subscribe(this, TabletNotificationKeys.Close, Open);
         }
 
         private void OnDestroy()
         {
-            button.onClick.RemoveListener(MinimizeOrMaximize);
+            GetComponent<Button>().onClick.RemoveListener(OpenTablet);
+            NotificationHub.Default.Unsubscribe(this);
         }
 
-        private void MinimizeOrMaximize()
+        private void OpenTablet()
         {
-            NotificationHub.Default.Notify(this, WindowsManager.IsWindowZoomed ? WindowsManagerNotificationKey.Minimize : WindowsManagerNotificationKey.Maximize);
+            NotificationHub.Default.Notify(this, TabletNotificationKeys.Open);
+            gameObject.SetActive(false);
+        }
+
+        private void Open(Notification notification)
+        {
+            gameObject.SetActive(true);
         }
     }
 }

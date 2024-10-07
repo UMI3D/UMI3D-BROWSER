@@ -21,7 +21,7 @@ using TMPro;
 using umi3d.cdk.collaboration;
 using UnityEngine;
 
-namespace umi3d.browserRuntime.ui.tablet.screens
+namespace umi3d.browserRuntime.ui.inGame.tablet.screens
 {
     public class SocialScreen : MonoBehaviour
     {

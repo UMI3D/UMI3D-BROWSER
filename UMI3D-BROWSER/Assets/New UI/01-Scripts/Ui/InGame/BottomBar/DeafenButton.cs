@@ -18,7 +18,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace umi3dBrowsers.displayer.ingame
+namespace umi3d.browserRuntime.ui.inGame.bottomBar
 {
     public class DeafenButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
@@ -62,6 +62,8 @@ namespace umi3dBrowsers.displayer.ingame
 
         public void OnPointerExit(PointerEventData eventData)
         {
+            EventSystem.current.SetSelectedGameObject(null);
+
             UpdateIcon();
         }
     }

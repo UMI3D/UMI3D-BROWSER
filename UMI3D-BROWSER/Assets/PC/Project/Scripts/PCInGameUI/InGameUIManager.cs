@@ -16,7 +16,7 @@ limitations under the License.
 
 using umi3d.baseBrowser.cursor;
 using umi3d.baseBrowser.inputs.interactions;
-using umi3dBrowsers.displayer.ingame;
+using umi3d.browserRuntime.ui.inGame.tablet;
 using umi3dBrowsers.linker.ingameui;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -30,7 +30,7 @@ namespace umi3dBrowsers.ingame_ui
         [SerializeField] private InputAction openCloseInGamePanel;
 
         [Header("Dependencies")]
-        [SerializeField] private MainInGamePanel mainInGamePanel;
+        [SerializeField] private TabletPanel mainInGamePanel;
 
         [Header("Linkers")]
         [SerializeField] private InGamePanelLinker inGamePanelLinker;
@@ -40,6 +40,15 @@ namespace umi3dBrowsers.ingame_ui
         [SerializeField] private bool debugMode;
 
         private void Awake()
+        {
+            openCloseInGamePanel.performed += i => ToggleInGamePanel();
+            inGamePanelLinker.OnOpenClosePanel += () => ToggleInGamePanel();
+            inGameLinker.OnEnableDisableInGameUI += isEnable => gameObject.SetActive(isEnable);
+
+            BaseCursor.SetMovement(this, CursorMovement.Free);
+        }
+
+        private void Start()
         {
             openCloseInGamePanel.Enable();
 
@@ -51,14 +60,8 @@ namespace umi3dBrowsers.ingame_ui
                 Cursor.lockState = CursorLockMode.Confined;
             }
 
-            openCloseInGamePanel.performed += i => ToggleInGamePanel();
-            inGamePanelLinker.OnOpenClosePanel += () => ToggleInGamePanel();
-            inGameLinker.OnEnableDisableInGameUI += isEnable => gameObject.SetActive(isEnable);
-
             if (!debugMode)
                 gameObject.SetActive(inGameLinker.IsEnable);
-
-            BaseCursor.SetMovement(this, CursorMovement.Free);
         }
 
         private void OnEnable()

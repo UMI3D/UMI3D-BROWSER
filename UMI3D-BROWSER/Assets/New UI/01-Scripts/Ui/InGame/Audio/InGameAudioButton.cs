@@ -15,28 +15,17 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
-using umi3d.browserRuntime.notificationKeys;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
-namespace umi3d.browserRuntime.ui.windowBar
+namespace umi3d.browserRuntime.ui.inGame.audio
 {
-    public class HideApplicationButton : MonoBehaviour
+    public class InGameAudioButton : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler
     {
-        [SerializeField] private Button button;
-        private void Awake()
-        {
-            button.onClick.AddListener(Hide);
-        }
+        public void OnPointerClick(PointerEventData eventData)
+            => NotificationHub.Default.Notify(this, InGameNotificationKeys.PlayHoverSound);
 
-        private void OnDestroy()
-        {
-            button.onClick.RemoveListener(Hide);
-        }
-
-        private void Hide()
-        {
-            NotificationHub.Default.Notify(this, WindowsManagerNotificationKey.Hide);
-        }
+        public void OnPointerEnter(PointerEventData eventData)
+            => NotificationHub.Default.Notify(this, InGameNotificationKeys.PlayClickSound);
     }
 }

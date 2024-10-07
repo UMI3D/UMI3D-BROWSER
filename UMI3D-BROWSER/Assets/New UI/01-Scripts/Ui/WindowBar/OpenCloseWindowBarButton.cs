@@ -17,7 +17,7 @@ limitations under the License.
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace umi3dBrowsers.displayer.windowBar
+namespace umi3d.browserRuntime.ui.windowBar
 {
     public class OpenCloseWindowBarButton : MonoBehaviour
     {

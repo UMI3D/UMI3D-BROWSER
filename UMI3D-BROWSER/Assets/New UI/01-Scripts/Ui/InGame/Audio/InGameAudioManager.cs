@@ -17,10 +17,10 @@ limitations under the License.
 using inetum.unityUtils;
 using UnityEngine;
 
-namespace umi3d.browserRuntime.ui.tablet.audio
+namespace umi3d.browserRuntime.ui.inGame.audio
 {
     [RequireComponent(typeof(AudioSource))]
-    public class TabletAudioManager : MonoBehaviour
+    public class InGameAudioManager : MonoBehaviour
     {
         [SerializeField] private AudioClip hoverSound;
         [SerializeField] private AudioClip clickSound;
@@ -31,8 +31,8 @@ namespace umi3d.browserRuntime.ui.tablet.audio
         {
             audioSource = GetComponent<AudioSource>();
 
-            NotificationHub.Default.Subscribe(this, TabletNotificationKeys.PlayHoverSound, PlayHover);
-            NotificationHub.Default.Subscribe(this, TabletNotificationKeys.PlayClickSound, PlayerClick);
+            NotificationHub.Default.Subscribe(this, InGameNotificationKeys.PlayHoverSound, PlayHover);
+            NotificationHub.Default.Subscribe(this, InGameNotificationKeys.PlayClickSound, PlayerClick);
         }
 
         private void PlayHover()

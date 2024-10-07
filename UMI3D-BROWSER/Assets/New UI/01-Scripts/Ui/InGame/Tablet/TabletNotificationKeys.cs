@@ -14,11 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-namespace umi3d.browserRuntime.ui.tablet
+namespace umi3d.browserRuntime.ui.inGame.tablet
 {
     public static class TabletNotificationKeys
     {
-        public static string PlayHoverSound = "windowBar-playSound-hover";
-        public static string PlayClickSound = "windowBar-playSound-click";
+        public static readonly string Open = "tablet-open";
+        public static readonly string OpenSocial = "tablet-open-social";
+        public static readonly string Close = "tablet-close";
+        public static readonly string PlayHoverSound = "tablet-playSound-hover";
+        public static readonly string PlayClickSound = "tablet-playSound-click";
     }
 }

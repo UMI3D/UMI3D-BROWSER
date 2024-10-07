@@ -19,7 +19,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace umi3dBrowsers.displayer.ingame
+namespace umi3d.browserRuntime.ui.inGame.bottomBar
 {
     public class MuteButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
@@ -27,8 +27,6 @@ namespace umi3dBrowsers.displayer.ingame
         [SerializeField] private Image icon;
         [SerializeField] private Sprite unmuteSprite;
         [SerializeField] private Sprite muteSprite;
-
-        private bool m_IsClicked;
 
         private void Awake()
         {
@@ -49,7 +47,6 @@ namespace umi3dBrowsers.displayer.ingame
         {
             MicrophoneListener.mute = !MicrophoneListener.mute;
             UpdateIcon();
-            EventSystem.current.SetSelectedGameObject(null);
         }
 
         private void UpdateIcon()
@@ -64,8 +61,8 @@ namespace umi3dBrowsers.displayer.ingame
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            if (m_IsClicked)
-                return;
+            EventSystem.current.SetSelectedGameObject(null);
+
             UpdateIcon();
         }
     }

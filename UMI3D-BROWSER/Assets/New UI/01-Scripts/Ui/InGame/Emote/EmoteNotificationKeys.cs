@@ -14,23 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using umi3d.browserRuntime.pc;
-using UnityEngine;
-
-namespace umi3dBrowsers.displayer.windowBar
+namespace umi3d.browserRuntime.ui.inGame.emote
 {
-    public class WindowBarDisplayer : MonoBehaviour
+    public static class EmoteNotificationKeys
     {
-#if UNITY_EDITOR
-        private void Awake()
-        {
-            transform.parent.gameObject.SetActive(false);
-        }
-#endif
-
-        private void Update()
-        {
-            WindowsManager.Update();
-        }
+        public static readonly string Open = "emote-open";
+        public static readonly string Close = "emote-close";
     }
 }

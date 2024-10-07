@@ -14,30 +14,23 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
-using umi3d.browserRuntime.notificationKeys;
 using umi3d.browserRuntime.pc;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.ui.windowBar
 {
-    public class MinimizeMaximizeApplicationButton : MonoBehaviour
+    public class WindowBarPanel : MonoBehaviour
     {
-        [SerializeField] private Button button;
+#if UNITY_EDITOR
         private void Awake()
         {
-            button.onClick.AddListener(MinimizeOrMaximize);
+            transform.parent.gameObject.SetActive(false);
         }
+#endif
 
-        private void OnDestroy()
+        private void Update()
         {
-            button.onClick.RemoveListener(MinimizeOrMaximize);
-        }
-
-        private void MinimizeOrMaximize()
-        {
-            NotificationHub.Default.Notify(this, WindowsManager.IsWindowZoomed ? WindowsManagerNotificationKey.Minimize : WindowsManagerNotificationKey.Maximize);
+            WindowsManager.Update();
         }
     }
 }

@@ -14,24 +14,29 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using TMPro;
+using inetum.unityUtils;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-public class InteractionMappingDisplayer : MonoBehaviour
+namespace umi3d.browserRuntime.ui.inGame.tablet.social
 {
-    [SerializeField] private TMP_Text actionName;
-    [SerializeField] private Transform keyContent;
-    [SerializeField] private GameObject keyPrefab;
-
-    public void Initialize(string name)
+    public class OpenSocialButton : MonoBehaviour
     {
-        actionName.text = name;
-    }
+        [SerializeField] private Button button;
 
-    public void Add(Sprite sprite)
-    {
-        Instantiate(keyPrefab, keyContent).GetComponent<Image>().sprite = sprite;
+        private void Awake()
+        {
+            button.onClick.AddListener(OpenSocial);
+        }
+
+        private void OnDestroy()
+        {
+            button.onClick.RemoveListener(OpenSocial);
+        }
+
+        private void OpenSocial()
+        {
+            NotificationHub.Default.Notify(this, TabletNotificationKeys.OpenSocial);
+        }
     }
 }

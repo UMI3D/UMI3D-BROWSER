@@ -18,14 +18,14 @@ using inetum.unityUtils;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace umi3d.browserRuntime.ui.windowBar.audio
+namespace umi3d.browserRuntime.ui.tablet.audio
 {
-    public class WindowBarAudioButton : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler
+    public class TabletAudioButton : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler
     {
         public void OnPointerClick(PointerEventData eventData)
-            => NotificationHub.Default.Notify(this, WindowBarNotificationKeys.PlayHoverSound);
+            => NotificationHub.Default.Notify(this, TabletNotificationKeys.PlayHoverSound);
 
         public void OnPointerEnter(PointerEventData eventData)
-            => NotificationHub.Default.Notify(this, WindowBarNotificationKeys.PlayClickSound);
+            => NotificationHub.Default.Notify(this, TabletNotificationKeys.PlayClickSound);
     }
 }

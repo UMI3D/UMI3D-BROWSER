@@ -2971,8 +2971,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   button: {fileID: 575513382}
   icon: {fileID: 1134207524}
-  audioOnSprite: {fileID: 21300000, guid: 91c9224f99a43f7449fbcbd2fc17dcb9, type: 3}
-  audioOffSprite: {fileID: 21300000, guid: 44373fa1b5f2b0c4798e28019722473e, type: 3}
+  audioOnSprite: {fileID: 21300000, guid: 5c8d70f1241be1f40a7081e4c94ca6d7, type: 3}
+  audioOffSprite: {fileID: 21300000, guid: 3ccfac26cb9f957439d47d3df4ab079b, type: 3}
 --- !u!114 &575513386
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3504,9 +3504,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 77e9dbe18b0d69e4b973840ad7fd8e9b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6d019eaca089dd248b5447ac60fc69c5, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -5253,8 +5253,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 5c9401ac88ec72b47883af3ec0d8bf4e, type: 3}
-  m_Type: 0
+  m_Sprite: {fileID: 21300000, guid: 448a981b62e7b604bbfa76fbc8e5b693, type: 3}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -5262,7 +5262,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
+  m_PixelsPerUnitMultiplier: 8
 --- !u!222 &950493204
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5877,9 +5877,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 91c9224f99a43f7449fbcbd2fc17dcb9, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5c8d70f1241be1f40a7081e4c94ca6d7, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -6362,9 +6362,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: edc08c24aaa09b842baef65c38dcea07, type: 3}
+  m_Sprite: {fileID: 21300000, guid: f3ce64d4acb3f224fb9f912e8f6fb35c, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -8580,7 +8580,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: -16, y: -16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1717919886
 MonoBehaviour:
@@ -8602,7 +8602,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 616d6aa68d9f107488133cc5ecc96e4b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 753c0c55b8d0c7f4d90f74f3f57898c6, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -10174,7 +10174,7 @@ MonoBehaviour:
       m_Calls: []
   m_Sprite: {fileID: 21300000, guid: 6a81eba68cd5bd74b86f50206d89f9d1, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -10554,8 +10554,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   button: {fileID: 2127824592}
   icon: {fileID: 1234038322}
-  unmuteSprite: {fileID: 21300000, guid: edc08c24aaa09b842baef65c38dcea07, type: 3}
-  muteSprite: {fileID: 21300000, guid: c6a7b3e48ddee2146b237531af69e472, type: 3}
+  unmuteSprite: {fileID: 21300000, guid: f3ce64d4acb3f224fb9f912e8f6fb35c, type: 3}
+  muteSprite: {fileID: 21300000, guid: 0806647aa58551642a24db95729f32be, type: 3}
 --- !u!114 &2127824596
 MonoBehaviour:
   m_ObjectHideFlags: 0

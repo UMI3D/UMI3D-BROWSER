@@ -21,6 +21,8 @@ namespace umi3d.browserRuntime.ui.inGame.tablet
         public static readonly string Open = "tablet-open";
         public static readonly string OpenUserNotification = "tablet-open-userNotification";
         public static readonly string OpenSocial = "tablet-open-social";
+        public static readonly string OpenSettings = "tablet-open-settings";
+        public static readonly string OpenLibraries = "tablet-open-libraries";
 
         public static readonly string Close = "tablet-close";
         public static readonly string CloseScreens = "tablet-close-screens";

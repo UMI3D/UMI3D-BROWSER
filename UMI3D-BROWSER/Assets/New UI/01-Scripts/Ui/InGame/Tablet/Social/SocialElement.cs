@@ -20,7 +20,7 @@ using umi3d.cdk.collaboration;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace umi3d.browserRuntime.ui.inGame.tablet.screens
+namespace umi3d.browserRuntime.ui.inGame.tablet.social
 {
     public class SocialElement : MonoBehaviour
     {

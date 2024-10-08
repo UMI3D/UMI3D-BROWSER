@@ -19,9 +19,18 @@ namespace umi3d.browserRuntime.ui.inGame.tablet
     public static class TabletNotificationKeys
     {
         public static readonly string Open = "tablet-open";
+        public static readonly string OpenUserNotification = "tablet-open-userNotification";
         public static readonly string OpenSocial = "tablet-open-social";
+
         public static readonly string Close = "tablet-close";
+        public static readonly string CloseScreens = "tablet-close-screens";
+
         public static readonly string PlayHoverSound = "tablet-playSound-hover";
         public static readonly string PlayClickSound = "tablet-playSound-click";
+
+        public static readonly string NewScreenSelected = "tablet-newScreenSelected";
+
+        public static readonly string UserNotificationReceived = "tablet-userNotification-received";
+        public static readonly string ClickButtonSocial = "tablet-click-social";
     }
 }

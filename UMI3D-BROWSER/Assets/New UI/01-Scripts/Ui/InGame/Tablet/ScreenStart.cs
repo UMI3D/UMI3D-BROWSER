@@ -14,32 +14,27 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
 using UnityEngine;
-using UnityEngine.UI;
 
-namespace umi3d.browserRuntime.ui.inGame.tablet.social
+namespace umi3d.browserRuntime.ui.inGame.tablet
 {
-    [RequireComponent(typeof(Button))]
-    public class OpenSocialSubscriber : MonoBehaviour
+    /// <summary>
+    /// To permit all screen to call it awake
+    /// </summary>
+    public class ScreenStart : MonoBehaviour
     {
-        private Button button;
+        [SerializeField] private GameObject[] screens;
 
         private void Awake()
         {
-            button = GetComponent<Button>();
-
-            NotificationHub.Default.Subscribe(this, TabletNotificationKeys.ClickButtonSocial, Show);
+            foreach (var screen in screens)
+                screen.SetActive(true);
         }
 
-        private void OnDestroy()
+        private void Start()
         {
-            NotificationHub.Default.Unsubscribe(this);
-        }
-
-        private void Show()
-        {
-            button.onClick?.Invoke();
+            foreach (var screen in screens)
+                screen.SetActive(false);
         }
     }
 }

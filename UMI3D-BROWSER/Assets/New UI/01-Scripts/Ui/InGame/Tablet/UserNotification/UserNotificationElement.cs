@@ -14,7 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System;
 using TMPro;
 using umi3d.cdk;
 using umi3d.common;
@@ -22,7 +21,7 @@ using umi3d.common.interaction;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace umi3dBrowsers.displayer
+namespace umi3d.browserRuntime.ui.inGame.tablet.userNotification
 {
     public class UserNotificationElement : MonoBehaviour
     {
@@ -46,6 +45,11 @@ namespace umi3dBrowsers.displayer
         }
 
         private bool isRead;
+
+        private void OnDisable()
+        {
+            IsRead = true;
+        }
 
         public void Init(NotificationDto notificationDto)
         {

@@ -14,12 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System;
+using inetum.unityUtils;
 using System.Collections.Generic;
 using umi3d.common;
+using umi3dBrowsers.displayer;
 using UnityEngine;
 
-namespace umi3dBrowsers.displayer
+namespace umi3d.browserRuntime.ui.inGame.tablet.userNotification
 {
     public class UserNotificationScreen : MonoBehaviour
     {
@@ -27,31 +28,19 @@ namespace umi3dBrowsers.displayer
         [SerializeField] private GameObject notificationPrefab;
         [SerializeField] private UserNotificationLoader notificationLoader;
 
-        public Action OnNotificationReceived;
-        public Action OnNotificationScreenOpened;
-
         private List<UserNotificationElement> _notificationElements = new List<UserNotificationElement>();
 
         private void Awake()
         {
             notificationLoader.Notification2DReceived += AddNotification;
+            NotificationHub.Default.Subscribe(this, TabletNotificationKeys.OpenUserNotification, Open);
+            NotificationHub.Default.Subscribe(this, TabletNotificationKeys.CloseScreens, Close);
         }
 
         private void OnDestroy()
         {
             notificationLoader.Notification2DReceived -= AddNotification;
-        }
-
-        private void OnEnable()
-        {
-            OnNotificationScreenOpened?.Invoke();
-        }
-
-        private void OnDisable()
-        {
-            foreach (var element in _notificationElements)
-                if (!element.IsRead)
-                    element.IsRead = true;
+            NotificationHub.Default.Unsubscribe(this);
         }
 
         public void AddNotification(NotificationDto notificationDto)
@@ -60,7 +49,17 @@ namespace umi3dBrowsers.displayer
             var notification = notificationGameObject.GetComponent<UserNotificationElement>();
             notification.Init(notificationDto);
             _notificationElements.Add(notification);
-            OnNotificationReceived?.Invoke();
+            NotificationHub.Default.Notify(this, TabletNotificationKeys.UserNotificationReceived);
+        }
+
+        public void Open()
+        {
+            gameObject.SetActive(true);
+        }
+
+        public void Close()
+        {
+            gameObject.SetActive(false);
         }
 
 #if UNITY_EDITOR

@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,6 +47,14 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.screens
             UMI3DUser.OnRemoveUser.AddListener(Remove);
 
             searchField.onValueChanged.AddListener(Search);
+
+            NotificationHub.Default.Subscribe(this, TabletNotificationKeys.OpenSocial, Open);
+            NotificationHub.Default.Subscribe(this, TabletNotificationKeys.CloseScreens, Close);
+        }
+
+        private void OnDestroy()
+        {
+            NotificationHub.Default.Unsubscribe(this);
         }
 
         private void Update()
@@ -149,6 +158,15 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.screens
 
             UpdateUserList();
         }
-    }
 
+        public void Open()
+        {
+            gameObject.SetActive(true);
+        }
+
+        public void Close()
+        {
+            gameObject.SetActive(false);
+        }
+    }
 }

@@ -15,40 +15,46 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace umi3d.browserRuntime.ui.inGame.tablet.social
+namespace umi3d.browserRuntime.ui.inGame.tablet.userNotification
 {
     [RequireComponent(typeof(Button))]
-    public class OpenSocialButton : MonoBehaviour
+    public class OpenUserNotificationButton : MonoBehaviour
     {
+        [SerializeField] private GameObject newNotifIndicator;
+
         private Button button;
 
         private void Awake()
         {
-            button = GetComponent<Button>();
-            button.onClick.AddListener(OpenSocial);
+            newNotifIndicator.SetActive(false);
 
-            NotificationHub.Default.Subscribe(this, TabletNotificationKeys.ClickButtonSocial, Click);
+            button = GetComponent<Button>();
+            button.onClick.AddListener(OpenUserNotification);
+
+            NotificationHub.Default.Subscribe(this, TabletNotificationKeys.UserNotificationReceived, NewNotifReceived);
         }
 
         private void OnDestroy()
         {
-            button.onClick.RemoveListener(OpenSocial);
+            button.onClick.RemoveListener(OpenUserNotification);
+
             NotificationHub.Default.Unsubscribe(this);
         }
 
-        private void OpenSocial()
+        private void OpenUserNotification()
         {
             NotificationHub.Default.Notify(this, TabletNotificationKeys.CloseScreens);
-            NotificationHub.Default.Notify(this, TabletNotificationKeys.OpenSocial);
+            NotificationHub.Default.Notify(this, TabletNotificationKeys.OpenUserNotification);
+
+            newNotifIndicator.SetActive(false);
         }
 
-        private void Click(Notification notification)
+        private void NewNotifReceived(Notification notification)
         {
-            button.onClick?.Invoke();
+            newNotifIndicator.SetActive(true);
         }
     }
 }

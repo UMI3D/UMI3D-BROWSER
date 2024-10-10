@@ -86,7 +86,6 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
         {
             if (user.isClient || _users.Any(u => u.User.id == user.id))
                 return;
-            Debug.Log("Add");
             var socialElement = CreateUser(user);
             _users.Add(socialElement);
 
@@ -145,7 +144,6 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
 
         private void Remove(UMI3DUser user)
         {
-            Debug.Log("Remove");
             if (_users == null)
                 return;
 

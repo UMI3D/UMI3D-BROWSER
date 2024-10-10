@@ -162,7 +162,7 @@ namespace umi3dBrowsers
         private void PopupQuit()
         {
             Debug.Log("PopupQuit");
-            m_popupLinker.Show(m_quittingPopup, "Quit", "",
+            m_popupLinker.Show(m_quittingPopup, "Quit", "empty",
                 ("Quit", () => {
                     m_quittingNotifier[QuittingManagerNotificationKey.QuittingConfirmationInfo.Confirmation] = true;
                     m_quittingNotifier.Notify();

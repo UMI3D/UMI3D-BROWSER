@@ -15,31 +15,27 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.ui.inGame.tablet.social
 {
     [RequireComponent(typeof(Button))]
-    public class OpenSocialSubscriber : MonoBehaviour
+    public class OpenSocialNotifier : MonoBehaviour
     {
         private Button button;
 
         private void Awake()
         {
             button = GetComponent<Button>();
-
-            NotificationHub.Default.Subscribe(this, TabletNotificationKeys.ClickButtonSocial, Show);
+            button.onClick.AddListener(ClickSocial);
         }
 
-        private void OnDestroy()
+        private void ClickSocial()
         {
-            NotificationHub.Default.Unsubscribe(this);
-        }
-
-        private void Show()
-        {
-            button.onClick?.Invoke();
+            NotificationHub.Default.Notify(this, TabletNotificationKeys.Open);
+            NotificationHub.Default.Notify(this, TabletNotificationKeys.ClickButtonSocial);
         }
     }
 }

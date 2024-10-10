@@ -21,7 +21,8 @@ using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.ui.inGame.tablet.menu.principal
 {
-    public class MenuPrincipalButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
+    [RequireComponent(typeof(Button))]
+    public class MenuPrincipalButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         [SerializeField] private GameObject info;
         [SerializeField] private GameObject activeBackground;
@@ -31,16 +32,20 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.menu.principal
         [SerializeField] private Color iconColorActive;
 
         private bool isActive;
+        private Button button;
 
         private void Awake()
         {
+            button = GetComponent<Button>();
+            button.onClick.AddListener(Click);
+
             info.SetActive(false);
             activeBackground.SetActive(false);
 
             NotificationHub.Default.Subscribe(this, TabletNotificationKeys.NewScreenSelected, Deactivate);
         }
 
-        public void OnPointerClick(PointerEventData eventData)
+        public void Click()
         {
             NotificationHub.Default.Notify(this, TabletNotificationKeys.NewScreenSelected);
             isActive = true;

@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
 using umi3dBrowsers.data.ui;
 using umi3dBrowsers.linker;
 using umi3dBrowsers.linker.ui;
@@ -53,6 +54,7 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.menu.browser
                     activeBackground.SetActive(false);
                     icon.color = iconColor;
                     popupLinker.CloseAll();
+                    NotificationHub.Default.Notify(this, TabletNotificationKeys.Close);
                 }
             ),
                 ("resume", () => {

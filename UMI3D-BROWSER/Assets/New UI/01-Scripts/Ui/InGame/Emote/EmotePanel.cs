@@ -88,15 +88,19 @@ namespace umi3d.browserRuntime.ui.inGame.emote
             gameObject.SetActive(false);
         }
 
-        private void Setup(IReadOnlyList<umi3d.cdk.collaboration.emotes.Emote> emotes)
+        private void Setup(IReadOnlyList<Emote> emotes)
         {
             PrepareListOfEmote(emotes);
             currentEmotePage = 0;
             UpdateEmotePage();
         }
 
-        private void PrepareListOfEmote(IReadOnlyList<umi3d.cdk.collaboration.emotes.Emote> emotes)
+        private void PrepareListOfEmote(IReadOnlyList<Emote> emotes)
         {
+            if (emotes == null || emotes.Count == 0)
+                return;
+
+            lstEmotes ??= new();
             lstEmotes.Clear();
             for (int i = 0; i < emotes.Count; i++)
             {

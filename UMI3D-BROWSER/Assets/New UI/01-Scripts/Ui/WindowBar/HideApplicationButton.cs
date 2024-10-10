@@ -17,6 +17,7 @@ limitations under the License.
 using inetum.unityUtils;
 using umi3d.browserRuntime.notificationKeys;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.ui.windowBar
@@ -36,10 +37,8 @@ namespace umi3d.browserRuntime.ui.windowBar
 
         private void Hide()
         {
-            NotificationHub.Default.Notify(
-                this,
-                WindowsManagerNotificationKey.Minimize
-            );
+            NotificationHub.Default.Notify(this, WindowsManagerNotificationKey.Minimize);
+            EventSystem.current.SetSelectedGameObject(null);
         }
     }
 }

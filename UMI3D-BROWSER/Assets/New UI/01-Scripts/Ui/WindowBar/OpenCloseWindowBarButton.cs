@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.ui.windowBar
@@ -39,6 +40,7 @@ namespace umi3d.browserRuntime.ui.windowBar
         {
             WindowBarTransform.gameObject.SetActive(!WindowBarTransform.gameObject.activeInHierarchy);
             icon.transform.Rotate(0, 0, WindowBarTransform.gameObject.activeInHierarchy ? -180 : 180);
+            EventSystem.current.SetSelectedGameObject(null);
         }
     }
 }

@@ -17,6 +17,7 @@ limitations under the License.
 using inetum.unityUtils;
 using umi3d.browserRuntime.notificationKeys;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.ui.windowBar
@@ -43,6 +44,7 @@ namespace umi3d.browserRuntime.ui.windowBar
         private void MinimizeOrMaximize()
         {
             notifier.Notify();
+            EventSystem.current.SetSelectedGameObject(null);
         }
     }
 }

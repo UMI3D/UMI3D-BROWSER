@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.ui.windowBar
@@ -35,6 +36,7 @@ namespace umi3d.browserRuntime.ui.windowBar
         private void Close()
         {
             Application.Quit();
+            EventSystem.current.SetSelectedGameObject(null);
         }
     }
 }

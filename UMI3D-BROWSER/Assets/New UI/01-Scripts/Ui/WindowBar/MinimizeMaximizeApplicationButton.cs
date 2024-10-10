@@ -16,7 +16,6 @@ limitations under the License.
 
 using inetum.unityUtils;
 using umi3d.browserRuntime.notificationKeys;
-using umi3d.browserRuntime.pc;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -25,8 +24,14 @@ namespace umi3d.browserRuntime.ui.windowBar
     public class MinimizeMaximizeApplicationButton : MonoBehaviour
     {
         [SerializeField] private Button button;
+
+        private Notifier notifier;
+
         private void Awake()
         {
+            notifier = NotificationHub.Default.GetNotifier(this, WindowsManagerNotificationKey.FullScreenModeWillChange);
+            notifier[WindowsManagerNotificationKey.FullScreenModeChangedInfo.Mode] = FullScreenMode.Windowed;
+
             button.onClick.AddListener(MinimizeOrMaximize);
         }
 
@@ -37,7 +42,7 @@ namespace umi3d.browserRuntime.ui.windowBar
 
         private void MinimizeOrMaximize()
         {
-            NotificationHub.Default.Notify(this, WindowsManager.IsWindowZoomed ? WindowsManagerNotificationKey.Minimize : WindowsManagerNotificationKey.Maximize);
+            notifier.Notify();
         }
     }
 }

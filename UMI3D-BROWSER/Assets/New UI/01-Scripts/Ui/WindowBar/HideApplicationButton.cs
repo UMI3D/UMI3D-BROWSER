@@ -36,7 +36,10 @@ namespace umi3d.browserRuntime.ui.windowBar
 
         private void Hide()
         {
-            NotificationHub.Default.Notify(this, WindowsManagerNotificationKey.Hide);
+            NotificationHub.Default.Notify(
+                this,
+                WindowsManagerNotificationKey.Minimize
+            );
         }
     }
 }

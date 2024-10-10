@@ -14,8 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#if UNITY_STANDALONE_WIN || UNITY_STANDALONE_OSX
-
 using inetum.unityUtils;
 using System;
 using System.Runtime.InteropServices;
@@ -45,8 +43,7 @@ namespace umi3d.browserRuntime.pc
         /// </summary>
         static int widthMonitor
         {
-            get
-            {
+            get {
                 return Screen.resolutions[Screen.resolutions.Length - 1].width;
             }
         }
@@ -55,8 +52,7 @@ namespace umi3d.browserRuntime.pc
         /// </summary>
         static int heightMonitor
         {
-            get
-            {
+            get {
                 return Screen.resolutions[Screen.resolutions.Length - 1].height;
             }
         }
@@ -68,8 +64,7 @@ namespace umi3d.browserRuntime.pc
         /// </summary>
         public static bool IsWindowZoomed
         {
-            get
-            {
+            get {
                 return IsZoomed(window);
             }
         }
@@ -83,8 +78,7 @@ namespace umi3d.browserRuntime.pc
         /// </summary>
         public static bool IsWindowInFullScreen
         {
-            get
-            {
+            get {
                 return IsFullScreen(Screen.fullScreenMode);
             }
         }
@@ -96,6 +90,8 @@ namespace umi3d.browserRuntime.pc
         /// The next full screen state.
         /// </summary>
         static FullScreenMode nextFullScreenMode = FullScreenMode.Windowed;
+
+#if UNITY_STANDALONE_WIN
 
         /// <summary>
         /// External method to minimize or maximize the window.<br/>
@@ -145,19 +141,12 @@ namespace umi3d.browserRuntime.pc
         [DllImport("user32.dll")]
         static extern bool IsZoomed(IntPtr hWnd);
 
+#endif
+
         static WindowsManager()
         {
             // Get the active window ptr.
             window = GetActiveWindow();
-
-            // Minimize the window when 'WindowsManagerNotificationKey.Minimize' is sent.
-            NotificationHub.Default.Subscribe(
-                typeof(WindowsManager).FullName,
-                WindowsManagerNotificationKey.Hide,
-                null,
-                Hide
-            );
-
 
             // Minimize the window when 'WindowsManagerNotificationKey.Minimize' is sent.
             NotificationHub.Default.Subscribe(
@@ -193,7 +182,6 @@ namespace umi3d.browserRuntime.pc
 
         public static void Update()
         {
-#if !UNITY_EDITOR && UNITY_STANDALONE
             if (nextFullScreenMode != fullScreenMode)
             {
                 return;
@@ -213,7 +201,7 @@ namespace umi3d.browserRuntime.pc
             {
                 SwitchFullScreen(IsWindowInFullScreen);
             }
-#endif
+
         }
 
         /// <summary>
@@ -248,8 +236,6 @@ namespace umi3d.browserRuntime.pc
             return fullScreen ? FullScreenMode.FullScreenWindow : FullScreenMode.Windowed;
 #elif UNITY_STANDALONE_OSX
         return fullScreen ? FullScreenMode.MaximizedWindow : FullScreenMode.Windowed;
-#else
-            return FullScreenMode.FullScreenWindow;
 #endif
         }
 
@@ -285,8 +271,7 @@ namespace umi3d.browserRuntime.pc
             );
 
             // Wait one frame so that the window can be resized.
-            new Task(async () =>
-            {
+            new Task(async () => {
                 // Wait one frame.
                 await Task.Yield();
                 fullScreenMode = nextFullScreenMode;
@@ -312,12 +297,6 @@ namespace umi3d.browserRuntime.pc
             ShowWindow(window, SW_SHOWMAXIMIZED);
 #endif
         }
-        static void Hide()
-        {
-#if UNITY_STANDALONE_WIN
-            ShowWindow(window, SW_HIDE);
-#endif
-        }
 
         /// <summary>
         /// Be notified when the full sceen mode will change.
@@ -335,5 +314,3 @@ namespace umi3d.browserRuntime.pc
         }
     }
 }
-
-#endif

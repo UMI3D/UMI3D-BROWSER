@@ -24,7 +24,6 @@ namespace umi3d.browserRuntime.ui.inGame.tablet
         private void Awake()
         {
             NotificationHub.Default.Subscribe(this, TabletNotificationKeys.Open, Open);
-            NotificationHub.Default.Subscribe(this, TabletNotificationKeys.OpenSocial, Open);
             NotificationHub.Default.Subscribe(this, TabletNotificationKeys.Close, Close);
         }
 

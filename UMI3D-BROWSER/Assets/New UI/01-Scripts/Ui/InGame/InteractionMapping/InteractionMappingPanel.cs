@@ -60,6 +60,8 @@ namespace umi3d.browserRuntime.ui.inGame.interactionMapping
 
         private void Show(KeyboardInteraction interaction, string name, InputAction action)
         {
+            name ??= ""; // Ensure non null value
+
             gameObject.SetActive(true);
             interactionText.text = interaction?.name;
 

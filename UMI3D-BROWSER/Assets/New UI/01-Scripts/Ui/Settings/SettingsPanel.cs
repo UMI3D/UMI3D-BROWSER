@@ -14,27 +14,28 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace umi3d.browserRuntime.ui.settings.audio
+namespace umi3d.browserRuntime.ui.settings
 {
-    [RequireComponent(typeof(Button))]
-    public class OpenAudioButton : MonoBehaviour
+    public class SettingsPanel : MonoBehaviour
     {
-        private Button button;
+        [SerializeField] private GameObject[] panels;
+        [SerializeField] private Button firstPanel;
 
         private void Awake()
         {
-            button = GetComponent<Button>();
-            button.onClick.AddListener(OpenAudio);
+            foreach (GameObject go in panels)
+                go.SetActive(true);
         }
 
-        private void OpenAudio()
+        private void Start()
         {
-            NotificationHub.Default.Notify(this, SettingsNotificationKeys.CloseAll);
-            NotificationHub.Default.Notify(this, SettingsNotificationKeys.OpenAudio);
+            foreach (GameObject go in panels)
+                go.SetActive(false);
+
+            firstPanel.onClick?.Invoke();
         }
     }
 }

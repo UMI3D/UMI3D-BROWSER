@@ -16,12 +16,8 @@ limitations under the License.
 
 namespace umi3d.browserRuntime.ui.settings
 {
-    public static class SettingsNotificationKeys
+    public static class SettingsPlayerPrefsKeys
     {
-        internal static readonly string CloseAll = "settings-close-all";
-        internal static readonly string OpenGeneral = "settings-open-general";
-        internal static readonly string OpenAudio = "settings-open-audio";
-
-        internal static readonly string NewPanelSelected = "settings-newPanelSelected";
+        internal static readonly string Microphone = "settings-microphone";
     }
 }

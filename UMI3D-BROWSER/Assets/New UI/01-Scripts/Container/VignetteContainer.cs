@@ -167,7 +167,9 @@ namespace umi3dBrowsers.container
         private VignetteDisplayer CreateVignette(VirtualWorlds pVirtualWorlds, VirtualWorldData pWorldData)
         {
             VignetteContainerData data = VignetteContainerData.FindVignetteContainerDataByVignetteScale(vignetteMode, m_vignetteContainerDatas);
-            var vignette = Instantiate(data.VignettePrefab, gridLayout.transform).GetComponent<VignetteDisplayer>();
+            GameObject vignetteGO = Instantiate(data.VignettePrefab);
+            vignetteGO.transform.SetParent(gridLayout.transform, false);
+            var vignette = vignetteGO.GetComponent<VignetteDisplayer>();
             vignette.SetupDisplay(pWorldData.worldName);
             vignette.SetupFavoriteButton(() => { 
                 pVirtualWorlds.ToggleWorldFavorite(pWorldData);

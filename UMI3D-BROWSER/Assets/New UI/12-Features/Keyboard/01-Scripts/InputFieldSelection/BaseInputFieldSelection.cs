@@ -30,12 +30,16 @@ namespace umi3d.browserRuntime.ui.keyboard
         public bool isPreviewBar = false;
 
         /// <summary>
-        /// Whether this selection is being used.
+        /// Whether the associated text field is being used.
         /// </summary>
         public bool isActive => isPreviewBar || activeSelection == this;
 
         static BaseInputFieldSelection activeSelection;
 
+        /// <summary>
+        /// Whether the input field text can be edited when selected.
+        /// </summary>
+        public bool allowTextModification { get; set; } = false;
         /// <summary>
         /// Whether the caret or the selection are available.
         /// </summary>
@@ -70,28 +74,30 @@ namespace umi3d.browserRuntime.ui.keyboard
         {
             this.context = context;
 
-            selectionNotifier = NotificationHub.Default.GetNotifier(
-                this,
-                KeyboardNotificationKeys.TextFieldSelected
-            );
+            selectionNotifier = NotificationHub.Default
+                .GetNotifier<KeyboardNotificationKeys.TextFieldSelected>(this);
         }
 
         public virtual void OnEnable()
         {
-            NotificationHub.Default.Subscribe(
+            NotificationHub.Default.Subscribe<KeyboardNotificationKeys.TextFieldSelected>(
                 this,
-                KeyboardNotificationKeys.TextFieldSelected,
                 new FilterByRef(FilterType.AcceptAllExcept, this),
                 TextFieldSelected
             );
+
+            NotificationHub.Default.Subscribe<KeyboardNotificationKeys.TextFieldDeselected>(
+               this,
+               new FilterByRef(FilterType.AcceptAllExcept, this),
+               TextFieldDeselected
+           );
         }
 
         public virtual void OnDisable()
         {
-            NotificationHub.Default.Unsubscribe(
-                this,
-                KeyboardNotificationKeys.TextFieldSelected
-            );
+            NotificationHub.Default.Unsubscribe<KeyboardNotificationKeys.TextFieldSelected>(this);
+
+            NotificationHub.Default.Unsubscribe<KeyboardNotificationKeys.TextFieldDeselected>(this);
         }
 
         /// <summary>
@@ -127,10 +133,9 @@ namespace umi3d.browserRuntime.ui.keyboard
         {
             ActivateInternal();
 
-            selectionNotifier[KeyboardNotificationKeys.Info.IsActivation] = isActive;
-            selectionNotifier[KeyboardNotificationKeys.Info.IsPreviewBar] = isPreviewBar;
-            selectionNotifier[KeyboardNotificationKeys.Info.SelectionPositions] = allowSelection ? (start, end) : null;
-            selectionNotifier[KeyboardNotificationKeys.Info.InputFieldText] = inputField.text;
+            selectionNotifier[KeyboardNotificationKeys.TextFieldSelected.IsPreviewBar] = isPreviewBar;
+            selectionNotifier[KeyboardNotificationKeys.TextFieldSelected.SelectionPositions] = allowSelection ? (start, end) : null;
+            selectionNotifier[KeyboardNotificationKeys.TextFieldSelected.InputFieldText] = inputField.text;
             selectionNotifier.Notify();
 
             if (allowSelection)
@@ -178,10 +183,9 @@ namespace umi3d.browserRuntime.ui.keyboard
         {
             ActivateInternal();
 
-            selectionNotifier[KeyboardNotificationKeys.Info.IsActivation] = isActive;
-            selectionNotifier[KeyboardNotificationKeys.Info.IsPreviewBar] = isPreviewBar;
-            selectionNotifier[KeyboardNotificationKeys.Info.SelectionPositions] = allowSelection ? newCaretPosition : null;
-            selectionNotifier[KeyboardNotificationKeys.Info.InputFieldText] = inputField.text;
+            selectionNotifier[KeyboardNotificationKeys.TextFieldSelected.IsPreviewBar] = isPreviewBar;
+            selectionNotifier[KeyboardNotificationKeys.TextFieldSelected.SelectionPositions] = allowSelection ? newCaretPosition : null;
+            selectionNotifier[KeyboardNotificationKeys.TextFieldSelected.InputFieldText] = inputField.text;
             selectionNotifier.Notify();
 
             if (allowSelection)
@@ -252,60 +256,67 @@ namespace umi3d.browserRuntime.ui.keyboard
             activeSelection = null;
         }
 
+        /// <summary>
+        /// Call when a text field is selected.<br/>
+        /// Update the input field text.<br/>
+        /// Update the position of the caret or the selection of the text.
+        /// </summary>
+        /// <param name="notification"></param>
         void TextFieldSelected(Notification notification)
+        {
+            if (!isActive)
+            {
+                return;
+            }
+
+            // Update text.
+            if (!allowTextModification)
+            {
+                return;
+            }
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.TextFieldSelected.InputFieldText, out string text))
+            {
+                return;
+            }
+            if (isPreviewBar)
+            {
+                // Hide or display preview bar.
+                inputField.textViewport.gameObject.SetActive(text != null);
+                inputField.targetGraphic?.gameObject.SetActive(text != null);
+            }
+            inputField.text = text;
+
+
+            // Update caret or selection.
+            if (!allowSelection)
+            {
+                return;
+            }
+            if (notification.TryGetInfoT(KeyboardNotificationKeys.TextFieldSelected.SelectionPositions, out int caretPosition, false))
+            {
+                DeselectWithoutNotify(caretPosition);
+            }
+            else if (notification.TryGetInfoT(KeyboardNotificationKeys.TextFieldSelected.SelectionPositions, out (int, int) selectionPositions, false))
+            {
+                SelectWithoutNotify(selectionPositions.Item1, selectionPositions.Item2);
+            }
+            else
+            {
+                notification.LogError(nameof(KeyboardTMPInputFieldLinker), KeyboardNotificationKeys.TextFieldSelected.SelectionPositions, $"Selection positions is neither int nor (int, int).");
+                return;
+            }
+        }
+
+        void TextFieldDeselected()
         {
             if (!isActive || !allowSelection)
             {
                 return;
             }
 
-            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.InputFieldText, out string text))
+            if (!isPreviewBar)
             {
-                return;
-            }
-
-            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.IsActivation, out bool isActivation))
-            {
-                return;
-            }
-
-            if (isPreviewBar)
-            {
-                // Hide or display preview bar.
-                inputField.textViewport.gameObject.SetActive(text != null);
-                inputField.targetGraphic?.gameObject.SetActive(text != null);
-
-                inputField.text = text;
-
-                if (!isActivation && string.IsNullOrEmpty(inputField.text))
-                {
-                    DeselectWithoutNotify(0);
-                    return;
-                }
-            }
-            else
-            {
-                if (!isActivation || text == null)
-                {
-                    Deactivate();
-                    return;
-                }
-
-                inputField.text = text;
-            }
-
-            if (notification.TryGetInfoT(KeyboardNotificationKeys.Info.SelectionPositions, out int caretPosition, false))
-            {
-                DeselectWithoutNotify(caretPosition);
-            }
-            else if (notification.TryGetInfoT(KeyboardNotificationKeys.Info.SelectionPositions, out (int, int) selectionPositions, false))
-            {
-                SelectWithoutNotify(selectionPositions.Item1, selectionPositions.Item2);
-            }
-            else
-            {
-                notification.LogError(nameof(KeyboardTMPInputFieldLinker), KeyboardNotificationKeys.Info.SelectionPositions, $"Selection positions is neither int nor (int, int).");
-                return;
+                Deactivate();
             }
         }
     }

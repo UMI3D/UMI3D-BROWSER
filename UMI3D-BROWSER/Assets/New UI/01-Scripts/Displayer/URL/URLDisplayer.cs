@@ -14,8 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System;
-using umi3dBrowsers.displayer;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -25,8 +23,8 @@ namespace umi3dBrowsers
     public class URLDisplayer : MonoBehaviour
     {
         [Header("UrlForm")]
-        [SerializeField] private TMP_UMI3DUIInputField urlField;
-        [SerializeField] private Button submitButton;
+        [SerializeField] TMPro.TMP_InputField urlField;
+        [SerializeField] Button submitButton;
         [Space]
         public UnityEvent<string> OnSubmit;
 

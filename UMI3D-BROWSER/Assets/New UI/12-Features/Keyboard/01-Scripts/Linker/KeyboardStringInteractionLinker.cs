@@ -19,29 +19,21 @@ using System.Collections;
 using System.Collections.Generic;
 using umi3d.browserRuntime.NotificationKeys;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace umi3d.browserRuntime.ui.keyboard
 {
-    public class KeyboardWVInputFieldLinker : MonoBehaviour
+    public class KeyboardStringInteractionLinker : MonoBehaviour
     {
-        [Tooltip("Event raised when text has been added.")]
-        public UnityEvent<string> addText = new();
-        [Tooltip("Event raised when the delete button is pressed.")]
-        public UnityEvent deleteCharacter = new();
         [Tooltip("Event raised when the enter or submit button is pressed.")]
-        public UnityEvent enterOrSubmit = new();
+        public event System.Action<string> enterOrSubmit;
 
         bool isSelected = false;
         Notifier selectionNotifier;
-        Notifier deselectionNotifier;
 
         void Awake()
         {
             selectionNotifier = NotificationHub.Default
                 .GetNotifier<KeyboardNotificationKeys.TextFieldSelected>(this);
-            deselectionNotifier = NotificationHub.Default
-                .GetNotifier<KeyboardNotificationKeys.TextFieldDeselected>(this);
         }
 
         void OnEnable()
@@ -74,31 +66,20 @@ namespace umi3d.browserRuntime.ui.keyboard
             NotificationHub.Default.Unsubscribe<KeyboardNotificationKeys.TextFieldDeselected>(this);
         }
 
-        public void WebViewTextFieldSelected()
+        public void TextFieldSelected(string text)
         {
-            if (isSelected)
-            {
-                return;
-            }
             isSelected = true;
 
             selectionNotifier[KeyboardNotificationKeys.TextFieldSelected.IsPreviewBar] = false;
-            selectionNotifier[KeyboardNotificationKeys.TextFieldSelected.SelectionPositions] = 0;
-            selectionNotifier[KeyboardNotificationKeys.TextFieldSelected.InputFieldText] = null;
+            selectionNotifier[KeyboardNotificationKeys.TextFieldSelected.SelectionPositions] = text.Length;
+            selectionNotifier[KeyboardNotificationKeys.TextFieldSelected.InputFieldText] = text;
             selectionNotifier.Notify();
         }
 
-        public void WebViewTextFieldUnselected()
-        {
-            if (!isSelected)
-            {
-                return;
-            }
-            isSelected = false;
-
-            deselectionNotifier.Notify();
-        }
-
+        /// <summary>
+        /// Method called when another textfield has been selected.
+        /// </summary>
+        /// <param name="notification"></param>
         void OtherTextFieldSelected()
         {
             isSelected = false;
@@ -106,7 +87,7 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         void TextFieldDeselected()
         {
-            isSelected = false;
+            isSelected = false; 
         }
 
         void AddOrRemoveCharacters(Notification notification)
@@ -124,10 +105,8 @@ namespace umi3d.browserRuntime.ui.keyboard
             switch (textUpdate)
             {
                 case TextFieldTextUpdate.AddCharacters:
-                    AddCharacters(notification);
                     break;
                 case TextFieldTextUpdate.RemoveCharacters:
-                    RemoveCharacters(notification);
                     break;
                 case TextFieldTextUpdate.SubmitText:
                     SubmitText(notification);
@@ -138,7 +117,7 @@ namespace umi3d.browserRuntime.ui.keyboard
             }
         }
 
-        void AddCharacters(Notification notification)
+        void SubmitText(Notification notification)
         {
             if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.Characters, out string characters, false))
             {
@@ -155,17 +134,7 @@ namespace umi3d.browserRuntime.ui.keyboard
                 characters = character.ToString();
             }
 
-            addText.Invoke(characters);
-        }
-
-        void RemoveCharacters(Notification notification)
-        {
-            deleteCharacter.Invoke();
-        }
-
-        void SubmitText(Notification notification)
-        {
-            enterOrSubmit.Invoke();
+            enterOrSubmit?.Invoke(characters);
         }
     }
 }

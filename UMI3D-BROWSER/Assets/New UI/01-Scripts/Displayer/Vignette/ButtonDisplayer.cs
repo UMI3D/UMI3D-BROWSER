@@ -17,7 +17,6 @@ limitations under the License.
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -33,7 +32,6 @@ namespace umi3dBrowsers.displayer
         [SerializeField] private Color clickColor = Color.white;
         [Space]
         [SerializeField] private Button button;
-        [SerializeField] private Collider button_collider;
         [SerializeField] private Image backGround = null;
         [SerializeField] private Image iconImage = null;
         [SerializeField] private Sprite normalIcon;
@@ -65,7 +63,6 @@ namespace umi3dBrowsers.displayer
         private void OnEnable()
         {
             button.enabled = true;
-            button_collider.enabled = true;
 
             if (backGround != null)
                 backGround.color = backgroundNormalColor;
@@ -167,7 +164,6 @@ namespace umi3dBrowsers.displayer
         public void Disable()
         {
             button.enabled = false;
-            button_collider.enabled = false;
 
             if (_easeInOutCoroutine != null)
             {

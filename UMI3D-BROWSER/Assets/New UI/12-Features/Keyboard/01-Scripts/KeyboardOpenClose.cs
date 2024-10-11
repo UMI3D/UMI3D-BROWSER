@@ -28,7 +28,7 @@ namespace umi3d.browserRuntime.ui.keyboard
         public bool isOpen = true;
 
         Notifier openOrCloseNotifier;
-        Notifier selectionNotifier;
+        Notifier deselectionNotifier;
 
         bool withAnimation = true;
         float animationTime = 1f;
@@ -48,10 +48,8 @@ namespace umi3d.browserRuntime.ui.keyboard
                 }
             );
 
-            selectionNotifier = NotificationHub.Default.GetNotifier(
-                this,
-                KeyboardNotificationKeys.TextFieldSelected
-            );
+            deselectionNotifier = NotificationHub.Default
+               .GetNotifier<KeyboardNotificationKeys.TextFieldDeselected>(this);
         }
 
         void Start()
@@ -75,11 +73,16 @@ namespace umi3d.browserRuntime.ui.keyboard
                 SpecialKeyPressed
             );
 
-            NotificationHub.Default.Subscribe(
+            NotificationHub.Default.Subscribe<KeyboardNotificationKeys.TextFieldSelected>(
                 this,
-                KeyboardNotificationKeys.TextFieldSelected,
                 new FilterByRef(FilterType.AcceptAllExcept, this),
                 TextFieldSelected
+            );
+
+            NotificationHub.Default.Subscribe<KeyboardNotificationKeys.TextFieldDeselected>(
+                this,
+                new FilterByRef(FilterType.AcceptAllExcept, this),
+                TextFieldDeselected
             );
         }
 
@@ -89,7 +92,9 @@ namespace umi3d.browserRuntime.ui.keyboard
 
             NotificationHub.Default.Unsubscribe(this, KeyboardNotificationKeys.SpecialKeyPressed);
 
-            NotificationHub.Default.Unsubscribe(this, KeyboardNotificationKeys.TextFieldSelected);
+            NotificationHub.Default.Unsubscribe<KeyboardNotificationKeys.TextFieldSelected>(this);
+
+            NotificationHub.Default.Unsubscribe<KeyboardNotificationKeys.TextFieldDeselected>(this);
         }
 
         void Close()
@@ -139,35 +144,27 @@ namespace umi3d.browserRuntime.ui.keyboard
 
             Close();
 
-            selectionNotifier[KeyboardNotificationKeys.Info.IsActivation] = false;
-            selectionNotifier[KeyboardNotificationKeys.Info.IsPreviewBar] = false;
-            selectionNotifier[KeyboardNotificationKeys.Info.SelectionPositions] = null;
-            selectionNotifier[KeyboardNotificationKeys.Info.InputFieldText] = "";
-            selectionNotifier.Notify();
+            deselectionNotifier.Notify();
         }
 
         void TextFieldSelected(Notification notification)
         {
-            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.IsPreviewBar, out bool isPreviewBar) || isPreviewBar)
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.TextFieldSelected.IsPreviewBar, out bool isPreviewBar) || isPreviewBar)
             {
                 return;
             }
 
-            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.IsActivation, out bool isActivation))
-            {
-                return;
-            }
-
-            if (!isOpen && isActivation)
+            if (!isOpen)
             {
                 Open();
-                return;
             }
+        }
 
-            if (isOpen && !isActivation)
+        void TextFieldDeselected(Notification notification)
+        {
+            if (isOpen)
             {
                 Close();
-                return;
             }
         }
     }

@@ -111,10 +111,9 @@ namespace umi3dBrowsers.container.formrenderer
                                 formBinding.Add(() => paramRequestDto.parameter = null);
                             else
                             {
-                                if (stringParam.isDisplayer)
-                                    gameObject = Instantiate(textPrefab, container.transform);
-                                else
-                                    gameObject = Instantiate(textFieldPrefab, container.transform);
+                                gameObject = Instantiate(stringParam.isDisplayer ? textPrefab : textFieldPrefab);
+                                gameObject.transform.SetParent(container.transform, false);
+
                                 var inputFieldDisplayer = gameObject?.GetComponentInChildren<IInputFieldDisplayer>();
                                 displayer = inputFieldDisplayer;
                                 formBinding.Add(() => paramRequestDto.parameter = displayer?.GetValue(true));

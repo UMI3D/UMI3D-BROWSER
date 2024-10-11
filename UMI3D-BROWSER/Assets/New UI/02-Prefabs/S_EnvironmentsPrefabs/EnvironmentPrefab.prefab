@@ -1196,6 +1196,7 @@ GameObject:
   - component: {fileID: 8761181149546510028}
   - component: {fileID: 5008610468168228763}
   - component: {fileID: 5405780417110214687}
+  - component: {fileID: 2960427451652965223}
   m_Layer: 6
   m_Name: SelectedInteractableManager
   m_TagString: Untagged
@@ -1231,7 +1232,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 882590ab39e4e70469148514cc0b920a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  simLinker: {fileID: 0}
+  simLinker: {fileID: 11400000, guid: 636ad0567f208434fa27befdcdf924a3, type: 2}
   label: {fileID: 5153264487261517291}
   background: {fileID: 4389856411696366292}
   collider: {fileID: 160321555442591626}
@@ -1255,6 +1256,18 @@ MonoBehaviour:
   addRemoveWhenActivationChange: 1
   variables:
   - {fileID: 5008610468168228763}
+--- !u!114 &2960427451652965223
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1273526557503657305}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9117e8a4345f545499aaa4212c5d9fa7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1302813447607826114
 GameObject:
   m_ObjectHideFlags: 0
@@ -8173,7 +8186,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.0009432606, y: -0.000016199157}
+  m_AnchoredPosition: {x: 0.061987735, y: -0.000016199157}
   m_SizeDelta: {x: -183, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1643687410417014379
@@ -8337,7 +8350,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 3802370216027245434}
   m_Direction: 0
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.9994647
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

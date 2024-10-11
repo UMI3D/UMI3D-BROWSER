@@ -14,11 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using umi3d.common.interaction;
-using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -28,8 +23,6 @@ namespace umi3dBrowsers.displayer
     {
         private ISubDisplayer _subDisplayer;
         public ISubDisplayer SubDisplayer => _subDisplayer;
-        public event Action OnHoverEnter;
-        public event Action OnHoverExit;
 
         private int id;
         public int ID => id;    
@@ -45,7 +38,6 @@ namespace umi3dBrowsers.displayer
         public override void OnPointerEnter(PointerEventData eventData)
         {
             base.OnPointerEnter(eventData);
-            OnHoverEnter?.Invoke();
             if (_subDisplayer == null) return;
             _subDisplayer.HoverEnter(eventData);
         }
@@ -53,7 +45,6 @@ namespace umi3dBrowsers.displayer
         public override void OnPointerExit(PointerEventData eventData)
         {
             base.OnPointerExit(eventData);
-            OnHoverExit?.Invoke();
             if (_subDisplayer == null) return;
             _subDisplayer.HoverExit(eventData);
         }

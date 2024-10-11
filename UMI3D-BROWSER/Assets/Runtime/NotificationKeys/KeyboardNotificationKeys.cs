@@ -24,7 +24,34 @@ namespace umi3d.browserRuntime.NotificationKeys
         /// <summary>
         /// Notification sent when a text field has been selected.
         /// </summary>
-        public const string TextFieldSelected = "KeyboardNotificationKeysTextFieldSelected";
+        public class TextFieldSelected
+        {
+            /// <summary>
+            /// Whether the selected field is the preview bar.<br/>
+            /// Value is <see cref="bool"/>.
+            /// </summary>
+            public const string IsPreviewBar = "IsPreviewBar";
+
+            /// <summary>
+            /// The position of the caret if value is int or the selection if value is (int, int).<br/>
+            /// Value is <see cref="int"/> or (<see cref="int"/>, <see cref="int"/>).
+            /// </summary>
+            public const string SelectionPositions = "SelectionPositions";
+
+            /// <summary>
+            /// The text of the input field.<br/>
+            /// Value is <see cref="string"/>.
+            /// </summary>
+            public const string InputFieldText = "InputFieldText";
+        }
+
+        /// <summary>
+        /// Notification sent when a text field has been deselected.
+        /// </summary>
+        public class TextFieldDeselected
+        {
+
+        }
 
         /// <summary>
         /// Notification sent when a special key is pressed.
@@ -73,38 +100,6 @@ namespace umi3d.browserRuntime.NotificationKeys
 
         public static class Info
         {
-            /// <summary>
-            /// Whether the selection of the input field active it.<br/>
-            /// Value is <see cref="bool"/>.<br/>
-            /// <br/>
-            /// See Notification key: <see cref="TextFieldSelected"/>
-            /// </summary>
-            public const string IsActivation = "IsActivation";
-
-            /// <summary>
-            /// Whether the selection is the preview bar.<br/>
-            /// Value is <see cref="bool"/>.<br/>
-            /// <br/>
-            /// See Notification key: <see cref="TextFieldSelected"/>
-            /// </summary>
-            public const string IsPreviewBar = "IsPreviewBar";
-
-            /// <summary>
-            /// The position of the caret if value is int or the selection if value is (int, int).<br/>
-            /// Value is <see cref="int"/> or (<see cref="int"/>, <see cref="int"/>).<br/>
-            /// <br/>
-            /// See Notification key: <see cref="TextFieldSelected"/>
-            /// </summary>
-            public const string SelectionPositions = "SelectionPositions";
-
-            /// <summary>
-            /// The text of the input field.<br/>
-            /// Value is <see cref="string"/>.<br/>
-            /// <br/>
-            /// See Notification key: <see cref="TextFieldSelected"/>
-            /// </summary>
-            public const string InputFieldText = "InputFieldText";
-
             /// <summary>
             /// The special key pressed.<br/>
             /// Value is <see cref="umi3d.browserRuntime.NotificationKeys.SpecialKey"/>.<br/>

@@ -57,9 +57,8 @@ namespace umi3d.browserRuntime.ui.keyboard
                 setupTarget.Start(TaskScheduler.FromCurrentSynchronizationContext());
             }
 
-            NotificationHub.Default.Subscribe(
+            NotificationHub.Default.Subscribe<KeyboardNotificationKeys.TextFieldSelected>(
                 this,
-                KeyboardNotificationKeys.TextFieldSelected,
                 TextFieldSelected
             );
 
@@ -67,17 +66,12 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         void OnDisable()
         {
-            NotificationHub.Default.Unsubscribe(this, KeyboardNotificationKeys.TextFieldSelected);
+            NotificationHub.Default.Unsubscribe<KeyboardNotificationKeys.TextFieldSelected>(this);
         }
 
         void TextFieldSelected(Notification notification)
         {
-            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.IsActivation, out bool isActivation) || !isActivation)
-            {
-                return;
-            }
-
-            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.IsPreviewBar, out bool isPreviewBar) || isPreviewBar)
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.TextFieldSelected.IsPreviewBar, out bool isPreviewBar) || isPreviewBar)
             {
                 return;
             }

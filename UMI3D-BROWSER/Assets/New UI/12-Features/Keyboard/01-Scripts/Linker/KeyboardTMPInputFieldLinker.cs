@@ -37,7 +37,7 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         TMPro.TMP_InputField inputField;
         UMI3DInputFieldSelection selection;
-        Notifier selectionNotifier;
+        Notifier deselectionNotifier;
 
         void Awake()
         {
@@ -45,12 +45,11 @@ namespace umi3d.browserRuntime.ui.keyboard
 
             selection = new(this);
             selection.Blur();
+            selection.allowTextModification = !waitForSubmit;
             selection.allowSelection = !waitForSubmit;
 
-            selectionNotifier = NotificationHub.Default.GetNotifier(
-                this,
-                KeyboardNotificationKeys.TextFieldSelected
-            );
+            deselectionNotifier = NotificationHub.Default
+                .GetNotifier<KeyboardNotificationKeys.TextFieldDeselected>(this);
         }
 
         void OnEnable()
@@ -105,11 +104,7 @@ namespace umi3d.browserRuntime.ui.keyboard
 
                     if (closeOnSubmit)
                     {
-                        selectionNotifier[KeyboardNotificationKeys.Info.IsActivation] = false;
-                        selectionNotifier[KeyboardNotificationKeys.Info.IsPreviewBar] = false;
-                        selectionNotifier[KeyboardNotificationKeys.Info.SelectionPositions] = null;
-                        selectionNotifier[KeyboardNotificationKeys.Info.InputFieldText] = "";
-                        selectionNotifier.Notify();
+                        deselectionNotifier.Notify();
                     }
 
                     enterOrSubmit.Invoke();

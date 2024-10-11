@@ -34,13 +34,14 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         bool isSelected = false;
         Notifier selectionNotifier;
+        Notifier deselectionNotifier;
 
         void Awake()
         {
-            selectionNotifier = NotificationHub.Default.GetNotifier(
-                this,
-                KeyboardNotificationKeys.TextFieldSelected
-            );
+            selectionNotifier = NotificationHub.Default
+                .GetNotifier<KeyboardNotificationKeys.TextFieldSelected>(this);
+            deselectionNotifier = NotificationHub.Default
+                .GetNotifier<KeyboardNotificationKeys.TextFieldDeselected>(this);
         }
 
         void OnEnable()
@@ -51,11 +52,16 @@ namespace umi3d.browserRuntime.ui.keyboard
                 AddOrRemoveCharacters
             );
 
-            NotificationHub.Default.Subscribe(
+            NotificationHub.Default.Subscribe<KeyboardNotificationKeys.TextFieldSelected>(
                 this,
-                KeyboardNotificationKeys.TextFieldSelected,
                 new FilterByRef(FilterType.AcceptAllExcept, this),
-                TextFieldSelected
+                OtherTextFieldSelected
+            );
+
+            NotificationHub.Default.Subscribe<KeyboardNotificationKeys.TextFieldDeselected>(
+                this,
+                new FilterByRef(FilterType.AcceptAllExcept, this),
+                TextFieldDeselected
             );
         }
 
@@ -63,7 +69,9 @@ namespace umi3d.browserRuntime.ui.keyboard
         {
             NotificationHub.Default.Unsubscribe(this, KeyboardNotificationKeys.AddOrRemoveCharacters);
 
-            NotificationHub.Default.Unsubscribe(this, KeyboardNotificationKeys.TextFieldSelected);
+            NotificationHub.Default.Unsubscribe<KeyboardNotificationKeys.TextFieldSelected>(this);
+
+            NotificationHub.Default.Unsubscribe<KeyboardNotificationKeys.TextFieldDeselected>(this);
         }
 
         public void WebViewTextFieldSelected()
@@ -74,10 +82,9 @@ namespace umi3d.browserRuntime.ui.keyboard
             }
             isSelected = true;
 
-            selectionNotifier[KeyboardNotificationKeys.Info.IsActivation] = true;
-            selectionNotifier[KeyboardNotificationKeys.Info.IsPreviewBar] = false;
-            selectionNotifier[KeyboardNotificationKeys.Info.SelectionPositions] = null;
-            selectionNotifier[KeyboardNotificationKeys.Info.InputFieldText] = null;
+            selectionNotifier[KeyboardNotificationKeys.TextFieldSelected.IsPreviewBar] = false;
+            selectionNotifier[KeyboardNotificationKeys.TextFieldSelected.SelectionPositions] = 0;
+            selectionNotifier[KeyboardNotificationKeys.TextFieldSelected.InputFieldText] = null;
             selectionNotifier.Notify();
         }
 
@@ -89,14 +96,15 @@ namespace umi3d.browserRuntime.ui.keyboard
             }
             isSelected = false;
 
-            selectionNotifier[KeyboardNotificationKeys.Info.IsActivation] = false;
-            selectionNotifier[KeyboardNotificationKeys.Info.IsPreviewBar] = false;
-            selectionNotifier[KeyboardNotificationKeys.Info.SelectionPositions] = null;
-            selectionNotifier[KeyboardNotificationKeys.Info.InputFieldText] = "";
-            selectionNotifier.Notify();
+            deselectionNotifier.Notify();
         }
 
-        void TextFieldSelected(Notification notification)
+        void OtherTextFieldSelected()
+        {
+            isSelected = false;
+        }
+
+        void TextFieldDeselected()
         {
             isSelected = false;
         }

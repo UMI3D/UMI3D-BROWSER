@@ -1,12 +1,24 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+/*
+Copyright 2019 - 2024 Inetum
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
 using umi3d.baseBrowser.cursor;
 using umi3d.baseBrowser.inputs.interactions;
-using umi3d.cdk.collaboration;
+using umi3d.browserRuntime.ui.inGame.tablet;
 using umi3dBrowsers.linker.ingameui;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using static umi3d.baseBrowser.cursor.BaseCursor;
 
@@ -18,7 +30,7 @@ namespace umi3dBrowsers.ingame_ui
         [SerializeField] private InputAction openCloseInGamePanel;
 
         [Header("Dependencies")]
-        [SerializeField] private MainInGamePanel mainInGamePanel;
+        [SerializeField] private TabletPanel mainInGamePanel;
 
         [Header("Linkers")]
         [SerializeField] private InGamePanelLinker inGamePanelLinker;
@@ -28,6 +40,15 @@ namespace umi3dBrowsers.ingame_ui
         [SerializeField] private bool debugMode;
 
         private void Awake()
+        {
+            openCloseInGamePanel.performed += i => ToggleInGamePanel();
+            inGamePanelLinker.OnOpenClosePanel += () => ToggleInGamePanel();
+            inGameLinker.OnEnableDisableInGameUI += isEnable => gameObject.SetActive(isEnable);
+
+            BaseCursor.SetMovement(this, CursorMovement.Free);
+        }
+
+        private void Start()
         {
             openCloseInGamePanel.Enable();
 
@@ -39,14 +60,8 @@ namespace umi3dBrowsers.ingame_ui
                 Cursor.lockState = CursorLockMode.Confined;
             }
 
-            openCloseInGamePanel.performed += i => ToggleInGamePanel();
-            inGamePanelLinker.OnOpenClosePanel += () => ToggleInGamePanel();
-            inGameLinker.OnEnableDisableInGameUI += isEnable => gameObject.SetActive(isEnable);
-
             if (!debugMode)
                 gameObject.SetActive(inGameLinker.IsEnable);
-
-            BaseCursor.SetMovement(this, CursorMovement.Free);
         }
 
         private void OnEnable()

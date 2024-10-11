@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System;
 using TMPro;
 using umi3d.cdk.collaboration;
 using UnityEngine;
@@ -24,7 +25,14 @@ namespace umi3dBrowsers.services.librairies
     public class LibraryManagerEntry : MonoBehaviour
     {
         [SerializeField] private Button deleteButton;
+        [SerializeField] private Image deleteButtonImage;
+        [SerializeField] private Sprite deleteButtonSprite;
+        [SerializeField] private Sprite deleteButtonSpriteHover;
+        [SerializeField] private Color deleteButtonImageColor;
+        [SerializeField] private Color deleteButtonImageColorHover;
         [SerializeField] private TextMeshProUGUI libLabel;
+
+        public event Action DeleteLib;
 
         public Button DeleteButton => deleteButton;
         public TextMeshProUGUI LibLabel => libLabel;
@@ -32,6 +40,17 @@ namespace umi3dBrowsers.services.librairies
         private void OnEnable()
         {
             deleteButton.gameObject.SetActive(UMI3DCollaborationClientServer.Environement == null);
+        }
+
+        public void Delete()
+        {
+            DeleteLib?.Invoke();
+        }
+
+        public void DeleteButtonHover(bool isHover)
+        {
+            deleteButtonImage.sprite = isHover ? deleteButtonSpriteHover : deleteButtonSprite;
+            deleteButtonImage.color = isHover ? deleteButtonImageColorHover : deleteButtonImageColor;
         }
     }
 }

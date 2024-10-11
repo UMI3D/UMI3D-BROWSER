@@ -164,7 +164,7 @@ GameObject:
   - component: {fileID: 4044699968087321909}
   - component: {fileID: 5424798755437669878}
   - component: {fileID: 1516279408018297783}
-  - component: {fileID: 2506890863409639988}
+  - component: {fileID: 6957942219898506057}
   m_Layer: 5
   m_Name: UserNotificationElement
   m_TagString: Untagged
@@ -288,7 +288,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
---- !u!114 &2506890863409639988
+--- !u!114 &6957942219898506057
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -297,14 +297,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 751161709065877071}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5c0e27cebcadce94082acc0b9d0e6a21, type: 3}
+  m_Script: {fileID: 11500000, guid: 5eaae0b44c51977479feee938660d522, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   description: {fileID: 8340411198859870703}
   descriptionComplete: {fileID: 9061988131650342904}
   badge: {fileID: 3501253467289434896}
-  badgeColorNew: {r: 0.019607844, g: 0.7960785, b: 0.8431373, a: 1}
-  badgeColorRead: {r: 0.5176471, g: 0.5176471, b: 0.5176471, a: 1}
+  badgeColorNew: {r: 0, g: 1, b: 1, a: 1}
+  badgeColorRead: {r: 0.4392157, g: 0.4392157, b: 0.4392157, a: 1}
   buttonsContainer: {fileID: 208381373136744238}
   buttonPrefab: {fileID: 3473510192864361373, guid: 203c2ca3e93e9694b84b6b9fc0c5998e,
     type: 3}

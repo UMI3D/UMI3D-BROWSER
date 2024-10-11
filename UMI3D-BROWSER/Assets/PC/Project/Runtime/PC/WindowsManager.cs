@@ -14,8 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#if UNITY_STANDALONE_WIN || UNITY_STANDALONE_OSX
-
 using inetum.unityUtils;
 using System;
 using System.Runtime.InteropServices;
@@ -45,8 +43,7 @@ namespace umi3d.browserRuntime.pc
         /// </summary>
         static int widthMonitor
         {
-            get
-            {
+            get {
                 return Screen.resolutions[Screen.resolutions.Length - 1].width;
             }
         }
@@ -55,8 +52,7 @@ namespace umi3d.browserRuntime.pc
         /// </summary>
         static int heightMonitor
         {
-            get
-            {
+            get {
                 return Screen.resolutions[Screen.resolutions.Length - 1].height;
             }
         }
@@ -68,8 +64,7 @@ namespace umi3d.browserRuntime.pc
         /// </summary>
         public static bool IsWindowZoomed
         {
-            get
-            {
+            get {
                 return IsZoomed(window);
             }
         }
@@ -83,8 +78,7 @@ namespace umi3d.browserRuntime.pc
         /// </summary>
         public static bool IsWindowInFullScreen
         {
-            get
-            {
+            get {
                 return IsFullScreen(Screen.fullScreenMode);
             }
         }
@@ -96,6 +90,8 @@ namespace umi3d.browserRuntime.pc
         /// The next full screen state.
         /// </summary>
         static FullScreenMode nextFullScreenMode = FullScreenMode.Windowed;
+
+#if UNITY_STANDALONE_WIN
 
         /// <summary>
         /// External method to minimize or maximize the window.<br/>
@@ -144,6 +140,8 @@ namespace umi3d.browserRuntime.pc
         /// <returns></returns>
         [DllImport("user32.dll")]
         static extern bool IsZoomed(IntPtr hWnd);
+
+#endif
 
         static WindowsManager()
         {
@@ -238,8 +236,6 @@ namespace umi3d.browserRuntime.pc
             return fullScreen ? FullScreenMode.FullScreenWindow : FullScreenMode.Windowed;
 #elif UNITY_STANDALONE_OSX
         return fullScreen ? FullScreenMode.MaximizedWindow : FullScreenMode.Windowed;
-#else
-            return FullScreenMode.FullScreenWindow;
 #endif
         }
 
@@ -275,8 +271,7 @@ namespace umi3d.browserRuntime.pc
             );
 
             // Wait one frame so that the window can be resized.
-            new Task(async () =>
-            {
+            new Task(async () => {
                 // Wait one frame.
                 await Task.Yield();
                 fullScreenMode = nextFullScreenMode;
@@ -319,5 +314,3 @@ namespace umi3d.browserRuntime.pc
         }
     }
 }
-
-#endif

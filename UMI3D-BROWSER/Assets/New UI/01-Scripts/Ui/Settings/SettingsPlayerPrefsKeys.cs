@@ -19,5 +19,7 @@ namespace umi3d.browserRuntime.ui.settings
     public static class SettingsPlayerPrefsKeys
     {
         internal static readonly string Microphone = "settings-microphone";
+        internal static readonly string EnvironmentVolume = "settings-volume-environement";
+        internal static readonly string ConversationVolume = "settings-volume-conversation";
     }
 }

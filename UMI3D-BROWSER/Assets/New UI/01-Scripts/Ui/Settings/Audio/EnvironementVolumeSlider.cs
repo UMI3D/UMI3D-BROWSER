@@ -14,42 +14,24 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
+using inetum.unityUtils.audio;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace umi3dBrowsers.displayer
+namespace umi3d.browserRuntime.ui.settings.audio
 {
-    public class SliderHandler : MonoBehaviour
+    public class EnvironementVolumeSlider : MonoBehaviour
     {
-        [SerializeField] TextMeshProUGUI text;
-        [SerializeField] Slider slider;
+        [SerializeField] private Slider slider;
 
         private void Start()
         {
-            SetText(slider.value);
-
-            slider.onValueChanged.AddListener(value => {
-                SetText(value);
+            slider.onValueChanged.AddListener(newValue => {
+                PlayerPrefs.SetFloat(SettingsPlayerPrefsKeys.EnvironmentVolume, newValue);
+                AudioMixerControl.SetVolume(AudioMixerControl.Group.Environment, newValue);
             });
-        }
 
-        /// <summary>
-        /// Call it before start
-        /// </summary>
-        public void Init(float value)
-        {
-            SetText(value);
-            slider.value = value;
-        }
-
-        public void SetText(float value)
-        {
-            text.SetText(value.ToString());
+            slider.value = PlayerPrefs.GetFloat(SettingsPlayerPrefsKeys.EnvironmentVolume, 100);
         }
     }
 }
-

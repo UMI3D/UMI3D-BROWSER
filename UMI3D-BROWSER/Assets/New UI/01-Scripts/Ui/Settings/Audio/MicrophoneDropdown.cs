@@ -18,12 +18,11 @@ using System.Linq;
 using System.Collections.Generic;
 using umi3d.cdk.collaboration;
 using umi3dBrowsers.displayer;
-using umi3dBrowsers.services.connection;
 using Unity.VisualScripting;
 using UnityEngine;
 using inetum.unityUtils;
 
-namespace umi3d.browserRuntime.ui.settings.general
+namespace umi3d.browserRuntime.ui.settings.audio
 {
     public class MicrophoneDropdown : MonoBehaviour
     {
@@ -35,7 +34,7 @@ namespace umi3d.browserRuntime.ui.settings.general
         {
             var lstMicrophones = MicrophoneListener.GetMicrophonesNames();
 
-            selectedMicrophone = PlayerPrefs.GetString(SettingsPlayerPrefsKeys.Microphone);
+            selectedMicrophone = PlayerPrefs.GetString(SettingsPlayerPrefsKeys.Microphone, null);
             if (selectedMicrophone == null || selectedMicrophone == string.Empty || !lstMicrophones.Contains(selectedMicrophone))
                 if (lstMicrophones.Length > 0)
                     Select(lstMicrophones[0]);

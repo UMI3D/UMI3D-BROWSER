@@ -91,7 +91,6 @@ namespace MrtkShader
                     break;
 
                 default:
-                    Debug.LogWarning("unsupported shader property");
                     break;
             }
         }

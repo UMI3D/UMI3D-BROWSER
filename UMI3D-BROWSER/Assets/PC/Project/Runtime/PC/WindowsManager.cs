@@ -15,9 +15,6 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
-using System;
-using System.Runtime.InteropServices;
-using System.Threading;
 using System.Threading.Tasks;
 using umi3d.browserRuntime.notificationKeys;
 using UnityEngine;
@@ -65,7 +62,11 @@ namespace umi3d.browserRuntime.pc
         public static bool IsWindowZoomed
         {
             get {
+#if UNITY_STANDALONE_WIN
                 return IsZoomed(window);
+#else
+                return true;
+#endif
             }
         }
         /// <summary>
@@ -145,8 +146,10 @@ namespace umi3d.browserRuntime.pc
 
         static WindowsManager()
         {
+#if UNITY_STANDALONE_WIN
             // Get the active window ptr.
             window = GetActiveWindow();
+#endif
 
             // Minimize the window when 'WindowsManagerNotificationKey.Minimize' is sent.
             NotificationHub.Default.Subscribe(
@@ -171,13 +174,6 @@ namespace umi3d.browserRuntime.pc
                  null,
                  FullScreenWillChange
              );
-
-            //// Set the initial resolution.
-            //Screen.SetResolution(
-            //    widthMonitor / 2,
-            //    heightMonitor / 2,
-            //    FullScreenMode.Windowed
-            //);
         }
 
         public static void Update()
@@ -235,7 +231,9 @@ namespace umi3d.browserRuntime.pc
 #if UNITY_STANDALONE_WIN
             return fullScreen ? FullScreenMode.FullScreenWindow : FullScreenMode.Windowed;
 #elif UNITY_STANDALONE_OSX
-        return fullScreen ? FullScreenMode.MaximizedWindow : FullScreenMode.Windowed;
+            return fullScreen ? FullScreenMode.MaximizedWindow : FullScreenMode.Windowed;
+#else
+            return fullScreen ? FullScreenMode.FullScreenWindow : FullScreenMode.Windowed;
 #endif
         }
 

@@ -20,26 +20,19 @@ using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.ui.settings.audio
 {
-    [RequireComponent(typeof(Button))]
-    public class NoiseReductionButton : MonoBehaviour
+    [RequireComponent(typeof(Slider))]
+    public class NoiseThresholdSlider : MonoBehaviour
     {
-        [SerializeField] private bool isOnButton;
-
-        private Button button;
+        [SerializeField] private Slider slider;
 
         private void Awake()
         {
-            button = GetComponent<Button>();
-            button.onClick.AddListener(() => {
-                MicrophoneListener.Instance.UseNoiseReduction = isOnButton;
-                PlayerPrefs.SetInt(SettingsPlayerPrefsKeys.UseNoiseReduction, isOnButton ? 1 : 0);
+            slider.onValueChanged.AddListener(newValue => {
+                PlayerPrefs.SetFloat(SettingsPlayerPrefsKeys.NoiseThreshold, newValue);
+                MicrophoneListener.Instance.minAmplitudeToSend = newValue;
             });
-        }
 
-        private void Start()
-        {
-            if (PlayerPrefs.GetInt(SettingsPlayerPrefsKeys.UseNoiseReduction, 0) > 0 == isOnButton)
-                button.onClick?.Invoke();
+            slider.value = PlayerPrefs.GetFloat(SettingsPlayerPrefsKeys.NoiseThreshold, 0);
         }
     }
 }

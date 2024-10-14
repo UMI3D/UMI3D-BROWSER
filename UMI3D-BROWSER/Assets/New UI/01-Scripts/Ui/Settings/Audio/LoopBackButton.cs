@@ -14,8 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
-using System;
 using umi3d.cdk.collaboration;
 using UnityEngine;
 using UnityEngine.UI;
@@ -26,43 +24,21 @@ namespace umi3d.browserRuntime.ui.settings.audio
     public class LoopBackButton : MonoBehaviour
     {
         [SerializeField] private bool isOnButton;
-        [SerializeField] private GameObject activeBackground;
 
         private Button button;
-        private bool isActive;
 
         private void Awake()
         {
             button = GetComponent<Button>();
-            button.onClick.AddListener(Click);
-
-            NotificationHub.Default.Subscribe(this, SettingsNotificationKeys.NewUseLoopBackSelected, Deactivate);
+            button.onClick.AddListener(() => {
+                MicrophoneListener.Instance.useLocalLoopback = isOnButton;
+            });
         }
 
         private void Start()
         {
             if (!isOnButton)
                 button.onClick?.Invoke();
-        }
-
-        private void OnDestroy()
-        {
-            NotificationHub.Default.Unsubscribe(this);
-        }
-
-        private void Click()
-        {
-            NotificationHub.Default.Notify(this, SettingsNotificationKeys.NewUseLoopBackSelected);
-            isActive = true;
-            activeBackground.SetActive(true);
-
-            MicrophoneListener.Instance.useLocalLoopback = isOnButton;
-        }
-
-        private void Deactivate(Notification notification)
-        {
-            isActive = false;
-            activeBackground.SetActive(false);
         }
     }
 }

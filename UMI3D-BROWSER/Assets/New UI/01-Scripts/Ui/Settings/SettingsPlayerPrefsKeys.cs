@@ -22,5 +22,8 @@ namespace umi3d.browserRuntime.ui.settings
         internal static readonly string EnvironmentVolume = "settings-volume-environement";
         internal static readonly string ConversationVolume = "settings-volume-conversation";
         internal static readonly string UseNoiseReduction = "settings-useNoiseReduction";
+        internal static readonly string AudioMode = "settings-audioMode";
+        internal static readonly string NoiseThreshold = "settings-noiseThreshold";
+        internal static readonly string DelayBeforeMuteMic = "settings-delayBeforeMuteMic";
     }
 }

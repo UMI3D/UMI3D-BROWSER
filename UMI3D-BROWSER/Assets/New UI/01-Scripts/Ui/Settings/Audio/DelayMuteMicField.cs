@@ -14,32 +14,27 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using TMPro;
 using umi3d.cdk.collaboration;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.ui.settings.audio
 {
-    [RequireComponent(typeof(Button))]
-    public class NoiseReductionButton : MonoBehaviour
+    [RequireComponent(typeof(TMP_InputField))]
+    public class DelayMuteMicField : MonoBehaviour
     {
-        [SerializeField] private bool isOnButton;
-
-        private Button button;
+        private TMP_InputField inputField;
 
         private void Awake()
         {
-            button = GetComponent<Button>();
-            button.onClick.AddListener(() => {
-                MicrophoneListener.Instance.UseNoiseReduction = isOnButton;
-                PlayerPrefs.SetInt(SettingsPlayerPrefsKeys.UseNoiseReduction, isOnButton ? 1 : 0);
+            inputField = GetComponent<TMP_InputField>();
+            inputField.contentType = TMP_InputField.ContentType.DecimalNumber;
+            inputField.onValueChanged.AddListener(newValue => {
+                PlayerPrefs.SetFloat(SettingsPlayerPrefsKeys.DelayBeforeMuteMic, float.Parse(newValue));
+                MicrophoneListener.Instance.voiceStopingDelaySeconds = float.Parse(newValue);
             });
-        }
 
-        private void Start()
-        {
-            if (PlayerPrefs.GetInt(SettingsPlayerPrefsKeys.UseNoiseReduction, 0) > 0 == isOnButton)
-                button.onClick?.Invoke();
+            inputField.text = PlayerPrefs.GetFloat(SettingsPlayerPrefsKeys.DelayBeforeMuteMic, 0).ToString();
         }
     }
 }

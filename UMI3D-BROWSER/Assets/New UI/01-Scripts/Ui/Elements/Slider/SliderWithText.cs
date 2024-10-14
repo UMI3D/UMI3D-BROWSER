@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -25,6 +26,8 @@ namespace umi3dBrowsers.displayer
     {
         [SerializeField] private TextMeshProUGUI text;
         [SerializeField] private string suffix;
+        [SerializeField] private bool isRounded;
+        [SerializeField] private int decimalPoint;
 
         private Slider slider;
 
@@ -44,6 +47,8 @@ namespace umi3dBrowsers.displayer
 
         public void SetText(float value)
         {
+            if (isRounded)
+                value = (float)Math.Round(value, decimalPoint);
             text.SetText(value.ToString() + suffix);
         }
     }

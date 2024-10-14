@@ -31,6 +31,7 @@ namespace utils.tweens
         private Vector3 tweenOrigine;
 
         private static bool animate = false;
+        public static bool IsAnimated => animate;
         public static void ToggleAnimation(bool isOn)
         {
             animate = isOn;

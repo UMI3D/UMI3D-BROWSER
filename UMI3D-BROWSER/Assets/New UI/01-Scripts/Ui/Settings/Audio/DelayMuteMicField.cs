@@ -19,7 +19,7 @@ using umi3d.cdk.collaboration;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.settings.audio
-{
+{   
     [RequireComponent(typeof(TMP_InputField))]
     public class DelayMuteMicField : MonoBehaviour
     {

@@ -20,7 +20,6 @@ using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.ui.settings.audio
 {
-    [RequireComponent(typeof(Slider))]
     public class EnvironementVolumeSlider : MonoBehaviour
     {
         [SerializeField] private Slider slider;

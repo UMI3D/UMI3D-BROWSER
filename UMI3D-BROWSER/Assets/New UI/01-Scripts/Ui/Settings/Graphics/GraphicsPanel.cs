@@ -14,24 +14,32 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using umi3d.cdk.collaboration;
+using inetum.unityUtils;
 using UnityEngine;
-using UnityEngine.UI;
 
-namespace umi3d.browserRuntime.ui.settings.audio
+namespace umi3d.browserRuntime.ui.settings.graphics
 {
-    public class NoiseThresholdSlider : MonoBehaviour
+    public class GraphicsPanel : MonoBehaviour
     {
-        [SerializeField] private Slider slider;
-
         private void Awake()
         {
-            slider.onValueChanged.AddListener(newValue => {
-                PlayerPrefs.SetFloat(SettingsPlayerPrefsKeys.NoiseThreshold, newValue);
-                MicrophoneListener.Instance.minAmplitudeToSend = newValue;
-            });
+            NotificationHub.Default.Subscribe(this, SettingsNotificationKeys.CloseAll, Close);
+            NotificationHub.Default.Subscribe(this, SettingsNotificationKeys.OpenGraphics, Open);
+        }
 
-            slider.value = PlayerPrefs.GetFloat(SettingsPlayerPrefsKeys.NoiseThreshold, 0);
+        private void OnDestroy()
+        {
+            NotificationHub.Default.Unsubscribe(this);
+        }
+
+        private void Open()
+        {
+            gameObject.SetActive(true);
+        }
+
+        private void Close()
+        {
+            gameObject.SetActive(false);
         }
     }
 }

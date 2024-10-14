@@ -47,7 +47,7 @@ namespace umi3dBrowsers.displayer
                 m_menuNavigationLinker.ShowPanel(m_loadingPanel);
                 m_menuNavigationLinker.ReplacePlayerAndShowPanel();
             };
-            UMI3DEnvironmentClient.EnvironementJoinned.AddListener(() =>
+            UMI3DEnvironmentClient.EnvironementLoaded.AddListener(() =>
             {
                 OnLoadingFinished?.Invoke();
                 loadingTipDisplayer.StopDisplayTips();
@@ -100,7 +100,6 @@ namespace umi3dBrowsers.displayer
                 {
                     OnLoadingFinished?.Invoke();
                     loadingTipDisplayer.StopDisplayTips();
-                    m_linker.StopDisplayEnvironmentHandler();
                     _loadingInProgress = false;
                 }
             }

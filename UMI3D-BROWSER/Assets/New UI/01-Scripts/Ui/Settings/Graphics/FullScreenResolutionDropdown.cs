@@ -15,11 +15,9 @@ limitations under the License.
 */
 
 using System.Collections.Generic;
-using umi3d.cdk.collaboration;
 using umi3dBrowsers.displayer;
 using UnityEngine;
 using inetum.unityUtils;
-using static UnityEngine.Rendering.DebugUI;
 
 namespace umi3d.browserRuntime.ui.settings.graphics
 {

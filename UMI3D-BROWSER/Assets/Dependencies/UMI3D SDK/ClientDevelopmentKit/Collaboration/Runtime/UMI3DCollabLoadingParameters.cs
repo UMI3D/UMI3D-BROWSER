@@ -39,8 +39,11 @@ namespace umi3d.cdk.collaboration
         [Header("Collab User Capture")]
         [SerializeField]
         private bool collaborationUserCaptureActivated;
-        public bool CollaborationUserCaptureActivated => collaborationUserCaptureActivated;
-        public bool SetCollaborationUserCaptureActivated(bool value) => collaborationUserCaptureActivated = value;
+        public bool CollaborationUserCaptureActivated
+        {
+            get => collaborationUserCaptureActivated;
+            set => collaborationUserCaptureActivated = value;
+        }
 
         [SerializeField]
         private GameObject collabTrackedSkeleton;

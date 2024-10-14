@@ -121,8 +121,11 @@ namespace umi3d.cdk
 
         [SerializeField, Tooltip("True if the browser uses a head mounted display.")]
         private bool hasHeadMountedDisplay;
-        public bool HasHeadMountedDisplay => hasHeadMountedDisplay;
-        public bool SetHasHeadMountedDisplay(bool value) => hasHeadMountedDisplay = value;
+        public bool HasHeadMountedDisplay
+        {
+            get => hasHeadMountedDisplay;
+            set => hasHeadMountedDisplay = value;
+        }
 
         public virtual void Init()
         {

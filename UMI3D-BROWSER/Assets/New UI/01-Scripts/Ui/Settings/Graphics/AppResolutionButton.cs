@@ -61,8 +61,7 @@ namespace umi3d.browserRuntime.ui.settings.graphics
 
         private void FullScreenResolutionValueChanged(Resolution value)
         {
-            if (Screen.fullScreen)
-                Screen.SetResolution(value.width, value.height, true);
+            Screen.SetResolution(value.width, value.height, Screen.fullScreen);
         }
     }
 }

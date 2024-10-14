@@ -22,7 +22,7 @@ namespace inetum.unityUtils
     /// <summary>
     /// The request made by a client to get some values from a supplier.
     /// </summary>
-    public class Request 
+    public class Request
     {
         /// <summary>
         /// Whether this request is associated with a <see cref="Supplier"/>.

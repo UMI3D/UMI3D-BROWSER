@@ -49,9 +49,9 @@ namespace inetum.unityUtils
         #region Subscribe
 
         public void Subscribe(
-            Object subscriber, 
-            string id, 
-            INotificationFilter publishersFilter, 
+            Object subscriber,
+            string id,
+            INotificationFilter publishersFilter,
             Action<Notification> action
         )
         {
@@ -99,9 +99,9 @@ namespace inetum.unityUtils
         }
 
         public void Subscribe(
-            Object subscriber, 
+            Object subscriber,
             string id,
-            INotificationFilter publishersFilter, 
+            INotificationFilter publishersFilter,
             Action action
         )
         {
@@ -310,8 +310,8 @@ namespace inetum.unityUtils
         }
 
         public int Notify(
-            Object publisher, 
-            string id, 
+            Object publisher,
+            string id,
             Dictionary<string, Object> info = null
         )
         {
@@ -339,8 +339,8 @@ namespace inetum.unityUtils
         {
             return new Notifier(
                 publisher,
-                id, 
-                subscribersFilter, 
+                id,
+                subscribersFilter,
                 info,
                 this
             );

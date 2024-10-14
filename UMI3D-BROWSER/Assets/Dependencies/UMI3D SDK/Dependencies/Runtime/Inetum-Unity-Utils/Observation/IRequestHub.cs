@@ -18,7 +18,7 @@ using System;
 
 namespace inetum.unityUtils
 {
-    public interface IRequestHub 
+    public interface IRequestHub
     {
         #region Subscribe
 

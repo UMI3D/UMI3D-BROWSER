@@ -1,5 +1,5 @@
 /*
-Copyright 2019 - 2021 Inetum
+Copyright 2019 - 2024 Inetum
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,18 +16,14 @@ limitations under the License.
 
 namespace umi3d.common
 {
-    public class FrameRequestDto : AbstractOperationDto
+    /// <summary>
+    /// List of default shader properties that can be used for <see cref="UMI3DMaterialDto.shaderProperties"/>
+    /// </summary>
+    public static class UMI3DShaderProperties
     {
         /// <summary>
-        /// Frame's UMI3D id.
+        /// A property to set a material render queue.
         /// </summary>
-        public ulong FrameId { get; set; } = 0;
-
-        /// <summary>
-        /// Scale of the user in the new referential. 
-        /// Not to be misunderstood with the height.
-        /// A user should be at full height with a scale of one.
-        /// </summary>
-        public float scale { get; set; } = 1;
+        public const string RenderQueueProperty = "RenderQueue";
     }
 }

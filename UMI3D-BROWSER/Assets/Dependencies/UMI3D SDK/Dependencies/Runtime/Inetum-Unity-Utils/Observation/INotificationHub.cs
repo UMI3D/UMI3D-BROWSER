@@ -32,9 +32,9 @@ namespace inetum.unityUtils
         /// <param name="publishersFilter">Only the notifications that pass this filter test can be sent to this 'subscriber'.</param>
         /// <param name="action">The action perform to notify.</param>
         public void Subscribe(
-            Object subscriber, 
+            Object subscriber,
             string id,
-            INotificationFilter publishersFilter, 
+            INotificationFilter publishersFilter,
             Action<Notification> action
         );
 
@@ -60,9 +60,9 @@ namespace inetum.unityUtils
         /// <param name="publishersFilter">Only the notifications that pass this filter test can be sent to this 'subscriber'.</param>
         /// <param name="action">The action perform to notify.</param>
         public void Subscribe(
-            Object subscriber, 
+            Object subscriber,
             string id,
-            INotificationFilter publishersFilter, 
+            INotificationFilter publishersFilter,
             Action action
         );
 

@@ -17,7 +17,6 @@ using System.Collections.Generic;
 using System.Linq;
 using umi3d.cdk;
 using umi3d.cdk.interaction;
-using umi3d.cdk.userCapture.pose;
 using umi3d.common;
 using umi3dBrowsers.interaction.selection;
 using umi3dBrowsers.interaction.selection.cursor;
@@ -142,7 +141,7 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
                     return;
 
                 trackingInfo.targetContainer.Interactable.HoverEnter(
-                    controller.bone.Bonetype,
+                    controller.bone.BoneType,
                     controller.bone.transform.position,
                     new Vector4(controller.bone.transform.rotation.x, controller.bone.transform.rotation.y, controller.bone.transform.rotation.z, controller.bone.transform.rotation.w),
                     trackingInfo.targetContainer.Interactable.id,
@@ -152,7 +151,7 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
 
                 if (trackingInfo.target.dto.HoverEnterAnimationId != 0)
                 {
-                    changelastBone.Invoke(controller.bone.Bonetype);
+                    changelastBone.Invoke(controller.bone.BoneType);
                     StartAnim(trackingInfo.target.dto.HoverEnterAnimationId);
                 }
             });
@@ -165,7 +164,7 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
                 if (!IsNullOrDestroyed(trackingInfo.targetContainer))
                 {
                     trackingInfo.targetContainer.Interactable.HoverExit(
-                        controller.bone.Bonetype,
+                        controller.bone.BoneType,
                         controller.bone.transform.position,
                         new Vector4(controller.bone.transform.rotation.x, controller.bone.transform.rotation.y, controller.bone.transform.rotation.z, controller.bone.transform.rotation.w),
                         trackingInfo.targetContainer.Interactable.id,
@@ -179,7 +178,7 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
                     {
                         toolId = trackingInfo.targetContainer.Interactable.id,
                         hoveredObjectId = trackingInfo.targetContainer.Interactable.id,
-                        boneType = controller.bone.Bonetype,
+                        boneType = controller.bone.BoneType,
                         state = false,
                         normal = Vector3.zero.Dto(),
                         position = Vector3.zero.Dto(),
@@ -190,7 +189,7 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
 
                 if (trackingInfo.target.dto.HoverExitAnimationId != 0)
                 {
-                    changelastBone.Invoke(controller.bone.Bonetype);
+                    changelastBone.Invoke(controller.bone.BoneType);
                     StartAnim(trackingInfo.target.dto.HoverExitAnimationId);
                 }
             });
@@ -201,7 +200,7 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
                     return;
 
                 trackingInfo.targetContainer.Interactable.Hovered(
-                    controller.bone.Bonetype,
+                    controller.bone.BoneType,
                     controller.bone.transform.position,
                     new Vector4(controller.bone.transform.rotation.x, controller.bone.transform.rotation.y, controller.bone.transform.rotation.z, controller.bone.transform.rotation.w),
                     trackingInfo.targetContainer.Interactable.id,
@@ -213,18 +212,19 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
 
         protected async void StartAnim(ulong id)
         {
-            var anim = UMI3DAbstractAnimation.Get(id);
+            var anim = UMI3DAbstractAnimation.Get(UMI3DGlobalID.EnvironmentId, id);
             if (anim != null)
             {
                 await anim.SetUMI3DProperty(
                     new SetUMI3DPropertyData(
+                        UMI3DGlobalID.EnvironmentId,
                          new SetEntityPropertyDto()
                          {
                              entityId = id,
                              property = UMI3DPropertyKeys.AnimationPlaying,
                              value = true
                          },
-                        UMI3DEnvironmentLoader.GetEntity(id))
+                        UMI3DEnvironmentLoader.GetEntity(UMI3DGlobalID.EnvironmentId, id))
                     );
                 anim.Start();
             }
@@ -250,6 +250,17 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
             return obj != null && distance < maxLength;
         }
 
+        /// <summary>
+        /// Test if a collider should block a raycast
+        /// </summary>
+        /// <param name="hit"></param>
+        /// <returns></returns>
+        private bool IsABlocker(RaycastHit hit)
+        {
+            var container = hit.transform.GetComponentInParent<NodeContainer>();
+            return container?.instance.IsBlockingInteraction ?? false;
+        }
+
         public void Update()
         {
             // Priority on touch UI
@@ -262,7 +273,7 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
             }
 
             raycastHelperSelectable = new RaySelectionZone<Selectable>(transform.position, transform.up);
-            raycastHelperInteractable = new RaySelectionZone<InteractableContainer>(transform.position, transform.up);
+            raycastHelperInteractable = new RaySelectionZone<InteractableContainer>(transform.position, transform.up) { blocker = IsABlocker };
             raycastHelperElement = new RaySelectionZone<AbstractClientInteractableElement>(transform.position, transform.up);
 
             //Update impact point position

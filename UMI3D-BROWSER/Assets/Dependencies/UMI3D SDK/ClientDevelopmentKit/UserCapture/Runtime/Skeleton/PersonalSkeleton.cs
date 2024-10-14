@@ -17,6 +17,7 @@ limitations under the License.
 using System.Collections.Generic;
 using umi3d.cdk.userCapture.pose;
 using umi3d.cdk.userCapture.tracking;
+using umi3d.common;
 using umi3d.common.userCapture.tracking;
 using UnityEngine;
 
@@ -36,16 +37,25 @@ namespace umi3d.cdk.userCapture
         /// </summary>
         public Vector3 worldSize => TrackedSubskeleton.Hips.lossyScale;
 
+        private ILoadingManager loadingManager;
+
+        private bool hasHeadMountedDisplay = false; 
+
         protected void Start()
         {
-            PoseSubskeleton = new PoseSubskeleton();
-
-            //Init(trackedSkeleton, PoseSubskeleton);
+            PoseSubskeleton = new PoseSubskeleton(UMI3DGlobalID.EnvironmentId, this);
+            
         }
 
-        public void SelfInit()
+        public void Init(bool hasHMD)
         {
+            this.hasHeadMountedDisplay = hasHMD;
             Init(trackedSkeleton, PoseSubskeleton);
+        }
+
+        public void Init()
+        {
+            Init((UMI3DEnvironmentLoader.Instance.LoadingParameters as IUMI3DUserCaptureLoadingParameters)?.HasHeadMountedDisplay ?? false);
         }
 
         /// <inheritdoc/>
@@ -81,6 +91,15 @@ namespace umi3d.cdk.userCapture
             }
 
             lastFrame = frame;
+        }
+
+        protected override void CorrectIK()
+        {
+            if (hasHeadMountedDisplay) // no IK correction for VR devices
+                return;
+
+
+            base.CorrectIK();
         }
     }
 }

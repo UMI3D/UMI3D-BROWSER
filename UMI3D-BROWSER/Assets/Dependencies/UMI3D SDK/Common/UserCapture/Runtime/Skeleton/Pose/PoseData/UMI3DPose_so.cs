@@ -26,7 +26,7 @@ namespace umi3d.common.userCapture.pose
     /// <summary>
     /// Scriptable object to contains data for a pose.
     /// </summary>
-    [Serializable, CreateAssetMenu(menuName ="UMI3D/UserCapture/Pose")]
+    [Serializable, CreateAssetMenu(menuName = "UMI3D/UserCapture/Pose")]
     public class UMI3DPose_so : ScriptableObject, IJsonSerializer, IUMI3DPoseData
     {
         #region Fields
@@ -46,7 +46,7 @@ namespace umi3d.common.userCapture.pose
         #endregion Fields
 
         /// <inheritdoc/>
-        public IList<BoneDto> Bones => bones.Select(b=>b.ToDto()).ToList();
+        public IList<BoneDto> Bones => bones.Select(b => b.ToDto()).ToList();
 
         /// <inheritdoc/>
         public PoseAnchorDto Anchor => boneAnchor.ToDto();
@@ -71,10 +71,20 @@ namespace umi3d.common.userCapture.pose
             };
         }
 
+        public void Init(PoseDto poseDto)
+        {
+            Init(poseDto.bones, poseDto.anchor);
+        }
+
         /// <inheritdoc/>
         public PoseDto ToPoseDto()
         {
             return new PoseDto() { bones = GetBonesCopy(), anchor = GetBonePoseCopy() };
+        }
+
+        public PoseDto ToPoseDto(PoseAnchoringType anchoringType, ulong poseRelativeNodeId, uint poseRelativeBone, Vector3 posOffset, Quaternion rotOffset)
+        {
+            return new PoseDto { bones = GetBonesCopy(), anchor = GetBonePoseCopy() };
         }
 
         /// <inheritdoc/>

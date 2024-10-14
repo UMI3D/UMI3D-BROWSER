@@ -23,7 +23,7 @@ namespace umi3d.common
     /// <summary>
     /// Helper class for physics related algorithms such as ray-casting.
     /// </summary>
-    public static class Physics
+    public class Physics : MonoBehaviour
     {
         /// <summary>
         /// Size of the raycast hit buffer.

@@ -34,7 +34,7 @@ namespace umi3dVRBrowsersBase.interactions.input
         /// <param name="interaction"></param>
         /// <param name="toolId"></param>
         /// <param name="hoveredObjectId"></param>
-        public override void Associate(AbstractInteractionDto interaction, ulong toolId, ulong hoveredObjectId)
+        public override void Associate(ulong environmentId, AbstractInteractionDto interaction, ulong toolId, ulong hoveredObjectId)
         {
             if (associatedInteraction != null)
             {
@@ -43,7 +43,7 @@ namespace umi3dVRBrowsersBase.interactions.input
 
             if (IsCompatibleWith(interaction) && interaction is EventDto ev)
             {
-                base.Associate(interaction, toolId, hoveredObjectId);
+                base.Associate(environmentId, interaction, toolId, hoveredObjectId);
             }
             else
             {
@@ -58,7 +58,7 @@ namespace umi3dVRBrowsersBase.interactions.input
         /// <param name="dofs"></param>
         /// <param name="toolId"></param>
         /// <param name="hoveredObjectId"></param>
-        public override void Associate(ManipulationDto manipulation, DofGroupEnum dofs, ulong toolId, ulong hoveredObjectId)
+        public override void Associate(ulong environmentId, ManipulationDto manipulation, DofGroupEnum dofs, ulong toolId, ulong hoveredObjectId)
         {
             if (associatedInteraction != null)
             {
@@ -68,7 +68,7 @@ namespace umi3dVRBrowsersBase.interactions.input
             if (IsCompatibleWith(manipulation))
             {
 
-                base.Associate(manipulation, dofs, toolId, hoveredObjectId);
+                base.Associate(environmentId, manipulation, dofs, toolId, hoveredObjectId);
             }
         }
 

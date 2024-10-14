@@ -26,32 +26,37 @@ namespace umi3dVRBrowsersBase.ikManagement
 
         public Animator SkeletonAnimator;
 
-        public VirtualObjectBodyInteraction LeftTarget;
-        public VirtualObjectBodyInteraction RightTarget;
-
         public Tracker LeftTracker;
         public Tracker RightTracker;
 
         private void Start()
         {
-            LeftTracker = LeftTracker ?? LeftTarget.GetComponent<Tracker>();
-            RightTracker = RightTracker ?? RightTarget.GetComponent<Tracker>();
-            LeftTracker.isActif = false;
-            RightTracker.isActif = false;
+            LeftTracker.isActive = false;
+            RightTracker.isActive = false;
         }
 
         private void Update()
         {
-            this.transform.position = new Vector3(FollowedAvatarNode.position.x, OVRRig.position.y, FollowedAvatarNode.position.z);
-            this.transform.rotation = FollowedAvatarNode.rotation;
+            transform.position = new Vector3(
+                FollowedAvatarNode.position.x, 
+                OVRRig.position.y, 
+                FollowedAvatarNode.position.z
+            );
+            transform.rotation = FollowedAvatarNode.rotation;
         }
 
         public void SetFootTargets()
         {
-            LeftTarget.transform.position = SkeletonAnimator.GetBoneTransform(HumanBodyBones.LeftFoot).position;
-            RightTarget.transform.position = SkeletonAnimator.GetBoneTransform(HumanBodyBones.RightFoot).position;
-            LeftTracker.isActif = true;
-            RightTracker.isActif = true;
+            LeftTracker.transform.position 
+                = SkeletonAnimator.GetBoneTransform(
+                    HumanBodyBones.LeftFoot
+                ).position;
+            RightTracker.transform.position 
+                = SkeletonAnimator.GetBoneTransform(
+                    HumanBodyBones.RightFoot
+                ).position;
+            LeftTracker.isActive = true;
+            RightTracker.isActive = true;
         }
     }
 }

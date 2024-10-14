@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -25,17 +26,9 @@ namespace umi3dVRBrowsersBase.connection
     /// </summary>
     public static class PlayerPrefsManager
     {
-        #region Fields
+        #region Ip
 
         public static readonly string Umi3dIp = "umi3d-ip";
-
-        public static readonly string Umi3dPort = "umi3d-port";
-
-        public static readonly string Umi3dVirtualWorlds = "umi3d-virtual-worlds";
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         /// If an ip VirtualWorld is stored, returns it otherwise returns an empty string.
@@ -43,12 +36,9 @@ namespace umi3dVRBrowsersBase.connection
         /// <returns></returns>
         public static string GetUmi3dIp()
         {
-            string res = string.Empty;
-
-            if (PlayerPrefs.HasKey(Umi3dIp))
-                res = PlayerPrefs.GetString(Umi3dIp);
-
-            return res;
+            return PlayerPrefs.HasKey(Umi3dIp) 
+                ? PlayerPrefs.GetString(Umi3dIp)
+                : string.Empty;
         }
 
         /// <summary>
@@ -60,18 +50,21 @@ namespace umi3dVRBrowsersBase.connection
             PlayerPrefs.SetString(Umi3dIp, ip);
         }
 
+        #endregion
+
+        #region Port
+
+        public static readonly string Umi3dPort = "umi3d-port";
+
         /// <summary>
         /// If a port VirtualWorld is stored, returns it otherwise returns an empty string.
         /// </summary>
         /// <returns></returns>
         public static string GetUmi3DPort()
         {
-            string res = string.Empty;
-
-            if (PlayerPrefs.HasKey(Umi3dPort))
-                res = PlayerPrefs.GetString(Umi3dPort);
-
-            return res;
+            return PlayerPrefs.HasKey(Umi3dPort)
+                ? PlayerPrefs.GetString(Umi3dPort)
+                : string.Empty;
         }
 
         /// <summary>
@@ -83,85 +76,30 @@ namespace umi3dVRBrowsersBase.connection
             PlayerPrefs.SetString(Umi3dPort, port);
         }
 
+        #endregion
+
+        #region Virtual Worlds
+
+        public static readonly string Umi3dVirtualWorlds = "umi3d-virtual-worlds";
+
         /// <summary>
-        /// Returns true if their is VirtualWorld store.
+        /// Returns true if there is <see cref="VirtualWorlds"/> stored.
         /// </summary>
         /// <returns></returns>
         public static bool HasVirtualWorldsStored()
         {
-            if (PlayerPrefs.HasKey(Umi3dVirtualWorlds))
-            {
-                VirtualWorlds data = JsonUtility.FromJson<VirtualWorlds>(PlayerPrefs.GetString(Umi3dVirtualWorlds));
-                if (data != null)
-                {
-                    return data.worlds.Count > 0;
-                }
-            }
-
-            return false;
+            return PlayerPrefs.HasKey(Umi3dVirtualWorlds);
         }
 
         /// <summary>
-        /// Return true if at least one VirtualWorld is set to favorite;
+        /// Returns the <see cref="VirtualWorlds"/> stored.
         /// </summary>
         /// <returns></returns>
-        public static bool HasFavoriteVirtualWorldsStored()
+        public static VirtualWorlds GetVirtualWorlds()
         {
-            if (!HasFavoriteVirtualWorldsStored()) return false;
-
-            if (PlayerPrefs.HasKey(Umi3dVirtualWorlds))
-            {
-                VirtualWorlds data = JsonUtility.FromJson<VirtualWorlds>(PlayerPrefs.GetString(Umi3dVirtualWorlds));
-                if (data != null)
-                {
-                    return data.worlds.Where(d => d.isFavorite).Count() > 0;
-                }
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Returns a list of all VirtualWorld.
-        /// </summary>
-        /// <returns></returns>
-        public static List<VirtualWorldData> GetVirtualWorlds()
-        {
-            if (HasVirtualWorldsStored())
-            {
-                string dataStr = PlayerPrefs.GetString(Umi3dVirtualWorlds);
-
-                VirtualWorlds data = JsonUtility.FromJson<VirtualWorlds>(PlayerPrefs.GetString(Umi3dVirtualWorlds));
-
-                if (data == null)
-                {
-                    Debug.LogError("Interal error, impossible to read VirtualWorlds from preferences");
-                }
-                else
-                {
-                    return data.worlds;
-                }
-            }
-            else
-            {
-                Debug.Log("No VirtualWorlds stored, you should use HasVirtualWorldsStored() before calling this method");
-            }
-
-            return new();
-        }
-
-        /// <summary>
-        /// Returns a list of all favorite VirtualWorld.
-        /// </summary>
-        /// <returns></returns>
-        public static List<VirtualWorldData> GetFavoriteVirtualWorlds()
-        {
-            if (HasVirtualWorldsStored())
-                return GetVirtualWorlds().Where(d => d.isFavorite)
-                                         .OrderBy(d => d.indexFavorite)
-                                         .ToList();
-
-            return new ();
+            return PlayerPrefs.HasKey(Umi3dVirtualWorlds)
+                ? JsonUtility.FromJson<VirtualWorlds>(PlayerPrefs.GetString(Umi3dVirtualWorlds))
+                : null;
         }
 
         /// <summary>
@@ -169,119 +107,14 @@ namespace umi3dVRBrowsersBase.connection
         /// </summary>
         /// <param name="url"></param>
         /// <param name="name"></param>
-        public static void SaveVirtualWorld(VirtualWorldData data)
+        public static void SaveVirtualWorld(VirtualWorlds worlds)
         {
-            VirtualWorlds virtualWorlds;
-
-            if (HasVirtualWorldsStored())
-            {
-                virtualWorlds = JsonUtility.FromJson<VirtualWorlds>(PlayerPrefs.GetString(Umi3dVirtualWorlds));
-
-                if (virtualWorlds == null)
-                {
-                    Debug.LogError("Interal error, impossible to read virtual world from preferences");
-                    return;
-                }
-                else if (virtualWorlds.worlds.Find(d => d.worldUrl == data.worldUrl) is VirtualWorldData d && d != null)
-                {
-                    if (data.isFavorite)
-                    {
-                        d.isFavorite = true;
-                        d.indexFavorite = GetFavoriteVirtualWorlds().Count;
-                    }
-                    d.dateLastConnection = data.dateLastConnection;
-                }
-                else
-                {
-                    data.dateFirstConnection = data.dateLastConnection;
-                    virtualWorlds.worlds.Add(data);
-                }
-            }
-            else
-            {
-                data.dateFirstConnection = data.dateLastConnection;
-                if (data.isFavorite)
-                    data.indexFavorite = 0;
-                virtualWorlds = new VirtualWorlds { worlds = new List<VirtualWorldData> { data } };
-            }
-            PlayerPrefs.SetString(Umi3dVirtualWorlds, JsonUtility.ToJson(virtualWorlds));
+            PlayerPrefs.SetString(Umi3dVirtualWorlds, JsonUtility.ToJson(worlds));
             PlayerPrefs.Save();
         }
 
-        /// <summary>
-        /// If a VirtualWorld with <see cref="url"/> as url is currently stored, remove from favorite.
-        /// </summary>
-        /// <param name="url"></param>
-        public static void RemoveServerFromFavorite(string url)
-        {
-            if (!HasFavoriteVirtualWorldsStored()) return;
-            
-            var virtualWorlds = GetFavoriteVirtualWorlds();
-            var favoriteFound = false;
+        #endregion
 
-            for (int i = 0; i < virtualWorlds.Count; i++)
-            {
-                if (!favoriteFound)
-                {
-                    if (virtualWorlds[i].worldUrl != url) continue;
-                    favoriteFound = true;
-
-                    virtualWorlds[i].isFavorite = false;
-                }
-                else
-                {
-                    virtualWorlds[i].indexFavorite -= 1;
-                }
-            }
-            PlayerPrefs.SetString(Umi3dVirtualWorlds, JsonUtility.ToJson(virtualWorlds));
-            PlayerPrefs.Save();
-        }
-
-        /// <summary>
-        /// Increment Favorite VirtualWorld index, if a favorite VirtualWorld with <see cref="url"/> as url is currently stored
-        /// </summary>
-        /// <param name="url"></param>
-        public static void IncrementFavorite(string url)
-        {
-            if (!HasFavoriteVirtualWorldsStored()) return;
-
-            var favoriteVirtualWorlds = GetFavoriteVirtualWorlds();
-
-            for (int i = 0; i < favoriteVirtualWorlds.Count; i++)
-            {
-                if (favoriteVirtualWorlds[i].worldUrl != url) continue;
-
-                if (i != favoriteVirtualWorlds.Count - 1)
-                {
-                    favoriteVirtualWorlds[i].indexFavorite += 1;
-                    favoriteVirtualWorlds[i+1].indexFavorite -= 1;
-                }
-                return;
-            }
-        }
-
-        /// <summary>
-        /// Decrement Favorite VirtualWorld index, if a favorite VirtualWorld with <see cref="url"/> as url is currently stored
-        /// </summary>
-        /// <param name="url"></param>
-        public static void DecrementFavorite(string url)
-        {
-            if (!HasFavoriteVirtualWorldsStored()) return;
-
-            var favoriteVirtualWorlds = GetFavoriteVirtualWorlds();
-
-            for (int i = 0; i < favoriteVirtualWorlds.Count; i++)
-            {
-                if (favoriteVirtualWorlds[i].worldUrl != url) continue;
-
-                if (i != 0)
-                {
-                    favoriteVirtualWorlds[i].indexFavorite -= 1;
-                    favoriteVirtualWorlds[i - 1].indexFavorite += 1;
-                }
-                return;
-            }
-        }
 
         /// <summary>
         /// Contains : environment name, ip and port.
@@ -295,32 +128,128 @@ namespace umi3dVRBrowsersBase.connection
 
             public override string ToString() => $"name = {environmentName}, ip = {ip}, port = {port}";
         }
+    }
+
+    /// <summary>
+    /// Stores data about a VirtualWorld.
+    /// </summary>
+    [System.Serializable]
+    public class VirtualWorldData
+    {
+        public string worldName;
+        public string worldUrl;
+
+        public bool isFavorite;
+
+        public string dateFirstConnection;
+        public string dateLastConnection;
+    }
+
+    /// <summary>
+    /// Stores all VirtualWorlds.
+    /// </summary>
+    [System.Serializable]
+    public class VirtualWorlds
+    {
+        /// <summary>
+        /// All the worlds.
+        /// </summary>
+        public List<VirtualWorldData> worlds = new();
+        /// <summary>
+        /// The list of favorite URLs.
+        /// </summary>
+        public List<string> favoriteURLs = new();
 
         /// <summary>
-        /// Stores data about a VirtualWorld.
+        /// The favorite worlds.
         /// </summary>
-        [System.Serializable]
-        public class VirtualWorldData
+        public List<VirtualWorldData> FavoriteWorlds
         {
-            public string worldName;
-            public string worldUrl;
-
-            public bool isFavorite;
-            public int indexFavorite;
-
-            public string dateFirstConnection;
-            public string dateLastConnection;
+            get
+            {
+                if (worlds == null || worlds.Count == 0)
+                {
+                    return null;
+                }
+                else
+                {
+                    List<VirtualWorldData> result = new();
+                    foreach (var url in favoriteURLs)
+                    {
+                        result.Add(worlds.Find(world => world.worldUrl == url));
+                    }
+                    return result;
+                }
+            }
         }
 
         /// <summary>
-        /// Stores all VirtualWorlds.
+        /// Whether or not the stored worlds contains <paramref name="world"/>.
         /// </summary>
-        [System.Serializable]
-        public class VirtualWorlds
+        /// <param name="world"></param>
+        /// <returns></returns>
+        public bool Contains(VirtualWorldData world)
         {
-            public List<VirtualWorldData> worlds = new ();
+            return worlds.Find(_world => _world.worldUrl == world.worldUrl) != null;
         }
 
-        #endregion
+        public void AddWorld(VirtualWorldData world)
+        {
+            worlds.Add(world);
+            PlayerPrefsManager.SaveVirtualWorld(this);
+        }
+
+        public void UpdateWorld(VirtualWorldData world)
+        {
+            var storedWorld = worlds.Find(_world => _world.worldUrl == world.worldUrl);
+            if (storedWorld == null)
+            {
+                UnityEngine.Debug.LogError($"world is not stored.");
+                return;
+            }
+
+            if (world.isFavorite && !storedWorld.isFavorite)
+            {
+                storedWorld.isFavorite = true;
+                AddWorldToFavoriteWorlds(storedWorld);
+            }
+
+            storedWorld.dateLastConnection = world.dateLastConnection;
+            PlayerPrefsManager.SaveVirtualWorld(this);
+        }
+
+        public void AddWorldToFavoriteWorlds(VirtualWorldData world, int index = -1)
+        {
+            UnityEngine.Debug.LogError($"here");
+            if (index < 0)
+            {
+                index = favoriteURLs.Count;
+            }
+            favoriteURLs.Insert(index, world.worldUrl);
+            PlayerPrefsManager.SaveVirtualWorld(this);
+        }
+
+        public void RemoveWorldFromFavoriteWorlds(VirtualWorldData world)
+        {
+            RemoveWorldFromFavoriteWorlds(world.worldUrl);
+        }
+
+        public void RemoveWorldFromFavoriteWorlds(string url)
+        {
+            worlds.Find(_world => _world.worldUrl == url).isFavorite = false;
+            favoriteURLs.Remove(url);
+            PlayerPrefsManager.SaveVirtualWorld(this);
+        }
+
+        public void DebugFavoriteListCreation()
+        {
+            foreach (var world in worlds) 
+            {
+                if (world.isFavorite && !favoriteURLs.Contains(world.worldUrl))
+                {
+                    favoriteURLs.Add(world.worldUrl);
+                }
+            }
+        }
     }
 }

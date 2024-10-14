@@ -221,8 +221,6 @@ namespace umi3dVRBrowsersBase.interactions
 
             if (res == null) res = FindVRInput(menuInputs, i => i.IsAvailable() || !unused, this.gameObject);
 
-            PlayerMenuManager.Instance.CtrlToolMenu.AddBinding(res);
-
             return res;
         }
 
@@ -287,8 +285,6 @@ namespace umi3dVRBrowsersBase.interactions
                 result.Init(this);
                 menuInputs.Add(result as MenuInput);
             }
-
-            PlayerMenuManager.Instance.CtrlToolMenu.AddBinding(result);
 
             return result;
         }

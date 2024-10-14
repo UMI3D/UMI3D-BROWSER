@@ -17,6 +17,7 @@ limitations under the License.
 using umi3d.cdk.binding;
 using umi3d.cdk.userCapture.tracking;
 using umi3d.common;
+using umi3d.common.core;
 using umi3d.common.userCapture.binding;
 using UnityEngine;
 
@@ -27,24 +28,36 @@ namespace umi3d.cdk.userCapture.binding
     /// </summary>
     public class BoneBinding : AbstractSimpleBinding
     {
+        private const DebugScope DEBUG_SCOPE = DebugScope.CDK | DebugScope.UserCapture;
+
         public BoneBinding(BoneBindingDataDto dto, Transform boundTransform, ISkeleton skeleton) : base(dto, boundTransform)
         {
             this.skeleton = skeleton;
+            this.UserId = dto.userId;
+            this.BoneType = dto.boneType;
+            this.BindToController = dto.bindToController;
+
+            BoneBindingDataDto = (BoneBindingDataDto)SimpleBindingData;
         }
 
         #region DTO Access
 
-        protected BoneBindingDataDto BoneBindingDataDto => SimpleBindingData as BoneBindingDataDto;
+        protected BoneBindingDataDto BoneBindingDataDto { get; }
 
         /// <summary>
         /// See <see cref="BoneBindingDataDto.userId"/>.
         /// </summary>
-        public ulong UserId => BoneBindingDataDto.userId;
+        public ulong UserId { get; }
 
         /// <summary>
         /// See <see cref="BoneBindingDataDto.boneType"/>.
         /// </summary>
-        public uint BoneType => BoneBindingDataDto.boneType;
+        public uint BoneType { get; }
+
+        /// <summary>
+        /// See <see cref="BoneBindingDataDto.bindToController"/>.
+        /// </summary>
+        public bool BindToController { get; }
 
         #endregion DTO Access
 
@@ -58,42 +71,33 @@ namespace umi3d.cdk.userCapture.binding
         {
             if (boundTransform == null) // node is destroyed
             {
-                UMI3DLogger.LogWarning($"Bound transform is null. It may have been deleted without removing the binding first.", DebugScope.CDK | DebugScope.Core);
+                UMI3DLogger.LogWarning($"Bound transform is null. It may have been deleted without removing the binding first.", DEBUG_SCOPE);
                 success = false;
                 return;
             }
 
-            ISkeleton.Transformation parentBoneTransform;
+            if (!hasStartedToBeApplied)
+                Start();
 
-            if (BoneBindingDataDto.bindToController)
+            ITransformation parentBone = null;
+
+            if (BindToController && skeleton.TrackedSubskeleton.Controllers.TryGetValue(BoneType, out IController controller))
             {
-                var controller = ((skeleton.TrackedSubskeleton as TrackedSubskeleton).controllers.Find(c => c.boneType == BoneType) as DistantController);
-
-                if (controller != null)
-                    parentBoneTransform = new()
-                    {
-                        Position = controller.position,
-                        Rotation = controller.rotation,
-                    };
-                else
-                {
-                    UMI3DLogger.LogError($"No existing controller for {BoneType}. It may have been deleted without removing the binding first.", DebugScope.CDK | DebugScope.Core);
-                    success = false;
-                    return;
-                }
+                parentBone = controller.transformation;
             }
-            else
+            else if (skeleton.Bones.TryGetValue(BoneType, out var boneTransformation))
             {
-                if (!skeleton.Bones.TryGetValue(BoneType, out parentBoneTransform))
-                {
-                    UMI3DLogger.LogError($"Bone transform from bone {BoneType} is null. It may have been deleted without removing the binding first.", DebugScope.CDK | DebugScope.Core);
-                    success = false;
-                    return;
-                }
-
+                parentBone = boneTransformation;
             }
 
-            Compute((parentBoneTransform.Position, parentBoneTransform.Rotation, Vector3.one));
+            if (parentBone == null)
+            {
+                UMI3DLogger.LogWarning($"Bone transform from bone {BoneType} is null. It may have been deleted without removing the binding first.", DEBUG_SCOPE);
+                success = false;
+                return;
+            }
+
+            Compute(parentBone);
             success = true;
         }
     }

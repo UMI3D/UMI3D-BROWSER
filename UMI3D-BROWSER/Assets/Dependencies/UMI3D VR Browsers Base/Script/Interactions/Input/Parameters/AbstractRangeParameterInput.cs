@@ -39,7 +39,7 @@ namespace umi3dVRBrowsersBase.interactions.input
         /// <param name="interaction"></param>
         /// <param name="toolId"></param>
         /// <param name="hoveredObjectId"></param>
-        public override void Associate(AbstractInteractionDto interaction, ulong toolId, ulong hoveredObjectId)
+        public override void Associate(ulong environmentId, AbstractInteractionDto interaction, ulong toolId, ulong hoveredObjectId)
         {
             if (currentInteraction != null)
             {
@@ -67,7 +67,7 @@ namespace umi3dVRBrowsersBase.interactions.input
                         UMI3DClientServer.SendData(new ParameterSettingRequestDto()
                         {
                             id = param.id,
-                            boneType = bone.Bonetype,
+                            boneType = bone.BoneType,
                             bonePosition = bone.transform.position.Dto(),
                             boneRotation = bone.transform.rotation.Dto(),
                             parameter = new ParameterType()

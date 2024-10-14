@@ -141,13 +141,13 @@ namespace umi3d.cdk
         }
 
         // Enable to access the Collaboration implementation. Should not be there and will be reworked.
-        public static async Task<byte[]> GetFile(string url, bool useParameterInsteadOfHeader)
+        public static async Task<byte[]> GetFile(string url, bool useParameterInsteadOfHeader, Progress progress = null)
         {
             try
             {
                 if (Exists)
                 {
-                    byte[] bytes = await Instance._GetFile(url, useParameterInsteadOfHeader);
+                    byte[] bytes = await Instance._GetFile(url, useParameterInsteadOfHeader, progress);
                     if (bytes != null)
                         return (bytes);
                     throw new Umi3dLoadingException($"No Data in response for {url}");
@@ -162,24 +162,24 @@ namespace umi3d.cdk
 
         }
 
-        protected virtual Task<byte[]> _GetFile(string url, bool useParameterInsteadOfHeader)
+        protected virtual Task<byte[]> _GetFile(string url, bool useParameterInsteadOfHeader, Progress progress = null)
         {
             throw new NotImplementedException();
         }
 
         // Enable to access the Collaboration implementation. Should not be there and will be reworked.
-        public static async Task<LoadEntityDto> GetEntity(List<ulong> ids)
+        public static async Task<LoadEntityDto> GetEntity(ulong environmentId, List<ulong> ids)
         {
             if (Exists)
             {
-                LoadEntityDto dto = await Instance._GetEntity(ids);
+                LoadEntityDto dto = await Instance._GetEntity(environmentId, ids);
                 return (dto);
             }
             else
                 throw new Exception($"Instance of UMI3DClientServer is null");
         }
 
-        protected virtual Task<LoadEntityDto> _GetEntity(List<ulong> id)
+        protected virtual Task<LoadEntityDto> _GetEntity(ulong environmentId, List<ulong> ids)
         {
             throw new NotImplementedException();
         }

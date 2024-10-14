@@ -37,6 +37,11 @@ namespace umi3d.cdk.interaction
         public AbstractTool tool => currentTool;
 
         /// <summary>
+        /// Currently projected tool ID.
+        /// </summary>
+        protected ulong? currentToolId = null;
+
+        /// <summary>
         /// Controller's inputs.
         /// </summary>
         public abstract List<AbstractUMI3DInput> inputs { get; }
@@ -44,7 +49,7 @@ namespace umi3d.cdk.interaction
         /// <summary>
         /// Inputs associated to a given tool (keys are tools' ids).
         /// </summary>
-        protected Dictionary<ulong, AbstractUMI3DInput[]> associatedInputs = new Dictionary<ulong, AbstractUMI3DInput[]>();
+        protected Dictionary<(ulong,ulong), AbstractUMI3DInput[]> associatedInputs = new ();
 
         /// <summary>
         /// Controller projection memory.
@@ -184,11 +189,12 @@ namespace umi3d.cdk.interaction
             else
             {
                 AbstractInteractionDto[] interactions = tool.interactionsLoaded.ToArray();
-                AbstractUMI3DInput[] inputs = projectionMemory.Project(this, interactions, tool.id, hoveredObjectId);
-                associatedInputs.Add(tool.id, inputs);
+                AbstractUMI3DInput[] inputs = projectionMemory.Project(this, tool.environmentId, interactions, tool.id, hoveredObjectId);
+                associatedInputs.Add((tool.id,tool.environmentId), inputs);
             }
 
             currentTool = tool;
+            currentToolId = tool.id;
         }
 
 
@@ -220,21 +226,23 @@ namespace umi3d.cdk.interaction
         /// <see cref="Project(AbstractTool)"/>
         public virtual void Release(AbstractTool tool, InteractionMappingReason reason)
         {
-            if (currentTool == null)
-                throw new System.Exception("no tool is currently projected on this controller");
-            if (currentTool.id != tool.id)
-                throw new System.Exception("This tool is not currently projected on this controller");
+            if (currentToolId != tool.id)
+            {
+                Debug.LogError("This tool is not currently projected on this controller. Temporary Fix.");
+                return;
+            }
 
-            if (associatedInputs.TryGetValue(tool.id, out AbstractUMI3DInput[] inputs))
+            if (associatedInputs.TryGetValue((tool.id, tool.environmentId), out AbstractUMI3DInput[] inputs))
             {
                 foreach (AbstractUMI3DInput input in inputs)
                 {
                     if (input.CurrentInteraction() != null)
                         input.Dissociate();
                 }
-                associatedInputs.Remove(tool.id);
+                associatedInputs.Remove((tool.id, tool.environmentId));
             }
             currentTool = null;
+            currentToolId = null;
         }
 
         /// <summary>
@@ -256,17 +264,18 @@ namespace umi3d.cdk.interaction
             else
             {
                 var interaction = new AbstractInteractionDto[] { abstractInteractionDto };
-                AbstractUMI3DInput[] inputs = projectionMemory.Project(this, interaction, tool.id, GetCurrentHoveredId());
-                if (associatedInputs.ContainsKey(tool.id))
+                AbstractUMI3DInput[] inputs = projectionMemory.Project(this, tool.environmentId, interaction, tool.id, GetCurrentHoveredId());
+                if (associatedInputs.ContainsKey((tool.id, tool.environmentId)))
                 {
-                    associatedInputs[tool.id] = associatedInputs[tool.id].Concat(inputs).ToArray();
+                    associatedInputs[(tool.id, tool.environmentId)] = associatedInputs[(tool.id, tool.environmentId)].Concat(inputs).ToArray();
                 }
                 else
                 {
-                    associatedInputs.Add(tool.id, inputs);
+                    associatedInputs.Add((tool.id, tool.environmentId), inputs);
                 }
             }
             currentTool = tool;
+            currentToolId = tool.id;
         }
     }
 }

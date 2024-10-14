@@ -31,20 +31,25 @@ namespace umi3d.cdk.binding
         /// <summary>
         /// Currently computed bindings per UMI3D node id.
         /// </summary>
-        public IReadOnlyDictionary<ulong, AbstractBinding> Bindings { get; }
+        public IReadOnlyDictionary<(ulong environmentId, ulong nodeId), AbstractBinding> Bindings { get; }
 
         /// <summary>
         /// Add a binding that already has been loaded.
         /// </summary>
         /// <param name="boundNodeId">Id of the node that will apply the binding on itself.</param>
         /// <param name="binding">Binding to add</param>
-        public void AddBinding(ulong boundNodeId, AbstractBinding binding);
+        public void AddBinding(ulong environmentId, ulong boundNodeId, AbstractBinding binding);
 
         /// <summary>
         /// Remove a binding to compute.
         /// </summary>
         /// <param name="boundNodeid">Id of the node that is bound.</param>
-        public void RemoveBinding(ulong boundNodeid);
+        public void RemoveBinding(ulong environmentId, ulong boundNodeid);
+
+        /// <summary>
+        /// Force the update of the binding application coroutine.
+        /// </summary>
+        void ForceBindingsApplicationUpdate();
 
         /// <summary>
         /// Enable/disable bindings computation for this client.

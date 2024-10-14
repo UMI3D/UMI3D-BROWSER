@@ -14,10 +14,12 @@ limitations under the License.
 using System;
 using System.Collections.Generic;
 using umi3d.cdk.interaction;
-using umi3d.cdk.userCapture.pose;
+using umi3d.common;
 using umi3dBrowsers.interaction.selection;
 using umi3dBrowsers.interaction.selection.intentdetector;
 using umi3dBrowsers.interaction.selection.projector;
+using umi3dBrowsers.linker;
+using umi3dVRBrowsersBase.ui;
 using UnityEngine;
 
 namespace umi3dVRBrowsersBase.interactions.selection.selector
@@ -41,11 +43,6 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
 
         #region constructors
 
-        private InteractableVRSelector() : base()
-        {
-            projector = new InteractableProjector();
-        }
-
         /// <inheritdoc/>
         [HideInInspector]
         public class InteractableSelectionData : SelectionIntentData<InteractableContainer>
@@ -59,6 +56,22 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
         #endregion constructors
 
         #region lifecycle
+        protected override void Awake()
+        {
+            base.Awake();
+            simLinker.OnSimReady += sim =>
+            {
+                projector = new InteractableProjector()
+                {
+                    sim = sim
+                };
+            };
+        }
+
+        protected override void Start()
+        {
+            base.Start();
+        }
 
         protected override void Update()
         {
@@ -164,7 +177,7 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
                     && icToSelect.Interactable.dto.interactions != null
                     && icToSelect.Interactable.dto.interactions.Count > 0
                     && controller.IsCompatibleWith(icToSelect.Interactable)
-                    && (!InteractionMapper.Instance.IsToolSelected(icToSelect.Interactable.id)
+                    && (!InteractionMapper.Instance.IsToolSelected(UMI3DGlobalID.EnvironmentId, icToSelect.Interactable.id)
                         || (LastSelected?.selectedObject.Interactable == icToSelect.Interactable));
         }
 
@@ -234,12 +247,12 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
                 || selectionInfo.selectedObject.Interactable == null 
                 || selectionInfo.selectedObject.Interactable.dto == null
             ) return;
-            var interactionTool = AbstractInteractionMapper.Instance.GetTool(selectionInfo.selectedObject.Interactable.dto.id);
+            var interactionTool = AbstractInteractionMapper.Instance.GetTool(UMI3DGlobalID.EnvironmentId, selectionInfo.selectedObject.Interactable.dto.id);
             if (selectionInfo is InteractableSelectionData)
                 (selectionInfo as InteractableSelectionData).tool = interactionTool;
 
             if (isSelecting
-                && (LastSelected != null || (!controller.IsAvailableFor(interactionTool) && InteractionMapper.Instance.IsToolSelected(interactionTool.id)))) // second case happens when an object is destroyed but the tool is not released
+                && (LastSelected != null || (!controller.IsAvailableFor(interactionTool) && InteractionMapper.Instance.IsToolSelected(UMI3DGlobalID.EnvironmentId, interactionTool.id)))) // second case happens when an object is destroyed but the tool is not released
                 Deselect(LastSelected);
 
             if (controller.IsAvailableFor(interactionTool))

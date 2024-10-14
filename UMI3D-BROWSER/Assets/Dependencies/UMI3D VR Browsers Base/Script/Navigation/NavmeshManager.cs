@@ -64,9 +64,9 @@ namespace umi3dVRBrowsersBase.navigation
         {
             if (node.IsPartOfNavmesh)
             {
-                if (node.gameObject.GetComponent<Collider>() != null)
+                if (node.GameObject.GetComponent<Collider>() != null)
                 {
-                    AddTeleportArea(node.gameObject);
+                    AddTeleportArea(node.GameObject);
                 }
 
                 foreach (var renderer in node.renderers)
@@ -106,12 +106,12 @@ namespace umi3dVRBrowsersBase.navigation
             {
                 TeleportArea tpArea;
 
-                if (node.gameObject.TryGetComponent<TeleportArea>(out tpArea))
+                if (node.GameObject.TryGetComponent<TeleportArea>(out tpArea))
                 {
                     GameObject.Destroy(tpArea);
                 }
 
-                node.gameObject.layer = ToLayer(navmeshLayer);
+                node.GameObject.layer = ToLayer(navmeshLayer);
 
                 foreach (var renderer in node.renderers)
                 {
@@ -158,9 +158,9 @@ namespace umi3dVRBrowsersBase.navigation
         /// <param name="mask"></param>
         private void SetLayer(UMI3DNodeInstance node, LayerMask mask)
         {
-            if (node.gameObject.GetComponent<Collider>() != null)
+            if (node.GameObject.GetComponent<Collider>() != null)
             {
-                node.gameObject.layer = ToLayer(navmeshLayer);
+                node.GameObject.layer = ToLayer(navmeshLayer);
             }
 
             foreach (var renderer in node.renderers)
@@ -176,7 +176,7 @@ namespace umi3dVRBrowsersBase.navigation
         private void DeleteTeleportArea(UMI3DNodeInstance node)
         {
             TeleportArea tpArea;
-            if (node.gameObject.TryGetComponent<TeleportArea>(out tpArea))
+            if (node.GameObject.TryGetComponent<TeleportArea>(out tpArea))
             {
                 GameObject.Destroy(tpArea);
             }

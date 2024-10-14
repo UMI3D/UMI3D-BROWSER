@@ -33,8 +33,8 @@ namespace umi3dVRBrowsersBase.ui.playerMenu
         public void Toggle(bool value)
         {
             IsOn = value;
-            m_onButton.SetActive(IsOn ? true : false);
-            m_offButton.SetActive(IsOn ? false : true);
+            m_onButton?.SetActive(IsOn ? true : false);
+            m_offButton?.SetActive(IsOn ? false : true);
         }
 
         public void Toggle()

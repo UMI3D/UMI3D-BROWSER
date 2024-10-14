@@ -19,7 +19,7 @@ namespace umi3d.common
     /// <summary>
     /// Contains the keys for all available operations within the UMI3D protocol.
     /// </summary>
-    /// Those keys are used when exchaning operations or request between the server and clients 
+    /// Those keys are used when exchanging operations or request between the server and clients 
     /// to identify which process should be started on the receiving side.
     public static class UMI3DOperationKeys
     {
@@ -33,6 +33,7 @@ namespace umi3d.common
         public const uint RedirectionRequest = 8;
         public const uint ForceLogoutRequest = 9;
         public const uint PlayPoseRequest = 10;
+        public const uint ViewpointTeleportationRequest = 11;
 
         public const uint UserMicrophoneStatus = 21;
         public const uint UserAvatarStatus = 22;
@@ -40,6 +41,8 @@ namespace umi3d.common
         public const uint MuteAllMicrophoneStatus = 24;
         public const uint MuteAllAvatarStatus = 25;
         public const uint MuteAllAttentionStatus = 26;
+        public const uint MicrophoneRequest = 27;
+        public const uint UserActionRequest = 28;
 
         public const uint SetEntityProperty = 101;
         public const uint SetEntityDictionnaryProperty = 103;
@@ -70,6 +73,9 @@ namespace umi3d.common
         public const uint FrameRequest = 306;
         public const uint FrameConfirmation = 307;
         public const uint SetUTSBoneTargetFPS = 308;
+        public const uint PerspectiveCameraProperties = 309;
+        public const uint OrthographicCameraProperties = 310;
+
 
         public const uint FpsNavigationMode = 400;
         public const uint FlyingNavigationMode = 401;
@@ -97,18 +103,19 @@ namespace umi3d.common
         public const uint EmoteRequest = 10020;
 
         public const uint ValidatePoseConditionRequest = 10030;
-        public const uint ActivatePoseAnimatorRequest = 10031;
+        public const uint CheckPoseAnimatorConditionsRequest = 10031;
 
         public const uint VolumeUserTransit = 10100;
 
         public const uint WebViewUrlRequest = 10200;
+        public const uint WebViewSynchronizationRequest = 10201;
 
     }
 
     /// <summary>
     /// Contains the keys for all available parameter types within the UMI3D protocol.
     /// </summary>
-    /// Those keys are used when exchaning operations or request between the server and clients 
+    /// Those keys are used when exchanging operations or request between the server and clients 
     /// to identify what parameters to apply on processes started on the receiving side.
     public static class UMI3DParameterKeys
     {

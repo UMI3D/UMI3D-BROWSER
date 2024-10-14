@@ -12,6 +12,10 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
+using inetum.unityUtils.async;
+using System;
+using System.Threading.Tasks;
+using umi3d.browserRuntime.player;
 using umi3d.cdk.menu;
 using umi3dVRBrowsersBase.interactions;
 using UnityEngine;
@@ -93,7 +97,7 @@ namespace umi3dVRBrowsersBase.ui.playerMenu
 
     public partial class PlayerMenuManager : SingleBehaviour<PlayerMenuManager>
     {
-        public ParameterGear parameterGear;
+        Task<SelectedInteractableManager> selectedInteractableManager;
 
         #region Player Menu
 
@@ -112,7 +116,10 @@ namespace umi3dVRBrowsersBase.ui.playerMenu
             transform.RotateAround(playerCameraPosition, Vector3.up, playerCameraRotation.eulerAngles.y);
             m_playerMenuCanvas.SetActive(true);
             m_menuCollider.enabled = true;
-            parameterGear.Hide();
+            selectedInteractableManager.IfCompleted(sim =>
+            {
+                sim.Hide();
+            });
 
             ToolboxesMenu.Open();
             CloseSubWindow();
@@ -151,12 +158,6 @@ namespace umi3dVRBrowsersBase.ui.playerMenu
             CtrlToolMenu.DisplayParameterMenu(controller, menuAsync: true);
         }
 
-        public void DisplayActionBinding(ControllerType controller)
-        {
-            Open(true);
-            CtrlToolMenu.DisplayBindingMenu(controller);
-        }
-
         public void DisplayParameterInToolbox(AbstractMenu menu)
         {
             Open(true);
@@ -177,19 +178,19 @@ namespace umi3dVRBrowsersBase.ui.playerMenu
             base.Awake();
             Debug.Assert(m_playerCamera != null, "Player Camera is null in Player Menu Manager");
             m_menuCollider = GetComponent<BoxCollider>();
-            //gear  =
             Close(true);
         }
 
         private void Start()
         {
+            selectedInteractableManager = Global.GetAsync<SelectedInteractableManager>();
             gameObject.AddComponent<SelectablePlayerMenu>();
             MenuHeader.Initialize();
         }
     }
 
     /// <summary>
-    /// Only to prevent users from selecting Interactable behing the menu.
+    /// Only to prevent users from selecting Interactable behind the menu.
     /// </summary>
     public class SelectablePlayerMenu : UnityEngine.UI.Selectable
     {

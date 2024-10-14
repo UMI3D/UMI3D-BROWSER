@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using umi3d.common;
 
@@ -42,7 +43,8 @@ namespace umi3d.cdk
                 webView.transform.SetParent(data.node.transform);
                 webView.transform.localPosition = UnityEngine.Vector3.zero;
                 webView.transform.localRotation = UnityEngine.Quaternion.identity;
-            } else
+            }
+            else
             {
                 UMI3DLogger.LogError("Impossible to load WebView, not implemented on this browser", scope);
             }
@@ -55,7 +57,7 @@ namespace umi3d.cdk
             var dto = (node.dto as GlTFNodeDto)?.extensions?.umi3d as UMI3DWebViewDto;
             if (dto == null) return false;
 
-            AbstractUMI3DWebView webView = node.gameObject.GetComponentInChildren<AbstractUMI3DWebView>();
+            AbstractUMI3DWebView webView = node.GameObject.GetComponentInChildren<AbstractUMI3DWebView>();
             if (webView == null)
             {
                 UMI3DLogger.Log("Webview should not be null on " + node.transform.name, scope);
@@ -78,8 +80,26 @@ namespace umi3d.cdk
                 case UMI3DPropertyKeys.WebViewUrl:
                     webView.url = dto.url = (string)data.property.value;
                     break;
+                case UMI3DPropertyKeys.WebViewScrollOffset:
+                    webView.scrollOffset = dto.scrollOffset = (Vector2Dto)data.property.value;
+                    break;
                 case UMI3DPropertyKeys.WebViewCanUrlBeForced:
                     webView.canUrlBeForced = dto.canUrlBeForced = (bool)data.property.value;
+                    break;
+                case UMI3DPropertyKeys.WebViewUseWhileList:
+                    webView.useWhiteList = dto.useWhiteList = (bool)data.property.value;
+                    break;
+                case UMI3DPropertyKeys.WebViewWhileList:
+                    webView.whiteList = dto.whiteList = (List<string>)data.property.value;
+                    break;
+                case UMI3DPropertyKeys.WebViewUseBlackList:
+                    webView.useBlackList = dto.useBlackList = (bool)data.property.value;
+                    break;
+                case UMI3DPropertyKeys.WebViewBlackList:
+                    webView.blackList = dto.blackList = (List<string>)data.property.value;
+                    break;
+                case UMI3DPropertyKeys.WebViewIsAdmin:
+                    webView.isAdmin = dto.isAdmin = (bool)data.property.value;
                     break;
                 default:
                     return false;
@@ -90,12 +110,12 @@ namespace umi3d.cdk
 
         public override async Task<bool> SetUMI3DProperty(SetUMI3DPropertyContainerData data)
         {
-            var node = data.entity as UMI3DNodeInstance;
-            if (node == null) return false;
+            if (data.entity is not UMI3DNodeInstance node) return false;
+
             var dto = (node.dto as GlTFNodeDto)?.extensions?.umi3d as UMI3DWebViewDto;
             if (dto == null) return false;
 
-            AbstractUMI3DWebView webView = node.gameObject.GetComponentInChildren<AbstractUMI3DWebView>();
+            AbstractUMI3DWebView webView = node.GameObject.GetComponentInChildren<AbstractUMI3DWebView>();
             if (webView == null)
             {
                 UMI3DLogger.Log("Webview should not be null on " + node.transform.name, scope);
@@ -118,8 +138,26 @@ namespace umi3d.cdk
                 case UMI3DPropertyKeys.WebViewUrl:
                     webView.url = dto.url = UMI3DSerializer.Read<string>(data.container);
                     break;
+                case UMI3DPropertyKeys.WebViewScrollOffset:
+                    webView.scrollOffset = dto.scrollOffset = UMI3DSerializer.Read<Vector2Dto>(data.container);
+                    break;
                 case UMI3DPropertyKeys.WebViewCanUrlBeForced:
                     webView.canUrlBeForced = dto.canUrlBeForced = UMI3DSerializer.Read<bool>(data.container);
+                    break;
+                case UMI3DPropertyKeys.WebViewUseWhileList:
+                    webView.useWhiteList = dto.useWhiteList = UMI3DSerializer.Read<bool>(data.container);
+                    break;
+                case UMI3DPropertyKeys.WebViewWhileList:
+                    webView.whiteList = dto.whiteList = UMI3DSerializer.ReadList<string>(data.container);
+                    break;
+                case UMI3DPropertyKeys.WebViewUseBlackList:
+                    webView.useBlackList = dto.useBlackList = UMI3DSerializer.Read<bool>(data.container);
+                    break;
+                case UMI3DPropertyKeys.WebViewBlackList:
+                    webView.blackList = dto.blackList = UMI3DSerializer.ReadList<string>(data.container);
+                    break;
+                case UMI3DPropertyKeys.WebViewIsAdmin:
+                    webView.isAdmin = dto.isAdmin = UMI3DSerializer.Read<bool>(data.container);
                     break;
                 default:
                     return false;

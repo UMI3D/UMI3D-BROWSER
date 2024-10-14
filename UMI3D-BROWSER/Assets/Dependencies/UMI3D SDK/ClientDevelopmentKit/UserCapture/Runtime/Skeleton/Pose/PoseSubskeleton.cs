@@ -15,14 +15,14 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using umi3d.cdk.userCapture.tracking;
 using umi3d.common;
-using umi3d.common.userCapture;
 using umi3d.common.userCapture.description;
-using umi3d.common.userCapture.pose;
 using umi3d.common.userCapture.tracking;
 
 namespace umi3d.cdk.userCapture.pose
@@ -37,29 +37,61 @@ namespace umi3d.cdk.userCapture.pose
         #region Dependency Injection
 
         private readonly IEnvironmentManager environmentManagerService;
+        private readonly ISkeleton parentSkeleton;
 
-        public PoseSubskeleton() : this(environmentManagerService: UMI3DEnvironmentLoader.Instance)
+        public PoseSubskeleton(ulong environmentId, ISkeleton parentSkeleton) : this(environmentId: environmentId,
+                                                                                                               parentSkeleton: parentSkeleton,
+                                                                                                               environmentManagerService: UMI3DEnvironmentLoader.Instance)
         {
         }
 
-        public PoseSubskeleton(IEnvironmentManager environmentManagerService)
+        public PoseSubskeleton(ulong environmentId, ISkeleton parentSkeleton, IEnvironmentManager environmentManagerService)
         {
             this.environmentManagerService = environmentManagerService;
+            this.parentSkeleton = parentSkeleton;
+            this.poseAggregator = new PoseClipAggregator(parentSkeleton);
+            EnvironmentId = environmentId;
+            Init();
         }
 
         #endregion Dependency Injection
 
-        /// <inheritdoc/>
-        public IReadOnlyList<PoseClip> AppliedPoses => appliedPoses;
+        /// <summary>
+        /// Aggregates all played poses into a final skeleton for the pose subskeleton.
+        /// </summary>
+        private readonly IPoseClipAggregator poseAggregator;
 
-        protected List<PoseClip> appliedPoses = new();
+        /// <inheritdoc/>
+        public IReadOnlyList<PoseClip> AppliedPoses => poseAggregator.ActivePoses;
 
         public int Priority => PRIORITY;
 
+        public ulong EnvironmentId { get; set; }
+
         private const int PRIORITY = 100;
 
+        /// <summary>
+        /// Poses to play next when possible.
+        /// </summary>
+        private readonly List<PlayPoseRequest> queuedPlayPoseRequests = new();
+
+        private record PlayPoseRequest
+        {
+            public PoseClip poseClip;
+            public ISubskeletonDescriptionInterpolationPlayer.PlayingParameters playingParameters = new();
+        }
+
+        public void Init()
+        {
+            poseAggregator.PoseStopped += (_) => CheckPendingPlayingPoseRequests();
+        }
+
+        #region Pose Playing
+
+        #region Start
+
         /// <inheritdoc/>
-        public void StartPose(IEnumerable<PoseClip> posesToAdd, bool isOverriding = false)
+        public void StartPose(IEnumerable<PoseClip> posesToAdd, bool isOverriding = false, ISubskeletonDescriptionInterpolationPlayer.PlayingParameters parameters = null)
         {
             if (posesToAdd == null)
                 throw new ArgumentNullException(nameof(posesToAdd), $"Cannot start poses.");
@@ -67,20 +99,79 @@ namespace umi3d.cdk.userCapture.pose
             if (isOverriding)
                 StopAllPoses();
 
-            appliedPoses.AddRange(posesToAdd);
+            foreach (PoseClip poseClip in posesToAdd)
+                StartPose(poseClip, parameters: parameters);
         }
 
         /// <inheritdoc/>
-        public void StartPose(PoseClip poseToAdd, bool isOverriding = false)
+        public void StartPose(PoseClip poseToAdd, bool isOverriding = false, ISubskeletonDescriptionInterpolationPlayer.PlayingParameters parameters = null)
         {
             if (poseToAdd == null)
                 throw new ArgumentNullException(nameof(poseToAdd), $"Cannot start pose.");
 
+            // pose already playing on a channel.
+            if (poseAggregator.IsPlaying(poseToAdd))
+            {
+                UMI3DLogger.LogWarning($"Pose clip {poseToAdd.Id} is already playing.", DEBUG_SCOPE);
+                return;
+            }
+
             if (isOverriding)
                 StopAllPoses();
 
-            appliedPoses.Add(poseToAdd);
+            // pose already requested to be played.
+            if (queuedPlayPoseRequests.Select(x => x.poseClip).Contains(poseToAdd))
+            {
+                UMI3DLogger.LogWarning($"Pose clip {poseToAdd.Id} is already queued for playing.", DEBUG_SCOPE);
+                return;
+            }
+
+            // if the pose could not be executed right now, store and wait for a channel to free itself.
+            if (!poseAggregator.CanPlay(poseToAdd))
+            {
+                PlayPoseRequest request = new()
+                {
+                    poseClip = poseToAdd,
+                    playingParameters = parameters
+                };
+
+                queuedPlayPoseRequests.Add(request);
+                CheckPendingPlayingPoseRequests();
+                return;
+            }
+
+            poseAggregator.Play(poseToAdd, parameters);
         }
+
+        #endregion Start
+
+        #region Pending Requests Management
+
+        /// <summary>
+        /// Try to apply pending pose playing requests
+        /// </summary>
+        private void CheckPendingPlayingPoseRequests()
+        {
+            if (poseAggregator.IsLocked) // a non-composable pose is preventing others to be played.
+                return;
+
+            foreach (PlayPoseRequest playPoseRequest in queuedPlayPoseRequests.ToArray())
+            {
+                if (poseAggregator.CanPlay(playPoseRequest.poseClip)) // all poses are compatibles, play the pose
+                {
+                    queuedPlayPoseRequests.Remove(playPoseRequest);
+
+                    poseAggregator.Play(playPoseRequest.poseClip, playPoseRequest.playingParameters ?? new());
+
+                    if (!playPoseRequest.poseClip.IsComposable)
+                        return;
+                }
+            }
+        }
+
+        #endregion Pending Requests Management
+
+        #region Stop
 
         /// <inheritdoc/>
         public void StopPose(IEnumerable<PoseClip> posesToStop)
@@ -97,99 +188,53 @@ namespace umi3d.cdk.userCapture.pose
             if (poseToStop == null)
                 return;
 
-            appliedPoses.Remove(poseToStop);
+            if (queuedPlayPoseRequests.Select(x => x.poseClip).Contains(poseToStop))
+            {
+                queuedPlayPoseRequests.Remove(queuedPlayPoseRequests.First(x => x.poseClip == poseToStop));
+                return;
+            }
+
+            if (!poseAggregator.IsPlaying(poseToStop))
+                return;
+
+            poseAggregator.End(poseToStop);
         }
 
         /// <inheritdoc/>
         public void StopPose(IEnumerable<ulong> posesToStopIds)
         {
-            StopPose(posesToStopIds.Select(poseId => appliedPoses.Find(x => x.Id == poseId)));
+            foreach (ulong poseToStopId in posesToStopIds)
+            {
+                StopPose(poseAggregator.PlayingPoses.FirstOrDefault(x => x.Id == poseToStopId));
+            }
         }
 
         /// <inheritdoc/>
         public void StopPose(ulong poseToStopId)
         {
-            StopPose(appliedPoses.Find(x => x.Id == poseToStopId));
+            StopPose(poseAggregator.PlayingPoses.Where(x => x.Id == poseToStopId));
         }
 
         /// <inheritdoc/>
         public void StopAllPoses()
         {
-            appliedPoses.Clear();
+            queuedPlayPoseRequests.Clear();
+            poseAggregator.StopAll();
         }
+
+        #endregion Stop
+
+        #endregion Pose Playing
 
         /// <inheritdoc/>
         public SubSkeletonPoseDto GetPose(UMI3DSkeletonHierarchy hierarchy)
         {
-            if (hierarchy == null)
-                throw new ArgumentNullException(nameof(hierarchy));
-
-            SubSkeletonPoseDto poseDto = new SubSkeletonPoseDto() { bones = new List<SubSkeletonBoneDto>() };
-            foreach (var pose in appliedPoses)
-            {
-                foreach (var bone in pose.Bones)
-                {
-                    int indexOf = poseDto.bones.FindIndex(a => a.boneType == bone.boneType);
-
-                    SubSkeletonBoneDto bonePose = GetBonePose(hierarchy, bone, pose).subBone;
-                    if (indexOf != -1)
-                        poseDto.bones[indexOf] = bonePose;
-                    else
-                        poseDto.bones.Add(bonePose);
-                }
-            }
-
-            computedMap.Clear();
-            return poseDto;
+            return poseAggregator.GetPose(hierarchy);
         }
 
-        private Dictionary<uint, (BoneDto bone, SubSkeletonBoneDto subBone)> computedMap = new();
+        #region TrackingFrames
 
-        /// <summary>
-        /// Recursively compute local rotation for a bone.
-        /// </summary>
-        /// <param name="hierarchy"></param>
-        /// <param name="boneDto"></param>
-        /// <param name="pose"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="ArgumentException"></exception>
-        private (BoneDto bone, SubSkeletonBoneDto subBone) GetBonePose(UMI3DSkeletonHierarchy hierarchy, BoneDto boneDto, PoseClip pose)
-        {
-            if (boneDto == null)
-                throw new ArgumentNullException(nameof(boneDto));
-
-            uint boneType = boneDto.boneType;
-
-            if (computedMap.ContainsKey(boneType))
-                return computedMap[boneType];
-
-            if (!hierarchy.Relations.ContainsKey(boneType))
-                throw new ArgumentException($"Bone ({boneType}, \"{BoneTypeHelper.GetBoneName(boneType)}\") not defined in hierarchy.", nameof(boneDto));
-
-            var relation = hierarchy.Relations[boneType];
-
-            var parentBone = pose.Bones.Find(b => b.boneType == relation.boneTypeParent);
-
-            SubSkeletonBoneDto subBone = new() { boneType = boneType };
-            if (parentBone == default || parentBone.boneType == BoneType.None) // bone has no parent
-            {
-                subBone.localRotation = boneDto.rotation;
-            }
-            else // bone has a parent and thus its rotation depends on it
-            {
-                var parent = GetBonePose(hierarchy, parentBone, pose);
-                subBone.localRotation = (UnityEngine.Quaternion.Inverse(parent.bone.rotation.Quaternion()) * boneDto.rotation.Quaternion()).Dto();
-            }
-
-            computedMap[boneType] = new()
-            {
-                bone = boneDto,
-                subBone = subBone
-            };
-
-            return computedMap[boneType];
-        }
+        private IEnumerable<PoseClip> posesToStop; // optimization for allocation
 
         /// <inheritdoc/>
         public void UpdateBones(UserTrackingFrameDto trackingFrame)
@@ -197,31 +242,21 @@ namespace umi3d.cdk.userCapture.pose
             if (trackingFrame is null)
                 throw new ArgumentNullException(nameof(trackingFrame));
 
-            StartPoses(trackingFrame);
-
-            // remove not activated poses
-            int nbObjToRemove = appliedPoses.Count - trackingFrame.poses.Count;
-            if (nbObjToRemove > 0)
+            // stop poses
+            posesToStop = AppliedPoses.Where(pose => !trackingFrame.poses.Contains(pose.Id)).ToList();
+            foreach (PoseClip poseToStop in posesToStop)
             {
-                Queue<PoseClip> posesToRemove = new Queue<PoseClip>(nbObjToRemove);
-                appliedPoses.ForEach(pose =>
-                {
-                    if (!trackingFrame.poses.Contains(pose.Id))
-                        posesToRemove.Enqueue(pose);
-                });
-                StopPose(posesToRemove);
+                StopPose(poseToStop);
             }
-        }
 
-        private void StartPoses(UserTrackingFrameDto trackingFrame)
-        {
+            // play poses
             foreach (ulong poseId in trackingFrame.poses)
             {
                 //at load, could receive tracking frame without having the pose
-                UMI3DEntityInstance poseClipEntityInstance = environmentManagerService.TryGetEntityInstance(poseId);
-                PoseClip poseClip = poseClipEntityInstance?.Object as PoseClip;
+                if (!environmentManagerService.TryGetEntity(EnvironmentId, poseId, out PoseClip poseClip))
+                    continue;
 
-                if (poseClipEntityInstance is not null && !appliedPoses.Contains(poseClip))
+                if (!poseAggregator.IsPlaying(poseClip))
                     StartPose(poseClip);
             }
         }
@@ -232,12 +267,14 @@ namespace umi3d.cdk.userCapture.pose
             if (trackingFrame == null)
                 throw new ArgumentNullException(nameof(trackingFrame));
 
-            trackingFrame.poses ??= new(appliedPoses.Count);
+            trackingFrame.poses ??= new(AppliedPoses.Count);
 
-            appliedPoses.ForEach((pose) =>
+            AppliedPoses.ForEach((pose) =>
             {
                 trackingFrame.poses.Add(pose.Id);
             });
         }
+
+        #endregion TrackingFrames
     }
 }

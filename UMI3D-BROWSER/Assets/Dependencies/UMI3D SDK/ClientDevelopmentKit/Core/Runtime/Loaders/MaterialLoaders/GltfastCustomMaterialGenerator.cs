@@ -44,7 +44,13 @@ namespace umi3d.cdk
             }
             else
             {
-                material = GetPbrMetallicRoughnessMaterial(gltfMaterial.doubleSided);
+                if (gltfMaterial.pbrMetallicRoughness.baseColor.gamma.a <= .1f)
+                {
+                    Debug.Log("TODO : fix default base material with transparency");
+                    material = new UnityEngine.Material(Shader.Find("Universal Render Pipeline/Lit"));
+                }
+                else
+                    material = GetPbrMetallicRoughnessMaterial(gltfMaterial.doubleSided);
             }
 
             if (string.IsNullOrEmpty(gltfMaterial.name))
@@ -57,7 +63,7 @@ namespace umi3d.cdk
             }
 
 
-            // SpecularGlossiness not totaly supported
+            // SpecularGlossiness not totally supported
             if (gltfMaterial.extensions != null)
             {
                 GLTFast.Schema.PbrSpecularGlossiness specGloss = gltfMaterial.extensions.KHR_materials_pbrSpecularGlossiness;
@@ -199,7 +205,7 @@ namespace umi3d.cdk
                 material.SetTextureScale(texturePropertyId, scale);
             }
             else
-                UMI3DLogger.LogWarning("Impossible to applay texture offset and scale because " + material.shader.name + " has no properpy with id : " + texturePropertyId, scope);
+                UMI3DLogger.LogWarning("Impossible to apply texture offset and scale because " + material.shader.name + " has no properpy with id : " + texturePropertyId, scope);
         }
 
         /// <inheritdoc/>

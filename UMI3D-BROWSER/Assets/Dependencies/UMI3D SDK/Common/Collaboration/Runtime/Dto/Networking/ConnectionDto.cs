@@ -14,6 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System.Collections.Generic;
+
 namespace umi3d.common.collaboration.dto.networking
 {
     /// <summary>
@@ -42,10 +44,21 @@ namespace umi3d.common.collaboration.dto.networking
         public GateDto gate { get; set; }
 
         /// <summary>
+        /// Current version of the sdk on the browser
+        /// </summary>
+        public string sdkVersion { get; set; }
+        /// <summary>
+        /// Version of forms compatible with the browser
+        /// </summary>
+        public List<string> formCompatibleVersions { get; set; }
+
+        /// <summary>
         /// Is the client only wanting to download a library rather than connecting right now?
         /// </summary>
         /// If false : the client to connect normaly. <br/>
         /// If true : the client ask only for the library it will need in a later connection.
         public bool libraryPreloading { get; set; }
+
+        public bool isServer { get; set; }
     }
 }

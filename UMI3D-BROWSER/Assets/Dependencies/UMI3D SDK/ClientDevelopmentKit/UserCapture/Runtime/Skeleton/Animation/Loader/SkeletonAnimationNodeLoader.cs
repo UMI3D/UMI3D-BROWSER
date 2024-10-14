@@ -15,17 +15,14 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
-
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+using umi3d.cdk.userCapture.description;
 using umi3d.common;
 using umi3d.common.userCapture;
 using umi3d.common.userCapture.animation;
 using umi3d.common.userCapture.description;
-using umi3d.common.userCapture.pose;
-
 using UnityEngine;
 
 namespace umi3d.cdk.userCapture.animation
@@ -42,12 +39,12 @@ namespace umi3d.cdk.userCapture.animation
 
         #region Dependency Injection
 
-        protected readonly ISkeletonManager personnalSkeletonService;
+        protected readonly ISkeletonManager personalSkeletonService;
         protected readonly IUMI3DClientServer clientServer;
 
         public SkeletonAnimationNodeLoader() : base()
         {
-            personnalSkeletonService = PersonalSkeletonManager.Instance;
+            personalSkeletonService = PersonalSkeletonManager.Instance;
             clientServer = UMI3DClientServer.Instance;
         }
 
@@ -55,11 +52,11 @@ namespace umi3d.cdk.userCapture.animation
                                            ILoadingManager loadingManager,
                                            IUMI3DResourcesManager resourcesManager,
                                            ICoroutineService coroutineManager,
-                                           ISkeletonManager personnalSkeletonService,
+                                           ISkeletonManager personalSkeletonService,
                                            IUMI3DClientServer clientServer)
             : base(environmentManager, loadingManager, resourcesManager, coroutineManager)
         {
-            this.personnalSkeletonService = personnalSkeletonService;
+            this.personalSkeletonService = personalSkeletonService;
             this.clientServer = clientServer;
         }
 
@@ -82,15 +79,15 @@ namespace umi3d.cdk.userCapture.animation
 
             await base.ReadUMI3DExtension(data);
 
-            await Load(data.dto as SkeletonAnimationNodeDto);
+            await Load(data.environmentId, data.dto as SkeletonAnimationNodeDto);
         }
 
-        public async Task Load(SkeletonAnimationNodeDto skeletonNodeDto)
+        public async Task Load(ulong environmentId, SkeletonAnimationNodeDto skeletonNodeDto)
         {
-            UMI3DNodeInstance nodeInstance = environmentManager.GetNodeInstance(skeletonNodeDto.id);  //node exists because of base call of ReadUMI3DExtensiun
+            UMI3DNodeInstance nodeInstance = environmentManager.GetNodeInstance(environmentId, skeletonNodeDto.id);  //node exists because of base call of ReadUMI3DExtensiun
 
             // a skeleton node should contain an animator
-            Animator animator = nodeInstance.gameObject.GetComponentInChildren<Animator>();
+            Animator animator = nodeInstance.GameObject.GetComponentInChildren<Animator>();
             if (animator == null)
             {
                 UMI3DLogger.LogWarning($"Cannot load skeleton animation {skeletonNodeDto.id}. No animator was found on node for user {skeletonNodeDto.userId}. ", DEBUG_SCOPE);
@@ -107,30 +104,76 @@ namespace umi3d.cdk.userCapture.animation
                 return;
             }
 
-            var modelTracker = nodeInstance.gameObject.GetOrAddComponent<ModelTracker>();
+            var modelTracker = nodeInstance.GameObject.GetOrAddComponent<ModelTracker>();
             modelTracker.animatorsToRebind.Add(animator);
 
             // hide the model if it has any renderers
-            foreach (var renderer in nodeInstance.gameObject.GetComponentsInChildren<Renderer>())
+            foreach (var renderer in nodeInstance.GameObject.GetComponentsInChildren<Renderer>())
                 renderer.gameObject.layer = LayerMask.NameToLayer("Invisible");
 
-            _ = Task.Run(async () => // task is required to load asynchronously while not blocking the loading process
+            // scale the subskeleton to fit the scale of the user
+            nodeInstance.transform.localScale = personalSkeletonService.PersonalSkeleton.worldSize;
+
+            Task attachtask = WaitAndAttach(); // do not await purposefully
+
+            async Task WaitAndAttach()
             {
                 // get animation related to the skeleton node
                 Queue<UMI3DAnimatorAnimation> animations = new(skeletonNodeDto.relatedAnimationsId.Length);
                 foreach (var id in skeletonNodeDto.relatedAnimationsId)
                 {
-                    var instance = await loadingManager.WaitUntilEntityLoaded(id, null);
+                    var instance = await loadingManager.WaitUntilEntityLoaded(environmentId, id, null);
                     animations.Enqueue(instance.Object as UMI3DAnimatorAnimation);
                 }
 
                 // create subSkeleton and add it to a skeleton
-                AnimatedSubskeleton animationSubskeleton = new(skeletonMapper, animations.ToArray(), skeletonNodeDto.priority, skeletonNodeDto.animatorSelfTrackedParameters);
-                AttachToSkeleton(skeletonNodeDto.userId, animationSubskeleton);
-            });
+                ISkeleton parentSkeleton = GetParentSkeleton(environmentId, skeletonNodeDto.userId);
+                if (parentSkeleton == null)
+                {
+                    UMI3DLogger.LogWarning($"Skeleton of user {skeletonNodeDto.userId} not found. Cannot attach skeleton node.", DEBUG_SCOPE);
+                    return;
+                }
+
+                // cull animators of other skeletons when they are not visible
+                if (parentSkeleton is not IPersonalSkeleton)
+                {
+                    parentSkeleton.VisibilityChanged += AutoCullAnimator;
+
+                    void AutoCullAnimator(bool isVisible)
+                    {
+                        if (animator == null)
+                            return;
+
+                        if (isVisible && animator.cullingMode != AnimatorCullingMode.AlwaysAnimate)
+                        {
+                            animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+                            animator.Update(0);
+                        }
+                        else if (!isVisible && animator.cullingMode != AnimatorCullingMode.CullCompletely)
+                        {
+                            animator.cullingMode = AnimatorCullingMode.CullCompletely;
+                        }
+                    }
+                }
+
+                ISubskeletonDescriptionInterpolationPlayer player = new SubskeletonDescriptionInterpolationPlayer(skeletonMapper, skeletonNodeDto.IsInterpolable, parentSkeleton);
+                AnimatedSubskeleton animationSubskeleton = new AnimatedSubskeleton(skeletonNodeDto, player, skeletonMapper, animations.ToArray(), skeletonNodeDto.animatorSelfTrackedParameters);
+                AttachToSkeleton(parentSkeleton, animationSubskeleton);
+            };
             nodeInstance.Delete = () => Delete(skeletonNodeDto.userId);
 
             await Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Get the parent skeleton of the animated subskeleton.
+        /// </summary>
+        /// <param name="environmentId"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        protected virtual ISkeleton GetParentSkeleton(ulong environmentId, ulong userId)
+        {
+            return personalSkeletonService.PersonalSkeleton;
         }
 
         protected virtual void Delete(ulong userId)
@@ -234,7 +277,7 @@ namespace umi3d.cdk.userCapture.animation
         /// <param name="animator"></param>
         protected void ExtractRigsFromAnimator(Animator animator)
         {
-            UMI3DSkeletonHierarchy hierarchy = personnalSkeletonService.PersonalSkeleton.SkeletonHierarchy;
+            UMI3DSkeletonHierarchy hierarchy = personalSkeletonService.PersonalSkeleton.SkeletonHierarchy;
             var transformHierarchy = hierarchy.Generate(animator.transform);
 
             static string RemoveWhiteSpaces(string s)
@@ -296,25 +339,23 @@ namespace umi3d.cdk.userCapture.animation
         /// </summary>
         /// <param name="userId"></param>
         /// <param name="animatedSubskeleton"></param>
-        protected virtual void AttachToSkeleton(ulong userId, AnimatedSubskeleton animatedSubskeleton)
+        protected virtual void AttachToSkeleton(ISkeleton parentSkeleton, AnimatedSubskeleton animatedSubskeleton)
         {
-            var skeleton = personnalSkeletonService.PersonalSkeleton;
-
             // add animated skeleton to subskeleton list and re-order it by descending priority
-            skeleton.AddSubskeleton(animatedSubskeleton);
+            parentSkeleton.AddSubskeleton(animatedSubskeleton);;
 
             // if it is the browser, register that it is required to delete animated skeleton on leaving
             if (!isRegisteredForPersonalSkeletonCleanup)
             {
                 isRegisteredForPersonalSkeletonCleanup = true;
 
-                clientServer.OnLeavingEnvironment.AddListener(() => RemoveSkeletons(skeleton));
+                clientServer.OnLeavingEnvironment.AddListener(() => RemoveSkeletons((IPersonalSkeleton)parentSkeleton));
             }
         }
 
         private void RemoveSkeletons()
         {
-            var skeleton = personnalSkeletonService.PersonalSkeleton;
+            var skeleton = personalSkeletonService.PersonalSkeleton;
 
             RemoveSkeletons(skeleton);
         }

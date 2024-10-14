@@ -23,6 +23,8 @@ namespace umi3d.common
     /// </summary>
     public class ByteContainer
     {
+        public ulong environmentId { get; private set; }
+
         public ulong timeStep { get; private set; }
 
         /// <summary>
@@ -42,16 +44,20 @@ namespace umi3d.common
 
         public List<CancellationToken> tokens;
 
-        private ByteContainer()
+        public UMI3DVersion.Version version;
+
+        private ByteContainer(ulong environmentId, UMI3DVersion.Version version)
         {
             tokens = new();
+            this.environmentId = environmentId;
+            this.version = version;
         }
 
-        public ByteContainer(Binary frame) : this(frame.TimeStep, frame.StreamData.byteArr)
+        public ByteContainer(ulong environmentId, Binary frame, UMI3DVersion.Version version) : this(environmentId, frame.TimeStep, frame.StreamData.byteArr, version)
         {
         }
 
-        public ByteContainer(ulong timeStep, byte[] bytes) : this()
+        public ByteContainer(ulong environmentId, ulong timeStep, byte[] bytes, UMI3DVersion.Version version) : this(environmentId, version)
         {
             this.timeStep = timeStep;
             this.bytes = bytes;
@@ -59,14 +65,23 @@ namespace umi3d.common
             length = bytes.Length;
         }
 
-        public ByteContainer(ByteContainer container) : this()
+        public ByteContainer(ByteContainer container) : this(container.environmentId, container.version)
         {
-
             this.bytes = container.bytes;
             position = container.position;
             length = container.length;
             timeStep = container.timeStep;
         }
+
+        /// <summary>
+        /// Use to change the EnvironmentId field
+        /// </summary>
+        /// <param name="environmentId"></param>
+        public void UpdateEnvironmentId(ulong environmentId)
+        {
+            this.environmentId = environmentId;
+        }
+
 
         /// <inheritdoc/>
         public override string ToString()
@@ -77,15 +92,17 @@ namespace umi3d.common
 
     public class DtoContainer
     {
+        public ulong environmentId { get; private set; }
         public AbstractOperationDto operation;
         public List<CancellationToken> tokens;
 
-        private DtoContainer()
+        private DtoContainer(ulong environmentId)
         {
             tokens = new();
+            this.environmentId = environmentId;
         }
 
-        public DtoContainer(AbstractOperationDto operation) : this()
+        public DtoContainer(ulong environmentId, AbstractOperationDto operation) : this(environmentId)
         {
             this.operation = operation;
         }

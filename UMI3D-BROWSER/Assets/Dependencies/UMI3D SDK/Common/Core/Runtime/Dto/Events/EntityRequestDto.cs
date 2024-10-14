@@ -23,9 +23,19 @@ namespace umi3d.common
     /// An EntityRequest is sent when a user gets the whole enviornment while joining.
     public class EntityRequestDto : UMI3DDto
     {
+        public ulong environmentId { get; set; }
         /// <summary>
         /// Entities to load id.
         /// </summary>
         public List<ulong> entitiesId { get; set; }
+    }
+
+    public class UserActionRequestDto : AbstractBrowserRequestDto
+    {
+
+        /// <summary>
+        /// Entities to load id.
+        /// </summary>
+        public ulong actionId { get; set; }
     }
 }

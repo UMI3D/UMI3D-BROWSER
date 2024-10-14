@@ -14,12 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
 using System;
-using System.ComponentModel;
+using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
+using umi3d.cdk.notification;
 using umi3d.common;
 using UnityEngine;
 
@@ -41,11 +42,11 @@ namespace umi3d.cdk
         /// <returns></returns>
         ///  A transaction is composed of a set of operations to be performed on entities (e.g Scenes, Nodes, Materials).
         ///  Operations should be applied in the same order as stored in the transaction.
-        public async Task PerformTransaction(TransactionDto transaction)
+        public async Task PerformTransaction(ulong environmentId,TransactionDto transaction)
         {
             int _transaction = count++;
             int opCount = 0;
-            foreach (var operation in transaction.operations.Select(o => new DtoContainer(o)))
+            foreach (var operation in transaction.operations.Select(o => new DtoContainer(environmentId,o)))
             {
                 bool performed = false;
                 var ErrorTime = Time.time + secondBeforeError;
@@ -136,6 +137,8 @@ namespace umi3d.cdk
             }
         }
 
+        Dictionary<string, object> info = new();
+
         /// <summary>
         /// Apply an <paramref name="operation"/>.
         /// </summary>
@@ -148,23 +151,31 @@ namespace umi3d.cdk
                 case LoadEntityDto load:
                     await Task.WhenAll(load.entities.Select(async entity =>
                     {
-                        await UMI3DEnvironmentLoader.LoadEntity(entity, operation.tokens);
+                        await UMI3DEnvironmentLoader.LoadEntity(operation.environmentId, entity, operation.tokens);
                     }));
                     break;
                 case DeleteEntityDto delete:
-                    await UMI3DEnvironmentLoader.DeleteEntity(delete.entityId, operation.tokens);
+                    await UMI3DEnvironmentLoader.Instance.DeleteEntityInstance(operation.environmentId, delete.entityId, operation.tokens);
                     break;
                 case SetEntityPropertyDto set:
-                    await UMI3DEnvironmentLoader.SetEntity(set, operation.tokens);
+                    await UMI3DEnvironmentLoader.SetEntity(operation.environmentId, set, operation.tokens);
                     break;
                 case MultiSetEntityPropertyDto multiSet:
-                    await UMI3DEnvironmentLoader.SetMultiEntity(multiSet, operation.tokens);
+                    await UMI3DEnvironmentLoader.SetMultiEntity(operation.environmentId, multiSet, operation.tokens);
                     break;
                 case StartInterpolationPropertyDto interpolationStart:
-                    await UMI3DEnvironmentLoader.StartInterpolation(interpolationStart, operation.tokens);
+                    await UMI3DEnvironmentLoader.StartInterpolation(operation.environmentId, interpolationStart, operation.tokens);
                     break;
                 case StopInterpolationPropertyDto interpolationStop:
-                    await UMI3DEnvironmentLoader.StopInterpolation(interpolationStop, operation.tokens);
+                    await UMI3DEnvironmentLoader.StopInterpolation(operation.environmentId, interpolationStop, operation.tokens);
+                    break;
+                case PerspectiveCameraPropertiesDto perspectiveCameraProperties:
+                    info[UMI3DClientNotificatonKeys.Info.CameraProperties] = perspectiveCameraProperties;
+                    NotificationHub.Default.Notify(this, UMI3DClientNotificatonKeys.CameraPropertiesNotification, info);
+                    break;
+                case OrthographicCameraPropertiesDto orthographicCameraProperties:
+                    info[UMI3DClientNotificatonKeys.Info.CameraProperties] = orthographicCameraProperties;
+                    NotificationHub.Default.Notify(this, UMI3DClientNotificatonKeys.CameraPropertiesNotification, info);
                     break;
                 default:
                     if (!await OperationDto(operation))
@@ -181,7 +192,6 @@ namespace umi3d.cdk
         public async Task PerformOperation(ByteContainer container)
         {
             uint operationId = UMI3DSerializer.Read<uint>(container);
-
             switch (operationId)
             {
                 case UMI3DOperationKeys.LoadEntity:
@@ -190,17 +200,33 @@ namespace umi3d.cdk
                 case UMI3DOperationKeys.DeleteEntity:
                     {
                         ulong entityId = UMI3DSerializer.Read<ulong>(container);
-                        await UMI3DEnvironmentLoader.DeleteEntity(entityId, container.tokens);
+                        await UMI3DEnvironmentLoader.Instance.DeleteEntityInstance(container.environmentId, entityId, container.tokens);
                         break;
                     }
                 case UMI3DOperationKeys.MultiSetEntityProperty:
-                    await UMI3DEnvironmentLoader.SetMultiEntity(container);
+                    await UMI3DEnvironmentLoader.SetMultiEntity(container.environmentId, container);
                     break;
                 case UMI3DOperationKeys.StartInterpolationProperty:
-                    await UMI3DEnvironmentLoader.StartInterpolation(container);
+                    await UMI3DEnvironmentLoader.StartInterpolation(container.environmentId, container);
                     break;
                 case UMI3DOperationKeys.StopInterpolationProperty:
-                    await UMI3DEnvironmentLoader.StopInterpolation(container);
+                    await UMI3DEnvironmentLoader.StopInterpolation(container.environmentId, container);
+                    break;
+                case UMI3DOperationKeys.PerspectiveCameraProperties:
+                    Vector3Dto localPos = UMI3DSerializer.Read<Vector3Dto>(container);
+                    float perspNear = UMI3DSerializer.Read<float>(container);
+                    float perspFar = UMI3DSerializer.Read<float>(container);
+                    float fov = UMI3DSerializer.Read<float>(container);
+                    info[UMI3DClientNotificatonKeys.Info.CameraProperties] = new PerspectiveCameraPropertiesDto() { localPosition = localPos, nearPlane = perspNear, farPlane = perspFar, fieldOfView = fov };
+                    NotificationHub.Default.Notify(this, UMI3DClientNotificatonKeys.CameraPropertiesNotification, info);
+                    break;
+                case UMI3DOperationKeys.OrthographicCameraProperties:
+                    Vector3Dto orthoLocalPos = UMI3DSerializer.Read<Vector3Dto>(container);
+                    float orthoNear = UMI3DSerializer.Read<float>(container);
+                    float orthoFar = UMI3DSerializer.Read<float>(container);
+                    float size = UMI3DSerializer.Read<float>(container);
+                    info[UMI3DClientNotificatonKeys.Info.CameraProperties] = new OrthographicCameraPropertiesDto() { localPosition = orthoLocalPos, nearPlane = orthoNear, farPlane = orthoFar, size = size };
+                    NotificationHub.Default.Notify(this, UMI3DClientNotificatonKeys.CameraPropertiesNotification, info);
                     break;
 
                 default:
@@ -208,7 +234,7 @@ namespace umi3d.cdk
                     {
                         ulong entityId = UMI3DSerializer.Read<ulong>(container);
                         uint propertyKey = UMI3DSerializer.Read<uint>(container);
-                        await UMI3DEnvironmentLoader.SetEntity(operationId, entityId, propertyKey, container);
+                        await UMI3DEnvironmentLoader.SetEntity(container.environmentId, operationId, entityId, propertyKey, container);
                     }
                     else if (!await Operation(operationId, container))
                         await UMI3DEnvironmentLoader.AbstractParameters.UnknownOperationHandler(operationId, container);

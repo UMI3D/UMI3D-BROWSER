@@ -39,11 +39,11 @@ sysinfo.txt
 # Builds
 *.unitypackage
 
-
-/UMI3D-browser-quest/Assets/XR/GlTFSceneExtensions.cs.meta
-/UMI3D-browser-quest/Assets/EXCLUDED.meta
-/UMI3D-browser-quest/Assets/EXCLUDED
-/UMI3D-browser-quest/UserSettings/EditorUserSettings.asset
-
-Assets/Dependencies/UMI3D SDK/Dependencies/Runtime/GltFast/Documentation/*
+# Exclude the files that are located in any EXCLUDED folder.
+/UMI3D-BROWSER/Assets/**/EXCLUDED.meta
+/UMI3D-BROWSER/Assets/**/EXCLUDED
+/UMI3D-BROWSER/Assets/XR/GlTFSceneExtensions.cs.meta
+/UMI3D-BROWSER/UserSettings/EditorUserSettings.asset
+/UMI3D-BROWSER/Assets/Dependencies/UMI3D SDK/Dependencies/Runtime/GltFast/Documentation/*
+/UMI3D-BROWSER/pxr_driver_sdk.log
 

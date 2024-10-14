@@ -14,8 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using umi3d.common;
 using UnityEngine;
@@ -71,14 +73,26 @@ namespace umi3d.cdk
             {
                 AssetBundle bundle = downloadHandlerAssetBundle?.assetBundle;
 
-                www.Dispose();
-                if (bundle != null) return (bundle);
-#if UNITY_2020_OR_NEWER
-                    else if (downloadHandlerAssetBundle?.error != null)
-                        throw new Umi3dException($"An error has occurred during the decoding of the asset bundle’s assets.\n{downloadHandlerAssetBundle?.error}");
+
+                if (bundle != null)
+                {
+                    www.Dispose();
+                    return (bundle);
+                }
+#if UNITY_2020_1_OR_NEWER
+                else if (downloadHandlerAssetBundle?.error != null)
+                {
+                    string error = downloadHandlerAssetBundle?.error;
+                    www.Dispose();
+                    throw new Umi3dBundleException($"An error has occurred during the decoding of the asset bundle’s assets.\n{error}", error.Contains("can't be loaded because another AssetBundle with the same files is already loaded."));
+                }
 #endif
                 else
-                    throw new Umi3dException($"Asset bundle empty: \n\n\"{url}\" \n\nAn error might have occurred during the decoding of the asset bundle’s assets.");
+                {
+                    UMI3DResourcesManager.Instance.DebugCach();
+                    www.Dispose();
+                    throw new Umi3dBundleException($"Asset bundle empty: \n\n\"{url}\" \n\nAn error might have occurred during the decoding of the asset bundle’s assets.", true);
+                }
             }
             www.Dispose();
             throw new Umi3dException("The downloadHandler provided is not a DownloadHandlerAssetBundle");
@@ -89,7 +103,31 @@ namespace umi3d.cdk
         {
             if (pathIfObjectInBundle != null && pathIfObjectInBundle != "" && o is AssetBundle bundle)
             {
-                if (Array.Exists(bundle.GetAllAssetNames(), element => { return element == pathIfObjectInBundle; }))
+                bool isAsset = Array.Exists(bundle.GetAllAssetNames(), element => { return element == pathIfObjectInBundle; });
+                bool isScene = false;
+                if (!isAsset)
+                    isScene = Array.Exists(bundle.GetAllScenePaths(), element => { return element == pathIfObjectInBundle; });
+                if (!isAsset && !isScene)
+                {
+                    var result = bundle.GetAllAssetNames().FirstOrDefault(element => element.Contains(pathIfObjectInBundle));
+                    if (result != null)
+                    {
+                        isAsset = true;
+                        pathIfObjectInBundle = result;
+                    }
+                    else
+                    {
+                        result = bundle.GetAllScenePaths().FirstOrDefault(element => element.Contains(pathIfObjectInBundle));
+                        if (result != null)
+                        {
+                            isScene = true;
+                            pathIfObjectInBundle = result;
+                        }
+                    }
+                }
+
+
+                if (isAsset)
                 {
 #if UNITY_2020_1_OR_NEWER
                     var load = bundle.LoadAssetAsync(pathIfObjectInBundle);
@@ -108,30 +146,29 @@ namespace umi3d.cdk
                     {
                         if (objectInBundle is GameObject)
                         {
-
+#if UNITY_EDITOR && !UNITY_STANDALONE_WIN
                             UnityEngine.Debug.Log("<color=green>TODO: </color>" + $"Fix shader on asset bundle go {(objectInBundle as GameObject).name}");
                             ShaderFix.FixShadersForEditor(objectInBundle as GameObject);
+#endif
                             AbstractMeshDtoLoader.HideModelRecursively((GameObject)objectInBundle);
                         }
                         return (objectInBundle);
                     }
                 }
-                else
+                else if (isScene)
                 {
-                    if (Array.Exists(bundle.GetAllScenePaths(), element => { return element == pathIfObjectInBundle; }))
-                    {
-                        var scene = await LoadScene(pathIfObjectInBundle);
+                    var scene = await LoadScene(pathIfObjectInBundle);
+#if UNITY_EDITOR && !UNITY_STANDALONE_WIN
                         UnityEngine.Debug.Log("<color=green>TODO: </color>" + $"Fix shader on asset bundle go {scene.Item1.name}");
                         ShaderFix.FixShadersForEditor(scene.Item1);
-
-                        AbstractMeshDtoLoader.HideModelRecursively(scene.Item1);
-                        return scene;
-                    }
-                    else
-                    {
-                        UMI3DLogger.LogWarning($"Path {pathIfObjectInBundle} not found in Assets nor Scene", scope);
-                        return (o);
-                    }
+#endif
+                    AbstractMeshDtoLoader.HideModelRecursively(scene.Item1);
+                    return scene;
+                }
+                else
+                {
+                    UMI3DLogger.LogWarning($"Path {pathIfObjectInBundle} not found in Assets nor Scenes.\nAvailabled Assets were {bundle.GetAllAssetNames().ToString<string>()}\nAvailabled Scenes were {bundle.GetAllScenePaths().ToString<string>()}", scope);
+                    return (o);
                 }
             }
 
@@ -145,12 +182,33 @@ namespace umi3d.cdk
         /// <returns>(Empty object which contains every object of loaded scene; loaded scene, empty)</returns>
         private async Task<(GameObject, Scene)> LoadScene(string scenePath)
         {
+
+            List<int> alreadyLoaded = new();
+            for (int i = 0; i < SceneManager.sceneCount; i++)
+            {
+                var sc = SceneManager.GetSceneAt(i);
+
+                if (sc.path == scenePath)
+                {
+                    alreadyLoaded.Add(i);
+                }
+            }
             var asyncLoading = SceneManager.LoadSceneAsync(scenePath, LoadSceneMode.Additive);
 
             while (!asyncLoading.isDone)
                 await UMI3DAsyncManager.Yield();
 
-            var scene = SceneManager.GetSceneByPath(scenePath);
+            Scene scene = SceneManager.GetSceneByPath(scenePath);
+            for (int i = 0; i < SceneManager.sceneCount; i++)
+            {
+                var sc = SceneManager.GetSceneAt(i);
+
+                if (sc.path == scenePath && !alreadyLoaded.Contains(i))
+                {
+                    scene = sc;
+                    break;
+                }
+            }
 
             GameObject sceneObj = new GameObject(scenePath);
 

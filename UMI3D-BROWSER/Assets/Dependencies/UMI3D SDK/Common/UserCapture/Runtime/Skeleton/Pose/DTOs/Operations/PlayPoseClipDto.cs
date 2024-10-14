@@ -23,12 +23,6 @@ namespace umi3d.common.userCapture.pose
     public class PlayPoseClipDto : AbstractOperationDto
     {
         /// <summary>
-        /// Id of the user to apply the pose to. 
-        /// Specify <see cref="UMI3DGlobalID.EnvironementId"/> to set an environment pose.
-        /// </summary>
-        public ulong userID { get; set; }
-
-        /// <summary>
         /// Index in the list of poses
         /// </summary>
         public ulong poseId { get; set; }
@@ -37,5 +31,11 @@ namespace umi3d.common.userCapture.pose
         /// Is it a message to stop or to start the related pose
         /// </summary>
         public bool stopPose { get; set; }
+
+        /// <summary>
+        /// Transition duration in seconds.
+        /// </summary>
+        /// If negative, no transition duration is specified.
+        public float transitionDuration { get; set; }
     }
 }

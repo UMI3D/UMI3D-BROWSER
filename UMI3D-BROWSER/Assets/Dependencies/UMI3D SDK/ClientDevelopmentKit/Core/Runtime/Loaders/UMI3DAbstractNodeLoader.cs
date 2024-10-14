@@ -71,11 +71,13 @@ namespace umi3d.cdk
             {
                 if (nodeDto.pid != 0)
                 {
-                    loadingManager.WaitUntilEntityLoaded(nodeDto.pid, e =>
+                    loadingManager.WaitUntilEntityLoaded(
+                        data.environmentId 
+                        ,nodeDto.pid, e =>
                     {
                         if (e is UMI3DNodeInstance instance)
                         {
-                            var nodeInstance = environmentManager.TryGetEntityInstance(nodeDto.pid) as UMI3DNodeInstance;
+                            var nodeInstance = environmentManager.TryGetEntityInstance(data.environmentId,nodeDto.pid) as UMI3DNodeInstance;
                             if ( nodeInstance != null && nodeInstance.mainInstance != null)
                             {
                                 data.node.transform.SetParent(nodeInstance.mainInstance.transform, false);
@@ -122,17 +124,17 @@ namespace umi3d.cdk
             {
                 case UMI3DPropertyKeys.Static:
                     dto.isStatic = (bool)data.property.value;
-                    if (dto.isStatic != node.gameObject.isStatic)
-                        node.gameObject.isStatic = dto.isStatic;
+                    if (dto.isStatic != node.GameObject.isStatic)
+                        node.GameObject.isStatic = dto.isStatic;
                     break;
                 case UMI3DPropertyKeys.Active:
                     dto.active = (bool)data.property.value;
-                    if (node.gameObject.activeSelf != dto.active)
-                        node.gameObject.SetActive(dto.active);
+                    if (node.GameObject.activeSelf != dto.active)
+                        node.GameObject.SetActive(dto.active);
                     break;
                 case UMI3DPropertyKeys.ParentId:
                     ulong pid = dto.pid = (ulong)(long)data.property.value;
-                    UMI3DNodeInstance parent = environmentManager.GetNodeInstance(pid);
+                    UMI3DNodeInstance parent = environmentManager.GetNodeInstance(data.environmentId, pid);
                     node.transform.SetParent(parent != null ? parent.transform : environmentManager.transform);
                     if(parent != null)
                     {
@@ -186,17 +188,17 @@ namespace umi3d.cdk
             {
                 case UMI3DPropertyKeys.Static:
                     dto.isStatic = UMI3DSerializer.Read<bool>(data.container);
-                    if (dto.isStatic != node.gameObject.isStatic)
-                        node.gameObject.isStatic = dto.isStatic;
+                    if (dto.isStatic != node.GameObject.isStatic)
+                        node.GameObject.isStatic = dto.isStatic;
                     break;
                 case UMI3DPropertyKeys.Active:
                     dto.active = UMI3DSerializer.Read<bool>(data.container);
-                    if (node.gameObject.activeSelf != dto.active)
-                        node.gameObject.SetActive(dto.active);
+                    if (node.GameObject.activeSelf != dto.active)
+                        node.GameObject.SetActive(dto.active);
                     break;
                 case UMI3DPropertyKeys.ParentId:
                     ulong pid = dto.pid = UMI3DSerializer.Read<ulong>(data.container);
-                    UMI3DNodeInstance parent = UMI3DEnvironmentLoader.GetNode(pid);
+                    UMI3DNodeInstance parent = UMI3DEnvironmentLoader.GetNode(data.environmentId, pid);
                     node.transform.SetParent(parent != null ? parent.transform : environmentManager.transform);
                     if (parent != null)
                     {

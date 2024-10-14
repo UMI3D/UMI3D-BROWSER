@@ -64,7 +64,7 @@ namespace umi3dVRBrowsersBase.interactions.input
 
             if (controller is VRController vrController)
             {
-                boneType = vrController.bone.Bonetype;
+                boneType = vrController.bone.BoneType;
                 boneTransform = vrController.bone.transform;
             } else
             {
@@ -78,7 +78,7 @@ namespace umi3dVRBrowsersBase.interactions.input
         /// <param name="interaction"></param>
         /// <param name="toolId"></param>
         /// <param name="hoveredObjectId"></param>
-        public override void Associate(AbstractInteractionDto interaction, ulong toolId, ulong hoveredObjectId)
+        public override void Associate(ulong environmentId, AbstractInteractionDto interaction, ulong toolId, ulong hoveredObjectId)
         {
             if (IsCompatibleWith(interaction) && IsAvailable())
             {
@@ -97,7 +97,7 @@ namespace umi3dVRBrowsersBase.interactions.input
         /// <param name="dofs"></param>
         /// <param name="toolId"></param>
         /// <param name="hoveredObjectId"></param>
-        public override void Associate(ManipulationDto manipulation, DofGroupEnum dofs, ulong toolId, ulong hoveredObjectId)
+        public override void Associate(ulong environmentId, ManipulationDto manipulation, DofGroupEnum dofs, ulong toolId, ulong hoveredObjectId)
         {
             if (IsCompatibleWith(manipulation) && IsAvailable())
             {

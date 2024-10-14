@@ -11,33 +11,66 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System.Collections.Generic;
+
 namespace umi3d.common
 {
     /// <summary>
-    /// Describes a Webview
+    /// Describes a WebView
     /// </summary>
     [System.Serializable]
     public class UMI3DWebViewDto : UMI3DNodeDto, IEntity
     {
         /// <summary>
-        /// Can users interact with the webview .
+        /// Define if user is an admin or not. Admin are allowed to sync their content.
+        /// </summary>
+        public bool isAdmin { get; set; }
+
+        /// <summary>
+        /// Can users interact with the webView .
         /// </summary>
         public bool canInteract { get; set; }
 
-        /// Webview size.
+        /// WebView size.
         public Vector2Dto size { get; set; }
 
-        /// Webview texture dimensions.
+        /// WebView texture dimensions.
         public Vector2Dto textureSize { get; set; }
 
         /// <summary>
+        /// new
         /// Url to load on clients.
         /// </summary>
         public string url { get; set; }
 
         /// <summary>
+        /// Scroll offset.
+        /// </summary>
+        public Vector2Dto scrollOffset { get; set; }
+
+        /// <summary>
         /// If set to false, when <see cref="url"/> is set, the value will be ignored by the browser.
         /// </summary>
         public bool canUrlBeForced { get; set; }
+
+        /// <summary>
+        /// if true, will use <see cref="whiteList"/> to determine which domains are allowed.
+        /// </summary>
+        public bool useWhiteList { get; set; }
+
+        /// <summary>
+        /// Authorized domaines.
+        /// </summary>
+        public List<string> whiteList { get; set; }
+
+        /// <summary>
+        /// if true, will use <see cref="useBlackList"/> to determine which domains are prohibited.
+        /// </summary>
+        public bool useBlackList { get; set; }
+
+        /// <summary>
+        /// Non authorized domaines.
+        /// </summary>
+        public List<string> blackList { get; set; }
     }
 }

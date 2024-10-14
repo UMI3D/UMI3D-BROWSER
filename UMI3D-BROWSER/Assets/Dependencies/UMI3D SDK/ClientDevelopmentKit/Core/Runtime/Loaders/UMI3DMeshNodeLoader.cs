@@ -100,7 +100,7 @@ namespace umi3d.cdk
                 {
                     if (o is GameObject g)
                     {
-                        await CallbackAfterLoadingForMesh(g, meshDto, data.node.transform, offset, null);
+                        await CallbackAfterLoadingForMesh(data.environmentId, g, meshDto, data.node.transform, offset, null);
                     }
                     else if (o is (GameObject go, Scene scene))
                     {
@@ -111,7 +111,7 @@ namespace umi3d.cdk
                             transforms.Add(go.transform.GetChild(i).gameObject);
                         }*/
 
-                        await CallbackAfterLoadingForMesh(go, meshDto, data.node.transform, offset, scene);
+                        await CallbackAfterLoadingForMesh(data.environmentId, go, meshDto, data.node.transform, offset, scene);
 
                         /*foreach (var goo in transforms.ToArray())
                         {
@@ -148,6 +148,9 @@ namespace umi3d.cdk
                 case UMI3DPropertyKeys.IsTraversable:
                     (data.entity as UMI3DNodeInstance).IsTraversable = (bool)data.property.value;
                     return true;
+                case UMI3DPropertyKeys.IsBlockingInteraction:
+                    (data.entity as UMI3DNodeInstance).IsBlockingInteraction = (bool)data.property.value;
+                    return true;
                 default:
                     return false;
             }
@@ -178,6 +181,9 @@ namespace umi3d.cdk
                     return true;
                 case UMI3DPropertyKeys.IsTraversable:
                     (data.entity as UMI3DNodeInstance).IsTraversable = UMI3DSerializer.Read<bool>(data.container);
+                    return true;
+                case UMI3DPropertyKeys.IsBlockingInteraction:
+                    (data.entity as UMI3DNodeInstance).IsBlockingInteraction = UMI3DSerializer.Read<bool>(data.container);
                     return true;
                 default:
                     return false;
@@ -261,7 +267,7 @@ namespace umi3d.cdk
             }
         }
 
-        private async Task CallbackAfterLoadingForMesh(GameObject go, UMI3DMeshNodeDto dto, Transform parent, Vector3 rotationOffsetByLoader, object data)
+        private async Task CallbackAfterLoadingForMesh(ulong environmentId,GameObject go, UMI3DMeshNodeDto dto, Transform parent, Vector3 rotationOffsetByLoader, object data)
         {
             var modelTracker = parent.gameObject.AddComponent<ModelTracker>();
             GameObject root = null;
@@ -276,7 +282,7 @@ namespace umi3d.cdk
             }
 
             GameObject instance = null;
-            UMI3DNodeInstance nodeInstance = environmentManager.GetNodeInstance(dto.id);
+            UMI3DNodeInstance nodeInstance = environmentManager.GetNodeInstance(environmentId, dto.id);
 
             instance = GameObject.Instantiate(root, parent, true);
 
@@ -317,9 +323,40 @@ namespace umi3d.cdk
             SetCollider(dto.id, nodeInstance, colliderDto);
             SetMaterialOverided(dto, nodeInstance);
             SetLightMap(instance, nodeInstance);
+            SetBlendShapeRef(nodeInstance, dto);
 
             nodeInstance.IsPartOfNavmesh = dto.isPartOfNavmesh;
             nodeInstance.IsTraversable = dto.isTraversable;
+            nodeInstance.IsBlockingInteraction = dto.isBlockingInteraction;
+
+        }
+
+        private void SetBlendShapeRef(UMI3DNodeInstance nodeInstance, UMI3DMeshNodeDto dto, bool setValue = true)
+        {
+            IEnumerable<Renderer> childrenSkinnedMesh = GetChildRenderersWhithoutOtherModel(nodeInstance).Where(s => s is SkinnedMeshRenderer);
+            foreach (Renderer skinnedMesh in childrenSkinnedMesh)
+            {
+                SkinnedMeshRenderer skm = (skinnedMesh as SkinnedMeshRenderer);
+                if (skm.sharedMesh.blendShapeCount > 0 && !nodeInstance.skmToUpdateWithBlendShapes.Contains(skm))
+                {
+
+                    nodeInstance.skmToUpdateWithBlendShapes.Add(skm);
+
+                    //Set value
+                    if (setValue)
+                        try
+                        {
+                            for (int i = 0; i < dto.blendShapesValues.Count; i++)
+                            {
+                                skm.SetBlendShapeWeight(i, dto.blendShapesValues[i]);
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.LogError($"Cannot apply blendshape values. Skinned Mesh Renderer {skm.name} has {skm.sharedMesh.blendShapeCount} blendshapes whereas dto has {dto.blendShapesValues.Count}." + e);
+                        }
+                }
+            }
         }
 
         /// <summary>
@@ -349,6 +386,7 @@ namespace umi3d.cdk
                 yield return null;
 
             data.Init();
+            yield return null;
         }
 
 

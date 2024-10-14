@@ -17,7 +17,7 @@ limitations under the License.
 using System.Threading.Tasks;
 using umi3d.cdk;
 using umi3d.common;
-using umi3dVRBrowsersBase.ui.watchMenu;
+using umi3dBrowsers.player;
 using UnityEngine;
 
 namespace umi3dVRBrowsersBase.ui.notification
@@ -81,12 +81,12 @@ namespace umi3dVRBrowsersBase.ui.notification
             {
                 notification = loader.InstantiatePrefab(true);
 
-                UMI3DNodeInstance obj = UMI3DEnvironmentLoader.GetNode(notificationOnObjectDto.objectId);
+                UMI3DNodeInstance obj = UMI3DEnvironmentLoader.GetNode(UMI3DGlobalID.EnvironmentId, notificationOnObjectDto.objectId);
 
-                notification.SetParent(obj?.gameObject.transform, Vector3.zero, Quaternion.identity);
+                notification.SetParent(obj?.GameObject.transform, Vector3.zero, Quaternion.identity);
 
                 notification.Init(dto);
-                UMI3DEnvironmentLoader.RegisterNodeInstance(dto.id, dto, notification.gameObject);
+                UMI3DEnvironmentLoader.RegisterNodeInstance(UMI3DGlobalID.EnvironmentId, dto.id, dto, notification.gameObject);
             }
             else
             {
@@ -97,7 +97,7 @@ namespace umi3dVRBrowsersBase.ui.notification
                     notification.SetParent(watch.notificationContainer, Vector3.zero, Quaternion.identity);
 
                     notification.Init(dto);
-                    UMI3DEnvironmentLoader.RegisterNodeInstance(dto.id, dto, notification.gameObject);
+                    UMI3DEnvironmentLoader.RegisterNodeInstance(UMI3DGlobalID.EnvironmentId, dto.id, dto, notification.gameObject);
                 }
             }
         }

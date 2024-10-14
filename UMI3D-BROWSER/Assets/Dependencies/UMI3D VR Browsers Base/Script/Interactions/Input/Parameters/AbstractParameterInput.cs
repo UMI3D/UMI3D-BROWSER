@@ -90,7 +90,7 @@ namespace umi3dVRBrowsersBase.interactions.input
         /// <param name="interaction"></param>
         /// <param name="toolId"></param>
         /// <param name="hoveredObjectId"></param>
-        public override void Associate(AbstractInteractionDto interaction, ulong toolId, ulong hoveredObjectId)
+        public override void Associate(ulong environmentId, AbstractInteractionDto interaction, ulong toolId, ulong hoveredObjectId)
         {
             if (currentInteraction != null)
             {
@@ -115,7 +115,7 @@ namespace umi3dVRBrowsersBase.interactions.input
 
                     UMI3DClientServer.SendData(new ParameterSettingRequestDto()
                     {
-                        boneType = bone.Bonetype,
+                        boneType = bone.BoneType,
                         bonePosition = bone.transform.position.Dto(),
                         boneRotation = bone.transform.rotation.Dto(),
                         toolId = toolId,
@@ -156,7 +156,7 @@ namespace umi3dVRBrowsersBase.interactions.input
         /// <param name="dofs"></param>
         /// <param name="toolId"></param>
         /// <param name="hoveredObjectId"></param>
-        public override void Associate(ManipulationDto manipulation, DofGroupEnum dofs, ulong toolId, ulong hoveredObjectId)
+        public override void Associate(ulong environmentId, ManipulationDto manipulation, DofGroupEnum dofs, ulong toolId, ulong hoveredObjectId)
         {
             throw new System.Exception("Incompatible interaction");
         }

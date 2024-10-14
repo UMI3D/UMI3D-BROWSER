@@ -26,5 +26,6 @@ namespace umi3d.browserRuntime.ui.settings
         internal static readonly string AudioMode = "settings-audioMode";
         internal static readonly string NoiseThreshold = "settings-noiseThreshold";
         internal static readonly string DelayBeforeMuteMic = "settings-delayBeforeMuteMic";
+        internal static readonly string UiAnimation = "settings-uiAnimation";
     }
 }

@@ -23,10 +23,15 @@ namespace umi3dBrowsers.displayer
 {
     public class InputFieldDispayer : MonoBehaviour, IInputFieldDisplayer
     {
-        [Header("Form")]
-        [SerializeField] private TMP_UMI3DUIInputField textInputField;
-        [SerializeField] private TextMeshProUGUI placeHolder;
-        [SerializeField] private TextMeshProUGUI title;
+        [SerializeField] TMP_Text title;
+        TMP_InputField inputField;
+
+        TMP_Text placeholder => inputField.placeholder as TMP_Text;
+
+        void Awake()
+        {
+            inputField = GetComponentInChildren<TMP_InputField>();
+        }
 
         public object GetValue(bool trim)
         {
@@ -35,9 +40,9 @@ namespace umi3dBrowsers.displayer
         public string GetText(bool trim)
         {
             if (trim)
-                return textInputField.text.Trim();
+                return inputField.text.Trim();
             else
-                return textInputField.text;
+                return inputField.text;
         }
 
         public void SetTitle(string title)
@@ -47,7 +52,7 @@ namespace umi3dBrowsers.displayer
 
         public void SetPlaceHolder(List<string> placeHolder)
         {
-            this.placeHolder.text = placeHolder[0];
+            placeholder.text = placeHolder[0];
         }
 
         public void SetColor(Color color)
@@ -60,11 +65,11 @@ namespace umi3dBrowsers.displayer
 
         public void SetType(TextType type)
         {
-            textInputField.contentType = ToContentType(type);
+            inputField.contentType = ToContentType(type);
             if (type == TextType.Phone)
-                textInputField.characterLimit = 15;
+                inputField.characterLimit = 15;
 
-            textInputField.characterValidation = ToCharaterValidation(type);
+            inputField.characterValidation = ToCharaterValidation(type);
         }
 
         private TMP_InputField.ContentType ToContentType(TextType type)

@@ -154,7 +154,7 @@ namespace umi3dBrowsers.displayer
 
         public void SetupRenameButton(Action<string> onRename)
         {
-            inputFieldBackground.InputField.OnTextChanged += onRename;
+            inputFieldBackground.InputField.onValueChanged.AddListener(value => onRename(value));
         }
 
         public void HoverEnter(PointerEventData eventData)

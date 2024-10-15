@@ -32,11 +32,11 @@ namespace umi3dBrowsers.displayer
         private Coroutine _easeInOutCoroutine;
 
         [Header("obj")]
-        [SerializeField] private TMP_UMI3DUIInputField inputField;
+        [SerializeField] private TMP_InputField inputField;
         [SerializeField] private ImageButtonDisplayer ImageButtonDisplayer;
 
         public string Text { get => inputField.text; set => inputField.text = value; }
-        public TMP_UMI3DUIInputField InputField => inputField;
+        public TMP_InputField InputField => inputField;
 
         public event Action OnClick;
         public event Action OnDisabled;

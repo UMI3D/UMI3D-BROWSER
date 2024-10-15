@@ -26,30 +26,28 @@ namespace umi3d.browserRuntime.ui.keyboard
     {
         PointerDownBehaviour pointerDown;
 
-        Dictionary<string, object> info = new()
-        {
-            { KeyboardNotificationKeys.Info.IsOpening, false },
-            { KeyboardNotificationKeys.Info.WithAnimation, true },
-            { KeyboardNotificationKeys.Info.AnimationTime, 1f },
-            { KeyboardNotificationKeys.Info.PhaseOneStartTimePercentage, .5f }
-        };
+        Notifier quitKeyPressedNotifier;
 
         void Awake()
         {
             pointerDown = GetComponent<PointerDownBehaviour>();
-
+            pointerDown.isSimpleClick = true;
             pointerDown.pointerClickedSimple += PointerDown;
+
+            quitKeyPressedNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                KeyboardNotificationKeys.SpecialKeyPressed,
+                null,
+                new()
+                {
+                    { KeyboardNotificationKeys.Info.SpecialKey, SpecialKey.Quit }
+                }
+            );
         }
 
         void PointerDown()
         {
-            // To update.
-            info[KeyboardNotificationKeys.Info.WithAnimation] = true;
-            NotificationHub.Default.Notify(
-                this,
-                KeyboardNotificationKeys.OpenOrClose,
-                info
-            );
+            quitKeyPressedNotifier.Notify();
         }
     }
 }

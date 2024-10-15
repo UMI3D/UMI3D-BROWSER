@@ -237,7 +237,9 @@ namespace umi3dBrowsers.container.formrenderer
 
         private void HandleDivDto<T>(T itemDto, GameObject prefab, FormContainer parentContainer, Action<T, FormContainer, displayer.IDisplayer> handleItem) where T : DivDto
         {
-            GameObject gameObject = Instantiate(prefab, parentContainer.container.transform);
+            GameObject gameObject = Instantiate(prefab);
+            gameObject.transform.SetParent(parentContainer.container.transform, false);
+
             FormContainer container = parentContainer.GetNextFormContainer(gameObject, itemDto.styles);
             var displayer = gameObject.GetComponent<displayer.IDisplayer>();
 

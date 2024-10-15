@@ -23,7 +23,7 @@ using UnityEngine.UI;
 
 namespace umi3dBrowsers.displayer
 {
-    public class SliderHandler : MonoBehaviour
+    public class SliderWithText : MonoBehaviour
     {
         [SerializeField] TextMeshProUGUI text;
         [SerializeField] Slider slider;

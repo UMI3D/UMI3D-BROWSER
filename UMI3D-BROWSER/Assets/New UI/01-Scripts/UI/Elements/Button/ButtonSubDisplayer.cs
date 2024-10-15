@@ -23,7 +23,7 @@ using UnityEngine.UI;
 
 namespace umi3dBrowsers.displayer
 {
-    public class ButtonDisplayer : MonoBehaviour, ISubDisplayer
+    public class ButtonSubDisplayer : MonoBehaviour, ISubDisplayer
     {
         [Header("trash button")]
         [SerializeField] private Color backgroundNormalColor = Color.gray;

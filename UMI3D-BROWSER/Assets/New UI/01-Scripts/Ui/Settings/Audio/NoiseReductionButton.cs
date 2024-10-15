@@ -31,7 +31,9 @@ namespace umi3d.browserRuntime.ui.settings.audio
         {
             button = GetComponent<Button>();
             button.onClick.AddListener(() => {
+#if UNITY_STANDALONE
                 MicrophoneListener.Instance.UseNoiseReduction = isOnButton;
+#endif
                 PlayerPrefs.SetInt(SettingsPlayerPrefsKeys.UseNoiseReduction, isOnButton ? 1 : 0);
             });
         }

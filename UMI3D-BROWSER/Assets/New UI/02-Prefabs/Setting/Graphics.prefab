@@ -145,7 +145,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4051332977746887804}
   - component: {fileID: 7991744571305715154}
-  - component: {fileID: 419578592313200227}
+  - component: {fileID: 8083008691241378660}
   m_Layer: 5
   m_Name: Graphics
   m_TagString: Untagged
@@ -199,7 +199,7 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!114 &419578592313200227
+--- !u!114 &8083008691241378660
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -208,7 +208,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2572118892198786665}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2010d2c4498b5b943b304c0e17b880ee, type: 3}
+  m_Script: {fileID: 11500000, guid: 3ad71b0492568354abcca856ab7aecfc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   quality: 0
@@ -334,6 +334,12 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+  objectToEnableOnHover: []
+  autoUnHover: 0
+  objectToEnableOnClick: []
+  autoDeselect: 0
+  autoInitStyles: 1
+  relatedButtonStyles: []
 --- !u!1001 &3984942634378024
 PrefabInstance:
   m_ObjectHideFlags: 0

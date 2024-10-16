@@ -17,7 +17,6 @@ limitations under the License.
 using System;
 using System.Collections;
 using TMPro;
-using umi3dBrowsers.Displayer;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;

@@ -17,12 +17,11 @@ limitations under the License.
 
 using System;
 using System.Collections;
-using umi3dBrowsers.displayer;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace umi3dBrowsers.Displayer
+namespace umi3dBrowsers.displayer
 {
     public class ButtonSubDisplayer : MonoBehaviour, ISubDisplayer
     {
@@ -33,7 +32,6 @@ namespace umi3dBrowsers.Displayer
         [SerializeField] private Color clickColor = Color.white;
         [Space]
         [SerializeField] private Button button;
-        [SerializeField] private Collider button_collider;
         [SerializeField] private Image backGround = null;
         [SerializeField] private Image iconImage = null;
         [SerializeField] private Sprite normalIcon;
@@ -65,7 +63,6 @@ namespace umi3dBrowsers.Displayer
         private void OnEnable()
         {
             button.enabled = true;
-            button_collider.enabled = true;
 
             if (backGround != null)
                 backGround.color = backgroundNormalColor;
@@ -87,7 +84,7 @@ namespace umi3dBrowsers.Displayer
         }
 
         private void OnDisable()
-        {          
+        {
             //if (_easeInOutCoroutine != null)
             //{
             //    StopCoroutine(_easeInOutCoroutine);
@@ -167,7 +164,6 @@ namespace umi3dBrowsers.Displayer
         public void Disable()
         {
             button.enabled = false;
-            button_collider.enabled = false;
 
             if (_easeInOutCoroutine != null)
             {

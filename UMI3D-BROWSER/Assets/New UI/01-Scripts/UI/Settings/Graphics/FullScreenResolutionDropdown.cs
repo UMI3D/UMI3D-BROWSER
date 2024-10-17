@@ -27,8 +27,6 @@ namespace umi3d.browserRuntime.ui.settings.graphics
 
         private void Start()
         {
-            Select(Screen.currentResolution.ToString());
-
             List<GridDropDownItemCell> microphones = new();
 
             var i = 0;

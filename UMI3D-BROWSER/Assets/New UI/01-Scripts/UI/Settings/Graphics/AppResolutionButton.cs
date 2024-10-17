@@ -36,10 +36,6 @@ namespace umi3d.browserRuntime.ui.settings.graphics
         {
             button = GetComponent<Button>();
             button.onClick.AddListener(() => {
-#if UNITY_STANDALONE
-                if (resolution != ResolutionEnum.Custom) 
-                    FullScreenResolutionValueChanged(Screen.resolutions[0]);
-#endif
                 QualitySettings.SetQualityLevel((int)resolution, false);
             });
             NotificationHub.Default.Subscribe(this, SettingsNotificationKeys.NewToggleCustomSelected + toggleGroup, Selected);

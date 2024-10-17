@@ -76,13 +76,11 @@ namespace umi3d.browserRuntime.navigation
         {
             if (!notification.TryGetInfoT(LocomotionNotificationKeys.Info.Direction, out int direction))
             {
-                notification.LogError(nameof(UMI3DVRPlayer), LocomotionNotificationKeys.Info.Direction);
                 return;
             }
 
             if (!notification.TryGetInfoT(LocomotionNotificationKeys.Info.TurnAmount, out float turnAmount))
             {
-                notification.LogError(nameof(UMI3DVRPlayer), LocomotionNotificationKeys.Info.TurnAmount);
                 return;
             }
 

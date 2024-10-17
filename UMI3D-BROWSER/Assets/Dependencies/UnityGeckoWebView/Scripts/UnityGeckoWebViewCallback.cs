@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
 using UnityEngine;
 
 namespace com.inetum.unitygeckowebview
@@ -24,11 +25,24 @@ namespace com.inetum.unitygeckowebview
     /// </summary>
     public class UnityGeckoWebViewCallback : AndroidJavaProxy
     {
-        private UnityGeckoWebView webView;
+        WebviewContainer webView;
 
-        public UnityGeckoWebViewCallback(UnityGeckoWebView webView) : base("com.inetum.unitygeckowebview.UnityGeckoWebViewCallback")
+        Notifier webViewTextFieldSelected;
+        Notifier loadingNotifier;
+
+        public UnityGeckoWebViewCallback(WebviewContainer webView) : base("com.inetum.unitygeckowebview.UnityGeckoWebViewCallback")
         {
             this.webView = webView;
+
+            webViewTextFieldSelected = NotificationHub.Default.GetNotifier(
+                this,
+                GeckoWebViewNotificationKeys.WebViewTextFieldSelected
+            );
+
+            loadingNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                GeckoWebViewNotificationKeys.Loading
+            );
         }
 
         /// <summary>
@@ -39,7 +53,7 @@ namespace com.inetum.unitygeckowebview
             if (webView is null)
                 return;
 
-            UnityGeckoWebView.actionsToRunOnMainThread.Enqueue(() => webView.OnTextInputSelected?.Invoke());
+            UnityGeckoWebViewMainThreadDispatcher.Instance.actionsToRunOnMainThread.Enqueue(TextInputSelected);
         }
 
         /// <summary>
@@ -50,7 +64,25 @@ namespace com.inetum.unitygeckowebview
             if (webView is null)
                 return;
 
-            UnityGeckoWebView.actionsToRunOnMainThread.Enqueue(() => webView.OnUrlStartedLoading?.Invoke(url));
+            UnityGeckoWebViewMainThreadDispatcher.Instance.actionsToRunOnMainThread.Enqueue(() => LoadingHasStarted(url));
+        }
+
+        /// <summary>
+        /// Notify all subscribers that a text field has been selected.
+        /// </summary>
+        public void TextInputSelected()
+        {
+            webViewTextFieldSelected.Notify();
+        }
+
+        /// <summary>
+        /// Notify all subscribers that a web page has started loading.
+        /// </summary>
+        /// <param name="url"></param>
+        public void LoadingHasStarted(string url)
+        {
+            loadingNotifier[GeckoWebViewNotificationKeys.Info.URL] = url;
+            loadingNotifier.Notify();
         }
     }
 }

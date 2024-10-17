@@ -39,6 +39,61 @@ namespace umi3d.browserRuntime.NotificationKeys
     }
 
     /// <summary>
+    /// Opening state of an object.
+    /// </summary>
+    public enum OpeningState
+    {
+        Open,
+        Close
+    }
+
+    /// <summary>
+    /// The animation settings for the keyboard.
+    /// </summary>
+    public enum KeyboardAnimationType
+    {
+        OpenOrClose,
+        KeyPress
+    }
+
+    /// <summary>
+    /// The keyboard special keys.
+    /// </summary>
+    public enum SpecialKey
+    {
+        Enter,
+        Quit
+    }
+
+    /// <summary>
+    /// The localisation version of the keyboard.
+    /// </summary>
+    public enum KeyboardLocalisationVersion
+    {
+        QWERTY,
+        AZERTY
+    }
+
+    /// <summary>
+    /// How the text of a text field will be updated.
+    /// </summary>
+    public enum TextFieldTextUpdate
+    {
+        /// <summary>
+        /// Some characters will be added at the string position.
+        /// </summary>
+        AddCharacters,
+        /// <summary>
+        /// Some characters will be removed at the string position.
+        /// </summary>
+        RemoveCharacters,
+        /// <summary>
+        /// The text will be submit so text field that wait for submission will be updated.
+        /// </summary>
+        SubmitText
+    }
+
+    /// <summary>
     /// The locomotion types.
     /// </summary>
     [Flags]

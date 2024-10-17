@@ -32,19 +32,6 @@ namespace umi3d.browserRuntime.ui
 
         protected bool? isLongPress = null;
 
-        void Awake()
-        {
-            if (!isSimpleClick)
-            {
-                info = new()
-                {
-                    { NKCount, 1 },
-                    { NKIsLongPress, false },
-                    { NKIsImmediate, true }
-                };
-            }
-        }
-
         public void OnPointerDown(PointerEventData eventData)
         {
             if (isSimpleClick)
@@ -53,6 +40,7 @@ namespace umi3d.browserRuntime.ui
             }
             else
             {
+                this.eventData = eventData;
                 OnMultiClick();
             }
         }
@@ -73,6 +61,7 @@ namespace umi3d.browserRuntime.ui
             numberOfClick++;
 
             // Raise the 'pointerClick' event each time the pointer is down.
+            info[NKPointerEvent] = eventData;
             info[NKCount] = numberOfClick;
             info[NKIsLongPress] = false;
             info[NKIsImmediate] = true;
@@ -108,6 +97,7 @@ namespace umi3d.browserRuntime.ui
 
             // After the 'timeOut' is reached a 'pointerClick' event is raised.
             // If only one down has been made it is a single click else it is a multi click.
+            info[NKPointerEvent] = eventData;
             info[NKCount] = numberOfClick;
             info[NKIsLongPress] = isLongPress.Value;
             info[NKIsImmediate] = false;

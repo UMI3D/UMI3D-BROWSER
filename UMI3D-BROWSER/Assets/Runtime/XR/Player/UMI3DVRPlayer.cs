@@ -20,6 +20,7 @@ using umi3d.browserRuntime.navigation;
 using umi3d.cdk;
 using umi3d.cdk.collaboration.userCapture;
 using umi3d.cdk.navigation;
+using umi3d.cdk.notification;
 using umi3dBrowsers.linker;
 using Unity.XR.CoreUtils;
 using UnityEngine;
@@ -51,6 +52,8 @@ namespace umi3d.browserRuntime.player
         Linker<UMI3DVRPlayer> linker;
         [SerializeField] private ConnectionToImmersiveLinker connectionLinker;
 
+        Request playerRequest;
+
         private void Awake()
         {
             logger.MainContext = this;
@@ -76,7 +79,6 @@ namespace umi3d.browserRuntime.player
             // SKELETON SERVICE
             CollaborationSkeletonsManager.Instance.navigation = navigationDelegate; //also use to init manager via Instance call
 
-
             linker = Linker.Get<UMI3DVRPlayer>(nameof(UMI3DVRPlayer));
         }
 
@@ -92,12 +94,21 @@ namespace umi3d.browserRuntime.player
 
         void OnEnable()
         {
+            playerRequest = RequestHub.Default.
+                SubscribeAsSupplier<UMI3DClientRequestKeys.PlayerRequest>(this);
+
+            playerRequest[this, UMI3DClientRequestKeys.PlayerRequest.Transform] = () => transform;
+            playerRequest[this, UMI3DClientRequestKeys.PlayerRequest.Camera] = () => mainCamera;
+
             // Link is made at the end of the OnEnable method so that all the set up has been made.
             linker.Link(this);
         }
 
         void OnDisable()
         {
+            RequestHub.Default.
+                UnsubscribeAsSupplier<UMI3DClientRequestKeys.PlayerRequest>(this);
+
             // Unlink when disabled.
             linker.Link(null, false);
         }

@@ -11,15 +11,14 @@ GameObject:
   - component: {fileID: 1182492981284698535}
   - component: {fileID: 5141954830890573209}
   - component: {fileID: 6219344913283396469}
+  - component: {fileID: 371972963759796757}
   - component: {fileID: 4032303156467274208}
   - component: {fileID: 4270669299128629980}
-  - component: {fileID: 924065277104236474}
-  - component: {fileID: 4217872974673847910}
   - component: {fileID: 8103905456779676164}
   - component: {fileID: 4111741901627651358}
   - component: {fileID: 5064662766089679295}
   - component: {fileID: 5763676354435110210}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: KeyText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -86,6 +85,25 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &371972963759796757
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1278514031943565970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7951c64acb0fa62458bf30a60089fe2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 0
+  m_CheckFor2DOcclusion: 0
+  m_CheckFor3DOcclusion: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RaycastTriggerInteraction: 1
 --- !u!114 &4032303156467274208
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -143,43 +161,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   style: 0
---- !u!65 &924065277104236474
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1278514031943565970}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 100, y: 100, z: 0.01}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &4217872974673847910
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1278514031943565970}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 54201f7897bbda644b218cb41fa75e97, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  scaleHorizontalRT: 0
-  childRT: {fileID: 0}
-  updateOnGUI: 0
-  setCenter: 0
 --- !u!114 &8103905456779676164
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -245,7 +226,7 @@ GameObject:
   - component: {fileID: 3000348633981518314}
   - component: {fileID: 5606902941627895841}
   - component: {fileID: 4502402628655209772}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -321,7 +302,7 @@ GameObject:
   - component: {fileID: 1059215850699374082}
   - component: {fileID: 4838103407767763960}
   - component: {fileID: 7531718044258188436}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}

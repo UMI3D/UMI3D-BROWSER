@@ -208,8 +208,6 @@ namespace umi3dBrowsers.editor
             //Check selectors
             if (player.GetComponentsInChildren<InteractableVRSelector>().Length == 0)
                 errors.Add("Prefab without any InteractableVRSelector, you can add UMI3D VR Browser Base/Prefab/ControllerSelectors as a children of each of you controller");
-            if (player.GetComponentsInChildren<SelectableVRSelector>().Length == 0)
-                errors.Add("Prefab without any SelectableVRSelector, you can add UMI3D VR Browser Base/Prefab/ControllerSelectors as a children of each of you controller");
             if (player.GetComponentsInChildren<ElementVRSelector>().Length == 0)
                 errors.Add("Prefab without any ElementVRSelector, you can add UMI3D VR Browser Base/Prefab/ControllerSelectors as a children of each of you controller");
 

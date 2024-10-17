@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6792958168597962912}
   - component: {fileID: 6645721043224374426}
   - component: {fileID: 8914785964924814315}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 923060808259402518}
   - component: {fileID: 5571359912988596876}
   - component: {fileID: 6917842145485650077}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: TitleBck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -165,7 +165,7 @@ GameObject:
   - component: {fileID: 2030195095787300970}
   - component: {fileID: 6104430333401156296}
   - component: {fileID: 6120619991089189823}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -246,7 +246,7 @@ GameObject:
   - component: {fileID: 6742420742908366662}
   - component: {fileID: 1163758870184875767}
   - component: {fileID: 1676702054274617732}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: ValidePopUp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -386,7 +386,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1980755354741513920}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Header Container
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -425,7 +425,7 @@ GameObject:
   - component: {fileID: 7675430841199337846}
   - component: {fileID: 7675430841199337844}
   - component: {fileID: 7675430841199337845}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Content
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -505,7 +505,7 @@ GameObject:
   - component: {fileID: 7675430841397464008}
   - component: {fileID: 7675430841397464006}
   - component: {fileID: 7675430841397464007}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -584,8 +584,9 @@ GameObject:
   - component: {fileID: 7675430841589379746}
   - component: {fileID: 7675430841589379747}
   - component: {fileID: 7675430841589379748}
+  - component: {fileID: 2952604373483700071}
   - component: {fileID: 7675430841589379749}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: DialogueBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -675,6 +676,25 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &2952604373483700071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7675430841589379751}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7951c64acb0fa62458bf30a60089fe2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 0
+  m_CheckFor2DOcclusion: 0
+  m_CheckFor3DOcclusion: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RaycastTriggerInteraction: 1
 --- !u!114 &7675430841589379749
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -708,7 +728,7 @@ GameObject:
   - component: {fileID: 7675430842962958660}
   - component: {fileID: 7675430842962958658}
   - component: {fileID: 7675430842962958659}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -790,7 +810,7 @@ GameObject:
   - component: {fileID: 6164269491515091094}
   - component: {fileID: 8726261739847042883}
   - component: {fileID: 1837122660568357813}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: CancelPopUpButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}

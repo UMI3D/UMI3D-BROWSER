@@ -13,7 +13,6 @@ limitations under the License.
 
 using umi3d.cdk.menu;
 using umi3d.cdk.menu.view;
-using umi3dVRBrowsersBase.ui.keyboard;
 using UnityEngine.UI;
 
 namespace umi3dVRBrowsersBase.ui.displayers
@@ -28,7 +27,7 @@ namespace umi3dVRBrowsersBase.ui.displayers
         /// <summary>
         /// Input to edit associated text.
         /// </summary>
-        public CustomInputWithKeyboardEnvironment inputField;
+        public InputField inputField;
 
         /// <summary>
         /// Label to display associated item name.
@@ -49,7 +48,8 @@ namespace umi3dVRBrowsersBase.ui.displayers
             inputField.text = menuItem.GetValue();
             label.text = menuItem.Name;
 
-            inputField.SetEditionCallback((res) => { NotifyValueChange(res); inputField.SetTextWithoutNotify(res); });
+            UnityEngine.Debug.LogError($"TODO: bind new keyboard");
+            //inputField.SetEditionCallback((res) => { NotifyValueChange(res); inputField.SetTextWithoutNotify(res); });
         }
 
         /// <summary>

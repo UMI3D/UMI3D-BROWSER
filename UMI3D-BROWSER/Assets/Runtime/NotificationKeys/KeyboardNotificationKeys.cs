@@ -22,6 +22,43 @@ namespace umi3d.browserRuntime.NotificationKeys
     public static class KeyboardNotificationKeys 
     {
         /// <summary>
+        /// Notification sent when a text field has been selected.
+        /// </summary>
+        public class TextFieldSelected
+        {
+            /// <summary>
+            /// Whether the selected field is the preview bar.<br/>
+            /// Value is <see cref="bool"/>.
+            /// </summary>
+            public const string IsPreviewBar = "IsPreviewBar";
+
+            /// <summary>
+            /// The position of the caret if value is int or the selection if value is (int, int).<br/>
+            /// Value is <see cref="int"/> or (<see cref="int"/>, <see cref="int"/>).
+            /// </summary>
+            public const string SelectionPositions = "SelectionPositions";
+
+            /// <summary>
+            /// The text of the input field.<br/>
+            /// Value is <see cref="string"/>.
+            /// </summary>
+            public const string InputFieldText = "InputFieldText";
+        }
+
+        /// <summary>
+        /// Notification sent when a text field has been deselected.
+        /// </summary>
+        public class TextFieldDeselected
+        {
+
+        }
+
+        /// <summary>
+        /// Notification sent when a special key is pressed.
+        /// </summary>
+        public const string SpecialKeyPressed = "KeyboardNotificationKeysSpecialKeyPressed";
+
+        /// <summary>
         /// Notification sent when an object ask for the focus of the preview bar.
         /// </summary>
         public const string AskPreviewFocus = "KeyboardAskPreviewFocus";
@@ -56,16 +93,28 @@ namespace umi3d.browserRuntime.NotificationKeys
         /// </summary>
         public const string OpenOrClose = "KeyboardOpenOrClose";
 
+        /// <summary>
+        /// Notification sent when the animations settings will change.
+        /// </summary>
+        public const string AnimationSettings = "KeyboardAnimationSettings";
+
         public static class Info
         {
             /// <summary>
-            /// Whether some characters will be added or removed.<br/>
-            /// If true then characters will be added. Else characters will be removed.<br/>
-            /// Value is <see cref="bool"/>.<br/>
+            /// The special key pressed.<br/>
+            /// Value is <see cref="umi3d.browserRuntime.NotificationKeys.SpecialKey"/>.<br/>
+            /// <br/>
+            /// See Notification key: <see cref="SpecialKeyPressed"/>
+            /// </summary>
+            public const string SpecialKey = "SpecialKey";
+
+            /// <summary>
+            /// How the text of a text field will be updated.<br/>
+            /// Value is <see cref="umi3d.browserRuntime.NotificationKeys.TextFieldTextUpdate"/>.<br/>
             /// <br/>
             /// See Notification key: <see cref="AddOrRemoveCharacters"/>
             /// </summary>
-            public const string IsAddingCharacters = "IsAddingCharacters";
+            public const string TextFieldTextUpdate = "TextFieldTextUpdate";
 
             /// <summary>
             /// The characters added.<br/>
@@ -121,10 +170,19 @@ namespace umi3d.browserRuntime.NotificationKeys
             public const string Version = "Version";
 
             /// <summary>
+            /// The pointer event data related of the interaction.<br/>
+            /// Value is <see cref="PointerEventData"/>.<br/>
+            /// <br/>
+            /// See Notification key: <see cref="KeyHovered"/>
+            /// </summary>
+            public const string PointerEventData = "PointerEventData";
+
+            /// <summary>
             /// Whether the opening or closing is animated.<br/>
             /// Value is <see cref="bool"/>.<br/>
             /// <br/>
-            /// See Notification key: <see cref="OpenOrClose"/>
+            /// See Notification key: <see cref="OpenOrClose"/><br/>
+            /// See Notification key: <see cref="AnimationSettings"/><br/>
             /// </summary>
             public const string WithAnimation = "WithAnimation";
 
@@ -151,6 +209,14 @@ namespace umi3d.browserRuntime.NotificationKeys
             /// See Notification key: <see cref="OpenOrClose"/>
             /// </summary>
             public const string PhaseOneStartTimePercentage = "PhaseOneStartTimePercentage";
+
+            /// <summary>
+            /// The type of animation.<br/>
+            /// Value is <see cref="NotificationKeys.KeyboardAnimationType"/>.<br/>
+            /// <br/>
+            /// See Notification key: <see cref="AnimationSettings"/><br/>
+            /// </summary>
+            public const string AnimationType = "AnimationType";
         }
     }
 }

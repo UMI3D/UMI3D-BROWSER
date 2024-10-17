@@ -19,7 +19,3 @@ namespace umi3d.baseBrowser.parameters
     public class StringEnumParameterInput : AbstractEnumParameterInput<cdk.menu.DropDownInputMenuItem, string>
     {}
 }
-
-
-    
-

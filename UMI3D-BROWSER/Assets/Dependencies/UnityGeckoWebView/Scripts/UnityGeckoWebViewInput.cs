@@ -14,38 +14,41 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace com.inetum.unitygeckowebview
 {
     /// <summary>
-    /// Manages screen touches for <see cref="UnityGeckoWebView"/>.
+    /// Manages screen touches for a java web view.
     /// </summary>
-    public class UnityGeckoWebViewInput : UnityEngine.UI.Selectable, IPointerMoveHandler
+    [RequireComponent(typeof(RawImage))]
+    [RequireComponent(typeof(AndroidJavaWebview))]
+    public class UnityGeckoWebViewInput : Selectable, IPointerMoveHandler
     {
-        #region Fields
+        [Space]
 
-        [SerializeField, Tooltip("Rect Transform associated to webview raw image transform.")]
-        private RectTransform rawImageRectTransform;
+        [Tooltip("Event raised when the pointer is down. Parameter is coordinates in pixels.")]
+        public UnityEvent<Vector2> pointerDown = new();
 
-        [SerializeField]
-        private UnityGeckoWebView webView;
+        [Tooltip("Event raised when a text field has been selected in the web view.")]
+        public UnityEvent textFieldSelected = new();
+        [Tooltip("Event raised when the pointer is down without selected a text field in the web view.")]
+        public UnityEvent textFieldUnSelected = new();
 
         [SerializeField, Tooltip("Simulate a click when a short pointer down is detected ?")]
-        private bool simulateClick = false;
+        bool simulateClick = false;
 
-        /// <summary>
-        /// Event triggered when a a pointer down event is detected. Pointer coordinates in pixels.
-        /// </summary>
-        public UnityEvent<Vector2> onPointerDown = new();
+        RectTransform rawImageRectTransform;
+        AndroidJavaWebview javaWebView;
 
-        /// <summary>
-        /// Event triggered when a a pointer up event is detected. Pointer coordinates in pixels.
-        /// </summary>
-        public UnityEvent<Vector2> onPointerUp = new();
+        int TextureWidth, TextureHeight;
+
+        bool textSelectedLastFrame = false;
 
         #region Data
 
@@ -53,110 +56,165 @@ namespace com.inetum.unitygeckowebview
         /// World coordinates of raw image corners.
         /// </summary>
         Vector3[] coordinates = new Vector3[4];
-
         Vector3 up, right;
 
         /// <summary>
         /// Last time a up trigger was performed.
         /// </summary>
-        private float lastUp = 0;
-
+        float lastUp = 0;
         /// <summary>
         /// Time to consider that a trigger is a click.
         /// </summary>
-        private const int clickTime = 200;
+        const int clickTime = 200;
 
         #endregion
-
-        #endregion
-
-        #region Methods
 
         protected override void Awake()
         {
-            Debug.Assert(rawImageRectTransform != null, "RecTransform can not be null");
+            if (Application.isEditor)
+            {
+                UnityEngine.Debug.LogError($"The Gecko Web View only works in android.");
+                Destroy(this);
+                return;
+            }
+
+            rawImageRectTransform = GetComponent<RectTransform>();
+            javaWebView = GetComponent<AndroidJavaWebview>();
+        }
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+
+            NotificationHub.Default.Subscribe(
+                this,
+                GeckoWebViewNotificationKeys.InteractibilityChanged,
+                InteractibilityChanged
+            );
+
+            NotificationHub.Default.Subscribe(
+                this,
+                GeckoWebViewNotificationKeys.WebViewTextFieldSelected,
+                WebViewTextFieldSelected
+            );
+
+            NotificationHub.Default.Subscribe<GeckoWebViewNotificationKeys.TextureSizeChanged>(
+                this,
+                TextureSizeChanged
+            );
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+
+            NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.InteractibilityChanged);
+
+            NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.WebViewTextFieldSelected);
+
+            NotificationHub.Default.Unsubscribe<GeckoWebViewNotificationKeys.TextureSizeChanged>(this);
         }
 
         public override void OnPointerDown(PointerEventData eventData)
-        {
-            OnPointerDown(eventData.pointerCurrentRaycast.worldPosition, eventData.pointerId);
-        }
-
-        public async void OnPointerDown(Vector3 worldHitPoint, int pointerId)
         {
             rawImageRectTransform.GetWorldCorners(coordinates);
 
             up = (coordinates[1] - coordinates[0]);
             right = (coordinates[3] - coordinates[0]);
 
-            Vector3 localPosition = WorldToLocal(worldHitPoint);
-
-            onPointerDown.Invoke(localPosition);
-
             if (simulateClick)
             {
-                await Task.Delay(clickTime);
+                SimulateClick(eventData);
+                return;
+            }
 
-                if (Time.time - lastUp < clickTime / 1000f)
-                {
-                    webView.PointerDown(localPosition.x, localPosition.y, pointerId);
-                    await Task.Delay(40);
-                    webView.PointerUp(localPosition.x, localPosition.y, pointerId);
-                }
-                else
-                {
-                    webView.PointerDown(localPosition.x, localPosition.y, pointerId);
-                }
+            Vector3 localPosition = WorldToLocal(eventData.pointerCurrentRaycast.worldPosition);
+            pointerDown.Invoke(localPosition);
+            javaWebView.PointerDown(localPosition.x, localPosition.y, eventData.pointerId);
+            RaiseSelectionEvent();
+        }
+
+        async void SimulateClick(PointerEventData eventData)
+        {
+            await Task.Delay(clickTime);
+
+            Vector3 localPosition = WorldToLocal(eventData.pointerCurrentRaycast.worldPosition);
+            pointerDown.Invoke(localPosition);
+            javaWebView.PointerDown(localPosition.x, localPosition.y, eventData.pointerId);
+            UnityEngine.Debug.Log($"SimulateClick");
+            RaiseSelectionEvent();
+
+            if (Time.time - lastUp < clickTime / 1000f)
+            {
+                await Task.Delay(40);
+                javaWebView.PointerUp(localPosition.x, localPosition.y, eventData.pointerId);
+            }
+        }
+
+        async void RaiseSelectionEvent()
+        {
+            textSelectedLastFrame = false;
+
+            await Task.Delay(1000);
+
+            if (textSelectedLastFrame)
+            {
+                textFieldSelected.Invoke();
             }
             else
             {
-                webView.PointerDown(localPosition.x, localPosition.y, pointerId);
+                textFieldUnSelected.Invoke();
             }
-        }
-
-        public void OnPointerMove(PointerEventData eventData)
-        {
-            OnPointerMove(eventData.pointerCurrentRaycast.worldPosition, eventData.pointerId);
-        }
-
-        public void OnPointerMove(Vector3 worldHitPoint, int pointerId)
-        {
-            Vector3 localPosition = WorldToLocal(worldHitPoint);
-
-            webView.PointerMove(localPosition.x, localPosition.y, pointerId);
         }
 
         public override void OnPointerUp(PointerEventData eventData)
         {
-            OnPointerUp(eventData.pointerCurrentRaycast.worldPosition, eventData.pointerId);
-        }
-
-        public void OnPointerUp(Vector3 worldHitPoint, int pointerId)
-        {
-            Vector3 localPosition = WorldToLocal(worldHitPoint);
-            webView.PointerUp(localPosition.x, localPosition.y, pointerId);
-
-            onPointerUp.Invoke(localPosition);
-
             lastUp = Time.time;
+
+            Vector3 localPosition = WorldToLocal(eventData.pointerCurrentRaycast.worldPosition);
+            javaWebView.PointerUp(localPosition.x, localPosition.y, eventData.pointerId);
         }
 
-        public void OnClick(Vector3 worldHitPoint, int pointerId)
+        public void OnPointerMove(PointerEventData eventData)
         {
-            Vector3 localPosition = WorldToLocal(worldHitPoint);
-            webView.Click(localPosition.x, localPosition.y, pointerId);
+            Vector3 localPosition = WorldToLocal(eventData.pointerCurrentRaycast.worldPosition);
+            javaWebView.PointerMove(localPosition.x, localPosition.y, eventData.pointerId);
         }
 
-        private Vector3 WorldToLocal(Vector3 worldPosition)
+        Vector3 WorldToLocal(Vector3 worldPosition)
         {
             Vector3 localPosition = worldPosition - coordinates[0];
 
-            localPosition.x = Vector3.Dot(localPosition, right.normalized) / right.magnitude * webView.width;
-            localPosition.y = Vector3.Dot(localPosition, up.normalized) / up.magnitude * webView.height;
+            localPosition.x = Vector3.Dot(localPosition, right.normalized) / right.magnitude * TextureWidth;
+            localPosition.y = Vector3.Dot(localPosition, up.normalized) / up.magnitude * TextureHeight;
 
             return localPosition;
         }
 
-        #endregion
+        void TextureSizeChanged(Notification notification)
+        {
+            if (!notification.TryGetInfoT(GeckoWebViewNotificationKeys.TextureSizeChanged.Size, out Vector2 size))
+            {
+                return;
+            }
+
+            TextureWidth = (int)size.x;
+            TextureHeight = (int)size.y;
+        }
+
+        void InteractibilityChanged(Notification notification)
+        {
+            if (!notification.TryGetInfoT(GeckoWebViewNotificationKeys.Info.Interactable, out bool interactable))
+            {
+                return;
+            }
+
+            this.interactable = interactable;
+        }
+
+        void WebViewTextFieldSelected()
+        {
+            textSelectedLastFrame = true;
+        }
     }
 }

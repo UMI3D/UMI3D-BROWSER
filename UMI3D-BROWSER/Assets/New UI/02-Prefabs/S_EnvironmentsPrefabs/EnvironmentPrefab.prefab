@@ -99,6 +99,7 @@ GameObject:
   - component: {fileID: 8761181149546510028}
   - component: {fileID: 5008610468168228763}
   - component: {fileID: 5405780417110214687}
+  - component: {fileID: 9058659941346646636}
   m_Layer: 6
   m_Name: SelectedInteractableManager
   m_TagString: Untagged
@@ -158,6 +159,18 @@ MonoBehaviour:
   addRemoveWhenActivationChange: 1
   variables:
   - {fileID: 5008610468168228763}
+--- !u!114 &9058659941346646636
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1273526557503657305}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9117e8a4345f545499aaa4212c5d9fa7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1815898266745013490
 GameObject:
   m_ObjectHideFlags: 0

@@ -57,7 +57,6 @@ public class ParameterMenuDisplayer : MonoBehaviour
         gameObject.SetActive(true);
         BaseCursor.SetMovement(this, CursorMovement.Free);
 
-        Debug.Log(parameters.Count);
         foreach (AbstractParameterDto parameter in parameters)
             AddParameter(parameter);
     }

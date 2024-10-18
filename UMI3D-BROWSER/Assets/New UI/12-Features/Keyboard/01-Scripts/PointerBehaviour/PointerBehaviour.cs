@@ -26,6 +26,12 @@ namespace umi3d.browserRuntime.ui
     public class PointerBehaviour : MonoBehaviour, IPointerExitHandler
     {
         /// <summary>
+        /// Notification key for the pointer event.<br/>
+        /// Value is PointerEventData.<br/>
+        /// </summary>
+        public const string NKPointerEvent = "PointerEvent";
+
+        /// <summary>
         /// Notification key for the count of click.<br/>
         /// Value is int.<br/>
         /// </summary>
@@ -46,15 +52,16 @@ namespace umi3d.browserRuntime.ui
         /// </summary>
         public event Action pointerClickedSimple;
 
-        [SerializeField] protected bool isSimpleClick = true;
-        [SerializeField] protected float timeOut = .5f;
+        public bool isSimpleClick = true;
+        public float timeOut = .5f;
 
+        protected PointerEventData eventData;
         protected int numberOfClick = 0;
         protected float currentTimeOut;
         protected bool isTimeOut = false;
 
         protected Coroutine coroutine;
-        protected Dictionary<string, object> info;
+        protected Dictionary<string, object> info = new();
 
         protected virtual void OnEnable()
         {

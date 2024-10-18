@@ -43,8 +43,6 @@ namespace umi3d.browserRuntime.ui.keyboard
 #if UMI3D_XR
         void Awake()
         {
-            enabled = false;
-            return;
             inputField = GetComponent<TMPro.TMP_InputField>();
 
             selection = new(this);

@@ -32,7 +32,7 @@ namespace umi3dBrowsers.displayer
         [SerializeField] private Color hoverImageColor;
 
         [Header("buttons")]
-        [SerializeField] private ButtonDisplayer likeButton;
+        [SerializeField] private ButtonSubDisplayer likeButton;
         [SerializeField] private Image likeImage;
         [SerializeField] private Sprite normalLikeIcon;
         [SerializeField] private Color normalLikeColor;
@@ -43,7 +43,7 @@ namespace umi3dBrowsers.displayer
         [SerializeField] private Sprite selectedHoverLikeIcon;
         [SerializeField] private Color selectedHoverLikeColor;
         [Space]
-        [SerializeField] private ButtonDisplayer trashButton;
+        [SerializeField] private ButtonSubDisplayer trashButton;
         [Space]
         [SerializeField] VignetteInputField inputFieldBackground;
 

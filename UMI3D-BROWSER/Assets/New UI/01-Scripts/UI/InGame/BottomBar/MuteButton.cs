@@ -21,7 +21,7 @@ using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.ui.inGame.bottomBar
 {
-    public class MuteButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+    public class MuteButton : MonoBehaviour, IPointerExitHandler
     {
         [SerializeField] private Button button;
         [SerializeField] private Image icon;
@@ -54,16 +54,9 @@ namespace umi3d.browserRuntime.ui.inGame.bottomBar
             icon.sprite = MicrophoneListener.mute ? muteSprite : unmuteSprite;
         }
 
-        public void OnPointerEnter(PointerEventData eventData)
-        {
-            icon.sprite = !MicrophoneListener.mute ? muteSprite : unmuteSprite;
-        }
-
         public void OnPointerExit(PointerEventData eventData)
         {
             EventSystem.current.SetSelectedGameObject(null);
-
-            UpdateIcon();
         }
     }
 }

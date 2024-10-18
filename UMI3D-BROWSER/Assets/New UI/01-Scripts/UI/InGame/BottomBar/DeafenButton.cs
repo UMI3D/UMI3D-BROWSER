@@ -20,7 +20,7 @@ using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.ui.inGame.bottomBar
 {
-    public class DeafenButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+    public class DeafenButton : MonoBehaviour, IPointerExitHandler
     {
         [SerializeField] private Button button;
         [SerializeField] private Image icon;
@@ -55,16 +55,9 @@ namespace umi3d.browserRuntime.ui.inGame.bottomBar
             icon.sprite = IsAudioOn ? audioOnSprite : audioOffSprite;
         }
 
-        public void OnPointerEnter(PointerEventData eventData)
-        {
-            icon.sprite = !IsAudioOn ? audioOnSprite : audioOffSprite;
-        }
-
         public void OnPointerExit(PointerEventData eventData)
         {
             EventSystem.current.SetSelectedGameObject(null);
-
-            UpdateIcon();
         }
     }
 }

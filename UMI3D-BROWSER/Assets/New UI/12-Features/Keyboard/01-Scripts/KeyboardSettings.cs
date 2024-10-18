@@ -29,9 +29,13 @@ namespace umi3d.browserRuntime.ui.keyboard
         Notifier localisationVersionNotifier;
 
         [Header("Opening Closing Animation")]
-        public bool openingClosingWithAnimation = true;
+        public bool openingClosingWithAnimation = false;
         public float openingClosingAnimationTime = 1f;
         public float openingClosingPhaseOneStartTimePercentage = .5f;
+
+        [Header("Depth Animation")]
+        public bool keyPressWithAnimation = true;
+
         Notifier animationSettingsNotifier;
 
         void Awake()
@@ -50,7 +54,8 @@ namespace umi3d.browserRuntime.ui.keyboard
         void Start()
         {
             UpdateVersion();
-            UpdateAnimationSettings();
+            UpdateOpeningClosingAnimationSettings();
+            UpdateKeyPressAnimationSettings();
         }
 
         public void UpdateVersion()
@@ -59,11 +64,18 @@ namespace umi3d.browserRuntime.ui.keyboard
             localisationVersionNotifier.Notify();
         }
 
-        public void UpdateAnimationSettings()
+        public void UpdateOpeningClosingAnimationSettings()
         {
             animationSettingsNotifier[KeyboardNotificationKeys.Info.AnimationType] = KeyboardAnimationType.OpenOrClose;
             animationSettingsNotifier[KeyboardNotificationKeys.Info.WithAnimation] = openingClosingWithAnimation;
             animationSettingsNotifier[KeyboardNotificationKeys.Info.AnimationTime] = openingClosingAnimationTime;
+            animationSettingsNotifier.Notify();
+        }
+
+        public void UpdateKeyPressAnimationSettings()
+        {
+            animationSettingsNotifier[KeyboardNotificationKeys.Info.AnimationType] = KeyboardAnimationType.KeyPress;
+            animationSettingsNotifier[KeyboardNotificationKeys.Info.WithAnimation] = keyPressWithAnimation;
             animationSettingsNotifier.Notify();
         }
     }

@@ -19,8 +19,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using umi3d.browserRuntime.UX;
 using UnityEngine;
-using inetum.unityUtils.math;
-using inetum.unityUtils.debug;
+using umi3d.browserRuntime.NotificationKeys;
+using inetum.unityUtils;
 
 namespace umi3d.browserRuntime.ui.keyboard
 {
@@ -56,8 +56,27 @@ namespace umi3d.browserRuntime.ui.keyboard
 
                 setupTarget.Start(TaskScheduler.FromCurrentSynchronizationContext());
             }
+
+            NotificationHub.Default.Subscribe<KeyboardNotificationKeys.TextFieldSelected>(
+                this,
+                TextFieldSelected
+            );
+
         }
 
+        void OnDisable()
+        {
+            NotificationHub.Default.Unsubscribe<KeyboardNotificationKeys.TextFieldSelected>(this);
+        }
 
+        void TextFieldSelected(Notification notification)
+        {
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.TextFieldSelected.IsPreviewBar, out bool isPreviewBar) || isPreviewBar)
+            {
+                return;
+            }
+
+            lazyRotationAndTranslation.Rest();
+        }
     }
 }

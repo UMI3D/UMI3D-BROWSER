@@ -15,6 +15,10 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
+using System;
+#if UNITY_STANDALONE_WIN
+using System.Runtime.InteropServices;
+#endif
 using System.Threading.Tasks;
 using umi3d.browserRuntime.notificationKeys;
 using UnityEngine;

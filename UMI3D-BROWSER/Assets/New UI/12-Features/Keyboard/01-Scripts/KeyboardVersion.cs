@@ -24,13 +24,7 @@ namespace umi3d.browserRuntime.ui.keyboard
 {
     public class KeyboardVersion : MonoBehaviour
     {
-        public enum Version
-        {
-            QWERTY,
-            AZERTY
-        }
-
-        [SerializeField] Version version;
+        [SerializeField] KeyboardLocalisationVersion version;
 
         void Awake()
         {
@@ -54,12 +48,12 @@ namespace umi3d.browserRuntime.ui.keyboard
         }
 
 #if UNITY_EDITOR
-        static Version currentVersion = Version.QWERTY;
+        static KeyboardLocalisationVersion currentVersion = KeyboardLocalisationVersion.QWERTY;
 
         [ContextMenu("TestSwitch")]
         void TestSwitch()
         {
-            currentVersion = currentVersion == Version.QWERTY ? Version.AZERTY : Version.QWERTY;
+            currentVersion = currentVersion == KeyboardLocalisationVersion.QWERTY ? KeyboardLocalisationVersion.AZERTY : KeyboardLocalisationVersion.QWERTY;
             UnityEngine.Debug.Log($"test switch version to {currentVersion}");
             NotificationHub.Default.Notify(
                 this,

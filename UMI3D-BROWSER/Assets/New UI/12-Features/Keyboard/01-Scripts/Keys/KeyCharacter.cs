@@ -30,7 +30,7 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         static Dictionary<string, object> info = new()
         {
-            { KeyboardNotificationKeys.Info.IsAddingCharacters, true },
+            { KeyboardNotificationKeys.Info.TextFieldTextUpdate, TextFieldTextUpdate.AddCharacters },
             { KeyboardNotificationKeys.Info.Characters, 'a' }
         };
 

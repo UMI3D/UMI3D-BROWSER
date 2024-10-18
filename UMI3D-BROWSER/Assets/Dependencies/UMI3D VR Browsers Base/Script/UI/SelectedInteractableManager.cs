@@ -15,15 +15,15 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
-using inetum.unityUtils.async;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using TMPro;
-using umi3d.browserRuntime.player;
+using umi3d.browserRuntime.ui.keyboard;
+using umi3d.cdk;
 using umi3d.cdk.interaction;
+using umi3d.cdk.notification;
 using umi3d.common.interaction;
 using umi3dBrowsers.linker;
 using umi3dVRBrowsersBase.interactions;
@@ -39,6 +39,8 @@ namespace umi3dVRBrowsersBase.ui
     /// </summary>
     public class SelectedInteractableManager : AbstractClientInteractableElement, ITriggerableElement
     {
+        public event Action triggerHandler;
+
         [SerializeField] private SIM_Linker simLinker;
 
         public TMP_Text label;
@@ -54,7 +56,9 @@ namespace umi3dVRBrowsersBase.ui
         [Tooltip("Used for gear scale.")]
         public float maxScale = .5f;
 
-        public event Action triggerHandler;
+        Canvas canvas;
+
+        Request playerRequest;
 
         [HideInInspector]
         public Interactable interactable;
@@ -64,46 +68,118 @@ namespace umi3dVRBrowsersBase.ui
         public List<EventDto> events;
         [HideInInspector]
         public List<AbstractParameterDto> parameters;
-        [HideInInspector]
-        public Task<Transform> playerTransform;
-        [HideInInspector]
-        public Task<Transform> cameraTransform;
 
         Coroutine hideCoroutine;
 
+        ulong toolID;
+        StringParameterDto stringParameter;
+        KeyboardStringInteractionLinker keyboardLinker;
+        ControllerType controllerType;
+        Request leftTrackerRequest;
+        Request rightTrackerRequest;
+
+        private void Awake()
+        {
+            keyboardLinker = GetComponent<KeyboardStringInteractionLinker>();
+
+            canvas = GetComponentInChildren<Canvas>();
+
+            playerRequest = RequestHub.Default
+                .SubscribeAsClient<UMI3DClientRequestKeys.PlayerRequest>(this);
+
+            leftTrackerRequest = RequestHub.Default
+                .SubscribeAsClient<UMI3DClientRequestKeys.LeftTrackerRequest>(this);
+
+            rightTrackerRequest = RequestHub.Default
+                .SubscribeAsClient<UMI3DClientRequestKeys.RightTrackerRequest>(this);
+        }
+
         private void Start()
         {
-            var player = Global.GetAsync<UMI3DVRPlayer>();
-            playerTransform = player.ContinueWith(task =>
-            {
-                return task.Result.transform;
-            });
-            cameraTransform = player.ContinueWith(task =>
-            {
-                return task.Result.mainCamera.transform;
-            });
-
             Hide();
 
             simLinker.SimReady(this);
         }
 
-        private void Update()
+        void OnEnable()
+        {
+            keyboardLinker.enterOrSubmit += KeyboardLinker_enterOrSubmit;
+        }
+
+        void OnDisable()
+        {
+            keyboardLinker.enterOrSubmit -= KeyboardLinker_enterOrSubmit;
+        }
+
+        void KeyboardLinker_enterOrSubmit(string text)
+        {
+            uint boneType = 0;
+            Vector3 position = Vector3.zero;
+            Quaternion rotation = Quaternion.identity;
+
+            if (TryGetTrackerRequest(out Request request))
+            {
+                request.TryGetInfoT(UMI3DClientRequestKeys.TrackerRequest.BoneType, out boneType);
+                request.TryGetInfoT(UMI3DClientRequestKeys.TrackerRequest.Position, out position);
+                request.TryGetInfoT(UMI3DClientRequestKeys.TrackerRequest.Rotation, out rotation);
+            }
+
+            UnityEngine.Debug.Log($"keyboard enter with text: [{text}]");
+            UMI3DClientServer.SendRequest(new ParameterSettingRequestDto()
+            {
+                boneType = boneType,
+                bonePosition = position.Dto(),
+                boneRotation = rotation.Dto(),
+                toolId = toolID,
+                parameter = new StringParameterDto()
+                {
+                    id = stringParameter.id,
+                    description = stringParameter.description,
+                    name = stringParameter.name,
+                    icon2D = stringParameter.icon2D,
+                    icon3D = stringParameter.icon3D,
+                    value = text
+                },
+                id = stringParameter.id,
+            }, true);
+        }
+
+        bool TryGetTrackerRequest(out Request request)
+        {
+            switch (controllerType)
+            {
+                case ControllerType.LeftHandController:
+                    request = leftTrackerRequest;
+                    return true;
+
+                case ControllerType.RightHandController:
+                    request = rightTrackerRequest;
+                    return true;
+
+                default:
+                    UnityEngine.Debug.LogError($"Unhandled case.");
+                    request = null;
+                    return false;
+            }
+        }
+
+        void Update()
         {
             if (interactable == null && gameObject.activeInHierarchy)
             {
                 Hide();
             }
 
-            if (!cameraTransform.TryGet(out Transform ct))
+            if (!playerRequest.TryGetInfoT(UMI3DClientRequestKeys.PlayerRequest.Camera, out Camera camera))
             {
                 return;
             }
+
             if (isActiveAndEnabled)
             {
                 var distance = Vector3.Distance(
                     transform.position,
-                    ct.position
+                    camera.transform.position
                 );
                 var scale = Mathf.Lerp(
                     minScale,
@@ -117,8 +193,20 @@ namespace umi3dVRBrowsersBase.ui
         public void Trigger(ControllerType controllerType)
         {
             triggerHandler?.Invoke();
-            
-            if (interactions.Count > 0)
+
+            if (interactions.Count == 1)
+            {
+                if (interactions[0] is not StringParameterDto stringParameter)
+                {
+                    return;
+                }
+
+                toolID = interactable.id;
+                this.stringParameter = stringParameter;
+                keyboardLinker.TextFieldSelected(stringParameter.value);
+                this.controllerType = controllerType;
+            }
+            else if (interactions.Count > 0)
             {
                 PlayerMenuManager.Instance.OpenParameterMenu(controllerType, menuAsync: true);
             }
@@ -134,11 +222,11 @@ namespace umi3dVRBrowsersBase.ui
             Rest();
             if (hideCoroutine != null)
             {
-                StopCoroutine(hideCoroutine);
+                CoroutineManager.Instance.DetachCoroutine(hideCoroutine);
                 hideCoroutine = null;
             }
 
-            gameObject.SetActive(true);
+            canvas.gameObject.SetActive(true);
 
             this.interactable = interactable;
             interactions = interactable
@@ -181,14 +269,13 @@ namespace umi3dVRBrowsersBase.ui
                 else
                 {
                     label.text = interactions[0].name;
-                    UnityEngine.Debug.LogError($"[Selected Interactable] Unhandled case");
+                    UnityEngine.Debug.LogError($"[Selected Interactable] Unhandled case 1 : {interactions[0].GetType()}");
                 }
             }
             else
             {
                 label.text = interactable.name;
                 PlayerMenuManager.Instance.CtrlToolMenu.RememberParameters();
-                UnityEngine.Debug.LogError($"[Selected Interactable] Unhandled case");
             }
 
             if (string.IsNullOrEmpty(label.text))
@@ -197,11 +284,13 @@ namespace umi3dVRBrowsersBase.ui
             }
 
             transform.position = position;
-            cameraTransform.IfCompleted(ct =>
+
+            if (!playerRequest.TryGetInfoT(UMI3DClientRequestKeys.PlayerRequest.Camera, out Camera camera))
             {
-                var offset = transform.position - ct.position;
-                transform.LookAt(transform.position + offset);
-            });
+                return;
+            }
+            var offset = transform.position - camera.transform.position;
+            transform.LookAt(transform.position + offset);
         }
 
         /// <summary>
@@ -211,7 +300,7 @@ namespace umi3dVRBrowsersBase.ui
         /// <param name="container"></param>
         public void Display(InteractableContainer container)
         {
-            if (!playerTransform.TryGet(out Transform pt))
+            if (!playerRequest.TryGetInfoT(UMI3DClientRequestKeys.PlayerRequest.Transform, out Transform playerTransform))
             {
                 return;
             }
@@ -221,12 +310,12 @@ namespace umi3dVRBrowsersBase.ui
             {
                 Display(
                     container.Interactable,
-                    meshCollider.ClosestPoint(pt.position)
+                    meshCollider.ClosestPoint(playerTransform.position)
                 );
                 return;
             }
 
-            Ray ray = new Ray(pt.position, container.transform.position - pt.position);
+            Ray ray = new Ray(playerTransform.position, container.transform.position - playerTransform.position);
             (RaycastHit[] hits, int hitCount) = umi3d.common.Physics.RaycastAll(ray);
 
             // if the center of the object is outside of the mesh :
@@ -263,7 +352,7 @@ namespace umi3dVRBrowsersBase.ui
         public void Hide()
         {
             Rest();
-            gameObject.SetActive(false);
+            canvas.gameObject.SetActive(false);
         }
 
         public void HideWithDelay()

@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -28,12 +29,15 @@ namespace umi3d.browserRuntime.ui.inGame.bottomBar
         [SerializeField] private Sprite audioOffSprite;
 
         private float m_BaseVolume;
+        private Notifier deafenNotifier;
 
         private bool IsAudioOn => AudioListener.volume > .0f;
         private void Awake()
         {
             m_BaseVolume = 100.0f;
             button.onClick.AddListener(Deafen);
+
+            deafenNotifier = NotificationHub.Default.GetNotifier(this, InGameNotificationKeys.DeafenChanged);
         }
 
         private void OnDestroy()
@@ -48,6 +52,9 @@ namespace umi3d.browserRuntime.ui.inGame.bottomBar
 
             AudioListener.volume = IsAudioOn ? .0f : m_BaseVolume;
             UpdateIcon();
+
+            deafenNotifier[InGameNotificationKeys.IsDeafen] = !IsAudioOn;
+            deafenNotifier.Notify();
         }
 
         private void UpdateIcon()

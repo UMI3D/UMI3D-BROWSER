@@ -23,5 +23,8 @@ namespace umi3d.browserRuntime.ui.inGame
     {
         public static readonly string PlayHoverSound = "inGame-playSound-hover";
         public static readonly string PlayClickSound = "inGame-playSound-click";
+
+        public static readonly string DeafenChanged = "inGame-deafen-changed";
+        public static readonly string IsDeafen = "inGame-deafen-isActive";
     }
 }

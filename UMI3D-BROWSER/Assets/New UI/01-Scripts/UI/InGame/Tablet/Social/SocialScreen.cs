@@ -166,5 +166,14 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
         {
             gameObject.SetActive(false);
         }
+#if UNITY_EDITOR
+        [ContextMenu("Add Test User")]
+        private void AddTestUser()
+        {
+            var testUser = new UMI3DUser(0, 
+                new common.collaboration.dto.signaling.UserDto() { id = 0, login = "Test User" });
+            Add(testUser);
+        }
+#endif
     }
 }

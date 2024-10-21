@@ -30,10 +30,9 @@ namespace umi3dBrowsers.ingame_ui
         [SerializeField] private InputAction openCloseInGamePanel;
 
         [Header("Dependencies")]
-        [SerializeField] private TabletPanel mainInGamePanel;
+        [SerializeField] private TabletPanel TabletPanel;
 
         [Header("Linkers")]
-        [SerializeField] private InGamePanelLinker inGamePanelLinker;
         [SerializeField] private InGameLinker inGameLinker;
 
         [Header("Debug")]
@@ -42,7 +41,6 @@ namespace umi3dBrowsers.ingame_ui
         private void Awake()
         {
             openCloseInGamePanel.performed += i => ToggleInGamePanel();
-            inGamePanelLinker.OnOpenClosePanel += () => ToggleInGamePanel();
             inGameLinker.OnEnableDisableInGameUI += isEnable => gameObject.SetActive(isEnable);
 
             BaseCursor.SetMovement(this, CursorMovement.Free);
@@ -57,7 +55,6 @@ namespace umi3dBrowsers.ingame_ui
                 ToggleInGamePanel();
                 if (!debugMode)
                     gameObject.SetActive(inGameLinker.IsEnable);
-                Cursor.lockState = CursorLockMode.Confined;
             }
 
             if (!debugMode)
@@ -68,7 +65,6 @@ namespace umi3dBrowsers.ingame_ui
         {
             KeyboardShortcut.AddUpListener(ShortcutEnum.FreeCursor, FreeCursor);
             BaseCursor.SetMovement(this, CursorMovement.Center);
-            BaseCursor.State = CursorState.Default;
         }
 
         private void OnDisable()
@@ -79,31 +75,27 @@ namespace umi3dBrowsers.ingame_ui
 
         private void FreeCursor()
         {
-            if (mainInGamePanel.gameObject.activeSelf)
+            if (TabletPanel.gameObject.activeSelf)
                 return;
 
             if (BaseCursor.Movement == CursorMovement.Center)
                 BaseCursor.SetMovement(this, CursorMovement.Free);
             else
-            {
                 BaseCursor.SetMovement(this, CursorMovement.Center);
-                BaseCursor.State = CursorState.Default;
-            }
         }
 
         private void ToggleInGamePanel()
         {
             if (gameObject.activeSelf)
             {
-                if (mainInGamePanel.gameObject.activeSelf)
+                if (TabletPanel.gameObject.activeSelf)
                 {
-                    mainInGamePanel.gameObject.SetActive(false);
+                    TabletPanel.gameObject.SetActive(false);
                     BaseCursor.SetMovement(this, CursorMovement.Center);
-                    BaseCursor.State = CursorState.Default;
                 }
                 else
                 {
-                    mainInGamePanel.gameObject.SetActive(true);
+                    TabletPanel.gameObject.SetActive(true);
                     BaseCursor.SetMovement(this, CursorMovement.Free);
                 }
             }

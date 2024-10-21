@@ -212,8 +212,8 @@ GameObject:
   - component: {fileID: 8876376124874996879}
   - component: {fileID: 4778659411200012821}
   - component: {fileID: 90859474856313429}
-  - component: {fileID: 7440149681411933856}
   - component: {fileID: 2363781911729510788}
+  - component: {fileID: 3068970154764659224}
   - component: {fileID: 3885882739101740867}
   m_Layer: 5
   m_Name: Trash_btn
@@ -280,56 +280,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &7440149681411933856
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2351623466348810445}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ef4d6e6b0d2ca842b4eb75a9957f8e4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  backgroundNormalColor: {r: 0.2509804, g: 0.2509804, b: 0.2509804, a: 1}
-  normalColor: {r: 0.5294118, g: 0.5294118, b: 0.5294118, a: 1}
-  hoverColor: {r: 1, g: 1, b: 1, a: 1}
-  clickColor: {r: 1, g: 1, b: 1, a: 1}
-  button: {fileID: 2363781911729510788}
-  backGround: {fileID: 90859474856313429}
-  iconImage: {fileID: 4617739118905700313}
-  normalIcon: {fileID: 21300000, guid: 8a0a8aa557470c7429e8b8d7d7035e32, type: 3}
-  hoverIcon: {fileID: 21300000, guid: 4653d98d4563c284983c101c39761270, type: 3}
-  clickIcon: {fileID: 21300000, guid: 8a0a8aa557470c7429e8b8d7d7035e32, type: 3}
-  canvasGroup: {fileID: 3885882739101740867}
-  animationDuration: 0.5
-  slideEase:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  stayClicked: 0
-  canUnclick: 0
 --- !u!114 &2363781911729510788
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -374,6 +324,56 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &3068970154764659224
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2351623466348810445}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b791348d416790643a013d259c85b56b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  backgroundNormalColor: {r: 0.2509804, g: 0.2509804, b: 0.2509804, a: 1}
+  normalColor: {r: 0.5294118, g: 0.5294118, b: 0.5294118, a: 1}
+  hoverColor: {r: 1, g: 1, b: 1, a: 1}
+  clickColor: {r: 1, g: 1, b: 1, a: 1}
+  button: {fileID: 2363781911729510788}
+  backGround: {fileID: 90859474856313429}
+  iconImage: {fileID: 4617739118905700313}
+  normalIcon: {fileID: 21300000, guid: 8a0a8aa557470c7429e8b8d7d7035e32, type: 3}
+  hoverIcon: {fileID: 21300000, guid: 4653d98d4563c284983c101c39761270, type: 3}
+  clickIcon: {fileID: 21300000, guid: 8a0a8aa557470c7429e8b8d7d7035e32, type: 3}
+  canvasGroup: {fileID: 3885882739101740867}
+  animationDuration: 0.5
+  slideEase:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  stayClicked: 0
+  canUnclick: 0
 --- !u!225 &3885882739101740867
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -609,7 +609,7 @@ MonoBehaviour:
   vignetteImage: {fileID: 344009632092012096}
   normalImageColor: {r: 0.4392157, g: 0.4392157, b: 0.4392157, a: 1}
   hoverImageColor: {r: 1, g: 1, b: 1, a: 1}
-  likeButton: {fileID: 3995020310514069545}
+  likeButton: {fileID: 1427497410156205794}
   likeImage: {fileID: 7902515993194549043}
   normalLikeIcon: {fileID: 21300000, guid: 40e731205ffd34744a4f701d9ac35b44, type: 3}
   normalLikeColor: {r: 1, g: 1, b: 1, a: 1}
@@ -620,7 +620,7 @@ MonoBehaviour:
   selectedHoverLikeIcon: {fileID: 21300000, guid: 2fe725c75adadff498181f8588698f33,
     type: 3}
   selectedHoverLikeColor: {r: 1, g: 1, b: 1, a: 1}
-  trashButton: {fileID: 7440149681411933856}
+  trashButton: {fileID: 3068970154764659224}
   inputFieldBackground: {fileID: 8696773707627030463}
   hoverExitDelay: 0.1
   onVignetteClicked:
@@ -898,7 +898,7 @@ GameObject:
   - component: {fileID: 7617477244971592595}
   - component: {fileID: 9015222657267049923}
   - component: {fileID: 8259081927552192108}
-  - component: {fileID: 3995020310514069545}
+  - component: {fileID: 1427497410156205794}
   - component: {fileID: 1985186691348029351}
   m_Layer: 5
   m_Name: Favorie_btn
@@ -1009,7 +1009,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &3995020310514069545
+--- !u!114 &1427497410156205794
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1018,13 +1018,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 6589570799936200346}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ef4d6e6b0d2ca842b4eb75a9957f8e4, type: 3}
+  m_Script: {fileID: 11500000, guid: b791348d416790643a013d259c85b56b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   backgroundNormalColor: {r: 0.2509804, g: 0.2509804, b: 0.2509804, a: 1}
   normalColor: {r: 0.34509805, g: 0.34509805, b: 0.34509805, a: 1}
-  hoverColor: {r: 0.34117648, g: 0.86666673, b: 0.9058824, a: 1}
-  clickColor: {r: 0.31764707, g: 0.8470589, b: 0.8745099, a: 1}
+  hoverColor: {r: 0.34117648, g: 0.8666667, b: 0.90588236, a: 1}
+  clickColor: {r: 0.31764707, g: 0.84705883, b: 0.8745098, a: 1}
   button: {fileID: 8259081927552192108}
   backGround: {fileID: 9015222657267049923}
   iconImage: {fileID: 7902515993194549043}

@@ -30,6 +30,7 @@ using static umi3d.baseBrowser.cursor.BaseCursor;
 public class ParameterMenuDisplayer : MonoBehaviour
 {
     [SerializeField] private Transform content;
+    [SerializeField] private Button clsoeButton;
     [SerializeField] private GameObject stringParameterDisplayPrefab;
     [SerializeField] private GameObject booleanParameterDisplayPrefab;
     [SerializeField] private GameObject sliderParameterDisplayPrefab;
@@ -38,6 +39,7 @@ public class ParameterMenuDisplayer : MonoBehaviour
     private void Awake()
     {
         BaseController.Instance.LeftClickParametersInteraction.OnClicked += Show;
+        clsoeButton.onClick.AddListener(Hide);
 
         gameObject.SetActive(false);
     }
@@ -45,12 +47,16 @@ public class ParameterMenuDisplayer : MonoBehaviour
     private void OnDestroy()
     {
         BaseController.Instance.LeftClickParametersInteraction.OnClicked -= Show;
+        clsoeButton.onClick.RemoveListener(Hide);
     }
 
     private void Show(List<AbstractParameterDto> parameters)
     {
         if (gameObject.activeInHierarchy || parameters.Count <= 0)
             return;
+
+        foreach (Transform element in content)
+            Destroy(element.gameObject);
 
         parameters.Reverse(); // Reverse to show element above in front (layout in the object is set to reverse too)
 
@@ -59,6 +65,12 @@ public class ParameterMenuDisplayer : MonoBehaviour
 
         foreach (AbstractParameterDto parameter in parameters)
             AddParameter(parameter);
+    }
+
+    private void Hide()
+    {
+        gameObject.SetActive(false);
+        BaseCursor.UnSetMovement(this);
     }
 
     private void AddParameter(AbstractParameterDto parameter)

@@ -47,7 +47,7 @@ namespace umi3dBrowsers.displayer
                 m_menuNavigationLinker.ShowPanel(m_loadingPanel);
                 m_menuNavigationLinker.ReplacePlayerAndShowPanel();
             };
-            UMI3DEnvironmentClient.EnvironementJoinned.AddListener(() =>
+            UMI3DEnvironmentClient.EnvironementLoaded.AddListener(() =>
             {
                 OnLoadingFinished?.Invoke();
                 loadingTipDisplayer.StopDisplayTips();
@@ -61,49 +61,27 @@ namespace umi3dBrowsers.displayer
         {
             if (_currentProgress != null)
             {
-                _currentProgress.OnCompleteUpdated -= OnCompleteUpdated;
                 _currentProgress.OnFailedUpdated -= OnFailedUpdated;
                 _currentProgress.OnStatusUpdated -= OnStatusUpdated;
             }
             _currentProgress = progress;
 
-            void OnCompleteUpdated(float i) { OnProgressChange(_currentProgress.progressPercent / 100f); }
             void OnFailedUpdated(float i) { }
-            void OnStatusUpdated(string i) {
-                loadingBarDisplayer.SetLoadingState(_currentProgress.currentState); 
+            void OnStatusUpdated(string i)
+            {
+                loadingBarDisplayer.SetLoadingState(_currentProgress.currentState);
                 loadingBarDisplayer.SetProgressBarValue(_currentProgress.progressPercent / 100f);
             }
 
-            _currentProgress.OnCompleteUpdated += OnCompleteUpdated;
             _currentProgress.OnFailedUpdated += OnFailedUpdated;
             _currentProgress.OnStatusUpdated += OnStatusUpdated;
 
-            OnProgressChange(_currentProgress.progressPercent / 100f);
             loadingBarDisplayer.SetLoadingState(_currentProgress.currentState);
-        }
 
-        private void OnProgressChange(float val)
-        {
-            if (val >= 0 && val < 1)
-            {
-                if (_loadingInProgress == false) // Notify that a loading is in progress
-                {
-                    OnLoadingInProgress?.Invoke();
-                    m_linker.DisplayEnvironmentHandler();
-                    loadingTipDisplayer.DisplayTips();
-                    _loadingInProgress = true;
-                }
-            }
-            else
-            {
-                if (_loadingInProgress) // Notify that the loading has finished
-                {
-                    OnLoadingFinished?.Invoke();
-                    loadingTipDisplayer.StopDisplayTips();
-                    m_linker.StopDisplayEnvironmentHandler();
-                    _loadingInProgress = false;
-                }
-            }
+            OnLoadingInProgress?.Invoke();
+            m_linker.DisplayEnvironmentHandler();
+            loadingTipDisplayer.DisplayTips();
+            _loadingInProgress = true;
         }
     }
 }

@@ -237,7 +237,7 @@ namespace umi3dBrowsers
 
         private void BindConnectionService()
         {
-            connectionServiceLinker.OnParamFormDtoReceived += (connectionFormDto) =>
+            void Show()
             {
                 if (parentTransform.gameObject.activeSelf == false)
                 {
@@ -246,14 +246,10 @@ namespace umi3dBrowsers
                 }
                 m_menuNavigationLinker.ShowPanel(m_formPanel);
             };
-            connectionServiceLinker.OnDivFormDtoReceived += (connectionFormDto) => {
-                if (parentTransform.gameObject.activeSelf == false)
-                {
-                    ShowUI();
-                    mainContainerLinker.Spawner.RepositionPlayer();
-                }
-                m_menuNavigationLinker.ShowPanel(m_formPanel);
-            };
+
+            connectionServiceLinker.OnParamFormDtoReceived += (connectionFormDto) => Show();
+            connectionServiceLinker.OnDivFormDtoReceived += (connectionFormDto) => Show();
+            connectionServiceLinker.OnWaitReceived += (connectionFormDto) => Show();
 
             connectionServiceLinker.OnConnectionSuccess += () => HideUI();
         }

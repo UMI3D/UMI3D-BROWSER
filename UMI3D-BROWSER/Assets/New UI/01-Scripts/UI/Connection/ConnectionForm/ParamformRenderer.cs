@@ -24,9 +24,9 @@ using umi3dBrowsers.linker;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace umi3dBrowsers.container.formrenderer 
+namespace umi3dBrowsers.container.formrenderer
 {
-    public class ParamformRenderer : MonoBehaviour
+    public class ParamFormRenderer : MonoBehaviour
     {
         [Header("Displayers")]
         [SerializeField] private GameObject textFieldPrefab;

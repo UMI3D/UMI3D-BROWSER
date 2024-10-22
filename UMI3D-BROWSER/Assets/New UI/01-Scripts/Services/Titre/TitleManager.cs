@@ -31,6 +31,10 @@ namespace umi3dBrowsers.services.title
             connectionServiceLinker.OnDivFormDtoReceived += (connectionFormDto) => {
                 SetTitle(TitleType.connectionTitle, "", connectionFormDto?.name ?? "", true, true);
             };
+
+            connectionServiceLinker.OnWaitReceived += (connectionFormDto) => {
+                SetTitle(TitleType.connectionTitle, "", connectionFormDto?.name ?? "", true, true);
+            };
         }
 
         public void SetTitle(TitleType titleType,string prefix, string suffix, bool prefixOverride = false, bool suffixOverride = false)

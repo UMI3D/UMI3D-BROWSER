@@ -38,54 +38,67 @@ namespace inetum.unityUtils.math
         )
         {
             // Get the local position of 'child' with respect to 'parent'.
-            Vector3 localPosition_otc = parent.GetRelativeTranslationOfAToB(child);
+            Vector3 localPosition_child = parent.GetRelativeTranslationOfAToB(child);
 
             Vector3 delta = worldPosition - parent.position;
 
             if (filter.HasValue)
             {
-                localPosition_otc = Vector3.Scale(localPosition_otc, filter.Value);
+                localPosition_child = Vector3.Scale(localPosition_child, filter.Value);
 
                 delta = Vector3.Scale(delta, filter.Value);
             }
 
             // Move 'parent' so that the world position of 'child' is equal to 'worldPosition'.
-            parent.localPosition -= delta + localPosition_otc;
+            parent.localPosition -= delta + localPosition_child;
         }
 
         /// <summary>
-        /// Rotate <paramref name="offsetToMove"/> so that <paramref name="objectToCenter"/> is center in rotation compared to <paramref name="offsetToMove"/>'s parent.
+        /// Rotate <paramref name="parent"/> so that <paramref name="child"/> ends up with <paramref name="worldRotation"/>.<br/>
+        /// <br/>
+        /// <remarks>WARNING: <paramref name="parent"/> has to be a parent but not necessary the parent of <paramref name="child"/>.</remarks>
         /// </summary>
-        /// <param name="offsetToMove"></param>
-        /// <param name="objectToCenter"></param>
-        public static void RotateOffsetToCenterObject(this Transform offsetToMove, Transform objectToCenter, Vector3? filter = null)
+        /// <param name="parent">The object to move.</param>
+        /// <param name="child">The object to center.</param>
+        /// <param name="worldRotation">The world rotation where child will end up.</param>
+        /// <param name="filter"></param>
+        public static void RotateParentToCenterChild(
+            this Transform parent, 
+            Transform child,
+            Quaternion worldRotation,
+            Vector3? filter = null
+        )
         {
-            // Get the local rotation of objectToCenter with respect to offsetToMove.
-            Quaternion localRotation_otc = offsetToMove.GetRelativeRotationOfAToB(objectToCenter);
+            // Get the local rotation of 'child' with respect to 'parent'.
+            Quaternion localRotation_child = parent.GetRelativeRotationOfAToB(child);
 
-            Quaternion localRotation_otm = offsetToMove.localRotation;
+            Quaternion delta = Quaternion.Inverse(parent.rotation) * worldRotation;
 
             if (filter.HasValue)
             {
-                Vector3 euler_otc = localRotation_otc.eulerAngles;
-                localRotation_otc.eulerAngles = Vector3.Scale(euler_otc, filter.Value);
+                Vector3 euler_otc = localRotation_child.eulerAngles;
+                localRotation_child.eulerAngles = Vector3.Scale(euler_otc, filter.Value);
 
-                Vector3 euler_otm = localRotation_otm.eulerAngles;
-                localRotation_otm.eulerAngles = Vector3.Scale(euler_otm, filter.Value);
+                Vector3 euler_delta = delta.eulerAngles;
+                delta.eulerAngles = Vector3.Scale(euler_delta, filter.Value);
             }
 
-            // Rotate offsetToMove so that the world rotation of the objectToCenter is equal to offsetToMove's parent rotation.
-            offsetToMove.localRotation *= Quaternion.Inverse(localRotation_otm) * Quaternion.Inverse(localRotation_otc);
+            // Rotate 'parent' so that the world rotation of the 'child' is equal to 'worldRotation'.
+            parent.localRotation *= delta * Quaternion.Inverse(localRotation_child);
         }
 
         /// <summary>
-        /// Translate and rotate <paramref name="offsetToMove"/> so that <paramref name="objectToCenter"/> is center in position and rotation compared to <paramref name="offsetToMove"/>'s parent.
+        /// Translate and rotate <paramref name="parent"/> so that <paramref name="child"/> is center in position and rotation compared to <paramref name="parent"/>'s parent.
         /// </summary>
-        /// <param name="offsetToMove"></param>
-        /// <param name="objectToCenter"></param>
-        public static void TranslateAndRotateOffsetToCenterObject(
-            this Transform offsetToMove, 
-            Transform objectToCenter, 
+        /// <param name="parent">The object to move.</param>
+        /// <param name="child">The object to center.</param>
+        /// <param name="worldPosition">The world position where child will end up.</param>
+        /// <param name="worldRotation">The world rotation where child will end up.</param>
+        /// <param name="translationFilter"></param>
+        /// <param name="rotationFilter"></param>
+        public static void TranslateAndRotateParentToCenterChild(
+            this Transform parent, 
+            Transform child, 
             Vector3 worldPosition, 
             Quaternion worldRotation, 
             Vector3? translationFilter = null, 
@@ -93,10 +106,10 @@ namespace inetum.unityUtils.math
         )
         {
             // === Rotate the offsetToMove. ===
-            offsetToMove.RotateOffsetToCenterObject(objectToCenter, rotationFilter);
+            parent.RotateParentToCenterChild(child, worldRotation, rotationFilter);
 
             // === Move the offsetToMove. ===
-            offsetToMove.TranslateParentToCenterChild(objectToCenter, worldPosition, translationFilter);
+            parent.TranslateParentToCenterChild(child, worldPosition, translationFilter);
         }
     }
 }

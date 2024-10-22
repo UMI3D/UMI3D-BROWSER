@@ -1347,14 +1347,14 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2361799447805516612}
-  - {fileID: 6105303343043845600}
-  - {fileID: 7440187728793261206}
-  - {fileID: 3865173138055067259}
-  - {fileID: 963572361602764525}
-  - {fileID: 8332877419475495014}
-  - {fileID: 4534681928892191128}
   - {fileID: 6551145067560628410}
+  - {fileID: 4534681928892191128}
+  - {fileID: 8332877419475495014}
+  - {fileID: 963572361602764525}
+  - {fileID: 3865173138055067259}
+  - {fileID: 7440187728793261206}
+  - {fileID: 6105303343043845600}
+  - {fileID: 2361799447805516612}
   m_Father: {fileID: 833745950141136640}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1387,7 +1387,7 @@ MonoBehaviour:
   m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
-  m_ReverseArrangement: 0
+  m_ReverseArrangement: 1
 --- !u!114 &4750668223460049864
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9496,7 +9496,7 @@ MonoBehaviour:
   m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
-  m_ReverseArrangement: 0
+  m_ReverseArrangement: 1
 --- !u!114 &3918698808361757884
 MonoBehaviour:
   m_ObjectHideFlags: 0

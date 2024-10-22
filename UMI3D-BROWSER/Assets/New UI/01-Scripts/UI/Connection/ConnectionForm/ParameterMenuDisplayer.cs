@@ -58,19 +58,21 @@ public class ParameterMenuDisplayer : MonoBehaviour
         foreach (Transform element in content)
             Destroy(element.gameObject);
 
-        parameters.Reverse(); // Reverse to show element above in front (layout in the object is set to reverse too)
+        var paramtersTemp = new List<AbstractParameterDto>(parameters);
+        paramtersTemp.Reverse(); // Reverse to show element above in front (layout in the object is set to reverse too)
+
+        foreach (AbstractParameterDto parameter in paramtersTemp)
+            AddParameter(parameter);
 
         gameObject.SetActive(true);
         BaseCursor.SetMovement(this, CursorMovement.Free);
-
-        foreach (AbstractParameterDto parameter in parameters)
-            AddParameter(parameter);
     }
 
     private void Hide()
     {
         gameObject.SetActive(false);
         BaseCursor.UnSetMovement(this);
+        BaseCursor.State = BaseCursor.CursorState.Default;
     }
 
     private void AddParameter(AbstractParameterDto parameter)

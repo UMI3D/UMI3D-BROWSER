@@ -195,16 +195,19 @@ namespace umi3d.baseBrowser.Controller
         /// <exception cref="System.NotImplementedException"></exception>
         public override AbstractUMI3DInput FindInput(AbstractParameterDto param, bool unused = true)
         {
-            OnAddParameter?.Invoke(param);
-            if (param is FloatRangeParameterDto) return FindInput(floatRangeParameterInputs, i => i.IsAvailable(), ParameterActions);
-            else if (param is FloatParameterDto) return FindInput(floatParameterInputs, i => i.IsAvailable(), ParameterActions);
-            else if (param is IntegerParameterDto) return FindInput(intParameterInputs, i => i.IsAvailable());
+            AbstractUMI3DInput input = null;
+            if (param is FloatRangeParameterDto) input = FindInput(floatRangeParameterInputs, i => i.IsAvailable(), ParameterActions);
+            else if (param is FloatParameterDto) input = FindInput(floatParameterInputs, i => i.IsAvailable(), ParameterActions);
+            else if (param is IntegerParameterDto) input = FindInput(intParameterInputs, i => i.IsAvailable());
             else if (param is IntegerRangeParameterDto) throw new System.NotImplementedException();
-            else if (param is BooleanParameterDto) return FindInput(boolParameterInputs, i => i.IsAvailable(), ParameterActions);
-            else if (param is StringParameterDto) return FindInput(stringParameterInputs, i => i.IsAvailable(), ParameterActions);
-            else if (param is EnumParameterDto<string>) return FindInput(stringEnumParameterInputs, i => i.IsAvailable(), ParameterActions);
-            else if (param is UploadFileParameterDto) return FindInput(uploadFileParameterInputs, i => i.IsAvailable(), ParameterActions);
+            else if (param is BooleanParameterDto) input = FindInput(boolParameterInputs, i => i.IsAvailable(), ParameterActions);
+            else if (param is StringParameterDto) input = FindInput(stringParameterInputs, i => i.IsAvailable(), ParameterActions);
+            else if (param is EnumParameterDto<string>) input = FindInput(stringEnumParameterInputs, i => i.IsAvailable(), ParameterActions);
+            else if (param is UploadFileParameterDto) input = FindInput(uploadFileParameterInputs, i => i.IsAvailable(), ParameterActions);
             else throw new System.Exception("Input not found !!!!!!!!!!!");
+
+            OnAddParameter?.Invoke(param);
+            return input;
         }
 
         #region Find Manipulations

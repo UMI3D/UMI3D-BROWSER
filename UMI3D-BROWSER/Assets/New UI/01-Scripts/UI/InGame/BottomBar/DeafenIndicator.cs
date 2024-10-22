@@ -16,22 +16,48 @@ limitations under the License.
 
 using inetum.unityUtils;
 using System;
+using umi3d.browserRuntime.ui.settings;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.inGame.bottomBar
 {
     public class DeafenIndicator : MonoBehaviour
     {
+        private bool internalState = false;
+        private bool isEnable = false;
+
         private void Awake()
         {
             NotificationHub.Default.Subscribe(this, InGameNotificationKeys.DeafenChanged, DeafenChagned);
+            NotificationHub.Default.Subscribe(this, SettingsNotificationKeys.SetDeafenIndicator, Set);
             gameObject.SetActive(false);
+        }
+
+        private void OnDestroy()
+        {
+            NotificationHub.Default.Unsubscribe(this);
+        }
+
+        private void Set(Notification notification)
+        {
+            if (notification.TryGetInfoT(SettingsNotificationKeys.IsDeafenIndicatorEnable, out bool enable))
+            {
+                isEnable = enable;
+                if (!isEnable)
+                    gameObject.SetActive(false);
+                else
+                    gameObject.SetActive(internalState);
+            }
         }
 
         private void DeafenChagned(Notification notification)
         {
             if (notification.TryGetInfoT(InGameNotificationKeys.IsDeafen, out bool isDeafen))
-                gameObject.SetActive(isDeafen);
+            {
+                if (isEnable)
+                    gameObject.SetActive(isDeafen);
+                internalState = isDeafen;
+            }
         }
     }
 }

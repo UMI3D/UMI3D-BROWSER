@@ -26,7 +26,7 @@ using UnityEngine.UI;
 namespace umi3dBrowsers.displayer
 {
     [AddComponentMenu("UMI3D_UI/Toggle Switch", 30)]
-    public class ToggleSwitch : MonoBehaviour, IPointerClickHandler, IUMI3DBrowserUI, IDisplayer
+    public class ToggleSwitch : MonoBehaviour, IPointerClickHandler, IDisplayer
     {
         [Header("Slider setup")]
         [SerializeField, Range(0, 1f)] private float sliderValue;

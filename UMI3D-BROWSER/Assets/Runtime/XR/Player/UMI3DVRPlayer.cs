@@ -99,6 +99,7 @@ namespace umi3d.browserRuntime.player
 
             playerRequest[this, UMI3DClientRequestKeys.PlayerRequest.Transform] = () => transform;
             playerRequest[this, UMI3DClientRequestKeys.PlayerRequest.Camera] = () => mainCamera;
+            playerRequest.NotifyClientsThatSupplierChanged();
 
             // Link is made at the end of the OnEnable method so that all the set up has been made.
             linker.Link(this);

@@ -189,7 +189,6 @@ namespace umi3dBrowsers.container
             vignette.SetupRenameButton(newName => { 
                 pWorldData.worldName = newName; 
                 pVirtualWorlds.UpdateWorld(pWorldData);
-                vignetteContainerEvent.OnVignetteReset?.Invoke(); 
             });
             vignette.OnClick += () => {
                 connectionServiceLinker.TriesToConnect(pWorldData.worldUrl);

@@ -50,7 +50,7 @@ namespace com.inetum.unitygeckowebview
 
         private void OnDestroy()
         {
-            webView.Dispose();
+            webView?.Dispose();
             byteBuffer.Dispose();
         }
     }

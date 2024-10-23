@@ -557,6 +557,7 @@ GameObject:
   - component: {fileID: 6437036566123258891}
   - component: {fileID: 1193400614454046512}
   - component: {fileID: 808326237093957408}
+  - component: {fileID: -3540262142456587756}
   m_Layer: 5
   m_Name: DynamicServerContent
   m_TagString: Untagged
@@ -601,6 +602,7 @@ MonoBehaviour:
   paramRoot: {fileID: 1946961698949398182}
   formParamRenderer: {fileID: 1193400614454046512}
   formDivRenderer: {fileID: 808326237093957408}
+  waitRenderer: {fileID: -3540262142456587756}
   connectionServiceLinker: {fileID: 11400000, guid: 24604fe66de00534e9fe94635a6279cf,
     type: 2}
   menuNavigationLinker: {fileID: 11400000, guid: 438855b4a25630a4db523fe93ebc1ca5,
@@ -671,3 +673,42 @@ MonoBehaviour:
   - {fileID: 296451996952465717}
   connectionToImmersiveLinker: {fileID: 11400000, guid: 68ff1a90a5151924e867698a4e1d3a2d,
     type: 2}
+--- !u!114 &-3540262142456587756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9064025147618423764}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56e99d8f700993543a0281c5bce4267d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  WaitPrefab: {fileID: 6974842994351736208, guid: 1cdadf4cb2b03674da9f679ed650c014,
+    type: 3}
+  tabManager: {fileID: 7987622305674645075}
+  validationButton: {fileID: 6764881931589576737}
+  connectionServiceLinker: {fileID: 11400000, guid: 24604fe66de00534e9fe94635a6279cf,
+    type: 2}
+  refreshingText:
+    m_TableReference:
+      m_TableCollectionName: GUID:9f0d3ba07a8a50b468417e87e9b261f7
+    m_TableEntryReference:
+      m_KeyId: 78976310853001216
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  refreshingInText:
+    m_TableReference:
+      m_TableCollectionName: GUID:9f0d3ba07a8a50b468417e87e9b261f7
+    m_TableEntryReference:
+      m_KeyId: 78971110624878592
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []

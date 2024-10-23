@@ -35,8 +35,9 @@ namespace umi3dBrowsers.container.formrenderer
         [SerializeField] private GameObject contentRoot;
         [SerializeField] private GameObject paramRoot;
 
-        [SerializeField] private ParamformRenderer formParamRenderer;
+        [SerializeField] private ParamFormRenderer formParamRenderer;
         [SerializeField] private DivformRenderer formDivRenderer;
+        [SerializeField] private WaitRenderer waitRenderer;
 
         [Header("Linkers")]
         [SerializeField] private ConnectionServiceLinker connectionServiceLinker;
@@ -46,6 +47,7 @@ namespace umi3dBrowsers.container.formrenderer
         {
             connectionServiceLinker.OnParamFormDtoReceived += HandleParamForm;
             connectionServiceLinker.OnDivFormDtoReceived += HandleDivForm;
+            connectionServiceLinker.OnWaitReceived += HandleWait;
         }
 
         public void HandleParamForm(ConnectionFormDto connectionFormDto)
@@ -62,6 +64,14 @@ namespace umi3dBrowsers.container.formrenderer
             formDivRenderer.Init(paramRoot);
             formDivRenderer.CleanContent(connectionFormDto.guid);
             formDivRenderer.Handle(connectionFormDto);
+        }
+
+        public void HandleWait(WaitConnectionDto connectionFormDto)
+        {
+            menuNavigationLinker.SetCancelButtonActive(false);
+            waitRenderer.Init(paramRoot);
+            waitRenderer.CleanContent();
+            waitRenderer.Handle(connectionFormDto);
         }
     }
 }

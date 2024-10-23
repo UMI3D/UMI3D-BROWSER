@@ -24,7 +24,6 @@ using umi3d.cdk.collaboration.userCapture.binding;
 using umi3d.common;
 using umi3d.common.interaction;
 using UnityEngine;
-using umi3d.cdk.userCapture.tracking;
 using umi3d.cdk.userCapture.tracking.constraint;
 
 namespace umi3d.cdk.collaboration

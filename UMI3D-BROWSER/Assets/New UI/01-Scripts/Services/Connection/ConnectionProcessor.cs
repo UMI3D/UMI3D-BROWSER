@@ -22,6 +22,7 @@ using umi3d;
 using umi3d.cdk;
 using umi3d.cdk.collaboration;
 using umi3d.common;
+using umi3d.common.collaboration.dto.networking;
 using umi3d.common.interaction;
 using umi3dBrowsers.linker;
 using umi3dBrowsers.player;
@@ -44,6 +45,7 @@ namespace umi3dBrowsers.services.connection
         private string _mediaDataServerUrl = "";
         private Action<FormAnswerDto> _formParamAnswerCallBack;
         private Action<umi3d.common.interaction.form.FormAnswerDto> _formDivAnswerCallBack;
+        private Action _waitDtoCallBack;
         private Action<bool> _shouldDownloadLibrariesCallBack;
 
         private List<string> _compatibleFormVersion = new List<string>() { "1", "2.0" };
@@ -53,14 +55,16 @@ namespace umi3dBrowsers.services.connection
 
         private void Start()
         {
-            identifier.OnParamFormAvailible += HandleParameters;
+            identifier.OnParamFormAvailable += HandleParameters;
             identifier.OnDivFormAvailable += HandleDivs;
-            identifier.OnLibrairiesAvailible += HandleLibrairies;
+            identifier.OnLibrairiesAvailable += HandleLibrairies;
+            identifier.OnWaitAvailable += HandleWait;
             UMI3DCollaborationEnvironmentLoader.Instance.onEnvironmentLoaded.AddListener(() => connectionServiceLinker.ConnectionSuccess());
 
             connectionServiceLinker.OnTryToConnect += TryConnectToMediaServer;
-            connectionServiceLinker.OnSendFormAnwser += SendFormAnswer;
-            connectionServiceLinker.OnSendDivFormAnwser += SendDivFormAnswer;
+            connectionServiceLinker.OnSendFormAnswer += SendFormAnswer;
+            connectionServiceLinker.OnSendDivFormAnswer += SendDivFormAnswer;
+            connectionServiceLinker.OnSendWaitAnswer += SendWaitAnswer;
         }
 
         public async void TryConnectToMediaServer(string url)
@@ -131,6 +135,12 @@ namespace umi3dBrowsers.services.connection
             connectionServiceLinker.DivFormDtoReceived(dto);
         }
 
+        private void HandleWait(WaitConnectionDto dto, Action action)
+        {
+            _waitDtoCallBack = action;
+            connectionServiceLinker.WaitReceived(dto);
+        }
+
         private void HandleLibrairies(List<string> ids, Action<bool> action)
         {
             _shouldDownloadLibrariesCallBack = action;
@@ -158,6 +168,11 @@ namespace umi3dBrowsers.services.connection
         public void SendDivFormAnswer(umi3d.common.interaction.form.FormAnswerDto formAnswer)
         {
             _formDivAnswerCallBack?.Invoke(formAnswer);
+        }
+
+        public void SendWaitAnswer()
+        {
+            _waitDtoCallBack?.Invoke();
         }
 
         /// <summary>

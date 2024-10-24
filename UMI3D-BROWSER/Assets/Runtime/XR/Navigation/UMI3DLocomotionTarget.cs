@@ -119,7 +119,7 @@ namespace umi3d.browserRuntime.navigation
                 return;
             }
 
-            PlayerTransformUtils.MovePlayerAndCenterCamera(transform, mainCamera.transform, position);
+            PlayerTransformUtils.TranslatePlayerAndCenterCamera(transform, mainCamera.transform, position);
         }
     }
 }

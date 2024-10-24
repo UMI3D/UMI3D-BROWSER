@@ -16,57 +16,61 @@ limitations under the License.
 
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using umi3d.browserRuntime.UX;
 using UnityEngine;
 using umi3d.browserRuntime.NotificationKeys;
 using inetum.unityUtils;
+using umi3d.cdk.notification;
 
 namespace umi3d.browserRuntime.ui.keyboard
 {
     public class KeyboardPivot : MonoBehaviour
     {
         [SerializeField] Transform target;
-        Task setupTarget;
 
         LazyRotationAndTranslation lazyRotationAndTranslation;
+        Request playerRequest;
 
         void Awake()
         {
             lazyRotationAndTranslation = GetComponent<LazyRotationAndTranslation>();
+
+            playerRequest = RequestHub.Default.SubscribeAsClient<UMI3DClientRequestKeys.PlayerRequest>(this);
+
         }
 
         void OnEnable()
         {
-            if (target == null && setupTarget == null)
-            {
-                setupTarget = new Task(async () =>
-                {
-                    while (Camera.main == null)
-                    {
-                        await Task.Yield();
-                    }
-                    target = Camera.main.transform;
-
-                    lazyRotationAndTranslation.target = target;
-                    lazyRotationAndTranslation.Rest();
-
-                    setupTarget = null;
-                });
-
-                setupTarget.Start(TaskScheduler.FromCurrentSynchronizationContext());
-            }
+            playerRequest.supplierChanged += PlayerRequest_supplierChanged;
 
             NotificationHub.Default.Subscribe<KeyboardNotificationKeys.TextFieldSelected>(
                 this,
                 TextFieldSelected
             );
-
         }
 
         void OnDisable()
         {
+            playerRequest.supplierChanged -= PlayerRequest_supplierChanged;
+
             NotificationHub.Default.Unsubscribe<KeyboardNotificationKeys.TextFieldSelected>(this);
+        }
+
+        void PlayerRequest_supplierChanged()
+        {
+            if (target != null)
+            {
+                return;
+            }
+
+            if (!playerRequest.TryGetInfoT(UMI3DClientRequestKeys.PlayerRequest.Camera, out Camera camera))
+            {
+                return;
+            }
+            target = camera.transform;
+
+            lazyRotationAndTranslation.target = target;
+            lazyRotationAndTranslation.Rest();
         }
 
         void TextFieldSelected(Notification notification)

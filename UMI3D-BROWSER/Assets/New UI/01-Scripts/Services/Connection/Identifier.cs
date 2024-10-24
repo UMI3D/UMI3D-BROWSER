@@ -19,7 +19,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using umi3d.cdk.collaboration;
 using umi3d.common.interaction;
-using Unity.Burst.Intrinsics;
 using UnityEngine;
 
 namespace umi3dBrowsers.services.connection
@@ -27,9 +26,10 @@ namespace umi3dBrowsers.services.connection
     [CreateAssetMenu(fileName = "Identifier", menuName = "UMI3D/Identifier")]
     public class Identifier : ClientIdentifierApi
     {
-        public Action<List<string>, Action<bool>> OnLibrairiesAvailible;
-        public Action<ConnectionFormDto, Action<FormAnswerDto>> OnParamFormAvailible;
+        public Action<List<string>, Action<bool>> OnLibrairiesAvailable;
+        public Action<ConnectionFormDto, Action<FormAnswerDto>> OnParamFormAvailable;
         public Action<umi3d.common.interaction.form.ConnectionFormDto, Action<umi3d.common.interaction.form.FormAnswerDto>> OnDivFormAvailable;
+        public Action<WaitConnectionDto, Action> OnWaitAvailable;
 
         public Action OnAnswerFailed;
 
@@ -51,7 +51,7 @@ namespace umi3dBrowsers.services.connection
 
             Action<FormAnswerDto> callback = (formAnswer) => { form = formAnswer; isWaiting = false; };
 
-            OnParamFormAvailible.Invoke(parameter, callback);
+            OnParamFormAvailable.Invoke(parameter, callback);
 
             while (isWaiting)
                 await Task.Yield();
@@ -72,6 +72,18 @@ namespace umi3dBrowsers.services.connection
             return form;
         }
 
+        public override async Task GetParameterDtos(WaitConnectionDto parameter)
+        {
+            bool isWaiting = true;
+
+            Action callback = () => { isWaiting = false; };
+
+            OnWaitAvailable.Invoke(parameter, callback);
+
+            while (isWaiting)
+                await Task.Yield();
+        }
+
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
@@ -83,7 +95,7 @@ namespace umi3dBrowsers.services.connection
             bool form = false;
             Action<bool> callback = (f) => { form = f; b = false; };
 
-            OnLibrairiesAvailible.Invoke(LibrariesId, callback);
+            OnLibrairiesAvailable.Invoke(LibrariesId, callback);
             while (b)
                 await Task.Yield();
             return form;

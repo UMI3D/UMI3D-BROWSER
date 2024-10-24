@@ -673,8 +673,8 @@ PlayerSettings:
   webGLMemoryGeometricGrowthCap: 96
   webGLPowerPreference: 2
   scriptingDefineSymbols:
-    Android: UMI3D_XR;USE_VIVE_OPENXR_ANDROID_1_0_5;USE_INPUT_SYSTEM_POSE_CONTROL
-    Standalone: UMI3D_XR;USE_INPUT_SYSTEM_POSE_CONTROL
+    Android: USE_VIVE_OPENXR_ANDROID_1_0_5;USE_INPUT_SYSTEM_POSE_CONTROL;UMI3D_PC
+    Standalone: USE_INPUT_SYSTEM_POSE_CONTROL;UMI3D_PC
     Windows Store Apps: USE_INPUT_SYSTEM_POSE_CONTROL
   additionalCompilerArguments: {}
   platformArchitecture: {}

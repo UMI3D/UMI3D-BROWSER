@@ -355,7 +355,7 @@ namespace umi3d.cdk
                     int height = tex.height;
 
                     // Compute shader may be faster ?
-                    InvertTextureJob job = new () { width = width, height = height, original = original, result = inverted };
+                    InvertTextureJob job = new() { width = width, height = height, original = original, result = inverted };
                     job.Schedule().Complete();
 
                     tex.SetPixelData(inverted, 0);

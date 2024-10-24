@@ -1,3 +1,5 @@
+using inetum.unityUtils.math;
+using umi3d.browserRuntime.player;
 using umi3dBrowsers.linker;
 using UnityEngine;
 
@@ -20,14 +22,8 @@ namespace umi3dBrowsers
         }
         public void RepositionPlayer()
         {
-            playerTransform.position = transform.position;
-            playerTransform.rotation = transform.rotation;
-
-#if UMI3D_XR
-            var cameraTransform = Camera.main.transform;
-            cameraTransform.parent.localEulerAngles = new Vector3(0, -cameraTransform.localEulerAngles.y, 0);
-            cameraTransform.parent.localPosition = new Vector3(-cameraTransform.localPosition.x, 0, -cameraTransform.localPosition.z);
-#endif
+            PlayerTransformUtils.RotatePlayerAndCenterCamera(playerTransform, Camera.main.transform, transform.rotation);
+            PlayerTransformUtils.TranslatePlayerAndCenterCamera(playerTransform, Camera.main.transform, transform.position);
         }
     }
 }

@@ -31,11 +31,13 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
         [SerializeField] private TMP_InputField searchField;
         [SerializeField] private TMP_Text numberOfParticipantText;
         [SerializeField] private TMP_Text timeSpentText;
+        [SerializeField] private TMP_Dropdown sortByDropdown;
 
         private List<SocialElement> _users;
         private Dictionary<ulong, SocialElement> _allUsersRemembered = new();
 
         private DateTime _startTime;
+        private bool dropdownReverse = false;
 
         private void Awake()
         {
@@ -50,6 +52,19 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
 
             NotificationHub.Default.Subscribe(this, TabletNotificationKeys.OpenSocial, Open);
             NotificationHub.Default.Subscribe(this, TabletNotificationKeys.CloseScreens, Close);
+        }
+
+        private void Start()
+        {
+            sortByDropdown.options.Add(new TMP_Dropdown.OptionData("A to Z"));
+            sortByDropdown.options.Add(new TMP_Dropdown.OptionData("Z to A"));
+
+            sortByDropdown.onValueChanged.AddListener(index => {
+                dropdownReverse = index > 0;
+                SortAZ();
+            });
+
+            sortByDropdown.value = 0;
         }
 
         private void OnDestroy()
@@ -94,13 +109,15 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
 
         private void UpdateUserList(UMI3DUser user = null)
         {
-            Filter();
+            SortAZ();
             numberOfParticipantText.text = $" {_users.Count + 1}";
         }
 
-        private void Filter()
+        private void SortAZ()
         {
             _users.Sort((user0, user1) => string.Compare(user0.UserName, user1.UserName));
+            if (dropdownReverse)
+                _users.Reverse();
             UpdateHierarchy();
         }
 

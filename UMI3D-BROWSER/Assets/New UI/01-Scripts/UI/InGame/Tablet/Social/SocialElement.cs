@@ -65,6 +65,8 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
             }
         }
 
+        public bool MicroOpen => _user.microphoneStatus;
+
         private UMI3DUser _user;
         private float _volume = 100;
         private bool _isMute = false;

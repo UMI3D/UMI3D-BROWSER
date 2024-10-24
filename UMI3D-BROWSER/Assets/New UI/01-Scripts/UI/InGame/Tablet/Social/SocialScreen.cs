@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using umi3d.browserRuntime.ui.elements.dropdown;
 using umi3d.cdk.collaboration;
 using UnityEngine;
 
@@ -32,18 +33,23 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
         [SerializeField] private TMP_Text numberOfParticipantText;
         [SerializeField] private TMP_Text timeSpentText;
         [SerializeField] private TMP_Dropdown sortByDropdown;
+        [SerializeField] private ToggleDropdown filterDropdown;
 
         private List<SocialElement> _users;
+        private List<SocialElement> _allUsers;
         private Dictionary<ulong, SocialElement> _allUsersRemembered = new();
 
         private DateTime _startTime;
         private bool dropdownReverse = false;
 
+        private ToggleDropdownItem MuteFilter;
+        private ToggleDropdownItem UnMuteFilter;
+
         private void Awake()
         {
-            Clear();
+            UpdateList();
 
-            UMI3DEnvironmentClient.EnvironementJoinned.AddListener(Clear);
+            UMI3DEnvironmentClient.EnvironementJoinned.AddListener(UpdateList);
             UMI3DUser.OnNewUser.AddListener(Add);
             //UMI3DUser.OnUserMicrophoneStatusUpdated.AddListener(UpdateUserList);
             UMI3DUser.OnRemoveUser.AddListener(Remove);
@@ -56,6 +62,7 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
 
         private void Start()
         {
+            // Sort
             sortByDropdown.options.Add(new TMP_Dropdown.OptionData("A to Z"));
             sortByDropdown.options.Add(new TMP_Dropdown.OptionData("Z to A"));
 
@@ -65,6 +72,12 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
             });
 
             sortByDropdown.value = 0;
+
+            // Filter
+            MuteFilter = filterDropdown.AddOption("Mute");
+            MuteFilter.OnToggle += b => Filter();
+            UnMuteFilter = filterDropdown.AddOption("UnMute");
+            UnMuteFilter.OnToggle += b => Filter();
         }
 
         private void OnDestroy()
@@ -81,19 +94,20 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
             timeSpentText.text = $" {time.ToString("hh")}:{time.ToString("mm")}:{time.ToString("ss")}";
         }
 
-        private void Clear()
+        private void UpdateList()
         {
-            if (_users != null)
-                foreach (var u in _users)
+            if (_allUsers != null)
+                foreach (var u in _allUsers)
                     Destroy(u.gameObject);
 
             _startTime = DateTime.Now;
 
-            _users = new List<SocialElement>();
-            _users = UMI3DCollaborationEnvironmentLoader.Instance.JoinnedUserList
+            _allUsers = new List<SocialElement>();
+            _allUsers = UMI3DCollaborationEnvironmentLoader.Instance.JoinnedUserList
                 .Where(u => !u.isClient)
                 .Select(CreateUser)
                 .ToList();
+            _users = _allUsers;
             UpdateUserList();
         }
 
@@ -109,8 +123,19 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
 
         private void UpdateUserList(UMI3DUser user = null)
         {
-            SortAZ();
+            Filter();
             numberOfParticipantText.text = $" {_users.Count + 1}";
+        }
+
+        private void Filter()
+        {
+            // Use Filters
+            _users = _allUsers
+                .Where(u => MuteFilter.IsOn ? !u.MicroOpen : true)
+                .Where(u => UnMuteFilter.IsOn ? u.MicroOpen : true)
+                .ToList();
+
+            SortAZ();
         }
 
         private void SortAZ()

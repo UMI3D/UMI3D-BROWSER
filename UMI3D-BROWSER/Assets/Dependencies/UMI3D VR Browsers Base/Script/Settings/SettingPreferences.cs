@@ -17,7 +17,6 @@ limitations under the License.
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using static umi3dVRBrowsersBase.connection.PlayerPrefsManager;
 
 namespace umi3dVRBrowsersBase.settings
 {

@@ -26,5 +26,8 @@ namespace umi3d.browserRuntime.ui.settings
 
         internal static readonly string NewPanelSelected = "settings-newPanelSelected";
         internal static readonly string NewToggleCustomSelected = "settings-toggle-custom-";
+
+        internal static readonly string SetDeafenIndicator = "settings-deafen-indicator";
+        internal static readonly string IsDeafenIndicatorEnable = "settings-deafen-indicator-enable";
     }
 }

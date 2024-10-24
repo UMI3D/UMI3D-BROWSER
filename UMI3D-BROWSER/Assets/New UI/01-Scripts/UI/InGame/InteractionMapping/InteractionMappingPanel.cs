@@ -99,7 +99,7 @@ namespace umi3d.browserRuntime.ui.inGame.interactionMapping
         {
             gameObject.SetActive(false);
             foreach (var row in _rows)
-                Destroy(row.Value.gameObject);
+                DestroyImmediate(row.Value.gameObject);
             _rows.Clear();
         }
 

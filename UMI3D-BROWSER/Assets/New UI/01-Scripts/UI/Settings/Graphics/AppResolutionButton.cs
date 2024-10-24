@@ -18,13 +18,18 @@ using inetum.unityUtils;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using static umi3d.baseBrowser.preferences.SettingsPreferences;
 
 namespace umi3d.browserRuntime.ui.settings.graphics
 {
     [RequireComponent(typeof(Button))]
     public class AppResolutionButton : MonoBehaviour
     {
+        enum ResolutionEnum
+        {
+            Low, Medium, High, Custom
+        }
+
+
         [SerializeField] private ResolutionEnum resolution;
         [SerializeField] private List<GameObject> gameObjects;
         [SerializeField] private string toggleGroup;

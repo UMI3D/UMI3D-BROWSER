@@ -17,7 +17,6 @@ limitations under the License.
 using inetum.unityUtils;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using umi3d.browserRuntime.NotificationKeys;
 using UnityEngine;
 using UnityEngine.Events;
@@ -43,8 +42,6 @@ namespace umi3d.browserRuntime.ui.keyboard
 #if UMI3D_XR
         void Awake()
         {
-            enabled = false;
-            return;
             inputField = GetComponent<TMPro.TMP_InputField>();
 
             selection = new(this);
@@ -54,9 +51,9 @@ namespace umi3d.browserRuntime.ui.keyboard
 
             deselectionNotifier = NotificationHub.Default
                 .GetNotifier<KeyboardNotificationKeys.TextFieldDeselected>(this);
-    }
+        }
 
-    void OnEnable()
+        void OnEnable()
         {
             NotificationHub.Default.Subscribe(
                 this,

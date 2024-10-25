@@ -14,10 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
 using umi3d.baseBrowser.cursor;
 using umi3d.baseBrowser.inputs.interactions;
+using umi3d.browserRuntime.ui.inGame;
 using umi3d.browserRuntime.ui.inGame.tablet;
-using umi3dBrowsers.linker.ingameui;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using static umi3d.baseBrowser.cursor.BaseCursor;
@@ -32,16 +33,13 @@ namespace umi3dBrowsers.ingame_ui
         [Header("Dependencies")]
         [SerializeField] private TabletPanel TabletPanel;
 
-        [Header("Linkers")]
-        [SerializeField] private InGameLinker inGameLinker;
-
         [Header("Debug")]
         [SerializeField] private bool debugMode;
 
         private void Awake()
         {
             openCloseInGamePanel.performed += i => ToggleInGamePanel();
-            inGameLinker.OnEnableDisableInGameUI += isEnable => gameObject.SetActive(isEnable);
+            NotificationHub.Default.Subscribe(this, InGameNotificationKeys.EnableInGameUi, SetActive);
 
             BaseCursor.SetMovement(this, CursorMovement.Free);
         }
@@ -50,15 +48,7 @@ namespace umi3dBrowsers.ingame_ui
         {
             openCloseInGamePanel.Enable();
 
-            if (inGameLinker.IsEnable == false)
-            {
-                ToggleInGamePanel();
-                if (!debugMode)
-                    gameObject.SetActive(inGameLinker.IsEnable);
-            }
-
-            if (!debugMode)
-                gameObject.SetActive(inGameLinker.IsEnable);
+            gameObject.SetActive(debugMode);
         }
 
         private void OnEnable()
@@ -99,6 +89,12 @@ namespace umi3dBrowsers.ingame_ui
                     BaseCursor.SetMovement(this, CursorMovement.Free);
                 }
             }
+        }
+
+        private void SetActive(Notification notification)
+        {
+            if (notification.TryGetInfoT<bool>(InGameNotificationKeys.IsInGameUiActive, out var active))
+                gameObject.SetActive(active);
         }
     }
 }

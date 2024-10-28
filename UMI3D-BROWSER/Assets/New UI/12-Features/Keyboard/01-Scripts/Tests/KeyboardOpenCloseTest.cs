@@ -15,8 +15,6 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using umi3d.browserRuntime.NotificationKeys;
 using UnityEngine;
@@ -36,22 +34,20 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         void Awake()
         {
-            openOrCloseNotifier = NotificationHub.Default.GetNotifier(
+            openOrCloseNotifier = NotificationHub.Default.GetNotifier<KeyboardNotificationKeys.OpenOrClose>(
                 this,
-                KeyboardNotificationKeys.OpenOrClose,
                 null,
                 new()
                 {
-                    { KeyboardNotificationKeys.Info.IsOpening, isOpen },
-                    { KeyboardNotificationKeys.Info.WithAnimation, false },
-                    { KeyboardNotificationKeys.Info.AnimationTime, 1f },
-                    { KeyboardNotificationKeys.Info.PhaseOneStartTimePercentage, .5f }
+                    { KeyboardNotificationKeys.OpenOrClose.IsOpening, isOpen },
+                    { KeyboardNotificationKeys.OpenOrClose.WithAnimation, false },
+                    { KeyboardNotificationKeys.OpenOrClose.AnimationTime, 1f },
+                    { KeyboardNotificationKeys.OpenOrClose.PhaseOneStartTimePercentage, .5f }
                 }
             );
 
-            NotificationHub.Default.Subscribe(
+            NotificationHub.Default.Subscribe<KeyboardNotificationKeys.AnimationSettings>(
                 this,
-                KeyboardNotificationKeys.AnimationSettings,
                 EnableOrDisableAnimation
             );
 
@@ -60,14 +56,14 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         void Start()
         {
-            openOrCloseNotifier[KeyboardNotificationKeys.Info.IsOpening] = isOpen;
-            openOrCloseNotifier[KeyboardNotificationKeys.Info.WithAnimation] = false;
+            openOrCloseNotifier[KeyboardNotificationKeys.OpenOrClose.IsOpening] = isOpen;
+            openOrCloseNotifier[KeyboardNotificationKeys.OpenOrClose.WithAnimation] = false;
             openOrCloseNotifier.Notify();
         }
 
         void EnableOrDisableAnimation(Notification notification)
         {
-            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.AnimationType, out KeyboardAnimationType animationType))
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.AnimationSettings.AnimationType, out KeyboardAnimationType animationType))
             {
                 return;
             }
@@ -77,7 +73,7 @@ namespace umi3d.browserRuntime.ui.keyboard
                 return;
             }
 
-            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.WithAnimation, out bool withAnimation))
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.AnimationSettings.WithAnimation, out bool withAnimation))
             {
                 return;
             }
@@ -89,8 +85,8 @@ namespace umi3d.browserRuntime.ui.keyboard
         {
             isOpen = !isOpen;
             text.text = isOpen ? "Close" : "Open";
-            openOrCloseNotifier[KeyboardNotificationKeys.Info.IsOpening] = isOpen;
-            openOrCloseNotifier[KeyboardNotificationKeys.Info.WithAnimation] = withAnimation;
+            openOrCloseNotifier[KeyboardNotificationKeys.OpenOrClose.IsOpening] = isOpen;
+            openOrCloseNotifier[KeyboardNotificationKeys.OpenOrClose.WithAnimation] = withAnimation;
             openOrCloseNotifier.Notify();
         }
 
@@ -99,8 +95,8 @@ namespace umi3d.browserRuntime.ui.keyboard
         void TestOpen()
         {
             UnityEngine.Debug.Log($"test open");
-            openOrCloseNotifier[KeyboardNotificationKeys.Info.IsOpening] = true;
-            openOrCloseNotifier[KeyboardNotificationKeys.Info.WithAnimation] = withAnimation;
+            openOrCloseNotifier[KeyboardNotificationKeys.OpenOrClose.IsOpening] = true;
+            openOrCloseNotifier[KeyboardNotificationKeys.OpenOrClose.WithAnimation] = withAnimation;
             openOrCloseNotifier.Notify();
         }
 
@@ -108,8 +104,8 @@ namespace umi3d.browserRuntime.ui.keyboard
         void TestClose()
         {
             UnityEngine.Debug.Log($"test close");
-            openOrCloseNotifier[KeyboardNotificationKeys.Info.IsOpening] = false;
-            openOrCloseNotifier[KeyboardNotificationKeys.Info.WithAnimation] = withAnimation;
+            openOrCloseNotifier[KeyboardNotificationKeys.OpenOrClose.IsOpening] = false;
+            openOrCloseNotifier[KeyboardNotificationKeys.OpenOrClose.WithAnimation] = withAnimation;
             openOrCloseNotifier.Notify();
         }
 #endif

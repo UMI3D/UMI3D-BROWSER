@@ -76,7 +76,14 @@ namespace umi3d.browserRuntime.NotificationKeys
         /// <summary>
         /// Notification sent when the version of the keyboard will change.
         /// </summary>
-        public const string ChangeVersion = "KeyboardChangeVersion";
+        public class ChangeVersion
+        {
+            /// <summary>
+            /// The version of the keyboard (AZERTY, QWERTY, ...).<br/>
+            /// Value is <see cref="KeyboardLocalisationVersion"/>.
+            /// </summary>
+            public const string Version = "Version";
+        }
 
         /// <summary>
         /// Notification sent when the key is hovered.
@@ -91,12 +98,50 @@ namespace umi3d.browserRuntime.NotificationKeys
         /// <summary>
         /// Notification sent when the keyboard will be opened or closed.
         /// </summary>
-        public const string OpenOrClose = "KeyboardOpenOrClose";
+        public class OpenOrClose
+        {
+            /// <summary>
+            /// Whether the keyboard is opening or closing.<br/>
+            /// Value is <see cref="bool"/>.
+            /// </summary>
+            public const string IsOpening = "IsOpening";
+
+            /// <summary>
+            /// Whether the opening or closing is animated.<br/>
+            /// Value is <see cref="bool"/>.
+            /// </summary>
+            public const string WithAnimation = "WithAnimation";
+
+            /// <summary>
+            /// The animation time.<br/>
+            /// Value is <see cref="float"/>.
+            /// </summary>
+            public const string AnimationTime = "AnimationTime";
+
+            /// <summary>
+            /// The percentage [0,1] of the <see cref="AnimationTime"/> when the phase 1 start.<br/>
+            /// Value is <see cref="float"/>.
+            /// </summary>
+            public const string PhaseOneStartTimePercentage = "PhaseOneStartTimePercentage";
+        }
 
         /// <summary>
         /// Notification sent when the animations settings will change.
         /// </summary>
-        public const string AnimationSettings = "KeyboardAnimationSettings";
+        public class AnimationSettings
+        {
+            /// <summary>
+            /// The type of animation.<br/>
+            /// Value is <see cref="NotificationKeys.KeyboardAnimationType"/>.
+            /// </summary>
+            public const string AnimationType = "AnimationType";
+
+            /// <summary>
+            /// Whether the opening or closing is animated.<br/>
+            /// Value is <see cref="bool"/>.
+            /// </summary>
+            public const string WithAnimation = "WithAnimation";
+        }
 
         public static class Info
         {
@@ -162,61 +207,12 @@ namespace umi3d.browserRuntime.NotificationKeys
             public const string IsABC = "IsABC";
 
             /// <summary>
-            /// The version of the keyboard (AZERTY, QWERTY, ...).<br/>
-            /// Value is <see cref="string"/>.<br/>
-            /// <br/>
-            /// See Notification key: <see cref="ChangeVersion"/>
-            /// </summary>
-            public const string Version = "Version";
-
-            /// <summary>
             /// The pointer event data related of the interaction.<br/>
             /// Value is <see cref="PointerEventData"/>.<br/>
             /// <br/>
             /// See Notification key: <see cref="KeyHovered"/>
             /// </summary>
             public const string PointerEventData = "PointerEventData";
-
-            /// <summary>
-            /// Whether the opening or closing is animated.<br/>
-            /// Value is <see cref="bool"/>.<br/>
-            /// <br/>
-            /// See Notification key: <see cref="OpenOrClose"/><br/>
-            /// See Notification key: <see cref="AnimationSettings"/><br/>
-            /// </summary>
-            public const string WithAnimation = "WithAnimation";
-
-            /// <summary>
-            /// The animation time.<br/>
-            /// Value is <see cref="float"/>.<br/>
-            /// <br/>
-            /// See Notification key: <see cref="OpenOrClose"/>
-            /// </summary>
-            public const string AnimationTime = "AnimationTime";
-
-            /// <summary>
-            /// Whether the keyboard is opening or closing.<br/>
-            /// Value is <see cref="bool"/>.<br/>
-            /// <br/>
-            /// See Notification key: <see cref="OpenOrClose"/>
-            /// </summary>
-            public const string IsOpening = "IsOpening";
-
-            /// <summary>
-            /// The percentage [0,1] of the <see cref="AnimationTime"/> when the phase 1 start.<br/>
-            /// Value is <see cref="float"/>.<br/>
-            /// <br/>
-            /// See Notification key: <see cref="OpenOrClose"/>
-            /// </summary>
-            public const string PhaseOneStartTimePercentage = "PhaseOneStartTimePercentage";
-
-            /// <summary>
-            /// The type of animation.<br/>
-            /// Value is <see cref="NotificationKeys.KeyboardAnimationType"/>.<br/>
-            /// <br/>
-            /// See Notification key: <see cref="AnimationSettings"/><br/>
-            /// </summary>
-            public const string AnimationType = "AnimationType";
         }
     }
 }

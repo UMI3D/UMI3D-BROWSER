@@ -15,8 +15,6 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
-using System.Collections;
-using System.Collections.Generic;
 using umi3d.browserRuntime.NotificationKeys;
 using UnityEngine;
 using UnityEngine.UI;
@@ -32,34 +30,28 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         void Awake()
         {
-            animationNotifier = NotificationHub.Default.GetNotifier(
-                this,
-                KeyboardNotificationKeys.AnimationSettings
-            );
+            animationNotifier = NotificationHub.Default
+                .GetNotifier<KeyboardNotificationKeys.AnimationSettings>(this);
         }
 
-        private void Start()
+        void Start()
         {
-            animationNotifier[KeyboardNotificationKeys.Info.AnimationType] = KeyboardAnimationType.OpenOrClose;
-            animationNotifier[KeyboardNotificationKeys.Info.WithAnimation] = openCloseToggle.isOn;
-            animationNotifier.Notify();
+            EnableOpenOrCloseAnimation(openCloseToggle.isOn);
 
-            animationNotifier[KeyboardNotificationKeys.Info.AnimationType] = KeyboardAnimationType.KeyPress;
-            animationNotifier[KeyboardNotificationKeys.Info.WithAnimation] = keyPressToggle.isOn;
-            animationNotifier.Notify();
+            EnableKeyPressAnimation(keyPressToggle.isOn);
         }
 
         public void EnableOpenOrCloseAnimation(bool enable)
         {
-            animationNotifier[KeyboardNotificationKeys.Info.AnimationType] = KeyboardAnimationType.OpenOrClose;
-            animationNotifier[KeyboardNotificationKeys.Info.WithAnimation] = enable;
+            animationNotifier[KeyboardNotificationKeys.AnimationSettings.AnimationType] = KeyboardAnimationType.OpenOrClose;
+            animationNotifier[KeyboardNotificationKeys.AnimationSettings.WithAnimation] = enable;
             animationNotifier.Notify();
         }
 
         public void EnableKeyPressAnimation(bool enable)
         {
-            animationNotifier[KeyboardNotificationKeys.Info.AnimationType] = KeyboardAnimationType.KeyPress;
-            animationNotifier[KeyboardNotificationKeys.Info.WithAnimation] = enable;
+            animationNotifier[KeyboardNotificationKeys.AnimationSettings.AnimationType] = KeyboardAnimationType.KeyPress;
+            animationNotifier[KeyboardNotificationKeys.AnimationSettings.WithAnimation] = enable;
             animationNotifier.Notify();
         }
     }

@@ -24,20 +24,22 @@ namespace umi3d.browserRuntime.ui.keyboard
 {
     public class KeyboardVersionTest : MonoBehaviour
     {
+        /// <summary>
+        /// 0 -> AZERTY
+        /// 1 -> QWERTY
+        /// </summary>
         [SerializeField] TMPro.TMP_Dropdown dropdown;
 
         Notifier versionNotifier;
 
         void Start()
         {
-            versionNotifier = NotificationHub.Default.GetNotifier(
-                this,
-                KeyboardNotificationKeys.ChangeVersion
-            );
+            versionNotifier = NotificationHub.Default
+                .GetNotifier<KeyboardNotificationKeys.ChangeVersion>(this);
 
             int index = dropdown != null ? dropdown.value : 0;
 
-            versionNotifier[KeyboardNotificationKeys.Info.Version] = index == 0 ? "AZERTY" : "QWERTY";
+            versionNotifier[KeyboardNotificationKeys.ChangeVersion.Version] = index == 0 ? KeyboardLocalisationVersion.AZERTY : KeyboardLocalisationVersion.QWERTY;
             versionNotifier.Notify();
 
         }
@@ -54,7 +56,7 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         public void ValueChanged(int index)
         {
-            versionNotifier[KeyboardNotificationKeys.Info.Version] = index == 0 ? "AZERTY" : "QWERTY";
+            versionNotifier[KeyboardNotificationKeys.ChangeVersion.Version] = index == 0 ? KeyboardLocalisationVersion.AZERTY : KeyboardLocalisationVersion.QWERTY;
             versionNotifier.Notify();
         }
 
@@ -63,7 +65,7 @@ namespace umi3d.browserRuntime.ui.keyboard
         void TestSwitchToAzerty()
         {
             UnityEngine.Debug.Log($"test switch to Azerty");
-            versionNotifier[KeyboardNotificationKeys.Info.Version] = "AZERTY";
+            versionNotifier[KeyboardNotificationKeys.ChangeVersion.Version] = KeyboardLocalisationVersion.AZERTY;
             versionNotifier.Notify();
         }
 
@@ -71,7 +73,7 @@ namespace umi3d.browserRuntime.ui.keyboard
         void TestSwitchToQwerty()
         {
             UnityEngine.Debug.Log($"test switch to Qwerty");
-            versionNotifier[KeyboardNotificationKeys.Info.Version] = "QWERTY";
+            versionNotifier[KeyboardNotificationKeys.ChangeVersion.Version] = KeyboardLocalisationVersion.QWERTY;
             versionNotifier.Notify();
         }
 #endif

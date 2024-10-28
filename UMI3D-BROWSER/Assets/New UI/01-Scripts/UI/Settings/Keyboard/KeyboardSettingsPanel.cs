@@ -15,25 +15,32 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
+using umi3d.browserRuntime.ui.settings;
 using UnityEngine;
-using UnityEngine.UI;
 
-namespace umi3d.browserRuntime.ui.settings.comfort
+namespace umi3d.browserRuntime.settings
 {
-    public class OpenKeyboardButton : MonoBehaviour
+    public class KeyboardSettingsPanel : MonoBehaviour
     {
-        Button button;
-
         void Awake()
         {
-            button = GetComponent<Button>();
-            button.onClick.AddListener(Open);
+            NotificationHub.Default.Subscribe(this, SettingsNotificationKeys.CloseAll, Close);
+            NotificationHub.Default.Subscribe<SettingsNotificationKeys.OpenKeyboard>(this, Open);
+        }
+
+        void OnDestroy()
+        {
+            NotificationHub.Default.Unsubscribe<SettingsNotificationKeys.OpenKeyboard>(this);
         }
 
         void Open()
         {
-            NotificationHub.Default.Notify(this, SettingsNotificationKeys.CloseAll);
-            NotificationHub.Default.Notify<SettingsNotificationKeys.OpenKeyboard>(this);
+            gameObject.SetActive(true);
+        }
+
+        void Close()
+        {
+            gameObject.SetActive(false);
         }
     }
 }

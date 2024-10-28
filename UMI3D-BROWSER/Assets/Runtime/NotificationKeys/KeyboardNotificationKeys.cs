@@ -76,7 +76,14 @@ namespace umi3d.browserRuntime.NotificationKeys
         /// <summary>
         /// Notification sent when the version of the keyboard will change.
         /// </summary>
-        public const string ChangeVersion = "KeyboardChangeVersion";
+        public class ChangeVersion
+        {
+            /// <summary>
+            /// The version of the keyboard (AZERTY, QWERTY, ...).<br/>
+            /// Value is <see cref="KeyboardLocalisationVersion"/>.
+            /// </summary>
+            public const string Version = "Version";
+        }
 
         /// <summary>
         /// Notification sent when the key is hovered.
@@ -160,14 +167,6 @@ namespace umi3d.browserRuntime.NotificationKeys
             /// See Notification key: <see cref="ChangeMode"/>
             /// </summary>
             public const string IsABC = "IsABC";
-
-            /// <summary>
-            /// The version of the keyboard (AZERTY, QWERTY, ...).<br/>
-            /// Value is <see cref="string"/>.<br/>
-            /// <br/>
-            /// See Notification key: <see cref="ChangeVersion"/>
-            /// </summary>
-            public const string Version = "Version";
 
             /// <summary>
             /// The pointer event data related of the interaction.<br/>

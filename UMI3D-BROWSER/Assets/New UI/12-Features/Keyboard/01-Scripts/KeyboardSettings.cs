@@ -40,10 +40,8 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         void Awake()
         {
-            localisationVersionNotifier = NotificationHub.Default.GetNotifier(
-                this,
-                KeyboardNotificationKeys.ChangeVersion
-            );
+            localisationVersionNotifier = NotificationHub.Default
+                .GetNotifier<KeyboardNotificationKeys.ChangeVersion>(this);
 
             animationSettingsNotifier = NotificationHub.Default.GetNotifier(
                 this,
@@ -60,7 +58,7 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         public void UpdateVersion()
         {
-            localisationVersionNotifier[KeyboardNotificationKeys.Info.Version] = "AZERTY";
+            localisationVersionNotifier[KeyboardNotificationKeys.ChangeVersion.Version] = KeyboardLocalisationVersion.AZERTY;
             localisationVersionNotifier.Notify();
         }
 

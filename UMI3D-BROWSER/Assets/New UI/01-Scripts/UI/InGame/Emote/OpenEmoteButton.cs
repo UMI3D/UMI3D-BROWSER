@@ -15,6 +15,9 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
+using System;
+using System.Collections.Generic;
+using umi3d.cdk.collaboration.emotes;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -31,12 +34,17 @@ namespace umi3d.browserRuntime.ui.inGame.emote
             NotificationHub.Default.Subscribe(this, EmoteNotificationKeys.Open, ShowBackground);
             NotificationHub.Default.Subscribe(this, EmoteNotificationKeys.Close, HideBackground);
             activeBackground.SetActive(false);
+
+            EmoteManager.Instance.EmotesLoaded += Setup;
+            gameObject.SetActive(false);
         }
 
         private void OnDestroy()
         {
             button.onClick.RemoveListener(ToggleEmote);
             NotificationHub.Default.Unsubscribe(this);
+
+            EmoteManager.Instance.EmotesLoaded -= Setup;
         }
 
         private void ToggleEmote()
@@ -52,6 +60,11 @@ namespace umi3d.browserRuntime.ui.inGame.emote
         private void HideBackground()
         {
             activeBackground.SetActive(false);
+        }
+
+        private void Setup(IReadOnlyList<Emote> list)
+        {
+            gameObject.SetActive(list != null && list.Count > 0);
         }
     }
 }

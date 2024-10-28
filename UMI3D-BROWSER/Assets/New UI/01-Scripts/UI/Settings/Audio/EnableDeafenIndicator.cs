@@ -15,32 +15,35 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
-using System.Collections.Generic;
+using umi3d.cdk.collaboration;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
-namespace umi3d.browserRuntime.ui.settings.graphics
+namespace umi3d.browserRuntime.ui.settings.audio
 {
     [RequireComponent(typeof(Button))]
-    public class AntiAliasingButton : MonoBehaviour
+    public class EnableDeafenIndicator : MonoBehaviour
     {
-        [SerializeField] private UniversalRenderPipelineAsset pipelineAsset;
-        [SerializeField] private int msaaSampleCount;
+        [SerializeField] private bool isOnButton;
 
         private Button button;
+        private Notifier notifier;
 
         private void Awake()
         {
+            notifier = NotificationHub.Default.GetNotifier(this, SettingsNotificationKeys.SetDeafenIndicator);
+            notifier[SettingsNotificationKeys.IsDeafenIndicatorEnable] = isOnButton;
+
             button = GetComponent<Button>();
             button.onClick.AddListener(() => {
-                pipelineAsset.msaaSampleCount = (int)msaaSampleCount;
+                notifier.Notify();
+                PlayerPrefs.SetInt(SettingsPlayerPrefsKeys.DeafenIndicator, isOnButton ? 1 : 0);
             });
         }
 
         private void Start()
         {
-            if (pipelineAsset.msaaSampleCount == (int)msaaSampleCount)
+            if (PlayerPrefs.GetInt(SettingsPlayerPrefsKeys.DeafenIndicator, 1) > 0 == isOnButton)
                 button.onClick?.Invoke();
         }
     }

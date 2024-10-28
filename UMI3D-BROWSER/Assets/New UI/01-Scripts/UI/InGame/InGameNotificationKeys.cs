@@ -21,7 +21,13 @@ namespace umi3d.browserRuntime.ui.inGame
     /// </summary>
     public static class InGameNotificationKeys
     {
+        public static readonly string EnableInGameUi = "inGame-enable";
+        public static readonly string IsInGameUiActive = "inGame-isActive";
+
         public static readonly string PlayHoverSound = "inGame-playSound-hover";
         public static readonly string PlayClickSound = "inGame-playSound-click";
+
+        public static readonly string DeafenChanged = "inGame-deafen-changed";
+        public static readonly string IsDeafen = "inGame-deafen-isActive";
     }
 }

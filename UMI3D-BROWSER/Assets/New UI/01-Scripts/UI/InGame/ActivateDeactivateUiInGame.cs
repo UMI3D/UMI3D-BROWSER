@@ -14,19 +14,23 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using umi3dBrowsers.linker.ingameui;
+using inetum.unityUtils;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.inGame
 {
     public class ActivateDeactivateUiInGame : MonoBehaviour
     {
-        [SerializeField] private InGameLinker inGameLinker;
-
         private void Awake()
         {
-            inGameLinker.OnEnableDisableInGameUI += gameObject.SetActive;
+            NotificationHub.Default.Subscribe(this, InGameNotificationKeys.EnableInGameUi, SetActive);
             gameObject.SetActive(false);
+        }
+
+        private void SetActive(Notification notification)
+        {
+            if (notification.TryGetInfoT<bool>(InGameNotificationKeys.IsInGameUiActive, out var active))
+                gameObject.SetActive(active);
         }
     }
 }

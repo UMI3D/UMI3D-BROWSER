@@ -21,8 +21,15 @@ namespace umi3d.browserRuntime.ui.settings.graphics
 {
     public class GraphicsPanel : MonoBehaviour
     {
+        [SerializeField] private GameObject[] deactivateOnVr;
+
         private void Awake()
         {
+#if UMI3D_XR
+            foreach (GameObject go in deactivateOnVr)
+                go.SetActive(false);
+#endif
+
             NotificationHub.Default.Subscribe(this, SettingsNotificationKeys.CloseAll, Close);
             NotificationHub.Default.Subscribe(this, SettingsNotificationKeys.OpenGraphics, Open);
         }

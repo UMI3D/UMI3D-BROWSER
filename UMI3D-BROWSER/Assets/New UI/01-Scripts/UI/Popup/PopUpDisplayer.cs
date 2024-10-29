@@ -14,40 +14,76 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Localization.Components;
 
-namespace umi3dBrowsers.displayer
+namespace umi3d.browserRuntime.ui.popup
 {
     public class PopupDisplayer : MonoBehaviour
     {
         [SerializeField] private LocalizeStringEvent title;
         [SerializeField] private LocalizeStringEvent description;
         [SerializeField] private GameObject buttonGroup;
+        [SerializeField] private PopupType type;
 
         [Header("Prefabs")]
         [SerializeField] private GameObject buttonPrefab;
 
-        /// <remarks> Key for localisation </remarks>
-        public string Title { set => title.SetEntry(value); }
-        /// <remarks> Key for localisation </remarks>
-        public string Description { set => description.SetEntry(value); }
-
-        public void SetArguments(Dictionary<string, object> arguments)
+        private void Awake()
         {
-            title.StringReference.Arguments = new object[] { arguments };
-            description.StringReference.Arguments = new object[] { arguments };
+            NotificationHub.Default.Subscribe<PopupNotificationKeys.Show>(this, Show);
+            NotificationHub.Default.Subscribe<PopupNotificationKeys.CloseAll>(this, Close);
+
+            gameObject.SetActive(false);
         }
 
-        public void SetButtons(params (string, Action)[] buttons)
+        private void Show(Notification notification)
         {
-            ClearButtons();
+            // Verify type
+            PopupType popupType;
+            if (!notification.TryGetInfoT<PopupType>(PopupNotificationKeys.Show.Type, out popupType))
+                return;
 
-            foreach (var button in buttons)
-                CreateButton(button);
+            if (popupType != type)
+            {
+                gameObject.SetActive(false);
+                return;
+            }
+
+            // Set Arguments
+            if (notification.TryGetInfoT<Dictionary<string, object>>(PopupNotificationKeys.Show.Arguments, out var arguments))
+            {
+                title.StringReference.Arguments = new object[] { arguments };
+                description.StringReference.Arguments = new object[] { arguments };
+            }
+
+            // Set Texts
+            string mTitle, mDescription;
+            if (!notification.TryGetInfoT<string>(PopupNotificationKeys.Show.Title, out mTitle))
+                mTitle = "empty";
+            if (!notification.TryGetInfoT<string>(PopupNotificationKeys.Show.Description, out mDescription))
+                mDescription = "empty";
+            title.SetEntry(mTitle);
+            description.SetEntry(mDescription);
+
+            // Set buttons
+            if (notification.TryGetInfoT<List<(string, Action)>>(PopupNotificationKeys.Show.Buttons, out var buttons))
+            {
+                ClearButtons();
+
+                foreach (var button in buttons)
+                    CreateButton(button);
+            }
+            gameObject.SetActive(true);
+        }
+
+        private void Close()
+        {
+            gameObject.SetActive(false);
         }
 
         private void ClearButtons()

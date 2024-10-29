@@ -20,6 +20,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using umi3d.browserRuntime.ui.popup;
 using umi3d.common.interaction.form;
 using umi3dBrowsers.data.ui;
 using umi3dBrowsers.displayer;
@@ -35,8 +36,6 @@ namespace umi3dBrowsers.container
     public class VignetteContainer : MonoBehaviour
     {
         [SerializeField] private ConnectionServiceLinker connectionServiceLinker;
-        [SerializeField] private PopupLinker popupLinker;
-        [SerializeField] private PopupData removeWorldPopup;
 
         [Header("Vignette")]
         [SerializeField] private UIColliderScallerHandler scaler;
@@ -67,10 +66,13 @@ namespace umi3dBrowsers.container
 
         private bool m_shouldResetAndFetchVignetteFromDB = true;
 
+        private Notifier popupRemoveWorld;
+
         public bool ShouldResetAndFetchVignetteFromDB { get => m_shouldResetAndFetchVignetteFromDB; set => m_shouldResetAndFetchVignetteFromDB = value; }
 
         private void Awake()
         {
+            SetupPopupRemoveWorld();
             vignetteContainerEvent.OnVignetteReset += ResetVignettes;
             vignetteContainerEvent.OnVignetteChangeMode += ChangeVignetteMode;
 
@@ -84,6 +86,13 @@ namespace umi3dBrowsers.container
             });
 
             vignetteContainerEvent.OnVignetteReset?.Invoke();
+        }
+
+        private void SetupPopupRemoveWorld()
+        {
+            popupRemoveWorld = NotificationHub.Default.GetNotifier<PopupNotificationKeys.Show>(this);
+            popupRemoveWorld[PopupNotificationKeys.Show.Type] = PopupType.Warning;
+            popupRemoveWorld[PopupNotificationKeys.Show.Description] = "popup_deleteWorld_description";
         }
 
         private void OnEnable()
@@ -176,15 +185,18 @@ namespace umi3dBrowsers.container
                 vignetteContainerEvent.OnVignetteReset?.Invoke(); 
             }, pWorldData.isFavorite);
             vignette.SetupRemoveButton(() => {
-                popupLinker.SetArguments(removeWorldPopup, new() { { "worldName", pWorldData.worldName } });
-                popupLinker.Show(removeWorldPopup, "empty", "popup_deleteWorld_description",
-                    ("popup_cancel", () => popupLinker.CloseAll()),
+                popupRemoveWorld[PopupNotificationKeys.Show.Buttons] = new List<(string, Action)>() {
+                    ("popup_cancel", () => {
+                        NotificationHub.Default.Notify<PopupNotificationKeys.CloseAll>(this);
+                    }),
                     ("popup_yes", () => {
                         pVirtualWorlds.RemoveWorld(pWorldData);
                         vignetteContainerEvent.OnVignetteReset?.Invoke();
-                        popupLinker.CloseAll();
+                        NotificationHub.Default.Notify<PopupNotificationKeys.CloseAll>(this);
                     })
-                );
+                };
+                popupRemoveWorld[PopupNotificationKeys.Show.Arguments] = new Dictionary<string, object>() { { "worldName", pWorldData.worldName } };
+                popupRemoveWorld.Notify();
             });
             vignette.SetupRenameButton(newName => { 
                 pWorldData.worldName = newName; 

@@ -14,7 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
+using Pico.Platform;
+using System;
 using System.Collections.Generic;
+using umi3d.browserRuntime.ui.popup;
 using umi3d.cdk;
 using umi3d.cdk.collaboration;
 using umi3dBrowsers.data.ui;
@@ -29,8 +33,6 @@ namespace umi3dBrowsers.services.librairies
     /// </summary>
     public class LibraryManager : MonoBehaviour
     {
-        [SerializeField] private PopupLinker popupLinker;
-        [SerializeField] private PopupData deleteLibPopup;
         [SerializeField] private SimpleButton buttonUp;
         [SerializeField] private SimpleButton buttonDown;
         [SerializeField] private SimpleButton buttonDeleteAll;
@@ -61,21 +63,44 @@ namespace umi3dBrowsers.services.librairies
         /// </summary>
         private int indexOfCurrentTopEntryDisplayed = 0;
 
+        private Notifier popupDeleteAllLibNotifier;
+        private Notifier popupDeleteLibNotifier;
+        private Notifier popupCloseAll;
+
         private void Awake()
         {
+            SetupPopupDeleteAllLibNotifier();
+            SetupPopupDeleteLibNotifier();
+
             buttonDeleteAll.OnClick.AddListener(() => {
-                popupLinker.SetArguments(deleteLibPopup, new() { { "libCount", currentEntries.Count } });
-                popupLinker.Show(deleteLibPopup, "empty", "popup_deleteLibs_description",
-                    ("popup_cancel", () => popupLinker.CloseAll()),
-                    ("popup_yes", () => {
-                        foreach (var entry in currentEntries)
-                            entry.Delete();
-                        UpdateContent();
-                        popupLinker.CloseAll();
-                    }
-                )
-                );
+                popupDeleteAllLibNotifier.Notify();
             });
+        }
+
+        private void SetupPopupDeleteAllLibNotifier()
+        {
+            popupDeleteAllLibNotifier = NotificationHub.Default.GetNotifier<PopupNotificationKeys.Show>(this);
+            popupDeleteAllLibNotifier[PopupNotificationKeys.Show.Type] = PopupType.Warning;
+            popupDeleteAllLibNotifier[PopupNotificationKeys.Show.Description] = "popup_deleteLibs_description";
+            popupDeleteAllLibNotifier[PopupNotificationKeys.Show.Buttons] = new List<(string, Action)>() {
+                ("popup_cancel", () => {
+                    NotificationHub.Default.Notify<PopupNotificationKeys.CloseAll>(this);
+                }),
+                ("popup_yes", () => {
+                    foreach (var entry in currentEntries)
+                        entry.Delete();
+                    UpdateContent();
+                    NotificationHub.Default.Notify<PopupNotificationKeys.CloseAll>(this);
+                })
+            };
+            popupDeleteAllLibNotifier[PopupNotificationKeys.Show.Arguments] = new Dictionary<string, object>() { { "libCount", currentEntries.Count } };
+        }
+
+        private void SetupPopupDeleteLibNotifier()
+        {
+            popupDeleteAllLibNotifier = NotificationHub.Default.GetNotifier<PopupNotificationKeys.Show>(this);
+            popupDeleteAllLibNotifier[PopupNotificationKeys.Show.Type] = PopupType.Warning;
+            popupDeleteAllLibNotifier[PopupNotificationKeys.Show.Description] = "popup_deleteLib_description";
         }
 
         private void OnEnable()
@@ -129,16 +154,19 @@ namespace umi3dBrowsers.services.librairies
                         UMI3DResourcesManager.RemoveLibrary(lib.library);
                     };
                     entry.DeleteButton.onClick.AddListener(() => {
-                        popupLinker.SetArguments(deleteLibPopup, new() { { "libName", lib.key } });
-                        popupLinker.Show(deleteLibPopup, "empty", "popup_deleteLib_description",
-                            ("popup_cancel", () => popupLinker.CloseAll()),
+
+                        popupDeleteAllLibNotifier[PopupNotificationKeys.Show.Buttons] = new List<(string, Action)>() {
+                            ("popup_cancel", () => {
+                                NotificationHub.Default.Notify<PopupNotificationKeys.CloseAll>(this);
+                            }),
                             ("popup_yes", () => {
                                 entry.Delete();
                                 UpdateContent();
-                                popupLinker.CloseAll();
-                            }
-                        )
-                        );
+                                NotificationHub.Default.Notify<PopupNotificationKeys.CloseAll>(this);
+                            })
+                        };
+                        popupDeleteAllLibNotifier[PopupNotificationKeys.Show.Arguments] = new Dictionary<string, object>() { { "libName", lib.key } };
+                        popupDeleteAllLibNotifier.Notify();
                     });
 
                     currentEntries.Add(entry);

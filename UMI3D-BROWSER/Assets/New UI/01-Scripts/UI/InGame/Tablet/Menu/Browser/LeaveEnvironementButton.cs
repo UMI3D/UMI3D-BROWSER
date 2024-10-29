@@ -15,6 +15,9 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
+using System;
+using System.Collections.Generic;
+using umi3d.browserRuntime.ui.popup;
 using umi3dBrowsers.data.ui;
 using umi3dBrowsers.linker;
 using umi3dBrowsers.linker.ui;
@@ -32,14 +35,37 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.menu.browser
         [SerializeField] private Color iconColorHover;
         [SerializeField] private Color iconColorActive;
         [SerializeField] private ConnectionToImmersiveLinker connectionToImmersiveLinker;
-        [SerializeField] private PopupLinker popupLinker;
-        [SerializeField] private PopupData popupLeave;
 
         private bool isActive;
 
+        private Notifier popupLeaveNotifier;
+
         private void Awake()
         {
+            SetupPopupLeaveNotifier();
+
             activeBackground.SetActive(false);
+        }
+
+        private void SetupPopupLeaveNotifier()
+        {
+            popupLeaveNotifier = NotificationHub.Default.GetNotifier<PopupNotificationKeys.Show>(this);
+            popupLeaveNotifier[PopupNotificationKeys.Show.Type] = PopupType.Information;
+            popupLeaveNotifier[PopupNotificationKeys.Show.Description] = "popup_leave";
+            popupLeaveNotifier[PopupNotificationKeys.Show.Buttons] = new List<(string, Action)>() {
+                ("leave", () => {
+                    connectionToImmersiveLinker.Leave();
+                    activeBackground.SetActive(false);
+                    icon.color = iconColor;
+                    NotificationHub.Default.Notify<PopupNotificationKeys.CloseAll>(this);
+                    NotificationHub.Default.Notify(this, TabletNotificationKeys.Close);
+                }),
+                ("resume", () => {
+                    activeBackground.SetActive(false);
+                    icon.color = iconColor;
+                    NotificationHub.Default.Notify<PopupNotificationKeys.CloseAll>(this);
+                })
+            };
         }
 
         public void OnPointerClick(PointerEventData eventData)
@@ -48,22 +74,7 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.menu.browser
             activeBackground.SetActive(true);
             icon.color = iconColorActive;
 
-            popupLinker.Show(popupLeave, "empty", "popup_leave",
-                ("leave", () => {
-                    connectionToImmersiveLinker.Leave();
-                    activeBackground.SetActive(false);
-                    icon.color = iconColor;
-                    popupLinker.CloseAll();
-                    NotificationHub.Default.Notify(this, TabletNotificationKeys.Close);
-                }
-            ),
-                ("resume", () => {
-                    activeBackground.SetActive(false);
-                    icon.color = iconColor;
-                    popupLinker.CloseAll();
-                }
-            )
-            );
+            popupLeaveNotifier.Notify();
         }
 
         public void OnPointerEnter(PointerEventData eventData)

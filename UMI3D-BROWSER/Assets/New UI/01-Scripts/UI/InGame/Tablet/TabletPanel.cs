@@ -25,6 +25,7 @@ namespace umi3d.browserRuntime.ui.inGame.tablet
         {
             NotificationHub.Default.Subscribe(this, TabletNotificationKeys.Open, Open);
             NotificationHub.Default.Subscribe(this, TabletNotificationKeys.Close, Close);
+            gameObject.SetActive(false);
         }
 
         private void OnDestroy()

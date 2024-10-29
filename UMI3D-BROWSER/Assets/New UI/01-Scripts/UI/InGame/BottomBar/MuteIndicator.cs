@@ -33,7 +33,7 @@ namespace umi3d.browserRuntime.ui.inGame.bottomBar
                 var total = 0f;
                 foreach (var v in value)
                     total += v;
-                if (Mathf.Abs(total) > threashold)
+                if (MicrophoneListener.mute && Mathf.Abs(total) > threashold)
                 {
                     if (!gameObject.activeSelf)
                         gameObject.SetActive(true);

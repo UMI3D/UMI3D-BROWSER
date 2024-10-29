@@ -14,32 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 namespace umi3d
 {
-    public class #SCRIPTNAME# : MonoBehaviour
+    [CreateAssetMenu(fileName = "#SCRIPTNAME#", menuName = "UMI3D/#SCRIPTNAME#", order = 1)]
+    public class #SCRIPTNAME# : ScriptableObject
     {
-        void Awake()
-        {
-        }
-
-        void OnEnable()
-        {
-        }
-
-        void OnDisable()
-        {
-        }
-
-        void OnDestroy()
-        {
-        }
-
-        void Update()
-        {
-        }
     }
 }

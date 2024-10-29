@@ -60,7 +60,7 @@ namespace umi3dBrowsers.ingame_ui
         private void OnDisable()
         {
             KeyboardShortcut.RemoveUpListener(ShortcutEnum.FreeCursor, FreeCursor);
-            BaseCursor.SetMovement(this, CursorMovement.Free);
+            BaseCursor.UnSetMovement(this);
         }
 
         private void FreeCursor()
@@ -76,19 +76,13 @@ namespace umi3dBrowsers.ingame_ui
 
         private void ToggleInGamePanel()
         {
-            if (gameObject.activeSelf)
-            {
-                if (TabletPanel.gameObject.activeSelf)
-                {
-                    TabletPanel.gameObject.SetActive(false);
-                    BaseCursor.SetMovement(this, CursorMovement.Center);
-                }
-                else
-                {
-                    TabletPanel.gameObject.SetActive(true);
-                    BaseCursor.SetMovement(this, CursorMovement.Free);
-                }
-            }
+            if (!gameObject.activeSelf)
+                return;
+
+            if (TabletPanel.gameObject.activeSelf)
+                NotificationHub.Default.Notify(this, TabletNotificationKeys.Close);
+            else
+                NotificationHub.Default.Notify(this, TabletNotificationKeys.Open);
         }
 
         private void SetActive(Notification notification)

@@ -18,19 +18,19 @@ namespace umi3d.browserRuntime.ui.settings
 {
     public static class SettingsNotificationKeys
     {
-        internal static readonly string CloseAll = "settings-close-all";
-        internal static readonly string OpenGeneral = "settings-open-general";
-        internal static readonly string OpenAudio = "settings-open-audio";
-        internal static readonly string OpenGraphics = "settings-open-graphics";
-        internal static readonly string OpenComfort = "settings-open-comfort";
+        public static readonly string CloseAll = "settings-close-all";
+        public static readonly string OpenGeneral = "settings-open-general";
+        public static readonly string OpenAudio = "settings-open-audio";
+        public static readonly string OpenGraphics = "settings-open-graphics";
+        public static readonly string OpenComfort = "settings-open-comfort";
 
         // Notification sent when the keyboard settings panel should open.
         public class OpenKeyboard { }
 
-        internal static readonly string NewPanelSelected = "settings-newPanelSelected";
-        internal static readonly string NewToggleCustomSelected = "settings-toggle-custom-";
+        public static readonly string NewPanelSelected = "settings-newPanelSelected";
+        public static readonly string NewToggleCustomSelected = "settings-toggle-custom-";
 
-        internal static readonly string SetDeafenIndicator = "settings-deafen-indicator";
-        internal static readonly string IsDeafenIndicatorEnable = "settings-deafen-indicator-enable";
+        public static readonly string SetDeafenIndicator = "settings-deafen-indicator";
+        public static readonly string IsDeafenIndicatorEnable = "settings-deafen-indicator-enable";
     }
 }

@@ -14,6 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System;
+using System.Collections.Generic;
 using TMPro;
 using umi3d.baseBrowser.extension;
 using umi3d.cdk.collaboration;
@@ -22,8 +24,45 @@ using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.ui.inGame.tablet.social
 {
+    public class UserActionIcon : UserAction
+    {
+        public GameObject gameObject { get; private set; }
+        private Button button;
+
+        public UserActionIcon(GameObject gameObject, cdk.collaboration.UserAction action) : base(action)
+        {
+            this.gameObject = gameObject;
+            button = this.gameObject.GetComponent<Button>();
+            button?.onClick.AddListener(Call);
+        }
+
+        public override void Destroy() 
+        {
+            button?.onClick.RemoveListener(Call);
+            button = null;
+            GameObject.Destroy(gameObject);
+            base.Destroy();
+        }
+    }
+
+    public class UserAction
+    {
+        public cdk.collaboration.UserAction action { get; private set; }
+
+        public UserAction(cdk.collaboration.UserAction action)
+        {
+            this.action = action;
+        }
+
+        public virtual void Destroy() { }
+
+        public void Call() => this.action?.Call();
+    }
+
     public class SocialElement : MonoBehaviour
     {
+        const int MAX_ACTION_ICON = 3;
+
         [SerializeField] private TMP_Text nameText;
         [SerializeField] private TMP_Text placeText;
         [SerializeField] private Slider volumeSlider;
@@ -31,13 +70,16 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
         [SerializeField] private Button muteButton;
         [SerializeField] private Sprite volumeSprite;
         [SerializeField] private Sprite volumeMuteSprite;
+        [SerializeField] private Transform actionContainer;
+        [SerializeField] private GameObject actionIconPrefab;
+        [SerializeField] private Button actionButton;
 
         public UMI3DUser User
         {
             get => _user;
             set {
                 _user = value;
-                Update();
+                UpdateUser();
             }
         }
         public string UserName => _user?.login;
@@ -75,6 +117,9 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
         private const float factor = 5f / 2f;
         private const float factor2 = 5f / 2f;
 
+        List<UserActionIcon> actionIcons = new();
+        List<UserAction> actions = new();
+
         private void Awake()
         {
             volumeSlider.minValue = 0;
@@ -82,12 +127,55 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
             volumeSlider.onValueChanged.AddListener(newValue => {
                 UserVolume = newValue;
             });
+
+            UMI3DUser.OnUserActionsUpdated.AddListener(OnUserActionsUpdated);
         }
 
-        private void Update()
+        private void OnDestroy()
+        {
+            UMI3DUser.OnUserActionsUpdated.RemoveListener(OnUserActionsUpdated);
+        }
+
+        private void OnUserActionsUpdated(UMI3DUser user)
+        {
+            UnityEngine.Debug.Log($"OnUserActionsUpdated {user != this.User}");
+            if (user != this.User)
+                return;
+
+            foreach (UserAction item in actionIcons)
+                item.Destroy();
+            actionIcons.Clear();
+
+            foreach (UserAction item in actions)
+                item.Destroy();
+            actions.Clear();
+
+            int PrimaryCount = MAX_ACTION_ICON;
+            foreach (cdk.collaboration.UserAction action in user.userActions)
+            {
+                if (PrimaryCount > 0 && action.isPrimary)
+                {
+                    PrimaryCount--;
+                    var icon = Instantiate(this.actionIconPrefab, actionContainer);
+                    actionIcons.Add(new(icon, action));
+                    UnityEngine.Debug.Log($"Add icon {action.name}");
+                    continue;
+                }
+
+                UnityEngine.Debug.Log($"Add {action.name}");
+                actions.Add(new(action));
+            }
+
+            actionButton.gameObject.SetActive(actions.Count > 0);
+
+        }
+
+        private void UpdateUser()
         {
             nameText.text = UserName.CapitalizeAllWord();
             placeText.text = $"({UMI3DCollaborationClientServer.Environement?.name})";
+
+            OnUserActionsUpdated(this.User);
         }
 
         public void ToggleMute()

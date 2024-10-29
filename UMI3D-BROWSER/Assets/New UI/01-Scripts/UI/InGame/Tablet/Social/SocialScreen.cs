@@ -49,7 +49,7 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
         {
             UpdateList();
 
-            UMI3DEnvironmentClient.EnvironementJoinned.AddListener(UpdateList);
+            UMI3DEnvironmentClient.EnvironmentJoined.AddListener(UpdateList);
             UMI3DUser.OnNewUser.AddListener(Add);
             //UMI3DUser.OnUserMicrophoneStatusUpdated.AddListener(UpdateUserList);
             UMI3DUser.OnRemoveUser.AddListener(Remove);
@@ -103,7 +103,7 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
             _startTime = DateTime.Now;
 
             _allUsers = new List<SocialElement>();
-            _allUsers = UMI3DCollaborationEnvironmentLoader.Instance.JoinnedUserList
+            _allUsers = UMI3DCollaborationEnvironmentLoader.Instance.JoinedUserList
                 .Where(u => !u.isClient)
                 .Select(CreateUser)
                 .ToList();

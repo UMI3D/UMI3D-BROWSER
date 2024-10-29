@@ -29,15 +29,15 @@ namespace umi3d.browserRuntime.ui.inGame
         {
             text = GetComponent<TMP_Text>();
 
-            UMI3DEnvironmentClient.EnvironementJoinned.AddListener(OnEnvironmentJoinned);
+            UMI3DEnvironmentClient.EnvironmentJoined.AddListener(OnEnvironmentJoined);
         }
 
         private void OnDestroy()
         {
-            UMI3DEnvironmentClient.EnvironementJoinned.RemoveListener(OnEnvironmentJoinned);
+            UMI3DEnvironmentClient.EnvironmentJoined.RemoveListener(OnEnvironmentJoined);
         }
 
-        private void OnEnvironmentJoinned()
+        private void OnEnvironmentJoined()
         {
             text.text = UMI3DCollaborationClientServer.Instance.worldName ?? "";
         }

@@ -53,9 +53,8 @@ namespace umi3d.browserRuntime.ui.keyboard
             upPosition = rectTransform.anchoredPosition3D;
             downPosition = upPosition + new Vector3(0, 0, depth);
 
-            NotificationHub.Default.Subscribe(
+            NotificationHub.Default.Subscribe<KeyboardNotificationKeys.AnimationSettings>(
                 this,
-                KeyboardNotificationKeys.AnimationSettings,
                 EnableOrDisableAnimation
             );
         }
@@ -113,7 +112,7 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         void EnableOrDisableAnimation(Notification notification)
         {
-            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.AnimationType, out KeyboardAnimationType animationType))
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.AnimationSettings.AnimationType, out KeyboardAnimationType animationType))
             {
                 return;
             }
@@ -123,7 +122,7 @@ namespace umi3d.browserRuntime.ui.keyboard
                 return;
             }
 
-            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.WithAnimation, out bool withAnimation))
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.AnimationSettings.WithAnimation, out bool withAnimation))
             {
                 return;
             }

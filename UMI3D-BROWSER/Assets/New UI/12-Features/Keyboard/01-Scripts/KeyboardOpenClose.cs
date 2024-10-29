@@ -36,15 +36,14 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         void Awake()
         {
-            openOrCloseNotifier = NotificationHub.Default.GetNotifier(
+            openOrCloseNotifier = NotificationHub.Default.GetNotifier<KeyboardNotificationKeys.OpenOrClose>(
                 this,
-                KeyboardNotificationKeys.OpenOrClose,
                 null,
                 new()
                 {
-                    { KeyboardNotificationKeys.Info.WithAnimation, withAnimation },
-                    { KeyboardNotificationKeys.Info.AnimationTime, animationTime },
-                    { KeyboardNotificationKeys.Info.PhaseOneStartTimePercentage, phaseOneStartTimePercentage }
+                    { KeyboardNotificationKeys.OpenOrClose.WithAnimation, withAnimation },
+                    { KeyboardNotificationKeys.OpenOrClose.AnimationTime, animationTime },
+                    { KeyboardNotificationKeys.OpenOrClose.PhaseOneStartTimePercentage, phaseOneStartTimePercentage }
                 }
             );
 
@@ -54,16 +53,15 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         void Start()
         {
-            openOrCloseNotifier[KeyboardNotificationKeys.Info.IsOpening] = isOpen;
-            openOrCloseNotifier[KeyboardNotificationKeys.Info.WithAnimation] = false;
+            openOrCloseNotifier[KeyboardNotificationKeys.OpenOrClose.IsOpening] = isOpen;
+            openOrCloseNotifier[KeyboardNotificationKeys.OpenOrClose.WithAnimation] = false;
             openOrCloseNotifier.Notify();
         }
 
         void OnEnable()
         {
-            NotificationHub.Default.Subscribe(
+            NotificationHub.Default.Subscribe<KeyboardNotificationKeys.AnimationSettings>(
                 this,
-                KeyboardNotificationKeys.AnimationSettings,
                 EnableOrDisableAnimation
             );
 
@@ -88,7 +86,7 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         void OnDisable()
         {
-            NotificationHub.Default.Unsubscribe(this, KeyboardNotificationKeys.AnimationSettings);
+            NotificationHub.Default.Unsubscribe<KeyboardNotificationKeys.AnimationSettings>(this);
 
             NotificationHub.Default.Unsubscribe(this, KeyboardNotificationKeys.SpecialKeyPressed);
 
@@ -101,8 +99,8 @@ namespace umi3d.browserRuntime.ui.keyboard
         {
             isOpen = false;
 
-            openOrCloseNotifier[KeyboardNotificationKeys.Info.IsOpening] = isOpen;
-            openOrCloseNotifier[KeyboardNotificationKeys.Info.WithAnimation] = withAnimation;
+            openOrCloseNotifier[KeyboardNotificationKeys.OpenOrClose.IsOpening] = isOpen;
+            openOrCloseNotifier[KeyboardNotificationKeys.OpenOrClose.WithAnimation] = withAnimation;
             openOrCloseNotifier.Notify();
         }
 
@@ -110,14 +108,14 @@ namespace umi3d.browserRuntime.ui.keyboard
         {
             isOpen = true;
 
-            openOrCloseNotifier[KeyboardNotificationKeys.Info.IsOpening] = isOpen;
-            openOrCloseNotifier[KeyboardNotificationKeys.Info.WithAnimation] = withAnimation;
+            openOrCloseNotifier[KeyboardNotificationKeys.OpenOrClose.IsOpening] = isOpen;
+            openOrCloseNotifier[KeyboardNotificationKeys.OpenOrClose.WithAnimation] = withAnimation;
             openOrCloseNotifier.Notify();
         }
 
         void EnableOrDisableAnimation(Notification notification)
         {
-            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.AnimationType, out KeyboardAnimationType animationType))
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.AnimationSettings.AnimationType, out KeyboardAnimationType animationType))
             {
                 return;
             }
@@ -127,7 +125,7 @@ namespace umi3d.browserRuntime.ui.keyboard
                 return;
             }
 
-            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.WithAnimation, out bool withAnimation))
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.AnimationSettings.WithAnimation, out bool withAnimation))
             {
                 return;
             }

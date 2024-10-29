@@ -20,11 +20,11 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using TMPro;
 using umi3d.browserRuntime.ui.popup;
+using umi3d.browserRuntime.ui.inGame;
 using umi3d.cdk;
 using umi3d.cdk.collaboration;
 using umi3dBrowsers.data.ui;
 using umi3dBrowsers.linker;
-using umi3dBrowsers.linker.ingameui;
 using umi3dBrowsers.linker.ui;
 using umi3dBrowsers.services.connection;
 using umi3dBrowsers.services.title;
@@ -54,7 +54,6 @@ namespace umi3dBrowsers
         [SerializeField] private GameObject Title;
         [SerializeField] private Button PageTipButton;
 
-
         [Header("Navigation")]
         [SerializeField] private SimpleButton backButton;
         [SerializeField] private SimpleButton cancelConnectionButton;
@@ -74,7 +73,6 @@ namespace umi3dBrowsers
         [SerializeField] private ConnectionToImmersiveLinker connectionToImmersiveLinker;
         [SerializeField] private ConnectionServiceLinker connectionServiceLinker;
         [SerializeField] private MenuNavigationLinker m_menuNavigationLinker;
-        [SerializeField] private InGameLinker inGameLinker;
         [SerializeField] private PanelData m_mainMenuPanel;
         [SerializeField] private PanelData m_formPanel;
 
@@ -83,6 +81,7 @@ namespace umi3dBrowsers
         private Notifier m_popupConnectionFailedNotifier;
         private Notifier m_popupAnswerFailedNotifier;
         private Notifier m_quittingNotifier;
+        private Notifier m_enableInGameUiNotifier;
 
         private void Awake()
         {
@@ -91,7 +90,8 @@ namespace umi3dBrowsers
             SetupConnectionFailedPopupNotifier();
             SetupAnswerFailedPopupNotifier();
             m_quittingNotifier = NotificationHub.Default.GetNotifier(this, QuittingManagerNotificationKey.QuittingConfirmation);
-            NotificationHub.Default.Subscribe(this, QuittingManagerNotificationKey.RequestToQuit, () => {
+            m_enableInGameUiNotifier = NotificationHub.Default.GetNotifier(this, InGameNotificationKeys.EnableInGameUi);
+             NotificationHub.Default.Subscribe(this, QuittingManagerNotificationKey.RequestToQuit, () => {
                 m_quitPopupNotifier.Notify();
             });
 
@@ -143,17 +143,22 @@ namespace umi3dBrowsers
 
                 ShowUI();
                 m_menuNavigationLinker.ShowPanel(m_mainMenuPanel);
-                inGameLinker.EnableDisableInGameUI(false);
+
+                m_enableInGameUiNotifier[InGameNotificationKeys.IsInGameUiActive] = false;
+                m_enableInGameUiNotifier.Notify();
+
                 connectionProcessorService.Disconnect();
                 mainContainerLinker.Loader.ReloadScene();
             };
 
             UMI3DEnvironmentLoader.Instance.onEnvironmentLoaded?.AddListener(() => {
-                inGameLinker.EnableDisableInGameUI(true);
+                m_enableInGameUiNotifier[InGameNotificationKeys.IsInGameUiActive] = true;
+                m_enableInGameUiNotifier.Notify();
             } );
 
             UMI3DCollaborationClientServer.Instance.OnRedirectionStarted?.AddListener(() => {
-                inGameLinker.EnableDisableInGameUI(false);
+                m_enableInGameUiNotifier[InGameNotificationKeys.IsInGameUiActive] = false;
+                m_enableInGameUiNotifier.Notify();
             });
         }
 
@@ -250,7 +255,8 @@ namespace umi3dBrowsers
             connectionServiceLinker.OnAsksToLoadLibrairies += (ids, action) => action?.Invoke(true);
 
             m_menuNavigationLinker.ShowStartPanel();
-            inGameLinker.EnableDisableInGameUI(false);
+            m_enableInGameUiNotifier[InGameNotificationKeys.IsInGameUiActive] = false;
+            m_enableInGameUiNotifier.Notify();
         }
 
         /// <summary>

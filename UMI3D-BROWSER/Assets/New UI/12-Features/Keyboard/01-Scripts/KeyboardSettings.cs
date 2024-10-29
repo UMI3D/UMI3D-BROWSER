@@ -15,8 +15,6 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
-using System.Collections;
-using System.Collections.Generic;
 using umi3d.browserRuntime.NotificationKeys;
 using UnityEngine;
 
@@ -40,15 +38,11 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         void Awake()
         {
-            localisationVersionNotifier = NotificationHub.Default.GetNotifier(
-                this,
-                KeyboardNotificationKeys.ChangeVersion
-            );
+            localisationVersionNotifier = NotificationHub.Default
+                .GetNotifier<KeyboardNotificationKeys.ChangeVersion>(this);
 
-            animationSettingsNotifier = NotificationHub.Default.GetNotifier(
-                this,
-                KeyboardNotificationKeys.AnimationSettings
-            );
+            animationSettingsNotifier = NotificationHub.Default
+                .GetNotifier<KeyboardNotificationKeys.AnimationSettings>(this);
         }
 
         void Start()
@@ -60,22 +54,22 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         public void UpdateVersion()
         {
-            localisationVersionNotifier[KeyboardNotificationKeys.Info.Version] = "AZERTY";
+            localisationVersionNotifier[KeyboardNotificationKeys.ChangeVersion.Version] = KeyboardLocalisationVersion.AZERTY;
             localisationVersionNotifier.Notify();
         }
 
         public void UpdateOpeningClosingAnimationSettings()
         {
-            animationSettingsNotifier[KeyboardNotificationKeys.Info.AnimationType] = KeyboardAnimationType.OpenOrClose;
-            animationSettingsNotifier[KeyboardNotificationKeys.Info.WithAnimation] = openingClosingWithAnimation;
-            animationSettingsNotifier[KeyboardNotificationKeys.Info.AnimationTime] = openingClosingAnimationTime;
+            animationSettingsNotifier[KeyboardNotificationKeys.AnimationSettings.AnimationType] = KeyboardAnimationType.OpenOrClose;
+            animationSettingsNotifier[KeyboardNotificationKeys.AnimationSettings.WithAnimation] = openingClosingWithAnimation;
+            //animationSettingsNotifier[KeyboardNotificationKeys.Info.AnimationTime] = openingClosingAnimationTime;
             animationSettingsNotifier.Notify();
         }
 
         public void UpdateKeyPressAnimationSettings()
         {
-            animationSettingsNotifier[KeyboardNotificationKeys.Info.AnimationType] = KeyboardAnimationType.KeyPress;
-            animationSettingsNotifier[KeyboardNotificationKeys.Info.WithAnimation] = keyPressWithAnimation;
+            animationSettingsNotifier[KeyboardNotificationKeys.AnimationSettings.AnimationType] = KeyboardAnimationType.KeyPress;
+            animationSettingsNotifier[KeyboardNotificationKeys.AnimationSettings.WithAnimation] = keyPressWithAnimation;
             animationSettingsNotifier.Notify();
         }
     }

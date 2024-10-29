@@ -24,6 +24,9 @@ namespace umi3d.browserRuntime.ui.settings
         internal static readonly string OpenGraphics = "settings-open-graphics";
         internal static readonly string OpenComfort = "settings-open-comfort";
 
+        // Notification sent when the keyboard settings panel should open.
+        public class OpenKeyboard { }
+
         internal static readonly string NewPanelSelected = "settings-newPanelSelected";
         internal static readonly string NewToggleCustomSelected = "settings-toggle-custom-";
 

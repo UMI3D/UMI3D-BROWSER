@@ -19,7 +19,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
-using static umi3d.baseBrowser.preferences.SettingsPreferences;
 
 namespace umi3d.browserRuntime.ui.settings.graphics
 {

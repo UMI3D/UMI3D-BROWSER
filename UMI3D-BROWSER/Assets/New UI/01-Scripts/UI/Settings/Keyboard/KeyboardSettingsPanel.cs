@@ -15,33 +15,32 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
+using umi3d.browserRuntime.ui.settings;
 using UnityEngine;
 
-namespace umi3d.browserRuntime.ui.inGame.tablet
+namespace umi3d.browserRuntime.settings
 {
-    public class TabletPanel : MonoBehaviour
+    public class KeyboardSettingsPanel : MonoBehaviour
     {
-        private void Awake()
+        void Awake()
         {
-            NotificationHub.Default.Subscribe(this, TabletNotificationKeys.Open, Open);
-            NotificationHub.Default.Subscribe(this, TabletNotificationKeys.Close, Close);
-            gameObject.SetActive(false);
+            NotificationHub.Default.Subscribe(this, SettingsNotificationKeys.CloseAll, Close);
+            NotificationHub.Default.Subscribe<SettingsNotificationKeys.OpenKeyboard>(this, Open);
         }
 
-        private void OnDestroy()
+        void OnDestroy()
         {
-            NotificationHub.Default.Unsubscribe(this);
+            NotificationHub.Default.Unsubscribe<SettingsNotificationKeys.OpenKeyboard>(this);
         }
 
-        private void Open()
+        void Open()
         {
             gameObject.SetActive(true);
         }
 
-        private void Close()
+        void Close()
         {
             gameObject.SetActive(false);
         }
     }
 }
-

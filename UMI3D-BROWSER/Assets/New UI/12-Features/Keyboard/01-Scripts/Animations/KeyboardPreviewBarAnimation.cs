@@ -67,37 +67,35 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         void OnEnable()
         {
-            NotificationHub.Default.Subscribe(
+            NotificationHub.Default.Subscribe<KeyboardNotificationKeys.OpenOrClose>(
                 this,
-                KeyboardNotificationKeys.OpenOrClose,
-                null,
                 Animate
             );
         }
 
         void OnDisable()
         {
-            NotificationHub.Default.Unsubscribe(this, KeyboardNotificationKeys.OpenOrClose);
+            NotificationHub.Default.Unsubscribe<KeyboardNotificationKeys.OpenOrClose>(this);
         }
 
         void Animate(Notification notification)
         {
-            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.IsOpening, out bool isOpening))
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.OpenOrClose.IsOpening, out bool isOpening))
             {
                 return;
             }
 
-            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.AnimationTime, out float animationTime))
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.OpenOrClose.AnimationTime, out float animationTime))
             {
                 return;
             }
 
-            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.PhaseOneStartTimePercentage, out float phaseOnePct))
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.OpenOrClose.PhaseOneStartTimePercentage, out float phaseOnePct))
             {
                 return;
             }
 
-            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.WithAnimation, out bool isAnimated))
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.OpenOrClose.WithAnimation, out bool isAnimated))
             {
                 return;
             }

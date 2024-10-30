@@ -14,28 +14,30 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
-using System;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Settings;
 
-namespace umi3d.browserRuntime.ui.settings.general
+namespace umi3d.browserRuntime.ui.settings
 {
-    [RequireComponent(typeof(Button))]
-    public class OpenGeneralButton : MonoBehaviour
+    public class GeneralSettings : MonoBehaviour
     {
-        private Button button;
+        [HideInInspector] public GeneralSettingsPSM model;
 
-        private void Awake()
+        void Awake()
         {
-            button = GetComponent<Button>();
-            button.onClick.AddListener(OpenGeneral);
+            model = ScriptableObject.CreateInstance<GeneralSettingsPSM>();
         }
 
-        private void OpenGeneral()
+        void OnDestroy()
         {
-            NotificationHub.Default.Notify(this, SettingsNotificationKeys.CloseAll);
-            NotificationHub.Default.Notify(this, SettingsNotificationKeys.OpenGeneral);
+            model.Save();
+        }
+
+        public bool TryGetLocal(out Locale local)
+        {
+            local = LocalizationSettings.AvailableLocales.Locales.Find(local => local.Identifier.Code == model.selectedLanguage);
+            return local != null;
         }
     }
 }

@@ -14,32 +14,25 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-namespace umi3d.browserRuntime.ui.settings.comfort
+namespace umi3d.browserRuntime.ui.settings
 {
-    public class ComfortPanel : MonoBehaviour
+    public class ConfortSettings : MonoBehaviour
     {
-        private void Awake()
+        [HideInInspector] public ConfortSettingsPSM model;
+
+        void Awake()
         {
-            NotificationHub.Default.Subscribe(this, SettingsNotificationKeys.CloseAll, Close);
-            NotificationHub.Default.Subscribe(this, SettingsNotificationKeys.OpenComfort, Open);
+            model = ScriptableObject.CreateInstance<ConfortSettingsPSM>();
+            model.Load();
         }
 
-        private void OnDestroy()
+        void OnDestroy()
         {
-            NotificationHub.Default.Unsubscribe(this);
-        }
-
-        private void Open()
-        {
-            gameObject.SetActive(true);
-        }
-
-        private void Close()
-        {
-            gameObject.SetActive(false);
+            model.Save();
         }
     }
 }

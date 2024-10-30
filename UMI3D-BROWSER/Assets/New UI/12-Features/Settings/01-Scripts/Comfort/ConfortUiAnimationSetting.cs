@@ -18,28 +18,37 @@ using UnityEngine;
 using UnityEngine.UI;
 using utils.tweens;
 
-namespace umi3d.browserRuntime.ui.settings.comfort
+namespace umi3d.browserRuntime.ui.settings
 {
     [RequireComponent(typeof(Button))]
-    public class UiAnimationButton : MonoBehaviour
+    public class ConfortUiAnimationSetting : MonoBehaviour
     {
-        [SerializeField] private bool isOn;
+        [SerializeField] bool isOn;
 
-        private Button button;
+        Button button;
 
-        private void Awake()
+        ConfortSettings confortSettings;
+
+        void Awake()
         {
             button = GetComponent<Button>();
-            button.onClick.AddListener(() => {
-                UITweens.ToggleAnimation(isOn);
-                PlayerPrefs.SetInt(SettingsPlayerPrefsKeys.UiAnimation, isOn ? 1 : 0);
-            });
+            button.onClick.AddListener(Click);
+
+            confortSettings = GetComponentInParent<ConfortSettings>();
         }
 
-        private void Start()
+        void Start()
         {
-            if (isOn == PlayerPrefs.GetInt(SettingsPlayerPrefsKeys.UiAnimation, 1) > 0)
+            if (isOn == confortSettings.model.UIAnimation)
+            {
                 button.onClick?.Invoke();
+            }
+        }
+
+        void Click()
+        {
+            UITweens.ToggleAnimation(isOn);
+            confortSettings.model.UIAnimation = isOn;
         }
     }
 }

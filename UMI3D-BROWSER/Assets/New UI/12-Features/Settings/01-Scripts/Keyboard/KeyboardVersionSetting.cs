@@ -15,12 +15,11 @@ limitations under the License.
 */
 
 using UnityEngine.UI;
-using umi3d.browserRuntime.ui.settings;
 using UnityEngine;
 using umi3d.browserRuntime.NotificationKeys;
 using inetum.unityUtils;
 
-namespace umi3d.browserRuntime.settings
+namespace umi3d.browserRuntime.ui.settings
 {
     [RequireComponent(typeof(Button))]
     public class KeyboardVersionSetting : MonoBehaviour
@@ -29,6 +28,8 @@ namespace umi3d.browserRuntime.settings
 
         Button button;
 
+        KeyboardSettings KeyboardSettings;
+
         Notifier notifier;
 
         void Awake()
@@ -36,23 +37,23 @@ namespace umi3d.browserRuntime.settings
             button = GetComponent<Button>();
             button.onClick.AddListener(Click);
 
+            KeyboardSettings = GetComponentInParent<KeyboardSettings>();
+
             notifier = NotificationHub.Default
                 .GetNotifier<KeyboardNotificationKeys.ChangeVersion>(this);
         }
 
         void Start()
         {
-            string savedValue = PlayerPrefs.GetString(SettingsPlayerPrefsKeys.KeyboardLocalisationVersion, KeyboardLocalisationVersion.QWERTY.ToString());
-
-            if (localisationVersion.ToString() == savedValue)
+            if (localisationVersion == KeyboardSettings.model.localisationVersion)
             {
-                Click();
+                button.onClick?.Invoke();
             }
         }
 
         void Click()
         {
-            PlayerPrefs.SetString(SettingsPlayerPrefsKeys.KeyboardLocalisationVersion, localisationVersion.ToString());
+            KeyboardSettings.model.localisationVersion = localisationVersion;
 
             notifier[KeyboardNotificationKeys.ChangeVersion.Version] = localisationVersion;
             notifier.Notify();

@@ -14,26 +14,23 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
 using UnityEngine;
-using UnityEngine.UI;
 
-namespace umi3d.browserRuntime.ui.settings.comfort
+namespace umi3d.browserRuntime.ui.settings
 {
-    public class OpenKeyboardButton : MonoBehaviour
+    public class KeyboardSettings : MonoBehaviour
     {
-        Button button;
+        [HideInInspector] public KeyboardSettingsPSM model;
 
         void Awake()
         {
-            button = GetComponent<Button>();
-            button.onClick.AddListener(Open);
+            model = ScriptableObject.CreateInstance<KeyboardSettingsPSM>();
+            model.Load();
         }
 
-        void Open()
+        void OnDestroy()
         {
-            NotificationHub.Default.Notify(this, SettingsNotificationKeys.CloseAll);
-            NotificationHub.Default.Notify<SettingsNotificationKeys.OpenKeyboard>(this);
+            model.Save();
         }
     }
 }

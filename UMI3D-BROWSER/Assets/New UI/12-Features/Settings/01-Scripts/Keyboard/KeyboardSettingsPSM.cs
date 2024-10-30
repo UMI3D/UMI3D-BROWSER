@@ -15,13 +15,11 @@ limitations under the License.
 */
 
 using inetum.unityUtils.saveSystem;
-using System;
 using umi3d.browserRuntime.NotificationKeys;
 using UnityEngine;
 
-namespace umi3d.browserRuntime.settings
+namespace umi3d.browserRuntime.ui.settings
 {
-    [CreateAssetMenu(fileName = "KeyboardSettingsPSM", menuName = "UMI3D Browser/Settings/KeyboardSettingsPSM", order = 1)]
     public class KeyboardSettingsPSM : PersistentScriptableModel
     {
         public KeyboardLocalisationVersion localisationVersion = KeyboardLocalisationVersion.QWERTY;
@@ -29,6 +27,5 @@ namespace umi3d.browserRuntime.settings
         public bool AnimateOnOpeningAndClosing = false;
 
         public bool AnimateOnKeyPressed = true;
-
     }
 }

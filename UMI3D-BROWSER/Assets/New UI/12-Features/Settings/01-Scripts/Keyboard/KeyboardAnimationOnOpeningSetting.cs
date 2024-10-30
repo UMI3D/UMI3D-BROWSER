@@ -16,11 +16,10 @@ limitations under the License.
 
 using inetum.unityUtils;
 using umi3d.browserRuntime.NotificationKeys;
-using umi3d.browserRuntime.ui.settings;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace umi3d.browserRuntime.settings
+namespace umi3d.browserRuntime.ui.settings
 {
     [RequireComponent(typeof(Button))]
     public class KeyboardAnimationOnOpeningSetting : MonoBehaviour
@@ -29,12 +28,16 @@ namespace umi3d.browserRuntime.settings
 
         Button button;
 
+        KeyboardSettings KeyboardSettings;
+
         Notifier notifier;
 
         void Awake()
         {
             button = GetComponent<Button>();
             button.onClick.AddListener(Click);
+
+            KeyboardSettings = GetComponentInParent<KeyboardSettings>();
 
             notifier = NotificationHub.Default
                 .GetNotifier<KeyboardNotificationKeys.ChangeVersion>(this);
@@ -43,17 +46,15 @@ namespace umi3d.browserRuntime.settings
 
         void Start()
         {
-            bool savedValue = PlayerPrefs.GetInt(SettingsPlayerPrefsKeys.KeyboardAnimationOnOpening, 0) == 1 ? true : false;
-
-            if (isOn == savedValue)
+            if (isOn == KeyboardSettings.model.AnimateOnOpeningAndClosing)
             {
-                Click();
+                button.onClick?.Invoke();
             }
         }
 
         void Click()
         {
-            PlayerPrefs.SetInt(SettingsPlayerPrefsKeys.KeyboardAnimationOnOpening, isOn ? 1 : 0);
+            KeyboardSettings.model.AnimateOnOpeningAndClosing = isOn;
 
             notifier[KeyboardNotificationKeys.AnimationSettings.WithAnimation] = isOn;
             notifier.Notify();

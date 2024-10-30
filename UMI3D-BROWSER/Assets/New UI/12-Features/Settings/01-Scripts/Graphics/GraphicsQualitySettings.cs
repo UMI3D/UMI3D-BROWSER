@@ -14,32 +14,43 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
+using umi3d.browserRuntime.notificationKeys;
 
-namespace umi3d.browserRuntime.ui.settings.graphics
+namespace umi3d.browserRuntime.ui.settings
 {
     [RequireComponent(typeof(Button))]
-    public class EnableHdrButton : MonoBehaviour
+    public class GraphicsQualitySettings : MonoBehaviour
     {
-        [SerializeField] private UniversalRenderPipelineAsset pipelineAsset;
-        [SerializeField] private bool isOn;
+        [SerializeField] BrowserQualitySettings quality;
 
-        private Button button;
+        Button button;
 
-        private void Awake()
+        GraphicsSettings graphicsSettings;
+
+        void Awake()
         {
             button = GetComponent<Button>();
-            button.onClick.AddListener(() => {
-                pipelineAsset.supportsHDR = isOn;
-            });
+            button.onClick.AddListener(Click);
+
+            graphicsSettings = GetComponentInParent<GraphicsSettings>();
         }
 
-        private void Start()
+        void Start()
         {
-            if (isOn == pipelineAsset.supportsHDR)
+            if (quality != graphicsSettings.model.quality)
+            {
                 button.onClick?.Invoke();
+            }
+        }
+
+        void Click()
+        {
+            QualitySettings.SetQualityLevel((int)quality, false);
+            graphicsSettings.model.quality = quality;
         }
     }
 }

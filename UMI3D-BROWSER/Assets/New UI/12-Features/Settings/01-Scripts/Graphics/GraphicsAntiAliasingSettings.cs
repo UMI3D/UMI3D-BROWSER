@@ -14,8 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
@@ -23,25 +21,35 @@ using UnityEngine.UI;
 namespace umi3d.browserRuntime.ui.settings.graphics
 {
     [RequireComponent(typeof(Button))]
-    public class AntiAliasingButton : MonoBehaviour
+    public class GraphicsAntiAliasingSettings : MonoBehaviour
     {
-        [SerializeField] private UniversalRenderPipelineAsset pipelineAsset;
-        [SerializeField] private int msaaSampleCount;
+        [SerializeField] int msaa;
 
-        private Button button;
+        Button button;
 
-        private void Awake()
+        GraphicsSettings graphicsSettings;
+
+        void Awake()
         {
             button = GetComponent<Button>();
-            button.onClick.AddListener(() => {
-                pipelineAsset.msaaSampleCount = (int)msaaSampleCount;
-            });
+            button.onClick.AddListener(Click);
+
+            graphicsSettings = GetComponentInParent<GraphicsSettings>();
         }
 
-        private void Start()
+        void Start()
         {
-            if (pipelineAsset.msaaSampleCount == (int)msaaSampleCount)
+            if (msaa != graphicsSettings.model.msaa)
+            {
                 button.onClick?.Invoke();
+            }
+        }
+
+        void Click()
+        {
+            UniversalRenderPipelineAsset urp = QualitySettings.renderPipeline as UniversalRenderPipelineAsset;
+            urp.msaaSampleCount = msaa;
+            graphicsSettings.model.msaa = msaa;
         }
     }
 }

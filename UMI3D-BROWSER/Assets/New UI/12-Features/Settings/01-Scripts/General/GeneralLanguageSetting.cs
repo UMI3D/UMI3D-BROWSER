@@ -40,6 +40,8 @@ namespace umi3d.browserRuntime.ui.settings
         void Awake()
         {
             generalSettings = GetComponentInParent<GeneralSettings>();
+            dropdown = GetComponent<TMP_Dropdown>();
+            label = GetComponentInChildren<TMP_Text>();
 
             if (!generalSettings.TryGetLocal(out selectedLanguage))
             {
@@ -50,9 +52,7 @@ namespace umi3d.browserRuntime.ui.settings
             languages = LocalizationSettings.AvailableLocales.Locales;
             selectedLanguageIndex = languages.IndexOf(selectedLanguage);
 
-            dropdown = GetComponent<TMP_Dropdown>();
             dropdown.onValueChanged.AddListener(ValueChanged);
-            label = GetComponentInChildren<TMP_Text>();
             SetOptions();
         }
 

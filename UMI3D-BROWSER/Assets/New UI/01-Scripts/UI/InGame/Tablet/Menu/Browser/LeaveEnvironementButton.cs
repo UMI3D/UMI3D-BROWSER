@@ -53,14 +53,14 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.menu.browser
             popupLeaveNotifier[PopupNotificationKeys.Show.Type] = PopupType.Information;
             popupLeaveNotifier[PopupNotificationKeys.Show.Description] = "popup_leave";
             popupLeaveNotifier[PopupNotificationKeys.Show.Buttons] = new List<(string, Action)>() {
-                ("leave", () => {
+                ("popup_yes", () => {
                     connectionToImmersiveLinker.Leave();
                     activeBackground.SetActive(false);
                     icon.color = iconColor;
                     NotificationHub.Default.Notify<PopupNotificationKeys.CloseAll>(this);
                     NotificationHub.Default.Notify(this, TabletNotificationKeys.Close);
                 }),
-                ("resume", () => {
+                ("popup_no", () => {
                     activeBackground.SetActive(false);
                     icon.color = iconColor;
                     NotificationHub.Default.Notify<PopupNotificationKeys.CloseAll>(this);

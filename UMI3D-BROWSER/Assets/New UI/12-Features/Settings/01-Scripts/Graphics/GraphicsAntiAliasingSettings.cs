@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using umi3d.browserRuntime.notificationKeys;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
@@ -37,9 +38,14 @@ namespace umi3d.browserRuntime.ui.settings.graphics
             graphicsSettings = GetComponentInParent<GraphicsSettings>();
         }
 
-        void Start()
+        void OnEnable()
         {
-            if (msaa != graphicsSettings.model.msaa)
+            if (graphicsSettings.model.quality != BrowserQualitySettings.Custom)
+            {
+                return;
+            }
+
+            if (msaa == graphicsSettings.model.msaa)
             {
                 button.onClick?.Invoke();
             }

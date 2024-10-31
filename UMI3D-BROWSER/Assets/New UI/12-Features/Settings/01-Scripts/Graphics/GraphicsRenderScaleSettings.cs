@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using System;
+using umi3d.browserRuntime.notificationKeys;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
@@ -40,8 +41,13 @@ namespace umi3d.browserRuntime.ui.settings
             graphicsSettings = GetComponentInParent<GraphicsSettings>();
         }
 
-        void Start()
+        void OnEnable()
         {
+            if (graphicsSettings.model.quality != BrowserQualitySettings.Custom)
+            {
+                return;
+            }
+
             slider.value = graphicsSettings.model.renderScale;
         }
 

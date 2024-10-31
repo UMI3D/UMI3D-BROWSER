@@ -31,17 +31,22 @@ namespace umi3d.browserRuntime.ui.settings
 
         GraphicsSettings graphicsSettings;
 
+        Notifier notifier;
+
         void Awake()
         {
             button = GetComponent<Button>();
             button.onClick.AddListener(Click);
 
             graphicsSettings = GetComponentInParent<GraphicsSettings>();
+
+            notifier = NotificationHub.Default
+                .GetNotifier<SettingsNotificationKeys.QualityChanged>(this);
         }
 
         void Start()
         {
-            if (quality != graphicsSettings.model.quality)
+            if (quality == graphicsSettings.model.quality)
             {
                 button.onClick?.Invoke();
             }
@@ -51,6 +56,9 @@ namespace umi3d.browserRuntime.ui.settings
         {
             QualitySettings.SetQualityLevel((int)quality, false);
             graphicsSettings.model.quality = quality;
+
+            notifier[SettingsNotificationKeys.QualityChanged.Quality] = quality;
+            notifier.Notify();
         }
     }
 }

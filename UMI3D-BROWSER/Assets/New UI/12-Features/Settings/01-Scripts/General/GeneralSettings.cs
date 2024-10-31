@@ -27,6 +27,8 @@ namespace umi3d.browserRuntime.ui.settings
         void Awake()
         {
             model = ScriptableObject.CreateInstance<GeneralSettingsPSM>();
+            model.directories = "Settings";
+            model.Load();
         }
 
         void OnDestroy()
@@ -36,7 +38,7 @@ namespace umi3d.browserRuntime.ui.settings
 
         public bool TryGetLocal(out Locale local)
         {
-            local = LocalizationSettings.AvailableLocales.Locales.Find(local => local.Identifier.Code == model.selectedLanguage);
+            local = LocalizationSettings.AvailableLocales.Locales.Find(local => local.LocaleName == model.selectedLanguage);
             return local != null;
         }
     }

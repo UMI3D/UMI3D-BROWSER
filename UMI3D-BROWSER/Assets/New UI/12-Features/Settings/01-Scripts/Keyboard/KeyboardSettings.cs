@@ -25,6 +25,7 @@ namespace umi3d.browserRuntime.ui.settings
         void Awake()
         {
             model = ScriptableObject.CreateInstance<KeyboardSettingsPSM>();
+            model.directories = "Settings";
             model.Load();
         }
 

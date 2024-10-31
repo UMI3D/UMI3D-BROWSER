@@ -25,6 +25,8 @@ namespace umi3d.browserRuntime.ui.settings
         void Awake()
         {
             model = ScriptableObject.CreateInstance<GraphicsSettingsPSM>();
+            model.directories = "Settings";
+            model.Load();
         }
 
         void OnDestroy()

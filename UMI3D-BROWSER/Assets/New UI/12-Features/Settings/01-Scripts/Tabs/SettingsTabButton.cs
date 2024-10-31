@@ -42,7 +42,7 @@ namespace umi3d.browserRuntime.ui.settings
             button.onClick.AddListener(Click);
 
             text = GetComponentInChildren<TMP_Text>();
-            background = GetComponentInChildren<Image>();
+            background = transform.GetChild(1).GetComponent<Image>();
 
             content = transform.parent.GetChild(1).gameObject;
 

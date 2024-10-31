@@ -35,7 +35,7 @@ namespace umi3d.browserRuntime.ui.settings
             button = GetComponent<Button>();
             button.onClick.AddListener(Click);
 
-            background = GetComponentInChildren<Image>();
+            background = transform.GetChild(0).GetComponent<Image>();
 
             parent = transform.parent.gameObject;
             instanceID = parent.GetInstanceID();

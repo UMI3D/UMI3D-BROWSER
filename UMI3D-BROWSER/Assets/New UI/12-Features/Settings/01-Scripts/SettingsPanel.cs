@@ -21,21 +21,46 @@ namespace umi3d.browserRuntime.ui.settings
 {
     public class SettingsPanel : MonoBehaviour
     {
-        [SerializeField] private GameObject[] panels;
-        [SerializeField] private Button firstPanel;
+        Transform tabs;
+        Transform contents;
+        Transform templates;
 
-        private void Awake()
+        void Awake()
         {
-            foreach (GameObject go in panels)
-                go.SetActive(true);
+            tabs = transform.GetChild(0);
+            contents = transform.GetChild(1);
+            templates = transform.GetChild(2);
         }
 
-        private void Start()
+        void Start()
         {
-            foreach (GameObject go in panels)
-                go.SetActive(false);
+            SetTemplates();
+        }
 
-            firstPanel.onClick?.Invoke();
+        void SetTemplates()
+        {
+            for (int i = 0; i < templates.childCount; i++)
+            {
+                Transform panel = templates.GetChild(i);
+                panel.gameObject.SetActive(true);
+                Transform tab = panel.GetChild(0);
+                Transform content = panel.GetChild(1);
+
+                tab.SetParent(tabs, true);
+                content.SetParent(contents, true);
+
+                tab.name = panel.name;
+                content.name = panel.name;
+
+                if (i != 0)
+                {
+                    content.gameObject.SetActive(false);
+                }
+                else
+                {
+                    tab.GetComponent<Button>().onClick?.Invoke();
+                }
+            }
         }
     }
 }

@@ -38,7 +38,10 @@ namespace umi3d.browserRuntime.ui.settings
             sliderControl.valueChanged += ValueChanged;
 
             graphicsSettings = GetComponentInParent<GraphicsSettings>();
+        }
 
+        void Start()
+        {
             slider.value = graphicsSettings.model.renderScale;
         }
 

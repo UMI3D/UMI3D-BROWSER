@@ -16,6 +16,7 @@ limitations under the License.
 
 using TMPro;
 using umi3d.cdk.collaboration;
+using umi3dBrowsers.linker;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.inGame
@@ -23,6 +24,7 @@ namespace umi3d.browserRuntime.ui.inGame
     [RequireComponent(typeof(TMP_Text))]
     public class EnvironmentNameText : MonoBehaviour
     {
+        [SerializeField] private ConnectionToImmersiveLinker connectionToImmersiveLinker;
         private TMP_Text text;
 
         private void Awake()
@@ -30,16 +32,23 @@ namespace umi3d.browserRuntime.ui.inGame
             text = GetComponent<TMP_Text>();
 
             UMI3DEnvironmentClient.EnvironementJoinned.AddListener(OnEnvironmentJoinned);
+            connectionToImmersiveLinker.OnLeave += OnEnvironmentLeaved;
         }
 
         private void OnDestroy()
         {
             UMI3DEnvironmentClient.EnvironementJoinned.RemoveListener(OnEnvironmentJoinned);
+            connectionToImmersiveLinker.OnLeave -= OnEnvironmentLeaved;
         }
 
         private void OnEnvironmentJoinned()
         {
             text.text = UMI3DCollaborationClientServer.Environement?.name ?? "";
+        }
+
+        private void OnEnvironmentLeaved()
+        {
+            text.text = "";
         }
     }
 }

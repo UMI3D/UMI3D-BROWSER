@@ -35,5 +35,10 @@ namespace umi3dBrowsers
                 OnSubmit?.Invoke(urlField.text.Trim());
             });
         }
+
+        private void OnEnable()
+        {
+            urlField.text = "";
+        }
     }
 }

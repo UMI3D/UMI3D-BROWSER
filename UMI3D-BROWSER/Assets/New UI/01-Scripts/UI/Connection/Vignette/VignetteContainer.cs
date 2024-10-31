@@ -84,8 +84,6 @@ namespace umi3dBrowsers.container
                 if (vignetteDisplayers.Count > (int)vignetteMode)
                     scrollbar.value += scrollButtonSpeed / vignetteDisplayers.Count;
             });
-
-            vignetteContainerEvent.OnVignetteReset?.Invoke();
         }
 
         private void SetupPopupRemoveWorld()
@@ -101,6 +99,8 @@ namespace umi3dBrowsers.container
                 await Task.Yield();
                 scrollbar.value = 0;
             }).Start(TaskScheduler.FromCurrentSynchronizationContext());
+
+            vignetteContainerEvent.OnVignetteReset?.Invoke();
         }
 
         private void OnDestroy()

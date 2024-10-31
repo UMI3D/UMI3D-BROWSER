@@ -43,16 +43,19 @@ namespace umi3d.browserRuntime.ui.settings
             dropdown = GetComponent<TMP_Dropdown>();
             label = GetComponentInChildren<TMP_Text>();
 
+            dropdown.onValueChanged.AddListener(ValueChanged);
+        }
+
+        void Start()
+        {
             if (!generalSettings.TryGetLocal(out selectedLanguage))
             {
                 UnityEngine.Debug.LogError($"[GeneralLanguageSetting] no language saved.");
                 selectedLanguage = LocalizationSettings.SelectedLocale;
             }
-            
+            LocalizationSettings.SelectedLocale = selectedLanguage;
             languages = LocalizationSettings.AvailableLocales.Locales;
             selectedLanguageIndex = languages.IndexOf(selectedLanguage);
-
-            dropdown.onValueChanged.AddListener(ValueChanged);
             SetOptions();
         }
 
@@ -96,7 +99,7 @@ namespace umi3d.browserRuntime.ui.settings
             selectedLanguageIndex = index < selectedLanguageIndex ? index : index + 1;
             selectedLanguage = languages[selectedLanguageIndex];
             LocalizationSettings.SelectedLocale = selectedLanguage;
-            generalSettings.model.selectedLanguage = selectedLanguage.Identifier.Code;
+            generalSettings.model.selectedLanguage = selectedLanguage.LocaleName;
 
             UpdateOptions();
         }

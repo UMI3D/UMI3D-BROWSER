@@ -1,0 +1,62 @@
+/*
+Copyright 2019 - 2024 Inetum
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+using inetum.unityUtils;
+using umi3d.browserRuntime.notificationKeys;
+using UnityEngine;
+using UnityEngine.Rendering.Universal;
+using UnityEngine.UI;
+
+namespace umi3d.browserRuntime.ui.settings
+{
+    [RequireComponent(typeof(Button))]
+    public class GraphicsHDRSettings : MonoBehaviour
+    {
+        [SerializeField] bool isOn;
+
+        Button button;
+
+        GraphicsSettings graphicsSettings;
+
+        void Awake()
+        {
+            button = GetComponent<Button>();
+            button.onClick.AddListener(Click);
+
+            graphicsSettings = GetComponentInParent<GraphicsSettings>();
+        }
+
+        void OnEnable()
+        {
+            if (graphicsSettings.model.quality != BrowserQualitySettings.Custom)
+            {
+                return;
+            }
+
+            if (isOn == graphicsSettings.model.HDR)
+            {
+                button.onClick?.Invoke();
+            }
+        }
+
+        void Click()
+        {
+            UniversalRenderPipelineAsset urp = QualitySettings.renderPipeline as UniversalRenderPipelineAsset;
+            urp.supportsHDR = isOn;
+            graphicsSettings.model.HDR = isOn;
+        }
+    }
+}

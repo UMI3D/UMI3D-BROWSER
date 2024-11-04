@@ -1,5 +1,5 @@
-﻿/*
-Copyright 2019 - 2021 Inetum
+/*
+Copyright 2019 - 2024 Inetum
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,17 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System;
-using System.Collections.Generic;
-
-namespace umi3d.cdk.collaboration
+namespace umi3d.browserRuntime.ui.popup
 {
-    public interface ICollaborationEnvironmentManager : IEnvironmentManager
+    public enum PopupType
     {
-        IReadOnlyList<UMI3DUser> UserList { get; }
-        IReadOnlyList<UMI3DUser> JoinedUserList { get; }
-
-        event Action OnUpdateJoinedUserList;
-        event Action OnUpdateUserList;
+        Information,
+        Warning,
+        Error
     }
 }

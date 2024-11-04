@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -27,7 +28,8 @@ namespace umi3d.browserRuntime.ui.inGame.tablet
         private void Awake()
         {
             GetComponent<Button>().onClick.AddListener(OpenTablet);
-            NotificationHub.Default.Subscribe(this, TabletNotificationKeys.Close, Open);
+            NotificationHub.Default.Subscribe(this, TabletNotificationKeys.Open, HideButton);
+            NotificationHub.Default.Subscribe(this, TabletNotificationKeys.Close, ShowButton);
         }
 
         private void OnDestroy()
@@ -39,10 +41,14 @@ namespace umi3d.browserRuntime.ui.inGame.tablet
         private void OpenTablet()
         {
             NotificationHub.Default.Notify(this, TabletNotificationKeys.Open);
+        }
+
+        private void HideButton(Notification notification)
+        {
             gameObject.SetActive(false);
         }
 
-        private void Open(Notification notification)
+        private void ShowButton(Notification notification)
         {
             gameObject.SetActive(true);
         }

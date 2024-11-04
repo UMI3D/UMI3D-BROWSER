@@ -1,5 +1,5 @@
 /*
-Copyright 2019 - 2023 Inetum
+Copyright 2019 - 2024 Inetum
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,31 +14,30 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.UI;
 
-namespace umi3dBrowsers
+namespace umi3d.browserRuntime.ui.popup
 {
-    public class URLDisplayer : MonoBehaviour
+    public class BlockingBackgroundPopup : MonoBehaviour
     {
-        [Header("UrlForm")]
-        [SerializeField] TMPro.TMP_InputField urlField;
-        [SerializeField] Button submitButton;
-        [Space]
-        public UnityEvent<string> OnSubmit;
 
         private void Awake()
         {
-            submitButton.onClick.AddListener(() =>
-            {
-                OnSubmit?.Invoke(urlField.text.Trim());
-            });
+            NotificationHub.Default.Subscribe<PopupNotificationKeys.Show>(this, Show);
+            NotificationHub.Default.Subscribe<PopupNotificationKeys.CloseAll>(this, Hide);
+
+            gameObject.SetActive(false);
         }
 
-        private void OnEnable()
+        private void Show()
         {
-            urlField.text = "";
+            gameObject.SetActive(true);
+        }
+
+        private void Hide()
+        {
+            gameObject.SetActive(false);
         }
     }
 }

@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TMPro;
+using umi3d.browserRuntime.ui.popup;
 using umi3d.browserRuntime.ui.inGame;
 using umi3d.cdk;
 using umi3d.cdk.collaboration;
@@ -74,19 +75,25 @@ namespace umi3dBrowsers
         [SerializeField] private MenuNavigationLinker m_menuNavigationLinker;
         [SerializeField] private PanelData m_mainMenuPanel;
         [SerializeField] private PanelData m_formPanel;
-        [SerializeField] private PopupLinker m_popupLinker;
-        [SerializeField] private PopupData m_tryConnectPopup;
-        [SerializeField] private PopupData m_connectionErrorPopup;
-        [SerializeField] private PopupData m_quittingPopup;
 
+        private Notifier m_quitPopupNotifier;
+        private Notifier m_popupTryToConnectNotifier;
+        private Notifier m_popupConnectionFailedNotifier;
+        private Notifier m_popupAnswerFailedNotifier;
         private Notifier m_quittingNotifier;
         private Notifier m_enableInGameUiNotifier;
 
         private void Awake()
         {
+            SetupQuitPopupNotifier();
+            SetupTryToConnectPopupNotifier();
+            SetupConnectionFailedPopupNotifier();
+            SetupAnswerFailedPopupNotifier();
             m_quittingNotifier = NotificationHub.Default.GetNotifier(this, QuittingManagerNotificationKey.QuittingConfirmation);
             m_enableInGameUiNotifier = NotificationHub.Default.GetNotifier(this, InGameNotificationKeys.EnableInGameUi);
-            NotificationHub.Default.Subscribe(this, QuittingManagerNotificationKey.RequestToQuit, PopupQuit);
+             NotificationHub.Default.Subscribe(this, QuittingManagerNotificationKey.RequestToQuit, () => {
+                m_quitPopupNotifier.Notify();
+            });
 
             navBarButtonsColors.colorMultiplier = 1.0f;
 
@@ -120,8 +127,6 @@ namespace umi3dBrowsers
                     PageTipButton.onClick.AddListener(() => PageTipDisplayer.Show(panelTutoManager));
                 }
             };
-
-            m_popupLinker.Initialize(popupTransform);
 
             connectionToImmersiveLinker.OnLeave += () =>
             {
@@ -157,14 +162,12 @@ namespace umi3dBrowsers
             });
         }
 
-        private void OnDestroy()
+        private void SetupQuitPopupNotifier()
         {
-            NotificationHub.Default.Unsubscribe(this, QuittingManagerNotificationKey.RequestToQuit);
-        }
-
-        private void PopupQuit()
-        {
-            m_popupLinker.Show(m_quittingPopup, "Quit", "empty",
+            m_quitPopupNotifier = NotificationHub.Default.GetNotifier<PopupNotificationKeys.Show>(this);
+            m_quitPopupNotifier[PopupNotificationKeys.Show.Type] = PopupType.Information;
+            m_quitPopupNotifier[PopupNotificationKeys.Show.Title] = "Quit";
+            m_quitPopupNotifier[PopupNotificationKeys.Show.Buttons] = new List<(string, Action)>() {
                 ("Quit", () => {
                     m_quittingNotifier[QuittingManagerNotificationKey.QuittingConfirmationInfo.Confirmation] = true;
                     m_quittingNotifier.Notify();
@@ -172,9 +175,48 @@ namespace umi3dBrowsers
                 ("Cancel", () => {
                     m_quittingNotifier[QuittingManagerNotificationKey.QuittingConfirmationInfo.Confirmation] = false;
                     m_quittingNotifier.Notify();
-                    m_popupLinker.CloseAll();
+                    NotificationHub.Default.Notify<PopupNotificationKeys.CloseAll>(this);
                 }
-            ));
+            )};
+        }
+
+        private void SetupTryToConnectPopupNotifier()
+        {
+            m_popupTryToConnectNotifier = NotificationHub.Default.GetNotifier<PopupNotificationKeys.Show>(this);
+            m_popupTryToConnectNotifier[PopupNotificationKeys.Show.Type] = PopupType.Information;
+            m_popupTryToConnectNotifier[PopupNotificationKeys.Show.Title] = "popup_connection_server";
+            m_popupTryToConnectNotifier[PopupNotificationKeys.Show.Description] = "popup_trying_connect";
+        }
+
+        private void SetupConnectionFailedPopupNotifier()
+        {
+            m_popupConnectionFailedNotifier = NotificationHub.Default.GetNotifier<PopupNotificationKeys.Show>(this);
+            m_popupConnectionFailedNotifier[PopupNotificationKeys.Show.Type] = PopupType.Error;
+            m_popupConnectionFailedNotifier[PopupNotificationKeys.Show.Title] = "popup_fail_connect";
+            m_popupConnectionFailedNotifier[PopupNotificationKeys.Show.Description] = "error_msg";
+            m_popupConnectionFailedNotifier[PopupNotificationKeys.Show.Buttons] = new List<(string, Action)>() {
+                ("popup_close", () => {
+                    NotificationHub.Default.Notify<PopupNotificationKeys.CloseAll>(this);
+                })
+            };
+        }
+
+        private void SetupAnswerFailedPopupNotifier()
+        {
+            m_popupAnswerFailedNotifier = NotificationHub.Default.GetNotifier<PopupNotificationKeys.Show>(this);
+            m_popupAnswerFailedNotifier[PopupNotificationKeys.Show.Type] = PopupType.Error;
+            m_popupAnswerFailedNotifier[PopupNotificationKeys.Show.Title] = "popup_answer_failed_title";
+            m_popupAnswerFailedNotifier[PopupNotificationKeys.Show.Description] = "popup_answer_failed_description";
+            m_popupAnswerFailedNotifier[PopupNotificationKeys.Show.Buttons] = new List<(string, Action)>() {
+                ("popup_close", () => {
+                    NotificationHub.Default.Notify<PopupNotificationKeys.CloseAll>(this);
+                })
+            };
+        }
+
+        private void OnDestroy()
+        {
+            NotificationHub.Default.Unsubscribe(this, QuittingManagerNotificationKey.RequestToQuit);
         }
 
         private void Start()
@@ -195,22 +237,20 @@ namespace umi3dBrowsers
             };
 
             connectionServiceLinker.OnTryToConnect += (url) => {
-                m_popupLinker.SetArguments(m_tryConnectPopup, new Dictionary<string, object>() { { "url", url } });
-                m_popupLinker.Show(m_tryConnectPopup, "popup_connection_server", "popup_trying_connect");
+                m_popupConnectionFailedNotifier[PopupNotificationKeys.Show.Arguments] = 
+                    new Dictionary<string, object>() { { "url", url } };
+                m_popupTryToConnectNotifier.Notify();
             };
             connectionServiceLinker.OnConnectionFailure += (message) => {
-                m_popupLinker.SetArguments(m_connectionErrorPopup, new Dictionary<string, object>() { { "error", message } });
-                m_popupLinker.Show(m_connectionErrorPopup, "popup_fail_connect", "error_msg",
-                    ("popup_close", () => { m_popupLinker.CloseAll(); }
-                ));
+                m_popupConnectionFailedNotifier[PopupNotificationKeys.Show.Arguments] = 
+                    new Dictionary<string, object>() { { "error", message } };
+                m_popupConnectionFailedNotifier.Notify();
             };
             connectionServiceLinker.OnMediaServerPingSuccess += (virtualWorldData) => {
-                m_popupLinker.CloseAll();
+                NotificationHub.Default.Notify<PopupNotificationKeys.CloseAll>(this);
             };
             connectionServiceLinker.OnAnswerFailed += () => {
-                m_popupLinker.Show(m_connectionErrorPopup, "popup_answer_failed_title", "popup_answer_failed_description",
-                    ("popup_close", () => { m_popupLinker.CloseAll(); }
-                ));
+                m_popupAnswerFailedNotifier.Notify();
             };
             connectionServiceLinker.OnAsksToLoadLibrairies += (ids, action) => action?.Invoke(true);
 

@@ -14,6 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using umi3d.baseBrowser.extension;
 using umi3d.cdk.collaboration;
@@ -22,8 +25,11 @@ using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.ui.inGame.tablet.social
 {
+
     public class SocialElement : MonoBehaviour
     {
+        const int MAX_ACTION_ICON = 3;
+
         [SerializeField] private TMP_Text nameText;
         [SerializeField] private TMP_Text placeText;
         [SerializeField] private Slider volumeSlider;
@@ -31,13 +37,19 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
         [SerializeField] private Button muteButton;
         [SerializeField] private Sprite volumeSprite;
         [SerializeField] private Sprite volumeMuteSprite;
+        [SerializeField] private Transform actionContainer;
+        [HideInInspector]public RectTransform nonPrimaryActionContainer;
+        [SerializeField] private GameObject actionIconPrefab;
+        [SerializeField] private GameObject nonPrimaryActionPrefab;
+        [SerializeField] private Toggle actionButton;
+        [SerializeField] private TMP_Dropdown dropdown;
 
         public UMI3DUser User
         {
             get => _user;
             set {
                 _user = value;
-                Update();
+                UpdateUser();
             }
         }
         public string UserName => _user?.login;
@@ -67,6 +79,12 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
 
         public bool MicroOpen => _user.microphoneStatus;
 
+        public ToggleGroup ToggleGroup
+        {
+            get => actionButton.group;
+            set => actionButton.group = value;
+        }
+
         private UMI3DUser _user;
         private float _volume = 100;
         private bool _isMute = false;
@@ -75,6 +93,9 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
         private const float factor = 5f / 2f;
         private const float factor2 = 5f / 2f;
 
+        List<PrimaryUserActionIcon> actionIcons = new();
+        List<OptionUserActionIcon> actions = new();
+
         private void Awake()
         {
             volumeSlider.minValue = 0;
@@ -82,12 +103,119 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
             volumeSlider.onValueChanged.AddListener(newValue => {
                 UserVolume = newValue;
             });
+
+            dropdown.onValueChanged.AddListener(DropDown_OnValueChanged);
+            actionButton.onValueChanged.AddListener(DisplayAction);
+            UMI3DUser.OnUserActionsUpdated.AddListener(OnUserActionsUpdated);
         }
 
         private void Update()
         {
+            if(isDisplayingAction)
+            {
+                Vector3[] v = new Vector3[4];
+                (this.transform as RectTransform).GetWorldCorners(v);
+                nonPrimaryActionContainer.position = v[3];
+            }
+        }
+        private void OnDisable()
+        {
+            if (isDisplayingAction)
+            {
+                DisplayAction(false);
+            }
+        }
+
+        bool isDisplayingAction = false;
+
+        private void DisplayAction(bool display)
+        {
+            if (display)
+            {
+                foreach (Transform child in nonPrimaryActionContainer.transform)
+                {
+                    GameObject.Destroy(child.gameObject);
+                }
+                float size = 0;
+                
+                foreach(var action in actions)
+                {
+                    var rect = Instantiate(nonPrimaryActionPrefab, nonPrimaryActionContainer).transform as RectTransform;
+                    action.SetButton(rect.gameObject);
+                    size += rect.sizeDelta.y;
+                }
+
+                Vector3[] v = new Vector3[4];
+                (this.transform as RectTransform).GetWorldCorners(v);
+
+                nonPrimaryActionContainer.position = v[3];//new Vector3(this.transform.position.x - nonPrimaryActionContainer.sizeDelta.x, this.transform.position.y );
+                nonPrimaryActionContainer.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, size);
+            }
+            else
+                foreach (Transform child in nonPrimaryActionContainer.transform)
+                {
+                    GameObject.Destroy(child.gameObject);
+                }
+            isDisplayingAction = display;
+            actionButton.SetIsOnWithoutNotify(display);
+            nonPrimaryActionContainer.gameObject.SetActive(display);
+        }
+
+        private void DropDown_OnValueChanged(int value)
+        {
+            value -= 1;
+            if (actions.Count < value && value >= 0)
+                actions[value].Call();
+
+            dropdown.SetValueWithoutNotify(0);
+        }
+
+        private void OnDestroy()
+        {
+            dropdown.onValueChanged.RemoveListener(DropDown_OnValueChanged);
+            UMI3DUser.OnUserActionsUpdated.RemoveListener(OnUserActionsUpdated);
+        }
+
+        private async void OnUserActionsUpdated(UMI3DUser user)
+        {
+            if (user != this.User)
+                return;
+
+            foreach (PrimaryUserActionIcon item in actionIcons)
+                item.Destroy();
+            actionIcons.Clear();
+
+            foreach (OptionUserActionIcon item in actions)
+                item.Destroy();
+            actions.Clear();
+
+            int PrimaryCount = MAX_ACTION_ICON;
+
+            dropdown.ClearOptions();
+            foreach (cdk.collaboration.UserAction action in user.userActions.ToList())
+            {
+                if (PrimaryCount > 0 && action.isPrimary)
+                {
+                    PrimaryCount--;
+                    PrimaryUserActionIcon displayer = await PrimaryUserActionIcon.Create(Instantiate(this.actionIconPrefab, actionContainer), action);
+                    actionIcons.Add(displayer);
+                }
+                else
+                {
+                    var d = await OptionUserActionIcon.Create(action);
+                    actions.Add(d);
+                }
+            }
+
+            actionButton.gameObject.SetActive(actions.Count > 0);
+        }
+
+        private void UpdateUser()
+        {
             nameText.text = UserName.CapitalizeAllWord();
             placeText.text = $"({UMI3DCollaborationClientServer.Environement?.name})";
+
+            OnUserActionsUpdated(this.User);
         }
 
         public void ToggleMute()

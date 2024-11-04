@@ -24,7 +24,7 @@ limitations under the License.
 namespace umi3dBrowsers.displayer
 {
     [RequireComponent(typeof(UMI3DUI_Button))]
-    public class SubmitButton : MonoBehaviour, ISubDisplayer
+    public class SubmitButton : MonoBehaviour, ISubDisplayer, IPointerDownHandler
     {
         public event Action OnClick;
         public event Action OnDisabled;
@@ -43,17 +43,22 @@ namespace umi3dBrowsers.displayer
 
         private bool _isPressed;
 
+        private void Start()
+        {
+            image.sprite = normalSprite;
+            image.color = normalColor;
+        }
+
         public void Click()
         {
-            image.sprite = clickedSprite;
-            image.color = pressedColor;
-            _isPressed = true;
+            _isPressed = false;
+            Disable();
         }
 
         public void HoverEnter(PointerEventData eventData)
         {
             if (_isPressed) return;
-            image.sprite = clickedSprite;
+            image.sprite = normalSprite;
             image.color = hoverColor;
         }
 
@@ -72,6 +77,13 @@ namespace umi3dBrowsers.displayer
         public void Init(Color normalColor, Color hoverColor, Color selectedColor)
         {
             throw new NotImplementedException();
+        }
+
+        public void OnPointerDown(PointerEventData eventData)
+        {
+            image.sprite = clickedSprite;
+            image.color = pressedColor;
+            _isPressed = true;
         }
     }
 }

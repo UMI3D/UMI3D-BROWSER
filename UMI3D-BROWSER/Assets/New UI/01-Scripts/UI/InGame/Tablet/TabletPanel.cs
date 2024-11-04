@@ -15,7 +15,9 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
+using umi3d.baseBrowser.cursor;
 using UnityEngine;
+using static umi3d.baseBrowser.cursor.BaseCursor;
 
 namespace umi3d.browserRuntime.ui.inGame.tablet
 {
@@ -25,6 +27,7 @@ namespace umi3d.browserRuntime.ui.inGame.tablet
         {
             NotificationHub.Default.Subscribe(this, TabletNotificationKeys.Open, Open);
             NotificationHub.Default.Subscribe(this, TabletNotificationKeys.Close, Close);
+            gameObject.SetActive(false);
         }
 
         private void OnDestroy()
@@ -35,11 +38,13 @@ namespace umi3d.browserRuntime.ui.inGame.tablet
         private void Open()
         {
             gameObject.SetActive(true);
+            BaseCursor.SetMovement(this, CursorMovement.Free);
         }
 
         private void Close()
         {
             gameObject.SetActive(false);
+            BaseCursor.UnSetMovement(this);
         }
     }
 }

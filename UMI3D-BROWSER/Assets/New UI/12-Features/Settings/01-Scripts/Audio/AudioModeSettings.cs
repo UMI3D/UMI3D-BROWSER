@@ -53,7 +53,10 @@ namespace umi3d.browserRuntime.ui.settings
 
         void Click()
         {
-            MicrophoneListener.Instance.SetCurrentMicrophoneMode(mode);
+            if (MicrophoneListener.Exists)
+            {
+                MicrophoneListener.Instance.SetCurrentMicrophoneMode(mode);
+            }
             audioSettings.model.mode = mode;
 
             notifier[SettingsNotificationKeys.MicrophoneModeChanged.Mode] = mode;

@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using umi3d.cdk.collaboration;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -47,7 +48,10 @@ namespace umi3d.browserRuntime.ui.settings.audio
         void Click()
         {
 #if UNITY_STANDALONE
+            if (MicrophoneListener.Exists)
+            {
                 MicrophoneListener.Instance.UseNoiseReduction = isOnButton;
+            }
 #endif
             audioSettings.model.isNoiseReductionEnabled = isOn;
         }

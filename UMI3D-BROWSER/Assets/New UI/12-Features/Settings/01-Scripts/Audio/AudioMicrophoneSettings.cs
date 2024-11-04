@@ -49,6 +49,11 @@ namespace umi3d.browserRuntime.ui.settings
 
         void RefreshMicOptions()
         {
+            if (!MicrophoneListener.Exists)
+            {
+                return;
+            }
+
             microphones = MicrophoneListener.GetMicrophonesNames().ToList();
 
             if (string.IsNullOrEmpty(audioSettings.model.microphone) || !microphones.Contains(audioSettings.model.microphone))
@@ -60,8 +65,7 @@ namespace umi3d.browserRuntime.ui.settings
                 dropdownControl.selectedIndex = microphones.IndexOf(audioSettings.model.microphone);
             }
 
-            MicrophoneListener.Instance.SetCurrentMicrophoneName(microphones[dropdownControl.selectedIndex])
-                .Start(TaskScheduler.FromCurrentSynchronizationContext());
+            MicrophoneListener.Instance.SetCurrentMicrophoneName(microphones[dropdownControl.selectedIndex]);
 
             dropdownControl.optionsCount = microphones.Count;
             dropdownControl.SetOptions();
@@ -74,8 +78,7 @@ namespace umi3d.browserRuntime.ui.settings
 
         void ValueChanged(int index)
         {
-            MicrophoneListener.Instance.SetCurrentMicrophoneName(microphones[index])
-                .Start(TaskScheduler.FromCurrentSynchronizationContext());
+            MicrophoneListener.Instance.SetCurrentMicrophoneName(microphones[index]);
             audioSettings.model.microphone = microphones[index];
         }
     }

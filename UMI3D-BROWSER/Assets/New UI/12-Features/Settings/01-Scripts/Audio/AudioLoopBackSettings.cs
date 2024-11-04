@@ -43,7 +43,10 @@ namespace umi3d.browserRuntime.ui.settings
 
         void Click()
         {
-            MicrophoneListener.Instance.useLocalLoopback = isOn;
+            if (MicrophoneListener.Exists)
+            {
+                MicrophoneListener.Instance.useLocalLoopback = isOn;
+            }
         }
     }
 }

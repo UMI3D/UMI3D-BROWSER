@@ -46,7 +46,10 @@ namespace umi3d.browserRuntime.ui.settings
 
         void ValueChanged(float newValue)
         {
-            MicrophoneListener.Instance.minAmplitudeToSend = newValue;
+            if (MicrophoneListener.Exists)
+            {
+                MicrophoneListener.Instance.minAmplitudeToSend = newValue;
+            }
             audioSettings.model.noiseThreshold = newValue;
         }
     }

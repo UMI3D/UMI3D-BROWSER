@@ -50,7 +50,7 @@ namespace umi3d.browserRuntime.ui.settings.audio
 #if UNITY_STANDALONE
             if (MicrophoneListener.Exists)
             {
-                MicrophoneListener.Instance.UseNoiseReduction = isOnButton;
+                MicrophoneListener.Instance.UseNoiseReduction = isOn;
             }
 #endif
             audioSettings.model.isNoiseReductionEnabled = isOn;

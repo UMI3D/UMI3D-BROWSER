@@ -23,7 +23,14 @@ namespace umi3d.browserRuntime.notificationKeys
         /// <summary>
         /// Event raised when a setting panel is selected.
         /// </summary>
-        public class NewPanelSelected { }
+        public class NewPanelSelected 
+        {
+            /// <summary>
+            /// The new selected panel.<br/>
+            /// Value is <see cref="string"/>.
+            /// </summary>
+            public const string panel = "panel";
+        }
 
         /// <summary>
         /// Notification sent when the quality settings have changed.

@@ -37,6 +37,8 @@ namespace umi3d.browserRuntime.ui.settings
 
         bool isActive;
 
+        Notifier notifier;
+
         void Awake()
         {
             button = GetComponent<Button>();
@@ -48,10 +50,12 @@ namespace umi3d.browserRuntime.ui.settings
             content = transform.parent.GetChild(1).gameObject;
 
             NotificationHub.Default.Subscribe<SettingsNotificationKeys.NewPanelSelected>(
-                this,
                 new FilterByRef(FilterType.AcceptAllExcept, this),
                 Deactivate
             );
+
+            notifier = NotificationHub.Default
+                .GetNotifier<SettingsNotificationKeys.NewPanelSelected>(this);
         }
 
         void OnDestroy()
@@ -78,7 +82,8 @@ namespace umi3d.browserRuntime.ui.settings
 
         void Click()
         {
-            NotificationHub.Default.Notify<SettingsNotificationKeys.NewPanelSelected>(this);
+            notifier[SettingsNotificationKeys.NewPanelSelected.panel] = name;
+            notifier.Notify();
             Activate();
         }
 
@@ -90,8 +95,18 @@ namespace umi3d.browserRuntime.ui.settings
             content.SetActive(true);
         }
 
-        void Deactivate()
+        void Deactivate(Notification notification)
         {
+            if (!notification.TryGetInfoT(SettingsNotificationKeys.NewPanelSelected.panel, out string panel))
+            {
+                return;
+            }
+
+            if (panel == name)
+            {
+                return;
+            }
+
             isActive = false;
             text.color = textColor;
             background.gameObject.SetActive(false);

@@ -64,16 +64,6 @@ namespace umi3d.browserRuntime.ui.keyboard
             );
         }
 
-        private void OnEnable()
-        {
-
-        }
-
-        private void OnDestroy()
-        {
-
-        }
-
         public void OnPointerDown(PointerEventData eventData)
         {
             if (!button.IsInteractable())

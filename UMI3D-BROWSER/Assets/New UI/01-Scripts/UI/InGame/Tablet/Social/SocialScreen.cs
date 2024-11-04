@@ -22,6 +22,7 @@ using TMPro;
 using umi3d.browserRuntime.ui.elements.dropdown;
 using umi3d.cdk.collaboration;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.ui.inGame.tablet.social
 {
@@ -29,6 +30,7 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
     {
         [SerializeField] private Transform content;
         [SerializeField] private GameObject socialPrefab;
+        [SerializeField] private RectTransform userActionContainer;
         [SerializeField] private TMP_InputField searchField;
         [SerializeField] private TMP_Text numberOfParticipantText;
         [SerializeField] private TMP_Text timeSpentText;
@@ -45,11 +47,13 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
         private ToggleDropdownItem MuteFilter;
         private ToggleDropdownItem UnMuteFilter;
 
+        private ToggleGroup toggleGroup;
+
         private void Awake()
         {
             UpdateList();
 
-            UMI3DEnvironmentClient.EnvironementJoinned.AddListener(UpdateList);
+            UMI3DEnvironmentClient.EnvironmentJoined.AddListener(UpdateList);
             UMI3DUser.OnNewUser.AddListener(Add);
             //UMI3DUser.OnUserMicrophoneStatusUpdated.AddListener(UpdateUserList);
             UMI3DUser.OnRemoveUser.AddListener(Remove);
@@ -58,6 +62,9 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
 
             NotificationHub.Default.Subscribe(this, TabletNotificationKeys.OpenSocial, Open);
             NotificationHub.Default.Subscribe(this, TabletNotificationKeys.CloseScreens, Close);
+
+            toggleGroup = gameObject.GetOrAddComponent<ToggleGroup>();
+            toggleGroup.allowSwitchOff = true;
         }
 
         private void Start()
@@ -78,6 +85,14 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
             MuteFilter.OnToggle += b => Filter();
             UnMuteFilter = filterDropdown.AddOption("UnMute");
             UnMuteFilter.OnToggle += b => Filter();
+
+
+            UnityEngine.Debug.Assert(MuteFilter != null, "Mute filter is null");
+            UnityEngine.Debug.Assert(UnMuteFilter != null, "UnMute filter is null");
+
+            userActionContainer.gameObject.SetActive(false);
+
+            Filter();
         }
 
         private void OnDestroy()
@@ -103,7 +118,7 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
             _startTime = DateTime.Now;
 
             _allUsers = new List<SocialElement>();
-            _allUsers = UMI3DCollaborationEnvironmentLoader.Instance.JoinnedUserList
+            _allUsers = UMI3DCollaborationEnvironmentLoader.Instance.JoinedUserList
                 .Where(u => !u.isClient)
                 .Select(CreateUser)
                 .ToList();
@@ -129,8 +144,12 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
 
         private void Filter()
         {
+            if (MuteFilter is null || UnMuteFilter is null)
+                return;
+
             // Use Filters
             _users = _allUsers
+                .Where(u => u is not null)
                 .Where(u => MuteFilter.IsOn ? !u.MicroOpen : true)
                 .Where(u => UnMuteFilter.IsOn ? u.MicroOpen : true)
                 .ToList();
@@ -180,6 +199,9 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
                 socialElement.IsMute = false;
                 _allUsersRemembered.Add(user.id, socialElement);
             }
+
+            socialElement.ToggleGroup = toggleGroup;
+            socialElement.nonPrimaryActionContainer = userActionContainer;
 
             return socialElement;
         }

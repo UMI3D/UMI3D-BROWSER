@@ -1,5 +1,5 @@
 ﻿/*
-Copyright 2019 - 2021 Inetum
+Copyright 2019 - 2024 Inetum
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,17 +14,20 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System;
-using System.Collections.Generic;
+using TMPro;
+using UnityEngine;
 
-namespace umi3d.cdk.collaboration
+namespace umi3d.browserRuntime.ui.inGame.tablet.social
 {
-    public interface ICollaborationEnvironmentManager : IEnvironmentManager
+    public class UserActionOptionDisplayer : MonoBehaviour
     {
-        IReadOnlyList<UMI3DUser> UserList { get; }
-        IReadOnlyList<UMI3DUser> JoinedUserList { get; }
+        public TMP_Text text;
+        public GameObject Parent;
 
-        event Action OnUpdateJoinedUserList;
-        event Action OnUpdateUserList;
+        private void Start()
+        {
+            if(text.text == null)
+                Parent.transform.parent.gameObject.SetActive(false);
+        }
     }
 }

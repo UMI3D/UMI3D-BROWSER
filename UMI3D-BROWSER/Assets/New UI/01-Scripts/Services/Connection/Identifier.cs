@@ -74,6 +74,8 @@ namespace umi3dBrowsers.services.connection
 
         public override async Task GetParameterDtos(WaitConnectionDto parameter)
         {
+            UnityEngine.Debug.Log("Wait");
+
             bool isWaiting = true;
 
             Action callback = () => { isWaiting = false; };

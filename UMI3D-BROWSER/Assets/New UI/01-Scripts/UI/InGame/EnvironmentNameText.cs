@@ -31,17 +31,17 @@ namespace umi3d.browserRuntime.ui.inGame
         {
             text = GetComponent<TMP_Text>();
 
-            UMI3DEnvironmentClient.EnvironementJoinned.AddListener(OnEnvironmentJoinned);
             connectionToImmersiveLinker.OnLeave += OnEnvironmentLeaved;
+            UMI3DEnvironmentClient.EnvironmentJoined.AddListener(OnEnvironmentJoined);
         }
 
         private void OnDestroy()
         {
-            UMI3DEnvironmentClient.EnvironementJoinned.RemoveListener(OnEnvironmentJoinned);
             connectionToImmersiveLinker.OnLeave -= OnEnvironmentLeaved;
+            UMI3DEnvironmentClient.EnvironmentJoined.RemoveListener(OnEnvironmentJoined);
         }
 
-        private void OnEnvironmentJoinned()
+        private void OnEnvironmentJoined()
         {
             text.text = UMI3DCollaborationClientServer.Environement?.name ?? "";
         }

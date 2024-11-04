@@ -47,7 +47,7 @@ namespace umi3dBrowsers.displayer
                 m_menuNavigationLinker.ShowPanel(m_loadingPanel);
                 m_menuNavigationLinker.ReplacePlayerAndShowPanel();
             };
-            UMI3DEnvironmentClient.EnvironementLoaded.AddListener(() =>
+            UMI3DEnvironmentClient.EnvironmentLoaded.AddListener(() =>
             {
                 OnLoadingFinished?.Invoke();
                 loadingTipDisplayer.StopDisplayTips();

@@ -14,20 +14,41 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-namespace umi3d.browserRuntime.ui.settings
+namespace umi3d.browserRuntime.notificationKeys
 {
     public static class SettingsNotificationKeys
     {
         public static readonly string CloseAll = "settings-close-all";
-        public static readonly string OpenGeneral = "settings-open-general";
-        public static readonly string OpenAudio = "settings-open-audio";
-        public static readonly string OpenGraphics = "settings-open-graphics";
-        public static readonly string OpenComfort = "settings-open-comfort";
 
-        // Notification sent when the keyboard settings panel should open.
-        public class OpenKeyboard { }
+        /// <summary>
+        /// Event raised when a setting panel is selected.
+        /// </summary>
+        public class NewPanelSelected { }
 
-        public static readonly string NewPanelSelected = "settings-newPanelSelected";
+        /// <summary>
+        /// Notification sent when the quality settings have changed.
+        /// </summary>
+        public class QualityChanged 
+        {
+            /// <summary>
+            /// The new quality.<br/>
+            /// Value is <see cref="notificationKeys.BrowserQualitySettings"/>.
+            /// </summary>
+            public const string Quality = "Quality";
+        }
+
+        /// <summary>
+        /// Notification sent when the microphone mode has changed.
+        /// </summary>
+        public class MicrophoneModeChanged
+        {
+            /// <summary>
+            /// The new mode.<br/>
+            /// Value is <see cref="umi3d.cdk.collaboration.MicrophoneMode"/>.
+            /// </summary>
+            public const string Mode = "Mode";
+        }
+
         public static readonly string NewToggleCustomSelected = "settings-toggle-custom-";
 
         public static readonly string SetDeafenIndicator = "settings-deafen-indicator";

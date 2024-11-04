@@ -15,12 +15,13 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
+using umi3d.browserRuntime.notificationKeys;
 using umi3d.cdk.collaboration;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.settings
 {
-    public class AudioModeDependencySettings : MonoBehaviour
+    internal class AudioModeDependencySettings : MonoBehaviour
     {
         [SerializeField] MicrophoneMode mode;
 

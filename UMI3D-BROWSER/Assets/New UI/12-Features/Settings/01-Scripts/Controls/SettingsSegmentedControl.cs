@@ -15,13 +15,14 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
+using umi3d.browserRuntime.notificationKeys;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.ui.settings
 {
     [RequireComponent(typeof(Button))]
-    public class SettingsSegmentedControl : MonoBehaviour
+    internal class SettingsSegmentedControl : MonoBehaviour
     {
         Button button;
         Image background;

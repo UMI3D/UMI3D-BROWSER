@@ -14,24 +14,24 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using umi3d.cdk.collaboration;
 using UnityEngine;
-using UnityEngine.UI;
 
-namespace umi3d.browserRuntime.ui.settings.audio
+namespace umi3d.browserRuntime.ui.settings
 {
-    public class NoiseThresholdSlider : MonoBehaviour
+    internal class AudioSettings : MonoBehaviour
     {
-        [SerializeField] private Slider slider;
+        [HideInInspector] public AudioSettingsPSM model;
 
-        private void Awake()
+        void Awake()
         {
-            slider.onValueChanged.AddListener(newValue => {
-                PlayerPrefs.SetFloat(SettingsPlayerPrefsKeys.NoiseThreshold, newValue);
-                MicrophoneListener.Instance.minAmplitudeToSend = newValue;
-            });
+            model = ScriptableObject.CreateInstance<AudioSettingsPSM>();
+            model.directories = "Settings";
+            model.Load();
+        }
 
-            slider.value = PlayerPrefs.GetFloat(SettingsPlayerPrefsKeys.NoiseThreshold, 0);
+        void OnDestroy()
+        {
+            model.Save();
         }
     }
 }

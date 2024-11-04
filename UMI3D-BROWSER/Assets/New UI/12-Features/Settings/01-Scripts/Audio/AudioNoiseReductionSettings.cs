@@ -14,31 +14,42 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using umi3d.cdk.collaboration;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.ui.settings.audio
 {
     [RequireComponent(typeof(Button))]
-    public class LoopBackButton : MonoBehaviour
+    public class AudioNoiseReductionSettings : MonoBehaviour
     {
-        [SerializeField] private bool isOnButton;
+        [SerializeField] bool isOn;
 
-        private Button button;
+        Button button;
 
-        private void Awake()
+        AudioSettings audioSettings;
+
+        void Awake()
         {
             button = GetComponent<Button>();
-            button.onClick.AddListener(() => {
-                MicrophoneListener.Instance.useLocalLoopback = isOnButton;
-            });
+            button.onClick.AddListener(Click);
+
+            audioSettings = GetComponentInParent<AudioSettings>();
         }
 
-        private void Start()
+        void OnEnable()
         {
-            if (!isOnButton)
+            if (isOn == audioSettings.model.isNoiseReductionEnabled)
+            {
                 button.onClick?.Invoke();
+            }
+        }
+
+        void Click()
+        {
+#if UNITY_STANDALONE
+                MicrophoneListener.Instance.UseNoiseReduction = isOnButton;
+#endif
+            audioSettings.model.isNoiseReductionEnabled = isOn;
         }
     }
 }

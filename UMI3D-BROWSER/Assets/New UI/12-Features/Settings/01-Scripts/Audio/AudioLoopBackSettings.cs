@@ -18,30 +18,32 @@ using umi3d.cdk.collaboration;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace umi3d.browserRuntime.ui.settings.audio
+namespace umi3d.browserRuntime.ui.settings
 {
     [RequireComponent(typeof(Button))]
-    public class NoiseReductionButton : MonoBehaviour
+    internal class AudioLoopBackSettings : MonoBehaviour
     {
-        [SerializeField] private bool isOnButton;
+        [SerializeField] bool isOn;
 
-        private Button button;
+        Button button;
 
-        private void Awake()
+        void Awake()
         {
             button = GetComponent<Button>();
-            button.onClick.AddListener(() => {
-#if UNITY_STANDALONE
-                MicrophoneListener.Instance.UseNoiseReduction = isOnButton;
-#endif
-                PlayerPrefs.SetInt(SettingsPlayerPrefsKeys.UseNoiseReduction, isOnButton ? 1 : 0);
-            });
+            button.onClick.AddListener(Click);
         }
 
-        private void Start()
+        void Start()
         {
-            if (PlayerPrefs.GetInt(SettingsPlayerPrefsKeys.UseNoiseReduction, 0) > 0 == isOnButton)
+            if (!isOn)
+            {
                 button.onClick?.Invoke();
+            }
+        }
+
+        void Click()
+        {
+            MicrophoneListener.Instance.useLocalLoopback = isOn;
         }
     }
 }

@@ -88,9 +88,6 @@ GameObject:
   - component: {fileID: 2747800768571797233}
   - component: {fileID: 5763647368329373287}
   - component: {fileID: 4091496519142942823}
-  - component: {fileID: 2639397828201798842}
-  - component: {fileID: 3887983224347091693}
-  - component: {fileID: 1143311188928746549}
   m_Layer: 5
   m_Name: Language
   m_TagString: Untagged
@@ -202,6 +199,12 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+  objectToEnableOnHover: []
+  autoUnHover: 0
+  objectToEnableOnClick: []
+  autoDeselect: 0
+  autoInitStyles: 1
+  relatedButtonStyles: []
 --- !u!114 &4091496519142942823
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -215,9 +218,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _params:
-    SupportedLanguages: 0
-    languageDual: 
-    language: 
+    SupportedLanguages: {fileID: 0}
     languageFlag: {fileID: 0}
   flagImage: {fileID: 4009260704966468097}
   dualText: {fileID: 4544152233404068472}
@@ -226,52 +227,6 @@ MonoBehaviour:
   normalBGColor: {r: 0.18431373, g: 0.18431373, b: 0.18431373, a: 1}
   hoverBG: {r: 0.3584906, g: 0.3584906, b: 0.3584906, a: 1}
   selectedBG: {r: 0.41509432, g: 0.41509432, b: 0.41509432, a: 1}
---- !u!114 &2639397828201798842
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4673848439384612461}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7831fdd9ac1e0fa44976294339e58742, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rescalUIOnStart: 0
---- !u!65 &3887983224347091693
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4673848439384612461}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0, y: 0, z: 0.01}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1143311188928746549
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4673848439384612461}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 54201f7897bbda644b218cb41fa75e97, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &8365409551679942530
 GameObject:
   m_ObjectHideFlags: 0

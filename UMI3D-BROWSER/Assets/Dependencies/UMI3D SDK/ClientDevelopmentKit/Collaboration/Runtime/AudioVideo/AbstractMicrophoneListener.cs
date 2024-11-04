@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Unity.VisualScripting.YamlDotNet.Core.Tokens;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -216,12 +217,44 @@ namespace umi3d.cdk.collaboration
             }
         }
 
+        static public bool ForceMicrophoneStatus(bool mute)
+        {
+            if (Exists)
+                Instance._mute = mute;
+            return MicrophoneListener.mute;
+        }
+
         bool _mute
         {
             get => IsMute() ?? isMute;
             set => Mute(value);
         }
 
+        static public bool canUnmute
+        {
+            get
+            {
+                if (Exists)
+                    return Instance._canUnmute;
+                return false;
+            }
+            set
+            {
+                if (Exists)
+                    Instance._mute = value;
+            }
+        }
+
+        bool _canUnmute = true;
+
+        static public bool forceMute
+        {
+            set
+            {
+                if (Exists)
+                    instance.ForceMute(value);
+            }
+        }
 
         public bool useLocalLoopback
         {
@@ -555,6 +588,13 @@ namespace umi3d.cdk.collaboration
         }
 
         protected void Mute(bool? mute)
+        {
+            var isMute = mute ?? !this.isMute;
+            if (canUnmute && !isMute)
+                ForceMute(isMute);
+        }
+
+        protected void ForceMute(bool? mute)
         {
             var isMute = mute ?? !this.isMute;
             if (this.isMute != isMute)

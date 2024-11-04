@@ -45,7 +45,7 @@ namespace umi3d.browserRuntime.ui.settings
                 Transform content = panel.GetChild(1);
 
                 tab.SetParent(tabs, true);
-                content.SetParent(contents, true);
+                content.SetParent(contents, false);
 
                 tab.name = panel.name;
                 content.name = panel.name;

@@ -106,13 +106,30 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
 
             dropdown.onValueChanged.AddListener(DropDown_OnValueChanged);
             actionButton.onValueChanged.AddListener(DisplayAction);
-            DisplayAction(false);
             UMI3DUser.OnUserActionsUpdated.AddListener(OnUserActionsUpdated);
         }
 
+        private void Update()
+        {
+            if(isDisplayingAction)
+            {
+                Vector3[] v = new Vector3[4];
+                (this.transform as RectTransform).GetWorldCorners(v);
+                nonPrimaryActionContainer.position = v[3];
+            }
+        }
+        private void OnDisable()
+        {
+            if (isDisplayingAction)
+            {
+                DisplayAction(false);
+            }
+        }
+
+        bool isDisplayingAction = false;
+
         private void DisplayAction(bool display)
         {
-            
             if (display)
             {
                 foreach (Transform child in nonPrimaryActionContainer.transform)
@@ -139,6 +156,8 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
                 {
                     GameObject.Destroy(child.gameObject);
                 }
+            isDisplayingAction = display;
+            actionButton.SetIsOnWithoutNotify(display);
             nonPrimaryActionContainer.gameObject.SetActive(display);
         }
 

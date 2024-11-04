@@ -86,7 +86,13 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
             UnMuteFilter = filterDropdown.AddOption("UnMute");
             UnMuteFilter.OnToggle += b => Filter();
 
+
+            UnityEngine.Debug.Assert(MuteFilter != null, "Mute filter is null");
+            UnityEngine.Debug.Assert(UnMuteFilter != null, "UnMute filter is null");
+
             userActionContainer.gameObject.SetActive(false);
+
+            Filter();
         }
 
         private void OnDestroy()
@@ -138,8 +144,12 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
 
         private void Filter()
         {
+            if (MuteFilter is null || UnMuteFilter is null)
+                return;
+
             // Use Filters
             _users = _allUsers
+                .Where(u => u is not null)
                 .Where(u => MuteFilter.IsOn ? !u.MicroOpen : true)
                 .Where(u => UnMuteFilter.IsOn ? u.MicroOpen : true)
                 .ToList();

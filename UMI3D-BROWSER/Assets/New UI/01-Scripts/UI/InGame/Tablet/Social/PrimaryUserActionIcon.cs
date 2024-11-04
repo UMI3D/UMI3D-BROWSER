@@ -85,7 +85,6 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
             if(this.button != null)
                 button.onClick.RemoveListener(Call);
             this.button = gameObject.GetComponent<Button>();
-            UnityEngine.Debug.Log(this.button);
             this.button?.onClick.AddListener(Call);
         }
 

@@ -22,6 +22,7 @@ using TMPro;
 using umi3d.browserRuntime.ui.elements.dropdown;
 using umi3d.cdk.collaboration;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.ui.inGame.tablet.social
 {
@@ -29,6 +30,7 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
     {
         [SerializeField] private Transform content;
         [SerializeField] private GameObject socialPrefab;
+        [SerializeField] private RectTransform userActionContainer;
         [SerializeField] private TMP_InputField searchField;
         [SerializeField] private TMP_Text numberOfParticipantText;
         [SerializeField] private TMP_Text timeSpentText;
@@ -45,6 +47,8 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
         private ToggleDropdownItem MuteFilter;
         private ToggleDropdownItem UnMuteFilter;
 
+        private ToggleGroup toggleGroup;
+
         private void Awake()
         {
             UpdateList();
@@ -58,6 +62,9 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
 
             NotificationHub.Default.Subscribe(this, TabletNotificationKeys.OpenSocial, Open);
             NotificationHub.Default.Subscribe(this, TabletNotificationKeys.CloseScreens, Close);
+
+            toggleGroup = gameObject.GetOrAddComponent<ToggleGroup>();
+            toggleGroup.allowSwitchOff = true;
         }
 
         private void Start()
@@ -78,6 +85,8 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
             MuteFilter.OnToggle += b => Filter();
             UnMuteFilter = filterDropdown.AddOption("UnMute");
             UnMuteFilter.OnToggle += b => Filter();
+
+            userActionContainer.gameObject.SetActive(false);
         }
 
         private void OnDestroy()
@@ -180,6 +189,9 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
                 socialElement.IsMute = false;
                 _allUsersRemembered.Add(user.id, socialElement);
             }
+
+            socialElement.ToggleGroup = toggleGroup;
+            socialElement.nonPrimaryActionContainer = userActionContainer;
 
             return socialElement;
         }

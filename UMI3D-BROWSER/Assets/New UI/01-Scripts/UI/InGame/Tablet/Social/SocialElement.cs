@@ -16,6 +16,7 @@ limitations under the License.
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using umi3d.baseBrowser.extension;
 using umi3d.cdk.collaboration;
@@ -24,40 +25,6 @@ using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.ui.inGame.tablet.social
 {
-    public class UserActionIcon : UserAction
-    {
-        public GameObject gameObject { get; private set; }
-        private Button button;
-
-        public UserActionIcon(GameObject gameObject, cdk.collaboration.UserAction action) : base(action)
-        {
-            this.gameObject = gameObject;
-            button = this.gameObject.GetComponent<Button>();
-            button?.onClick.AddListener(Call);
-        }
-
-        public override void Destroy() 
-        {
-            button?.onClick.RemoveListener(Call);
-            button = null;
-            GameObject.Destroy(gameObject);
-            base.Destroy();
-        }
-    }
-
-    public class UserAction
-    {
-        public cdk.collaboration.UserAction action { get; private set; }
-
-        public UserAction(cdk.collaboration.UserAction action)
-        {
-            this.action = action;
-        }
-
-        public virtual void Destroy() { }
-
-        public void Call() => this.action?.Call();
-    }
 
     public class SocialElement : MonoBehaviour
     {
@@ -71,8 +38,11 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
         [SerializeField] private Sprite volumeSprite;
         [SerializeField] private Sprite volumeMuteSprite;
         [SerializeField] private Transform actionContainer;
+        [HideInInspector]public RectTransform nonPrimaryActionContainer;
         [SerializeField] private GameObject actionIconPrefab;
-        [SerializeField] private Button actionButton;
+        [SerializeField] private GameObject nonPrimaryActionPrefab;
+        [SerializeField] private Toggle actionButton;
+        [SerializeField] private TMP_Dropdown dropdown;
 
         public UMI3DUser User
         {
@@ -109,6 +79,12 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
 
         public bool MicroOpen => _user.microphoneStatus;
 
+        public ToggleGroup ToggleGroup
+        {
+            get => actionButton.group;
+            set => actionButton.group = value;
+        }
+
         private UMI3DUser _user;
         private float _volume = 100;
         private bool _isMute = false;
@@ -117,8 +93,8 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
         private const float factor = 5f / 2f;
         private const float factor2 = 5f / 2f;
 
-        List<UserActionIcon> actionIcons = new();
-        List<UserAction> actions = new();
+        List<PrimaryUserActionIcon> actionIcons = new();
+        List<OptionUserActionIcon> actions = new();
 
         private void Awake()
         {
@@ -128,46 +104,91 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
                 UserVolume = newValue;
             });
 
+            dropdown.onValueChanged.AddListener(DropDown_OnValueChanged);
+            actionButton.onValueChanged.AddListener(DisplayAction);
+            DisplayAction(false);
             UMI3DUser.OnUserActionsUpdated.AddListener(OnUserActionsUpdated);
+        }
+
+        private void DisplayAction(bool display)
+        {
+            
+            if (display)
+            {
+                foreach (Transform child in nonPrimaryActionContainer.transform)
+                {
+                    GameObject.Destroy(child.gameObject);
+                }
+                float size = 0;
+                
+                foreach(var action in actions)
+                {
+                    var rect = Instantiate(nonPrimaryActionPrefab, nonPrimaryActionContainer).transform as RectTransform;
+                    action.SetButton(rect.gameObject);
+                    size += rect.sizeDelta.y;
+                }
+
+                Vector3[] v = new Vector3[4];
+                (this.transform as RectTransform).GetWorldCorners(v);
+
+                nonPrimaryActionContainer.position = v[3];//new Vector3(this.transform.position.x - nonPrimaryActionContainer.sizeDelta.x, this.transform.position.y );
+                nonPrimaryActionContainer.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, size);
+            }
+            else
+                foreach (Transform child in nonPrimaryActionContainer.transform)
+                {
+                    GameObject.Destroy(child.gameObject);
+                }
+            nonPrimaryActionContainer.gameObject.SetActive(display);
+        }
+
+        private void DropDown_OnValueChanged(int value)
+        {
+            value -= 1;
+            if (actions.Count < value && value >= 0)
+                actions[value].Call();
+
+            dropdown.SetValueWithoutNotify(0);
         }
 
         private void OnDestroy()
         {
+            dropdown.onValueChanged.RemoveListener(DropDown_OnValueChanged);
             UMI3DUser.OnUserActionsUpdated.RemoveListener(OnUserActionsUpdated);
         }
 
-        private void OnUserActionsUpdated(UMI3DUser user)
+        private async void OnUserActionsUpdated(UMI3DUser user)
         {
-            UnityEngine.Debug.Log($"OnUserActionsUpdated {user != this.User}");
             if (user != this.User)
                 return;
 
-            foreach (UserAction item in actionIcons)
+            foreach (PrimaryUserActionIcon item in actionIcons)
                 item.Destroy();
             actionIcons.Clear();
 
-            foreach (UserAction item in actions)
+            foreach (OptionUserActionIcon item in actions)
                 item.Destroy();
             actions.Clear();
 
             int PrimaryCount = MAX_ACTION_ICON;
-            foreach (cdk.collaboration.UserAction action in user.userActions)
+
+            dropdown.ClearOptions();
+            foreach (cdk.collaboration.UserAction action in user.userActions.ToList())
             {
                 if (PrimaryCount > 0 && action.isPrimary)
                 {
                     PrimaryCount--;
-                    var icon = Instantiate(this.actionIconPrefab, actionContainer);
-                    actionIcons.Add(new(icon, action));
-                    UnityEngine.Debug.Log($"Add icon {action.name}");
-                    continue;
+                    PrimaryUserActionIcon displayer = await PrimaryUserActionIcon.Create(Instantiate(this.actionIconPrefab, actionContainer), action);
+                    actionIcons.Add(displayer);
                 }
-
-                UnityEngine.Debug.Log($"Add {action.name}");
-                actions.Add(new(action));
+                else
+                {
+                    var d = await OptionUserActionIcon.Create(action);
+                    actions.Add(d);
+                }
             }
 
             actionButton.gameObject.SetActive(actions.Count > 0);
-
         }
 
         private void UpdateUser()

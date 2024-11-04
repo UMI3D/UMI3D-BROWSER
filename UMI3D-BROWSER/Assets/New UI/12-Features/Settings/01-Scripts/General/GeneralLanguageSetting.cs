@@ -14,36 +14,31 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System;
 using System.Collections.Generic;
-using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
 
 namespace umi3d.browserRuntime.ui.settings
 {
-    [RequireComponent(typeof(TMP_Dropdown))]
-    public class GeneralLanguageSetting : MonoBehaviour
+    [RequireComponent(typeof(SettingsDropdownControl))]
+    internal class GeneralLanguageSetting : MonoBehaviour
     {
-        TMP_Dropdown dropdown;
-        TMP_Text label;
+        SettingsDropdownControl dropdownControl;
 
         Locale selectedLanguage;
-        int selectedLanguageIndex;
         List<Locale> languages;
-        List<TMP_Dropdown.OptionData> options = new();
-
+        
         GeneralSettings generalSettings;
 
         void Awake()
         {
-            generalSettings = GetComponentInParent<GeneralSettings>();
-            dropdown = GetComponent<TMP_Dropdown>();
-            label = GetComponentInChildren<TMP_Text>();
+            dropdownControl = GetComponent<SettingsDropdownControl>();
 
-            dropdown.onValueChanged.AddListener(ValueChanged);
+            generalSettings = GetComponentInParent<GeneralSettings>();
+
+            dropdownControl.indexToItem = index => LocalToString(languages[index]);
+            dropdownControl.valueChanged += ValueChanged;
         }
 
         void Start()
@@ -55,53 +50,22 @@ namespace umi3d.browserRuntime.ui.settings
             }
             LocalizationSettings.SelectedLocale = selectedLanguage;
             languages = LocalizationSettings.AvailableLocales.Locales;
-            selectedLanguageIndex = languages.IndexOf(selectedLanguage);
-            SetOptions();
+
+            dropdownControl.selectedIndex = languages.IndexOf(selectedLanguage);
+            dropdownControl.optionsCount = languages.Count;
+            dropdownControl.SetOptions();
         }
 
         string LocalToString(Locale locale)
         {
-            return locale.Identifier.CultureInfo.NativeName.FirstCharacterToUpper();
-        }
-
-        void SetOptions()
-        {
-            for (int i = 0; i < languages.Count; i++)
-            {
-                if (i == selectedLanguageIndex)
-                {
-                    continue;
-                }
-
-                string language = LocalToString(languages[i]);
-                options.Add(new(language));
-            }
-            dropdown.options = options;
-            dropdown.SetValueWithoutNotify(-1);
-            label.text = LocalToString(selectedLanguage);
-        }
-
-        void UpdateOptions()
-        {
-            int index = 0;
-            for (int i = 0; i < options.Count; i++)
-            {
-                index = i < selectedLanguageIndex ? i : i + 1;
-
-                options[i].text = LocalToString(languages[index]);
-            }
-            dropdown.SetValueWithoutNotify(-1);
-            label.text = LocalToString(selectedLanguage);
+            return Unity.VisualScripting.StringUtility.FirstCharacterToUpper(locale.Identifier.CultureInfo.NativeName);
         }
 
         void ValueChanged(int index)
         {
-            selectedLanguageIndex = index < selectedLanguageIndex ? index : index + 1;
-            selectedLanguage = languages[selectedLanguageIndex];
+            selectedLanguage = languages[index];
             LocalizationSettings.SelectedLocale = selectedLanguage;
             generalSettings.model.selectedLanguage = selectedLanguage.LocaleName;
-
-            UpdateOptions();
         }
     }
 }

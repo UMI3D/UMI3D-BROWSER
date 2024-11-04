@@ -30,9 +30,19 @@ namespace umi3d.browserRuntime.ui.settings
         [ContextMenu("Set Size")]
         void SetContentsTransform()
         {
+            RectTransform rt = transform.GetComponent<RectTransform>();
+
+            rt.offsetMin = new Vector2(0f, 0f);
+            rt.offsetMax = new Vector2(0f, -64f);
+
+
+#if UNITY_EDITOR
+            UnityEditor.EditorUtility.SetDirty(rt);
+#endif
+
             for (int i = 0; i < transform.childCount; i++)
             {
-                RectTransform rt = transform.GetChild(i).GetComponent<RectTransform>();
+                rt = transform.GetChild(i).GetComponent<RectTransform>();
                 rt.sizeDelta = new Vector2(1010f, 49f);
 
 #if UNITY_EDITOR

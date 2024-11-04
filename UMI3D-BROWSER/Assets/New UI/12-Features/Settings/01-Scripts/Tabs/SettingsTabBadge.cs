@@ -18,9 +18,9 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace umi3d.browserRuntime.settings
+namespace umi3d.browserRuntime.ui.settings
 {
-    public class SettingsTabBadge : MonoBehaviour
+    internal class SettingsTabBadge : MonoBehaviour
     {
         [SerializeField] float padding = 10f;
         [SerializeField] bool isHorizontal = true;

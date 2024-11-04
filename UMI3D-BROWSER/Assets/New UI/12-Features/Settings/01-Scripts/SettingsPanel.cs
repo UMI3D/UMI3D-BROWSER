@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -30,10 +31,7 @@ namespace umi3d.browserRuntime.ui.settings
             tabs = transform.GetChild(0);
             contents = transform.GetChild(1);
             templates = transform.GetChild(2);
-        }
 
-        void Start()
-        {
             SetTemplates();
         }
 
@@ -52,14 +50,21 @@ namespace umi3d.browserRuntime.ui.settings
                 tab.name = panel.name;
                 content.name = panel.name;
 
-                if (i != 0)
-                {
-                    content.gameObject.SetActive(false);
-                }
-                else
-                {
-                    tab.GetComponent<Button>().onClick?.Invoke();
-                }
+                ApplySettings(i, tab, content);
+            }
+        }
+
+        async void ApplySettings(int i, Transform tab, Transform content)
+        {
+            await Task.Yield();
+
+            if (i != 0)
+            {
+                content.gameObject.SetActive(false);
+            }
+            else
+            {
+                tab.GetComponent<Button>().onClick?.Invoke();
             }
         }
     }

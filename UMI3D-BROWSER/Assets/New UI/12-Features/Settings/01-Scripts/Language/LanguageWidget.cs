@@ -18,6 +18,7 @@ using inetum.unityUtils;
 using System;
 using System.Collections.Generic;
 using umi3d.browserRuntime.conditionalCompilation;
+using umi3d.browserRuntime.ui.settings;
 using umi3dBrowsers.data.ui;
 using umi3dBrowsers.linker.ui;
 using umi3dBrowsers.services.connection;
@@ -32,8 +33,8 @@ namespace umi3dBrowsers.displayer
         [Serializable]
         public class LanguageAssociation
         {
-            [SerializeField] public LanguageSelectionField.LanguageParams languageParams;
-            [SerializeField] public LanguageSelectionField languageSelectionField;
+            [SerializeField] public SettingsLanguageControl.LanguageParams languageParams;
+            [SerializeField] public SettingsLanguageControl languageSelectionField;
         }
 
         [SerializeField] private List<LanguageAssociation> languageAssociations = new();
@@ -60,17 +61,17 @@ namespace umi3dBrowsers.displayer
         {
             selectedLanguage = LocalizationSettings.SelectedLocale;
 
-            LanguageSelectionField baseField = null;
+            SettingsLanguageControl baseField = null;
             for (int i = 0; i < languageAssociations.Count; i++)
             {
                 LanguageAssociation currentAsso = languageAssociations[i];
 
                 if (languageAssociations[i].languageSelectionField == null)
                 {
-                    languageAssociations[i].languageSelectionField = Instantiate(languagePrefab, transform).GetComponent<LanguageSelectionField>();
+                    languageAssociations[i].languageSelectionField = Instantiate(languagePrefab, transform).GetComponent<SettingsLanguageControl>();
                 }
 
-                LanguageSelectionField currentField = languageAssociations[i].languageSelectionField;
+                SettingsLanguageControl currentField = languageAssociations[i].languageSelectionField;
 
                 currentField.Init(currentAsso.languageParams);
                 currentField.OnClick += () =>
@@ -78,18 +79,11 @@ namespace umi3dBrowsers.displayer
                     selectedLanguage = currentAsso.languageParams.SupportedLanguages;
                     languageAssociations.ForEach(language =>
                     {
-                        if (language.languageSelectionField != currentField)
-                            language.languageSelectionField.Disable();
                         OnSupportedLanguageValidated?.Invoke(selectedLanguage);
                         menuNavigationLinker.ShowPanel(nextPanel.Reference);
                     });
                 };
 
-                currentField.OnDisabled += () =>
-                {
-                    if (currentField.Params.SupportedLanguages == selectedLanguage)
-                        selectedLanguage = null;
-                };
 
                 if (selectedLanguage == currentAsso.languageParams.SupportedLanguages)
                     baseField = currentField;

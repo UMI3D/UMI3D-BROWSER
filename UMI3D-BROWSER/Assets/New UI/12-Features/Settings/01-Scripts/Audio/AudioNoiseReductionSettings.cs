@@ -18,10 +18,10 @@ using umi3d.cdk.collaboration;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace umi3d.browserRuntime.ui.settings.audio
+namespace umi3d.browserRuntime.ui.settings
 {
     [RequireComponent(typeof(Button))]
-    public class AudioNoiseReductionSettings : MonoBehaviour
+    internal class AudioNoiseReductionSettings : MonoBehaviour
     {
         [SerializeField] bool isOn;
 

@@ -19,10 +19,10 @@ using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
-namespace umi3d.browserRuntime.ui.settings.graphics
+namespace umi3d.browserRuntime.ui.settings
 {
     [RequireComponent(typeof(Button))]
-    public class GraphicsAntiAliasingSettings : MonoBehaviour
+    internal class GraphicsAntiAliasingSettings : MonoBehaviour
     {
         [SerializeField] int msaa;
 

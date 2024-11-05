@@ -18,7 +18,7 @@ using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.settings
 {
-    public class ConfortSettings : MonoBehaviour
+    internal class ConfortSettings : MonoBehaviour
     {
         [HideInInspector] public ConfortSettingsPSM model;
 

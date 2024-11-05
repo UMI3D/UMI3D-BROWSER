@@ -18,7 +18,7 @@ using inetum.unityUtils.saveSystem;
 
 namespace umi3d.browserRuntime.ui.settings
 {
-    public class GeneralSettingsPSM : PersistentScriptableModel
+    internal class GeneralSettingsPSM : PersistentScriptableModel
     {
         /// <summary>
         /// Whether the languages panel has been displayed at first launch.

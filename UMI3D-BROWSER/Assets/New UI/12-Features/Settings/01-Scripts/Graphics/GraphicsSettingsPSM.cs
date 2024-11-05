@@ -19,7 +19,7 @@ using umi3d.browserRuntime.notificationKeys;
 
 namespace umi3d.browserRuntime.ui.settings
 {
-    public class GraphicsSettingsPSM : PersistentScriptableModel
+    internal class GraphicsSettingsPSM : PersistentScriptableModel
     {
         public BrowserQualitySettings quality = BrowserQualitySettings.Medium;
         public bool HDR = true;

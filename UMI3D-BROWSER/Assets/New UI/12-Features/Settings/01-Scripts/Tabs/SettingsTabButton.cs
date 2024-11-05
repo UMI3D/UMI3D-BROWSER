@@ -24,7 +24,7 @@ using UnityEngine.UI;
 namespace umi3d.browserRuntime.ui.settings
 {
     [RequireComponent(typeof(Button))]
-    public class SettingsTabButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+    internal class SettingsTabButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         [SerializeField] Color textColor;
         [SerializeField] Color textColorHover;

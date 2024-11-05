@@ -15,12 +15,10 @@ limitations under the License.
 */
 
 using inetum.unityUtils.saveSystem;
-using System;
-using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.settings
 {
-    public class ConfortSettingsPSM : PersistentScriptableModel
+    internal class ConfortSettingsPSM : PersistentScriptableModel
     {
         public bool UIAnimation = true;
     }

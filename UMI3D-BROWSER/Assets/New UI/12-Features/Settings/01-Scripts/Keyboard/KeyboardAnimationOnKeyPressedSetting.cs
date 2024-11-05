@@ -22,7 +22,7 @@ using UnityEngine.UI;
 namespace umi3d.browserRuntime.ui.settings
 {
     [RequireComponent(typeof(Button))]
-    public class KeyboardAnimationOnKeyPressedSetting : MonoBehaviour
+    internal class KeyboardAnimationOnKeyPressedSetting : MonoBehaviour
     {
         [SerializeField] bool isOn;
 

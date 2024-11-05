@@ -15,15 +15,14 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
-using System.Collections.Generic;
+using umi3d.browserRuntime.notificationKeys;
 using UnityEngine;
 using UnityEngine.UI;
-using umi3d.browserRuntime.notificationKeys;
 
 namespace umi3d.browserRuntime.ui.settings
 {
     [RequireComponent(typeof(Button))]
-    public class GraphicsQualitySettings : MonoBehaviour
+    internal class GraphicsQualitySettings : MonoBehaviour
     {
         [SerializeField] BrowserQualitySettings quality;
 

@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Unity.VisualScripting.YamlDotNet.Core.Tokens;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -102,7 +103,8 @@ namespace umi3d.cdk.collaboration
         public static MumbleEvent OnMumbleStatusUpdate = new MumbleEvent();
         EventUpdater<MumbleStatus> OnMumbleStatusUpdateUpdater;
 
-        List<Action<float[]>> subscribed = new List<Action<float[]>>();
+        List<Action<float[]>> subscribedPCM = new ();
+        List<Action<bool>> subscribedIsSpeaking = new();
 
         protected class Identity
         {
@@ -829,9 +831,35 @@ namespace umi3d.cdk.collaboration
         }
         #endregion
 
+
+        public bool wasTalking = false;
+        public float threshold = 1;
+
         private void DebugSample(PcmArray array)
         {
-            foreach (var action in subscribed)
+            if(subscribedIsSpeaking.Count > 0)
+            {
+                var total = 0f;
+                foreach (var v in array.Pcm)
+                    total += v;
+                if (MicrophoneListener.mute && Mathf.Abs(total) > threshold)
+                {
+                    if (!wasTalking)
+                    {
+                        wasTalking = true;
+                        foreach (var action in subscribedIsSpeaking)
+                            action?.Invoke(wasTalking);
+                    }
+                    else if(wasTalking)
+                    {
+                        wasTalking = false;
+                        foreach (var action in subscribedIsSpeaking)
+                            action?.Invoke(wasTalking);
+                    }
+                }
+            }
+
+            foreach (var action in subscribedPCM)
                 action?.Invoke(array.Pcm);
 
             if (debugSampling)
@@ -919,9 +947,19 @@ namespace umi3d.cdk.collaboration
 
         public bool Subscribe(Action<float[]> callback)
         {
-            if (!subscribed.Contains(callback))
+            if (!subscribedPCM.Contains(callback))
             {
-                subscribed.Add(callback);
+                subscribedPCM.Add(callback);
+                return true;
+            }
+            return false;
+        }
+
+        public bool Subscribe(Action<bool> callback)
+        {
+            if (!subscribedIsSpeaking.Contains(callback))
+            {
+                subscribedIsSpeaking.Add(callback);
                 return true;
             }
             return false;
@@ -929,7 +967,12 @@ namespace umi3d.cdk.collaboration
 
         public bool UnSubscribe(Action<float[]> callback)
         {
-            return subscribed.Remove(callback);
+            return subscribedPCM.Remove(callback);
+        }
+
+        public bool UnSubscribe(Action<bool> callback)
+        {
+            return subscribedIsSpeaking.Remove(callback);
         }
 
     }

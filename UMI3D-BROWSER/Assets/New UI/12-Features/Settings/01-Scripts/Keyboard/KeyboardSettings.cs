@@ -18,7 +18,7 @@ using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.settings
 {
-    public class KeyboardSettings : MonoBehaviour
+    internal class KeyboardSettings : MonoBehaviour
     {
         [HideInInspector] public KeyboardSettingsPSM model;
 

@@ -20,7 +20,7 @@ using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.ui.settings
 {
-    public class SettingsPanel : MonoBehaviour
+    internal class SettingsPanel : MonoBehaviour
     {
         Transform tabs;
         Transform contents;

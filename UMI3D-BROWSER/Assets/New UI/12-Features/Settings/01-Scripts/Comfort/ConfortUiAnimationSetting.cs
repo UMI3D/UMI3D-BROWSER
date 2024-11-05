@@ -21,7 +21,7 @@ using utils.tweens;
 namespace umi3d.browserRuntime.ui.settings
 {
     [RequireComponent(typeof(Button))]
-    public class ConfortUiAnimationSetting : MonoBehaviour
+    internal class ConfortUiAnimationSetting : MonoBehaviour
     {
         [SerializeField] bool isOn;
 

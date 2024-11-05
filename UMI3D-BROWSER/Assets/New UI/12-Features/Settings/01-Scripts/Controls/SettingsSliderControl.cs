@@ -22,7 +22,7 @@ using UnityEngine.UI;
 namespace umi3d.browserRuntime.ui.settings
 {
     [RequireComponent(typeof(Slider))]
-    public class SettingsSliderControl : MonoBehaviour
+    internal class SettingsSliderControl : MonoBehaviour
     {
         public event Action<float> valueChanged;
 

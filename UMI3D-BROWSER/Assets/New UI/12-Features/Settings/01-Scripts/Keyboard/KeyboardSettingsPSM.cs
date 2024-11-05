@@ -16,11 +16,10 @@ limitations under the License.
 
 using inetum.unityUtils.saveSystem;
 using umi3d.browserRuntime.NotificationKeys;
-using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.settings
 {
-    public class KeyboardSettingsPSM : PersistentScriptableModel
+    internal class KeyboardSettingsPSM : PersistentScriptableModel
     {
         public KeyboardLocalisationVersion localisationVersion = KeyboardLocalisationVersion.QWERTY;
 

@@ -17,9 +17,7 @@ limitations under the License.
 using System.Linq;
 using umi3d.cdk.collaboration;
 using UnityEngine;
-using System.Threading.Tasks;
 using System.Collections.Generic;
-using System;
 
 namespace umi3d.browserRuntime.ui.settings
 {

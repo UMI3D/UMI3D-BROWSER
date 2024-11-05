@@ -20,7 +20,7 @@ using UnityEngine.UI;
 namespace umi3d.browserRuntime.ui.settings
 {
     [RequireComponent(typeof(Toggle))]
-    public class SettingsDropdownControlItem : MonoBehaviour
+    internal class SettingsDropdownControlItem : MonoBehaviour
     {
         [Header("Even Color")]
         [SerializeField] Color EvenItemColor;

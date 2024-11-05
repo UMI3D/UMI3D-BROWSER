@@ -20,7 +20,7 @@ using UnityEngine.Localization.Settings;
 
 namespace umi3d.browserRuntime.ui.settings
 {
-    public class GeneralSettings : MonoBehaviour
+    internal class GeneralSettings : MonoBehaviour
     {
         [HideInInspector] public GeneralSettingsPSM model;
 

@@ -14,7 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
 using umi3d.browserRuntime.notificationKeys;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
@@ -23,7 +22,7 @@ using UnityEngine.UI;
 namespace umi3d.browserRuntime.ui.settings
 {
     [RequireComponent(typeof(Button))]
-    public class GraphicsHDRSettings : MonoBehaviour
+    internal class GraphicsHDRSettings : MonoBehaviour
     {
         [SerializeField] bool isOn;
 

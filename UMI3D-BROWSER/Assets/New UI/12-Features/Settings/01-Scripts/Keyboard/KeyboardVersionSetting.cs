@@ -22,7 +22,7 @@ using inetum.unityUtils;
 namespace umi3d.browserRuntime.ui.settings
 {
     [RequireComponent(typeof(Button))]
-    public class KeyboardVersionSetting : MonoBehaviour
+    internal class KeyboardVersionSetting : MonoBehaviour
     {
         [SerializeField] KeyboardLocalisationVersion localisationVersion;
 

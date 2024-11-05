@@ -18,7 +18,7 @@ using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.settings
 {
-    public class GraphicsSettings : MonoBehaviour
+    internal class GraphicsSettings : MonoBehaviour
     {
         [HideInInspector] public GraphicsSettingsPSM model;
 

@@ -14,7 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System;
 using umi3d.browserRuntime.notificationKeys;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
@@ -24,7 +23,7 @@ namespace umi3d.browserRuntime.ui.settings
 {
     [RequireComponent(typeof(Slider))]
     [RequireComponent(typeof(SettingsSliderControl))]
-    public class GraphicsRenderScaleSettings : MonoBehaviour
+    internal class GraphicsRenderScaleSettings : MonoBehaviour
     {
         Slider slider;
         SettingsSliderControl sliderControl;

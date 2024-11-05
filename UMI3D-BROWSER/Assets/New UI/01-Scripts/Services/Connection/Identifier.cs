@@ -26,7 +26,7 @@ namespace umi3dBrowsers.services.connection
     [CreateAssetMenu(fileName = "Identifier", menuName = "UMI3D/Identifier")]
     public class Identifier : ClientIdentifierApi
     {
-        public Action<List<string>, Action<bool>> OnLibrairiesAvailable;
+        public Action<List<string>, Action<bool>> OnLibrariesAvailable;
         public Action<ConnectionFormDto, Action<FormAnswerDto>> OnParamFormAvailable;
         public Action<umi3d.common.interaction.form.ConnectionFormDto, Action<umi3d.common.interaction.form.FormAnswerDto>> OnDivFormAvailable;
         public Action<WaitConnectionDto, Action> OnWaitAvailable;
@@ -74,8 +74,6 @@ namespace umi3dBrowsers.services.connection
 
         public override async Task GetParameterDtos(WaitConnectionDto parameter)
         {
-            UnityEngine.Debug.Log("Wait");
-
             bool isWaiting = true;
 
             Action callback = () => { isWaiting = false; };
@@ -97,7 +95,7 @@ namespace umi3dBrowsers.services.connection
             bool form = false;
             Action<bool> callback = (f) => { form = f; b = false; };
 
-            OnLibrairiesAvailable.Invoke(LibrariesId, callback);
+            OnLibrariesAvailable.Invoke(LibrariesId, callback);
             while (b)
                 await Task.Yield();
             return form;

@@ -14,39 +14,24 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
-using System;
-using System.Collections.Generic;
 using umi3d.browserRuntime.conditionalCompilation;
-using umi3d.browserRuntime.ui.settings;
 using umi3dBrowsers.data.ui;
 using umi3dBrowsers.linker.ui;
 using umi3dBrowsers.services.connection;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.Localization.Settings;
 
-namespace umi3dBrowsers.displayer
+namespace umi3d.browserRuntime.ui.settings
 {
     public class LanguageWidget : MonoBehaviour
     {
-        [Serializable]
-        public class LanguageAssociation
-        {
-            [SerializeField] public SettingsLanguageControl.LanguageParams languageParams;
-            [SerializeField] public SettingsLanguageControl languageSelectionField;
-        }
+        [SerializeField] SettingsLanguageControl.LanguageParams[] languageParams;
 
-        [SerializeField] private List<LanguageAssociation> languageAssociations = new();
-
-        [SerializeField, ReadOnly] private UnityEngine.Localization.Locale selectedLanguage;
         [SerializeField] private GameObject languagePrefab;
         [SerializeField] private MenuNavigationLinker menuNavigationLinker;
         [SerializeField] private MultiDeviceReference<PanelData> nextPanel;
 
-        public UnityEvent<UnityEngine.Localization.Locale> OnSupportedLanguageValidated;
-
-        private void OnEnable()
+        void OnEnable()
         {
             if (PlayerPrefsManager.GetLocalisationLocal() != null && !menuNavigationLinker.ForceLanguage)
                 menuNavigationLinker.ShowPanel(nextPanel.Reference);
@@ -57,36 +42,21 @@ namespace umi3dBrowsers.displayer
             };
         }
 
-        private void Start()
+        void Start()
         {
-            selectedLanguage = LocalizationSettings.SelectedLocale;
-
-            SettingsLanguageControl baseField = null;
-            for (int i = 0; i < languageAssociations.Count; i++)
+            for (int i = 0; i < languageParams.Length; i++)
             {
-                LanguageAssociation currentAsso = languageAssociations[i];
+                GameObject languageGO = Instantiate(languagePrefab);
+                languageGO.transform.SetParent(transform, false);
+                SettingsLanguageControl languageControl = languageGO.GetComponent<SettingsLanguageControl>();
 
-                if (languageAssociations[i].languageSelectionField == null)
+                var currentAsso = languageParams[i];
+
+                languageControl.Init(currentAsso);
+                languageControl.OnClick += () =>
                 {
-                    languageAssociations[i].languageSelectionField = Instantiate(languagePrefab, transform).GetComponent<SettingsLanguageControl>();
-                }
-
-                SettingsLanguageControl currentField = languageAssociations[i].languageSelectionField;
-
-                currentField.Init(currentAsso.languageParams);
-                currentField.OnClick += () =>
-                {
-                    selectedLanguage = currentAsso.languageParams.SupportedLanguages;
-                    languageAssociations.ForEach(language =>
-                    {
-                        OnSupportedLanguageValidated?.Invoke(selectedLanguage);
-                        menuNavigationLinker.ShowPanel(nextPanel.Reference);
-                    });
+                    menuNavigationLinker.ShowPanel(nextPanel.Reference);
                 };
-
-
-                if (selectedLanguage == currentAsso.languageParams.SupportedLanguages)
-                    baseField = currentField;
             }
         }
     }

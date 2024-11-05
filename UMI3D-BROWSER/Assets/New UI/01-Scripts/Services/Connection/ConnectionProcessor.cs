@@ -57,7 +57,7 @@ namespace umi3dBrowsers.services.connection
         {
             identifier.OnParamFormAvailable += HandleParameters;
             identifier.OnDivFormAvailable += HandleDivs;
-            identifier.OnLibrairiesAvailable += HandleLibrairies;
+            identifier.OnLibrariesAvailable += HandleLibrairies;
             identifier.OnWaitAvailable += HandleWait;
             UMI3DCollaborationEnvironmentLoader.Instance.onEnvironmentLoaded.AddListener(() => connectionServiceLinker.ConnectionSuccess());
 

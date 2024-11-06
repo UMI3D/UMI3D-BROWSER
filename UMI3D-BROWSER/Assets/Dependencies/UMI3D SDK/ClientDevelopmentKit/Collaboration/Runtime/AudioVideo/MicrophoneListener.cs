@@ -58,7 +58,9 @@ namespace umi3d.cdk.collaboration
             pushToTalkKeycode = KeyCode.M;
 
             MicrophoneListener.Instance.Subscribe(value => {
-                UMI3DClientServer.SendRequest(ConferenceRequest.GetUserIsSpeakingStatusRequest(UMI3DCollaborationClientServer.Instance.GetUserId(), value), true);
+                MainThreadDispatcher.UnityMainThreadDispatcher.Instance().Enqueue(() => {
+                    UMI3DClientServer.SendRequest(ConferenceRequest.GetUserIsSpeakingStatusRequest(UMI3DCollaborationClientServer.Instance.GetUserId(), value), true); 
+                });
             });
         }
 

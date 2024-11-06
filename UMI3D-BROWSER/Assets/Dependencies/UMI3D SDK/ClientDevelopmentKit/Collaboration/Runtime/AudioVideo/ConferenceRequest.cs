@@ -11,7 +11,7 @@ namespace umi3d.cdk.collaboration
         {
             return new ConferenceBrowserRequestDto()
             {
-                operation = UMI3DOperationKeys.UserSpeakingStatus,
+                operation = UMI3DOperationKeys.UserIsTalkingStatus,
                 id = userId,
                 value = value
             };

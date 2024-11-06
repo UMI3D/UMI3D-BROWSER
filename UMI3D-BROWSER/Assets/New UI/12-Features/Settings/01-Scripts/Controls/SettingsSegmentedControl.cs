@@ -26,7 +26,7 @@ namespace umi3d.browserRuntime.ui.settings
     {
         Button button;
         Image background;
-        bool isActive;
+        internal bool isActive { get; private set; }
 
         GameObject parent;
         int instanceID;

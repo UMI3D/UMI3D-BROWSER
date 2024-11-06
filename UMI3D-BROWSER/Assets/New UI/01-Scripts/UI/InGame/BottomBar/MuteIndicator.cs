@@ -26,14 +26,13 @@ namespace umi3d.browserRuntime.ui.inGame.bottomBar
 
         private float timer = 0;
 
-
         private void Awake()
         {
             MicrophoneListener.Instance.threshold = threashold;
             MicrophoneListener.Instance.Subscribe(value => {
-                if (value)
+                if (MicrophoneListener.mute && value)
                 {
-                    if (!gameObject.activeSelf)
+                    if ( !gameObject.activeSelf)
                         gameObject.SetActive(true);
                     timer = 2;
                 }

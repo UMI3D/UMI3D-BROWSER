@@ -44,7 +44,7 @@ namespace umi3d.common
         public const uint MicrophoneRequest = 27;
         public const uint UserActionRequest = 28;
         public const uint CanUnmuteMicrophoneRequest = 29;
-        public const uint UserSpeakingStatus = 30;
+        public const uint UserIsTalkingStatus = 30;
 
         public const uint SetEntityProperty = 101;
         public const uint SetEntityDictionnaryProperty = 103;

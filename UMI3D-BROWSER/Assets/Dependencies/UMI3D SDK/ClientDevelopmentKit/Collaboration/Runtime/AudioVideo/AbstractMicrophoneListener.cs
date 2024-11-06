@@ -20,7 +20,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Unity.VisualScripting.YamlDotNet.Core.Tokens;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -573,7 +572,7 @@ namespace umi3d.cdk.collaboration
                 mumbleMic.SendAudioOnStart = false;
                 mumbleClient.AddMumbleMic(mumbleMic);
 
-                mumbleClient.SetSelfMute(isMute);
+                mumbleClient.SetSelfMute(!this.useLocalLoopback && isMute);
 
                 if (sendPosition)
                     mumbleMic.SetPositionalDataFunction(WritePositionalData);
@@ -832,8 +831,13 @@ namespace umi3d.cdk.collaboration
         #endregion
 
 
-        public bool wasTalking = false;
+        public bool wasTalking { get; private set; } = false;
         public float threshold = 1;
+        /// <summary>
+        /// In Milliseconds
+        /// </summary>
+        public int TimeToWaitBeforeResettingWasTalkingToFalse = 500;
+        private DateTime SampleCountBeforeNotTalking;
 
         private void DebugSample(PcmArray array)
         {
@@ -842,15 +846,20 @@ namespace umi3d.cdk.collaboration
                 var total = 0f;
                 foreach (var v in array.Pcm)
                     total += v;
-                if (MicrophoneListener.mute && Mathf.Abs(total) > threshold)
+
+                if (Mathf.Abs(total) > threshold)
                 {
+                    SampleCountBeforeNotTalking = DateTime.Now.AddMilliseconds(TimeToWaitBeforeResettingWasTalkingToFalse);
                     if (!wasTalking)
                     {
                         wasTalking = true;
                         foreach (var action in subscribedIsSpeaking)
                             action?.Invoke(wasTalking);
                     }
-                    else if(wasTalking)
+                }
+                else if (wasTalking)
+                {
+                    if (DateTime.Now > SampleCountBeforeNotTalking)
                     {
                         wasTalking = false;
                         foreach (var action in subscribedIsSpeaking)

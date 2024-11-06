@@ -18,6 +18,7 @@ using System.Linq;
 using umi3d.cdk.collaboration;
 using UnityEngine;
 using System.Collections.Generic;
+using inetum.unityUtils;
 
 namespace umi3d.browserRuntime.ui.settings
 {
@@ -52,16 +53,17 @@ namespace umi3d.browserRuntime.ui.settings
                 return;
             }
 
-            microphones = MicrophoneListener.GetMicrophonesNames().ToList();
+            var tmp = MicrophoneListener.GetMicrophonesNames();
+            if(microphones is not null && tmp.Length == microphones.Count && tmp.Zip(microphones,(a,b) => a == b).All(c => c))
+                return;
 
-            if (string.IsNullOrEmpty(audioSettings.model.microphone) || !microphones.Contains(audioSettings.model.microphone))
-            {
+            microphones = tmp.ToList();
+
+            var current = audioSettings.model.microphone;
+            if (string.IsNullOrEmpty(current) || !microphones.Contains(current))
                 dropdownControl.selectedIndex = 0;
-            }
             else
-            {
-                dropdownControl.selectedIndex = microphones.IndexOf(audioSettings.model.microphone);
-            }
+                dropdownControl.selectedIndex = microphones.IndexOf(current);
 
             MicrophoneListener.Instance.SetCurrentMicrophoneName(microphones[dropdownControl.selectedIndex]);
 

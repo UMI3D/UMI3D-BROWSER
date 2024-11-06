@@ -173,15 +173,11 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
 
         private void Search(string name)
         {
-            if (name == null || name == string.Empty)
+            foreach (SocialElement user in _users)
             {
-                foreach (var user in _users)
-                    user.gameObject.SetActive(true);
-                return;
+                bool isActive = string.IsNullOrEmpty(name) || user.UserName.ToLower().Contains(name.ToLower());
+                user.gameObject.SetActive(isActive);
             }
-
-            foreach (var user in _users)
-                user.gameObject.SetActive(user.UserName.Contains(name));
         }
 
         private SocialElement CreateUser(UMI3DUser user)

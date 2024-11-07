@@ -18,6 +18,7 @@ using System.Linq;
 using umi3d.cdk.collaboration;
 using UnityEngine;
 using System.Collections.Generic;
+using inetum.unityUtils;
 
 namespace umi3d.browserRuntime.ui.settings
 {
@@ -29,6 +30,7 @@ namespace umi3d.browserRuntime.ui.settings
         AudioSettings audioSettings;
 
         List<string> microphones;
+        bool NoMicrophoneFound = false;
 
         void Awake()
         {
@@ -49,19 +51,46 @@ namespace umi3d.browserRuntime.ui.settings
         {
             if (!MicrophoneListener.Exists)
             {
+                if (this.NoMicrophoneFound)
+                    return;
+
+                this.NoMicrophoneFound = true;
+                microphones = new List<string> { "No Microphone Listener" };
+
+                dropdownControl.optionsCount = microphones.Count;
+                dropdownControl.SetOptions();
+
                 return;
             }
 
-            microphones = MicrophoneListener.GetMicrophonesNames().ToList();
+            var tmp = MicrophoneListener.GetMicrophonesNames();
+            
+            if (tmp.Length <= 0)
+            {
+                if (this.NoMicrophoneFound)
+                    return;
 
-            if (string.IsNullOrEmpty(audioSettings.model.microphone) || !microphones.Contains(audioSettings.model.microphone))
-            {
+                this.NoMicrophoneFound = true;
+                microphones = new List<string> { "No Microphone Found" };
+
+                dropdownControl.optionsCount = microphones.Count;
+                dropdownControl.SetOptions();
+
+                return;
+            }
+
+            if(!this.NoMicrophoneFound && microphones is not null && tmp.Length == microphones.Count && tmp.Zip(microphones,(a,b) => a == b).All(c => c))
+                return;
+
+            this.NoMicrophoneFound = false;
+
+            microphones = tmp.ToList();
+
+            var current = audioSettings.model.microphone;
+            if (string.IsNullOrEmpty(current) || !microphones.Contains(current))
                 dropdownControl.selectedIndex = 0;
-            }
             else
-            {
-                dropdownControl.selectedIndex = microphones.IndexOf(audioSettings.model.microphone);
-            }
+                dropdownControl.selectedIndex = microphones.IndexOf(current);
 
             MicrophoneListener.Instance.SetCurrentMicrophoneName(microphones[dropdownControl.selectedIndex]);
 
@@ -76,8 +105,11 @@ namespace umi3d.browserRuntime.ui.settings
 
         void ValueChanged(int index)
         {
-            MicrophoneListener.Instance.SetCurrentMicrophoneName(microphones[index]);
-            audioSettings.model.microphone = microphones[index];
+            if (!MicrophoneListener.Exists)
+            {
+                MicrophoneListener.Instance.SetCurrentMicrophoneName(microphones[index]);
+                audioSettings.model.microphone = microphones[index];
+            }
         }
     }
 }

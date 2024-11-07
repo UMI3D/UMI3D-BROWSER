@@ -237,7 +237,7 @@ namespace umi3dBrowsers
             };
 
             connectionServiceLinker.OnTryToConnect += (url) => {
-                m_popupConnectionFailedNotifier[PopupNotificationKeys.Show.Arguments] = 
+                m_popupTryToConnectNotifier[PopupNotificationKeys.Show.Arguments] = 
                     new Dictionary<string, object>() { { "url", url } };
                 m_popupTryToConnectNotifier.Notify();
             };

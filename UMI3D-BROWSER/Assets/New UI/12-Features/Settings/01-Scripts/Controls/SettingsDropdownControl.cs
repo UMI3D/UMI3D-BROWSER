@@ -47,6 +47,7 @@ namespace umi3d.browserRuntime.ui.settings
 
         public void SetOptions()
         {
+            options.Clear();
             for (int i = 0; i < optionsCount; i++)
             {
                 if (i == selectedIndex)

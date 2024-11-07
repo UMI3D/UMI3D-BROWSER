@@ -154,9 +154,9 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
                 }
             }
 
-            SortAZ();
-
             CreateSocialList();
+
+            SortAZ();
 
             UpdateHierarchy();
         }
@@ -207,9 +207,11 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
         void SortAZ()
         {
             users.Sort((user0, user1) => string.Compare(user0.login, user1.login));
+            activatedElements.Sort((user0, user1) => string.Compare(user0.User.login, user1.User.login));
             if (sortAZIndex == 1)
             {
                 users.Reverse();
+                activatedElements.Reverse();
             }
         }
 
@@ -254,7 +256,6 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
 
         SocialElement CreateSocialElement()
         {
-            UnityEngine.Debug.Log($"CreateSocialElement");
             GameObject socialElementGO = Instantiate(socialPrefab);
             SocialElement socialElement = socialElementGO.GetComponent<SocialElement>();
             socialElementGO.transform.SetParent(content.transform, false);

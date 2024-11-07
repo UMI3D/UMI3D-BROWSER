@@ -40,7 +40,20 @@ namespace umi3d.browserRuntime.ui.settings
 
         void OnEnable()
         {
-            if (graphicsSettings.model.quality != BrowserQualitySettings.Custom)
+            if (graphicsSettings.model == null || graphicsSettings.model.quality != BrowserQualitySettings.Custom)
+            {
+                return;
+            }
+
+            if (msaa == graphicsSettings.model.msaa)
+            {
+                button.onClick?.Invoke();
+            }
+        }
+
+        private void Start()
+        {
+            if (graphicsSettings.model == null || graphicsSettings.model.quality != BrowserQualitySettings.Custom)
             {
                 return;
             }

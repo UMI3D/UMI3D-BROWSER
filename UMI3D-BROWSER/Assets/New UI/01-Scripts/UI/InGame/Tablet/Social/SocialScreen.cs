@@ -28,79 +28,68 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
 {
     public class SocialScreen : MonoBehaviour
     {
-        [SerializeField] private Transform content;
-        [SerializeField] private GameObject socialPrefab;
-        [SerializeField] private RectTransform userActionContainer;
-        [SerializeField] private TMP_InputField searchField;
-        [SerializeField] private TMP_Text numberOfParticipantText;
-        [SerializeField] private TMP_Text timeSpentText;
-        [SerializeField] private TMP_Dropdown sortByDropdown;
-        [SerializeField] private ToggleDropdown filterDropdown;
+        [SerializeField] Transform content;
+        [SerializeField] GameObject socialPrefab;
+        [SerializeField] RectTransform userActionContainer;
+        [SerializeField] TMP_InputField searchField;
+        [SerializeField] TMP_Text numberOfParticipantText;
+        [SerializeField] TMP_Text timeSpentText;
+        [SerializeField] TMP_Dropdown sortByDropdown;
+        [SerializeField] ToggleDropdown filterDropdown;
 
-        private List<SocialElement> _users;
-        private List<SocialElement> _allUsers;
-        private Dictionary<ulong, SocialElement> _allUsersRemembered = new();
+        List<UMI3DUser> users = new();
+        List<UMI3DUser> filteredUser = new();
 
-        private DateTime _startTime;
-        private bool dropdownReverse = false;
+        List<SocialElement> activatedElements = new();
+        List<SocialElement> deactivatedElements = new();
+        Dictionary<ulong, SocialElement> _allUsersRemembered = new();
 
-        private ToggleDropdownItem MuteFilter;
-        private ToggleDropdownItem UnMuteFilter;
+        DateTime _startTime;
 
-        private ToggleGroup toggleGroup;
+        ToggleDropdownItem MuteFilter;
+        ToggleDropdownItem UnMuteFilter;
 
-        private void Awake()
+        ToggleGroup toggleGroup;
+
+        void Awake()
         {
-            UpdateList();
-
-            UMI3DEnvironmentClient.EnvironmentJoined.AddListener(UpdateList);
-            UMI3DUser.OnNewUser.AddListener(Add);
-            //UMI3DUser.OnUserMicrophoneStatusUpdated.AddListener(UpdateUserList);
-            UMI3DUser.OnRemoveUser.AddListener(Remove);
-
-            searchField.onValueChanged.AddListener(Search);
-
             NotificationHub.Default.Subscribe(this, TabletNotificationKeys.OpenSocial, Open);
             NotificationHub.Default.Subscribe(this, TabletNotificationKeys.CloseScreens, Close);
+
+            // Reset
+            _Reset();
+            UMI3DEnvironmentClient.EnvironmentLoaded.AddListener(_Reset);
+            UMI3DCollaborationEnvironmentLoader.Instance.OnUpdateJoinedUserList += ResetLists;
+
+            //UMI3DUser.OnUserMicrophoneStatusUpdated.AddListener(UpdateUserList);
+
+            sortByDropdown.options.Add(new TMP_Dropdown.OptionData("A to Z"));
+            sortByDropdown.options.Add(new TMP_Dropdown.OptionData("Z to A"));
+            sortByDropdown.value = 0;
+
+            searchField.onValueChanged.AddListener(SearchValueChanged);
+            sortByDropdown.onValueChanged.AddListener(SortAZValueChanged);
 
             toggleGroup = gameObject.GetOrAddComponent<ToggleGroup>();
             toggleGroup.allowSwitchOff = true;
         }
 
-        private void Start()
+        void Start()
         {
-            // Sort
-            sortByDropdown.options.Add(new TMP_Dropdown.OptionData("A to Z"));
-            sortByDropdown.options.Add(new TMP_Dropdown.OptionData("Z to A"));
-
-            sortByDropdown.onValueChanged.AddListener(index => {
-                dropdownReverse = index > 0;
-                SortAZ();
-            });
-
-            sortByDropdown.value = 0;
-
-            // Filter
             MuteFilter = filterDropdown.AddOption("Mute");
-            MuteFilter.OnToggle += b => Filter();
             UnMuteFilter = filterDropdown.AddOption("UnMute");
-            UnMuteFilter.OnToggle += b => Filter();
-
-
-            UnityEngine.Debug.Assert(MuteFilter != null, "Mute filter is null");
-            UnityEngine.Debug.Assert(UnMuteFilter != null, "UnMute filter is null");
+            MuteFilter.OnToggle += FilterMuteUserValueChanged;
+            UnMuteFilter.OnToggle += FilterUnmuteUserValueChanged;
 
             userActionContainer.gameObject.SetActive(false);
-
-            Filter();
         }
 
-        private void OnDestroy()
+        void OnDestroy()
         {
             NotificationHub.Default.Unsubscribe(this);
         }
 
-        private void Update()
+        void Update()
         {
             if (!enabled)
                 return;
@@ -109,85 +98,182 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
             timeSpentText.text = $" {time.ToString("hh")}:{time.ToString("mm")}:{time.ToString("ss")}";
         }
 
-        private void UpdateList()
+        void _Reset()
         {
-            if (_allUsers != null)
-                foreach (var u in _allUsers)
-                    Destroy(u.gameObject);
-
             _startTime = DateTime.Now;
-
-            _allUsers = new List<SocialElement>();
-            _allUsers = UMI3DCollaborationEnvironmentLoader.Instance.JoinedUserList
-                .Where(u => !u.isClient)
-                .Select(CreateUser)
-                .ToList();
-            _users = _allUsers;
-            UpdateUserList();
+            ResetLists();
         }
 
-        private void Add(UMI3DUser user)
+        void ResetLists()
         {
-            if (user.isClient || _users.Any(u => u.User.id == user.id))
-                return;
-            var socialElement = CreateUser(user);
-            _users.Add(socialElement);
+            users.Clear();
+            users = UMI3DCollaborationEnvironmentLoader
+                .Instance.JoinedUserList
+                .Where(u => !u.isClient).ToList();
 
             UpdateUserList();
         }
 
-        private void UpdateUserList(UMI3DUser user = null)
+        void UpdateUserList()
         {
-            Filter();
-            numberOfParticipantText.text = $" {_users.Count + 1}";
+            ApplyFilterAndSearch();
+            numberOfParticipantText.text = $" {users.Count + 1}";
         }
 
-        private void Filter()
+        void ApplyFilterAndSearch()
         {
-            if (MuteFilter is null || UnMuteFilter is null)
-                return;
+            filteredUser.Clear();
+            ClearSocialList();
 
-            // Use Filters
-            _users = _allUsers
-                .Where(u => u is not null)
-                .Where(u => MuteFilter.IsOn ? !u.MicroOpen : true)
-                .Where(u => UnMuteFilter.IsOn ? u.MicroOpen : true)
-                .ToList();
+            for (int i = 0; i < users.Count; i++)
+            {
+                UMI3DUser user = users[i];
+
+                if (!IsIncludeBySearch(user))
+                {
+                    continue;
+                }
+
+                bool isInclude = true;
+                if (FilterEnabled)
+                {
+                    isInclude = false;
+                    if (IsIncludeByMuteFilter(user))
+                    {
+                        isInclude = true;
+                    }
+                    if (IsIncludeByUnmuteFilter(user))
+                    {
+                        isInclude = true;
+                    }
+                }
+
+                if (isInclude)
+                {
+                    filteredUser.Add(user);
+                }
+            }
+
+            CreateSocialList();
 
             SortAZ();
-        }
 
-        private void SortAZ()
-        {
-            _users.Sort((user0, user1) => string.Compare(user0.UserName, user1.UserName));
-            if (dropdownReverse)
-                _users.Reverse();
             UpdateHierarchy();
         }
 
-        private void UpdateHierarchy()
+        bool FilterEnabled => mute || unMute;
+
+        bool mute = false;
+        void FilterMuteUserValueChanged(bool mute)
         {
-            foreach (var u in _users)
-                u.transform.SetAsLastSibling();
+            this.mute = mute;
+            ApplyFilterAndSearch();
+        }
+        bool IsIncludeByMuteFilter(UMI3DUser user)
+        {
+            return !mute || user.microphoneStatus;
         }
 
-        private void Search(string name)
+        bool unMute = false;
+        void FilterUnmuteUserValueChanged(bool unMute)
         {
-            foreach (SocialElement user in _users)
+            this.unMute = unMute;
+            ApplyFilterAndSearch();
+        }
+        bool IsIncludeByUnmuteFilter(UMI3DUser user)
+        {
+            return !unMute || !user.microphoneStatus;
+        }
+
+        string search = null;
+        void SearchValueChanged(string name)
+        {
+            search = name;
+            ApplyFilterAndSearch();
+        }
+        bool IsIncludeBySearch(UMI3DUser user)
+        {
+            return string.IsNullOrEmpty(search) || user.login.ToLower().Contains(search.ToLower());
+        }
+
+        int sortAZIndex = 0;
+        void SortAZValueChanged(int value)
+        {
+            sortAZIndex = value;
+            SortAZ();
+
+            UpdateHierarchy();
+        }
+        void SortAZ()
+        {
+            users.Sort((user0, user1) => string.Compare(user0.login, user1.login));
+            activatedElements.Sort((user0, user1) => string.Compare(user0.User.login, user1.User.login));
+            if (sortAZIndex == 1)
             {
-                bool isActive = string.IsNullOrEmpty(name) || user.UserName.ToLower().Contains(name.ToLower());
-                user.gameObject.SetActive(isActive);
+                users.Reverse();
+                activatedElements.Reverse();
             }
         }
 
-        private SocialElement CreateUser(UMI3DUser user)
+        void CreateSocialList()
         {
-            var socialElement = Instantiate(socialPrefab, content).GetComponent<SocialElement>();
-            socialElement.User = user;
-            if (_allUsersRemembered.ContainsKey(user.id))
+            foreach (UMI3DUser user in filteredUser)
             {
-                socialElement.UserVolume = _allUsersRemembered[user.id].UserVolume;
-                socialElement.IsMute = _allUsersRemembered[user.id].IsMute;
+                SocialElement socialElement;
+                if (deactivatedElements.Count > 0)
+                {
+                    socialElement = deactivatedElements[deactivatedElements.Count - 1];
+                    deactivatedElements.RemoveAt(deactivatedElements.Count - 1);
+                    socialElement.gameObject.SetActive(true);
+                }
+                else
+                {
+                    socialElement = CreateSocialElement();
+                }
+                activatedElements.Add(socialElement);
+                SetSocialElement(socialElement, user);
+            }
+        }
+
+        void ClearSocialList()
+        {
+            for (int i = activatedElements.Count - 1; i >= 0; i--)
+            {
+                SocialElement socialElement = activatedElements[i];
+                activatedElements.RemoveAt(i);
+                deactivatedElements.Add(socialElement);
+                socialElement.gameObject.SetActive(false);
+            }
+        }
+
+        void UpdateHierarchy()
+        {
+            foreach (SocialElement u in activatedElements)
+            {
+                u.transform.SetAsLastSibling();
+            }
+        }
+
+        SocialElement CreateSocialElement()
+        {
+            GameObject socialElementGO = Instantiate(socialPrefab);
+            SocialElement socialElement = socialElementGO.GetComponent<SocialElement>();
+            socialElementGO.transform.SetParent(content.transform, false);
+            return socialElement;
+        }
+
+        void SetSocialElement(SocialElement socialElement, UMI3DUser user)
+        {
+            socialElement.User = user;
+            if (_allUsersRemembered.TryGetValue(user.id, out SocialElement elt))
+            {
+                if (elt == null)
+                {
+                    UnityEngine.Debug.LogError($"[UMI3D Browser] Social: null ref SocialElement.");
+                }
+                socialElement.UserVolume = elt?.UserVolume ?? 100f;
+                socialElement.IsMute = elt?.IsMute ?? false;
+                _allUsersRemembered[user.id] = socialElement;
             }
             else
             {
@@ -198,23 +284,6 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
 
             socialElement.ToggleGroup = toggleGroup;
             socialElement.nonPrimaryActionContainer = userActionContainer;
-
-            return socialElement;
-        }
-
-        private void Remove(UMI3DUser user)
-        {
-            if (_users == null)
-                return;
-
-            var userToRemove = _users.FirstOrDefault(u => { return u?.User.id == user.id; });
-            if (userToRemove == null)
-                return;
-
-            _users.Remove(userToRemove);
-            Destroy(userToRemove.gameObject);
-
-            UpdateUserList();
         }
 
         public void Open()
@@ -226,13 +295,19 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
         {
             gameObject.SetActive(false);
         }
+
 #if UNITY_EDITOR
         [ContextMenu("Add Test User")]
-        private void AddTestUser()
+        void AddTestUser()
         {
-            var testUser = new UMI3DUser(0, 
-                new common.collaboration.dto.signaling.UserDto() { id = 0, login = "Test User" });
-            Add(testUser);
+            ulong userID = UMI3DCollaborationClientServer.Instance.GetUserId() + 1;
+            common.collaboration.dto.signaling.UserDto dto = new() { id = userID, login = "Test User" };
+
+            UMI3DUser testUser = new UMI3DUser(0, dto);
+
+            users.Add(testUser);
+
+            UpdateUserList();
         }
 #endif
     }

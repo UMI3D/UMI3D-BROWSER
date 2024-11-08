@@ -187,9 +187,8 @@ GameObject:
   - component: {fileID: 6061673669373692233}
   - component: {fileID: 2045812035046769462}
   - component: {fileID: 5025583639786466702}
-  - component: {fileID: 4200408600877155103}
-  - component: {fileID: 8365285130865417475}
-  - component: {fileID: 4856722957155083601}
+  - component: {fileID: 5933779909636612530}
+  - component: {fileID: 2262168631484145418}
   m_Layer: 5
   m_Name: PopupButton
   m_TagString: Untagged
@@ -256,7 +255,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &4200408600877155103
+--- !u!114 &5933779909636612530
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -265,11 +264,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 3473510192864361373}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e3db755ad23355408b4b3a50c08fe1a, type: 3}
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 0
+    m_Mode: 3
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
@@ -280,10 +279,10 @@ MonoBehaviour:
     m_NormalColor: {r: 0.18431373, g: 0.18431373, b: 0.18431373, a: 1}
     m_HighlightedColor: {r: 0.43529412, g: 0.7921569, b: 0.81960785, a: 1}
     m_PressedColor: {r: 0.43529412, g: 0.7921569, b: 0.81960785, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_SelectedColor: {r: 0.18431373, g: 0.18431373, b: 0.18431373, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
-    m_FadeDuration: 0
+    m_FadeDuration: 0.1
   m_SpriteState:
     m_HighlightedSprite: {fileID: 0}
     m_PressedSprite: {fileID: 0}
@@ -297,34 +296,10 @@ MonoBehaviour:
     m_DisabledTrigger: Disabled
   m_Interactable: 1
   m_TargetGraphic: {fileID: 5025583639786466702}
-  OnClick:
+  m_OnClick:
     m_PersistentCalls:
       m_Calls: []
-  OnRelease:
-    m_PersistentCalls:
-      m_Calls: []
---- !u!65 &8365285130865417475
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3473510192864361373}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 84, y: 29, z: 0.01}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &4856722957155083601
+--- !u!114 &2262168631484145418
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -333,7 +308,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3473510192864361373}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 54201f7897bbda644b218cb41fa75e97, type: 3}
+  m_Script: {fileID: 11500000, guid: 957df353f52fd6e40808942a8b457fae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &7275514141027517688

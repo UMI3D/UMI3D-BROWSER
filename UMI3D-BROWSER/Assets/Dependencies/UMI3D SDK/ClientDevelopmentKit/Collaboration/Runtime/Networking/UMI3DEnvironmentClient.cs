@@ -307,7 +307,7 @@ namespace umi3d.cdk.collaboration
         public async void ConnectionDisconnected()
         {
             UMI3DLogger.Log($"Connection lost with environment [Was Connected: {IsConnected()}]", scope);
-
+            UnityEngine.Debug.Log("Conneciton lost 0");
             if (UMI3DCollaborationClientServer.Exists)
                 UMI3DCollaborationClientServer.Instance.ConnectionLost(this);
             await Task.Yield();
@@ -434,6 +434,7 @@ namespace umi3d.cdk.collaboration
             {
                 UMI3DLogger.LogWarning($"Error on OnMessage({message})", scope);
                 UMI3DLogger.LogException(e, scope);
+                UnityEngine.Debug.Log("Conneciton lost 0");
                 ConnectionDisconnected();
             }
         }
@@ -473,6 +474,7 @@ namespace umi3d.cdk.collaboration
             {
                 UMI3DLogger.LogWarning($"Error on OnStatusChanged({statusDto})", scope);
                 UMI3DLogger.LogException(e, scope);
+                UnityEngine.Debug.Log("Conneciton lost 0");
                 ConnectionDisconnected();
             }
         }

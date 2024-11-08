@@ -291,10 +291,12 @@ namespace umi3d.cdk.collaboration
         /// </summary>
         public void ConnectionLost(UMI3DEnvironmentClient client)
         {
+            UnityEngine.Debug.Log("Conneciton lost 1");
             if (environmentClient == client)
             {
+                UnityEngine.Debug.Log("Conneciton lost 2");
                 UMI3DCollaborationClientServer.EnvironmentLogout(null, null);
-
+                
                 OnConnectionLost.Invoke();
             }
         }

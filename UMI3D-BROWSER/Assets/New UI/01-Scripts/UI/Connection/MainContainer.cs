@@ -79,6 +79,8 @@ namespace umi3dBrowsers
         private Notifier m_quitPopupNotifier;
         private Notifier m_popupTryToConnectNotifier;
         private Notifier m_popupConnectionFailedNotifier;
+        private Notifier m_popupConnectionLostNotifier;
+        private Notifier m_popupConnectionForceLogoutNotifier;
         private Notifier m_popupAnswerFailedNotifier;
         private Notifier m_quittingNotifier;
         private Notifier m_enableInGameUiNotifier;
@@ -88,7 +90,9 @@ namespace umi3dBrowsers
             SetupQuitPopupNotifier();
             SetupTryToConnectPopupNotifier();
             SetupConnectionFailedPopupNotifier();
+            SetupConnectionLostPopupNotifier();
             SetupAnswerFailedPopupNotifier();
+            SetupConnectionForceLogoutPopupNotifier();
             m_quittingNotifier = NotificationHub.Default.GetNotifier(this, QuittingManagerNotificationKey.QuittingConfirmation);
             m_enableInGameUiNotifier = NotificationHub.Default.GetNotifier(this, InGameNotificationKeys.EnableInGameUi);
              NotificationHub.Default.Subscribe(this, QuittingManagerNotificationKey.RequestToQuit, () => {
@@ -201,6 +205,29 @@ namespace umi3dBrowsers
             };
         }
 
+        private void SetupConnectionLostPopupNotifier()
+        {
+            m_popupConnectionLostNotifier = NotificationHub.Default.GetNotifier<PopupNotificationKeys.Show>(this);
+            m_popupConnectionLostNotifier[PopupNotificationKeys.Show.Type] = PopupType.Error;
+            m_popupConnectionLostNotifier[PopupNotificationKeys.Show.Title] = "popup_forced_leave";
+            m_popupConnectionLostNotifier[PopupNotificationKeys.Show.Description] = "popup_connection_lost_msg";
+            m_popupConnectionLostNotifier[PopupNotificationKeys.Show.Buttons] = new List<(string, Action)>() {
+                ("popup_connection_lost_leave", UMI3DCollaborationClientServer.Logout),
+                ("popup_connection_lost_retry", UMI3DCollaborationClientServer.Reconnect)
+            };
+        }
+
+        private void SetupConnectionForceLogoutPopupNotifier()
+        {
+            m_popupConnectionForceLogoutNotifier = NotificationHub.Default.GetNotifier<PopupNotificationKeys.Show>(this);
+            m_popupConnectionForceLogoutNotifier[PopupNotificationKeys.Show.Type] = PopupType.Error;
+            m_popupConnectionForceLogoutNotifier[PopupNotificationKeys.Show.Title] = "popup_forced_leave";
+            m_popupConnectionForceLogoutNotifier[PopupNotificationKeys.Show.Description] = "popup_forced_leave_msg";
+            m_popupConnectionForceLogoutNotifier[PopupNotificationKeys.Show.Buttons] = new List<(string, Action)>() {
+                ("popup_connection_lost_leave", UMI3DCollaborationClientServer.Logout),
+            };
+        }
+
         private void SetupAnswerFailedPopupNotifier()
         {
             m_popupAnswerFailedNotifier = NotificationHub.Default.GetNotifier<PopupNotificationKeys.Show>(this);
@@ -246,6 +273,14 @@ namespace umi3dBrowsers
                     new Dictionary<string, object>() { { "error", message } };
                 m_popupConnectionFailedNotifier.Notify();
             };
+            UMI3DClientServer.Instance.OnConnectionLost.AddListener(() => {
+                m_popupConnectionLostNotifier.Notify();
+            });
+            UMI3DCollaborationClientServer.Instance.OnForceLogoutMessage.AddListener((message) => {
+                m_popupConnectionForceLogoutNotifier[PopupNotificationKeys.Show.Arguments] =
+    new Dictionary<string, object>() { { "message", message } };
+                m_popupConnectionForceLogoutNotifier.Notify();
+            });
             connectionServiceLinker.OnMediaServerPingSuccess += (virtualWorldData) => {
                 NotificationHub.Default.Notify<PopupNotificationKeys.CloseAll>(this);
             };

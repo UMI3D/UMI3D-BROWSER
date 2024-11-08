@@ -221,7 +221,7 @@ namespace umi3d.cdk.collaboration
                 }
                 count--;
             }
-
+            UnityEngine.Debug.Log("Conneciton lost 0");
             DisconnectedFromServer(networkManagerComponent.Networker);
         }
 
@@ -230,6 +230,7 @@ namespace umi3d.cdk.collaboration
         /// </summary>
         public void Stop()
         {
+            UnityEngine.Debug.Log("Stop ?");
             if (client != null) client.Disconnect(false);
             client = null;
 
@@ -285,7 +286,7 @@ namespace umi3d.cdk.collaboration
 
         private void BindSucceded(NetWorker sender)
         {
-            UMI3DLogger.Log("Bind Succeded", scope);
+            UMI3DLogger.Log("Bind Succeeded", scope);
         }
 
         /// <summary>
@@ -294,14 +295,16 @@ namespace umi3d.cdk.collaboration
         /// <param name="sender"></param>
         private void DisconnectedFromServer(NetWorker sender)
         {
+            UnityEngine.Debug.Log("Conneciton lost 0");
             if (networkManagerComponent?.Networker != null)
                 networkManagerComponent.Networker.disconnected -= DisconnectedFromServer;
 
             MainThreadManager.Run(() =>
             {
+                UnityEngine.Debug.Log("Conneciton lost 0");
                 networkManagerComponent?.Disconnect();
                 networkManagerComponent = null;
-
+                UnityEngine.Debug.Log("Conneciton lost 0");
                 if (client != null)
                     environmentClient?.ConnectionDisconnected();
             });

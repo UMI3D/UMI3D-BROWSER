@@ -212,8 +212,14 @@ namespace umi3dBrowsers
             m_popupConnectionLostNotifier[PopupNotificationKeys.Show.Title] = "popup_forced_leave";
             m_popupConnectionLostNotifier[PopupNotificationKeys.Show.Description] = "popup_connection_lost_msg";
             m_popupConnectionLostNotifier[PopupNotificationKeys.Show.Buttons] = new List<(string, Action)>() {
-                ("popup_connection_lost_leave", UMI3DCollaborationClientServer.Logout),
-                ("popup_connection_lost_retry", UMI3DCollaborationClientServer.Reconnect)
+                ("popup_connection_lost_leave", ()=>{
+                    connectionToImmersiveLinker.Leave();
+                    NotificationHub.Default.Notify<PopupNotificationKeys.CloseAll>(this);
+                }),
+                ("popup_connection_lost_retry", () =>{
+                    UMI3DCollaborationClientServer.Reconnect();
+                    NotificationHub.Default.Notify<PopupNotificationKeys.CloseAll>(this); 
+                })
             };
         }
 
@@ -224,7 +230,10 @@ namespace umi3dBrowsers
             m_popupConnectionForceLogoutNotifier[PopupNotificationKeys.Show.Title] = "popup_forced_leave";
             m_popupConnectionForceLogoutNotifier[PopupNotificationKeys.Show.Description] = "popup_forced_leave_msg";
             m_popupConnectionForceLogoutNotifier[PopupNotificationKeys.Show.Buttons] = new List<(string, Action)>() {
-                ("popup_connection_lost_leave", UMI3DCollaborationClientServer.Logout),
+                ("popup_connection_lost_leave", ()=>{
+                    connectionToImmersiveLinker.Leave(); 
+                    NotificationHub.Default.Notify<PopupNotificationKeys.CloseAll>(this);
+                }),
             };
         }
 

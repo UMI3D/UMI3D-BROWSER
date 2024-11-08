@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Localization.Components;
+using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.ui.popup
 {
@@ -94,9 +95,9 @@ namespace umi3d.browserRuntime.ui.popup
 
         private GameObject CreateButton((string, Action) button)
         {
-            var buttonObject = Instantiate(buttonPrefab, buttonGroup.transform).GetComponent<SimpleButton>();
+            var buttonObject = Instantiate(buttonPrefab, buttonGroup.transform).GetComponent<Button>();
             buttonObject.GetComponentInChildren<LocalizeStringEvent>().SetEntry(button.Item1);
-            buttonObject.OnClick.AddListener(new UnityAction(button.Item2));
+            buttonObject.onClick.AddListener(new UnityAction(button.Item2));
 
             return buttonObject.gameObject;
         }

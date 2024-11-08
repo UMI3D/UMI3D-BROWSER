@@ -472,7 +472,6 @@ namespace umi3d.cdk.collaboration
             {
                 UMI3DLogger.LogWarning($"Error on OnStatusChanged({statusDto})", scope);
                 UMI3DLogger.LogException(e, scope);
-                UnityEngine.Debug.Log("Conneciton lost 0");
                 ConnectionDisconnected();
             }
         }

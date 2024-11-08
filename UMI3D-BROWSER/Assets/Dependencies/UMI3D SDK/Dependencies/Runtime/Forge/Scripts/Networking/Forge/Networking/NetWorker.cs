@@ -964,7 +964,6 @@ namespace BeardedManStudios.Forge.Networking
 					Me.OnDisconnect();
 			}
 
-            UnityEngine.Debug.Log("Conneciton lost 0");
             if (disconnected != null)
 				disconnected(this);
 

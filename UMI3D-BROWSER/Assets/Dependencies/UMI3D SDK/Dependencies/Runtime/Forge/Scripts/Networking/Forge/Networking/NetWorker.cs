@@ -964,7 +964,7 @@ namespace BeardedManStudios.Forge.Networking
 					Me.OnDisconnect();
 			}
 
-			if (disconnected != null)
+            if (disconnected != null)
 				disconnected(this);
 
 			Disposed = true;

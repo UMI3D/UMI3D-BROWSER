@@ -11,8 +11,6 @@ GameObject:
   - component: {fileID: 2993276049568404364}
   - component: {fileID: 6885483250065337106}
   - component: {fileID: 71937946680023374}
-  - component: {fileID: 2000355992008686258}
-  - component: {fileID: 1392914197723662996}
   - component: {fileID: 8490368051277575505}
   m_Layer: 5
   m_Name: BackButton
@@ -79,39 +77,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!65 &2000355992008686258
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4099621713457547148}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 84.6, y: 30, z: 0.01}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1392914197723662996
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4099621713457547148}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 54201f7897bbda644b218cb41fa75e97, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &8490368051277575505
 MonoBehaviour:
   m_ObjectHideFlags: 0

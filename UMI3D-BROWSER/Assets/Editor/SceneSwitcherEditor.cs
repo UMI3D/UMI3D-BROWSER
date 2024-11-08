@@ -38,6 +38,18 @@ namespace umi3d
             LoadScene("Assets/New UI/03-Scenes/MainImmersive(new).unity");
         }
 
+        [MenuItem("Scenes/PC/Window Bar", priority = 3)]
+        static void LoadPCWindowBar()
+        {
+            LoadScene("Assets/New UI/03-Scenes/PC/WindowBar.unity");
+        }
+
+        [MenuItem("Scenes/PC/UI In Game", priority = 4)]
+        static void LoadPCUIInGame()
+        {
+            LoadScene("Assets/New UI/03-Scenes/PC/PC_InGameUI.unity");
+        }
+
         static void LoadScene(string path)
         {
             EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();

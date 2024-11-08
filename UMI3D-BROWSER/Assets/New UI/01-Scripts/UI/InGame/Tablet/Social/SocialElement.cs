@@ -38,11 +38,19 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
         [SerializeField] private Sprite volumeSprite;
         [SerializeField] private Sprite volumeMuteSprite;
         [SerializeField] private Transform actionContainer;
-        [HideInInspector]public RectTransform nonPrimaryActionContainer;
+        [HideInInspector] public RectTransform nonPrimaryActionContainer;
         [SerializeField] private GameObject actionIconPrefab;
         [SerializeField] private GameObject nonPrimaryActionPrefab;
         [SerializeField] private Toggle actionButton;
         [SerializeField] private TMP_Dropdown dropdown;
+
+        public struct UserData
+        {
+            public bool isMute;
+            public float volume;
+        }
+
+        public UserData Data => new() { isMute = IsMute, volume = UserVolume };
 
         public UMI3DUser User
         {

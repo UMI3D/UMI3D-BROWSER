@@ -39,8 +39,8 @@ namespace umi3d.browserEditor.BuildTool
                 E_Target.Focus => BuildTarget.Android,
                 E_Target.Pico => BuildTarget.Android,
                 E_Target.SteamXR => BuildTarget.StandaloneWindows64,
-                E_Target.Windows => BuildTarget.StandaloneWindows,
-                _ => BuildTarget.StandaloneWindows
+                E_Target.Windows => BuildTarget.StandaloneWindows64,
+                _ => BuildTarget.StandaloneWindows64
             };
         }
     }

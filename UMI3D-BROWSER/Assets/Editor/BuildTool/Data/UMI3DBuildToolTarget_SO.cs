@@ -92,8 +92,8 @@ namespace umi3d.browserEditor.BuildTool
                         }
                         break;
                     case E_Target.SteamXR:
-                    case E_Target.Windows:
-                        if (buildTarget != BuildTarget.StandaloneWindows)
+                    case E_Target.Windows:             
+                        if (buildTarget != BuildTarget.StandaloneWindows64)
                         {
                             return false;
                         }
@@ -273,7 +273,7 @@ namespace umi3d.browserEditor.BuildTool
             {
                 buildSelectedTargetHandler?.Invoke(
                     GetSelectedTargets(
-                        BuildTarget.StandaloneWindows,
+                        BuildTarget.StandaloneWindows64,
                         releases[i]
                     )
                 );

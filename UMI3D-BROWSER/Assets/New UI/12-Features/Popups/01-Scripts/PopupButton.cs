@@ -22,7 +22,7 @@ using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.ui.popup
 {
-    public class PopupButton : MonoBehaviour
+    internal class PopupButton : MonoBehaviour
     {
         public int index;
         public Action<int> action;

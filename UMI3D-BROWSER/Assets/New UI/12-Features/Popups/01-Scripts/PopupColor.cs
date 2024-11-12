@@ -14,12 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.popup
 {
-    public static class PopupColor 
+    internal static class PopupColor 
     {
         public const string InformationColor = "#5EE3F0";
         public const string WarningColor = "#FFDD00";

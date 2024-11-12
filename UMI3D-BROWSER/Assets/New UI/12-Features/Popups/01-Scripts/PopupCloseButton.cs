@@ -21,7 +21,7 @@ using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.ui.popup
 {
-    public class PopupCloseButton : MonoBehaviour
+    internal class PopupCloseButton : MonoBehaviour
     {
         Button button;
         Action<int> action;

@@ -20,7 +20,7 @@ using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.ui.popup
 {
-    public class PopupBorder : MonoBehaviour
+    internal class PopupBorder : MonoBehaviour
     {
         Image image;
 

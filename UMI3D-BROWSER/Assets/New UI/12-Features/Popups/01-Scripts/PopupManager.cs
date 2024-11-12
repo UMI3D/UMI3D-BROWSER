@@ -15,13 +15,12 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.popup
 {
-    public class PopupManager : MonoBehaviour
+    internal class PopupManager : MonoBehaviour
     {
         [SerializeField] GameObject popupPrefab;
 

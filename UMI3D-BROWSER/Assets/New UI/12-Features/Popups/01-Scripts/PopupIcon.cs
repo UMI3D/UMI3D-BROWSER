@@ -21,7 +21,7 @@ using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.ui.pu
 {
-    public class PopupIcon : MonoBehaviour
+    internal class PopupIcon : MonoBehaviour
     {
         Image image;
 

@@ -15,13 +15,11 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.popup
 {
-    public class PopupBlockingLayer : MonoBehaviour
+    internal class PopupBlockingLayer : MonoBehaviour
     {
         void Awake()
         {

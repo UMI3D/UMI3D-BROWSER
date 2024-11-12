@@ -21,7 +21,7 @@ using UnityEngine.Localization.Components;
 
 namespace umi3d.browserRuntime.ui.popup
 {
-    public class PopupBodyText : MonoBehaviour
+    internal class PopupBodyText : MonoBehaviour
     {
         TMPro.TMP_Text text;
         LocalizeStringEvent stringEvent;

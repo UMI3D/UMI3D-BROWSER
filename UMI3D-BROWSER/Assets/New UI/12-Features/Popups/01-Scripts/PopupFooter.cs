@@ -21,7 +21,7 @@ using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.popup
 {
-    public class PopupFooter : MonoBehaviour
+    internal class PopupFooter : MonoBehaviour
     {
         [SerializeField] GameObject ButtonPrefab;
 

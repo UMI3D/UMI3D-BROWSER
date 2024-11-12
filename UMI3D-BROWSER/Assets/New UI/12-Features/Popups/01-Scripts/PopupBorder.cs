@@ -36,7 +36,7 @@ namespace umi3d.browserRuntime.ui.popup
            );
         }
 
-        void OnEnable()
+        void OnDestroy()
         {
             NotificationHub.Default
               .Unsubscribe<PopupNotificationKeys.Show>(this);

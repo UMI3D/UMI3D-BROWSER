@@ -26,7 +26,7 @@ namespace umi3d.browserRuntime.ui.popup
         [SerializeField] GameObject popupPrefab;
 
         GameObject popup;
-        List<Dictionary<string, System.Object>> popupInfo = new();
+        List<Notification> popupInfo = new();
 
         void Awake()
         {
@@ -41,7 +41,7 @@ namespace umi3d.browserRuntime.ui.popup
                 .Subscribe<PopupNotificationKeys.PopupClosed>(this, PopupClosed);
 
             popup = Instantiate(popupPrefab);
-            transform.SetParent(popup.transform, false);
+            popup.transform.SetParent(transform, false);
             popup.SetActive(false);
         }
 
@@ -49,12 +49,14 @@ namespace umi3d.browserRuntime.ui.popup
         {
             NotificationHub.Default
              .Unsubscribe<PopupNotificationKeys.Show>(this);
+
+            NotificationHub.Default
+            .Unsubscribe<PopupNotificationKeys.PopupClosed>(this);
         }
 
         void NewPopupEnqueued(Notification notification)
         {
-            Dictionary<string, System.Object> info = new(notification.Info);
-            popupInfo.Add(info);
+            popupInfo.Add(notification);
 
             if (!popup.activeInHierarchy)
             {
@@ -75,39 +77,34 @@ namespace umi3d.browserRuntime.ui.popup
                 return;
             }
 
-            Dictionary<string, System.Object> info = null;
+            Notification notif = null;
             for (int i = 0; i < popupInfo.Count; i++)
             {
-                Dictionary<string, object> _info = popupInfo[i];
-                if (!_info.TryGetValue(PopupNotificationKeys.Show.Type, out System.Object type))
+                Notification _notif = popupInfo[i];
+                if (!_notif.TryGetInfoT(PopupNotificationKeys.Show.Type, out PopupType type))
                 {
                     continue;
                 }
 
-                if (type is not PopupType popupType)
+                if (type == PopupType.Error)
                 {
-                    continue; 
-                }
-
-                if (popupType == PopupType.Error)
-                {
-                    info = _info;
+                    notif = _notif;
                     break;
                 }
 
-                if (popupType == PopupType.Warning && info == null)
+                if (type == PopupType.Warning && notif == null)
                 {
-                    info = _info;
+                    notif = _notif;
                 }
             }
 
-            if (info == null)
+            if (notif == null)
             {
-                info = popupInfo[0];
+                notif = popupInfo[0];
             }
-            popupInfo.Remove(info);
+            popupInfo.Remove(notif);
 
-            NotificationHub.Default.Notify<PopupNotificationKeys.Show>(this, info);
+            NotificationHub.Default.Notify<PopupNotificationKeys.Show>(this, notif.Info);
 
             popup.SetActive(true);
         }

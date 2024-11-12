@@ -24,6 +24,14 @@ namespace umi3d.browserRuntime.ui.popup
         public class Show
         {
             /// <summary>
+            /// ID of the popup.
+            /// </summary>
+            /// <remarks>
+            /// Value type : <see cref="System.Guid"/>
+            /// </remarks>
+            public const string ID = "ID";
+
+            /// <summary>
             /// Type of the popup.
             /// </summary>
             /// <remarks>
@@ -72,6 +80,14 @@ namespace umi3d.browserRuntime.ui.popup
             /// Value type : Dictionary(<see cref="string"/> "key", <see cref="object"/> "value")
             /// </remarks>
             public const string Arguments = "Arguments";
+
+            /// <summary>
+            /// Whether the close button has to be hidden.
+            /// </summary>
+            /// <remarks>
+            /// Value type : <see cref="bool"/>
+            /// </remarks>
+            public const string HideCloseButton = "HideCloseButton";
         }
 
         /// <summary>

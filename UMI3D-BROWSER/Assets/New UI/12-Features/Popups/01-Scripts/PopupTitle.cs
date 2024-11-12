@@ -14,32 +14,64 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System.Collections;
-using System.Collections.Generic;
+using inetum.unityUtils;
 using UnityEngine;
+using UnityEngine.Localization.Components;
 
-namespace umi3d
+namespace umi3d.browserRuntime.ui.popup
 {
     public class PopupTitle : MonoBehaviour
     {
+        TMPro.TMP_Text text;
+        LocalizeStringEvent stringEvent;
+
         void Awake()
         {
-        }
+            text = GetComponent<TMPro.TMP_Text>();
+            stringEvent = GetComponent<LocalizeStringEvent>();
 
-        void OnEnable()
-        {
-        }
-
-        void OnDisable()
-        {
+            NotificationHub.Default
+               .Subscribe<PopupNotificationKeys.Show>(
+               this,
+               new FilterByCondition(FilterType.AcceptOnly, publisher => publisher is PopupManager),
+               NewPopup
+           );
         }
 
         void OnDestroy()
         {
+            NotificationHub.Default
+                .Unsubscribe<PopupNotificationKeys.Show>(this);
         }
 
-        void Update()
+        void NewPopup(Notification notification)
         {
+            if (notification.TryGetInfoT(PopupNotificationKeys.Show.Title, out string text, false))
+            {
+                UpdateText(text);
+                return;
+            }
+
+            if (notification.TryGetInfoT(PopupNotificationKeys.Show.Title, out (string, string) tableAndEntry, false))
+            {
+                UpdateLocalizeText(tableAndEntry.Item1, tableAndEntry.Item2);
+                return;
+            }
+
+            notification.LogError(this.GetType().FullName, PopupNotificationKeys.Show.Title, "The title is neither string or (string, string)");
+        }
+
+        void UpdateText(string text)
+        {
+            UpdateLocalizeText(null, null);
+            this.text.text = text;
+        }
+
+        void UpdateLocalizeText(string table, string entry)
+        {
+            stringEvent.SetTable(table);
+            stringEvent.SetEntry(entry);
+            stringEvent.RefreshString();
         }
     }
 }

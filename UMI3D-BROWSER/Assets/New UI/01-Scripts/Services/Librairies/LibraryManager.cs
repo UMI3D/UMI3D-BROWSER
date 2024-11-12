@@ -66,17 +66,21 @@ namespace umi3dBrowsers.services.librairies
         private Notifier popupCloseAll;
 
         const string LOCALIZATION_TABLE = "UMI3D_inetum";
+        Guid deleteLibraryId;
 
         private void Awake()
         {
             SetupPopupDeleteLibNotifier();
 
             popupDeleteAllLibNotifier = NotificationHub.Default.GetNotifier<PopupNotificationKeys.Show>(this);
+            deleteLibraryId = Guid.NewGuid();
+            popupDeleteAllLibNotifier[PopupNotificationKeys.Show.ID] = deleteLibraryId;
             buttonDeleteAll.OnClick.AddListener(DeleteAllLibClick);
         }
 
         private void DeleteAllLibClick()
         {
+           
             popupDeleteAllLibNotifier[PopupNotificationKeys.Show.Type] = PopupType.Warning;
             popupDeleteAllLibNotifier[PopupNotificationKeys.Show.Description] = (LOCALIZATION_TABLE, "popup_deleteLibs_description");
             popupDeleteAllLibNotifier[PopupNotificationKeys.Show.Buttons] = new List<(string, Action)>() {

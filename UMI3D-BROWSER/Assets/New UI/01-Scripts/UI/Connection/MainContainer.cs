@@ -19,8 +19,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TMPro;
-using umi3d.browserRuntime.ui.popup;
 using umi3d.browserRuntime.ui.inGame;
+using umi3d.browserRuntime.ui.popup;
 using umi3d.cdk;
 using umi3d.cdk.collaboration;
 using umi3dBrowsers.data.ui;
@@ -76,30 +76,27 @@ namespace umi3dBrowsers
         [SerializeField] private PanelData m_mainMenuPanel;
         [SerializeField] private PanelData m_formPanel;
 
-        private Notifier m_quitPopupNotifier;
-        private Notifier m_popupTryToConnectNotifier;
-        private Notifier m_popupConnectionFailedNotifier;
-        private Notifier m_popupConnectionLostNotifier;
-        private Notifier m_popupConnectionForceLogoutNotifier;
-        private Notifier m_popupAnswerFailedNotifier;
+        private Notifier popupNotifier;
         private Notifier m_quittingNotifier;
         private Notifier m_enableInGameUiNotifier;
 
         const string LOCALIZATION_TABLE = "UMI3D_inetum";
+        Guid popupID;
 
         private void Awake()
         {
-            SetupQuitPopupNotifier();
-            SetupTryToConnectPopupNotifier();
-            SetupConnectionFailedPopupNotifier();
-            SetupConnectionLostPopupNotifier();
-            SetupAnswerFailedPopupNotifier();
-            SetupConnectionForceLogoutPopupNotifier();
+            popupID = Guid.NewGuid();
+            popupNotifier = NotificationHub.Default.GetNotifier<PopupNotificationKeys.Show>(this);
+            popupNotifier[PopupNotificationKeys.Show.ID] = popupID;
+
             m_quittingNotifier = NotificationHub.Default.GetNotifier(this, QuittingManagerNotificationKey.QuittingConfirmation);
             m_enableInGameUiNotifier = NotificationHub.Default.GetNotifier(this, InGameNotificationKeys.EnableInGameUi);
-             NotificationHub.Default.Subscribe(this, QuittingManagerNotificationKey.RequestToQuit, () => {
-                m_quitPopupNotifier.Notify();
-            });
+            
+            NotificationHub.Default.Subscribe(
+                this, 
+                QuittingManagerNotificationKey.RequestToQuit, 
+                TryToQuit
+            );
 
             navBarButtonsColors.colorMultiplier = 1.0f;
 
@@ -168,88 +165,20 @@ namespace umi3dBrowsers
             });
         }
 
-        private void SetupQuitPopupNotifier()
+        void TryToQuit()
         {
-            m_quitPopupNotifier = NotificationHub.Default.GetNotifier<PopupNotificationKeys.Show>(this);
-            m_quitPopupNotifier[PopupNotificationKeys.Show.Type] = PopupType.Information;
-            m_quitPopupNotifier[PopupNotificationKeys.Show.Title] = (LOCALIZATION_TABLE, "Quit");
-            m_quitPopupNotifier[PopupNotificationKeys.Show.Buttons] = new List<(string, Action)>() {
-                ("Quit", () => {
-                    m_quittingNotifier[QuittingManagerNotificationKey.QuittingConfirmationInfo.Confirmation] = true;
-                    m_quittingNotifier.Notify();
-                }),
-                ("Cancel", () => {
-                    m_quittingNotifier[QuittingManagerNotificationKey.QuittingConfirmationInfo.Confirmation] = false;
-                    m_quittingNotifier.Notify();
-                    NotificationHub.Default.Notify<PopupNotificationKeys.CloseAll>(this);
-                }
-            )};
-        }
-
-        private void SetupTryToConnectPopupNotifier()
-        {
-            m_popupTryToConnectNotifier = NotificationHub.Default.GetNotifier<PopupNotificationKeys.Show>(this);
-            m_popupTryToConnectNotifier[PopupNotificationKeys.Show.Type] = PopupType.Information;
-            m_popupTryToConnectNotifier[PopupNotificationKeys.Show.Title] = (LOCALIZATION_TABLE, "popup_connection_server");
-            m_popupTryToConnectNotifier[PopupNotificationKeys.Show.Description] = (LOCALIZATION_TABLE, "popup_trying_connect");
-        }
-
-        private void SetupConnectionFailedPopupNotifier()
-        {
-            m_popupConnectionFailedNotifier = NotificationHub.Default.GetNotifier<PopupNotificationKeys.Show>(this);
-            m_popupConnectionFailedNotifier[PopupNotificationKeys.Show.Type] = PopupType.Error;
-            m_popupConnectionFailedNotifier[PopupNotificationKeys.Show.Title] = (LOCALIZATION_TABLE, "popup_fail_connect");
-            m_popupConnectionFailedNotifier[PopupNotificationKeys.Show.Description] = (LOCALIZATION_TABLE, "error_msg");
-            m_popupConnectionFailedNotifier[PopupNotificationKeys.Show.Buttons] = new List<(string, Action)>() {
-                ("popup_close", () => {
-                    NotificationHub.Default.Notify<PopupNotificationKeys.CloseAll>(this);
-                })
+            popupNotifier[PopupNotificationKeys.Show.Type] = PopupType.Information;
+            popupNotifier[PopupNotificationKeys.Show.Title] = (LOCALIZATION_TABLE, "Quit");
+            popupNotifier[PopupNotificationKeys.Show.Buttons] = new List<(string, string)>() {
+                (LOCALIZATION_TABLE, "Quit"), (LOCALIZATION_TABLE, "Cancel")
             };
-        }
-
-        private void SetupConnectionLostPopupNotifier()
-        {
-            m_popupConnectionLostNotifier = NotificationHub.Default.GetNotifier<PopupNotificationKeys.Show>(this);
-            m_popupConnectionLostNotifier[PopupNotificationKeys.Show.Type] = PopupType.Error;
-            m_popupConnectionLostNotifier[PopupNotificationKeys.Show.Title] = "popup_forced_leave";
-            m_popupConnectionLostNotifier[PopupNotificationKeys.Show.Description] = "popup_connection_lost_msg";
-            m_popupConnectionLostNotifier[PopupNotificationKeys.Show.Buttons] = new List<(string, Action)>() {
-                ("popup_connection_lost_leave", ()=>{
-                    connectionToImmersiveLinker.Leave();
-                    NotificationHub.Default.Notify<PopupNotificationKeys.CloseAll>(this);
-                }),
-                ("popup_connection_lost_retry", () =>{
-                    UMI3DCollaborationClientServer.Reconnect();
-                    NotificationHub.Default.Notify<PopupNotificationKeys.CloseAll>(this); 
-                })
+            Action<int> action = index =>
+            {
+                m_quittingNotifier[QuittingManagerNotificationKey.QuittingConfirmationInfo.Confirmation] = index == 0;
+                m_quittingNotifier.Notify();
             };
-        }
-
-        private void SetupConnectionForceLogoutPopupNotifier()
-        {
-            m_popupConnectionForceLogoutNotifier = NotificationHub.Default.GetNotifier<PopupNotificationKeys.Show>(this);
-            m_popupConnectionForceLogoutNotifier[PopupNotificationKeys.Show.Type] = PopupType.Error;
-            m_popupConnectionForceLogoutNotifier[PopupNotificationKeys.Show.Title] = "popup_forced_leave";
-            m_popupConnectionForceLogoutNotifier[PopupNotificationKeys.Show.Description] = "popup_forced_leave_msg";
-            m_popupConnectionForceLogoutNotifier[PopupNotificationKeys.Show.Buttons] = new List<(string, Action)>() {
-                ("popup_connection_lost_leave", ()=>{
-                    connectionToImmersiveLinker.Leave(); 
-                    NotificationHub.Default.Notify<PopupNotificationKeys.CloseAll>(this);
-                }),
-            };
-        }
-
-        private void SetupAnswerFailedPopupNotifier()
-        {
-            m_popupAnswerFailedNotifier = NotificationHub.Default.GetNotifier<PopupNotificationKeys.Show>(this);
-            m_popupAnswerFailedNotifier[PopupNotificationKeys.Show.Type] = PopupType.Error;
-            m_popupAnswerFailedNotifier[PopupNotificationKeys.Show.Title] = (LOCALIZATION_TABLE, "popup_answer_failed_title");
-            m_popupAnswerFailedNotifier[PopupNotificationKeys.Show.Description] = (LOCALIZATION_TABLE, "popup_answer_failed_description");
-            m_popupAnswerFailedNotifier[PopupNotificationKeys.Show.Buttons] = new List<(string, Action)>() {
-                ("popup_close", () => {
-                    NotificationHub.Default.Notify<PopupNotificationKeys.CloseAll>(this);
-                })
-            };
+            popupNotifier[PopupNotificationKeys.Show.ButtonActions] = action;
+            popupNotifier.Notify();
         }
 
         private void OnDestroy()
@@ -275,28 +204,76 @@ namespace umi3dBrowsers
             };
 
             connectionServiceLinker.OnTryToConnect += (url) => {
-                m_popupTryToConnectNotifier[PopupNotificationKeys.Show.Arguments] = 
+                popupNotifier[PopupNotificationKeys.Show.Type] = PopupType.Information;
+                popupNotifier[PopupNotificationKeys.Show.Title] = (LOCALIZATION_TABLE, "popup_connection_server");
+                popupNotifier[PopupNotificationKeys.Show.Description] = (LOCALIZATION_TABLE, "popup_trying_connect");
+                popupNotifier[PopupNotificationKeys.Show.Arguments] = 
                     new Dictionary<string, object>() { { "url", url } };
-                m_popupTryToConnectNotifier.Notify();
+                popupNotifier[PopupNotificationKeys.Show.Buttons] = null;
+                popupNotifier[PopupNotificationKeys.Show.ButtonActions] = null;
+                popupNotifier.Notify();
             };
             connectionServiceLinker.OnConnectionFailure += (message) => {
-                m_popupConnectionFailedNotifier[PopupNotificationKeys.Show.Arguments] = 
+                popupNotifier[PopupNotificationKeys.Show.Type] = PopupType.Error;
+                popupNotifier[PopupNotificationKeys.Show.Title] = (LOCALIZATION_TABLE, "popup_fail_connect");
+                popupNotifier[PopupNotificationKeys.Show.Description] = (LOCALIZATION_TABLE, "error_msg");
+                popupNotifier[PopupNotificationKeys.Show.Buttons] = new List<(string, string)>() {
+                    (LOCALIZATION_TABLE, "popup_close")
+                };
+                popupNotifier[PopupNotificationKeys.Show.ButtonActions] = null;
+                popupNotifier[PopupNotificationKeys.Show.Arguments] = 
                     new Dictionary<string, object>() { { "error", message } };
-                m_popupConnectionFailedNotifier.Notify();
+                popupNotifier.Notify();
             };
             UMI3DClientServer.Instance.OnConnectionLost.AddListener(() => {
-                m_popupConnectionLostNotifier.Notify();
+                popupNotifier[PopupNotificationKeys.Show.Type] = PopupType.Error;
+                popupNotifier[PopupNotificationKeys.Show.Title] = (LOCALIZATION_TABLE, "popup_forced_leave");
+                popupNotifier[PopupNotificationKeys.Show.Description] = (LOCALIZATION_TABLE, "popup_connection_lost_msg");
+                popupNotifier[PopupNotificationKeys.Show.Buttons] = new List<(string, string)>() {
+                    (LOCALIZATION_TABLE, "popup_connection_lost_leave"),
+                    (LOCALIZATION_TABLE, "popup_connection_lost_retry")
+                };
+                Action<int> action = index =>
+                {
+                    if (index == -1 || index == 0)
+                    {
+                        connectionToImmersiveLinker.Leave();
+                    }
+                    else
+                    {
+                        UMI3DCollaborationClientServer.Reconnect();
+                    }
+                };
+                popupNotifier[PopupNotificationKeys.Show.ButtonActions] = action;
+                popupNotifier.Notify();
             });
             UMI3DCollaborationClientServer.Instance.OnForceLogoutMessage.AddListener((message) => {
-                m_popupConnectionForceLogoutNotifier[PopupNotificationKeys.Show.Arguments] =
-    new Dictionary<string, object>() { { "message", message } };
-                m_popupConnectionForceLogoutNotifier.Notify();
+                popupNotifier[PopupNotificationKeys.Show.Type] = PopupType.Error;
+                popupNotifier[PopupNotificationKeys.Show.Title] = (LOCALIZATION_TABLE, "popup_forced_leave");
+                popupNotifier[PopupNotificationKeys.Show.Description] = (LOCALIZATION_TABLE, "popup_forced_leave_msg");
+                popupNotifier[PopupNotificationKeys.Show.Buttons] = new List<(string, string)>() {
+                    (LOCALIZATION_TABLE, "popup_connection_lost_leave")
+                };
+                Action<int> action = index =>
+                {
+                    connectionToImmersiveLinker.Leave();
+                };
+                popupNotifier[PopupNotificationKeys.Show.ButtonActions] = action;
+                popupNotifier[PopupNotificationKeys.Show.Arguments] = 
+                    new Dictionary<string, object>() { { "message", message } };
+                popupNotifier.Notify();
             });
             connectionServiceLinker.OnMediaServerPingSuccess += (virtualWorldData) => {
                 NotificationHub.Default.Notify<PopupNotificationKeys.CloseAll>(this);
             };
             connectionServiceLinker.OnAnswerFailed += () => {
-                m_popupAnswerFailedNotifier.Notify();
+                popupNotifier[PopupNotificationKeys.Show.Type] = PopupType.Error;
+                popupNotifier[PopupNotificationKeys.Show.Title] = (LOCALIZATION_TABLE, "popup_answer_failed_title");
+                popupNotifier[PopupNotificationKeys.Show.Description] = (LOCALIZATION_TABLE, "popup_answer_failed_description");
+                popupNotifier[PopupNotificationKeys.Show.Buttons] = new List<(string, string)>() {
+                    (LOCALIZATION_TABLE, "popup_close")
+                };
+                popupNotifier.Notify();
             };
             connectionServiceLinker.OnAsksToLoadLibrairies += (ids, action) => action?.Invoke(true);
 

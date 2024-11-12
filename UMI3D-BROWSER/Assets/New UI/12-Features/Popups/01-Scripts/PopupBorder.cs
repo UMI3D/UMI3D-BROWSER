@@ -14,32 +14,55 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System.Collections;
-using System.Collections.Generic;
+using inetum.unityUtils;
 using UnityEngine;
+using UnityEngine.UI;
 
-namespace umi3d
+namespace umi3d.browserRuntime.ui.popup
 {
     public class PopupBorder : MonoBehaviour
     {
+        Image image;
+
         void Awake()
         {
+            image = GetComponent<Image>();
+
+            NotificationHub.Default
+               .Subscribe<PopupNotificationKeys.Show>(
+               this,
+               new FilterByCondition(FilterType.AcceptOnly, publisher => publisher is PopupManager),
+               NewPopup
+           );
         }
 
         void OnEnable()
         {
+            NotificationHub.Default
+              .Unsubscribe<PopupNotificationKeys.Show>(this);
         }
 
-        void OnDisable()
+        void NewPopup(Notification notification)
         {
-        }
+            if (!notification.TryGetInfoT(PopupNotificationKeys.Show.Type, out PopupType type))
+            {
+                return;
+            }
 
-        void OnDestroy()
-        {
-        }
-
-        void Update()
-        {
+            switch (type)
+            {
+                case PopupType.Information:
+                    image.color = PopupColor.HexToColor(PopupColor.InformationColor);
+                    break;
+                case PopupType.Warning:
+                    image.color = PopupColor.HexToColor(PopupColor.WarningColor);
+                    break;
+                case PopupType.Error:
+                    image.color = PopupColor.HexToColor(PopupColor.ErrorColor);
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

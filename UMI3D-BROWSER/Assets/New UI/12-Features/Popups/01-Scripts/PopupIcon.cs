@@ -14,32 +14,58 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System.Collections;
-using System.Collections.Generic;
+using inetum.unityUtils;
+using umi3d.browserRuntime.ui.popup;
 using UnityEngine;
+using UnityEngine.UI;
 
-namespace umi3d
+namespace umi3d.browserRuntime.ui.pu
 {
     public class PopupIcon : MonoBehaviour
     {
+        Image image;
+
         void Awake()
         {
-        }
+            image = GetComponent<Image>();
 
-        void OnEnable()
-        {
-        }
-
-        void OnDisable()
-        {
+            NotificationHub.Default
+               .Subscribe<PopupNotificationKeys.Show>(
+               this,
+               new FilterByCondition(FilterType.AcceptOnly, publisher => publisher is PopupManager),
+               NewPopup
+           );
         }
 
         void OnDestroy()
         {
+            NotificationHub.Default
+              .Unsubscribe<PopupNotificationKeys.Show>(this);
         }
 
-        void Update()
+        void NewPopup(Notification notification)
         {
+            if (!notification.TryGetInfoT(PopupNotificationKeys.Show.Type, out PopupType type))
+            {
+                return;
+            }
+
+            switch (type)
+            {
+                case PopupType.Information:
+                    image.gameObject.SetActive(false);
+                    break;
+                case PopupType.Warning:
+                    image.gameObject.SetActive(true);
+                    image.color = PopupColor.HexToColor(PopupColor.WarningColor);
+                    break;
+                case PopupType.Error:
+                    image.gameObject.SetActive(true);
+                    image.color = PopupColor.HexToColor(PopupColor.ErrorColor);
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

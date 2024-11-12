@@ -21,6 +21,7 @@ using umi3d.browserRuntime.ui.popup;
 using umi3d.cdk;
 using umi3d.cdk.collaboration;
 using UnityEngine;
+using UnityEngine.Localization.Tables;
 using UnityEngine.UI;
 
 namespace umi3dBrowsers.services.librairies
@@ -64,6 +65,8 @@ namespace umi3dBrowsers.services.librairies
         private Notifier popupDeleteLibNotifier;
         private Notifier popupCloseAll;
 
+        const string LOCALIZATION_TABLE = "UMI3D_inetum";
+
         private void Awake()
         {
             SetupPopupDeleteLibNotifier();
@@ -75,7 +78,7 @@ namespace umi3dBrowsers.services.librairies
         private void DeleteAllLibClick()
         {
             popupDeleteAllLibNotifier[PopupNotificationKeys.Show.Type] = PopupType.Warning;
-            popupDeleteAllLibNotifier[PopupNotificationKeys.Show.Description] = "popup_deleteLibs_description";
+            popupDeleteAllLibNotifier[PopupNotificationKeys.Show.Description] = (LOCALIZATION_TABLE, "popup_deleteLibs_description");
             popupDeleteAllLibNotifier[PopupNotificationKeys.Show.Buttons] = new List<(string, Action)>() {
                 ("popup_cancel", () => {
                     NotificationHub.Default.Notify<PopupNotificationKeys.CloseAll>(this);
@@ -95,7 +98,7 @@ namespace umi3dBrowsers.services.librairies
         {
             popupDeleteLibNotifier = NotificationHub.Default.GetNotifier<PopupNotificationKeys.Show>(this);
             popupDeleteLibNotifier[PopupNotificationKeys.Show.Type] = PopupType.Warning;
-            popupDeleteLibNotifier[PopupNotificationKeys.Show.Description] = "popup_deleteLib_description";
+            popupDeleteLibNotifier[PopupNotificationKeys.Show.Description] = (LOCALIZATION_TABLE, "popup_deleteLib_description");
         }
 
         private void OnEnable()

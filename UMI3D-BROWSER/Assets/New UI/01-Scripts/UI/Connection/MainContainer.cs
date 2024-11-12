@@ -83,6 +83,8 @@ namespace umi3dBrowsers
         private Notifier m_quittingNotifier;
         private Notifier m_enableInGameUiNotifier;
 
+        const string LOCALIZATION_TABLE = "UMI3D_inetum";
+
         private void Awake()
         {
             SetupQuitPopupNotifier();
@@ -166,7 +168,7 @@ namespace umi3dBrowsers
         {
             m_quitPopupNotifier = NotificationHub.Default.GetNotifier<PopupNotificationKeys.Show>(this);
             m_quitPopupNotifier[PopupNotificationKeys.Show.Type] = PopupType.Information;
-            m_quitPopupNotifier[PopupNotificationKeys.Show.Title] = "Quit";
+            m_quitPopupNotifier[PopupNotificationKeys.Show.Title] = (LOCALIZATION_TABLE, "Quit");
             m_quitPopupNotifier[PopupNotificationKeys.Show.Buttons] = new List<(string, Action)>() {
                 ("Quit", () => {
                     m_quittingNotifier[QuittingManagerNotificationKey.QuittingConfirmationInfo.Confirmation] = true;
@@ -184,16 +186,16 @@ namespace umi3dBrowsers
         {
             m_popupTryToConnectNotifier = NotificationHub.Default.GetNotifier<PopupNotificationKeys.Show>(this);
             m_popupTryToConnectNotifier[PopupNotificationKeys.Show.Type] = PopupType.Information;
-            m_popupTryToConnectNotifier[PopupNotificationKeys.Show.Title] = "popup_connection_server";
-            m_popupTryToConnectNotifier[PopupNotificationKeys.Show.Description] = "popup_trying_connect";
+            m_popupTryToConnectNotifier[PopupNotificationKeys.Show.Title] = (LOCALIZATION_TABLE, "popup_connection_server");
+            m_popupTryToConnectNotifier[PopupNotificationKeys.Show.Description] = (LOCALIZATION_TABLE, "popup_trying_connect");
         }
 
         private void SetupConnectionFailedPopupNotifier()
         {
             m_popupConnectionFailedNotifier = NotificationHub.Default.GetNotifier<PopupNotificationKeys.Show>(this);
             m_popupConnectionFailedNotifier[PopupNotificationKeys.Show.Type] = PopupType.Error;
-            m_popupConnectionFailedNotifier[PopupNotificationKeys.Show.Title] = "popup_fail_connect";
-            m_popupConnectionFailedNotifier[PopupNotificationKeys.Show.Description] = "error_msg";
+            m_popupConnectionFailedNotifier[PopupNotificationKeys.Show.Title] = (LOCALIZATION_TABLE, "popup_fail_connect");
+            m_popupConnectionFailedNotifier[PopupNotificationKeys.Show.Description] = (LOCALIZATION_TABLE, "error_msg");
             m_popupConnectionFailedNotifier[PopupNotificationKeys.Show.Buttons] = new List<(string, Action)>() {
                 ("popup_close", () => {
                     NotificationHub.Default.Notify<PopupNotificationKeys.CloseAll>(this);
@@ -205,8 +207,8 @@ namespace umi3dBrowsers
         {
             m_popupAnswerFailedNotifier = NotificationHub.Default.GetNotifier<PopupNotificationKeys.Show>(this);
             m_popupAnswerFailedNotifier[PopupNotificationKeys.Show.Type] = PopupType.Error;
-            m_popupAnswerFailedNotifier[PopupNotificationKeys.Show.Title] = "popup_answer_failed_title";
-            m_popupAnswerFailedNotifier[PopupNotificationKeys.Show.Description] = "popup_answer_failed_description";
+            m_popupAnswerFailedNotifier[PopupNotificationKeys.Show.Title] = (LOCALIZATION_TABLE, "popup_answer_failed_title");
+            m_popupAnswerFailedNotifier[PopupNotificationKeys.Show.Description] = (LOCALIZATION_TABLE, "popup_answer_failed_description");
             m_popupAnswerFailedNotifier[PopupNotificationKeys.Show.Buttons] = new List<(string, Action)>() {
                 ("popup_close", () => {
                     NotificationHub.Default.Notify<PopupNotificationKeys.CloseAll>(this);

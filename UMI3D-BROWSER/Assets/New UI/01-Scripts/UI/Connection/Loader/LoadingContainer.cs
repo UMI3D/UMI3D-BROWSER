@@ -42,7 +42,10 @@ namespace umi3dBrowsers.displayer
 
         private void Awake()
         {
-            m_linker.OnLeave += () => _loadingInProgress = false;
+            m_linker.OnLeave += () => {
+                _loadingInProgress = false;
+                m_menuNavigationLinker.ReplacePlayerAndShowPanel();
+            };
             OnLoadingInProgress += () => {
                 m_menuNavigationLinker.ShowPanel(m_loadingPanel);
                 m_menuNavigationLinker.ReplacePlayerAndShowPanel();

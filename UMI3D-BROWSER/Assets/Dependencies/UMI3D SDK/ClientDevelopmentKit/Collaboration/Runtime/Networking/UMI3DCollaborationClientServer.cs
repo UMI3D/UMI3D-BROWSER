@@ -294,7 +294,7 @@ namespace umi3d.cdk.collaboration
             if (environmentClient == client)
             {
                 UMI3DCollaborationClientServer.EnvironmentLogout(null, null);
-
+                
                 OnConnectionLost.Invoke();
             }
         }

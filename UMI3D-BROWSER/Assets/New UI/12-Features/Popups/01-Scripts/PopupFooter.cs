@@ -16,7 +16,6 @@ limitations under the License.
 
 using inetum.unityUtils;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -31,7 +30,6 @@ namespace umi3d.browserRuntime.ui.popup
 
         void Awake()
         {
-            UnityEngine.Debug.Log($"message");
             NotificationHub.Default
                 .Subscribe<PopupNotificationKeys.Show>(
                 this,
@@ -50,7 +48,7 @@ namespace umi3d.browserRuntime.ui.popup
         {
             DeactivateAllButtons();
 
-            if (!notification.TryGetInfoT(PopupNotificationKeys.Show.Buttons, out List<System.Object> list))
+            if (!notification.TryGetInfoT(PopupNotificationKeys.Show.Buttons, out List<System.Object> list) || list == null)
             {
                 return;
             }

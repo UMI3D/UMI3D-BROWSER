@@ -25,8 +25,9 @@ namespace umi3d.browserRuntime.ui.popup
     {
         [SerializeField] GameObject popupPrefab;
 
+        System.Guid? currentId;
         GameObject popup;
-        List<Notification> popupInfo = new();
+        List<(System.Guid?, Notification)> popupInfo = new();
 
         void Awake()
         {
@@ -56,7 +57,36 @@ namespace umi3d.browserRuntime.ui.popup
 
         void NewPopupEnqueued(Notification notification)
         {
-            popupInfo.Add(notification);
+            if (!notification.TryGetInfoT(PopupNotificationKeys.Show.ID, out System.Guid id))
+            {
+                popupInfo.Add((null, notification));
+
+                if (!popup.activeInHierarchy)
+                {
+                    DisplayNextPopup();
+                }
+                return;
+            }
+            
+
+            if (currentId.HasValue && currentId.Value == id)
+            {
+                NotificationHub.Default.Notify<PopupNotificationKeys.Show>(this, notification.Info);
+                return;
+            }
+
+            int index = popupInfo.FindIndex(info =>
+            {
+                return info.Item1.HasValue && info.Item1.Value == id;
+            });
+            if (index >= 0)
+            {
+                popupInfo[index] = (id, notification);
+            }
+            else
+            {
+                popupInfo.Add((id, notification));
+            }
 
             if (!popup.activeInHierarchy)
             {
@@ -67,6 +97,7 @@ namespace umi3d.browserRuntime.ui.popup
         void PopupClosed()
         {
             popup.SetActive(false);
+            currentId = null;
             DisplayNextPopup();
         }
 
@@ -77,10 +108,10 @@ namespace umi3d.browserRuntime.ui.popup
                 return;
             }
 
-            Notification notif = null;
+            int index = -1;
             for (int i = 0; i < popupInfo.Count; i++)
             {
-                Notification _notif = popupInfo[i];
+                Notification _notif = popupInfo[i].Item2;
                 if (!_notif.TryGetInfoT(PopupNotificationKeys.Show.Type, out PopupType type))
                 {
                     continue;
@@ -88,21 +119,23 @@ namespace umi3d.browserRuntime.ui.popup
 
                 if (type == PopupType.Error)
                 {
-                    notif = _notif;
+                    index = i;
                     break;
                 }
 
-                if (type == PopupType.Warning && notif == null)
+                if (type == PopupType.Warning && index < 0)
                 {
-                    notif = _notif;
+                    index = i;
                 }
             }
 
-            if (notif == null)
+            if (index < 0)
             {
-                notif = popupInfo[0];
+                index = 0;
             }
-            popupInfo.Remove(notif);
+            Notification notif = popupInfo[index].Item2;
+            currentId = popupInfo[index].Item1;
+            popupInfo.RemoveAt(index);
 
             NotificationHub.Default.Notify<PopupNotificationKeys.Show>(this, notif.Info);
 

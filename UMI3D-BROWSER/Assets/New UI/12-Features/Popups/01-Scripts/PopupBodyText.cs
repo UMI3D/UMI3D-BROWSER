@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Localization.Components;
 
@@ -46,19 +47,32 @@ namespace umi3d.browserRuntime.ui.popup
 
         void NewPopup(Notification notification)
         {
+            if (notification.TryGetInfoT(PopupNotificationKeys.Show.Arguments, out Dictionary<string, System.Object> arguments, false))
+            {
+                UpdateArguments(arguments);
+            }
+            else
+            {
+                UpdateArguments(null);
+            }
+
             if (notification.TryGetInfoT(PopupNotificationKeys.Show.Description, out string text, false))
             {
                 UpdateText(text);
-                return;
             }
-
-            if (notification.TryGetInfoT(PopupNotificationKeys.Show.Description, out (string, string) tableAndEntry, false))
+            else if (notification.TryGetInfoT(PopupNotificationKeys.Show.Description, out (string, string) tableAndEntry, false))
             {
                 UpdateLocalizeText(tableAndEntry.Item1, tableAndEntry.Item2);
-                return;
             }
+            else
+            {
+                notification.LogError(this.GetType().FullName, PopupNotificationKeys.Show.Description, "The description is neither string or (string, string)");
+            }
+        }
 
-            notification.LogError(this.GetType().FullName, PopupNotificationKeys.Show.Description, "The description is neither string or (string, string)");
+        void UpdateArguments(Dictionary<string, System.Object> arguments)
+        {
+            stringEvent.StringReference.Arguments = new object[] { arguments };
         }
 
         void UpdateText(string text)

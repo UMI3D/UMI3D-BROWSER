@@ -14,32 +14,54 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System.Collections;
-using System.Collections.Generic;
+using inetum.unityUtils;
+using System;
 using UnityEngine;
+using UnityEngine.UI;
 
-namespace umi3d
+namespace umi3d.browserRuntime.ui.popup
 {
     public class PopupCloseButton : MonoBehaviour
     {
+        Button button;
+        Action<int> action;
+
         void Awake()
         {
-        }
+            button = GetComponent<Button>();
+            button.onClick.AddListener(Click);
 
-        void OnEnable()
-        {
-        }
-
-        void OnDisable()
-        {
+            NotificationHub.Default
+               .Subscribe<PopupNotificationKeys.Show>(
+               this,
+               new FilterByCondition(FilterType.AcceptOnly, publisher => publisher is PopupManager),
+               NewPopup
+           );
         }
 
         void OnDestroy()
         {
+            NotificationHub.Default
+             .Unsubscribe<PopupNotificationKeys.Show>(this);
         }
 
-        void Update()
+        void NewPopup(Notification notification)
         {
+            if (!notification.TryGetInfoT(PopupNotificationKeys.Show.ButtonActions, out action))
+            {
+                return;
+            }
+        }
+
+        void Click()
+        {
+            if (action == null)
+            {
+                UnityEngine.Debug.LogError($"[Popup] Action null.");
+            }
+            action?.Invoke(-1);
+
+            NotificationHub.Default.Notify<PopupNotificationKeys.PopupClosed>(this);
         }
     }
 }

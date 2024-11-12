@@ -331,6 +331,7 @@ namespace umi3dBrowsers
                 {
                     ShowUI();
                     mainContainerLinker.Spawner.RepositionPlayer();
+                    connectionToImmersiveLinker.DisplayEnvironmentHandler();
                 }
                 m_menuNavigationLinker.ShowPanel(m_formPanel);
             };
@@ -339,7 +340,10 @@ namespace umi3dBrowsers
             connectionServiceLinker.OnDivFormDtoReceived += (connectionFormDto) => Show();
             connectionServiceLinker.OnWaitReceived += (connectionFormDto) => Show();
 
-            connectionServiceLinker.OnConnectionSuccess += () => HideUI();
+            connectionServiceLinker.OnConnectionSuccess += () => {
+                HideUI();
+                connectionToImmersiveLinker.StopDisplayEnvironmentHandler();
+            };
         }
 
         private void HideUI()

@@ -14,32 +14,54 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System.Collections;
-using System.Collections.Generic;
+using inetum.unityUtils;
+using System;
 using UnityEngine;
+using UnityEngine.Localization.Components;
+using UnityEngine.UI;
 
-namespace umi3d
+namespace umi3d.browserRuntime.ui.popup
 {
     public class PopupButton : MonoBehaviour
     {
+        public int index;
+        public Action<int> action;
+
+        Button button;
+        TMPro.TMP_Text text;
+        LocalizeStringEvent stringEvent;
+
         void Awake()
         {
+            button = GetComponent<Button>();
+            button.onClick.AddListener(Click);
+
+            text = GetComponentInChildren<TMPro.TMP_Text>();
+            stringEvent = GetComponentInChildren<LocalizeStringEvent>();
         }
 
-        void OnEnable()
+        void Click()
         {
+            if (action == null)
+            {
+                UnityEngine.Debug.LogError($"[Popup] Action is null.");
+            }
+            action?.Invoke(index);
+
+            NotificationHub.Default.Notify<PopupNotificationKeys.PopupClosed>(this);
         }
 
-        void OnDisable()
+        public void UpdateText(string text)
         {
+            UpdateLocalizeText(null, null);
+            this.text.text = text;
         }
 
-        void OnDestroy()
+        public void UpdateLocalizeText(string table, string entry)
         {
-        }
-
-        void Update()
-        {
+            stringEvent.SetTable(table);
+            stringEvent.SetEntry(entry);
+            stringEvent.RefreshString();
         }
     }
 }

@@ -14,32 +14,47 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace umi3d
+namespace umi3d.browserRuntime.ui.popup
 {
     public class PopupBlockingLayer : MonoBehaviour
     {
         void Awake()
         {
-        }
+            gameObject.SetActive(false);
 
-        void OnEnable()
-        {
-        }
+            NotificationHub.Default
+                 .Subscribe<PopupNotificationKeys.Show>(
+                 this,
+                 new FilterByCondition(FilterType.AcceptOnly, publisher => publisher is PopupManager),
+                 NewPopup
+             );
 
-        void OnDisable()
-        {
+            NotificationHub.Default
+                .Subscribe<PopupNotificationKeys.PopupClosed>(this, PopupClosed);
         }
 
         void OnDestroy()
         {
+            NotificationHub.Default
+            .Unsubscribe<PopupNotificationKeys.Show>(this);
+
+            NotificationHub.Default
+            .Unsubscribe<PopupNotificationKeys.PopupClosed>(this);
         }
 
-        void Update()
+        void NewPopup()
         {
+            gameObject.SetActive(true);
+        }
+
+        void PopupClosed()
+        {
+            gameObject.SetActive(false);
         }
     }
 }

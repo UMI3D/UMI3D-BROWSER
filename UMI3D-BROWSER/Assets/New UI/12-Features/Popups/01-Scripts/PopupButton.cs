@@ -31,6 +31,8 @@ namespace umi3d.browserRuntime.ui.popup
         TMPro.TMP_Text text;
         LocalizeStringEvent stringEvent;
 
+        Notifier closeNotifier;
+
         void Awake()
         {
             button = GetComponent<Button>();
@@ -38,6 +40,9 @@ namespace umi3d.browserRuntime.ui.popup
 
             text = GetComponentInChildren<TMPro.TMP_Text>();
             stringEvent = GetComponentInChildren<LocalizeStringEvent>();
+
+            closeNotifier = NotificationHub.Default
+                .GetNotifier<PopupNotificationKeys.PopupClosed>(this);
         }
 
         void Click()
@@ -48,7 +53,7 @@ namespace umi3d.browserRuntime.ui.popup
             }
             action?.Invoke(index);
 
-            NotificationHub.Default.Notify<PopupNotificationKeys.PopupClosed>(this);
+            closeNotifier.Notify();
         }
 
         public void UpdateText(string text)
@@ -62,6 +67,11 @@ namespace umi3d.browserRuntime.ui.popup
             stringEvent.SetTable(table);
             stringEvent.SetEntry(entry);
             stringEvent.RefreshString();
+        }
+
+        public void SetPopupID(System.Guid? id)
+        {
+            closeNotifier[PopupNotificationKeys.PopupClosed.ID] = id;
         }
     }
 }

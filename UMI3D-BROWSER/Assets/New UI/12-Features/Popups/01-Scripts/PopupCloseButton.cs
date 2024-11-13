@@ -26,6 +26,8 @@ namespace umi3d.browserRuntime.ui.popup
         Button button;
         Action<int> action;
 
+        Notifier closeNotifier;
+
         void Awake()
         {
             button = GetComponent<Button>();
@@ -37,6 +39,9 @@ namespace umi3d.browserRuntime.ui.popup
                new FilterByCondition(FilterType.AcceptOnly, publisher => publisher is PopupManager),
                NewPopup
            );
+
+            closeNotifier = NotificationHub.Default
+               .GetNotifier<PopupNotificationKeys.PopupClosed>(this);
         }
 
         void OnDestroy()
@@ -47,9 +52,18 @@ namespace umi3d.browserRuntime.ui.popup
 
         void NewPopup(Notification notification)
         {
-            if (!notification.TryGetInfoT(PopupNotificationKeys.EnqueuePopup.ButtonActions, out action))
+            notification.TryGetInfoT(PopupNotificationKeys.EnqueuePopup.ButtonActions, out action, false);
+
+            notification.TryGetInfoNullableT(PopupNotificationKeys.EnqueuePopup.ID, out System.Guid? id, false);
+            closeNotifier[PopupNotificationKeys.PopupClosed.ID] = id;
+
+            if (notification.TryGetInfoT(PopupNotificationKeys.EnqueuePopup.HideCloseButton, out bool hide, false))
             {
-                return;
+                gameObject.SetActive(!hide);
+            }
+            else
+            {
+                gameObject.SetActive(true);
             }
         }
 
@@ -61,7 +75,7 @@ namespace umi3d.browserRuntime.ui.popup
             }
             action?.Invoke(-1);
 
-            NotificationHub.Default.Notify<PopupNotificationKeys.PopupClosed>(this);
+            closeNotifier.Notify();
         }
     }
 }

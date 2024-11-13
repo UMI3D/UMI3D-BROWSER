@@ -48,21 +48,24 @@ namespace umi3d.browserRuntime.ui.popup
         {
             DeactivateAllButtons();
 
-            if (!notification.TryGetInfoT(PopupNotificationKeys.EnqueuePopup.Buttons, out List<System.Object> list) || list == null)
+            if (!notification.TryGetInfoT(PopupNotificationKeys.EnqueuePopup.Buttons, out List<System.Object> list, false) || list == null)
             {
                 return;
             }
 
-            if (!notification.TryGetInfoT(PopupNotificationKeys.EnqueuePopup.ButtonActions, out Action<int> action))
+            if (!notification.TryGetInfoT(PopupNotificationKeys.EnqueuePopup.ButtonActions, out Action<int> action, false))
             {
                 return;
             }
+
+            notification.TryGetInfoNullableT(PopupNotificationKeys.EnqueuePopup.ID, out System.Guid? id, false);
 
             for (int i = 0; i < list.Count; i++)
             {
                 PopupButton button = ActiveButton();
                 button.index = i;
                 button.action = action;
+                button.SetPopupID(id);
 
                 System.Object _text = list[i];
                 if (_text is string text)

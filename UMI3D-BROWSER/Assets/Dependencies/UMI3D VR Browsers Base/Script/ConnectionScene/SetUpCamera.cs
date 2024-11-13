@@ -59,7 +59,6 @@ namespace umi3dVRBrowsersBase.connection
         {
             cameraManager.enabled = true;
             Camera.main.clearFlags = CameraClearFlags.SolidColor;
-            //Camera.main.backgroundColor = Color.black;
 
             RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Flat;
             RenderSettings.ambientLight = Color.black;

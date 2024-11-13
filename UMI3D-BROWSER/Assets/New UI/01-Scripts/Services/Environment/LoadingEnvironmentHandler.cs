@@ -15,6 +15,7 @@ limitations under the License.
 */
 using inetum.unityUtils;
 using umi3d.cdk;
+using umi3d.common;
 using umi3dBrowsers.linker;
 using umi3dVRBrowsersBase.ui.playerMenu;
 using UnityEngine;
@@ -64,9 +65,12 @@ namespace umi3dBrowsers.services.environment
         /// </summary>
         public void Display()
         {
-            Camera.main.cullingMask = loadingCullingMask.value;
-            Camera.main.clearFlags = CameraClearFlags.Skybox;
-            RenderSettings.skybox = skyBoxHomeMaterial;
+            if ((UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DLoadingParameters).BrowserType != XRBrowserTypes.AR)
+            {
+                Camera.main.cullingMask = loadingCullingMask.value;
+                Camera.main.clearFlags = CameraClearFlags.Skybox;
+                RenderSettings.skybox = skyBoxHomeMaterial;
+            }
         }
 
         /// <summary>
@@ -74,8 +78,11 @@ namespace umi3dBrowsers.services.environment
         /// </summary>
         public void StopDisplay()
         {
-            Camera.main.cullingMask = defaultCullingMask;
-            Camera.main.clearFlags = CameraClearFlags.Skybox;
+            if ((UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DLoadingParameters).BrowserType != XRBrowserTypes.AR)
+            {
+                Camera.main.cullingMask = defaultCullingMask;
+                Camera.main.clearFlags = CameraClearFlags.Skybox;
+            }
 
             OnLoadingScreenHidden?.Invoke();
         }

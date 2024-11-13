@@ -21,6 +21,7 @@ using TMPro;
 using umi3d.baseBrowser.cursor;
 using umi3d.cdk;
 using umi3d.cdk.collaboration;
+using umi3d.common;
 using umi3dBrowsers.data.ui;
 using umi3dBrowsers.linker;
 using umi3dBrowsers.linker.ingameui;
@@ -95,13 +96,14 @@ namespace umi3dBrowsers
                 LocalizationSettings.SelectedLocale = local;
             };
 
-           // var local = PlayerPrefsManager.GetLocalisationLocal();
-           // LocalizationSettings.SelectedLocale = local ?? LocalizationSettings.ProjectLocale;
+            // var local = PlayerPrefsManager.GetLocalisationLocal();
+            // LocalizationSettings.SelectedLocale = local ?? LocalizationSettings.ProjectLocale;
 
             m_menuNavigationLinker.Initialize(contentTransform);
             m_menuNavigationLinker.OnSetCancelButtonActive += (active) => cancelConnectionButton.gameObject.SetActive(active);
 
-            m_menuNavigationLinker.OnPanelChanged += (panel, panelTutoManager) => {
+            m_menuNavigationLinker.OnPanelChanged += (panel, panelTutoManager) =>
+            {
                 Logo.SetActive(panel.DisplayTop);
                 Title.SetActive(panel.DisplayTop);
                 title.SetTitle(panel.TitleType, panel.TitlePrefix, panel.TitleSuffix);
@@ -114,7 +116,7 @@ namespace umi3dBrowsers
 
                 backButton.gameObject.SetActive(panel.DisplayBack);
 
-                var hasTuto = panelTutoManager != null && panelTutoManager.Count > 0;   
+                var hasTuto = panelTutoManager != null && panelTutoManager.Count > 0;
 
                 try
                 {
@@ -156,11 +158,13 @@ namespace umi3dBrowsers
                 mainContainerLinker.Loader.ReloadScene();
             };
 
-            UMI3DEnvironmentLoader.Instance.onEnvironmentLoaded?.AddListener(() => {
+            UMI3DEnvironmentLoader.Instance.onEnvironmentLoaded?.AddListener(() =>
+            {
                 inGameLinker.EnableDisableInGameUI(true);
-            } );
+            });
 
-            UMI3DCollaborationClientServer.Instance.OnRedirectionStarted?.AddListener(() => {
+            UMI3DCollaborationClientServer.Instance.OnRedirectionStarted?.AddListener(() =>
+            {
                 inGameLinker.EnableDisableInGameUI(false);
             });
         }
@@ -182,20 +186,24 @@ namespace umi3dBrowsers
                 ShowUI();
             };
 
-            connectionServiceLinker.OnTryToConnect += (url) => {
+            connectionServiceLinker.OnTryToConnect += (url) =>
+            {
                 m_popupLinker.SetArguments(m_tryConnectPopup, new Dictionary<string, object>() { { "url", url } });
                 m_popupLinker.Show(m_tryConnectPopup, "popup_connection_server", "popup_trying_connect");
             };
-            connectionServiceLinker.OnConnectionFailure += (message) => {
+            connectionServiceLinker.OnConnectionFailure += (message) =>
+            {
                 m_popupLinker.SetArguments(m_connectionErrorPopup, new Dictionary<string, object>() { { "error", message } });
                 m_popupLinker.Show(m_connectionErrorPopup, "popup_fail_connect", "error_msg",
                     ("popup_close", () => { m_popupLinker.CloseAll(); }
                 ));
             };
-            connectionServiceLinker.OnMediaServerPingSuccess += (virtualWorldData) => {
+            connectionServiceLinker.OnMediaServerPingSuccess += (virtualWorldData) =>
+            {
                 m_popupLinker.CloseAll();
             };
-            connectionServiceLinker.OnAnswerFailed += () => {
+            connectionServiceLinker.OnAnswerFailed += () =>
+            {
                 m_popupLinker.Show(m_connectionErrorPopup, "popup_answer_failed_title", "popup_answer_failed_description",
                     ("popup_close", () => { m_popupLinker.CloseAll(); }
                 ));
@@ -252,14 +260,16 @@ namespace umi3dBrowsers
         private void HideUI()
         {
             parentTransform.gameObject.SetActive(false);
-            mainContainerLinker.Skybox.gameObject.SetActive(false);
+            if ((UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DLoadingParameters).BrowserType != XRBrowserTypes.AR)
+                mainContainerLinker.Skybox.gameObject.SetActive(false);
             mainContainerLinker.DirectionalLight.gameObject.SetActive(false);
         }
 
         private void ShowUI()
         {
             parentTransform.gameObject.SetActive(true);
-            mainContainerLinker.Skybox.gameObject.SetActive(true);
+            if ((UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DLoadingParameters).BrowserType != XRBrowserTypes.AR) 
+                mainContainerLinker.Skybox.gameObject.SetActive(true);
             mainContainerLinker.DirectionalLight.gameObject.SetActive(true);
         }
     }

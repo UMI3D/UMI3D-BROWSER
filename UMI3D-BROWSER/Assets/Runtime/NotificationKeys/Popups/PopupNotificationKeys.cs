@@ -26,7 +26,24 @@ namespace umi3d.browserRuntime.ui.popup
         public class EnqueuePopup
         {
             /// <summary>
-            /// ID of the popup.
+            /// The popup info.
+            /// </summary>
+            /// <remarks>
+            /// Value type : <see cref="PopupInfo"/>
+            /// </remarks>
+            public const string PopupInfo = "PopupInfo";
+        }
+
+        /// <summary>
+        /// Dequeue a popup.
+        /// </summary>
+        /// <remarks>
+        /// If the popup that will be removed is currently displayed then close the popup.
+        /// </remarks>
+        public class DequeuePopup
+        {
+            /// <summary>
+            /// ID of the popup that will be removed.
             /// </summary>
             /// <remarks>
             /// Value type : <see cref="System.Guid"/>
@@ -34,68 +51,29 @@ namespace umi3d.browserRuntime.ui.popup
             public const string ID = "ID";
 
             /// <summary>
-            /// Type of the popup. REQUIRED
+            /// The index of the buttonsAction.<br/>
+            /// <br/>
+            /// In the case where this popup is currently displaying use this index to trigger the buttons action.
             /// </summary>
             /// <remarks>
-            /// Value type : <see cref="PopupType"/>
+            /// Value type : nullable <see cref="int"/>
             /// </remarks>
-            public const string Type = "Type";
-
-            /// <summary>
-            /// The title of the popup.
-            /// </summary>
-            /// <remarks>
-            /// Value type : string <see cref="string"/> or localized string (<see cref="string"/> Table, <see cref="string"/> Key)
-            /// </remarks>
-            public const string Title = "Title";
-
-            /// <summary>
-            /// The description of the popup.
-            /// </summary>
-            /// <remarks>
-            /// Value type : string <see cref="string"/> or localized string (<see cref="string"/> Table, <see cref="string"/> Key)
-            /// </remarks>
-            public const string Description = "Description";
-
-            /// <summary>
-            /// A list of buttons to show under the text of the popup.
-            /// </summary>
-            /// <remarks>
-            /// Value type : List(<see cref="System.Object"/>) where object can be string <see cref="string"/> or localized string (<see cref="string"/> Table, <see cref="string"/> Key)
-            /// </remarks>
-            public const string Buttons = "Buttons";
-
-            /// <summary>
-            /// The action trigger when a button is clicked.
-            /// </summary>
-            /// <remarks>
-            /// Value type : <see cref="System.Action"/>(<see cref="int"/>)<br/>
-            /// -1 means that the close button of the popup has been pressed.<br/>
-            /// 0 means that the first button has been pressed, and so on.
-            /// </remarks>
-            public const string ButtonActions = "ButtonActions";
-
-            /// <summary>
-            /// Arguments used by localisation in <see cref="Title"/> and <see cref="Description"/>
-            /// </summary>
-            /// <remarks>
-            /// Value type : Dictionary(<see cref="string"/> "key", <see cref="object"/> "value")
-            /// </remarks>
-            public const string Arguments = "Arguments";
-
-            /// <summary>
-            /// Whether the close button has to be hidden.
-            /// </summary>
-            /// <remarks>
-            /// Value type : <see cref="bool"/>
-            /// </remarks>
-            public const string HideCloseButton = "HideCloseButton";
+            public const string ActionIndex = "ActionIndex";
         }
 
         /// <summary>
-        /// Notification when a popup has closed.
+        /// Notification sent when a popup has closed.
         /// </summary>
-        public class PopupClosed { }
+        public class PopupClosed 
+        {
+            /// <summary>
+            /// ID of the popup that has been closed.
+            /// </summary>
+            /// <remarks>
+            /// Value type : nullable <see cref="System.Guid"/>
+            /// </remarks>
+            public const string ID = "ID";
+        }
 
         /// <summary>
         /// Event raised when all the pop up have been closed.
@@ -103,8 +81,63 @@ namespace umi3d.browserRuntime.ui.popup
         public class AllPopupAreClosed { }
 
         /// <summary>
-        /// Close all opened popup;
+        /// Close the current opened popup;
         /// </summary>
-        public class CloseAll { }
+        public class CloseCurrentOpenedPopup 
+        {
+            /// <summary>
+            /// The index of the buttonsAction.
+            /// </summary>
+            /// <remarks>
+            /// Value type : nullable <see cref="int"/>
+            /// </remarks>
+            public const string ActionIndex = "ActionIndex";
+        }
+
+        /// <summary>
+        /// Replace current opened popup.<br/>
+        /// <br/>
+        /// To replace a popup you first need to <see cref="EnqueuePopup"/> the new popup.
+        /// </summary>
+        /// <remarks>
+        /// If the replacement popup is already the current popup then nothing happen.
+        /// </remarks>
+        public class ReplaceCurrentOpenedPopup 
+        {
+            /// <summary>
+            /// ID of the popup that will replace the current popup.
+            /// </summary>
+            /// <remarks>
+            /// Value type : <see cref="System.Guid"/>
+            /// </remarks>
+            public const string ID = "ID";
+
+            /// <summary>
+            /// The index of the buttonsAction.<br/>
+            /// <br/>
+            /// Use this index to trigger the buttons action of the current popup that will be replaced.
+            /// </summary>
+            /// <remarks>
+            /// Value type : nullable <see cref="int"/>
+            /// </remarks>
+            public const string ActionIndex = "ActionIndex";
+        }
+
+        /// <summary>
+        /// Display a popup.
+        /// </summary>
+        /// <remarks>
+        /// Do not use that directly. Use <see cref="EnqueuePopup"/>.
+        /// </remarks>
+        public class DisplayPopup
+        {
+            /// <summary>
+            /// The popup info.
+            /// </summary>
+            /// <remarks>
+            /// Value type : <see cref="PopupInfo"/>
+            /// </remarks>
+            public const string PopupInfo = "PopupInfo";
+        }
     }
 }

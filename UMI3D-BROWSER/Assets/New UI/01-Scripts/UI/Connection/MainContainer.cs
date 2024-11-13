@@ -162,6 +162,11 @@ namespace umi3dBrowsers
                 m_enableInGameUiNotifier[InGameNotificationKeys.IsInGameUiActive] = false;
                 m_enableInGameUiNotifier.Notify();
             });
+
+            UMI3DCollaborationClientServer.Instance.OnRedirectionAborted?.AddListener(() => {
+                m_enableInGameUiNotifier[InGameNotificationKeys.IsInGameUiActive] = true;
+                m_enableInGameUiNotifier.Notify();
+            });
         }
 
         void TryToQuit()

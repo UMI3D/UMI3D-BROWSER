@@ -15,8 +15,8 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
-using System;
 using System.Collections.Generic;
+using umi3d.browserRuntime.notificationKeys;
 using umi3d.browserRuntime.ui.popup;
 using umi3d.cdk;
 using umi3d.cdk.collaboration;
@@ -60,42 +60,37 @@ namespace umi3dBrowsers.services.librairies
         /// </summary>
         private int indexOfCurrentTopEntryDisplayed = 0;
 
-        private Notifier popupDeleteAllLibNotifier;
-        private Notifier popupDeleteLibNotifier;
         private Notifier popupCloseAll;
+
+        const string LOCALIZATION_TABLE = "UMI3D_inetum";
+        PopupNotifier popupNotifier;
 
         private void Awake()
         {
-            SetupPopupDeleteLibNotifier();
-
-            popupDeleteAllLibNotifier = NotificationHub.Default.GetNotifier<PopupNotificationKeys.Show>(this);
+            popupNotifier = new(this);
             buttonDeleteAll.OnClick.AddListener(DeleteAllLibClick);
         }
 
         private void DeleteAllLibClick()
         {
-            popupDeleteAllLibNotifier[PopupNotificationKeys.Show.Type] = PopupType.Warning;
-            popupDeleteAllLibNotifier[PopupNotificationKeys.Show.Description] = "popup_deleteLibs_description";
-            popupDeleteAllLibNotifier[PopupNotificationKeys.Show.Buttons] = new List<(string, Action)>() {
-                ("popup_cancel", () => {
-                    NotificationHub.Default.Notify<PopupNotificationKeys.CloseAll>(this);
-                }),
-                ("popup_yes", () => {
-                    foreach (var entry in currentEntries)
-                        entry.Delete();
-                    UpdateContent();
-                    NotificationHub.Default.Notify<PopupNotificationKeys.CloseAll>(this);
+            popupNotifier
+                .enqueue
+                .SetType(PopupType.Warning)
+                .SetArguments(("libCount", currentEntries.Count))
+                .SetDescription(LOCALIZATION_TABLE, "popup_deleteLibs_description")
+                .SetButtons((LOCALIZATION_TABLE, "popup_cancel"), (LOCALIZATION_TABLE, "popup_yes"))
+                .SetButtonsAction(index =>
+                {
+                    if (index == 1)
+                    {
+                        foreach (var entry in currentEntries)
+                        {
+                            entry.Delete();
+                        }
+                        UpdateContent();
+                    }
                 })
-            };
-            popupDeleteAllLibNotifier[PopupNotificationKeys.Show.Arguments] = new Dictionary<string, object>() { { "libCount", currentEntries.Count } };
-            popupDeleteAllLibNotifier.Notify();
-        }
-
-        private void SetupPopupDeleteLibNotifier()
-        {
-            popupDeleteLibNotifier = NotificationHub.Default.GetNotifier<PopupNotificationKeys.Show>(this);
-            popupDeleteLibNotifier[PopupNotificationKeys.Show.Type] = PopupType.Warning;
-            popupDeleteLibNotifier[PopupNotificationKeys.Show.Description] = "popup_deleteLib_description";
+                .Notify();
         }
 
         private void OnEnable()
@@ -149,19 +144,21 @@ namespace umi3dBrowsers.services.librairies
                         UMI3DResourcesManager.RemoveLibrary(lib.library);
                     };
                     entry.DeleteButton.onClick.AddListener(() => {
-
-                        popupDeleteLibNotifier[PopupNotificationKeys.Show.Buttons] = new List<(string, Action)>() {
-                            ("popup_cancel", () => {
-                                NotificationHub.Default.Notify<PopupNotificationKeys.CloseAll>(this);
-                            }),
-                            ("popup_yes", () => {
-                                entry.Delete();
-                                UpdateContent();
-                                NotificationHub.Default.Notify<PopupNotificationKeys.CloseAll>(this);
+                        popupNotifier
+                            .enqueue
+                            .SetType(PopupType.Warning)
+                            .SetArguments(("libName", lib.key))
+                            .SetDescription(LOCALIZATION_TABLE, "popup_deleteLib_description")
+                            .SetButtons((LOCALIZATION_TABLE, "popup_cancel"), (LOCALIZATION_TABLE, "popup_yes"))
+                            .SetButtonsAction(index =>
+                            {
+                                if (index == 1)
+                                {
+                                    entry.Delete();
+                                    UpdateContent();
+                                }
                             })
-                        };
-                        popupDeleteLibNotifier[PopupNotificationKeys.Show.Arguments] = new Dictionary<string, object>() { { "libName", lib.key } };
-                        popupDeleteLibNotifier.Notify();
+                            .Notify();
                     });
 
                     currentEntries.Add(entry);

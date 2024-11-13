@@ -19,9 +19,11 @@ namespace umi3d.browserRuntime.ui.popup
     public static class PopupNotificationKeys
     {
         /// <summary>
-        /// Show a popup. See <see cref="Popup" to/>. Need at least a Type.
+        /// Add popup to queue.<br/>
+        /// <br/>
+        /// If the queue is empty then display this popup.
         /// </summary>
-        public class Show
+        public class EnqueuePopup
         {
             /// <summary>
             /// ID of the popup.
@@ -32,7 +34,7 @@ namespace umi3d.browserRuntime.ui.popup
             public const string ID = "ID";
 
             /// <summary>
-            /// Type of the popup.
+            /// Type of the popup. REQUIRED
             /// </summary>
             /// <remarks>
             /// Value type : <see cref="PopupType"/>

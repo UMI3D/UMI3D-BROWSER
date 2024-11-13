@@ -30,7 +30,7 @@ namespace umi3d.browserRuntime.ui.pu
             image = GetComponent<Image>();
 
             NotificationHub.Default
-               .Subscribe<PopupNotificationKeys.Show>(
+               .Subscribe<PopupNotificationKeys.EnqueuePopup>(
                this,
                new FilterByCondition(FilterType.AcceptOnly, publisher => publisher is PopupManager),
                NewPopup
@@ -40,12 +40,12 @@ namespace umi3d.browserRuntime.ui.pu
         void OnDestroy()
         {
             NotificationHub.Default
-              .Unsubscribe<PopupNotificationKeys.Show>(this);
+              .Unsubscribe<PopupNotificationKeys.EnqueuePopup>(this);
         }
 
         void NewPopup(Notification notification)
         {
-            if (!notification.TryGetInfoT(PopupNotificationKeys.Show.Type, out PopupType type))
+            if (!notification.TryGetInfoT(PopupNotificationKeys.EnqueuePopup.Type, out PopupType type))
             {
                 return;
             }

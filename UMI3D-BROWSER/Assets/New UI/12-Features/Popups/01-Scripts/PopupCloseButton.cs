@@ -32,7 +32,7 @@ namespace umi3d.browserRuntime.ui.popup
             button.onClick.AddListener(Click);
 
             NotificationHub.Default
-               .Subscribe<PopupNotificationKeys.Show>(
+               .Subscribe<PopupNotificationKeys.EnqueuePopup>(
                this,
                new FilterByCondition(FilterType.AcceptOnly, publisher => publisher is PopupManager),
                NewPopup
@@ -42,12 +42,12 @@ namespace umi3d.browserRuntime.ui.popup
         void OnDestroy()
         {
             NotificationHub.Default
-             .Unsubscribe<PopupNotificationKeys.Show>(this);
+             .Unsubscribe<PopupNotificationKeys.EnqueuePopup>(this);
         }
 
         void NewPopup(Notification notification)
         {
-            if (!notification.TryGetInfoT(PopupNotificationKeys.Show.ButtonActions, out action))
+            if (!notification.TryGetInfoT(PopupNotificationKeys.EnqueuePopup.ButtonActions, out action))
             {
                 return;
             }

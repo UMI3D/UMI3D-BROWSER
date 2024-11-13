@@ -26,7 +26,7 @@ namespace umi3d.browserRuntime.ui.popup
             gameObject.SetActive(false);
 
             NotificationHub.Default
-                 .Subscribe<PopupNotificationKeys.Show>(
+                 .Subscribe<PopupNotificationKeys.EnqueuePopup>(
                  this,
                  new FilterByCondition(FilterType.AcceptOnly, publisher => publisher is PopupManager),
                  NewPopup
@@ -39,7 +39,7 @@ namespace umi3d.browserRuntime.ui.popup
         void OnDestroy()
         {
             NotificationHub.Default
-            .Unsubscribe<PopupNotificationKeys.Show>(this);
+            .Unsubscribe<PopupNotificationKeys.EnqueuePopup>(this);
 
             NotificationHub.Default
             .Unsubscribe<PopupNotificationKeys.PopupClosed>(this);

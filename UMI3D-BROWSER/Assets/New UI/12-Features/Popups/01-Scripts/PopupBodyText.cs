@@ -32,7 +32,7 @@ namespace umi3d.browserRuntime.ui.popup
             stringEvent = GetComponent<LocalizeStringEvent>();
 
             NotificationHub.Default
-               .Subscribe<PopupNotificationKeys.Show>(
+               .Subscribe<PopupNotificationKeys.EnqueuePopup>(
                this,
                new FilterByCondition(FilterType.AcceptOnly, publisher => publisher is PopupManager),
                NewPopup
@@ -42,12 +42,12 @@ namespace umi3d.browserRuntime.ui.popup
         void OnDestroy()
         {
             NotificationHub.Default
-                .Unsubscribe<PopupNotificationKeys.Show>(this);
+                .Unsubscribe<PopupNotificationKeys.EnqueuePopup>(this);
         }
 
         void NewPopup(Notification notification)
         {
-            if (notification.TryGetInfoT(PopupNotificationKeys.Show.Arguments, out Dictionary<string, System.Object> arguments, false))
+            if (notification.TryGetInfoT(PopupNotificationKeys.EnqueuePopup.Arguments, out Dictionary<string, System.Object> arguments, false))
             {
                 UpdateArguments(arguments);
             }
@@ -56,17 +56,17 @@ namespace umi3d.browserRuntime.ui.popup
                 UpdateArguments(null);
             }
 
-            if (notification.TryGetInfoT(PopupNotificationKeys.Show.Description, out string text, false))
+            if (notification.TryGetInfoT(PopupNotificationKeys.EnqueuePopup.Description, out string text, false))
             {
                 UpdateText(text);
             }
-            else if (notification.TryGetInfoT(PopupNotificationKeys.Show.Description, out (string, string) tableAndEntry, false))
+            else if (notification.TryGetInfoT(PopupNotificationKeys.EnqueuePopup.Description, out (string, string) tableAndEntry, false))
             {
                 UpdateLocalizeText(tableAndEntry.Item1, tableAndEntry.Item2);
             }
             else
             {
-                notification.LogError(this.GetType().FullName, PopupNotificationKeys.Show.Description, "The description is neither string or (string, string)");
+                notification.LogError(this.GetType().FullName, PopupNotificationKeys.EnqueuePopup.Description, "The description is neither string or (string, string)");
             }
         }
 

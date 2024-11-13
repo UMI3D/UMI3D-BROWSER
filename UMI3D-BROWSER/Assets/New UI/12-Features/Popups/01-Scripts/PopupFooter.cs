@@ -31,7 +31,7 @@ namespace umi3d.browserRuntime.ui.popup
         void Awake()
         {
             NotificationHub.Default
-                .Subscribe<PopupNotificationKeys.Show>(
+                .Subscribe<PopupNotificationKeys.EnqueuePopup>(
                 this,
                 new FilterByCondition(FilterType.AcceptOnly, publisher => publisher is PopupManager),
                 NewPopup
@@ -41,19 +41,19 @@ namespace umi3d.browserRuntime.ui.popup
         void OnDestroy()
         {
             NotificationHub.Default
-             .Unsubscribe<PopupNotificationKeys.Show>(this);
+             .Unsubscribe<PopupNotificationKeys.EnqueuePopup>(this);
         }
 
         void NewPopup(Notification notification)
         {
             DeactivateAllButtons();
 
-            if (!notification.TryGetInfoT(PopupNotificationKeys.Show.Buttons, out List<System.Object> list) || list == null)
+            if (!notification.TryGetInfoT(PopupNotificationKeys.EnqueuePopup.Buttons, out List<System.Object> list) || list == null)
             {
                 return;
             }
 
-            if (!notification.TryGetInfoT(PopupNotificationKeys.Show.ButtonActions, out Action<int> action))
+            if (!notification.TryGetInfoT(PopupNotificationKeys.EnqueuePopup.ButtonActions, out Action<int> action))
             {
                 return;
             }

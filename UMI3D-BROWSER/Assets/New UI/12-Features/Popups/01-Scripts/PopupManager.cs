@@ -31,7 +31,7 @@ namespace umi3d.browserRuntime.ui.popup
         void Awake()
         {
             NotificationHub.Default
-                .Subscribe<PopupNotificationKeys.Show>(
+                .Subscribe<PopupNotificationKeys.EnqueuePopup>(
                 this,
                 new FilterByRef(FilterType.AcceptAllExcept, this),
                 NewPopupEnqueued
@@ -48,7 +48,7 @@ namespace umi3d.browserRuntime.ui.popup
         void OnDestroy()
         {
             NotificationHub.Default
-             .Unsubscribe<PopupNotificationKeys.Show>(this);
+             .Unsubscribe<PopupNotificationKeys.EnqueuePopup>(this);
 
             NotificationHub.Default
             .Unsubscribe<PopupNotificationKeys.PopupClosed>(this);
@@ -56,7 +56,7 @@ namespace umi3d.browserRuntime.ui.popup
 
         void NewPopupEnqueued(Notification notification)
         {
-            if (!notification.TryGetInfoT(PopupNotificationKeys.Show.ID, out System.Guid id))
+            if (!notification.TryGetInfoT(PopupNotificationKeys.EnqueuePopup.ID, out System.Guid id))
             {
                 popupInfo.Add((null, notification));
 
@@ -70,7 +70,7 @@ namespace umi3d.browserRuntime.ui.popup
 
             if (currentId.HasValue && currentId.Value == id)
             {
-                NotificationHub.Default.Notify<PopupNotificationKeys.Show>(this, notification.Info);
+                NotificationHub.Default.Notify<PopupNotificationKeys.EnqueuePopup>(this, notification.Info);
                 return;
             }
 
@@ -111,7 +111,7 @@ namespace umi3d.browserRuntime.ui.popup
             for (int i = 0; i < popupInfo.Count; i++)
             {
                 Notification _notif = popupInfo[i].Item2;
-                if (!_notif.TryGetInfoT(PopupNotificationKeys.Show.Type, out PopupType type))
+                if (!_notif.TryGetInfoT(PopupNotificationKeys.EnqueuePopup.Type, out PopupType type))
                 {
                     continue;
                 }
@@ -136,7 +136,7 @@ namespace umi3d.browserRuntime.ui.popup
             currentId = popupInfo[index].Item1;
             popupInfo.RemoveAt(index);
 
-            NotificationHub.Default.Notify<PopupNotificationKeys.Show>(this, notif.Info);
+            NotificationHub.Default.Notify<PopupNotificationKeys.EnqueuePopup>(this, notif.Info);
 
             popup.SetActive(true);
         }

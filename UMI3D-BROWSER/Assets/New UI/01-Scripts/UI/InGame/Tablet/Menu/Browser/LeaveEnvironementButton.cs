@@ -44,8 +44,7 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.menu.browser
 
         private void Awake()
         {
-            Notifier popupLeaveNotifier = NotificationHub.Default.GetNotifier<PopupNotificationKeys.EnqueuePopup>(this);
-            popupNotifier = new(popupLeaveNotifier);
+            popupNotifier = new(this);
 
             activeBackground.SetActive(false);
         }
@@ -57,6 +56,7 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.menu.browser
             icon.color = iconColorActive;
 
             popupNotifier
+                .enqueue
                 .SetType(PopupType.Information)
                 .SetDescription(LOCALIZATION_TABLE, "popup_leave")
                 .SetButtons((LOCALIZATION_TABLE, "popup_yes"), (LOCALIZATION_TABLE, "popup_no"))

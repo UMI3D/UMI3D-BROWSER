@@ -72,8 +72,7 @@ namespace umi3dBrowsers.container
 
         private void Awake()
         {
-            Notifier popupRemoveWorld = NotificationHub.Default.GetNotifier<PopupNotificationKeys.EnqueuePopup>(this);
-            popupNotifier = new(popupRemoveWorld);
+            popupNotifier = new(this);
 
             vignetteContainerEvent.OnVignetteReset += ResetVignettes;
             vignetteContainerEvent.OnVignetteChangeMode += ChangeVignetteMode;
@@ -181,19 +180,20 @@ namespace umi3dBrowsers.container
             }, pWorldData.isFavorite);
             vignette.SetupRemoveButton(() => {
                 popupNotifier
-                .SetType(PopupType.Warning)
-                .SetArguments(("worldName", pWorldData.worldName))
-                .SetDescription(LOCALIZATION_TABLE, "popup_deleteWorld_description")
-                .SetButtons((LOCALIZATION_TABLE, "popup_cancel"), (LOCALIZATION_TABLE, "popup_yes"))
-                .SetButtonsAction(index =>
-                {
-                    if (index == 1)
+                    .enqueue
+                    .SetType(PopupType.Warning)
+                    .SetArguments(("worldName", pWorldData.worldName))
+                    .SetDescription(LOCALIZATION_TABLE, "popup_deleteWorld_description")
+                    .SetButtons((LOCALIZATION_TABLE, "popup_cancel"), (LOCALIZATION_TABLE, "popup_yes"))
+                    .SetButtonsAction(index =>
                     {
-                        pVirtualWorlds.RemoveWorld(pWorldData);
-                        vignetteContainerEvent.OnVignetteReset?.Invoke();
-                    }
-                })
-                .Notify();
+                        if (index == 1)
+                        {
+                            pVirtualWorlds.RemoveWorld(pWorldData);
+                            vignetteContainerEvent.OnVignetteReset?.Invoke();
+                        }
+                    })
+                    .Notify();
             });
             vignette.SetupRenameButton(newName => { 
                 pWorldData.worldName = newName; 

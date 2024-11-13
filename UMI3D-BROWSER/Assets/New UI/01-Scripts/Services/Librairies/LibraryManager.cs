@@ -67,14 +67,14 @@ namespace umi3dBrowsers.services.librairies
 
         private void Awake()
         {
-            Notifier popupDeleteLibNotifier = NotificationHub.Default.GetNotifier<PopupNotificationKeys.EnqueuePopup>(this);
-            popupNotifier = new(popupDeleteLibNotifier);
+            popupNotifier = new(this);
             buttonDeleteAll.OnClick.AddListener(DeleteAllLibClick);
         }
 
         private void DeleteAllLibClick()
         {
             popupNotifier
+                .enqueue
                 .SetType(PopupType.Warning)
                 .SetArguments(("libCount", currentEntries.Count))
                 .SetDescription(LOCALIZATION_TABLE, "popup_deleteLibs_description")
@@ -145,19 +145,20 @@ namespace umi3dBrowsers.services.librairies
                     };
                     entry.DeleteButton.onClick.AddListener(() => {
                         popupNotifier
-                        .SetType(PopupType.Warning)
-                        .SetArguments(("libName", lib.key))
-                        .SetDescription(LOCALIZATION_TABLE, "popup_deleteLib_description")
-                        .SetButtons((LOCALIZATION_TABLE, "popup_cancel"), (LOCALIZATION_TABLE, "popup_yes"))
-                        .SetButtonsAction(index =>
-                        {
-                            if (index == 1)
+                            .enqueue
+                            .SetType(PopupType.Warning)
+                            .SetArguments(("libName", lib.key))
+                            .SetDescription(LOCALIZATION_TABLE, "popup_deleteLib_description")
+                            .SetButtons((LOCALIZATION_TABLE, "popup_cancel"), (LOCALIZATION_TABLE, "popup_yes"))
+                            .SetButtonsAction(index =>
                             {
-                                entry.Delete();
-                                UpdateContent();
-                            }
-                        })
-                        .Notify();
+                                if (index == 1)
+                                {
+                                    entry.Delete();
+                                    UpdateContent();
+                                }
+                            })
+                            .Notify();
                     });
 
                     currentEntries.Add(entry);

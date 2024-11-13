@@ -85,8 +85,7 @@ namespace umi3dBrowsers
 
         private void Awake()
         {
-            Notifier _popupNotifier = NotificationHub.Default.GetNotifier<PopupNotificationKeys.EnqueuePopup>(this);
-            popupNotifier = new(_popupNotifier);
+            popupNotifier = new(this);
 
             m_quittingNotifier = NotificationHub.Default.GetNotifier(this, QuittingManagerNotificationKey.QuittingConfirmation);
             m_enableInGameUiNotifier = NotificationHub.Default.GetNotifier(this, InGameNotificationKeys.EnableInGameUi);
@@ -172,6 +171,7 @@ namespace umi3dBrowsers
         void TryToQuit()
         {
             popupNotifier
+                .enqueue
                 .SetType(PopupType.Information)
                 .SetTitle(LOCALIZATION_TABLE, "Quit")
                 .SetButtons((LOCALIZATION_TABLE, "Quit"), (LOCALIZATION_TABLE, "Cancel"))
@@ -216,7 +216,7 @@ namespace umi3dBrowsers
             UMI3DClientServer.Instance.OnConnectionLost.AddListener(OnConnectionLost);
             UMI3DCollaborationClientServer.Instance.OnForceLogoutMessage.AddListener(OnForceLogoutMessage);
             connectionServiceLinker.OnMediaServerPingSuccess += (virtualWorldData) => {
-                NotificationHub.Default.Notify<PopupNotificationKeys.CloseAll>(this);
+                NotificationHub.Default.Notify<PopupNotificationKeys.CloseCurrentOpenedPopup>(this);
             };
             connectionServiceLinker.OnAnswerFailed += OnAnswerFailed;
             connectionServiceLinker.OnAsksToLoadLibrairies += (ids, action) => action?.Invoke(true);
@@ -229,6 +229,7 @@ namespace umi3dBrowsers
         void OnTryToConnect(string url)
         {
             popupNotifier
+                .enqueue
                 .SetType(PopupType.Information)
                 .SetArguments(("url", url))
                 .SetTitle(LOCALIZATION_TABLE, "popup_connection_server")
@@ -239,58 +240,62 @@ namespace umi3dBrowsers
         void OnConnectionFailure(string message)
         {
             popupNotifier
-                 .SetType(PopupType.Error)
-                 .SetArguments(("error", message))
-                 .SetTitle(LOCALIZATION_TABLE, "popup_fail_connect")
-                 .SetDescription(LOCALIZATION_TABLE, "error_msg")
-                 .SetButtons((LOCALIZATION_TABLE, "popup_close"))
-                 .Notify();
+                .enqueue
+                .SetType(PopupType.Error)
+                .SetArguments(("error", message))
+                .SetTitle(LOCALIZATION_TABLE, "popup_fail_connect")
+                .SetDescription(LOCALIZATION_TABLE, "error_msg")
+                .SetButtons((LOCALIZATION_TABLE, "popup_close"))
+                .Notify();
         }
 
         void OnConnectionLost()
         {
             popupNotifier
-                 .SetType(PopupType.Error)
-                 .SetTitle(LOCALIZATION_TABLE, "popup_forced_leave")
-                 .SetDescription(LOCALIZATION_TABLE, "popup_connection_lost_msg")
-                 .SetButtons((LOCALIZATION_TABLE, "popup_connection_lost_leave"), (LOCALIZATION_TABLE, "popup_connection_lost_retry"))
-                 .SetButtonsAction(index =>
-                 {
-                     if (index == -1 || index == 0)
-                     {
-                         connectionToImmersiveLinker.Leave();
-                     }
-                     else
-                     {
-                         UMI3DCollaborationClientServer.Reconnect();
-                     }
-                 })
-                 .Notify();
+                .enqueue
+                .SetType(PopupType.Error)
+                .SetTitle(LOCALIZATION_TABLE, "popup_forced_leave")
+                .SetDescription(LOCALIZATION_TABLE, "popup_connection_lost_msg")
+                .SetButtons((LOCALIZATION_TABLE, "popup_connection_lost_leave"), (LOCALIZATION_TABLE, "popup_connection_lost_retry"))
+                .SetButtonsAction(index =>
+                {
+                    if (index == -1 || index == 0)
+                    {
+                        connectionToImmersiveLinker.Leave();
+                    }
+                    else
+                    {
+                        UMI3DCollaborationClientServer.Reconnect();
+                    }
+                })
+                .Notify();
         }
 
         void OnForceLogoutMessage(string message)
         {
             popupNotifier
-                 .SetType(PopupType.Error)
-                 .SetArguments(("message", message))
-                 .SetTitle(LOCALIZATION_TABLE, "popup_forced_leave")
-                 .SetDescription(LOCALIZATION_TABLE, "popup_forced_leave_msg")
-                 .SetButtons((LOCALIZATION_TABLE, "popup_connection_lost_leave"))
-                 .SetButtonsAction(index =>
-                 {
-                     connectionToImmersiveLinker.Leave();
-                 })
-                 .Notify();
+                .enqueue
+                .SetType(PopupType.Error)
+                .SetArguments(("message", message))
+                .SetTitle(LOCALIZATION_TABLE, "popup_forced_leave")
+                .SetDescription(LOCALIZATION_TABLE, "popup_forced_leave_msg")
+                .SetButtons((LOCALIZATION_TABLE, "popup_connection_lost_leave"))
+                .SetButtonsAction(index =>
+                {
+                    connectionToImmersiveLinker.Leave();
+                })
+                .Notify();
         }
 
         void OnAnswerFailed()
         {
             popupNotifier
-                 .SetType(PopupType.Error)
-                 .SetTitle(LOCALIZATION_TABLE, "popup_answer_failed_title")
-                 .SetDescription(LOCALIZATION_TABLE, "popup_answer_failed_description")
-                 .SetButtons((LOCALIZATION_TABLE, "popup_close"))
-                 .Notify();
+                .enqueue
+                .SetType(PopupType.Error)
+                .SetTitle(LOCALIZATION_TABLE, "popup_answer_failed_title")
+                .SetDescription(LOCALIZATION_TABLE, "popup_answer_failed_description")
+                .SetButtons((LOCALIZATION_TABLE, "popup_close"))
+                .Notify();
         }
 
         /// <summary>

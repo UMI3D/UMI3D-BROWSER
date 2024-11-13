@@ -95,12 +95,14 @@ namespace umi3d.browserRuntime.ui.popup
                 }
                 return;
             }
-            
-            //if (currentId.HasValue && currentId.Value == id.Value)
-            //{
-            //    NotificationHub.Default.Notify<PopupNotificationKeys.EnqueuePopup>(this, notification.Info);
-            //    return;
-            //}
+
+            if (currentPopupInfo.HasValue && currentPopupInfo.Value.id.HasValue && currentPopupInfo.Value.id.Value == popupInfo.id.Value)
+            {
+                currentPopupInfo = popupInfo;
+                displayPopupNotifier[PopupNotificationKeys.DisplayPopup.PopupInfo] = currentPopupInfo.Value;
+                displayPopupNotifier.Notify();
+                return;
+            }
 
             // Check if a popup with the same id has already be enqueued.
             int index = popupsInfo.FindIndex(info =>
@@ -157,24 +159,36 @@ namespace umi3d.browserRuntime.ui.popup
 
         void ReplaceCurrentOpenedPopup(Notification notification)
         {
-            //if (!notification.TryGetInfoT(PopupNotificationKeys.ReplaceCurrentOpenedPopup.ID, out System.Guid id))
-            //{
-            //    return;
-            //}
+            if (popupsInfo.Count == 0) 
+            {
+                // No popup to replace.
+                UnityEngine.Debug.LogError($"[Popup] Try to replace current popup but no popup are enqueued.");
+                return;
+            }
 
-            //int idx = popupInfo.FindIndex(info => info.Item1 == id);
-            //if (idx < 0)
-            //{
-            //    UnityEngine.Debug.LogError($"[Popup] Try to replace current popup by a popup that was not enqueue.");
-            //    return;
-            //}
+            if (!notification.TryGetInfoT(PopupNotificationKeys.ReplaceCurrentOpenedPopup.ID, out System.Guid id))
+            {
+                return;
+            }
 
-            //notification.TryGetInfoNullableT(PopupNotificationKeys.ReplaceCurrentOpenedPopup.ActionIndex, out int? index, false);
-            //if (index.HasValue)
-            //{
-            //    currentAction?.Invoke(index.Value);
-            //}
-            //DisplayPopup(idx);
+            if (currentPopupInfo.HasValue && currentPopupInfo.Value.id.HasValue && currentPopupInfo.Value.id.Value == id)
+            {
+                return;
+            }
+
+            int idx = popupsInfo.FindIndex(info => info.id == id);
+            if (idx < 0)
+            {
+                UnityEngine.Debug.LogError($"[Popup] Try to replace current popup by a popup that was not enqueue.");
+                return;
+            }
+
+            notification.TryGetInfoNullableT(PopupNotificationKeys.ReplaceCurrentOpenedPopup.ActionIndex, out int? index, false);
+            if (index.HasValue)
+            {
+                currentPopupInfo.Value.buttonActions?.Invoke(index.Value);
+            }
+            DisplayPopup(idx);
         }
 
         void DisplayNextPopup()

@@ -19,6 +19,7 @@ using System.ComponentModel;
 using umi3d.baseBrowser.cursor;
 using umi3d.baseBrowser.inputs.interactions;
 using umi3d.cdk;
+using umi3d.cdk.collaboration;
 using umi3d.cdk.interaction;
 using umi3d.cdk.menu;
 using umi3d.common;
@@ -145,6 +146,11 @@ namespace umi3d.baseBrowser.Controller
 
             UMI3DEnvironmentLoader.Instance.onEnvironmentLoaded?.AddListener(() => {
                 CanProcess = true;
+            });
+
+            UMI3DCollaborationClientServer.Instance?.OnRedirectionStarted?.AddListener(() => {
+                if(currentTool != null && currentToolId == currentTool.id)
+                    Release(currentTool, new RequestedFromMenu());
             });
         }
 

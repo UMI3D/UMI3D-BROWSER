@@ -206,7 +206,7 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
         }
         void SortAZ()
         {
-            users.Sort((user0, user1) => string.Compare(user0.login, user1.login));
+            users.Sort((user0, user1) => string.Compare(user0.login.Trim(), user1.login.Trim()));
             activatedElements.Sort((user0, user1) => string.Compare(user0.User.login, user1.User.login));
             if (sortAZIndex == 1)
             {

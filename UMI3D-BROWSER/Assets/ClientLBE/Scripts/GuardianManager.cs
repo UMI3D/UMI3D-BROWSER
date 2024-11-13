@@ -23,9 +23,9 @@ namespace ClientLBE
         public GameObject Player;
         public Transform PersonnalSkeletonContainer;
         public GameObject CameraPlayer;
-        public GameObject Repere;
 
-        private Transform scene;
+        public GameObject Repere;
+        public GameObject XROrigin;
 
         [Header("GUARDIAN")]
         public Material GuardianMaterial;
@@ -70,6 +70,14 @@ namespace ClientLBE
             StartCoroutine(GetARPlanes());
 
             UMI3DEnvironmentLoader.Instance.onEnvironmentLoaded.AddListener(() => StartCalibrationScene());
+
+
+            //Test de la position du XROrign avant la connection au sketcher
+          
+
+            LogParentHierarchy(XROrigin);
+
+            //GetGuardianArea();
         }
 
         void OnEnable()
@@ -96,15 +104,42 @@ namespace ClientLBE
             }
         }
 
+        void LogParentHierarchy(GameObject obj)
+        {
+            string hierarchy = obj.name;
+
+            // Parcourt la hiérarchie des parents
+            Transform currentParent = obj.transform.parent;
+            while (currentParent != null)
+            {
+                hierarchy = currentParent.name + " -> " + hierarchy;
+                currentParent = currentParent.parent;
+            }
+
+            // Affiche la hiérarchie dans la console
+            Debug.Log("REMY : Hiérarchie des parents : " + hierarchy);
+        }
+
         void LBEGroupEvent(LBEGroupSyncRequestDTO LbeGroupDtoData)
         {
+            Debug.Log("REMY : Enter LBE Group Event ! ");
+
             lBEGroupDto = LbeGroupDtoData;
-            CreatGuardianServer(lBEGroupDto.ARAnchors);
-            AddCapsulesToCurrentARUsers();   
+
+            if(lBEGroupDto.UserAR.Count + lBEGroupDto.UserVR.Count > 1)
+            {
+                CreatGuardianServer(lBEGroupDto.ARAnchors);
+            }
+            AddCapsulesToCurrentARUsers(); 
         }
 
         void AddUserLBEGroup(AddUserGroupOperationsDto addUserLBEGroupDTO)
         {
+            Debug.Log("REMY : AddUserLBEGroup ! ");
+            Debug.Log("REMY : lBEGroupDto.ARAnchors " + lBEGroupDto.ARAnchors.Count);
+
+            CreatGuardianServer(lBEGroupDto.ARAnchors);
+
             if (addUserLBEGroupDTO.IsUserAR == true)
             {
                 lBEGroupDto.UserAR.Add(addUserLBEGroupDTO.UserId);
@@ -241,6 +276,9 @@ namespace ClientLBE
 
                     ARPlane selectedPlane = planesToCalibrate[0];
 
+                    Instantiate(Repere, selectedPlane.transform.position, Quaternion.identity);
+
+
                     GameObject calibratorARPlane = new GameObject("Calibreur Plane");
                     calibratorARPlane.transform.position = planesToCalibrate[0].transform.position;
                     calibratorARPlane.transform.rotation = planesToCalibrate[0].transform.rotation;
@@ -260,7 +298,7 @@ namespace ClientLBE
                         Vector3 worldPosition = selectedPlane.transform.TransformPoint(vertex);
                         Instantiate(Repere, worldPosition, Quaternion.identity);
                     }
-
+                    
                 }
 
                 else
@@ -335,9 +373,6 @@ namespace ClientLBE
             yield return null;
             yield return null;
 
-            yield return new WaitForSeconds(5f);
-            Debug.Log("REMY : After 5 second");
-
             // TODO check the reason we have to wait
 
             if (automaticCalibration)
@@ -347,21 +382,25 @@ namespace ClientLBE
 
             if (Player != null)
             {
-                Transform parent = Player.transform.parent;
+                Transform scene = Player.transform.parent;
 
-                if (parent != null)
+                if (scene != null)
                 {
-                    scene = parent;
+ 
+                    Debug.Log("REMY : Name Calirator -> " + calibrator.name);
 
-                    calibrator.transform.rotation = new Quaternion(0.0f, calibrator.transform.rotation.y, 0.0f, calibrator.transform.rotation.w);
+                    calibrator.transform.rotation = Quaternion.Euler(0.0f, calibrator.transform.rotation.eulerAngles.y, 0.0f);
                     calibrator.transform.SetParent(null, true);
                     Player.transform.SetParent(calibrator.transform, true);
 
                     Vector3 Offset = Vector3.ProjectOnPlane(CameraPlayer.transform.position - calibrator.transform.position, Vector3.up);
                     calibrator.transform.Translate(Offset, Space.World);
 
-                    float angle = Vector3.SignedAngle(CameraPlayer.transform.forward, Vector3.ProjectOnPlane(calibrator.transform.forward, Vector3.up), Vector3.up);
-                    calibrator.transform.Rotate(0f, -angle, 0f);
+                    float angle = Vector3.SignedAngle(Vector3.ProjectOnPlane(calibrator.transform.forward, Vector3.up), Vector3.ProjectOnPlane(CameraPlayer.transform.forward, Vector3.up), Vector3.up);
+                    calibrator.transform.Rotate(0f, angle, 0f);
+
+                    Instantiate(Repere, calibrator.transform.position, calibrator.transform.rotation);
+
 
                     Player.transform.SetParent(scene, true);
                     calibrator.transform.SetParent(Player.transform, true);
@@ -370,19 +409,44 @@ namespace ClientLBE
                     guardianParent = new GameObject("Guardian");
                     guardianParent.transform.position = new Vector3(calibrator.transform.position.x, 0.0f, calibrator.transform.position.z);
 
-                    Instantiate(Repere, guardianParent.transform.position, Quaternion.identity);
+                    //Instantiate(Repere, scene.position, scene.rotation);
 
-                    GetGuardianArea();
+                    //GetGuardianArea();
                 }
                 else
                     Debug.LogError(Player.name + " has no parents.");
             }
             else
+            {
                 Debug.LogWarning("No GameObject to check is assigned!");
 
+            }
+            Debug.LogWarning("REMY : After End get Guardian Area!!!");
+
+
             arPlaneManager.enabled = false;
+
             ARPlanesActivation(false);
-        }        
+
+            //Instantiate(Repere, calibrator.transform.position, Quaternion.identity);
+
+
+            if (AnchorManager.enabled == false)
+            {
+                AnchorManager.enabled = true;
+            }
+
+            AddAnchorGuardian();
+
+            SendGuardianInServer();
+
+            if (userGuardianDto != null)
+            {
+                Debug.LogWarning("REMY : WaitSendGuardian !!!!");
+                StartCoroutine(WaitSendGuardian());
+            }
+            
+        }
 
         public void GetGuardianArea()
         {
@@ -412,10 +476,15 @@ namespace ClientLBE
                 {
                     List<Vector3> MeshAnchor = new List<Vector3>();
 
+                    List<GameObject> Reperes = new List<GameObject>();
+
                     if (AnchorManager != null)
                     {
                         foreach (Vector3 point in boundaryPoints)
                         {
+                            /*Reperes.Add(Instantiate(Repere, point, Quaternion.identity));
+                            Reperes.Add(Instantiate(Repere, point + new Vector3(0f, 2f, 0f), Quaternion.identity));*/
+
                             guardianAnchors.Add(point);
                             guardianAnchors.Add(point+ new Vector3(0f, 2f, 0f));
                         }
@@ -426,24 +495,21 @@ namespace ClientLBE
                     }
                     
                     guardianMesh = new GameObject("GuardianMesh");
-                    guardianMesh.transform.position = Vector3.zero;
+
+                    for(int i = 0; i<guardianAnchors.Count; i++)
+                    {
+                        Reperes[i].transform.SetParent(guardianMesh.transform,true);
+                    }
+
+                    guardianMesh.transform.position = Player.transform.position;
+                    guardianMesh.transform.SetParent(Player.transform, true);
+
+                   /* guardianMesh.transform.position = Vector3.zero;*/
                     
                     CreateGuardianMesh(guardianAnchors);
 
-                    if (AnchorManager.enabled == false)
-                    {
-                        AnchorManager.enabled = true;
-                    }
+                    Debug.Log("REMY : END Get guardian area !!!!");
 
-                    AddAnchorGuardian();
-                    
-                    SendGuardianInServer();
-
-                    // Sending data from the guardian to the server
-                    if (userGuardianDto != null)
-                    {
-                        StartCoroutine(WaitSendGuardian());
-                    }
                 }
             }
             else
@@ -455,36 +521,47 @@ namespace ClientLBE
         // Envoyer les data de chaque ancres au serveur
         public void SendGuardianInServer()
         {
+            Debug.Log("REMY : SEND Guardian Start !");
+
+           
             if (guardianAnchors != null || guardianAnchors.Count > 0)
             {
+                Debug.Log("REMY : SEND Guardian Start 1 !");
+
+                Debug.Log("REMY : SEND Guardian Start  !" + guardianAnchors.Count);
+
+
                 for (int i = 0; i < guardianAnchors.Count; i++)
                 {
-                    ARAnchorDto newAnchor = new ARAnchorDto();
 
-                    if (localVertexPositions.Count != 8)
-                    {
-                        Debug.LogError("ARAnchor coordinate number is not equal to 8");
-                    }
+                    ARAnchorDto newAnchor = new ARAnchorDto();
 
                     newAnchor.position = new Vector3Dto { X = localVertexPositions[i].x, Y = localVertexPositions[i].y, Z = localVertexPositions[i].z };
                     newAnchor.rotation = new Vector4Dto { X = localVertexRotations[i].x, Y = localVertexRotations[i].y, Z = localVertexRotations[i].z, W = localVertexRotations[i].w };
-               
+
                     userGuardianDto.ARAnchors.Add(newAnchor);              
                 }
 
                 var loadingParameters = UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DLoadingParameters;
                 userGuardianDto.ARiD = loadingParameters.BrowserType;
+                Debug.Log("REMY : SEND Guardian END !");
             }
         }
 
         IEnumerator WaitSendGuardian()
         {
+            Debug.Log("REMY : SEND Guardian REQUEST Start !");
+
             yield return new WaitForSeconds(2f);
             UMI3DClientServer.SendRequest(userGuardianDto, reliable: true);
+            Debug.Log("REMY :  SEND Guardian REQUEST END !");
+
         }
 
         public void CreatGuardianServer(List<ARAnchorDto> GuardianDto)
         {
+            Debug.Log("REMY : CreatGuardianServer !");
+
             // Clear the client's first connection data
             if (guardianMesh != null)
             {
@@ -518,12 +595,12 @@ namespace ClientLBE
             }
 
             guardianMesh = new GameObject("GuardianMesh");
-            guardianMesh.transform.position = Vector3.zero;
+           // guardianMesh.transform.position = Vector3.zero;
 
             CreateGuardianMesh(VerticePos);
 
-            guardianMesh.transform.position = new Vector3(calibrator.transform.position.x, 0.0f, calibrator.transform.position.z);
-            guardianMesh.transform.rotation = calibrator.transform.rotation;
+            /*guardianMesh.transform.position = new Vector3(calibrator.transform.position.x, 0.0f, calibrator.transform.position.z);
+            guardianMesh.transform.rotation = calibrator.transform.rotation;*/
         }
 
         public void AddAnchorGuardian()
@@ -540,7 +617,11 @@ namespace ClientLBE
 
         private void CreateGuardianMesh(List<Vector3> points)
         {
+            Debug.Log("REMY : CreateGuardianMesh !");
+
             Mesh mesh = new Mesh();
+
+            List<GameObject> repereVertice = new List<GameObject>();
 
             // Creating triangles
             int[] triangles = new int[]
@@ -563,10 +644,13 @@ namespace ClientLBE
             {
                 // Instantiate the prefab at the position of the retrieved point                  
                 GameObject AnchorGuardianTemp = new GameObject("AnchorGuardianTemp");
-                AnchorGuardianTemp.transform.position = points[i];
                 AnchorGuardianTemp.transform.parent = guardianMesh.transform;
+                AnchorGuardianTemp.transform.localPosition = points[i];
 
                 tempVerticesTransform.Add(AnchorGuardianTemp);
+
+                //repereVertice.Add(Instantiate(Repere, AnchorGuardianTemp.transform.position, Quaternion.identity));
+
             }
 
             // Mesh Properties
@@ -586,26 +670,35 @@ namespace ClientLBE
             Material material = GuardianMaterial;
             meshRenderer.material = material;
 
-            //Add box collider
-            guardianMesh.AddComponent<BoxCollider>().isTrigger = true;
 
-            guardianMesh.transform.position = Quaternion.Inverse(PersonnalSkeletonContainer.transform.rotation) * (guardianMesh.transform.position) + PersonnalSkeletonContainer.transform.position;
+            //Add box collider
+           guardianMesh.AddComponent<BoxCollider>().isTrigger = true;
+
+            //guardianMesh.transform.position = Quaternion.Inverse(PersonnalSkeletonContainer.transform.rotation) * (guardianMesh.transform.position) - PersonnalSkeletonContainer.transform.position;
             guardianMesh.transform.rotation = PersonnalSkeletonContainer.transform.rotation;
 
             guardianMesh.AddComponent<HoverGuardian>().targetMaterial = GuardianMaterial;
 
-            guardianMesh.transform.parent = calibrator.transform;
+
+
+            guardianMesh.transform.parent = null;
+
 
             for (int i = 0; i < tempVerticesTransform.Count; i++)
             {
-                tempVerticesTransform[i].transform.parent = null;
                 tempVerticesTransform[i].transform.parent = calibrator.transform;
 
-                localVertexPositions.Add(new Vector3 (tempVerticesTransform[i].transform.localPosition.x, tempVerticesTransform[i].transform.position.y, tempVerticesTransform[i].transform.localPosition.z));
+                localVertexPositions.Add(new Vector3(tempVerticesTransform[i].transform.localPosition.x, tempVerticesTransform[i].transform.position.y, tempVerticesTransform[i].transform.localPosition.z));
                 localVertexRotations.Add(tempVerticesTransform[i].transform.localRotation);
-            }
 
-            guardianMesh.transform.parent = null;
+                /*localVertexPositions.Add(new Vector3(repereVertice[i].transform.localPosition.x, repereVertice[i].transform.position.y, repereVertice[i].transform.localPosition.z));
+                localVertexRotations.Add(repereVertice[i].transform.localRotation);*/
+            }
+            
+
+
+            Debug.Log("REMY : After Null");
+
         }
     }
     #endregion

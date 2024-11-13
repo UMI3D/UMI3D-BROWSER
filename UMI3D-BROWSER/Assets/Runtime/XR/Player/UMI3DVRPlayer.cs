@@ -87,7 +87,7 @@ namespace umi3d.browserRuntime.player
                 true
             );
 
-            StartCoroutine(CenterCamera());
+            //StartCoroutine(CenterCamera());
         }
 
         void OnEnable()

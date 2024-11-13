@@ -23,6 +23,7 @@ using umi3dVRBrowsersBase.interactions;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using System.Collections.Generic;
+using umi3dVRBrowsersBase.rendering;
 
 namespace umi3dVRBrowsersBase.connection
 {
@@ -58,7 +59,10 @@ namespace umi3dVRBrowsersBase.connection
         {
             cameraManager.enabled = true;
             Camera.main.clearFlags = CameraClearFlags.SolidColor;
-            Camera.main.backgroundColor = Color.black;
+            //Camera.main.backgroundColor = Color.black;
+
+            RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Flat;
+            RenderSettings.ambientLight = Color.black;
 
             (UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DLoadingParameters).SetMR();
 
@@ -74,6 +78,9 @@ namespace umi3dVRBrowsersBase.connection
         {
             cameraManager.enabled = false;
             Camera.main.clearFlags = CameraClearFlags.Skybox;
+
+            RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Skybox;
+            RenderSettings.ambientLight = new Color(54f/255f, 58f/255f, 66f/255f);
 
             (UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DLoadingParameters).SetVR();
 

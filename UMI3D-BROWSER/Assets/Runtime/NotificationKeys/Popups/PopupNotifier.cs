@@ -24,8 +24,7 @@ namespace umi3d.browserRuntime.notificationKeys
 {
     public class PopupNotifier 
     {
-        PopupInfo popupInfo;
-        System.Guid guid;
+        public readonly System.Guid guid;
 
         public readonly EnqueuePopupHelper enqueue;
 

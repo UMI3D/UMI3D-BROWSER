@@ -64,6 +64,10 @@ namespace umi3d.browserRuntime.ui.popup
             {
                 UpdateLocalizeText(table, entry);
             }
+            else if (description == null)
+            {
+                UpdateText(null);
+            }
             else
             {
                 UnityEngine.Debug.LogError($"The description is neither string or (string, string)");

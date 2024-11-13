@@ -267,6 +267,14 @@ namespace umi3d.browserRuntime.notificationKeys
                 SetCloseButtonVisibility(false);
             }
 
+            isTypeSet = false;
+            isTitleSet = false;
+            isDescriptionSet = false;
+            AreButtonsSet = false;
+            isButtonsActionSet = false;
+            areArgumentsSet = false;
+            isCloseButtonVisibilitySet = false;
+
             notifier.Notify();
         }
     }

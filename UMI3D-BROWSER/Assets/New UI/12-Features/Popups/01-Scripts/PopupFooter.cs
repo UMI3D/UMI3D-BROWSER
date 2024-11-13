@@ -17,6 +17,7 @@ limitations under the License.
 using inetum.unityUtils;
 using System;
 using System.Collections.Generic;
+using umi3d.browserRuntime.notificationKeys;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.popup
@@ -31,9 +32,8 @@ namespace umi3d.browserRuntime.ui.popup
         void Awake()
         {
             NotificationHub.Default
-                .Subscribe<PopupNotificationKeys.EnqueuePopup>(
+                .Subscribe<PopupNotificationKeys.DisplayPopup>(
                 this,
-                new FilterByCondition(FilterType.AcceptOnly, publisher => publisher is PopupManager),
                 NewPopup
             );
         }
@@ -41,33 +41,31 @@ namespace umi3d.browserRuntime.ui.popup
         void OnDestroy()
         {
             NotificationHub.Default
-             .Unsubscribe<PopupNotificationKeys.EnqueuePopup>(this);
+             .Unsubscribe<PopupNotificationKeys.DisplayPopup>(this);
         }
 
         void NewPopup(Notification notification)
         {
             DeactivateAllButtons();
 
-            if (!notification.TryGetInfoT(PopupNotificationKeys.EnqueuePopup.Buttons, out List<System.Object> list, false) || list == null)
+            if (!notification.TryGetInfoT(PopupNotificationKeys.DisplayPopup.PopupInfo, out PopupInfo popupInfo))
             {
                 return;
             }
 
-            if (!notification.TryGetInfoT(PopupNotificationKeys.EnqueuePopup.ButtonActions, out Action<int> action, false))
+            if (popupInfo.buttons == null)
             {
                 return;
             }
 
-            notification.TryGetInfoNullableT(PopupNotificationKeys.EnqueuePopup.ID, out System.Guid? id, false);
-
-            for (int i = 0; i < list.Count; i++)
+            for (int i = 0; i < popupInfo.buttons.Count; i++)
             {
                 PopupButton button = ActiveButton();
                 button.index = i;
-                button.action = action;
-                button.SetPopupID(id);
+                button.action = popupInfo.buttonActions;
+                button.SetPopupID(popupInfo.id);
 
-                System.Object _text = list[i];
+                System.Object _text = popupInfo.buttons[i];
                 if (_text is string text)
                 {
                     button.UpdateText(text);

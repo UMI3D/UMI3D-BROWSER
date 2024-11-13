@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
-using System;
+using umi3d.browserRuntime.notificationKeys;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -24,7 +24,7 @@ namespace umi3d.browserRuntime.ui.popup
     internal class PopupCloseButton : MonoBehaviour
     {
         Button button;
-        Action<int> action;
+        PopupInfo popupInfo;
 
         Notifier closeNotifier;
 
@@ -34,10 +34,15 @@ namespace umi3d.browserRuntime.ui.popup
             button.onClick.AddListener(Click);
 
             NotificationHub.Default
-               .Subscribe<PopupNotificationKeys.EnqueuePopup>(
+               .Subscribe<PopupNotificationKeys.DisplayPopup>(
                this,
-               new FilterByCondition(FilterType.AcceptOnly, publisher => publisher is PopupManager),
                NewPopup
+           );
+
+            NotificationHub.Default
+               .Subscribe<PopupNotificationKeys.CloseCurrentOpenedPopup>(
+               this,
+               CloseCurrentOpenedPopup
            );
 
             closeNotifier = NotificationHub.Default
@@ -47,33 +52,37 @@ namespace umi3d.browserRuntime.ui.popup
         void OnDestroy()
         {
             NotificationHub.Default
-             .Unsubscribe<PopupNotificationKeys.EnqueuePopup>(this);
+                .Unsubscribe<PopupNotificationKeys.DisplayPopup>(this);
+
+            NotificationHub.Default
+                .Unsubscribe<PopupNotificationKeys.CloseCurrentOpenedPopup>(this);
         }
 
         void NewPopup(Notification notification)
         {
-            notification.TryGetInfoT(PopupNotificationKeys.EnqueuePopup.ButtonActions, out action, false);
-
-            notification.TryGetInfoNullableT(PopupNotificationKeys.EnqueuePopup.ID, out System.Guid? id, false);
-            closeNotifier[PopupNotificationKeys.PopupClosed.ID] = id;
-
-            if (notification.TryGetInfoT(PopupNotificationKeys.EnqueuePopup.HideCloseButton, out bool hide, false))
+            if (!notification.TryGetInfoT(PopupNotificationKeys.DisplayPopup.PopupInfo, out popupInfo))
             {
-                gameObject.SetActive(!hide);
+                return;
             }
-            else
+
+            closeNotifier[PopupNotificationKeys.PopupClosed.ID] = popupInfo.id;
+
+            gameObject.SetActive(!popupInfo.hideCloseButton);
+        }
+
+        void CloseCurrentOpenedPopup(Notification notification)
+        {
+            notification.TryGetInfoNullableT(PopupNotificationKeys.CloseCurrentOpenedPopup.ActionIndex, out int? index, false);
+            if (index.HasValue)
             {
-                gameObject.SetActive(true);
+                popupInfo.buttonActions?.Invoke(index.Value);
             }
+            closeNotifier.Notify();
         }
 
         void Click()
         {
-            if (action == null)
-            {
-                UnityEngine.Debug.LogError($"[Popup] Action null.");
-            }
-            action?.Invoke(-1);
+            popupInfo.buttonActions?.Invoke(-1);
 
             closeNotifier.Notify();
         }

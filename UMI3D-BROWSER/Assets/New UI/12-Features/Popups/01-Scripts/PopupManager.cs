@@ -16,6 +16,7 @@ limitations under the License.
 
 using inetum.unityUtils;
 using System.Collections.Generic;
+using umi3d.browserRuntime.notificationKeys;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.popup
@@ -24,9 +25,12 @@ namespace umi3d.browserRuntime.ui.popup
     {
         [SerializeField] GameObject popupPrefab;
 
-        System.Guid? currentId;
         GameObject popup;
-        List<(System.Guid?, Notification)> popupInfo = new();
+        List<PopupInfo> popupsInfo = new();
+        PopupInfo? currentPopupInfo;
+
+        Notifier displayPopupNotifier;
+        Notifier closeCurrentPopupNotifier;
 
         void Awake()
         {
@@ -38,11 +42,23 @@ namespace umi3d.browserRuntime.ui.popup
             );
 
             NotificationHub.Default
+                .Subscribe<PopupNotificationKeys.DequeuePopup>(this, DequeuePopup);
+
+            NotificationHub.Default
                 .Subscribe<PopupNotificationKeys.PopupClosed>(this, PopupClosed);
+
+            NotificationHub.Default
+                .Subscribe<PopupNotificationKeys.ReplaceCurrentOpenedPopup>(this, ReplaceCurrentOpenedPopup);
 
             popup = Instantiate(popupPrefab);
             popup.transform.SetParent(transform, false);
             popup.SetActive(false);
+
+            displayPopupNotifier = NotificationHub.Default
+                .GetNotifier<PopupNotificationKeys.DisplayPopup>(this);
+
+            closeCurrentPopupNotifier = NotificationHub.Default
+                .GetNotifier<PopupNotificationKeys.CloseCurrentOpenedPopup>(this);
         }
 
         void OnDestroy()
@@ -51,14 +67,27 @@ namespace umi3d.browserRuntime.ui.popup
              .Unsubscribe<PopupNotificationKeys.EnqueuePopup>(this);
 
             NotificationHub.Default
+             .Unsubscribe<PopupNotificationKeys.DequeuePopup>(this);
+
+            NotificationHub.Default
             .Unsubscribe<PopupNotificationKeys.PopupClosed>(this);
+
+            NotificationHub.Default
+             .Unsubscribe<PopupNotificationKeys.ReplaceCurrentOpenedPopup>(this);
         }
 
         void NewPopupEnqueued(Notification notification)
         {
-            if (!notification.TryGetInfoT(PopupNotificationKeys.EnqueuePopup.ID, out System.Guid id))
+            if (!notification.TryGetInfoT(PopupNotificationKeys.EnqueuePopup.PopupInfo, out PopupInfo popupInfo))
             {
-                popupInfo.Add((null, notification));
+                return;
+            }
+
+            if (!popupInfo.id.HasValue)
+            {
+                // This popup has no identification so add to the queue.
+
+                popupsInfo.Add(popupInfo);
 
                 if (!popup.activeInHierarchy)
                 {
@@ -67,24 +96,26 @@ namespace umi3d.browserRuntime.ui.popup
                 return;
             }
             
+            //if (currentId.HasValue && currentId.Value == id.Value)
+            //{
+            //    NotificationHub.Default.Notify<PopupNotificationKeys.EnqueuePopup>(this, notification.Info);
+            //    return;
+            //}
 
-            if (currentId.HasValue && currentId.Value == id)
+            // Check if a popup with the same id has already be enqueued.
+            int index = popupsInfo.FindIndex(info =>
             {
-                NotificationHub.Default.Notify<PopupNotificationKeys.EnqueuePopup>(this, notification.Info);
-                return;
-            }
-
-            int index = popupInfo.FindIndex(info =>
-            {
-                return info.Item1.HasValue && info.Item1.Value == id;
+                return info.id.HasValue && info.id.Value == popupInfo.id.Value;
             });
             if (index >= 0)
             {
-                popupInfo[index] = (id, notification);
+                // If a popup with the same id has already be enqueued.
+                popupsInfo[index] = popupInfo;
             }
             else
             {
-                popupInfo.Add((id, notification));
+                // Else add to the queue.
+                popupsInfo.Add(popupInfo);
             }
 
             if (!popup.activeInHierarchy)
@@ -93,36 +124,79 @@ namespace umi3d.browserRuntime.ui.popup
             }
         }
 
-        void PopupClosed()
+        void DequeuePopup(Notification notification)
         {
-            popup.SetActive(false);
-            currentId = null;
-            DisplayNextPopup();
-        }
-
-        void DisplayNextPopup()
-        {
-            if (popupInfo.Count == 0)
+            if (!notification.TryGetInfoT(PopupNotificationKeys.DequeuePopup.ID, out System.Guid id))
             {
                 return;
             }
 
-            int index = -1;
-            for (int i = 0; i < popupInfo.Count; i++)
+            if (currentPopupInfo.HasValue && currentPopupInfo.Value.id.HasValue && currentPopupInfo.Value.id.Value == id)
             {
-                Notification _notif = popupInfo[i].Item2;
-                if (!_notif.TryGetInfoT(PopupNotificationKeys.EnqueuePopup.Type, out PopupType type))
-                {
-                    continue;
-                }
+                notification.TryGetInfoNullableT(PopupNotificationKeys.DequeuePopup.ActionIndex, out int? index, false);
+                closeCurrentPopupNotifier[PopupNotificationKeys.CloseCurrentOpenedPopup.ActionIndex] = index;
+                closeCurrentPopupNotifier.Notify();
+                return;
+            }
 
-                if (type == PopupType.Error)
+            int idx = popupsInfo.FindIndex(info => info.id == id);
+            if (idx < 0)
+            {
+                UnityEngine.Debug.LogError($"[Popup] Try to dequeue a popup that was not enqueue.");
+                return;
+            }
+            popupsInfo.RemoveAt(idx);
+        }
+
+        void PopupClosed()
+        {
+            popup.SetActive(false);
+            currentPopupInfo = null;
+            DisplayNextPopup();
+        }
+
+        void ReplaceCurrentOpenedPopup(Notification notification)
+        {
+            //if (!notification.TryGetInfoT(PopupNotificationKeys.ReplaceCurrentOpenedPopup.ID, out System.Guid id))
+            //{
+            //    return;
+            //}
+
+            //int idx = popupInfo.FindIndex(info => info.Item1 == id);
+            //if (idx < 0)
+            //{
+            //    UnityEngine.Debug.LogError($"[Popup] Try to replace current popup by a popup that was not enqueue.");
+            //    return;
+            //}
+
+            //notification.TryGetInfoNullableT(PopupNotificationKeys.ReplaceCurrentOpenedPopup.ActionIndex, out int? index, false);
+            //if (index.HasValue)
+            //{
+            //    currentAction?.Invoke(index.Value);
+            //}
+            //DisplayPopup(idx);
+        }
+
+        void DisplayNextPopup()
+        {
+            if (popupsInfo.Count == 0)
+            {
+                NotificationHub.Default.Notify<PopupNotificationKeys.AllPopupAreClosed>(this);
+                return;
+            }
+
+            int index = -1;
+            for (int i = 0; i < popupsInfo.Count; i++)
+            {
+                PopupInfo popupInfo = popupsInfo[i];
+
+                if (popupInfo.type == PopupType.Error)
                 {
                     index = i;
                     break;
                 }
 
-                if (type == PopupType.Warning && index < 0)
+                if (popupInfo.type == PopupType.Warning && index < 0)
                 {
                     index = i;
                 }
@@ -132,14 +206,20 @@ namespace umi3d.browserRuntime.ui.popup
             {
                 index = 0;
             }
-            Notification notif = popupInfo[index].Item2;
-            currentId = popupInfo[index].Item1;
-            popupInfo.RemoveAt(index);
 
-            NotificationHub.Default.Notify<PopupNotificationKeys.EnqueuePopup>(this, notif.Info);
+            DisplayPopup(index);
+        }
+
+        void DisplayPopup(int index)
+        {
+            currentPopupInfo = popupsInfo[index];
+
+            popupsInfo.RemoveAt(index);
+
+            displayPopupNotifier[PopupNotificationKeys.DisplayPopup.PopupInfo] = currentPopupInfo.Value;
+            displayPopupNotifier.Notify();
 
             popup.SetActive(true);
         }
-
     }
 }

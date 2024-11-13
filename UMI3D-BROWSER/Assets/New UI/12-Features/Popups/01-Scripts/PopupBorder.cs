@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
+using umi3d.browserRuntime.notificationKeys;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -29,9 +30,8 @@ namespace umi3d.browserRuntime.ui.popup
             image = GetComponent<Image>();
 
             NotificationHub.Default
-               .Subscribe<PopupNotificationKeys.EnqueuePopup>(
+               .Subscribe<PopupNotificationKeys.DisplayPopup>(
                this,
-               new FilterByCondition(FilterType.AcceptOnly, publisher => publisher is PopupManager),
                NewPopup
            );
         }
@@ -39,17 +39,17 @@ namespace umi3d.browserRuntime.ui.popup
         void OnDestroy()
         {
             NotificationHub.Default
-              .Unsubscribe<PopupNotificationKeys.EnqueuePopup>(this);
+              .Unsubscribe<PopupNotificationKeys.DisplayPopup>(this);
         }
 
         void NewPopup(Notification notification)
         {
-            if (!notification.TryGetInfoT(PopupNotificationKeys.EnqueuePopup.Type, out PopupType type))
+            if (!notification.TryGetInfoT(PopupNotificationKeys.EnqueuePopup.PopupInfo, out PopupInfo popupInfo))
             {
                 return;
             }
 
-            switch (type)
+            switch (popupInfo.type)
             {
                 case PopupType.Information:
                     image.color = PopupColor.HexToColor(PopupColor.InformationColor);

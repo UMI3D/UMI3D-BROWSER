@@ -16,6 +16,7 @@ limitations under the License.
 
 using inetum.unityUtils;
 using System.Collections.Generic;
+using umi3d.browserRuntime.notificationKeys;
 using UnityEngine;
 using UnityEngine.Localization.Components;
 
@@ -32,9 +33,8 @@ namespace umi3d.browserRuntime.ui.popup
             stringEvent = GetComponent<LocalizeStringEvent>();
 
             NotificationHub.Default
-               .Subscribe<PopupNotificationKeys.EnqueuePopup>(
+               .Subscribe<PopupNotificationKeys.DisplayPopup>(
                this,
-               new FilterByCondition(FilterType.AcceptOnly, publisher => publisher is PopupManager),
                NewPopup
            );
         }
@@ -42,30 +42,31 @@ namespace umi3d.browserRuntime.ui.popup
         void OnDestroy()
         {
             NotificationHub.Default
-                .Unsubscribe<PopupNotificationKeys.EnqueuePopup>(this);
+                .Unsubscribe<PopupNotificationKeys.DisplayPopup>(this);
         }
 
         void NewPopup(Notification notification)
         {
-            if (notification.TryGetInfoT(PopupNotificationKeys.EnqueuePopup.Arguments, out Dictionary<string, System.Object> arguments, false))
+            if (!notification.TryGetInfoT(PopupNotificationKeys.DisplayPopup.PopupInfo, out PopupInfo popupInfo))
             {
-                UpdateArguments(arguments);
-            }
-            else
-            {
-                UpdateArguments(null);
+                return;
             }
 
-            if (notification.TryGetInfoT(PopupNotificationKeys.EnqueuePopup.Title, out string text, false))
+            UpdateArguments(popupInfo.arguments);
+
+            System.Object title = popupInfo.title;
+
+            if (title is string text)
             {
                 UpdateText(text);
-            } else if (notification.TryGetInfoT(PopupNotificationKeys.EnqueuePopup.Title, out (string, string) tableAndEntry, false))
+            }
+            else if (title is (string table, string entry))
             {
-                UpdateLocalizeText(tableAndEntry.Item1, tableAndEntry.Item2);
+                UpdateLocalizeText(table, entry);
             }
             else
             {
-                notification.LogError(this.GetType().FullName, PopupNotificationKeys.EnqueuePopup.Title, "The title is neither string or (string, string)");
+                UnityEngine.Debug.LogError($"The description is neither string or (string, string)");
             }
         }
 

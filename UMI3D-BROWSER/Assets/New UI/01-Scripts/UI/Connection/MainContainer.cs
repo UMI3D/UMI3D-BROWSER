@@ -41,7 +41,6 @@ namespace umi3dBrowsers
         [Header("Parent")]
         [SerializeField] private Transform parentTransform;
         [SerializeField] private Transform contentTransform;
-        [SerializeField] private Transform popupTransform;
 
         [Header("Dependencies")]
         [SerializeField] private MainContainerLinker mainContainerLinker;
@@ -177,7 +176,7 @@ namespace umi3dBrowsers
                 .SetButtons((POPUP_TABLE, "CloseApplication_buttonCancel"), (POPUP_TABLE, "CloseApplication_buttonClose"))
                 .SetButtonsAction(index =>
                 {
-                    m_quittingNotifier[QuittingManagerNotificationKey.QuittingConfirmationInfo.Confirmation] = index == 0;
+                    m_quittingNotifier[QuittingManagerNotificationKey.QuittingConfirmationInfo.Confirmation] = index == 1;
                     m_quittingNotifier.Notify();
                 })
                 .Notify();

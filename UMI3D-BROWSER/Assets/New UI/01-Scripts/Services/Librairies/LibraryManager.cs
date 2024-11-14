@@ -76,7 +76,7 @@ namespace umi3dBrowsers.services.librairies
             popupNotifier
                 .enqueue
                 .SetType(PopupType.Warning)
-                .SetArguments(("libCount", currentEntries.Count))
+                .SetArguments(("count", currentEntries.Count))
                 .SetTitle(POPUP_TABLE, "warningDeleteAllLibs")
                 .SetDescription(POPUP_TABLE, "warningDeleteAllLibs_message")
                 .SetButtons((POPUP_TABLE, "warningDeleteLib_buttonCancel"), (POPUP_TABLE, "warningDeleteLib_buttonDelete"))

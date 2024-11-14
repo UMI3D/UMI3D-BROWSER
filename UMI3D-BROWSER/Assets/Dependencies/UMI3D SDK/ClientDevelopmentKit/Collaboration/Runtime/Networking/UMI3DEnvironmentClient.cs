@@ -307,6 +307,7 @@ namespace umi3d.cdk.collaboration
         public async void ConnectionDisconnected()
         {
             UMI3DLogger.Log($"Connection lost with environment [Was Connected: {IsConnected()}]", scope);
+
             if (UMI3DCollaborationClientServer.Exists)
                 UMI3DCollaborationClientServer.Instance.ConnectionLost(this);
             await Task.Yield();

@@ -201,6 +201,8 @@ namespace umi3dBrowsers.container
             });
             vignette.OnClick += () => {
                 connectionServiceLinker.TriesToConnect(pWorldData.worldUrl);
+                pWorldData.dateLastConnection = DateTime.UtcNow.ToFileTime();
+                pVirtualWorlds.UpdateWorld(pWorldData);
             };
 
             return vignette;

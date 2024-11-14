@@ -14,9 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
-using System;
-using umi3d.browserRuntime.notificationKeys;
 using umi3d.browserRuntime.pc;
 using UnityEngine;
 
@@ -27,7 +24,7 @@ namespace umi3d.browserRuntime.ui.windowBar
         private void Awake()
         {
 #if UNITY_EDITOR
-            transform.parent.gameObject.SetActive(false);
+            gameObject.SetActive(false);
             return;
 #endif
         }

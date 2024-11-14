@@ -107,7 +107,7 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
         private void Awake()
         {
             volumeSlider.minValue = 0;
-            volumeSlider.maxValue = 100;
+            volumeSlider.maxValue = 300;
             volumeSlider.onValueChanged.AddListener(newValue => {
                 UserVolume = newValue;
             });

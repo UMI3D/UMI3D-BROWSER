@@ -17,6 +17,7 @@ limitations under the License.
 using inetum.unityUtils;
 using umi3d.browserRuntime.notificationKeys;
 using UnityEngine;
+using UnityEngine.Localization.Components;
 using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.ui.settings
@@ -26,7 +27,17 @@ namespace umi3d.browserRuntime.ui.settings
     {
         Button button;
         Image background;
+        TMPro.TMP_Text text;
+
+        string activeText = null;
+        string inactiveText = null;
+
         internal bool isActive { get; private set; }
+
+        
+        [SerializeField] private LocalizeStringEvent IsActiveEvent;
+        [Tooltip("If this field is not set, the IsActiveEvent is used")]
+        [SerializeField] private LocalizeStringEvent IsInactiveEvent;
 
         GameObject parent;
         int instanceID;
@@ -41,6 +52,11 @@ namespace umi3d.browserRuntime.ui.settings
             parent = transform.parent.gameObject;
             instanceID = parent.GetInstanceID();
 
+            text = transform.GetChild(1).GetComponent<TMPro.TMP_Text>();
+
+            IsActiveEvent?.OnUpdateString.AddListener(UpdateIsActiveString);
+            IsInactiveEvent?.OnUpdateString.AddListener(UpdateIsInactiveString);
+
             NotificationHub.Default.Subscribe(
                 this, 
                 SettingsNotificationKeys.NewToggleCustomSelected + instanceID, 
@@ -48,9 +64,18 @@ namespace umi3d.browserRuntime.ui.settings
             );
         }
 
+        private void OnEnable()
+        {
+            IsActiveEvent?.RefreshString();
+            IsInactiveEvent?.RefreshString();
+        }
+
         void OnDestroy()
         {
             NotificationHub.Default.Unsubscribe(this, SettingsNotificationKeys.NewToggleCustomSelected + instanceID);
+
+            IsActiveEvent?.OnUpdateString.RemoveListener(UpdateIsActiveString);
+            IsInactiveEvent?.OnUpdateString.RemoveListener(UpdateIsInactiveString);
         }
 
         void Click()
@@ -63,12 +88,34 @@ namespace umi3d.browserRuntime.ui.settings
         {
             isActive = true;
             background.gameObject.SetActive(true);
+            if (text && activeText != null)
+                text.text = activeText;
         }
 
         void Deactivate()
         {
             isActive = false;
             background.gameObject.SetActive(false);
+            if (text && inactiveText != null)
+                text.text = inactiveText;
+        }
+
+
+        private void UpdateIsActiveString(string s)
+        {
+            activeText = s;
+            if(text && isActive)
+                text.text = activeText;
+
+            if (IsInactiveEvent == null)
+                UpdateIsInactiveString(s);
+        }
+
+        private void UpdateIsInactiveString(string s)
+        {
+            inactiveText = s;
+            if (text && !isActive)
+                text.text = inactiveText;
         }
     }
 }

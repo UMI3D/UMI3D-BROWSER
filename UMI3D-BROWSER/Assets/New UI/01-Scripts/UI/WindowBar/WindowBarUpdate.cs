@@ -22,7 +22,7 @@ using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.windowBar
 {
-    public class WindowBarPanel : MonoBehaviour
+    public class WindowBarUpdate : MonoBehaviour
     {
         private void Awake()
         {
@@ -30,14 +30,11 @@ namespace umi3d.browserRuntime.ui.windowBar
             transform.parent.gameObject.SetActive(false);
             return;
 #endif
-            NotificationHub.Default.Subscribe(this, WindowsManagerNotificationKey.FullScreenModeChanged, OnFullScreenModeChanged);
-            transform.parent.gameObject.SetActive(WindowsManager.IsWindowInFullScreen);
         }
 
-        private void OnFullScreenModeChanged(Notification notification)
+        private void Update()
         {
-            if (notification.TryGetInfoT<FullScreenMode>(WindowsManagerNotificationKey.FullScreenModeChangedInfo.Mode, out var mode))
-                transform.parent.gameObject.SetActive(mode != FullScreenMode.Windowed);
+            WindowsManager.Update();
         }
     }
 }

@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using umi3d.browserRuntime.notificationKeys;
+using umi3d.browserRuntime.ui.connection.vignette;
 using umi3d.browserRuntime.ui.popup;
 using umi3d.common.interaction.form;
 using umi3dBrowsers.displayer;
@@ -97,6 +98,11 @@ namespace umi3dBrowsers.container
             vignetteContainerEvent.OnVignetteReset?.Invoke();
         }
 
+        private void Start()
+        {
+            ChangeVignetteMode(PlayerPrefs.GetInt(VignettePlayerPrefKeys.IsPrimaryVignetteMode, 1) == 1 ? primaryVignetteMode : secondaryVignetteMode);
+        }
+
         private void OnDestroy()
         {
             vignetteContainerEvent.OnVignetteReset -= ResetVignettes;
@@ -116,16 +122,14 @@ namespace umi3dBrowsers.container
 
         public void ChangePrimaryVignetteMode(E_VignetteScale vignetteScale)
         {
-            if (vignetteMode == primaryVignetteMode) vignetteMode = vignetteScale;
             primaryVignetteMode = vignetteScale;
-            ChangeVignetteMode(vignetteScale);
+            ChangeVignetteMode(PlayerPrefs.GetInt(VignettePlayerPrefKeys.IsPrimaryVignetteMode, 1) == 1 ? primaryVignetteMode : secondaryVignetteMode);
         }
 
         public void ChangeSecondaryVignetteMode(E_VignetteScale vignetteScale)
         {
-            if (vignetteMode == secondaryVignetteMode) vignetteMode = vignetteScale;
             secondaryVignetteMode = vignetteScale;
-            ChangeVignetteMode(vignetteScale);   
+            ChangeVignetteMode(PlayerPrefs.GetInt(VignettePlayerPrefKeys.IsPrimaryVignetteMode, 1) == 1 ? primaryVignetteMode : secondaryVignetteMode);
         }
 
         public void ChangeVignetteMode(E_VignetteScale mode)
@@ -134,6 +138,8 @@ namespace umi3dBrowsers.container
             SetGridLayout(VignetteContainerData.FindVignetteContainerDataByVignetteScale(vignetteMode, m_vignetteContainerDatas));
             UpdateNavigation();
             FillWithEmptyVignettes();
+
+            PlayerPrefs.SetInt(VignettePlayerPrefKeys.IsPrimaryVignetteMode, vignetteMode == primaryVignetteMode ? 1 : 0);
         }
 
         public void Clear()

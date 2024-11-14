@@ -26,6 +26,7 @@ namespace umi3d.browserRuntime.ui.popup
         PopupNotifier notifier;
 
         const string INETUM_TABLE = "UMI3D_inetum";
+        const string POPUP_TABLE = "BrowserPopups";
 
         void Awake()
         {
@@ -38,8 +39,8 @@ namespace umi3d.browserRuntime.ui.popup
             notifier
             .enqueue
             .SetArguments(("url", "test/url.com"))
-            .SetTitle(INETUM_TABLE, "popup_connection_server")
-            .SetDescription(INETUM_TABLE, "popup_trying_connect")
+            .SetTitle(POPUP_TABLE, "ConnectionToAPortal")
+            .SetDescription(POPUP_TABLE, "ConnectionToAPortal_message")
             .Notify();
         }
 
@@ -48,8 +49,9 @@ namespace umi3d.browserRuntime.ui.popup
         {
             notifier
             .enqueue
-            .SetTitle(INETUM_TABLE, "Quit")
-            .SetButtons((INETUM_TABLE, "Quit"), (INETUM_TABLE, "Cancel"))
+            .SetTitle(POPUP_TABLE, "CloseApplication")
+            .SetDescription(POPUP_TABLE, "CloseApplication_message")
+            .SetButtons((POPUP_TABLE, "CloseApplication_buttonCancel"), (POPUP_TABLE, "CloseApplication_buttonClose"))
             .Notify();
         }
 
@@ -59,8 +61,8 @@ namespace umi3d.browserRuntime.ui.popup
             notifier
               .enqueue
               .SetType(PopupType.Information)
-              .SetTitle(INETUM_TABLE, "popup_leave")
-              .SetButtons((INETUM_TABLE, "popup_yes"), (INETUM_TABLE, "popup_no"))
+              .SetTitle(POPUP_TABLE, "LeaveEnvironment")
+              .SetButtons((POPUP_TABLE, "LeaveEnvironment_buttonStay"), (POPUP_TABLE, "LeaveEnvironment_buttonLeave"))
               .Notify();
         }
 
@@ -70,7 +72,10 @@ namespace umi3d.browserRuntime.ui.popup
             notifier
               .enqueue
               .SetType(PopupType.Error)
-              .SetArguments(("error", "Error message, a long message.\nThat contain line break."))
+              .SetArguments(
+                ("errorTitle", "Error while connecting."),
+                ("errorMessage", "Error message, a long message.\nThat contain line break.")
+                )
               .SetTitle(INETUM_TABLE, "popup_fail_connect")
               .SetDescription(INETUM_TABLE, "error_msg")
               .SetButtons((INETUM_TABLE, "popup_close"))

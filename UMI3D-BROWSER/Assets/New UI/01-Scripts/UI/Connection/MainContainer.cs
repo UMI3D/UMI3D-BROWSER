@@ -80,7 +80,7 @@ namespace umi3dBrowsers
         private Notifier m_quittingNotifier;
         private Notifier m_enableInGameUiNotifier;
 
-        const string LOCALIZATION_TABLE = "UMI3D_inetum";
+        const string POPUP_TABLE = "BrowserPopups";
         PopupNotifier popupNotifier;
 
         private void Awake()
@@ -172,9 +172,9 @@ namespace umi3dBrowsers
         {
             popupNotifier
                 .enqueue
-                .SetType(PopupType.Information)
-                .SetTitle(LOCALIZATION_TABLE, "Quit")
-                .SetButtons((LOCALIZATION_TABLE, "Quit"), (LOCALIZATION_TABLE, "Cancel"))
+                .SetTitle(POPUP_TABLE, "CloseApplication")
+                .SetDescription(POPUP_TABLE, "CloseApplication_message")
+                .SetButtons((POPUP_TABLE, "CloseApplication_buttonCancel"), (POPUP_TABLE, "CloseApplication_buttonClose"))
                 .SetButtonsAction(index =>
                 {
                     m_quittingNotifier[QuittingManagerNotificationKey.QuittingConfirmationInfo.Confirmation] = index == 0;
@@ -191,7 +191,6 @@ namespace umi3dBrowsers
             connectionServiceLinker.OnConnectionFailure -= OnConnectionFailure;
             UMI3DClientServer.Instance.OnConnectionLost.RemoveListener(OnConnectionLost);
             UMI3DCollaborationClientServer.Instance.OnForceLogoutMessage.RemoveListener(OnForceLogoutMessage);
-            connectionServiceLinker.OnAnswerFailed -= OnAnswerFailed;
         }
 
         private void Start()
@@ -218,7 +217,6 @@ namespace umi3dBrowsers
             connectionServiceLinker.OnMediaServerPingSuccess += (virtualWorldData) => {
                 NotificationHub.Default.Notify<PopupNotificationKeys.CloseCurrentOpenedPopup>(this);
             };
-            connectionServiceLinker.OnAnswerFailed += OnAnswerFailed;
             connectionServiceLinker.OnAsksToLoadLibrairies += (ids, action) => action?.Invoke(true);
 
             m_menuNavigationLinker.ShowStartPanel();
@@ -230,11 +228,10 @@ namespace umi3dBrowsers
         {
             popupNotifier
                 .enqueue
-                .SetType(PopupType.Information)
-                .SetArguments(("url", url))
-                .SetTitle(LOCALIZATION_TABLE, "popup_connection_server")
-                .SetDescription(LOCALIZATION_TABLE, "popup_trying_connect")
-                .Notify();
+                 .SetArguments(("url", "test/url.com"))
+                 .SetTitle(POPUP_TABLE, "ConnectionToAPortal")
+                 .SetDescription(POPUP_TABLE, "ConnectionToAPortal_message")
+                 .Notify();
         }
 
         void OnConnectionFailure(string message)
@@ -242,10 +239,13 @@ namespace umi3dBrowsers
             popupNotifier
                 .enqueue
                 .SetType(PopupType.Error)
-                .SetArguments(("error", message))
-                .SetTitle(LOCALIZATION_TABLE, "popup_fail_connect")
-                .SetDescription(LOCALIZATION_TABLE, "error_msg")
-                .SetButtons((LOCALIZATION_TABLE, "popup_close"))
+                .SetArguments(
+                    ("errorTitle", "Error."),
+                    ("errorMessage", message)
+                )
+                .SetTitle(POPUP_TABLE, "ErrorPortalConnectionFailure")
+                .SetDescription(POPUP_TABLE, "Error_message")
+                .SetButtons((POPUP_TABLE, "Error_buttonClose"))
                 .Notify();
         }
 
@@ -254,9 +254,9 @@ namespace umi3dBrowsers
             popupNotifier
                 .enqueue
                 .SetType(PopupType.Error)
-                .SetTitle(LOCALIZATION_TABLE, "popup_forced_leave")
-                .SetDescription(LOCALIZATION_TABLE, "popup_connection_lost_msg")
-                .SetButtons((LOCALIZATION_TABLE, "popup_connection_lost_leave"), (LOCALIZATION_TABLE, "popup_connection_lost_retry"))
+                .SetTitle(POPUP_TABLE, "ErrorConnectionLost")
+                .SetDescription(POPUP_TABLE, "ErrorConnectionLost_message")
+                .SetButtons((POPUP_TABLE, "ErrorConnectionLost_buttonLeave"), (POPUP_TABLE, "ErrorConnectionLost_buttonReconnect"))
                 .SetButtonsAction(index =>
                 {
                     if (index == -1 || index == 0)
@@ -276,25 +276,13 @@ namespace umi3dBrowsers
             popupNotifier
                 .enqueue
                 .SetType(PopupType.Error)
-                .SetArguments(("message", message))
-                .SetTitle(LOCALIZATION_TABLE, "popup_forced_leave")
-                .SetDescription(LOCALIZATION_TABLE, "popup_forced_leave_msg")
-                .SetButtons((LOCALIZATION_TABLE, "popup_connection_lost_leave"))
+                .SetTitle(POPUP_TABLE, "ErrorForcedDisconnection")
+                .SetDescription(message)
+                .SetButtons((POPUP_TABLE, "ErrorForcedDisconnection_buttonLeave"))
                 .SetButtonsAction(index =>
                 {
                     connectionToImmersiveLinker.Leave();
                 })
-                .Notify();
-        }
-
-        void OnAnswerFailed()
-        {
-            popupNotifier
-                .enqueue
-                .SetType(PopupType.Error)
-                .SetTitle(LOCALIZATION_TABLE, "popup_answer_failed_title")
-                .SetDescription(LOCALIZATION_TABLE, "popup_answer_failed_description")
-                .SetButtons((LOCALIZATION_TABLE, "popup_close"))
                 .Notify();
         }
 

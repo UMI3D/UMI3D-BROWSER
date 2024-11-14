@@ -228,7 +228,7 @@ namespace umi3dBrowsers
         {
             popupNotifier
                 .enqueue
-                 .SetArguments(("url", "test/url.com"))
+                 .SetArguments(("url", url))
                  .SetTitle(POPUP_TABLE, "ConnectionToAPortal")
                  .SetDescription(POPUP_TABLE, "ConnectionToAPortal_message")
                  .Notify();

@@ -1,0 +1,129 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: BrowserPopups Shared Data
+  m_EditorClassIdentifier: 
+  m_TableCollectionName: BrowserPopups
+  m_TableCollectionNameGuidString: fba3eb5dcf71554489e23732cf2e3872
+  m_Entries:
+  - m_Id: 293800669184
+    m_Key: ConnectionToAPortal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1116676976640
+    m_Key: ConnectionToAPortal_message
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2752082243584
+    m_Key: CloseApplication
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2842255585280
+    m_Key: CloseApplication_message
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3396931317760
+    m_Key: CloseApplication_buttonCancel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3592348135424
+    m_Key: CloseApplication_buttonClose
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4595797618688
+    m_Key: LeaveEnvironment
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4843106365440
+    m_Key: LeaveEnvironment_buttonStay
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4922848473088
+    m_Key: LeaveEnvironment_buttonLeave
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6355446558720
+    m_Key: Error_message
+    m_Metadata:
+      m_Items: []
+  - m_Id: 41352475865088
+    m_Key: ErrorPortalConnectionFailure
+    m_Metadata:
+      m_Items: []
+  - m_Id: 42477820211200
+    m_Key: ErrorPortalConnectionFailure_message
+    m_Metadata:
+      m_Items: []
+  - m_Id: 42806724947968
+    m_Key: Error_buttonClose
+    m_Metadata:
+      m_Items: []
+  - m_Id: 43748664963072
+    m_Key: ErrorConnectionLost
+    m_Metadata:
+      m_Items: []
+  - m_Id: 43877111328768
+    m_Key: ErrorConnectionLost_message
+    m_Metadata:
+      m_Items: []
+  - m_Id: 44223502118912
+    m_Key: ErrorConnectionLost_buttonLeave
+    m_Metadata:
+      m_Items: []
+  - m_Id: 44425734680576
+    m_Key: ErrorConnectionLost_buttonReconnect
+    m_Metadata:
+      m_Items: []
+  - m_Id: 45686731206656
+    m_Key: ErrorForcedDisconnection
+    m_Metadata:
+      m_Items: []
+  - m_Id: 45929656905728
+    m_Key: ErrorForcedDisconnection_buttonLeave
+    m_Metadata:
+      m_Items: []
+  - m_Id: 49041905971200
+    m_Key: warningDeleteLib
+    m_Metadata:
+      m_Items: []
+  - m_Id: 49903000776704
+    m_Key: warningDeleteLib_message
+    m_Metadata:
+      m_Items: []
+  - m_Id: 50663574892544
+    m_Key: warningDeleteAllLibs
+    m_Metadata:
+      m_Items: []
+  - m_Id: 50822287355904
+    m_Key: warningDeleteAllLibs_message
+    m_Metadata:
+      m_Items: []
+  - m_Id: 51371267223552
+    m_Key: warningDeleteLib_buttonCancel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 51543439208448
+    m_Key: warningDeleteLib_buttonDelete
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 3204614926223802370
+  references:
+    version: 2
+    RefIds:
+    - rid: 3204614926223802370
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables,
+        asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1731580371428

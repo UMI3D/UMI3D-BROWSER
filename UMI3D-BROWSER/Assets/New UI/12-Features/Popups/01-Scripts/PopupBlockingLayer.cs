@@ -26,9 +26,8 @@ namespace umi3d.browserRuntime.ui.popup
             gameObject.SetActive(false);
 
             NotificationHub.Default
-                 .Subscribe<PopupNotificationKeys.EnqueuePopup>(
+                 .Subscribe<PopupNotificationKeys.DisplayPopup>(
                  this,
-                 new FilterByCondition(FilterType.AcceptOnly, publisher => publisher is PopupManager),
                  NewPopup
              );
 

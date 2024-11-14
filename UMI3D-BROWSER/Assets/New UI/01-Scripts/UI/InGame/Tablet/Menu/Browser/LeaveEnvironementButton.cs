@@ -39,7 +39,7 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.menu.browser
 
         private bool isActive;
 
-        const string LOCALIZATION_TABLE = "UMI3D_inetum";
+        const string POPUP_TABLE = "BrowserPopups";
         PopupNotifier popupNotifier;
 
         private void Awake()
@@ -58,8 +58,8 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.menu.browser
             popupNotifier
                 .enqueue
                 .SetType(PopupType.Information)
-                .SetDescription(LOCALIZATION_TABLE, "popup_leave")
-                .SetButtons((LOCALIZATION_TABLE, "popup_yes"), (LOCALIZATION_TABLE, "popup_no"))
+                .SetTitle(POPUP_TABLE, "LeaveEnvironment")
+                .SetButtons((POPUP_TABLE, "LeaveEnvironment_buttonStay"), (POPUP_TABLE, "LeaveEnvironment_buttonLeave"))
                 .SetButtonsAction(index =>
                 {
                     icon.color = iconColor;

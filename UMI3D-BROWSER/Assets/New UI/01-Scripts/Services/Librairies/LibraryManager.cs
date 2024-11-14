@@ -62,7 +62,7 @@ namespace umi3dBrowsers.services.librairies
 
         private Notifier popupCloseAll;
 
-        const string LOCALIZATION_TABLE = "UMI3D_inetum";
+        const string POPUP_TABLE = "BrowserPopups";
         PopupNotifier popupNotifier;
 
         private void Awake()
@@ -77,8 +77,9 @@ namespace umi3dBrowsers.services.librairies
                 .enqueue
                 .SetType(PopupType.Warning)
                 .SetArguments(("libCount", currentEntries.Count))
-                .SetDescription(LOCALIZATION_TABLE, "popup_deleteLibs_description")
-                .SetButtons((LOCALIZATION_TABLE, "popup_cancel"), (LOCALIZATION_TABLE, "popup_yes"))
+                .SetTitle(POPUP_TABLE, "warningDeleteAllLibs")
+                .SetDescription(POPUP_TABLE, "warningDeleteAllLibs_message")
+                .SetButtons((POPUP_TABLE, "warningDeleteLib_buttonCancel"), (POPUP_TABLE, "warningDeleteLib_buttonDelete"))
                 .SetButtonsAction(index =>
                 {
                     if (index == 1)
@@ -147,9 +148,10 @@ namespace umi3dBrowsers.services.librairies
                         popupNotifier
                             .enqueue
                             .SetType(PopupType.Warning)
-                            .SetArguments(("libName", lib.key))
-                            .SetDescription(LOCALIZATION_TABLE, "popup_deleteLib_description")
-                            .SetButtons((LOCALIZATION_TABLE, "popup_cancel"), (LOCALIZATION_TABLE, "popup_yes"))
+                            .SetArguments(("lib", lib.key))
+                            .SetTitle(POPUP_TABLE, "warningDeleteLib")
+                            .SetDescription(POPUP_TABLE, "warningDeleteLib_message")
+                            .SetButtons((POPUP_TABLE, "warningDeleteLib_buttonCancel"), (POPUP_TABLE, "warningDeleteLib_buttonDelete"))
                             .SetButtonsAction(index =>
                             {
                                 if (index == 1)

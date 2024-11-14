@@ -171,7 +171,7 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
         }
         bool IsIncludeByMuteFilter(UMI3DUser user)
         {
-            return !mute || user.microphoneStatus;
+            return mute && !user.microphoneStatus;
         }
 
         bool unMute = false;
@@ -182,7 +182,7 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
         }
         bool IsIncludeByUnmuteFilter(UMI3DUser user)
         {
-            return !unMute || !user.microphoneStatus;
+            return unMute && user.microphoneStatus;
         }
 
         string search = null;

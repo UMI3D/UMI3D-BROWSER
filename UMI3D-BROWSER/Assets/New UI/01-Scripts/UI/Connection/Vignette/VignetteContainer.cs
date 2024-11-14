@@ -79,11 +79,11 @@ namespace umi3dBrowsers.container
 
             buttonLeft.OnClick.AddListener(() => {
                 if (vignetteDisplayers.Count > (int)vignetteMode)
-                    scrollbar.value -= scrollButtonSpeed / vignetteDisplayers.Count;
+                    scrollbar.value -= scrollButtonSpeed / (vignetteDisplayers.Count - (int)vignetteMode);
             });
             buttonRight.OnClick.AddListener(() => {
                 if (vignetteDisplayers.Count > (int)vignetteMode)
-                    scrollbar.value += scrollButtonSpeed / vignetteDisplayers.Count;
+                    scrollbar.value += scrollButtonSpeed / (vignetteDisplayers.Count - (int)vignetteMode);
             });
         }
 
@@ -201,6 +201,8 @@ namespace umi3dBrowsers.container
             });
             vignette.OnClick += () => {
                 connectionServiceLinker.TriesToConnect(pWorldData.worldUrl);
+                pWorldData.dateLastConnection = DateTime.UtcNow.ToFileTime();
+                pVirtualWorlds.UpdateWorld(pWorldData);
             };
 
             return vignette;

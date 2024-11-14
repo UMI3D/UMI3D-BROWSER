@@ -15,29 +15,26 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
+using System;
+using umi3d.browserRuntime.notificationKeys;
+using umi3d.browserRuntime.pc;
 using UnityEngine;
 
-namespace umi3d.browserRuntime.ui.inGame.tablet
+namespace umi3d.browserRuntime.ui.windowBar
 {
-    /// <summary>
-    /// To permit all screen to call it awake
-    /// </summary>
-    public class ScreenStart : MonoBehaviour
+    public class WindowBarUpdate : MonoBehaviour
     {
-        [SerializeField] private GameObject[] screens;
-
         private void Awake()
         {
-            foreach (var screen in screens)
-                screen.SetActive(true);
+#if UNITY_EDITOR
+            transform.parent.gameObject.SetActive(false);
+            return;
+#endif
         }
 
-        private void Start()
+        private void Update()
         {
-            foreach (var screen in screens)
-                screen.SetActive(false);
-
-            NotificationHub.Default.Notify(this, TabletNotificationKeys.ClickButtonSocial);
+            WindowsManager.Update();
         }
     }
 }

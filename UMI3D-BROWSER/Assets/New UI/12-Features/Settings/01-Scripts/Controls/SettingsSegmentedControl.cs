@@ -29,8 +29,8 @@ namespace umi3d.browserRuntime.ui.settings
         Image background;
         TMPro.TMP_Text text;
 
-        string activeText;
-        string inactiveText;
+        string activeText = null;
+        string inactiveText = null;
 
         internal bool isActive { get; private set; }
 
@@ -52,7 +52,7 @@ namespace umi3d.browserRuntime.ui.settings
             parent = transform.parent.gameObject;
             instanceID = parent.GetInstanceID();
 
-            text = transform.GetChild(0).GetComponent<TMPro.TMP_Text>();
+            text = transform.GetChild(1).GetComponent<TMPro.TMP_Text>();
 
             IsActiveEvent?.OnUpdateString.AddListener(UpdateIsActiveString);
             IsInactiveEvent?.OnUpdateString.AddListener(UpdateIsInactiveString);
@@ -62,6 +62,12 @@ namespace umi3d.browserRuntime.ui.settings
                 SettingsNotificationKeys.NewToggleCustomSelected + instanceID, 
                 Deactivate
             );
+        }
+
+        private void OnEnable()
+        {
+            IsActiveEvent?.RefreshString();
+            IsInactiveEvent?.RefreshString();
         }
 
         void OnDestroy()
@@ -82,7 +88,7 @@ namespace umi3d.browserRuntime.ui.settings
         {
             isActive = true;
             background.gameObject.SetActive(true);
-            if (text)
+            if (text && activeText != null)
                 text.text = activeText;
         }
 
@@ -90,7 +96,7 @@ namespace umi3d.browserRuntime.ui.settings
         {
             isActive = false;
             background.gameObject.SetActive(false);
-            if (text)
+            if (text && inactiveText != null)
                 text.text = inactiveText;
         }
 

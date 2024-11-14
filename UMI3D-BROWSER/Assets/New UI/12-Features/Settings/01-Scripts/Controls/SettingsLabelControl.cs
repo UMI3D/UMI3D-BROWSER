@@ -14,6 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
+using umi3d.browserRuntime.notificationKeys;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -25,12 +27,26 @@ namespace umi3d.browserRuntime.ui.settings
         [SerializeField] Color oddColor;
 
         Image image;
+        int instanceID;
 
         void Awake()
         {
             image = GetComponent<Image>();
 
+            instanceID = GetComponentInParent<SettingsContent>().GetInstanceID();
+
+            NotificationHub.Default.Subscribe(
+                this,
+                SettingsNotificationKeys.UpdateChildVisibilitySelected + instanceID,
+                SetColor
+            );
+
             SetColor();
+        }
+
+        private void OnDestroy()
+        {
+            NotificationHub.Default.Unsubscribe(this, SettingsNotificationKeys.UpdateChildVisibilitySelected + instanceID);
         }
 
         [ContextMenu("Set Even Color")]

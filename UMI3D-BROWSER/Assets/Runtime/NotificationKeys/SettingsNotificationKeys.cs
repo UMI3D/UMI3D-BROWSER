@@ -57,6 +57,7 @@ namespace umi3d.browserRuntime.notificationKeys
         }
 
         public static readonly string NewToggleCustomSelected = "settings-toggle-custom-";
+        public static readonly string UpdateChildVisibilitySelected = "settings-child-count-update-";
 
         public static readonly string SetDeafenIndicator = "settings-deafen-indicator";
         public static readonly string IsDeafenIndicatorEnable = "settings-deafen-indicator-enable";

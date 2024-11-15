@@ -154,6 +154,11 @@ namespace umi3d.browserEditor.BuildTool
 
         void ApplyTargetOptions(E_Target target)
         {
+            if (Application.isPlaying)
+            {
+                return;
+            }
+
             ApplyScenes();
 
             // Switch target if needed and toggle options.
@@ -165,6 +170,11 @@ namespace umi3d.browserEditor.BuildTool
 
         void ApplyScenes()
         {
+            if (Application.isPlaying)
+            {
+                return;
+            }
+
             EditorBuildSettings.scenes = sceneModel.GetScenesForTarget(
                 targetModel.currentTarget
             ).Select(scene =>
@@ -221,6 +231,11 @@ namespace umi3d.browserEditor.BuildTool
 
         void BuildSelectedTargets(params TargetDto[] target)
         {
+            if (Application.isPlaying)
+            {
+                return;
+            }
+
             versionModel.UpdateOldVersion();
             versionModel.UpdateSDKVersion();
             for (int i = 0; i < target.Length; i++)

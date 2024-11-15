@@ -30,9 +30,19 @@ namespace umi3d.browserRuntime.ui.settings
 
         GraphicsSettings graphicsSettings;
 
+        private const float MIN_SLIDER_VALUE = 10;
+
+        private const float MAX_SLIDER_VALUE = 200;
+
+        private const float SLIDER_VALUE_TO_URP_RENDER_SCALE = 1 / 100f;
+
+        private const float URP_RENDER_SCALE_TO_SLIDER_VALUE = 1 / SLIDER_VALUE_TO_URP_RENDER_SCALE;
+
         void Awake()
         {
             slider = GetComponent<Slider>();
+            slider.minValue = MIN_SLIDER_VALUE;
+            slider.maxValue = MAX_SLIDER_VALUE;
 
             sliderControl = GetComponent<SettingsSliderControl>();
             sliderControl.valueChanged += ValueChanged;
@@ -47,11 +57,14 @@ namespace umi3d.browserRuntime.ui.settings
                 return;
             }
 
-            slider.value = graphicsSettings.model.renderScale;
+            slider.SetValueWithoutNotify(graphicsSettings.model.renderScale * URP_RENDER_SCALE_TO_SLIDER_VALUE);
         }
 
         void ValueChanged(float newValue)
         {
+            newValue = Mathf.Clamp(newValue, MIN_SLIDER_VALUE, MAX_SLIDER_VALUE);
+            newValue *= SLIDER_VALUE_TO_URP_RENDER_SCALE;
+
             UniversalRenderPipelineAsset urp = QualitySettings.renderPipeline as UniversalRenderPipelineAsset;
             urp.renderScale = newValue;
             graphicsSettings.model.renderScale = newValue;

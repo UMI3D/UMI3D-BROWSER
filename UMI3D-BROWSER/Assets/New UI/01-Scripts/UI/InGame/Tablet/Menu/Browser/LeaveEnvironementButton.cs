@@ -64,7 +64,7 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.menu.browser
                 {
                     icon.color = iconColor;
                     activeBackground.SetActive(false);
-                    if (index == 0)
+                    if (index == 1)
                     {
                         connectionToImmersiveLinker.Leave();
                         NotificationHub.Default.Notify(this, TabletNotificationKeys.Close);

@@ -43,6 +43,8 @@ namespace umi3d.browserEditor.BuildTool
         public TemplateContainer T_License;
         public TextField TF_License;
         public Button B_License;
+        public TextField TF_AppIdWindows;
+        public TextField TF_AppIdSteamVR;
 
         // Android
         public TemplateContainer T_Keystore;
@@ -81,6 +83,11 @@ namespace umi3d.browserEditor.BuildTool
             TF_License.RegisterValueChangedCallback(LicenseFolderValueChanged);
             B_License.clicked += BrowseLicenseFolder;
 
+            TF_AppIdWindows = root.Q<TextField>("AppIDWindows");
+            TF_AppIdWindows.RegisterValueChangedCallback(AppIdWindowsValueChanged);
+            TF_AppIdSteamVR = root.Q<TextField>("AppIDSteamVR");
+            TF_AppIdSteamVR.RegisterValueChangedCallback(AppIdSteamVRValueChanged);
+
             T_Keystore = root.Q<TemplateContainer>("T_Keystore");
             TF_Keystore = T_Keystore.Q<TextField>();
             B_Keystore = T_Keystore.Q<Button>();
@@ -113,6 +120,16 @@ namespace umi3d.browserEditor.BuildTool
             TF_License
                 .SetValueWithoutNotify(targetModel.license);
 
+            (TF_AppIdWindows.labelElement as INotifyValueChanged<string>)
+               .SetValueWithoutNotify("App id Windows");
+            TF_AppIdWindows
+                .SetValueWithoutNotify(targetModel.AppIdWindows);
+
+            (TF_AppIdSteamVR.labelElement as INotifyValueChanged<string>)
+               .SetValueWithoutNotify("App id SteamVR");
+            TF_AppIdSteamVR
+                .SetValueWithoutNotify(targetModel.AppIdSteamVR);
+
             (TF_Keystore.labelElement as INotifyValueChanged<string>)
                 .SetValueWithoutNotify("Keystore");
             TF_Keystore
@@ -129,6 +146,8 @@ namespace umi3d.browserEditor.BuildTool
             B_Installer.clicked -= BrowseInstallerFolder;
             TF_License.UnregisterValueChangedCallback(LicenseFolderValueChanged);
             B_License.clicked -= BrowseLicenseFolder;
+            TF_AppIdWindows.UnregisterValueChangedCallback(AppIdWindowsValueChanged);
+            TF_AppIdSteamVR.UnregisterValueChangedCallback(AppIdSteamVRValueChanged);
             TF_Keystore.UnregisterValueChangedCallback(KeystoreFolderValueChanged);
             B_Keystore.clicked -= BrowseKeystoreFolder;
             TF_KeystorePW.UnregisterValueChangedCallback(KeystorePasswordValueChanged);
@@ -171,6 +190,16 @@ namespace umi3d.browserEditor.BuildTool
             {
                 TF_License.SetValueWithoutNotify(path);
             });
+        }
+
+        void AppIdWindowsValueChanged(ChangeEvent<string> value)
+        {
+            targetModel.AppIdWindows = value.newValue;
+        }
+
+        void AppIdSteamVRValueChanged(ChangeEvent<string> value)
+        {
+            targetModel.AppIdSteamVR = value.newValue;
         }
 
         void KeystoreFolderValueChanged(ChangeEvent<string> value)

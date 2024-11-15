@@ -33,6 +33,8 @@ namespace umi3d.browserEditor.BuildTool
         public string installer;
         public string license;
         public string buildFolder;
+        public string AppIdWindows;
+        public string AppIdSteamVR;
         public E_Target currentTarget;
         public List<TargetDto> targets = new();
         public VisualTreeAsset target_VTA;

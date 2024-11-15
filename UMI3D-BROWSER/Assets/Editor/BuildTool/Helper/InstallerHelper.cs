@@ -89,11 +89,6 @@ namespace umi3d.browserEditor.BuildTool
                 replacement: $"#define MyAppVersion \"{formattedVersion}\""
             );
             setupText = Regex.Replace(
-                input: setupText,
-                pattern: "#define MyAppVersion2 \"(.*)?\"",
-                replacement: $"#define MyAppVersion2 \"{version.VersionFromNow}\""
-            );
-            setupText = Regex.Replace(
                input: setupText,
                pattern: "#define MyAppLicense \"(.*)?\"",
                replacement: $"#define MyAppLicense \"{licensePath}\""

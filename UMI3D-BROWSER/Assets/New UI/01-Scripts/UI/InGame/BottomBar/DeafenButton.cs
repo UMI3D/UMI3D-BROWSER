@@ -38,11 +38,13 @@ namespace umi3d.browserRuntime.ui.inGame.bottomBar
             button.onClick.AddListener(Deafen);
 
             deafenNotifier = NotificationHub.Default.GetNotifier(this, InGameNotificationKeys.DeafenChanged);
+            NotificationHub.Default.Subscribe(this, InGameNotificationKeys.DeafenChanged, UpdateIcon);
         }
 
         private void OnDestroy()
         {
             button.onClick.RemoveListener(Deafen);
+            NotificationHub.Default.Unsubscribe(this);
         }
 
         private void Deafen()
@@ -53,7 +55,6 @@ namespace umi3d.browserRuntime.ui.inGame.bottomBar
             AudioListener.volume = IsAudioOn ? .0f : m_BaseVolume;
             UpdateIcon();
 
-            deafenNotifier[InGameNotificationKeys.IsDeafen] = !IsAudioOn;
             deafenNotifier.Notify();
         }
 

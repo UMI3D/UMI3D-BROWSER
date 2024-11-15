@@ -52,12 +52,10 @@ namespace umi3d.browserRuntime.ui.inGame.bottomBar
 
         private void DeafenChagned(Notification notification)
         {
-            if (notification.TryGetInfoT(InGameNotificationKeys.IsDeafen, out bool isDeafen))
-            {
-                if (isEnable)
-                    gameObject.SetActive(isDeafen);
-                internalState = isDeafen;
-            }
+            var isDeafen = AudioListener.volume > .0f;
+            if (isEnable)
+                gameObject.SetActive(isDeafen);
+            internalState = isDeafen;
         }
     }
 }

@@ -534,11 +534,6 @@ namespace umi3d.cdk
 
                             if (objectData != null)
                             {
-                                if (!objectData.libraryIds.Contains(data.library))
-                                {
-                                    Debug.LogError("HUMMM " + objectData.fileName + " " + data.library + " vs " + objectData.libraryIds.FirstOrDefault());
-                                }
-
                                 objectData.downloadedPath = file.path;
                             }
                             else

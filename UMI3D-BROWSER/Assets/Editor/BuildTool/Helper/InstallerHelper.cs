@@ -55,7 +55,7 @@ namespace umi3d.browserEditor.BuildTool
                 return;
             }
 
-            if (!File.Exists(InstallerPath) || EditorUserBuildSettings.selectedBuildTargetGroup != BuildTargetGroup.Standalone)
+            if (!File.Exists(InstallerPath))
             {
                 UnityEngine.Debug.LogError($"[UMI3D] Build Tool: installer not found.");
                 return;

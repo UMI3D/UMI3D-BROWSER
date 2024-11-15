@@ -15,11 +15,11 @@ limitations under the License.
 */
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.Build.Reporting;
-using UnityEngine;
 using UnityEngine.Assertions;
 
 namespace umi3d.browserEditor.BuildTool
@@ -121,7 +121,7 @@ namespace umi3d.browserEditor.BuildTool
                         name += ".exe";
                         break;
                     default:
-                        Debug.LogError("Unhandled case");
+                        UnityEngine.Debug.LogError("Unhandled case");
                         break;
                 }
             }
@@ -165,13 +165,19 @@ namespace umi3d.browserEditor.BuildTool
             }
         }
 
+        #region Conditional settings
+
+        /// <summary>
+        /// Copy the license and paste in where the new build has been created.
+        /// </summary>
+        /// <remarks>This method is called only if target is UNITY_STANDALONE.</remarks>
+        /// <param name="licensePath"></param>
+        /// <param name="version"></param>
+        /// <param name="sdkVersion"></param>
+        /// <param name="target"></param>
+        [Conditional("UNITY_STANDALONE")]
         public static void CopyLicense(string licensePath, VersionDTO version, VersionDTO sdkVersion, TargetDto target)
         {
-            if (EditorUserBuildSettings.selectedBuildTargetGroup != BuildTargetGroup.Standalone)
-            {
-                return;
-            }
-
             if (string.IsNullOrEmpty(licensePath))
             {
                 UnityEngine.Debug.LogError($"[UMI3D] Build Tool: license path is empty");
@@ -179,11 +185,18 @@ namespace umi3d.browserEditor.BuildTool
             }
             File.Copy(
                 licensePath, 
-                $"{GetBuildPath(version, sdkVersion, target, EditorUserBuildSettings.selectedBuildTargetGroup == BuildTargetGroup.Standalone)}license.txt", 
+                $"{GetBuildPath(version, sdkVersion, target, true)}license.txt", 
                 true
             );
         }
 
+        /// <summary>
+        /// Set the keystore information (keystore path, password).
+        /// </summary>
+        /// <remarks>This method is called only if target is UNITY_ANDROID.</remarks>
+        /// <param name="password"></param>
+        /// <param name="path"></param>
+        [Conditional("UNITY_ANDROID")]
         public static void SetKeystore(string password, string path)
         {
             PlayerSettings.Android.useCustomKeystore = true;
@@ -191,6 +204,30 @@ namespace umi3d.browserEditor.BuildTool
             PlayerSettings.keyaliasPass = password;
             PlayerSettings.keystorePass = password;
         }
+
+        /// <summary>
+        /// Set the android bundle version code.
+        /// </summary>
+        /// <remarks>This method is called only if target is UNITY_ANDROID.</remarks>
+        /// <param name="versionModel"></param>
+        [Conditional("UNITY_ANDROID")]
+        public static void SetBundleVersionCode(UMI3DBuildToolVersion_SO versionModel)
+        {
+            PlayerSettings.Android.bundleVersionCode = versionModel.newVersion.BundleVersion;
+        }
+
+        /// <summary>
+        /// Set the application identifier.
+        /// </summary>
+        /// <remarks>This method is called only if target is UNITY_ANDROID or UNITY_IOS or UNITY_STANDALONE_OSX</remarks>
+        /// <param name="target"></param>
+        [Conditional("UNITY_ANDROID"), Conditional("UNITY_IOS"), Conditional("UNITY_STANDALONE_OSX")]
+        public static void SetApplicationIdentifier(TargetDto target)
+        {
+            PlayerSettings.applicationIdentifier = GetPackageName(target);
+        }
+
+        #endregion
 
         public static BuildReport BuildPlayer(VersionDTO version, VersionDTO sdkVersion, TargetDto target)
         {

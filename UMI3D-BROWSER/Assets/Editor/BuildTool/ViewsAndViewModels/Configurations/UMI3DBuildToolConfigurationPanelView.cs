@@ -123,12 +123,12 @@ namespace umi3d.browserEditor.BuildTool
             (TF_AppIdWindows.labelElement as INotifyValueChanged<string>)
                .SetValueWithoutNotify("App id Windows");
             TF_AppIdWindows
-                .SetValueWithoutNotify(targetModel.AppIdWindows);
+                .SetValueWithoutNotify(targetModel.appIdWindows);
 
             (TF_AppIdSteamVR.labelElement as INotifyValueChanged<string>)
                .SetValueWithoutNotify("App id SteamVR");
             TF_AppIdSteamVR
-                .SetValueWithoutNotify(targetModel.AppIdSteamVR);
+                .SetValueWithoutNotify(targetModel.appIdSteamVR);
 
             (TF_Keystore.labelElement as INotifyValueChanged<string>)
                 .SetValueWithoutNotify("Keystore");
@@ -194,12 +194,12 @@ namespace umi3d.browserEditor.BuildTool
 
         void AppIdWindowsValueChanged(ChangeEvent<string> value)
         {
-            targetModel.AppIdWindows = value.newValue;
+            targetModel.appIdWindows = value.newValue;
         }
 
         void AppIdSteamVRValueChanged(ChangeEvent<string> value)
         {
-            targetModel.AppIdSteamVR = value.newValue;
+            targetModel.appIdSteamVR = value.newValue;
         }
 
         void KeystoreFolderValueChanged(ChangeEvent<string> value)

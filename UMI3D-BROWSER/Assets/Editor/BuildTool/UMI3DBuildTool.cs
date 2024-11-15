@@ -195,21 +195,29 @@ namespace umi3d.browserEditor.BuildTool
         /// <returns></returns>
         int BuildTarget(TargetDto target, bool revealInFinder)
         {
-            // Update App name, Version and Android.BundleVersion.
+            // Application name. It is the one display in AppData/LocalLow.
             PlayerSettings.productName = BuildToolHelper.GetApplicationName(target);
-            PlayerSettings.applicationIdentifier = BuildToolHelper.GetPackageName(target);
+            // Version number of the application.
             PlayerSettings.bundleVersion = $"{target.releaseCycle.GetReleaseInitial()}_{versionModel.newVersion.VersionFromNow} Sdk: {versionModel.sdkVersion.Version}";
-            PlayerSettings.Android.bundleVersionCode = versionModel.newVersion.BundleVersion;
 
+            // ------ Conditional compilation settings ------
+            // Set the keystore information (Android only).
             BuildToolHelper.SetKeystore(keystoreModel.password, keystoreModel.path);
-
+            // Set the bundle version code (Android only).
+            BuildToolHelper.SetBundleVersionCode(versionModel);
+            // Set the application identifier (Android, iOS and macOS only).
+            BuildToolHelper.SetApplicationIdentifier(target);
+            // Update the installer (standalone only).
             InstallerHelper.UpdateInstaller(
                 targetModel.installer,
                 targetModel.license,
+                targetModel.AppId,
                 versionModel.newVersion,
                 versionModel.sdkVersion,
                 target
             );
+            // ------ Conditional compilation settings ------
+
             var report = BuildToolHelper.BuildPlayer(
                 versionModel.newVersion,
                 versionModel.sdkVersion,

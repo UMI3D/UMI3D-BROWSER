@@ -33,12 +33,27 @@ namespace umi3d.browserEditor.BuildTool
         public string installer;
         public string license;
         public string buildFolder;
-        public string AppIdWindows;
-        public string AppIdSteamVR;
+        public string appIdWindows;
+        public string appIdSteamVR;
         public E_Target currentTarget;
         public List<TargetDto> targets = new();
         public VisualTreeAsset target_VTA;
 
+        public string AppId
+        {
+            get
+            {
+                switch (currentTarget)
+                {
+                    case E_Target.SteamXR:
+                        return appIdSteamVR;
+                    case E_Target.Windows:
+                        return appIdWindows;
+                    default:
+                        return "";
+                }
+            }
+        }
         public TargetDto this[int index]
         {
             get

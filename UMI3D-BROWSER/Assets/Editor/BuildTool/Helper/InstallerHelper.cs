@@ -15,18 +15,30 @@ limitations under the License.
 */
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
 using UnityEditor;
-using UnityEngine;
 
 namespace umi3d.browserEditor.BuildTool
 {
     public static class InstallerHelper 
     {
+        /// <summary>
+        /// Update the installer with the information of the target, version, ect.
+        /// </summary>
+        /// <remarks>This method is only called for UNITY_STANDALONE.</remarks>
+        /// <param name="InstallerPath"></param>
+        /// <param name="licensePath"></param>
+        /// <param name="appId"></param>
+        /// <param name="version"></param>
+        /// <param name="sdkVersion"></param>
+        /// <param name="target"></param>
+        [Conditional("UNITY_STANDALONE")]
         public static void UpdateInstaller(
             string InstallerPath,
             string licensePath,
+            string appId,
             VersionDTO version,
             VersionDTO sdkVersion,
             TargetDto target
@@ -56,6 +68,11 @@ namespace umi3d.browserEditor.BuildTool
             string buildPath = BuildToolHelper.GetBuildPath(version, sdkVersion, target, true);
 
             string setupText = File.ReadAllText(InstallerPath);
+            setupText = Regex.Replace(
+                input: setupText,
+                pattern: "#define MyAppId \"(.*)?\"",
+                replacement: $"#define MyAppId \"{appId}\""
+            );
             setupText = Regex.Replace(
                 input: setupText,
                 pattern: "#define MyTarget \"(.*)?\"",

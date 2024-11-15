@@ -337,6 +337,8 @@ namespace umi3d.cdk
                     bundleCacheData.assets.Clear();
                     bundleCacheData.scenes.Clear();
                 }
+
+                Resources.UnloadUnusedAssets();
             }
             catch (System.Exception ex)
             {

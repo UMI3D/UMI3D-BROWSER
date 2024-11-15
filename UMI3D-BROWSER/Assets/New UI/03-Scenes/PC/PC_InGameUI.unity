@@ -13970,6 +13970,7 @@ MonoBehaviour:
   plusButton: {fileID: 9098701580128584756}
   minusButton: {fileID: 5743121281945188992}
   visibleElements: 8
+  speed: 1
 --- !u!222 &3101113391127980365
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -15021,7 +15022,8 @@ MonoBehaviour:
   scrollBar: {fileID: 6712365211954056098}
   plusButton: {fileID: 6906791445117541086}
   minusButton: {fileID: 8776869746946979842}
-  visibleElements: 2
+  visibleElements: 4
+  speed: 2
 --- !u!1 &4615912698147391387
 GameObject:
   m_ObjectHideFlags: 0
@@ -17358,7 +17360,7 @@ MonoBehaviour:
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135
-  m_ScrollSensitivity: 1
+  m_ScrollSensitivity: 4
   m_Viewport: {fileID: 6230601511385998482}
   m_HorizontalScrollbar: {fileID: 5849354881172291316}
   m_VerticalScrollbar: {fileID: 6712365211954056098}

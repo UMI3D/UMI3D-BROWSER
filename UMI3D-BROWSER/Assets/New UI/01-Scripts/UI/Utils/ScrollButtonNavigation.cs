@@ -24,6 +24,7 @@ public class ScrollButtonNavigation : MonoBehaviour
     [SerializeField] private Button plusButton;
     [SerializeField] private Button minusButton;
     [SerializeField] private int visibleElements;
+    [SerializeField] private float speed = 1.0f;
 
     private void OnEnable()
     {
@@ -51,7 +52,7 @@ public class ScrollButtonNavigation : MonoBehaviour
 
         var tmp = content.childCount - visibleElements;
         if (tmp > 0)
-            scrollBar.value = Mathf.Clamp01(scrollBar.value + (1.0f / tmp));
+            scrollBar.value = Mathf.Clamp01(scrollBar.value + (speed / tmp));
     }
 
     private void Minus()
@@ -61,6 +62,6 @@ public class ScrollButtonNavigation : MonoBehaviour
 
         var tmp = content.childCount - visibleElements;
         if (tmp > 0)
-            scrollBar.value = Mathf.Clamp01(scrollBar.value - (1.0f / tmp));
+            scrollBar.value = Mathf.Clamp01(scrollBar.value - (speed / tmp));
     }
 }

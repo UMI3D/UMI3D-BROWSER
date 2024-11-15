@@ -43,6 +43,11 @@ namespace umi3d.browserRuntime.ui.inGame.emote
             icon.gameObject.SetActive(true);
         }
 
+        private void OnEnable()
+        {
+            hoverBorder.gameObject.SetActive(false);
+        }
+
         public void Reset()
         {
             button.onClick.RemoveAllListeners();

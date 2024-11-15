@@ -109,62 +109,48 @@ namespace umi3dBrowsers.services.librairies
                 Destroy(entry.gameObject);
             currentEntries.Clear();
 
-            var libs = new Dictionary<string, List<UMI3DResourcesManager.DataFile>>();
-
             foreach (UMI3DResourcesManager.DataFile lib in UMI3DResourcesManager.Libraries)
             {
-                if (lib.applications != null)
-                    foreach (string app in lib.applications)
-                    {
-                        if (!libs.ContainsKey(app)) libs[app] = new List<UMI3DResourcesManager.DataFile>();
-                        libs[app].Add(lib);
-                    }
-            }
+                // 1. Display lib name
+                LibraryManagerEntry entry = Instantiate(libraryItemPrefab, container.transform).GetComponent<LibraryManagerEntry>();
+                if (entry == null)
+                    throw new System.ArgumentException("libraryItemPrefab must have a LibraryManagerEntry script");
 
-            foreach (KeyValuePair<string, List<UMI3DResourcesManager.DataFile>> app in libs)
-            {
-                foreach (UMI3DResourcesManager.DataFile lib in app.Value)
+                entry.gameObject.name = "LibraryItem_" + lib.key;
+                entry.LibLabel.text = lib.key + " " + lib.version;
+
+                //2. Display environments which use this lib
+                //Could be done with lib.applications if needed;
+
+                //3. Display lib size
+                //Could be done with lib.path if needed
+
+                //4.Bind the button to uninstall this lib
+                entry.DeleteLib += () =>
                 {
-                    // 1. Diplay lib name
-                    LibraryManagerEntry entry = Instantiate(libraryItemPrefab, container.transform).GetComponent<LibraryManagerEntry>();
-                    if (entry == null)
-                        throw new System.ArgumentException("libraryItemPrefab must have a LibraryManagerEntry script");
-
-                    entry.gameObject.name = "LibraryItem_" + lib.key;
-                    entry.LibLabel.text = lib.key;
-
-                    //2. Display environments which use this lib
-                    //Could be done with lib.applications if needed;
-
-                    //3. Display lib size
-                    //Could be done with lib.path if needed
-
-                    //4.Bind the button to unistall this lib
-                    entry.DeleteLib += () => {
-                        lib.applications.Remove(app.Key);
-                        UMI3DResourcesManager.RemoveLibrary(lib.library);
-                    };
-                    entry.DeleteButton.onClick.AddListener(() => {
-                        popupNotifier
-                            .enqueue
-                            .SetType(PopupType.Warning)
-                            .SetArguments(("lib", lib.key))
-                            .SetTitle(POPUP_TABLE, "warningDeleteLib")
-                            .SetDescription(POPUP_TABLE, "warningDeleteLib_message")
-                            .SetButtons((POPUP_TABLE, "warningDeleteLib_buttonCancel"), (POPUP_TABLE, "warningDeleteLib_buttonDelete"))
-                            .SetButtonsAction(index =>
+                    UMI3DResourcesManager.RemoveLibrary(lib.library);
+                };
+                entry.DeleteButton.onClick.AddListener(() =>
+                {
+                    popupNotifier
+                        .enqueue
+                        .SetType(PopupType.Warning)
+                        .SetArguments(("lib", lib.key))
+                        .SetTitle(POPUP_TABLE, "warningDeleteLib")
+                        .SetDescription(POPUP_TABLE, "warningDeleteLib_message")
+                        .SetButtons((POPUP_TABLE, "warningDeleteLib_buttonCancel"), (POPUP_TABLE, "warningDeleteLib_buttonDelete"))
+                        .SetButtonsAction(index =>
+                        {
+                            if (index == 1)
                             {
-                                if (index == 1)
-                                {
-                                    entry.Delete();
-                                    UpdateContent();
-                                }
-                            })
-                            .Notify();
-                    });
+                                entry.Delete();
+                                UpdateContent();
+                            }
+                        })
+                        .Notify();
+                });
 
-                    currentEntries.Add(entry);
-                }
+                currentEntries.Add(entry);
             }
 
             indexOfCurrentTopEntryDisplayed = 0;

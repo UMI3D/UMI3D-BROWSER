@@ -101,12 +101,20 @@ namespace umi3d.browserEditor.BuildTool
 
         public static string GetExeName(TargetDto target, VersionDTO version, bool withExtension)
         {
-            string name 
-                = $"UMI3D" +
-                $"_{target.Target}" +
-                $"_Browser" +
-                $"_{target.releaseCycle.GetReleaseInitial()}" +
-                $"_{version.VersionFromNow}";
+            string name;
+
+            if (target.Target == E_Target.Windows)
+            {
+                // Legacy name for the Windows browser
+                name = "UMI3D-Browser-Desktop";
+            } else
+            {
+                name = $"UMI3D" +
+                    $"_{target.Target}" +
+                    $"_Browser" +
+                    $"_{target.releaseCycle.GetReleaseInitial()}.{version.VersionFromNow()}";
+            }
+
             if (withExtension)
             {
                 switch (target.Target)
@@ -133,7 +141,7 @@ namespace umi3d.browserEditor.BuildTool
             string path = 
                 $"{target.BuildFolder}/" +
                 $"{target.releaseCycle}/" +
-                $"{version.VersionFromNow}_SDK{sdkVersion.Version}/";
+                $"{version.VersionFromNow()}_SDK{sdkVersion.Version()}/";
 
             if (addExeDir)
             {

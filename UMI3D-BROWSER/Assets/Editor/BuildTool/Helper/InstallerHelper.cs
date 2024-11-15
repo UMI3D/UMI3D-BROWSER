@@ -62,7 +62,6 @@ namespace umi3d.browserEditor.BuildTool
             }
 
             string appName = BuildToolHelper.GetApplicationName(target);
-            string formattedVersion = version.GetFormattedVersion(DateTime.Now.ToString("yyMMdd"), ".");
             string exeName = BuildToolHelper.GetExeName(target, version, true);
             string outputDir = BuildToolHelper.GetBuildPath(version, sdkVersion, target, false);
             string buildPath = BuildToolHelper.GetBuildPath(version, sdkVersion, target, true);
@@ -86,7 +85,7 @@ namespace umi3d.browserEditor.BuildTool
             setupText = Regex.Replace(
                 input: setupText, 
                 pattern: "#define MyAppVersion \"(.*)?\"", 
-                replacement: $"#define MyAppVersion \"{formattedVersion}\""
+                replacement: $"#define MyAppVersion \"{version.VersionFromNow()}\""
             );
             setupText = Regex.Replace(
                input: setupText,

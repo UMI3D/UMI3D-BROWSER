@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4249195079650180661}
   - component: {fileID: 3635000074566659067}
   - component: {fileID: 7513468215618892642}
+  - component: {fileID: 2395272048332403289}
   m_Layer: 5
   m_Name: Value
   m_TagString: Untagged
@@ -116,3 +117,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ShowMaskGraphic: 1
+--- !u!114 &2395272048332403289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5790434227063633988}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 890c5b097db2dd647bfc12dfe1da7442, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  evenColor: {r: 0.20000002, g: 0.20000002, b: 0.20000002, a: 1}
+  oddColor: {r: 0.18039216, g: 0.18039216, b: 0.18039216, a: 1}

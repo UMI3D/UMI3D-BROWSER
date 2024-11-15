@@ -316,11 +316,31 @@ namespace umi3d.cdk
         /// <inheritdoc/>
         public void DeleteObject(object objectLoaded, string reason)
         {
-            // Scenes and assets are destroyed elsewhere
-            if (objectLoaded is BundleCacheData bundleCacheData)
+            try
             {
-                bundleCacheData.assets.Clear();
-                bundleCacheData.scenes.Clear();
+                if (objectLoaded is BundleCacheData bundleCacheData)
+                {
+                    foreach (Object obj in bundleCacheData.assets.Values)
+                    {
+                        Object.DestroyImmediate(obj, true);
+                    }
+
+                    // Scenes assets are unloaded elsewhere
+                    foreach ((GameObject root, Scene scene) in bundleCacheData.scenes.Values)
+                    {
+                        Debug.Assert(!scene.isLoaded);
+
+                        if (root)
+                            Object.Destroy(root);
+                    }
+
+                    bundleCacheData.assets.Clear();
+                    bundleCacheData.scenes.Clear();
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogException(ex);
             }
         }
     }

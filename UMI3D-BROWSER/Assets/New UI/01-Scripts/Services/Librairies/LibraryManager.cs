@@ -15,8 +15,8 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
-using System;
 using System.Collections.Generic;
+using umi3d.browserRuntime.notificationKeys;
 using umi3d.browserRuntime.ui.popup;
 using umi3d.cdk;
 using umi3d.cdk.collaboration;
@@ -60,42 +60,38 @@ namespace umi3dBrowsers.services.librairies
         /// </summary>
         private int indexOfCurrentTopEntryDisplayed = 0;
 
-        private Notifier popupDeleteAllLibNotifier;
-        private Notifier popupDeleteLibNotifier;
         private Notifier popupCloseAll;
+
+        const string POPUP_TABLE = "BrowserPopups";
+        PopupNotifier popupNotifier;
 
         private void Awake()
         {
-            SetupPopupDeleteLibNotifier();
-
-            popupDeleteAllLibNotifier = NotificationHub.Default.GetNotifier<PopupNotificationKeys.Show>(this);
+            popupNotifier = new(this);
             buttonDeleteAll.OnClick.AddListener(DeleteAllLibClick);
         }
 
         private void DeleteAllLibClick()
         {
-            popupDeleteAllLibNotifier[PopupNotificationKeys.Show.Type] = PopupType.Warning;
-            popupDeleteAllLibNotifier[PopupNotificationKeys.Show.Description] = "popup_deleteLibs_description";
-            popupDeleteAllLibNotifier[PopupNotificationKeys.Show.Buttons] = new List<(string, Action)>() {
-                ("popup_cancel", () => {
-                    NotificationHub.Default.Notify<PopupNotificationKeys.CloseAll>(this);
-                }),
-                ("popup_yes", () => {
-                    foreach (var entry in currentEntries)
-                        entry.Delete();
-                    UpdateContent();
-                    NotificationHub.Default.Notify<PopupNotificationKeys.CloseAll>(this);
+            popupNotifier
+                .enqueue
+                .SetType(PopupType.Warning)
+                .SetArguments(("count", currentEntries.Count))
+                .SetTitle(POPUP_TABLE, "warningDeleteAllLibs")
+                .SetDescription(POPUP_TABLE, "warningDeleteAllLibs_message")
+                .SetButtons((POPUP_TABLE, "warningDeleteLib_buttonCancel"), (POPUP_TABLE, "warningDeleteLib_buttonDelete"))
+                .SetButtonsAction(index =>
+                {
+                    if (index == 1)
+                    {
+                        foreach (var entry in currentEntries)
+                        {
+                            entry.Delete();
+                        }
+                        UpdateContent();
+                    }
                 })
-            };
-            popupDeleteAllLibNotifier[PopupNotificationKeys.Show.Arguments] = new Dictionary<string, object>() { { "libCount", currentEntries.Count } };
-            popupDeleteAllLibNotifier.Notify();
-        }
-
-        private void SetupPopupDeleteLibNotifier()
-        {
-            popupDeleteLibNotifier = NotificationHub.Default.GetNotifier<PopupNotificationKeys.Show>(this);
-            popupDeleteLibNotifier[PopupNotificationKeys.Show.Type] = PopupType.Warning;
-            popupDeleteLibNotifier[PopupNotificationKeys.Show.Description] = "popup_deleteLib_description";
+                .Notify();
         }
 
         private void OnEnable()
@@ -149,19 +145,22 @@ namespace umi3dBrowsers.services.librairies
                         UMI3DResourcesManager.RemoveLibrary(lib.library);
                     };
                     entry.DeleteButton.onClick.AddListener(() => {
-
-                        popupDeleteLibNotifier[PopupNotificationKeys.Show.Buttons] = new List<(string, Action)>() {
-                            ("popup_cancel", () => {
-                                NotificationHub.Default.Notify<PopupNotificationKeys.CloseAll>(this);
-                            }),
-                            ("popup_yes", () => {
-                                entry.Delete();
-                                UpdateContent();
-                                NotificationHub.Default.Notify<PopupNotificationKeys.CloseAll>(this);
+                        popupNotifier
+                            .enqueue
+                            .SetType(PopupType.Warning)
+                            .SetArguments(("lib", lib.key))
+                            .SetTitle(POPUP_TABLE, "warningDeleteLib")
+                            .SetDescription(POPUP_TABLE, "warningDeleteLib_message")
+                            .SetButtons((POPUP_TABLE, "warningDeleteLib_buttonCancel"), (POPUP_TABLE, "warningDeleteLib_buttonDelete"))
+                            .SetButtonsAction(index =>
+                            {
+                                if (index == 1)
+                                {
+                                    entry.Delete();
+                                    UpdateContent();
+                                }
                             })
-                        };
-                        popupDeleteLibNotifier[PopupNotificationKeys.Show.Arguments] = new Dictionary<string, object>() { { "libName", lib.key } };
-                        popupDeleteLibNotifier.Notify();
+                            .Notify();
                     });
 
                     currentEntries.Add(entry);

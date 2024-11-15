@@ -24,9 +24,12 @@ namespace umi3d.browserRuntime.ui.settings
     internal class AudioModeDependencySettings : MonoBehaviour
     {
         [SerializeField] MicrophoneMode mode;
+        int instanceID;
 
         void Awake()
         {
+            instanceID = GetComponentInParent<SettingsContent>().GetInstanceID();
+
             NotificationHub.Default.Subscribe<SettingsNotificationKeys.MicrophoneModeChanged>(
                 this,
                 ModeChanged
@@ -46,6 +49,8 @@ namespace umi3d.browserRuntime.ui.settings
             }
 
             gameObject.SetActive(mode == this.mode);
+            NotificationHub.Default.Notify(this, SettingsNotificationKeys.UpdateChildVisibilitySelected + instanceID);
+
         }
     }
 }

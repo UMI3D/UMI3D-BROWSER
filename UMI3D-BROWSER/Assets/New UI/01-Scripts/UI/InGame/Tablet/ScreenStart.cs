@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.inGame.tablet
@@ -35,6 +36,8 @@ namespace umi3d.browserRuntime.ui.inGame.tablet
         {
             foreach (var screen in screens)
                 screen.SetActive(false);
+
+            NotificationHub.Default.Notify(this, TabletNotificationKeys.ClickButtonSocial);
         }
     }
 }

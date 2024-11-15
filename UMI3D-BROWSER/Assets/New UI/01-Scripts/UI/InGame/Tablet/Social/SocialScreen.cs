@@ -171,7 +171,7 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
         }
         bool IsIncludeByMuteFilter(UMI3DUser user)
         {
-            return !mute || user.microphoneStatus;
+            return mute && !user.microphoneStatus;
         }
 
         bool unMute = false;
@@ -182,7 +182,7 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
         }
         bool IsIncludeByUnmuteFilter(UMI3DUser user)
         {
-            return !unMute || !user.microphoneStatus;
+            return unMute && user.microphoneStatus;
         }
 
         string search = null;
@@ -206,7 +206,7 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
         }
         void SortAZ()
         {
-            users.Sort((user0, user1) => string.Compare(user0.login, user1.login));
+            users.Sort((user0, user1) => string.Compare(user0.login.Trim(), user1.login.Trim()));
             activatedElements.Sort((user0, user1) => string.Compare(user0.User.login, user1.User.login));
             if (sortAZIndex == 1)
             {

@@ -14,6 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
+using System;
+using umi3d.browserRuntime.notificationKeys;
 using umi3d.browserRuntime.pc;
 using UnityEngine;
 
@@ -21,16 +24,20 @@ namespace umi3d.browserRuntime.ui.windowBar
 {
     public class WindowBarPanel : MonoBehaviour
     {
-#if UNITY_EDITOR
         private void Awake()
         {
+#if UNITY_EDITOR
             transform.parent.gameObject.SetActive(false);
-        }
+            return;
 #endif
+            NotificationHub.Default.Subscribe(this, WindowsManagerNotificationKey.FullScreenModeChanged, OnFullScreenModeChanged);
+            transform.parent.gameObject.SetActive(WindowsManager.IsWindowInFullScreen);
+        }
 
-        private void Update()
+        private void OnFullScreenModeChanged(Notification notification)
         {
-            WindowsManager.Update();
+            if (notification.TryGetInfoT<FullScreenMode>(WindowsManagerNotificationKey.FullScreenModeChangedInfo.Mode, out var mode))
+                transform.parent.gameObject.SetActive(mode != FullScreenMode.Windowed);
         }
     }
 }

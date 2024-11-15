@@ -221,6 +221,7 @@ namespace umi3d.cdk.collaboration
                 }
                 count--;
             }
+
             DisconnectedFromServer(networkManagerComponent.Networker);
         }
 
@@ -284,7 +285,7 @@ namespace umi3d.cdk.collaboration
 
         private void BindSucceded(NetWorker sender)
         {
-            UMI3DLogger.Log("Bind Succeeded", scope);
+            UMI3DLogger.Log("Bind Succeded", scope);
         }
 
         /// <summary>
@@ -300,6 +301,7 @@ namespace umi3d.cdk.collaboration
             {
                 networkManagerComponent?.Disconnect();
                 networkManagerComponent = null;
+
                 if (client != null)
                     environmentClient?.ConnectionDisconnected();
             });

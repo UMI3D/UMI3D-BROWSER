@@ -1,0 +1,131 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: BrowserPopups_fr
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: fr
+  m_SharedData: {fileID: 11400000, guid: fba3eb5dcf71554489e23732cf2e3872, type: 2}
+  m_Metadata:
+    m_Items:
+    - rid: 3204614926223802372
+  m_TableData:
+  - m_Id: 293800669184
+    m_Localized: "Connexion \xE0 un portail"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1116676976640
+    m_Localized: "Tentative de connexion \xE0 :\n\"{url}\"\n\nCela peut prendre un
+      moment."
+    m_Metadata:
+      m_Items:
+      - rid: 3204614926223802372
+  - m_Id: 2752082243584
+    m_Localized: Fermeture de l'application
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2842255585280
+    m_Localized: Est-ce que vous voulez fermer l'application ?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3396931317760
+    m_Localized: Annuler
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3592348135424
+    m_Localized: Fermer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4595797618688
+    m_Localized: Est-ce que vous voulez quitter l'environnement ?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4843106365440
+    m_Localized: Rester
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4922848473088
+    m_Localized: Quitter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6355446558720
+    m_Localized: '{errorTitle} :
+
+      {errorMessage}'
+    m_Metadata:
+      m_Items:
+      - rid: 3204614926223802372
+  - m_Id: 41352475865088
+    m_Localized: Echec de connexion au portail
+    m_Metadata:
+      m_Items: []
+  - m_Id: 42806724947968
+    m_Localized: Fermer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 43748664963072
+    m_Localized: Connexion au portail perdue
+    m_Metadata:
+      m_Items: []
+  - m_Id: 43877111328768
+    m_Localized: Tenter une reconnexion ou quitter ?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 44223502118912
+    m_Localized: Quitter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 44425734680576
+    m_Localized: Reconnexion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 45686731206656
+    m_Localized: "D\xE9connexion forc\xE9e"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 45929656905728
+    m_Localized: Quitter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 49041905971200
+    m_Localized: Supprimer une librarie
+    m_Metadata:
+      m_Items: []
+  - m_Id: 49903000776704
+    m_Localized: "{lib} sera supprim\xE9e.\n\n\xCAtes-vous s\xFBr ?\n"
+    m_Metadata:
+      m_Items:
+      - rid: 3204614926223802372
+  - m_Id: 50663574892544
+    m_Localized: Supprimer toutes les libraries
+    m_Metadata:
+      m_Items: []
+  - m_Id: 50822287355904
+    m_Localized: "\xCAtes-vous s\xFBr de vouloir supprimer {count} libraries ?"
+    m_Metadata:
+      m_Items:
+      - rid: 3204614926223802372
+  - m_Id: 51371267223552
+    m_Localized: Annuler
+    m_Metadata:
+      m_Items: []
+  - m_Id: 51543439208448
+    m_Localized: Supprimer
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 3204614926223802372
+      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries: 007022ff03010000007022bec70500000070a2f2622d0000007062fc382e0000

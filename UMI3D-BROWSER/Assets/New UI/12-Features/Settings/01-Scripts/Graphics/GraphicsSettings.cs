@@ -20,18 +20,23 @@ namespace umi3d.browserRuntime.ui.settings
 {
     internal class GraphicsSettings : MonoBehaviour
     {
-        [HideInInspector] public GraphicsSettingsPSM model;
+        public static GraphicsSettingsPSM globalModel;
+
+        public GraphicsSettingsPSM model => globalModel;
 
         void Awake()
         {
-            model = ScriptableObject.CreateInstance<GraphicsSettingsPSM>();
-            model.directories = "Settings";
-            model.Load();
+            if (globalModel == null)
+            {
+                globalModel = ScriptableObject.CreateInstance<GraphicsSettingsPSM>();
+                globalModel.directories = "Settings";
+                globalModel.Load();
+            }
         }
 
         void OnDestroy()
         {
-            model.Save();
+            globalModel.Save();
         }
     }
 }

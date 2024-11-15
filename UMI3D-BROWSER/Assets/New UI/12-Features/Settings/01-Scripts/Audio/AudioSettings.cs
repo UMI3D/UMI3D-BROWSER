@@ -20,18 +20,20 @@ namespace umi3d.browserRuntime.ui.settings
 {
     internal class AudioSettings : MonoBehaviour
     {
-        [HideInInspector] public AudioSettingsPSM model;
+        public static AudioSettingsPSM globalModel;
+
+        public AudioSettingsPSM model => globalModel;
 
         void Awake()
         {
-            model = ScriptableObject.CreateInstance<AudioSettingsPSM>();
-            model.directories = "Settings";
-            model.Load();
+            globalModel = ScriptableObject.CreateInstance<AudioSettingsPSM>();
+            globalModel.directories = "Settings";
+            globalModel.Load();
         }
 
         void OnDestroy()
         {
-            model.Save();
+            globalModel.Save();
         }
     }
 }

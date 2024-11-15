@@ -169,6 +169,8 @@ namespace umi3dBrowsers.services.librairies
 
             indexOfCurrentTopEntryDisplayed = 0;
             UpdateDisplay();
+
+            buttonDeleteAll.gameObject.SetActive(currentEntries.Count > 0);
         }
 
         /// <summary>

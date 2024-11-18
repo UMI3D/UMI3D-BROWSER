@@ -110,7 +110,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -12, y: -12}
+  m_SizeDelta: {x: -10, y: -10}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5625673734313900189
 CanvasRenderer:
@@ -188,7 +188,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 20}
+  m_SizeDelta: {x: 78.9, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &590939126598301620
 CanvasRenderer:
@@ -436,7 +436,7 @@ MonoBehaviour:
   backgroundTransform: {fileID: 7636555059465139737}
   padding: 9
   isHorizontal: 1
-  isVertical: 1
+  isVertical: 0
 --- !u!1 &2635279873549770550
 GameObject:
   m_ObjectHideFlags: 0
@@ -1121,7 +1121,7 @@ MonoBehaviour:
   backgroundTransform: {fileID: 1613384891474236128}
   padding: 9
   isHorizontal: 1
-  isVertical: 1
+  isVertical: 0
 --- !u!1 &5363808881975649790
 GameObject:
   m_ObjectHideFlags: 0
@@ -1160,9 +1160,9 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -18, y: -18}
-  m_SizeDelta: {x: 20, y: 20}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -8, y: -8}
+  m_SizeDelta: {x: 24, y: 24}
+  m_Pivot: {x: 1, y: 1}
 --- !u!222 &2143432540410648406
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1276,7 +1276,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 20, y: 20, z: 0.01}
+  m_Size: {x: 24, y: 24, z: 0.01}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &6132722274300776443
 MonoBehaviour:
@@ -1413,7 +1413,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1613384891474236128
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1898,7 +1898,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: -12, y: 10}
-  m_SizeDelta: {x: 141.13, y: 29}
+  m_SizeDelta: {x: 99.72, y: 29}
   m_Pivot: {x: 1, y: 0}
 --- !u!222 &6961869839254046629
 CanvasRenderer:
@@ -2013,8 +2013,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 141.13, y: 29, z: 0.01}
-  m_Center: {x: -70.565, y: 14.5, z: 0}
+  m_Size: {x: 99.72, y: 29, z: 0.01}
+  m_Center: {x: -49.86, y: 14.5, z: 0}
 --- !u!114 &7117255920643945529
 MonoBehaviour:
   m_ObjectHideFlags: 0

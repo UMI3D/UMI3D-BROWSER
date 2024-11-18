@@ -58,9 +58,9 @@ namespace umi3dBrowsers.container
 
         [Header("Scrolling")]
         [SerializeField] private Scrollbar scrollbar;
-        [SerializeField] private SimpleButton buttonLeft;
+        [SerializeField] private Button buttonLeft;
         [SerializeField] private Image leftImage;
-        [SerializeField] private SimpleButton buttonRight;
+        [SerializeField] private Button buttonRight;
         [SerializeField] private Image rightImage;
         [SerializeField] private float scrollButtonSpeed = 1.0f;
 
@@ -78,11 +78,11 @@ namespace umi3dBrowsers.container
             vignetteContainerEvent.OnVignetteReset += ResetVignettes;
             vignetteContainerEvent.OnVignetteChangeMode += ChangeVignetteMode;
 
-            buttonLeft.OnClick.AddListener(() => {
+            buttonLeft.onClick.AddListener(() => {
                 if (vignetteDisplayers.Count > (int)vignetteMode)
                     scrollbar.value -= scrollButtonSpeed / (vignetteDisplayers.Count - (int)vignetteMode);
             });
-            buttonRight.OnClick.AddListener(() => {
+            buttonRight.onClick.AddListener(() => {
                 if (vignetteDisplayers.Count > (int)vignetteMode)
                     scrollbar.value += scrollButtonSpeed / (vignetteDisplayers.Count - (int)vignetteMode);
             });

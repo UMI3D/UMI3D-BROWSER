@@ -30,8 +30,8 @@ namespace umi3dBrowsers.services.librairies
     /// </summary>
     public class LibraryManager : MonoBehaviour
     {
-        [SerializeField] private SimpleButton buttonUp;
-        [SerializeField] private SimpleButton buttonDown;
+        [SerializeField] private Button buttonUp;
+        [SerializeField] private Button buttonDown;
         [SerializeField] private SimpleButton buttonDeleteAll;
 
         /// <summary>

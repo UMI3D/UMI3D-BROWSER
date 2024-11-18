@@ -16,6 +16,7 @@ limitations under the License.
 
 using inetum.unityUtils;
 using System.Collections.Generic;
+using umi3d.browserRuntime.libraries;
 using umi3d.browserRuntime.notificationKeys;
 using umi3d.browserRuntime.ui.popup;
 using umi3d.cdk;
@@ -88,6 +89,7 @@ namespace umi3dBrowsers.services.librairies
                         {
                             entry.Delete();
                         }
+                        NotificationHub.Default.Notify(this, LibraryNotificationKeys.LibraryDeleted);
                         UpdateContent();
                     }
                 })
@@ -144,6 +146,7 @@ namespace umi3dBrowsers.services.librairies
                             if (index == 1)
                             {
                                 entry.Delete();
+                                NotificationHub.Default.Notify(this, LibraryNotificationKeys.LibraryDeleted);
                                 UpdateContent();
                             }
                         })

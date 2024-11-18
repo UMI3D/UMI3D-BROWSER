@@ -39,8 +39,6 @@ namespace umi3dBrowsers.displayer
         public Color labelBaseColor;
         public bool isSelected;
 
-        public Color labelDisabledColor;
-
         protected override void Awake()
         {
             base.Awake();
@@ -74,13 +72,6 @@ namespace umi3dBrowsers.displayer
                 return;
             base.OnPointerExit(eventData);
             DisableHoverBarFX();
-        }
-
-        public void OnVignetteReset()
-        {
-            var isActive = PlayerPrefsManager.GetVirtualWorlds().FavoriteWorlds.Count > 0;
-            interactable = isActive;
-            label.color = isActive ? labelBaseColor : labelDisabledColor;
         }
 
         public void EnableHoverBarFX()

@@ -72,5 +72,10 @@ namespace umi3d.browserRuntime.ui.inGame.emote
             hoverBorder.gameObject.SetActive(false);
             infoText.SetEntry("select-emote");
         }
+
+        public void Click()
+        {
+            button.onClick?.Invoke();
+        }
     }
 }

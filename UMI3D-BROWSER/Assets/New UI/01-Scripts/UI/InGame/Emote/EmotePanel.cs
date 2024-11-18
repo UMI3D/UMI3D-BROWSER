@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
+using System;
 using System.Collections.Generic;
 using umi3d.cdk.collaboration.emotes;
 using UnityEngine;
@@ -61,8 +62,22 @@ namespace umi3d.browserRuntime.ui.inGame.emote
 
             NotificationHub.Default.Subscribe(this, EmoteNotificationKeys.Open, Open);
             NotificationHub.Default.Subscribe(this, EmoteNotificationKeys.Close, Close);
+            NotificationHub.Default.Subscribe<EmoteNotificationKeys.Play>(this, PlayEmote);
 
             gameObject.SetActive(false);
+        }
+
+        private void PlayEmote(Notification notification)
+        {
+            if (notification.TryGetInfoT<int>(EmoteNotificationKeys.Play.Id, out var id))
+            {
+                var pageIndex = id / 6;
+                var index = id - pageIndex * 6;
+                if (pageIndex == currentEmotePage)
+                    elements[index].Click(); // Update ui and play emote
+                else
+                    EmoteManager.Instance.PlayEmote(lstEmotes[pageIndex][index]); // Just play emote
+            }
         }
 
         private void OnDestroy()

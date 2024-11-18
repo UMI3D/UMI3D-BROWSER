@@ -13,7 +13,7 @@ PlayerSettings:
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: Inetum
-  productName: UMI3D Browser XR Alpha
+  productName: UMI3D Editor
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.12156863, g: 0.12156863, b: 0.1254902, a: 1}
@@ -136,7 +136,7 @@ PlayerSettings:
   vulkanEnableLateAcquireNextImage: 0
   vulkanEnableCommandBufferRecycling: 1
   loadStoreDebugModeEnabled: 0
-  bundleVersion: 'a_3_6_1_241002 Sdk: b_2_9_0_240826'
+  bundleVersion: 'p.3.6.13.241118 Sdk: b_2.9.0.241106'
   preloadedAssets:
   - {fileID: 11400000, guid: eac67687cb7c1d54bbbd3823149b2e20, type: 2}
   metroInputSource: 0
@@ -160,13 +160,14 @@ PlayerSettings:
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
     Android: com.inetum.umi3d_browser_xr.Alpha
+    Standalone: com.inetum.umi3d-browser
   buildNumber:
     Standalone: 0
     VisionOS: 0
     iPhone: 0
     tvOS: 0
   overrideDefaultApplicationIdentifier: 1
-  AndroidBundleVersionCode: 30601
+  AndroidBundleVersionCode: 30610
   AndroidMinSdkVersion: 29
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 0

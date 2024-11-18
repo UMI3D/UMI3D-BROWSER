@@ -26,9 +26,12 @@ namespace umi3d.browserRuntime.ui.settings
 
         void Awake()
         {
-            globalModel = ScriptableObject.CreateInstance<AudioSettingsPSM>();
-            globalModel.directories = "Settings";
-            globalModel.Load();
+            if (globalModel == null)
+            {
+                globalModel = ScriptableObject.CreateInstance<AudioSettingsPSM>();
+                globalModel.directories = "Settings";
+                globalModel.Load();
+            }
         }
 
         void OnDestroy()

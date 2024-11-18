@@ -14,8 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
 using System.Collections.Generic;
 using System.IO;
+using umi3d.browserRuntime.libraries;
 using umi3d.cdk;
 using UnityEngine;
 using UnityEngine.Localization.Components;
@@ -30,11 +32,17 @@ namespace umi3d.browserRuntime.ui.libraries
         private void Awake()
         {
             text = GetComponent<LocalizeStringEvent>();
+            NotificationHub.Default.Subscribe(this, LibraryNotificationKeys.LibraryDeleted, UpdateText);
         }
 
         private void OnEnable()
         {
             UpdateText();
+        }
+
+        private void OnDestroy()
+        {
+            NotificationHub.Default.Unsubscribe(this);
         }
 
         private void UpdateText()
@@ -46,8 +54,10 @@ namespace umi3d.browserRuntime.ui.libraries
 
             UpdateArguments(new (){ { "size", totalSize } });
         }
-        void UpdateArguments(Dictionary<string, System.Object> arguments)
+
+        private void UpdateArguments(Dictionary<string, System.Object> arguments)
         {
+            text.SetEntry("empty"); // To force refresh the text
             text.StringReference.Arguments = new object[] { arguments };
             text.SetEntry("byte");
         }

@@ -234,6 +234,14 @@ namespace umi3d.browserEditor.BuildTool
                     target
                 );
             }
+
+            // Set the application name for the editor. It is the one display in AppData/LocalLow.
+            // This way developer will have 3 data folder in AppData/LocalLow :
+            // - UMI3D (for the Windows browser).
+            // - UMI3D SteamVR (for the steamVR browser).
+            // - UMI3D Editor (for the editor).
+            PlayerSettings.productName = "UMI3D Editor";
+
             return reportInt;
         }
 

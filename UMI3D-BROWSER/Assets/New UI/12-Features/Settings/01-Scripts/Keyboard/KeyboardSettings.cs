@@ -20,18 +20,23 @@ namespace umi3d.browserRuntime.ui.settings
 {
     internal class KeyboardSettings : MonoBehaviour
     {
-        [HideInInspector] public KeyboardSettingsPSM model;
+        public static KeyboardSettingsPSM globalModel;
+
+        public KeyboardSettingsPSM model => globalModel;
 
         void Awake()
         {
-            model = ScriptableObject.CreateInstance<KeyboardSettingsPSM>();
-            model.directories = "Settings";
-            model.Load();
+            if (globalModel == null)
+            {
+                globalModel = ScriptableObject.CreateInstance<KeyboardSettingsPSM>();
+                globalModel.directories = "Settings";
+                globalModel.Load();
+            }
         }
 
         void OnDestroy()
         {
-            model.Save();
+            globalModel.Save();
         }
     }
 }

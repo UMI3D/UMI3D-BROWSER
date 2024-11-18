@@ -22,18 +22,23 @@ namespace umi3d.browserRuntime.ui.settings
 {
     internal class GeneralSettings : MonoBehaviour
     {
-        [HideInInspector] public GeneralSettingsPSM model;
+        public static GeneralSettingsPSM globalModel;
+
+        public GeneralSettingsPSM model => globalModel;
 
         void Awake()
         {
-            model = ScriptableObject.CreateInstance<GeneralSettingsPSM>();
-            model.directories = "Settings";
-            model.Load();
+            if (globalModel == null)
+            {
+                globalModel = ScriptableObject.CreateInstance<GeneralSettingsPSM>();
+                globalModel.directories = "Settings";
+                globalModel.Load();
+            }
         }
 
         void OnDestroy()
         {
-            model.Save();
+            globalModel.Save();
         }
 
         public bool TryGetLocal(out Locale local)

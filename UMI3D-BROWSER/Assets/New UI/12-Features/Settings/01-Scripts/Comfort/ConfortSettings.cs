@@ -20,18 +20,23 @@ namespace umi3d.browserRuntime.ui.settings
 {
     internal class ConfortSettings : MonoBehaviour
     {
-        [HideInInspector] public ConfortSettingsPSM model;
+        public static ConfortSettingsPSM globalModel;
+
+        public ConfortSettingsPSM model => globalModel;
 
         void Awake()
         {
-            model = ScriptableObject.CreateInstance<ConfortSettingsPSM>();
-            model.directories = "Settings";
-            model.Load();
+            if (globalModel == null)
+            {
+                globalModel = ScriptableObject.CreateInstance<ConfortSettingsPSM>();
+                globalModel.directories = "Settings";
+                globalModel.Load();
+            }
         }
 
         void OnDestroy()
         {
-            model.Save();
+            globalModel.Save();
         }
     }
 }

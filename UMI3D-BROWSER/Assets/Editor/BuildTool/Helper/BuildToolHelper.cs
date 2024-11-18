@@ -31,7 +31,7 @@ namespace umi3d.browserEditor.BuildTool
             string name = $"UMI3D";
 
             // To differentiate the desktop and the VR version on windows.
-            if (target.Target == E_Target.SteamXR)
+            if (target.Target == E_Target.SteamVR)
             {
                 name += $" SteamVR";
             }
@@ -82,7 +82,7 @@ namespace umi3d.browserEditor.BuildTool
                     case E_Target.Pico:
                         name += ".apk";
                         break;
-                    case E_Target.SteamXR:
+                    case E_Target.SteamVR:
                     case E_Target.Windows:
                         name += ".exe";
                         break;

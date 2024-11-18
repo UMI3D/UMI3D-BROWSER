@@ -45,7 +45,7 @@ namespace umi3d.browserEditor.BuildTool
             {
                 switch (currentTarget)
                 {
-                    case E_Target.SteamXR:
+                    case E_Target.SteamVR:
                         return appIdSteamVR;
                     case E_Target.Windows:
                         return appIdWindows;
@@ -108,7 +108,7 @@ namespace umi3d.browserEditor.BuildTool
                             return false;
                         }
                         break;
-                    case E_Target.SteamXR:
+                    case E_Target.SteamVR:
                     case E_Target.Windows:             
                         if (buildTarget != BuildTarget.StandaloneWindows64)
                         {

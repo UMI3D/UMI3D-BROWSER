@@ -39,7 +39,7 @@ namespace umi3d.browserEditor.BuildTool
                     loadingParameters.HasHeadMountedDisplay = true;
                     loadingParameters.CollaborationUserCaptureActivated = true;
                     break;
-                case E_Target.SteamXR:
+                case E_Target.SteamVR:
                     loadingParameters.supportedformats.Add(UMI3DAssetFormat.unity_standalone_urp);
                     loadingParameters.HasHeadMountedDisplay = true;
                     loadingParameters.CollaborationUserCaptureActivated = true;

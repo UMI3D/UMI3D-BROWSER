@@ -42,23 +42,17 @@ namespace umi3d.browserEditor.BuildTool
         /// </summary>
         public string date;
 
-        public string VersionFromNow
+        public string VersionFromNow(string separator = ".")
         {
-            get
-            {
-                return GetFormattedVersion(DateTime.Now.ToString("yyMMdd"));
-            }
+            return GetFormattedVersion(DateTime.Now.ToString("yyMMdd"), separator);
         }
 
-        public string Version
+        public string Version(string separator = ".")
         {
-            get
-            {
-                return GetFormattedVersion(date);
-            }
+            return GetFormattedVersion(date, separator);
         }
 
-        public string GetFormattedVersion(string date, string separator = "_")
+        public string GetFormattedVersion(string date, string separator = ".")
         {
             string result = $"";
 

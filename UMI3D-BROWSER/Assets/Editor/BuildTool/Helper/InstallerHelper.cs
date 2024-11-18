@@ -14,11 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System;
 using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
-using UnityEditor;
 
 namespace umi3d.browserEditor.BuildTool
 {
@@ -55,15 +53,14 @@ namespace umi3d.browserEditor.BuildTool
                 return;
             }
 
-            if (!File.Exists(InstallerPath) || EditorUserBuildSettings.selectedBuildTargetGroup != BuildTargetGroup.Standalone)
+            if (!File.Exists(InstallerPath))
             {
                 UnityEngine.Debug.LogError($"[UMI3D] Build Tool: installer not found.");
                 return;
             }
 
             string appName = BuildToolHelper.GetApplicationName(target);
-            string formattedVersion = version.GetFormattedVersion(DateTime.Now.ToString("yyMMdd"), ".");
-            string exeName = BuildToolHelper.GetExeName(target, version, true);
+            string exeName = BuildToolHelper.GetBuiltFileName(target, version, true);
             string outputDir = BuildToolHelper.GetBuildPath(version, sdkVersion, target, false);
             string buildPath = BuildToolHelper.GetBuildPath(version, sdkVersion, target, true);
 
@@ -86,12 +83,7 @@ namespace umi3d.browserEditor.BuildTool
             setupText = Regex.Replace(
                 input: setupText, 
                 pattern: "#define MyAppVersion \"(.*)?\"", 
-                replacement: $"#define MyAppVersion \"{formattedVersion}\""
-            );
-            setupText = Regex.Replace(
-                input: setupText,
-                pattern: "#define MyAppVersion2 \"(.*)?\"",
-                replacement: $"#define MyAppVersion2 \"{version.VersionFromNow}\""
+                replacement: $"#define MyAppVersion \"{version.VersionFromNow()}\""
             );
             setupText = Regex.Replace(
                input: setupText,

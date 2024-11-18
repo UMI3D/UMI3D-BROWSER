@@ -98,9 +98,9 @@ namespace umi3d.browserEditor.BuildTool
             // If you want to add unity editor version or the name of the feature you are developing.
             TF_AdditionalVersion.SetValueWithoutNotify(NewVersion.additionalVersion);
 
-            L_SDKVersion.text = $"SDK:   {versionModel.sdkVersion.Version}";
-            L_OldVersion.text = $"Old:   {versionModel.oldVersion.Version}";
-            L_Version.text = $"New:   {NewVersion.VersionFromNow}";
+            L_SDKVersion.text = $"SDK:   {versionModel.sdkVersion.Version()}";
+            L_OldVersion.text = $"Old:   {versionModel.oldVersion.Version()}";
+            L_Version.text = $"New:   {NewVersion.VersionFromNow()}";
 
             UpdateBorderColor(L_SDKVersion.parent, settingModel.sdkColor);
             //UpdateBorderColor(L_OldVersion.parent, settingModel.oldVersionColor);
@@ -117,17 +117,17 @@ namespace umi3d.browserEditor.BuildTool
 
         void UpdateNewVersion(VersionDTO version)
         {
-            L_Version.text = $"New:   {version.VersionFromNow}";
+            L_Version.text = $"New:   {version.VersionFromNow()}";
         }
 
         void UpdateOldVersion(VersionDTO version)
         {
-            L_OldVersion.text = $"Old:   {version.Version}";
+            L_OldVersion.text = $"Old:   {version.Version()}";
         }
 
         void UpdateSDKVersion(VersionDTO version)
         {
-            L_SDKVersion.text = $"SDK:   {version.Version}";
+            L_SDKVersion.text = $"SDK:   {version.Version()}";
         }
 
         #region Major

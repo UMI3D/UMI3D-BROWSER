@@ -28,19 +28,12 @@ namespace umi3d.browserEditor.BuildTool
     {
         public static string GetApplicationName(TargetDto target)
         {
-            string name = $"UMI3D Browser";
+            string name = $"UMI3D";
 
-            // To differentiate the XR version.
-            switch (target.Target)
+            // To differentiate the desktop and the VR version on windows.
+            if (target.Target == E_Target.SteamXR)
             {
-                case E_Target.Quest:
-                case E_Target.Focus:
-                case E_Target.Pico:
-                case E_Target.SteamXR:
-                    name += $" XR";
-                    break;
-                default:
-                    break;
+                name += $" SteamVR";
             }
 
             // To differentiate the alpha, beta and production version.
@@ -58,55 +51,28 @@ namespace umi3d.browserEditor.BuildTool
         }
 
         /// <summary>
-        /// doc: https://docs.unity3d.com/Manual/cus-naming.html
+        /// The name of the built file name. This name is not the one displayed in the app library.
         /// </summary>
         /// <param name="target"></param>
+        /// <param name="version"></param>
+        /// <param name="withExtension"></param>
         /// <returns></returns>
-        public static string GetPackageName(TargetDto target)
+        public static string GetBuiltFileName(TargetDto target, VersionDTO version, bool withExtension)
         {
-            // currently the quest has a custom package name due to 
-            // applab old version.
-            var packageName = target.Target switch
-            {
-                E_Target.Quest => "com.inetum.OculusQuestBrowser",
-                _ => "com.inetum.umi3d_browser"
-            };
+            string name;
 
-            // To differentiate the XR version.
-            switch (target.Target)
+            if (target.Target == E_Target.Windows)
             {
-                case E_Target.Focus:
-                case E_Target.Pico:
-                case E_Target.SteamXR:
-                    packageName += $"_xr";
-                    break;
-                // Todo: tmp due to applab old version.
-                case E_Target.Quest:
-                default:
-                    break;
+                // Legacy name for the Windows browser
+                name = "UMI3D-Browser-Desktop";
+            } else
+            {
+                name = $"UMI3D" +
+                    $"_{target.Target}" +
+                    $"_Browser" +
+                    $"_{target.releaseCycle.GetReleaseInitial()}.{version.VersionFromNow()}";
             }
 
-            switch (target.releaseCycle)
-            {
-                case E_ReleaseCycle.Alpha:
-                case E_ReleaseCycle.Beta:
-                    packageName += $".{target.releaseCycle}";
-                    break;
-                default:
-                    break;
-            }
-
-            return packageName;
-        }
-
-        public static string GetExeName(TargetDto target, VersionDTO version, bool withExtension)
-        {
-            string name 
-                = $"UMI3D" +
-                $"_{target.Target}" +
-                $"_Browser" +
-                $"_{target.releaseCycle.GetReleaseInitial()}" +
-                $"_{version.VersionFromNow}";
             if (withExtension)
             {
                 switch (target.Target)
@@ -133,36 +99,15 @@ namespace umi3d.browserEditor.BuildTool
             string path = 
                 $"{target.BuildFolder}/" +
                 $"{target.releaseCycle}/" +
-                $"{version.VersionFromNow}_SDK{sdkVersion.Version}/";
+                $"{version.VersionFromNow()}_SDK{sdkVersion.Version()}/";
 
             if (addExeDir)
             {
-                path += $"{GetExeName(target, version, withExtension: false)}/";
+                // Additional folder for Standalone built.
+                path += $"{GetBuiltFileName(target, version, withExtension: false)}/";
             }
 
             return path;
-        }
-
-        public static void CreateBuildPath(VersionDTO version, VersionDTO sdkVersion, TargetDto target, bool overwrite)
-        {
-            string path = GetBuildPath(
-                version, 
-                sdkVersion, 
-                target, 
-                addExeDir: EditorUserBuildSettings.selectedBuildTargetGroup == BuildTargetGroup.Standalone
-            );
-            if (Directory.Exists(path))
-            {
-                if (overwrite)
-                {
-                    Directory.Delete(path, true);
-                    Directory.CreateDirectory(path);
-                }
-            }
-            else
-            {
-                Directory.CreateDirectory(path);
-            }
         }
 
         #region Conditional settings
@@ -217,14 +162,38 @@ namespace umi3d.browserEditor.BuildTool
         }
 
         /// <summary>
-        /// Set the application identifier.
+        /// Set the application identifier.<br/>
+        /// <br/>
+        /// doc: https://docs.unity3d.com/Manual/cus-naming.html
         /// </summary>
         /// <remarks>This method is called only if target is UNITY_ANDROID or UNITY_IOS or UNITY_STANDALONE_OSX</remarks>
         /// <param name="target"></param>
         [Conditional("UNITY_ANDROID"), Conditional("UNITY_IOS"), Conditional("UNITY_STANDALONE_OSX")]
         public static void SetApplicationIdentifier(TargetDto target)
         {
-            PlayerSettings.applicationIdentifier = GetPackageName(target);
+            string packageName;
+
+            if (target.Target == E_Target.Quest)
+            {
+                // Legacy name due to applab old version.
+                packageName = "com.inetum.OculusQuestBrowser";
+            }
+            else
+            {
+                packageName = "com.inetum.umi3d_browser";
+            }
+
+            switch (target.releaseCycle)
+            {
+                case E_ReleaseCycle.Alpha:
+                case E_ReleaseCycle.Beta:
+                    packageName += $".{target.releaseCycle}";
+                    break;
+                default:
+                    break;
+            }
+
+            PlayerSettings.applicationIdentifier = packageName;
         }
 
         #endregion
@@ -260,7 +229,7 @@ namespace umi3d.browserEditor.BuildTool
                     target, 
                     addExeDir: EditorUserBuildSettings.selectedBuildTargetGroup == BuildTargetGroup.Standalone
                 ) 
-                + GetExeName(target, version, withExtension: true);
+                + GetBuiltFileName(target, version, withExtension: true);
             pbo.target = target.Target.GetBuildTarget();
             pbo.options = BuildOptions.None;
 

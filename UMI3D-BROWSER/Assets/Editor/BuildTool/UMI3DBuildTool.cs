@@ -198,7 +198,7 @@ namespace umi3d.browserEditor.BuildTool
             // Application name. It is the one display in AppData/LocalLow.
             PlayerSettings.productName = BuildToolHelper.GetApplicationName(target);
             // Version number of the application.
-            PlayerSettings.bundleVersion = $"{target.releaseCycle.GetReleaseInitial()}_{versionModel.newVersion.VersionFromNow} Sdk: {versionModel.sdkVersion.Version}";
+            PlayerSettings.bundleVersion = $"{target.releaseCycle.GetReleaseInitial()}.{versionModel.newVersion.VersionFromNow()} Sdk: {versionModel.sdkVersion.Version()}";
 
             // ------ Conditional compilation settings ------
             // Set the keystore information (Android only).

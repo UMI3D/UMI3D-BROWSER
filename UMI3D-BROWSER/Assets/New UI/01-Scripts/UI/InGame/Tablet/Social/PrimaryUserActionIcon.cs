@@ -111,10 +111,15 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
 
         static protected async Task<Sprite> LoadIcon(UserActionDto dto)
         {
+            if (dto?.icon2D?.variants == null)
+                return null;
+
             Sprite icon;
             try
             {
                 var iconResourceFile = UMI3DEnvironmentLoader.AbstractParameters.ChooseVariant(dto.icon2D.variants);
+                if (iconResourceFile == null)
+                    return null;
                 IResourcesLoader loader = UMI3DEnvironmentLoader.AbstractParameters.SelectLoader(iconResourceFile.extension);
                 Texture2D texture = (Texture2D)await UMI3DResourcesManager.LoadFile(dto.id, iconResourceFile, loader);
                 icon = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 100.0f);

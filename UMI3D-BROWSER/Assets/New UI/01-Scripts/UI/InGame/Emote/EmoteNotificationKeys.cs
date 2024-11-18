@@ -20,5 +20,17 @@ namespace umi3d.browserRuntime.ui.inGame.emote
     {
         public static readonly string Open = "emote-open";
         public static readonly string Close = "emote-close";
+
+        /// <summary>
+        /// Play an emote.
+        /// </summary>
+        public class Play
+        {
+            /// <summary>
+            /// Id of the emote to be played.
+            /// </summary>
+            /// <remarks><see cref="int"/></remarks>
+            public static readonly string Id = "emote-play-id";
+        }
     }
 }

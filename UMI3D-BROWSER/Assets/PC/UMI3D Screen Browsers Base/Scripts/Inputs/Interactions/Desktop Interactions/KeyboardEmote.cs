@@ -13,9 +13,11 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace umi3d.baseBrowser.inputs.interactions
 {
@@ -30,6 +32,21 @@ namespace umi3d.baseBrowser.inputs.interactions
             var _key = S_Emotes[index];
             return _key != null ? _key.m_isDown : false;
         }
+
+        public static void AddDownListener(int index, UnityAction action)
+        {
+            if (S_Emotes.Count <= index) return;
+            var _key = S_Emotes[index];
+            _key.onInputDown.AddListener(action);
+        }
+
+        public static void RemoveDownListener(int index, UnityAction action)
+        {
+            if (S_Emotes.Count <= index) return;
+            var _key = S_Emotes[index];
+            _key.onInputDown.RemoveListener(action);
+        }
+
 
         protected override void Awake()
         {

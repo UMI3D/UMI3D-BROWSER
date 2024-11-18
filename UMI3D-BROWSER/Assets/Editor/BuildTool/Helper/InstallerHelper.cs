@@ -14,11 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System;
 using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
-using UnityEditor;
 
 namespace umi3d.browserEditor.BuildTool
 {
@@ -62,7 +60,7 @@ namespace umi3d.browserEditor.BuildTool
             }
 
             string appName = BuildToolHelper.GetApplicationName(target);
-            string exeName = BuildToolHelper.GetExeName(target, version, true);
+            string exeName = BuildToolHelper.GetBuiltFileName(target, version, true);
             string outputDir = BuildToolHelper.GetBuildPath(version, sdkVersion, target, false);
             string buildPath = BuildToolHelper.GetBuildPath(version, sdkVersion, target, true);
 

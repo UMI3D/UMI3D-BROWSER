@@ -48,6 +48,7 @@ namespace umi3d.browserRuntime.ui.settings
                 UnityEngine.Debug.LogError($"[GeneralLanguageSetting] no language saved.");
                 selectedLanguage = LocalizationSettings.SelectedLocale;
             }
+
             LocalizationSettings.SelectedLocale = selectedLanguage;
             languages = LocalizationSettings.AvailableLocales.Locales;
 

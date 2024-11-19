@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using umi3d.baseBrowser.cursor;
 using umi3d.baseBrowser.inputs.interactions;
+using umi3d.browserRuntime.notificationKeys;
 using umi3d.cdk;
 using umi3d.cdk.collaboration;
 using umi3d.cdk.interaction;
@@ -101,6 +102,9 @@ namespace umi3d.baseBrowser.Controller
         public static event System.Action<ulong> HoverUpdate;
         public static event System.Action<ulong> HoverExit;
         public static bool CanProcess = false;
+
+        Notifier parameterInputFoundNotifier;
+
         #endregion
 
         #region Monobehaviour Life Cycle
@@ -152,6 +156,15 @@ namespace umi3d.baseBrowser.Controller
                 if(currentTool != null && currentToolId == currentTool.id)
                     Release(currentTool, new RequestedFromMenu());
             });
+
+            UMI3DCollaborationClientServer.Instance?.OnLeavingEnvironment?.AddListener(() =>
+            {
+                if (currentTool != null && currentToolId == currentTool.id)
+                    Release(currentTool, new RequestedFromMenu());
+            });
+
+            parameterInputFoundNotifier = NotificationHub.Default
+                .GetNotifier<InteractionNotificationKeys.ParameterInputFound>(this);
         }
 
         private void Instance_onNodeGameObjectSet(UMI3DNodeInstance node, GameObject oldGameObject)

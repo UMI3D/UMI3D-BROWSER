@@ -15,7 +15,6 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
-using System;
 using System.Collections.Generic;
 using umi3d.baseBrowser.inputs.interactions;
 using umi3d.browserRuntime.notificationKeys;
@@ -24,9 +23,9 @@ using UnityEngine;
 
 public class LeftClickParametersInteraction : MonoBehaviour
 {
-    public event Action<List<AbstractParameterDto>> OnClicked;
-
     private List<AbstractParameterDto> _parameters;
+
+    Notifier displayParameterNotifier;
 
     private void Awake()
     {
@@ -39,6 +38,9 @@ public class LeftClickParametersInteraction : MonoBehaviour
             this,
             ToolReleased
         );
+
+        displayParameterNotifier = NotificationHub.Default
+                .GetNotifier<InteractionNotificationKeys.DisplayParameters>(this);
 
         _parameters = new List<AbstractParameterDto>();
     }
@@ -70,7 +72,8 @@ public class LeftClickParametersInteraction : MonoBehaviour
 
     private void OnClick()
     {
-        OnClicked?.Invoke(_parameters);
+        displayParameterNotifier[InteractionNotificationKeys.DisplayParameters.parameters] = _parameters;
+        displayParameterNotifier.Notify();
     }
 
     void ParameterInputFound(Notification notification)

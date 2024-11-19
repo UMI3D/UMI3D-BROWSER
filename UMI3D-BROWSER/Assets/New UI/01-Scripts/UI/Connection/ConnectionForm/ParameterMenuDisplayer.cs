@@ -14,12 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
-using umi3d.baseBrowser.Controller;
 using umi3d.baseBrowser.cursor;
-using umi3d.baseBrowser.parameters;
+using umi3d.browserRuntime.notificationKeys;
 using umi3d.cdk;
 using umi3d.common.interaction;
 using umi3dBrowsers.displayer;
@@ -38,7 +38,11 @@ public class ParameterMenuDisplayer : MonoBehaviour
 
     private void Awake()
     {
-        BaseController.Instance.LeftClickParametersInteraction.OnClicked += Show;
+        NotificationHub.Default.Subscribe<InteractionNotificationKeys.DisplayParameters>(
+            this,
+            DisplayParameters
+        );
+
         clsoeButton.onClick.AddListener(Hide);
 
         gameObject.SetActive(false);
@@ -46,7 +50,6 @@ public class ParameterMenuDisplayer : MonoBehaviour
 
     private void OnDestroy()
     {
-        BaseController.Instance.LeftClickParametersInteraction.OnClicked -= Show;
         clsoeButton.onClick.RemoveListener(Hide);
     }
 
@@ -163,5 +166,15 @@ public class ParameterMenuDisplayer : MonoBehaviour
             id = parameter.id,
             parameter = parameter,
         }, true);
+    }
+
+    void DisplayParameters(Notification notification)
+    {
+        if (!notification.TryGetInfoT(InteractionNotificationKeys.DisplayParameters.parameters, out List<AbstractParameterDto> parameters))
+        {
+            return;
+        }
+
+        Show(parameters);
     }
 }

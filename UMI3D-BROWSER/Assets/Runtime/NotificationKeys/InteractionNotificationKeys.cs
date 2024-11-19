@@ -30,14 +30,14 @@ namespace umi3d.browserRuntime.notificationKeys
             /// The parameter dto.
             /// </summary>
             /// <remarks>
-            /// Value is <see cref="umi3d.common.interaction.AbstractParameterDto"/>
+            /// Value is <see cref="umi3d.common.interaction.AbstractParameterDto"/>.
             /// </remarks>
             public const string parameterDto = "parameterDto";
             /// <summary>
             /// The input.
             /// </summary>
             /// <remarks>
-            /// Value is <see cref="umi3d.cdk.interaction.AbstractUMI3DInput"/>
+            /// Value is <see cref="umi3d.cdk.interaction.AbstractUMI3DInput"/>.
             /// </remarks>
             public const string parameterInput = "parameterInput";
         }
@@ -51,9 +51,23 @@ namespace umi3d.browserRuntime.notificationKeys
             /// The tool.
             /// </summary>
             /// <remarks>
-            /// Value is <see cref="umi3d.cdk.interaction.AbstractTool"/>
+            /// Value is <see cref="umi3d.cdk.interaction.AbstractTool"/>.
             /// </remarks>
             public const string tool = "tool";
+        }
+
+        /// <summary>
+        /// Event raised when the parameters will be displayed.
+        /// </summary>
+        public class DisplayParameters
+        {
+            /// <summary>
+            /// The parameters.
+            /// </summary>
+            /// <remarks>
+            /// Value is List(<see cref="umi3d.common.interaction.AbstractParameterDto"/>).
+            /// </remarks>
+            public const string parameters = "parameters";
         }
     }
 }

@@ -27,9 +27,6 @@ namespace umi3dBrowsers.ingame_ui
 {
     public class InGameUIManager : MonoBehaviour
     {
-        [Header("Inputs")]
-        [SerializeField] private InputAction openCloseInGamePanel;
-
         [Header("Dependencies")]
         [SerializeField] private TabletPanel TabletPanel;
 
@@ -38,7 +35,7 @@ namespace umi3dBrowsers.ingame_ui
 
         private void Awake()
         {
-            openCloseInGamePanel.performed += i => ToggleInGamePanel();
+            KeyboardShortcut.AddDownListener(ShortcutEnum.DisplayHideGameMenu, ToggleInGamePanel);
             NotificationHub.Default.Subscribe(this, InGameNotificationKeys.EnableInGameUi, SetActive);
 
             BaseCursor.SetMovement(this, CursorMovement.Free);
@@ -46,8 +43,6 @@ namespace umi3dBrowsers.ingame_ui
 
         private void Start()
         {
-            openCloseInGamePanel.Enable();
-
             gameObject.SetActive(debugMode);
         }
 
@@ -65,6 +60,8 @@ namespace umi3dBrowsers.ingame_ui
 
         private void FreeCursor()
         {
+            if (KeyboardShortcut.IsEditingTextField)
+                return;
             if (TabletPanel.gameObject.activeSelf)
                 return;
 
@@ -76,6 +73,8 @@ namespace umi3dBrowsers.ingame_ui
 
         private void ToggleInGamePanel()
         {
+            if (KeyboardShortcut.IsEditingTextField)
+                return;
             if (!gameObject.activeSelf)
                 return;
 

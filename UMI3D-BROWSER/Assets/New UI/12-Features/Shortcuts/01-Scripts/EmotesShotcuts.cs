@@ -47,6 +47,8 @@ namespace umi3d.browserRuntime.shortcuts
 
         private void Play(int index)
         {
+            if (KeyboardEmote.IsEditingTextField)
+                return;
             playEmoteNotifier[EmoteNotificationKeys.Play.Id] = index;
             playEmoteNotifier.Notify();
         }

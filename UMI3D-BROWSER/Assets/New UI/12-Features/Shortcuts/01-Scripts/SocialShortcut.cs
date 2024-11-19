@@ -16,10 +16,7 @@ limitations under the License.
 
 using inetum.unityUtils;
 using umi3d.baseBrowser.inputs.interactions;
-using umi3d.browserRuntime.ui.inGame;
-using umi3d.browserRuntime.ui.inGame.emote;
 using umi3d.browserRuntime.ui.inGame.tablet;
-using umi3d.cdk.collaboration;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.shortcuts
@@ -38,6 +35,8 @@ namespace umi3d.browserRuntime.shortcuts
 
         private void OpenUserList()
         {
+            if (KeyboardShortcut.IsEditingTextField)
+                return;
             NotificationHub.Default.Notify(this, TabletNotificationKeys.Open);
             NotificationHub.Default.Notify(this, TabletNotificationKeys.ClickButtonSocial);
         }

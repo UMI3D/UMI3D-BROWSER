@@ -52,7 +52,6 @@ namespace umi3d.baseBrowser.Controller
         protected InteractionMapper InteractionMapper;
         [SerializeField]
         protected Transform CameraTransform;
-        public LeftClickParametersInteraction LeftClickParametersInteraction;
 
         [Header("Actions' parents")]
         public GameObject ParameterActions;

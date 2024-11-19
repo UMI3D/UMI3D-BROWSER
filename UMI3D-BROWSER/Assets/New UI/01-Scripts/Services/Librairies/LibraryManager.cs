@@ -16,6 +16,7 @@ limitations under the License.
 
 using inetum.unityUtils;
 using System.Collections.Generic;
+using TMPro;
 using umi3d.browserRuntime.libraries;
 using umi3d.browserRuntime.notificationKeys;
 using umi3d.browserRuntime.ui.popup;
@@ -34,6 +35,7 @@ namespace umi3dBrowsers.services.librairies
         [SerializeField] private Button buttonUp;
         [SerializeField] private Button buttonDown;
         [SerializeField] private SimpleButton buttonDeleteAll;
+        [SerializeField] private TMP_Text textNoLib;
 
         /// <summary>
         /// Prefab used to represent a library in the menu.
@@ -98,7 +100,6 @@ namespace umi3dBrowsers.services.librairies
 
         private void OnEnable()
         {
-            buttonDeleteAll.gameObject.SetActive(UMI3DCollaborationClientServer.Environement == null);
             UpdateContent();
         }
 
@@ -159,7 +160,8 @@ namespace umi3dBrowsers.services.librairies
             indexOfCurrentTopEntryDisplayed = 0;
             UpdateDisplay();
 
-            buttonDeleteAll.gameObject.SetActive(currentEntries.Count > 0);
+            buttonDeleteAll.gameObject.SetActive(UMI3DCollaborationClientServer.Environement == null && currentEntries.Count > 0);
+            textNoLib.gameObject.SetActive(currentEntries.Count == 0);
         }
 
         /// <summary>

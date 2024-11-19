@@ -69,8 +69,7 @@ namespace umi3d.browserRuntime.ui.elements.dropdown
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            if (!IsOn)
-                background.color = color;
+            background.color = color;
         }
     }
 }

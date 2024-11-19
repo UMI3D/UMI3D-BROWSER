@@ -17,7 +17,6 @@ limitations under the License.
 using inetum.unityUtils;
 using umi3d.baseBrowser.inputs.interactions;
 using umi3d.browserRuntime.ui.inGame;
-using umi3d.cdk.collaboration;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.shortcuts
@@ -39,6 +38,9 @@ namespace umi3d.browserRuntime.shortcuts
 
         private void ToggleDeafen()
         {
+            if (KeyboardShortcut.IsEditingTextField)
+                return;
+
             if (AudioListener.volume > 0)
                 m_BaseVolume = AudioListener.volume;
 

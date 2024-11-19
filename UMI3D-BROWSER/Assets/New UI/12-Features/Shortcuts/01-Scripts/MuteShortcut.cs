@@ -36,6 +36,8 @@ namespace umi3d.browserRuntime.shortcuts
 
         private void ToggleMute()
         {
+            if (KeyboardShortcut.IsEditingTextField)
+                return;
             MicrophoneListener.mute = !MicrophoneListener.mute;
             NotificationHub.Default.Notify(this, InGameNotificationKeys.MuteChanged);
         }

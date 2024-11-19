@@ -96,14 +96,13 @@ namespace umi3d.baseBrowser.Controller
         protected int m_navigationDirect = 0;
         protected AutoProjectOnHover reason = new AutoProjectOnHover();
 
-        public event System.Action OnRelease;
-
         public static event System.Action<ulong> HoverEnter;
         public static event System.Action<ulong> HoverUpdate;
         public static event System.Action<ulong> HoverExit;
         public static bool CanProcess = false;
 
         Notifier parameterInputFoundNotifier;
+        Notifier toolReleasedNotifier;
 
         #endregion
 
@@ -165,6 +164,9 @@ namespace umi3d.baseBrowser.Controller
 
             parameterInputFoundNotifier = NotificationHub.Default
                 .GetNotifier<InteractionNotificationKeys.ParameterInputFound>(this);
+
+            toolReleasedNotifier = NotificationHub.Default
+                .GetNotifier<InteractionNotificationKeys.ToolReleased>(this);
         }
 
         private void Instance_onNodeGameObjectSet(UMI3DNodeInstance node, GameObject oldGameObject)
@@ -285,7 +287,9 @@ namespace umi3d.baseBrowser.Controller
                 RemoveForceProjectionReleaseButton();
             }
             tool.onReleased(interactionBoneType);
-            OnRelease?.Invoke();
+
+            toolReleasedNotifier[InteractionNotificationKeys.ToolReleased.tool] = tool;
+            toolReleasedNotifier.Notify();
         }
         /// <summary>
         /// <inheritdoc/>

@@ -15,7 +15,6 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
-using umi3d.baseBrowser.Controller;
 using umi3d.baseBrowser.inputs.interactions;
 using umi3d.browserRuntime.notificationKeys;
 using umi3d.common.interaction;
@@ -40,11 +39,15 @@ namespace umi3d.browserRuntime.ui.inGame.interactionMapping
                 ParameterInputFound
             );
 
+            NotificationHub.Default.Subscribe<InteractionNotificationKeys.ToolReleased>(
+                this,
+                ToolReleased
+            );
+
             cursorImage = GetComponent<Image>();
 
             KeyboardInteraction.Mapped += ShowHover;
             KeyboardInteraction.Unmapped += ShowNormal;
-            BaseController.Instance.OnRelease += ShowNormal;
         }
 
         private void OnDestroy()
@@ -53,7 +56,6 @@ namespace umi3d.browserRuntime.ui.inGame.interactionMapping
 
             KeyboardInteraction.Mapped -= ShowHover;
             KeyboardInteraction.Unmapped -= ShowNormal;
-            BaseController.Instance.OnRelease -= ShowNormal;
         }
 
         private void ShowNormal()
@@ -77,6 +79,11 @@ namespace umi3d.browserRuntime.ui.inGame.interactionMapping
             }
 
             ShowHover(dto);
+        }
+
+        void ToolReleased()
+        {
+            ShowNormal();
         }
     }
 }

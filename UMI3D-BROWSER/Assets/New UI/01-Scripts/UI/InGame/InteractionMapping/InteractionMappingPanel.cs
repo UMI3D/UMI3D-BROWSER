@@ -19,13 +19,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
-using umi3d.baseBrowser.Controller;
 using umi3d.baseBrowser.inputs.interactions;
 using umi3d.browserRuntime.notificationKeys;
 using umi3d.common.interaction;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using static umi3d.browserRuntime.notificationKeys.InteractionNotificationKeys;
 
 namespace umi3d.browserRuntime.ui.inGame.interactionMapping
 {
@@ -47,9 +45,13 @@ namespace umi3d.browserRuntime.ui.inGame.interactionMapping
                 ParameterInputFound
             );
 
+            NotificationHub.Default.Subscribe<InteractionNotificationKeys.ToolReleased>(
+                this,
+                ToolReleased
+            );
+
             KeyboardInteraction.Mapped += Show;
             KeyboardInteraction.Unmapped += Hide;
-            BaseController.Instance.OnRelease += Hide;
 
             _rows = new();
 
@@ -63,7 +65,6 @@ namespace umi3d.browserRuntime.ui.inGame.interactionMapping
 
             KeyboardInteraction.Mapped -= Show;
             KeyboardInteraction.Unmapped -= Hide;
-            BaseController.Instance.OnRelease -= Hide;
         }
 
         private void Show(KeyboardInteraction interaction, string name, InputAction action)
@@ -134,6 +135,11 @@ namespace umi3d.browserRuntime.ui.inGame.interactionMapping
             }
 
             ShowParameters(dto);
+        }
+
+        void ToolReleased()
+        {
+            Hide();
         }
     }
 }

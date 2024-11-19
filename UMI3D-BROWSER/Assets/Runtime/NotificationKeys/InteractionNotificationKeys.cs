@@ -41,5 +41,19 @@ namespace umi3d.browserRuntime.notificationKeys
             /// </remarks>
             public const string parameterInput = "parameterInput";
         }
+
+        /// <summary>
+        /// Event raised when a tool is released.
+        /// </summary>
+        public class ToolReleased
+        {
+            /// <summary>
+            /// The tool.
+            /// </summary>
+            /// <remarks>
+            /// Value is <see cref="umi3d.cdk.interaction.AbstractTool"/>
+            /// </remarks>
+            public const string tool = "tool";
+        }
     }
 }

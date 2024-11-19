@@ -17,7 +17,6 @@ limitations under the License.
 using inetum.unityUtils;
 using System;
 using System.Collections.Generic;
-using umi3d.baseBrowser.Controller;
 using umi3d.baseBrowser.inputs.interactions;
 using umi3d.browserRuntime.notificationKeys;
 using umi3d.common.interaction;
@@ -36,20 +35,21 @@ public class LeftClickParametersInteraction : MonoBehaviour
             ParameterInputFound
         );
 
+        NotificationHub.Default.Subscribe<InteractionNotificationKeys.ToolReleased>(
+            this,
+            ToolReleased
+        );
+
         _parameters = new List<AbstractParameterDto>();
     }
 
     private void OnEnable()
     {
-        BaseController.Instance.OnRelease += Release;
-
         KeyboardShortcut.AddDownListener(ShortcutEnum.DisplayHideContextualMenu, OnClick);
     }
 
     private void OnDisable()
     {
-        BaseController.Instance.OnRelease -= Release;
-
         KeyboardShortcut.RemoveDownListener(ShortcutEnum.DisplayHideContextualMenu, OnClick);
     }
 
@@ -81,5 +81,10 @@ public class LeftClickParametersInteraction : MonoBehaviour
         }
 
         AddParameter(dto);
+    }
+
+    void ToolReleased(Notification notification)
+    {
+        Release();
     }
 }

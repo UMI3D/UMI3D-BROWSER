@@ -354,7 +354,6 @@ GameObject:
   m_Component:
   - component: {fileID: 583860043689566226}
   - component: {fileID: 5790828225358323248}
-  - component: {fileID: 2721641976429755375}
   m_Layer: 0
   m_Name: WebViewFactory
   m_TagString: Untagged
@@ -393,22 +392,10 @@ MonoBehaviour:
     androidRef: {fileID: 7244582323845736815, guid: 74515d6a62da0f340a5de8caea37b86d,
       type: 3}
     iOSRef: {fileID: 0}
-    windowsRef: {fileID: 1299818119154890605, guid: be5538d769744fe45ba0a7a023b7669c,
+    windowsRef: {fileID: 2637901191890785828, guid: 2780d03c8ff68c24a900d5c15a193405,
       type: 3}
     macOSRef: {fileID: 0}
     WebglRef: {fileID: 0}
---- !u!114 &2721641976429755375
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5659649433285484645}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 336135ac0ee017342838a71d402a556b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &5680856415329153319
 GameObject:
   m_ObjectHideFlags: 0

@@ -67,6 +67,8 @@ namespace umi3d.browserRuntime.ui.settings
             
             if (tmp.Length <= 0)
             {
+                UnityEngine.AudioSettings.Reset(UnityEngine.AudioSettings.GetConfiguration());
+
                 if (this.NoMicrophoneFound)
                     return;
 
@@ -105,7 +107,7 @@ namespace umi3d.browserRuntime.ui.settings
 
         void ValueChanged(int index)
         {
-            if (!MicrophoneListener.Exists)
+            if (MicrophoneListener.Exists)
             {
                 MicrophoneListener.Instance.SetCurrentMicrophoneName(microphones[index]);
                 audioSettings.model.microphone = microphones[index];

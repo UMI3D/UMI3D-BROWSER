@@ -48,6 +48,11 @@ namespace umi3d.browserEditor.BuildTool
             EditorApplication.playModeStateChanged += playModeStateChanged;
         }
 
+        ~UMI3DBuildToolMainPanelView()
+        {
+            EditorApplication.playModeStateChanged -= playModeStateChanged;
+        }
+
         void playModeStateChanged(PlayModeStateChange state)
         {
             if (blockingLayer == null)

@@ -152,6 +152,16 @@ namespace umi3d.browserEditor.BuildTool
             buildView.Set();
         }
 
+        private void OnEnable()
+        {
+            EditorApplication.playModeStateChanged += playModeStateChanged;
+        }
+
+        void OnDisable()
+        {
+            EditorApplication.playModeStateChanged -= playModeStateChanged;
+        }
+
         void ApplyTargetOptions(E_Target target)
         {
             if (Application.isPlaying)
@@ -198,7 +208,7 @@ namespace umi3d.browserEditor.BuildTool
             // Application name. It is the one display in AppData/LocalLow.
             PlayerSettings.productName = BuildToolHelper.GetApplicationName(target);
             // Version number of the application.
-            PlayerSettings.bundleVersion = $"{target.releaseCycle.GetReleaseInitial()}.{versionModel.newVersion.VersionFromNow()} Sdk: {versionModel.sdkVersion.Version()}";
+            BuildToolHelper.SetVersion(target, versionModel.newVersion, versionModel.sdkVersion);
 
             // ------ Conditional compilation settings ------
             // Set the keystore information (Android only).
@@ -241,6 +251,8 @@ namespace umi3d.browserEditor.BuildTool
             // - UMI3D SteamVR (for the steamVR browser).
             // - UMI3D Editor (for the editor).
             PlayerSettings.productName = "UMI3D Editor";
+            // Reset Version to avoir modifying ProjectSettings.asset.
+            PlayerSettings.bundleVersion = "Version will be set dynamically in build or in play mode";
 
             return reportInt;
         }
@@ -258,6 +270,21 @@ namespace umi3d.browserEditor.BuildTool
             {
                 ApplyTargetOptions(target[i].Target);
                 BuildTarget(target[i], i == target.Length - 1);
+            }
+        }
+
+        void playModeStateChanged(PlayModeStateChange state)
+        {
+            switch (state)
+            {
+                case PlayModeStateChange.EnteredPlayMode:
+                    BuildToolHelper.SetVersion(versionModel.newVersion, versionModel.sdkVersion);
+                    break;
+                case PlayModeStateChange.ExitingPlayMode:
+                case PlayModeStateChange.EnteredEditMode:
+                case PlayModeStateChange.ExitingEditMode:
+                default:
+                    break;
             }
         }
     }

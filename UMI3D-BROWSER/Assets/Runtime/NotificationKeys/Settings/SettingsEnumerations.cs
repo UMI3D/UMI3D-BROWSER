@@ -14,17 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils.saveSystem;
-using umi3d.browserRuntime.ui.keyboard;
-
 namespace umi3d.browserRuntime.ui.settings
 {
-    internal class KeyboardSettingsPSM : PersistentScriptableModel
+    /// <summary>
+    /// Quality settings for the UMI3D browser
+    /// </summary>
+    public enum BrowserQualitySettings
     {
-        public KeyboardLocalisationVersion localisationVersion = KeyboardLocalisationVersion.QWERTY;
-
-        public bool AnimateOnOpeningAndClosing = false;
-
-        public bool AnimateOnKeyPressed = true;
+        Low, Medium, High, Custom
     }
 }

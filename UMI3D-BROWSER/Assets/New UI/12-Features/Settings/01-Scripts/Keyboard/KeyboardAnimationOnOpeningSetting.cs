@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
-using umi3d.browserRuntime.NotificationKeys;
+using umi3d.browserRuntime.ui.keyboard;
 using UnityEngine;
 using UnityEngine.UI;
 

@@ -16,10 +16,8 @@ limitations under the License.
 
 using inetum.unityUtils;
 using System;
-using System.Security.Policy;
 using System.Threading.Tasks;
 using TMPro;
-using umi3d.browserRuntime.notificationKeys;
 using umi3d.browserRuntime.ui.inGame;
 using umi3d.browserRuntime.ui.popup;
 using umi3d.cdk;

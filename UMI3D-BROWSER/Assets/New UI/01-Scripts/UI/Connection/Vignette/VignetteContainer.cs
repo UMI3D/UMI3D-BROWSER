@@ -20,7 +20,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using umi3d.browserRuntime.notificationKeys;
 using umi3d.browserRuntime.ui.connection.vignette;
 using umi3d.browserRuntime.ui.popup;
 using umi3d.common.interaction.form;

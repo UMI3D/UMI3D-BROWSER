@@ -14,13 +14,20 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-namespace umi3d.browserRuntime.notificationKeys
+using System;
+
+namespace umi3d.browserRuntime.NotificationKeys
 {
     /// <summary>
-    /// Quality settings for the UMI3D browser
+    /// The locomotion types.
     /// </summary>
-    public enum BrowserQualitySettings
+    [Flags]
+    public enum LocomotionType
     {
-        Low, Medium, High, Custom
+        None = 0,
+        SnapTurn = 1,
+        ContinuousTurn = 1 << 1,
+        Teleportation = 1 << 2,
+        Move = 1 << 3,
     }
 }

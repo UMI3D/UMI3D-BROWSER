@@ -16,9 +16,8 @@ limitations under the License.
 
 using System;
 using System.Collections.Generic;
-using umi3d.browserRuntime.ui.popup;
 
-namespace umi3d.browserRuntime.notificationKeys
+namespace umi3d.browserRuntime.ui.popup
 {
     public struct PopupInfo 
     {

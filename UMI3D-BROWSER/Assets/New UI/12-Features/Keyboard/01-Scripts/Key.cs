@@ -16,9 +16,6 @@ limitations under the License.
 
 using inetum.unityUtils;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using umi3d.browserRuntime.NotificationKeys;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;

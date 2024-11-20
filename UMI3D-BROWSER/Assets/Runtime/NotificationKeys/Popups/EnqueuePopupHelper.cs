@@ -18,9 +18,8 @@ using inetum.unityUtils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using umi3d.browserRuntime.ui.popup;
 
-namespace umi3d.browserRuntime.notificationKeys
+namespace umi3d.browserRuntime.ui.popup
 {
     public class EnqueuePopupHelper 
     {

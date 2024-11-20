@@ -15,8 +15,7 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
-using System;
-using umi3d.browserRuntime.notificationKeys;
+using umi3d.browserRuntime.ui.settings;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.inGame.bottomBar

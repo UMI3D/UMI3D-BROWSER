@@ -15,7 +15,6 @@ limitations under the License.
 */
 
 using inetum.unityUtils.saveSystem;
-using umi3d.browserRuntime.notificationKeys;
 
 namespace umi3d.browserRuntime.ui.settings
 {

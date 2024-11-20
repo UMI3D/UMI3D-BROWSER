@@ -18,7 +18,6 @@ using inetum.unityUtils;
 using System.Collections.Generic;
 using TMPro;
 using umi3d.browserRuntime.libraries;
-using umi3d.browserRuntime.notificationKeys;
 using umi3d.browserRuntime.ui.popup;
 using umi3d.cdk;
 using umi3d.cdk.collaboration;

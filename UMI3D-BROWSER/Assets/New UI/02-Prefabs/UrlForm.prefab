@@ -195,19 +195,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 117330754131641159}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 11400000, guid: 24604fe66de00534e9fe94635a6279cf, type: 2}
-        m_TargetAssemblyTypeName: umi3dBrowsers.linker.ConnectionServiceLinker, Assembly-CSharp
-        m_MethodName: TriesToConnect
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 5156830166088268224}
-          m_ObjectArgumentAssemblyTypeName: TMPro.TMP_Text, Unity.TextMeshPro
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   objectToEnableOnHover: []
   autoUnHover: 0
   objectToEnableOnClick: []
@@ -704,7 +692,19 @@ MonoBehaviour:
   submitButton: {fileID: 5020368368529481212}
   OnSubmit:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: 24604fe66de00534e9fe94635a6279cf, type: 2}
+        m_TargetAssemblyTypeName: umi3dBrowsers.linker.ConnectionServiceLinker, Assembly-CSharp
+        m_MethodName: TriesToConnect
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &7849819327241549833
 GameObject:
   m_ObjectHideFlags: 0

@@ -14,6 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System.Security.Policy;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -39,6 +41,23 @@ namespace umi3dBrowsers
         private void OnEnable()
         {
             urlField.text = "";
+
+            urlField.onSubmit.AddListener(Submit);
+        }
+
+        private void OnDisable()
+        {
+            urlField.onSubmit.RemoveListener(Submit);
+        }
+
+        private void Submit(string url)
+        {
+            url = url.Trim();
+
+            if (string.IsNullOrEmpty(url))
+                return;
+
+            OnSubmit?.Invoke(url);
         }
     }
 }

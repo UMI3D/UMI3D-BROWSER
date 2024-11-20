@@ -15,13 +15,8 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
-using System;
-using System.Collections.Generic;
-using umi3d.browserRuntime.notificationKeys;
 using umi3d.browserRuntime.ui.popup;
-using umi3dBrowsers.data.ui;
 using umi3dBrowsers.linker;
-using umi3dBrowsers.linker.ui;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;

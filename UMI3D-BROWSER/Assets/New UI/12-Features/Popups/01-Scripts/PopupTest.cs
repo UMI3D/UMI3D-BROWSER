@@ -14,10 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System.Security.Policy;
-using umi3d.browserRuntime.notificationKeys;
 using UnityEngine;
-using UnityEngine.Localization.Tables;
 
 namespace umi3d.browserRuntime.ui.popup
 {

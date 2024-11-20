@@ -110,6 +110,29 @@ namespace umi3d.browserEditor.BuildTool
             return path;
         }
 
+        /// <summary>
+        /// Set the Application version.
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="newVersion"></param>
+        /// <param name="sdkVersion"></param>
+        public static void SetVersion(TargetDto target, VersionDTO newVersion, VersionDTO sdkVersion)
+        {
+            PlayerSettings.bundleVersion = $"{target.releaseCycle.GetReleaseInitial()}.{newVersion.VersionFromNow()} Sdk: {sdkVersion.Version()}";
+        }
+
+        /// <summary>
+        /// Set the Application version during play mode.
+        /// </summary>
+        /// <remarks>Do not use this method in build.</remarks>
+        /// <param name="newVersion"></param>
+        /// <param name="sdkVersion"></param>
+        [Conditional("UNITY_EDITOR")]
+        public static void SetVersion(VersionDTO newVersion, VersionDTO sdkVersion)
+        {
+            PlayerSettings.bundleVersion = $"{newVersion.VersionFromNow()} Sdk: {sdkVersion.Version()}";
+        }
+
         #region Conditional settings
 
         /// <summary>

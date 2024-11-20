@@ -14,8 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using umi3d.baseBrowser.Controller;
+using inetum.unityUtils;
 using umi3d.baseBrowser.inputs.interactions;
+using umi3d.browserRuntime.notificationKeys;
 using umi3d.common.interaction;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -33,20 +34,28 @@ namespace umi3d.browserRuntime.ui.inGame.interactionMapping
 
         private void Awake()
         {
+            NotificationHub.Default.Subscribe<InteractionNotificationKeys.ParameterInputFound>(
+                this,
+                ParameterInputFound
+            );
+
+            NotificationHub.Default.Subscribe<InteractionNotificationKeys.ToolReleased>(
+                this,
+                ToolReleased
+            );
+
             cursorImage = GetComponent<Image>();
 
             KeyboardInteraction.Mapped += ShowHover;
             KeyboardInteraction.Unmapped += ShowNormal;
-            BaseController.Instance.OnAddParameter += ShowHover;
-            BaseController.Instance.OnRelease += ShowNormal;
         }
 
         private void OnDestroy()
         {
+            NotificationHub.Default.Unsubscribe(this);
+
             KeyboardInteraction.Mapped -= ShowHover;
             KeyboardInteraction.Unmapped -= ShowNormal;
-            BaseController.Instance.OnAddParameter -= ShowHover;
-            BaseController.Instance.OnRelease -= ShowNormal;
         }
 
         private void ShowNormal()
@@ -61,5 +70,20 @@ namespace umi3d.browserRuntime.ui.inGame.interactionMapping
         }
         private void ShowHover(KeyboardInteraction interaction, string arg2, InputAction action) => ShowHover();
         private void ShowHover(AbstractParameterDto dto) => ShowHover();
+
+        void ParameterInputFound(Notification notification)
+        {
+            if (!notification.TryGetInfoT(InteractionNotificationKeys.ParameterInputFound.parameterDto, out AbstractParameterDto dto))
+            {
+                return;
+            }
+
+            ShowHover(dto);
+        }
+
+        void ToolReleased()
+        {
+            ShowNormal();
+        }
     }
 }

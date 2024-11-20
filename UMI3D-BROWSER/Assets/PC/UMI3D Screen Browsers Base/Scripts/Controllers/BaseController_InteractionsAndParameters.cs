@@ -17,6 +17,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using umi3d.baseBrowser.inputs.interactions;
+using umi3d.browserRuntime.notificationKeys;
 using umi3d.cdk.interaction;
 using umi3d.common.interaction;
 using UnityEngine;
@@ -25,8 +26,6 @@ namespace umi3d.baseBrowser.Controller
 {
     public partial class BaseController
     {
-        public event Action<AbstractParameterDto> OnAddParameter;
-
         public override List<AbstractUMI3DInput> inputs
         {
             get
@@ -206,7 +205,10 @@ namespace umi3d.baseBrowser.Controller
             else if (param is UploadFileParameterDto) input = FindInput(uploadFileParameterInputs, i => i.IsAvailable(), ParameterActions);
             else throw new System.Exception("Input not found !!!!!!!!!!!");
 
-            OnAddParameter?.Invoke(param);
+            parameterInputFoundNotifier[InteractionNotificationKeys.ParameterInputFound.parameterDto] = param;
+            parameterInputFoundNotifier[InteractionNotificationKeys.ParameterInputFound.parameterInput] = input;
+            parameterInputFoundNotifier.Notify();
+
             return input;
         }
 

@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using umi3d.baseBrowser.cursor;
 using umi3d.baseBrowser.inputs.interactions;
+using umi3d.browserRuntime.notificationKeys;
 using umi3d.cdk;
 using umi3d.cdk.collaboration;
 using umi3d.cdk.interaction;
@@ -51,7 +52,6 @@ namespace umi3d.baseBrowser.Controller
         protected InteractionMapper InteractionMapper;
         [SerializeField]
         protected Transform CameraTransform;
-        public LeftClickParametersInteraction LeftClickParametersInteraction;
 
         [Header("Actions' parents")]
         public GameObject ParameterActions;
@@ -95,12 +95,14 @@ namespace umi3d.baseBrowser.Controller
         protected int m_navigationDirect = 0;
         protected AutoProjectOnHover reason = new AutoProjectOnHover();
 
-        public event System.Action OnRelease;
-
         public static event System.Action<ulong> HoverEnter;
         public static event System.Action<ulong> HoverUpdate;
         public static event System.Action<ulong> HoverExit;
         public static bool CanProcess = false;
+
+        Notifier parameterInputFoundNotifier;
+        Notifier toolReleasedNotifier;
+
         #endregion
 
         #region Monobehaviour Life Cycle
@@ -152,6 +154,18 @@ namespace umi3d.baseBrowser.Controller
                 if(currentTool != null && currentToolId == currentTool.id)
                     Release(currentTool, new RequestedFromMenu());
             });
+
+            UMI3DCollaborationClientServer.Instance?.OnLeavingEnvironment?.AddListener(() =>
+            {
+                if (currentTool != null && currentToolId == currentTool.id)
+                    Release(currentTool, new RequestedFromMenu());
+            });
+
+            parameterInputFoundNotifier = NotificationHub.Default
+                .GetNotifier<InteractionNotificationKeys.ParameterInputFound>(this);
+
+            toolReleasedNotifier = NotificationHub.Default
+                .GetNotifier<InteractionNotificationKeys.ToolReleased>(this);
         }
 
         private void Instance_onNodeGameObjectSet(UMI3DNodeInstance node, GameObject oldGameObject)
@@ -272,7 +286,9 @@ namespace umi3d.baseBrowser.Controller
                 RemoveForceProjectionReleaseButton();
             }
             tool.onReleased(interactionBoneType);
-            OnRelease?.Invoke();
+
+            toolReleasedNotifier[InteractionNotificationKeys.ToolReleased.tool] = tool;
+            toolReleasedNotifier.Notify();
         }
         /// <summary>
         /// <inheritdoc/>

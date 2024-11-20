@@ -14,12 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
-using umi3d.baseBrowser.Controller;
 using umi3d.baseBrowser.inputs.interactions;
+using umi3d.browserRuntime.notificationKeys;
 using umi3d.common.interaction;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -39,10 +40,18 @@ namespace umi3d.browserRuntime.ui.inGame.interactionMapping
 
         private void Awake()
         {
+            NotificationHub.Default.Subscribe<InteractionNotificationKeys.ParameterInputFound>(
+                this,
+                ParameterInputFound
+            );
+
+            NotificationHub.Default.Subscribe<InteractionNotificationKeys.ToolReleased>(
+                this,
+                ToolReleased
+            );
+
             KeyboardInteraction.Mapped += Show;
             KeyboardInteraction.Unmapped += Hide;
-            BaseController.Instance.OnAddParameter += ShowParameters;
-            BaseController.Instance.OnRelease += Hide;
 
             _rows = new();
 
@@ -52,10 +61,10 @@ namespace umi3d.browserRuntime.ui.inGame.interactionMapping
 
         private void OnDestroy()
         {
+            NotificationHub.Default.Unsubscribe(this);
+
             KeyboardInteraction.Mapped -= Show;
             KeyboardInteraction.Unmapped -= Hide;
-            BaseController.Instance.OnAddParameter -= ShowParameters;
-            BaseController.Instance.OnRelease -= Hide;
         }
 
         private void Show(KeyboardInteraction interaction, string name, InputAction action)
@@ -116,6 +125,21 @@ namespace umi3d.browserRuntime.ui.inGame.interactionMapping
             interactionMappingDisplayer.Add(leftClickSprite);
 
             _rows.Add("Modify", interactionMappingDisplayer);
+        }
+
+        void ParameterInputFound(Notification notification)
+        {
+            if (!notification.TryGetInfoT(InteractionNotificationKeys.ParameterInputFound.parameterDto, out AbstractParameterDto dto))
+            {
+                return;
+            }
+
+            ShowParameters(dto);
+        }
+
+        void ToolReleased()
+        {
+            Hide();
         }
     }
 }

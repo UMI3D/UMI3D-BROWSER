@@ -14,13 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System.Collections;
-using System.Collections.Generic;
-using umi3d.browserRuntime.UX;
-using UnityEngine;
-using umi3d.browserRuntime.NotificationKeys;
 using inetum.unityUtils;
+using umi3d.browserRuntime.UX;
 using umi3d.cdk.notification;
+using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.keyboard
 {

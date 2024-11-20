@@ -14,10 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System;
-using UnityEngine;
-
-namespace umi3d.browserRuntime.NotificationKeys
+namespace umi3d.browserRuntime.ui.keyboard
 {
     public static class KeyboardNotificationKeys 
     {

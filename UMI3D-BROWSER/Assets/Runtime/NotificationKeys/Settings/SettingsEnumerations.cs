@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-namespace umi3d.browserRuntime.notificationKeys
+namespace umi3d.browserRuntime.ui.settings
 {
     /// <summary>
     /// Quality settings for the UMI3D browser

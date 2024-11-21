@@ -125,7 +125,7 @@ public class BugReporter : SingleBehaviour<BugReporter>
 
                     sw.WriteLine("# Versions");
                     sw.WriteLine("UMI3DVersion : " + UMI3DVersion.version);
-                    sw.WriteLine("Software version : " + BrowserDesktop.BrowserVersion.Version);
+                    //sw.WriteLine("Software version : " + BrowserDesktop.BrowserVersion.Version);
 
                     sw.WriteLine();
                     sw.WriteLine("# BUG Description");

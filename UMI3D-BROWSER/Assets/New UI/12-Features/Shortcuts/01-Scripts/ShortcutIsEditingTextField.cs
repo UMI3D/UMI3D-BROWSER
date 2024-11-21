@@ -41,14 +41,12 @@ namespace umi3d.browserRuntime.shortcuts
 
         private void OnSelect(string arg0)
         {
-            KeyboardShortcut.IsEditingTextField = true;
-            KeyboardEmote.IsEditingTextField = true;
+            BaseKeyInteraction.IsEditingTextField = true;
         }
 
         private void OnDeselect(string arg0)
         {
-            KeyboardShortcut.IsEditingTextField = false;
-            KeyboardEmote.IsEditingTextField = false;
+            BaseKeyInteraction.IsEditingTextField = false;
         }
     }
 }

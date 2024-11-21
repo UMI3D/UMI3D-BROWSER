@@ -13,14 +13,15 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-using BrowserDesktop;
 using inetum.unityUtils.multiTarget;
 using System.Threading.Tasks;
 using umi3d.cdk;
 using UnityEngine;
+#if UNITY_EDITOR
 using Process = System.Diagnostics.Process;
+#endif
 
-namespace umi3d.runtimeBrowser.webView
+namespace umi3d.browserRuntime.webView
 {
     public class WebViewFactory : AbstractWebViewFactory
     {
@@ -41,14 +42,12 @@ namespace umi3d.runtimeBrowser.webView
         {
             base.OnDestroy();
 
-            // Name of process launched in background by webviews.
+#if UNITY_EDITOR
+            // Name of process launched in background by webViews.
             const string webEngineProcessName = "UnityWebBrowser.Engine.Cef";
             Process[] processes = Process.GetProcessesByName(webEngineProcessName);
 
-            Debug.Log($"{nameof(RuntimeWebBrowserBasic)} : process to kill " + processes.Length);
-
-#if UNITY_EDITOR
-            foreach (Process process in Process.GetProcessesByName(webEngineProcessName))
+            foreach (Process process in processes)
             {
                 process.Kill();
             }

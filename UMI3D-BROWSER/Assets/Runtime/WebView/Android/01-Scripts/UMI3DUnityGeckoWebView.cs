@@ -21,7 +21,7 @@ using umi3d.common;
 using umi3d.common.interaction;
 using UnityEngine;
 
-namespace umi3d.browserRuntime.android
+namespace umi3d.browserRuntime.webView.android
 {
     public class UMI3DUnityGeckoWebView : AbstractUMI3DWebView
     {

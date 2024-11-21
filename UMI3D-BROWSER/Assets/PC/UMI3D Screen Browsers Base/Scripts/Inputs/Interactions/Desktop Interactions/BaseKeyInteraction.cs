@@ -13,12 +13,15 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+using inetum.unityUtils;
 using System.Collections.Generic;
 using System.Linq;
 using umi3d.baseBrowser.cursor;
+using umi3d.browserRuntime.inputs;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
 using static umi3d.baseBrowser.inputs.interactions.BaseKeyInteraction;
+using static umi3d.browserRuntime.inputs.InputNotificationKeys;
 
 namespace umi3d.baseBrowser.inputs.interactions
 {
@@ -32,7 +35,7 @@ namespace umi3d.baseBrowser.inputs.interactions
             //TODO add gamepad 
         }
 
-        public static bool IsEditingTextField;
+        public static bool IsEditingTextField { get; internal set; }
 
         public InputAction Key;
 
@@ -43,6 +46,21 @@ namespace umi3d.baseBrowser.inputs.interactions
         /// </summary>
         /// <returns></returns>
         public virtual bool CanProces() => BaseCursor.Movement != BaseCursor.CursorMovement.Free && !IsEditingTextField;
+
+        protected override void Awake()
+        {
+            base.Awake();
+
+            NotificationHub.Default.Subscribe<InputNotificationKeys.TextEditionStart>(
+                this,
+                TextEditionStart
+            );
+
+            NotificationHub.Default.Subscribe<InputNotificationKeys.TextEditionStop>(
+                this,
+                TextEditionStop
+            );
+        }
 
         protected virtual void Start()
         {
@@ -60,6 +78,11 @@ namespace umi3d.baseBrowser.inputs.interactions
                 if (m_wasHoverBeforeClicked && BaseCursor.State == BaseCursor.CursorState.Clicked)
                     BaseCursor.State = BaseCursor.CursorState.Hover;
             });
+        }
+
+        void OnDestroy()
+        {
+            NotificationHub.Default.Unsubscribe(this);
         }
 
         /// <summary>
@@ -117,6 +140,16 @@ namespace umi3d.baseBrowser.inputs.interactions
         }
 
         #endregion
+
+        void TextEditionStart()
+        {
+            IsEditingTextField = true;
+        }
+
+        void TextEditionStop()
+        {
+            IsEditingTextField = false;
+        }
     }
 
     public static class InputActionExtensions

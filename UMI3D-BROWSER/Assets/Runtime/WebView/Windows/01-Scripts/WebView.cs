@@ -14,10 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
 using System;
 using System.Collections;
 using System.Text.RegularExpressions;
-using umi3d.baseBrowser.inputs.interactions;
+using umi3d.browserRuntime.inputs;
 using umi3d.cdk;
 using umi3d.common;
 using umi3d.common.interaction;
@@ -362,14 +363,16 @@ namespace BrowserDesktop
         {
             IsWebViewFocused = true;
 
-            BaseKeyInteraction.IsEditingTextField = true;
+            NotificationHub.Default
+                .Notify<InputNotificationKeys.TextEditionStart>(this);
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
             IsWebViewFocused = false;
 
-            BaseKeyInteraction.IsEditingTextField = false;
+            NotificationHub.Default
+               .Notify<InputNotificationKeys.TextEditionStop>(this);
         }
 
         public void SetWorldSpace()

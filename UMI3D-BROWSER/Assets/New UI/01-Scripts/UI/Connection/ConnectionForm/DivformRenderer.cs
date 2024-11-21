@@ -70,9 +70,8 @@ namespace umi3dBrowsers.container.formrenderer
         /// Makes sure that there is no trace of anything left in the form
         /// </summary>
         /// <param name="id"></param>
-        internal void CleanContent(string id)
+        internal void CleanContent()
         {
-            InitFormAnswer(id);
             tabManager.Clear();
 
             foreach (var container in allContainers)
@@ -100,6 +99,7 @@ namespace umi3dBrowsers.container.formrenderer
             _answer.submitId = submitId;
             formBinding.ForEach(action => action?.Invoke());
             OnFormAnswer?.Invoke(_answer);
+            CleanContent();
         }
 
         private void InitFormAnswer(string id)
@@ -117,6 +117,7 @@ namespace umi3dBrowsers.container.formrenderer
         /// <param name="connectionFormDto"></param>
         internal void Handle(ConnectionFormDto connectionFormDto)
         {
+            InitFormAnswer(connectionFormDto.guid);
             validationButton.gameObject.SetActive(false);
             validationButton.OnClick.RemoveAllListeners();
 

@@ -60,6 +60,7 @@ namespace umi3dBrowsers.container.formrenderer
 
         internal void Handle(ConnectionFormDto connectionFormDto)
         {
+            InitFormAnswer(connectionFormDto.id);
             validationButton.gameObject.SetActive(true);
             validationButton.OnClick.RemoveAllListeners();
             validationButton.OnClick.AddListener(() => ValidateForm());
@@ -142,6 +143,7 @@ namespace umi3dBrowsers.container.formrenderer
         {
             formBinding.ForEach(action => action?.Invoke());
             OnFormAnswer?.Invoke(_formAnswer);
+            CleanContent();
         }
 
         private void InitFormAnswer(ulong id)
@@ -156,10 +158,9 @@ namespace umi3dBrowsers.container.formrenderer
             };
         }
 
-        internal void CleanContent(ulong id)
+        internal void CleanContent()
         {
             formBinding = new();
-            InitFormAnswer(id);
 
             tabManager.Clear();
         }

@@ -14,23 +14,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System;
 using UnityEngine;
-using UnityEngine.Android;
 
 namespace umi3d.browserRuntime.permission
 {
-    public class Permissions 
+    public class PermissionsAsker : MonoBehaviour
     {
-        public void AskForPermission()
+        void Awake()
         {
-            if (!Permission.HasUserAuthorizedPermission(Permission.Microphone))
-            {
-                Permission.RequestUserPermission(Permission.Microphone);
-                // The following may be useful one day.
-                //Permission.RequestUserPermission(Permission.ExternalStorageRead);
-                //Permission.RequestUserPermission(Permission.ExternalStorageWrite);
-            }
+#if UNITY_ANDROID
+            var permission = new Permissions();
+            permission.AskForPermission();
+#endif
         }
     }
 }

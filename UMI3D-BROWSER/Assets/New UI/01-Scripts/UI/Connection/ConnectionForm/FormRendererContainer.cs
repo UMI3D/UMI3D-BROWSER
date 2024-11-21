@@ -54,7 +54,7 @@ namespace umi3dBrowsers.container.formrenderer
         {
             menuNavigationLinker.SetCancelButtonActive(true);
             formParamRenderer.Init(paramRoot);
-            formParamRenderer.CleanContent(connectionFormDto.id);
+            formParamRenderer.CleanContent();
             formParamRenderer.Handle(connectionFormDto);
         }
 
@@ -62,7 +62,7 @@ namespace umi3dBrowsers.container.formrenderer
         {
             menuNavigationLinker.SetCancelButtonActive(false);
             formDivRenderer.Init(paramRoot);
-            formDivRenderer.CleanContent(connectionFormDto.guid);
+            formDivRenderer.CleanContent();
             formDivRenderer.Handle(connectionFormDto);
         }
 

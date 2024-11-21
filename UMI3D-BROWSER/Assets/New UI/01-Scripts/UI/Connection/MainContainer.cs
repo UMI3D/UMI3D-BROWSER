@@ -296,6 +296,7 @@ namespace umi3dBrowsers
         {
             cancelConnectionButton?.OnClick.AddListener(() => {
                 connectionToImmersiveLinker.Leave();
+                cancelConnectionButton.gameObject.SetActive(false);
             });
 #if UMI3D_XR
             connectionToImmersiveLinker.OnSkeletonStandUp += () =>

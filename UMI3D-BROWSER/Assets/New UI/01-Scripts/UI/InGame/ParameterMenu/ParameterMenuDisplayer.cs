@@ -20,6 +20,7 @@ using System.Linq;
 using TMPro;
 using umi3d.baseBrowser.cursor;
 using umi3d.browserRuntime.notificationKeys;
+using umi3d.browserRuntime.ui.inGame.tablet;
 using umi3d.cdk;
 using umi3d.common.interaction;
 using umi3dBrowsers.displayer;
@@ -43,6 +44,8 @@ public class ParameterMenuDisplayer : MonoBehaviour
             DisplayParameters
         );
 
+        NotificationHub.Default.Subscribe(this, TabletNotificationKeys.Open, Hide);
+
         clsoeButton.onClick.AddListener(Hide);
 
         gameObject.SetActive(false);
@@ -51,6 +54,7 @@ public class ParameterMenuDisplayer : MonoBehaviour
     private void OnDestroy()
     {
         clsoeButton.onClick.RemoveListener(Hide);
+        NotificationHub.Default.Unsubscribe(this);
     }
 
     private void Show(List<AbstractParameterDto> parameters)

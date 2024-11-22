@@ -51,16 +51,19 @@ namespace umi3d.browserRuntime.ui.settings
 
         void OnEnable()
         {
+            slider.SetValueWithoutNotify(graphicsSettings.model.renderScale * URP_RENDER_SCALE_TO_SLIDER_VALUE);
+
+            if (graphicsSettings.model.quality == BrowserQualitySettings.Custom)
+                ValueChanged(graphicsSettings.model.renderScale * URP_RENDER_SCALE_TO_SLIDER_VALUE);
+        }
+
+        void ValueChanged(float newValue)
+        {
             if (graphicsSettings.model.quality != BrowserQualitySettings.Custom)
             {
                 return;
             }
 
-            slider.SetValueWithoutNotify(graphicsSettings.model.renderScale * URP_RENDER_SCALE_TO_SLIDER_VALUE);
-        }
-
-        void ValueChanged(float newValue)
-        {
             newValue = Mathf.Clamp(newValue, MIN_SLIDER_VALUE, MAX_SLIDER_VALUE);
             newValue *= SLIDER_VALUE_TO_URP_RENDER_SCALE;
 

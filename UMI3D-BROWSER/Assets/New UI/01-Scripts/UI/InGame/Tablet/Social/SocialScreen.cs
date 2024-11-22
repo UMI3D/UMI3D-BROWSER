@@ -42,7 +42,7 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
 
         List<SocialElement> activatedElements = new();
         List<SocialElement> deactivatedElements = new();
-        Dictionary<ulong, SocialElement.UserData> _allUsersRemembered = new();
+        Dictionary<string, SocialElement.UserData> _allUsersRemembered = new();
 
         DateTime _startTime;
 
@@ -243,7 +243,7 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
                 activatedElements.RemoveAt(i);
                 deactivatedElements.Add(socialElement);
                 socialElement.gameObject.SetActive(false);
-                _allUsersRemembered[socialElement.User.id] = socialElement.Data;
+                _allUsersRemembered[socialElement.User.login] = socialElement.Data;
             }
         }
 
@@ -266,7 +266,7 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
         void SetSocialElement(SocialElement socialElement, UMI3DUser user)
         {
             socialElement.User = user;
-            if (_allUsersRemembered.TryGetValue(user.id, out SocialElement.UserData data))
+            if (_allUsersRemembered.TryGetValue(user.login, out SocialElement.UserData data))
             {
                 socialElement.UserVolume = data.volume;
                 socialElement.IsMute = data.isMute;

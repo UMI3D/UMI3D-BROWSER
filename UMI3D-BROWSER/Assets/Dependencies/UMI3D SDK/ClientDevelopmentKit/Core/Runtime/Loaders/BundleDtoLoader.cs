@@ -33,7 +33,7 @@ namespace umi3d.cdk
         /// <summary>
         /// Represents all <see cref="AssetBundle"/> assets and scenes to be able to unload the bundle.
         /// </summary>
-        private class BundleCacheData
+        public class BundleCacheData
         {
             /// <summary>
             /// All bundle assets by bundle path.
@@ -279,7 +279,7 @@ namespace umi3d.cdk
 
             foreach (GameObject obj in scene.GetRootGameObjects())
             {
-                obj.transform.SetParent(sceneObj.transform);
+                obj.transform.SetParent(sceneObj.transform);              
 
                 foreach (Camera cam in obj.GetComponentsInChildren<Camera>())
                 {

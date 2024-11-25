@@ -18,17 +18,25 @@ namespace umi3d.common.lbe.guardian
         {
             if (typeof(T) == typeof(UserGuardianDto))
             {
+                bool SetAdminUser = UMI3DSerializer.Read<bool>(container);
+                Debug.Log("REMY : Read 1 -> " + SetAdminUser);
+                uint IDLbeGroup = UMI3DSerializer.Read<uint>(container);
                 List<ARAnchorDto> ARAnchors = UMI3DSerializer.ReadList<ARAnchorDto>(container);
-                float offsetGuardian = UMI3DSerializer.Read<float>(container);
                 uint ARid = UMI3DSerializer.Read<uint>(container);
 
                 if (ARAnchors != null)
                 {
                     var userguardian = new UserGuardianDto
                     {
+
+                        SetAdminUser = SetAdminUser,
+                        IDLbeGroup = IDLbeGroup,
                         ARAnchors = ARAnchors,
                         ARiD = ARid
                     };
+
+                    Debug.Log("REMY : Read 2 -> " + userguardian.SetAdminUser);
+
 
                     readable = true;
                     result = (T)Convert.ChangeType(userguardian, typeof(T));
@@ -45,7 +53,10 @@ namespace umi3d.common.lbe.guardian
         {
             if (value is UserGuardianDto c)
             {
+                Debug.Log("REMY : Write -> " + c.SetAdminUser);
                 bytable = UMI3DSerializer.Write(UMI3DOperationKeys.GuardianBrowserRequest)
+                    + UMI3DSerializer.Write(c.SetAdminUser)
+                    + UMI3DSerializer.Write(c.IDLbeGroup)
                     + UMI3DSerializer.WriteCollection(c.ARAnchors)
                     + UMI3DSerializer.Write(c.ARiD);
                 return true;

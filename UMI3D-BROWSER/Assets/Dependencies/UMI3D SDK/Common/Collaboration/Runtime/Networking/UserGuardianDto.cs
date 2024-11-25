@@ -10,6 +10,10 @@ namespace umi3d.common.lbe
 {
     public class UserGuardianDto : AbstractBrowserRequestDto
     {
+        public bool SetAdminUser { get; set; }
+
+        public uint IDLbeGroup { get; set; }
+
         public List<ARAnchorDto> ARAnchors { get; set; }
 
         public uint ARiD { get; set; }

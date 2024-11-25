@@ -20,6 +20,7 @@ namespace umi3d.common.lbe
                 readable = UMI3DSerializer.TryRead(container, out uint Key);
 
                 uint lbeGroupId = UMI3DSerializer.Read<uint>(container);
+                ulong adminUserId = UMI3DSerializer.Read<ulong>(container);
                 List<ulong> userAR = UMI3DSerializer.ReadList<ulong>(container);
                 List<ulong> userVR = UMI3DSerializer.ReadList<ulong>(container);
                 List<ARAnchorDto> arAnchors = UMI3DSerializer.ReadList<ARAnchorDto>(container);
@@ -30,6 +31,7 @@ namespace umi3d.common.lbe
                     var lBEGroup = new LBEGroupSyncRequestDTO ()
                     {
                         LBEGroupId = lbeGroupId,
+                        AdminUserId = adminUserId,
                         UserAR = userAR,
                         UserVR = userVR,
                         ARAnchors = arAnchors
@@ -51,6 +53,7 @@ namespace umi3d.common.lbe
             {
                 bytable = UMI3DSerializer.Write(UMI3DOperationKeys.SetLBEGroupRequest)
                     + UMI3DSerializer.Write(c.LBEGroupId)
+                    + UMI3DSerializer.Write(c.AdminUserId)
                     + UMI3DSerializer.WriteCollection(c.UserAR)
                     + UMI3DSerializer.WriteCollection(c.UserVR)
                     + UMI3DSerializer.WriteCollection(c.ARAnchors);

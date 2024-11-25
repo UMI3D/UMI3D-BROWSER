@@ -8,6 +8,9 @@ namespace umi3d.common.lbe.description
     {
         public uint LBEGroupId { get; set; }
 
+        public ulong AdminUserId { get; set; }
+
+
         public List<ulong> UserAR { get; set; }
 
         public List<ulong> UserVR { get; set; }

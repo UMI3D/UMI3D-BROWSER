@@ -268,11 +268,13 @@ namespace umi3d.cdk
             else
             {
                 root = go;
+                root.transform.localPosition = Vector3.zero;
+                root.transform.localRotation = Quaternion.identity;
             }
 
             GameObject instance = null;
             UMI3DNodeInstance nodeInstance = environmentManager.GetNodeInstance(environmentId, dto.id);
-
+           
             instance = GameObject.Instantiate(root, parent, true);
 
             if (data is Scene scene)

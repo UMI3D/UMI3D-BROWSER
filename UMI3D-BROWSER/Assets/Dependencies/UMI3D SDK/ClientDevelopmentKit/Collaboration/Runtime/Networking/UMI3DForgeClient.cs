@@ -782,8 +782,6 @@ namespace umi3d.cdk.collaboration
                 case UMI3DOperationKeys.SetLBEGroupRequest:
                     MainThreadManager.Run(() =>
                     {
-
-                        Debug.Log("REMY : SetLBEGroupRequest ok");
                         LBEGroupSyncRequestDTO  lBEGroupRequestDTO = UMI3DSerializer.Read<LBEGroupSyncRequestDTO >(container);
 
                         var lBEGroup = new LBEGroupSyncRequestDTO ()
@@ -794,8 +792,6 @@ namespace umi3d.cdk.collaboration
                             UserVR = lBEGroupRequestDTO.UserVR,
                             ARAnchors = lBEGroupRequestDTO.ARAnchors
                         };
-
-                        Debug.Log("REMY : Umi3d Forge Client -> " + lBEGroup.ARAnchors[0].position);
 
                         if (LBEGroupEventOccurred != null)
                             LBEGroupEventOccurred(lBEGroup);

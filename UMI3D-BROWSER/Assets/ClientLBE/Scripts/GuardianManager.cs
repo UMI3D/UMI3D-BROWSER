@@ -109,8 +109,6 @@ namespace ClientLBE
 
             if(lBEGroupDto.UserAR.Count + lBEGroupDto.UserVR.Count >= 1)
             {
-                Debug.Log("REMY : CreatGuardianServer !");
-
                 CreatGuardianServer(lBEGroupDto.ARAnchors);
             }
             AddCapsulesToCurrentARUsers(); 
@@ -280,8 +278,6 @@ namespace ClientLBE
 
         public void ProcessIDSubmission(string id)
         {
-            Debug.Log("REMY : ID LBE Group 1 -> " + id);
-
             uint parsedID;
             if(userGuardianDto != null)
             {
@@ -294,11 +290,6 @@ namespace ClientLBE
             {
                 Debug.LogWarning("UserguardianDto empty");
             }
-
-            Debug.Log("REMY : Parse ID LBE Group 2 -> " + userGuardianDto.IDLbeGroup);
-
-            Debug.Log("REMY : ID LBE Group 3 -> " + userGuardianDto.IDLbeGroup);
-
         }
 
         public void ToggleCalibrationScene(bool value)
@@ -315,27 +306,17 @@ namespace ClientLBE
         public void ToggleUserAdmin(bool value)
         {
             AdminUser = value;
-            Debug.Log("REMY : Value Admin User -> "+value+" "+AdminUser);
 
             if (userGuardianDto != null)
             {
 
                 if (AdminUser == true)
                 {
-                    Debug.Log("REMY : if Admin User -> " + AdminUser);
-
                     userGuardianDto.SetAdminUser = true;
-
-                    Debug.Log("REMY : userGuardianDto.SetAdminUser -> " + userGuardianDto.SetAdminUser);
-
                 }
                 else
                 {
-                    Debug.Log("REMY : else Admin User -> " + AdminUser);
-
                     userGuardianDto.SetAdminUser = false;
-                    Debug.Log("REMY : userGuardianDto.SetAdminUser -> " + userGuardianDto.SetAdminUser);
-
                 }
             }
             else
@@ -536,13 +517,6 @@ namespace ClientLBE
 
                 var loadingParameters = UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DLoadingParameters;
                 userGuardianDto.ARiD = loadingParameters.BrowserType;
-
-
-                Debug.Log("REMY : SendGuadian -> " + userGuardianDto.ARAnchors[0].position);
-
-                Debug.Log("REMY : SendGuadian -> " + userGuardianDto.SetAdminUser);
-                Debug.Log("REMY : SendGuadian ID LBE Group -> " + userGuardianDto.IDLbeGroup);
-
             }
         }
 
@@ -550,14 +524,10 @@ namespace ClientLBE
         {
             yield return new WaitForSeconds(2f);
             UMI3DClientServer.SendRequest(userGuardianDto, reliable: true);
-            Debug.Log("REMY : WaitSendGuardian -> " + userGuardianDto.SetAdminUser);
-
         }
 
         public void CreatGuardianServer(List<ARAnchorDto> GuardianDto)
         {
-            Debug.Log("REMY : CreatGuardianServer 2 !");
-
             // Clear the client's first connection data
             if (guardianMesh != null)
             {
@@ -587,9 +557,6 @@ namespace ClientLBE
 
             guardianMesh.transform.position = new Vector3(calibrator.transform.position.x, 0.0f, calibrator.transform.position.z);
             guardianMesh.transform.rotation = calibrator.transform.rotation;
-
-            Debug.Log("REMY : End CreatGuardianServer !");
-
         }
 
         public void AddAnchorGuardian()
@@ -606,8 +573,6 @@ namespace ClientLBE
 
         private void CreateGuardianMesh(List<Vector3> points)
         {
-            Debug.Log("REMY : CreatGuardian Mesh !");
-
             Mesh mesh = new Mesh();
 
             // Creating triangles

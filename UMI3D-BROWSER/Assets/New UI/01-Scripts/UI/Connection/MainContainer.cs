@@ -64,7 +64,6 @@ namespace umi3dBrowsers
 
         [Header("Services")]
         [SerializeField] private ConnectionProcessor connectionProcessorService;
-        [SerializeField] private UITweens tween;
         [SerializeField] private PanelTutoDisplayer PageTipDisplayer;
 
         [Header("Linker")]
@@ -194,11 +193,6 @@ namespace umi3dBrowsers
         {
             BindNavigationButtons();
 
-#if UMI3D_XR
-            m_popupLinker.OnPopupOpen += () => tween.TweenTo();
-            m_popupLinker.OnPopupClose += () => tween.Rewind();
-#endif
-
             SetVersion(Application.version);
             BindConnectionService();
 
@@ -300,7 +294,10 @@ namespace umi3dBrowsers
             });
 #if UMI3D_XR
             connectionToImmersiveLinker.OnSkeletonStandUp += () =>
-                parentTransform.position = new Vector3(parentTransform.position.x, Camera.main.transform.position.y, parentTransform.position.z);
+            {
+                Transform root = parentTransform.parent;
+                root.position = new Vector3(root.position.x, Camera.main.transform.position.y, root.position.z);
+            };
 #endif
         }
 

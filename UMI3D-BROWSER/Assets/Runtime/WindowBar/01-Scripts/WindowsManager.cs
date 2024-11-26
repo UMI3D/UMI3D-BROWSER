@@ -23,7 +23,7 @@ using System.Threading.Tasks;
 using umi3d.browserRuntime.notificationKeys;
 using UnityEngine;
 
-namespace umi3d.browserRuntime.pc
+namespace umi3d.browserRuntime.ui.windowBar
 {
     /// <summary>
     /// This class removes the default Windows title bar and set up a custom one.

@@ -25,6 +25,15 @@ namespace umi3d.browserRuntime.ui.thumbnails
         {
             imageChangedNotifier = NotificationHub.Default
                 .GetNotifier<ThumbnailsNotificationKeys.ImageSpriteWillChange>(this);
+
+            updateFavoriteNotifier = NotificationHub.Default
+                .GetNotifier<ThumbnailsNotificationKeys.FavoriteStatusUpdated>(this);
+
+            favoriteChangedNotifier = NotificationHub.Default
+               .GetNotifier<ThumbnailsNotificationKeys.FavoriteStatusChanged>(this);
+
+            deleteNotifier = NotificationHub.Default
+               .GetNotifier<ThumbnailsNotificationKeys.DeleteThumbnail>(this);
         }
 
         #region Image
@@ -38,6 +47,40 @@ namespace umi3d.browserRuntime.ui.thumbnails
             this.image = image;
             imageChangedNotifier[ThumbnailsNotificationKeys.ImageSpriteWillChange.Sprite] = image;
             imageChangedNotifier.Notify();
+        }
+
+        #endregion
+
+        #region Favorite
+
+        public bool isFavorite;
+
+        Notifier updateFavoriteNotifier;
+        Notifier favoriteChangedNotifier;
+
+        public void UpdateFavoriteStatus(bool isFavorite)
+        {
+            this.isFavorite = isFavorite;
+            updateFavoriteNotifier[ThumbnailsNotificationKeys.FavoriteStatusUpdated.IsFavorite] = isFavorite;
+            updateFavoriteNotifier.Notify();
+        }
+
+        public void ToggleFavorite()
+        {
+            isFavorite = !isFavorite;
+            favoriteChangedNotifier[ThumbnailsNotificationKeys.FavoriteStatusChanged.IsFavorite] = isFavorite;
+            favoriteChangedNotifier.Notify();
+        }
+
+        #endregion
+
+        #region Delete
+
+        Notifier deleteNotifier;
+
+        public void Delete()
+        {
+            deleteNotifier.Notify();
         }
 
         #endregion

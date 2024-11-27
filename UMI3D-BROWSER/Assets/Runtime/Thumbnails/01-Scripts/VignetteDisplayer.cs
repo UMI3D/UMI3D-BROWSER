@@ -26,11 +26,6 @@ namespace umi3dBrowsers.displayer
 {
     public class VignetteDisplayer : MonoBehaviour, ISubDisplayer
     {
-        [SerializeField] private Color transprentColor = Color.gray;
-        [Header("Vignette main Image")]
-        [SerializeField] private Image vignetteImage;
-        [SerializeField] private Color normalImageColor;
-        [SerializeField] private Color hoverImageColor;
 
         [Header("buttons")]
         [SerializeField] private ButtonSubDisplayer likeButton;
@@ -81,7 +76,6 @@ namespace umi3dBrowsers.displayer
 
         private void Awake()
         {
-            transprentColor.a = 0;
             DisableSubComponents();
             pen.gameObject.SetActive(false);
             IF_background.enabled = false;
@@ -115,19 +109,16 @@ namespace umi3dBrowsers.displayer
             inputFieldBackground.OnDisabled -= () => DisableSubComponents();
         }
 
-        public void SetupDisplay(string pName, Image pImage = null)
+        public void SetupDisplay(string pName)
         {
             inputFieldBackground.Text = pName;
-            if (pImage != null)
-                vignetteImage = pImage;
 
-            vignetteImage.color = normalImageColor;
-            InputFieldText.color = normalImageColor;
+            //InputFieldText.color = normalImageColor;
         }
 
         internal void SetSprite(Sprite sprite)
         {
-            vignetteImage.sprite = sprite;
+            //vignetteImage.sprite = sprite;
         }
 
         public void SetupFavoriteButton(Action onFavorite, bool isFavorite = false)
@@ -139,10 +130,10 @@ namespace umi3dBrowsers.displayer
             likeImage.sprite = isFavorite ? selectedLikeIcon : normalLikeIcon;
             likeImage.color = isFavorite ? selectedLikeColor : normalLikeColor;
 
-            likeButton.NormalColor = isFavorite ? selectedLikeColor : normalLikeColor;
-            likeButton.HoverColor = isFavorite ? selectedHoverLikeColor : normalHoverLikeColor;
-            likeButton.NormalIcon = isFavorite ? selectedLikeIcon : normalLikeIcon;
-            likeButton.HoverIcon = isFavorite ? selectedHoverLikeIcon : normaHoverLikeIcon;
+            //likeButton.NormalColor = isFavorite ? selectedLikeColor : normalLikeColor;
+            //likeButton.HoverColor = isFavorite ? selectedHoverLikeColor : normalHoverLikeColor;
+            //likeButton.NormalIcon = isFavorite ? selectedLikeIcon : normalLikeIcon;
+            //likeButton.HoverIcon = isFavorite ? selectedHoverLikeIcon : normaHoverLikeIcon;
         }
 
         public void SetupRemoveButton(Action onRemove)
@@ -162,8 +153,7 @@ namespace umi3dBrowsers.displayer
 
             vignetteState = VignetteState.Hovering;
 
-            vignetteImage.color = hoverImageColor;
-            InputFieldText.color = hoverImageColor;
+            //InputFieldText.color = hoverImageColor;
 
             if (m_usesFavoriteButton)
                 likeButton.gameObject.SetActive(true);
@@ -177,8 +167,7 @@ namespace umi3dBrowsers.displayer
             if (gameObject.activeInHierarchy)
                 StartCoroutine(HoverDelay());
 
-            vignetteImage.color = normalImageColor;
-            InputFieldText.color = normalImageColor;
+            //InputFieldText.color = normalImageColor;
         }
 
         public void Click()

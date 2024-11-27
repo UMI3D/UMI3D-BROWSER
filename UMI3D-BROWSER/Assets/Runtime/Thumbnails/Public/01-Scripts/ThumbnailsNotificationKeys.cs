@@ -111,6 +111,41 @@ namespace umi3d.browserRuntime.ui.thumbnails
             public const string Sprite = "Sprite";
         }
 
+        /// <summary>
+        /// Event raised when the favorite status of a thumbnail has changed.
+        /// </summary>
+        public class FavoriteStatusChanged
+        {
+            /// <summary>
+            /// The favorite status.
+            /// </summary>
+            /// <remarks>
+            /// Value is <see cref="bool"/>.
+            /// </remarks>
+            public const string IsFavorite = "IsFavorite";
+        }
+
+        /// <summary>
+        /// Event raised when the favorite status of a thumbnail has to be updated in the view.
+        /// </summary>
+        public class FavoriteStatusUpdated
+        {
+            /// <summary>
+            /// The favorite status.
+            /// </summary>
+            /// <remarks>
+            /// Value is <see cref="bool"/>.
+            /// </remarks>
+            public const string IsFavorite = "IsFavorite";
+        }
+
+        /// <summary>
+        /// Event raised when a thumbnail will be deleted.
+        /// </summary>
+        public class DeleteThumbnail
+        {
+        }
+
         #endregion
     }
 }

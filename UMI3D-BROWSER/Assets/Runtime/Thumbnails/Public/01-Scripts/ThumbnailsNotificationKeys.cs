@@ -36,9 +36,9 @@ namespace umi3d.browserRuntime.ui.thumbnails
         }
 
         /// <summary>
-        /// Event raised when the slider value will changed.
+        /// Event raised when the slider value will change.
         /// </summary>
-        public class SliderValueWillChanged
+        public class SliderValueWillChange
         {
             /// <summary>
             /// The new value.
@@ -50,9 +50,9 @@ namespace umi3d.browserRuntime.ui.thumbnails
         }
 
         /// <summary>
-        /// Event raised when the visibility of the slider buttons will changed.
+        /// Event raised when the visibility of the slider buttons will change.
         /// </summary>
-        public class SliderButtonVisibilityChanged
+        public class SliderButtonVisibilityWillChange
         {
             /// <summary>
             /// Whether the slider buttons are visible.
@@ -64,9 +64,9 @@ namespace umi3d.browserRuntime.ui.thumbnails
         }
 
         /// <summary>
-        /// Event raised when the properties of the grid will changed.
+        /// Event raised when the properties of the grid will change.
         /// </summary>
-        public class GridPropertiesWillChanged
+        public class GridPropertiesWillChange
         {
             /// <summary>
             /// The size of the grid.
@@ -92,5 +92,25 @@ namespace umi3d.browserRuntime.ui.thumbnails
             /// </remarks>
             public const string Spacing = "Spacing";
         }
+
+
+
+        #region Thumbnail
+
+        /// <summary>
+        /// Event raised when the sprite of a thumbnail will change.
+        /// </summary>
+        public class ImageSpriteWillChange
+        {
+            /// <summary>
+            /// The sprite.
+            /// </summary>
+            /// <remarks>
+            /// Value is <see cref="Sprite"/>.
+            /// </remarks>
+            public const string Sprite = "Sprite";
+        }
+
+        #endregion
     }
 }

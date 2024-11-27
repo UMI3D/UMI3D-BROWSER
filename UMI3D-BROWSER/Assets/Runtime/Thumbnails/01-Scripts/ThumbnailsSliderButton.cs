@@ -49,7 +49,7 @@ namespace umi3d.browserRuntime.ui.thumbnails
 
             model = GetComponentInParent<ThumbnailsModelContainer>();
 
-            NotificationHub.Default.Subscribe<ThumbnailsNotificationKeys.SliderButtonVisibilityChanged>(
+            NotificationHub.Default.Subscribe<ThumbnailsNotificationKeys.SliderButtonVisibilityWillChange>(
                 this,
                 SliderButtonVisibilityChanged
             );
@@ -77,7 +77,7 @@ namespace umi3d.browserRuntime.ui.thumbnails
 
         void SliderButtonVisibilityChanged(Notification notification)
         {
-            if (!notification.TryGetInfoT(ThumbnailsNotificationKeys.SliderButtonVisibilityChanged.IsVisible, out bool isVisible))
+            if (!notification.TryGetInfoT(ThumbnailsNotificationKeys.SliderButtonVisibilityWillChange.IsVisible, out bool isVisible))
             {
                 return;
             }

@@ -34,7 +34,7 @@ namespace umi3d.browserRuntime.ui.thumbnails
 
             model = GetComponentInParent<ThumbnailsModelContainer>();
 
-            NotificationHub.Default.Subscribe<ThumbnailsNotificationKeys.SliderValueWillChanged>(
+            NotificationHub.Default.Subscribe<ThumbnailsNotificationKeys.SliderValueWillChange>(
                 this,
                 SliderValueWillChanged
             );
@@ -52,7 +52,7 @@ namespace umi3d.browserRuntime.ui.thumbnails
 
         void SliderValueWillChanged(Notification notification)
         {
-            if (!notification.TryGetInfoT(ThumbnailsNotificationKeys.SliderValueWillChanged.Value, out float value))
+            if (!notification.TryGetInfoT(ThumbnailsNotificationKeys.SliderValueWillChange.Value, out float value))
             {
                 return;
             }

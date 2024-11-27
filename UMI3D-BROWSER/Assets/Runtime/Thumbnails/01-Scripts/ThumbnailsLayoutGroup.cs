@@ -33,7 +33,7 @@ namespace umi3d.browserRuntime.ui.thumbnails
 
             model = GetComponentInParent<ThumbnailsModelContainer>();
 
-            NotificationHub.Default.Subscribe<ThumbnailsNotificationKeys.GridPropertiesWillChanged>(
+            NotificationHub.Default.Subscribe<ThumbnailsNotificationKeys.GridPropertiesWillChange>(
                 this,
                 GridPropertiesWillChanged
             );
@@ -46,17 +46,17 @@ namespace umi3d.browserRuntime.ui.thumbnails
 
         void GridPropertiesWillChanged(Notification notification)
         {
-            if (!notification.TryGetInfoT(ThumbnailsNotificationKeys.GridPropertiesWillChanged.Size, out Vector2 size))
+            if (!notification.TryGetInfoT(ThumbnailsNotificationKeys.GridPropertiesWillChange.Size, out Vector2 size))
             {
                 return;
             }
 
-            if (!notification.TryGetInfoT(ThumbnailsNotificationKeys.GridPropertiesWillChanged.RowCount, out int rowCount))
+            if (!notification.TryGetInfoT(ThumbnailsNotificationKeys.GridPropertiesWillChange.RowCount, out int rowCount))
             {
                 return;
             }
 
-            if (!notification.TryGetInfoT(ThumbnailsNotificationKeys.GridPropertiesWillChanged.Spacing, out Vector2 spacing))
+            if (!notification.TryGetInfoT(ThumbnailsNotificationKeys.GridPropertiesWillChange.Spacing, out Vector2 spacing))
             {
                 return;
             }

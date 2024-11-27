@@ -27,10 +27,10 @@ namespace umi3d.browserRuntime.ui.thumbnails
                 .GetNotifier<ThumbnailsNotificationKeys.ContentModeChanged>(this);
 
             horizontalSliderValueNotifier = NotificationHub.Default
-                .GetNotifier<ThumbnailsNotificationKeys.SliderValueWillChanged>(this);
+                .GetNotifier<ThumbnailsNotificationKeys.SliderValueWillChange>(this);
 
             horizontalSliderValueNotifier = NotificationHub.Default
-                .GetNotifier<ThumbnailsNotificationKeys.SliderValueWillChanged>(this);
+                .GetNotifier<ThumbnailsNotificationKeys.SliderValueWillChange>(this);
         }
 
         #region Content mode
@@ -76,19 +76,19 @@ namespace umi3d.browserRuntime.ui.thumbnails
 
         public void ResetSlider()
         {
-            horizontalSliderValueNotifier[ThumbnailsNotificationKeys.SliderValueWillChanged.Value] = 0;
+            horizontalSliderValueNotifier[ThumbnailsNotificationKeys.SliderValueWillChange.Value] = 0;
             horizontalSliderValueNotifier.Notify();
         }
 
         void SetHorizontalSliderValue(float value)
         {
-            horizontalSliderValueNotifier[ThumbnailsNotificationKeys.SliderValueWillChanged.Value] = value;
+            horizontalSliderValueNotifier[ThumbnailsNotificationKeys.SliderValueWillChange.Value] = value;
             horizontalSliderValueNotifier.Notify();
         }
 
         public void DisplaySlideButton(bool display)
         {
-            SliderButtonVisibilityNotifier[ThumbnailsNotificationKeys.SliderButtonVisibilityChanged.IsVisible] = display;
+            SliderButtonVisibilityNotifier[ThumbnailsNotificationKeys.SliderButtonVisibilityWillChange.IsVisible] = display;
             SliderButtonVisibilityNotifier.Notify();
         }
 
@@ -107,9 +107,9 @@ namespace umi3d.browserRuntime.ui.thumbnails
             this.gridSize = gridSize;
             this.gridRowCount = gridRowCount;
             this.gridSpacing = gridSpacing;
-            gridPropertiesNotifier[ThumbnailsNotificationKeys.GridPropertiesWillChanged.Size] = gridSize;
-            gridPropertiesNotifier[ThumbnailsNotificationKeys.GridPropertiesWillChanged.RowCount] = gridRowCount;
-            gridPropertiesNotifier[ThumbnailsNotificationKeys.GridPropertiesWillChanged.Spacing] = gridSpacing;
+            gridPropertiesNotifier[ThumbnailsNotificationKeys.GridPropertiesWillChange.Size] = gridSize;
+            gridPropertiesNotifier[ThumbnailsNotificationKeys.GridPropertiesWillChange.RowCount] = gridRowCount;
+            gridPropertiesNotifier[ThumbnailsNotificationKeys.GridPropertiesWillChange.Spacing] = gridSpacing;
             gridPropertiesNotifier.Notify();
         }
 

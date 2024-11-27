@@ -51,13 +51,6 @@ namespace umi3dBrowsers.container
         [SerializeField] private bool isFavorite;
         [SerializeField] private GridLayoutGroup gridLayout;
 
-        [Header("Scrolling")]
-        [SerializeField] private Button buttonLeft;
-        [SerializeField] private Image leftImage;
-        [SerializeField] private Button buttonRight;
-        [SerializeField] private Image rightImage;
-        [SerializeField] private float scrollButtonSpeed = 1.0f;
-
         private bool m_shouldResetAndFetchVignetteFromDB = true;
 
         const string LOCALIZATION_TABLE = "UMI3D_inetum";
@@ -71,15 +64,6 @@ namespace umi3dBrowsers.container
 
             //vignetteContainerEvent.OnVignetteReset += ResetVignettes;
             //vignetteContainerEvent.OnVignetteChangeMode += ChangeVignetteMode;
-
-            buttonLeft.onClick.AddListener(() => {
-                //if (vignetteDisplayers.Count > (int)vignetteMode)
-                //    scrollbar.value -= scrollButtonSpeed / (vignetteDisplayers.Count - (int)vignetteMode);
-            });
-            buttonRight.onClick.AddListener(() => {
-                //if (vignetteDisplayers.Count > (int)vignetteMode)
-                //    scrollbar.value += scrollButtonSpeed / (vignetteDisplayers.Count - (int)vignetteMode);
-            });
         }
 
         private void OnEnable()
@@ -295,16 +279,16 @@ namespace umi3dBrowsers.container
 
         public void UpdateNavigation()
         {
-            if ((int)vignetteMode < vignetteDisplayers.Count)
-            {
-                buttonLeft.gameObject.SetActive(true);
-                buttonRight.gameObject.SetActive(true);
-            }
-            else
-            {
-                buttonLeft.gameObject.SetActive(false);
-                buttonRight.gameObject.SetActive(false);
-            }
+            //if ((int)vignetteMode < vignetteDisplayers.Count)
+            //{
+            //    buttonLeft.gameObject.SetActive(true);
+            //    buttonRight.gameObject.SetActive(true);
+            //}
+            //else
+            //{
+            //    buttonLeft.gameObject.SetActive(false);
+            //    buttonRight.gameObject.SetActive(false);
+            //}
         }
 
 #if UNITY_EDITOR

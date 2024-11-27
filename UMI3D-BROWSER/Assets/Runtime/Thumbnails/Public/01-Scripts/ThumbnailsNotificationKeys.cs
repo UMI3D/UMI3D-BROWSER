@@ -35,6 +35,9 @@ namespace umi3d.browserRuntime.ui.thumbnails
             public const string ContentMode = "ContentMode";
         }
 
+        /// <summary>
+        /// Event raised when the slider value will changed.
+        /// </summary>
         public class SliderValueWillChanged
         {
             /// <summary>
@@ -44,6 +47,20 @@ namespace umi3d.browserRuntime.ui.thumbnails
             /// Value is <see cref="float"/>.
             /// </remarks>
             public const string Value = "Value";
+        }
+
+        /// <summary>
+        /// Event raised when the visibility of the slider buttons will changed.
+        /// </summary>
+        public class SliderButtonVisibilityChanged
+        {
+            /// <summary>
+            /// Whether the slider buttons are visible.
+            /// </summary>
+            /// <remarks>
+            /// Value is <see cref="bool"/>.
+            /// </remarks>
+            public const string IsVisible = "IsVisible";
         }
     }
 }

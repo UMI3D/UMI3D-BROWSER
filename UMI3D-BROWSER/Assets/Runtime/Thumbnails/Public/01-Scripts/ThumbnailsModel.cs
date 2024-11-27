@@ -27,6 +27,9 @@ namespace umi3d.browserRuntime.ui.thumbnails
 
             horizontalSliderValueNotifier = NotificationHub.Default
                 .GetNotifier<ThumbnailsNotificationKeys.SliderValueWillChanged>(this);
+
+            horizontalSliderValueNotifier = NotificationHub.Default
+                .GetNotifier<ThumbnailsNotificationKeys.SliderValueWillChanged>(this);
         }
 
         #region Content mode
@@ -43,7 +46,7 @@ namespace umi3d.browserRuntime.ui.thumbnails
             contentMode = contentMode == ThumbnailContentMode.Large
                ? ThumbnailContentMode.Small
                : ThumbnailContentMode.Large;
-            contentModeNotifier[ThumbnailsNotificationKeys.ThumbnailsContentModeChanged.ContentMode] = contentMode;
+            contentModeNotifier[ThumbnailsNotificationKeys.ContentModeChanged.ContentMode] = contentMode;
             contentModeNotifier.Notify();
         }
 
@@ -51,14 +54,35 @@ namespace umi3d.browserRuntime.ui.thumbnails
 
         #region Horizontal slider
 
+        public float scrollButtonSpeed = 1.0f;
+
         public float horizontalSliderValue;
 
         Notifier horizontalSliderValueNotifier;
+        Notifier SliderButtonVisibilityNotifier;
 
-        public void SetHorizontalSliderValue(float value)
+        public void SlideTowardLeft()
+        {
+            //if (vignetteDisplayers.Count > (int)vignetteMode)
+            //    scrollbar.value -= scrollButtonSpeed / (vignetteDisplayers.Count - (int)vignetteMode);
+        }
+
+        public void SlideTowardRight()
+        {
+            //if (vignetteDisplayers.Count > (int)vignetteMode)
+            //    scrollbar.value += scrollButtonSpeed / (vignetteDisplayers.Count - (int)vignetteMode);
+        }
+
+        void SetHorizontalSliderValue(float value)
         {
             horizontalSliderValueNotifier[ThumbnailsNotificationKeys.SliderValueWillChanged.Value] = value;
             horizontalSliderValueNotifier.Notify();
+        }
+
+        public void DisplaySlideButton(bool display)
+        {
+            SliderButtonVisibilityNotifier[ThumbnailsNotificationKeys.SliderButtonVisibilityChanged.IsVisible] = display;
+            SliderButtonVisibilityNotifier.Notify();
         }
 
         #endregion

@@ -20,15 +20,20 @@ namespace umi3d.browserRuntime.ui.thumbnails
 {
     public class ThumbnailsModel
     {
-        public ThumbnailContentMode contentMode;
-
-        Notifier contentModeNotifier;
-
         public ThumbnailsModel()
         {
             contentModeNotifier = NotificationHub.Default
-                .GetNotifier<ThumbnailsNotificationKeys.ThumbnailsContentModeChanged>(this);
+                .GetNotifier<ThumbnailsNotificationKeys.ContentModeChanged>(this);
+
+            horizontalSliderValueNotifier = NotificationHub.Default
+                .GetNotifier<ThumbnailsNotificationKeys.SliderValueWillChanged>(this);
         }
+
+        #region Content mode
+
+        public ThumbnailContentMode contentMode;
+
+        Notifier contentModeNotifier;
 
         /// <summary>
         /// Switch between <see cref="ThumbnailContentMode.Large"/> and <see cref="ThumbnailContentMode.Small"/>
@@ -41,5 +46,21 @@ namespace umi3d.browserRuntime.ui.thumbnails
             contentModeNotifier[ThumbnailsNotificationKeys.ThumbnailsContentModeChanged.ContentMode] = contentMode;
             contentModeNotifier.Notify();
         }
+
+        #endregion
+
+        #region Horizontal slider
+
+        public float horizontalSliderValue;
+
+        Notifier horizontalSliderValueNotifier;
+
+        public void SetHorizontalSliderValue(float value)
+        {
+            horizontalSliderValueNotifier[ThumbnailsNotificationKeys.SliderValueWillChanged.Value] = value;
+            horizontalSliderValueNotifier.Notify();
+        }
+
+        #endregion
     }
 }

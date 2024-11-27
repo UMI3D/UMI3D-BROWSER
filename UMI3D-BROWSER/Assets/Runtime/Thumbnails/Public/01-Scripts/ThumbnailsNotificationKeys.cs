@@ -24,7 +24,7 @@ namespace umi3d.browserRuntime.ui.thumbnails
         /// <summary>
         /// Event raised when the content mode of the thumbnails changed.
         /// </summary>
-        public class ThumbnailsContentModeChanged
+        public class ContentModeChanged
         {
             /// <summary>
             /// The new content mode.
@@ -33,6 +33,17 @@ namespace umi3d.browserRuntime.ui.thumbnails
             /// Value is <see cref="ThumbnailContentMode"/>.
             /// </remarks>
             public const string ContentMode = "ContentMode";
+        }
+
+        public class SliderValueWillChanged
+        {
+            /// <summary>
+            /// The new value.
+            /// </summary>
+            /// <remarks>
+            /// Value is <see cref="float"/>.
+            /// </remarks>
+            public const string Value = "Value";
         }
     }
 }

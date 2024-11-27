@@ -52,7 +52,6 @@ namespace umi3dBrowsers.container
         [SerializeField] private GridLayoutGroup gridLayout;
 
         [Header("Scrolling")]
-        [SerializeField] private Scrollbar scrollbar;
         [SerializeField] private Button buttonLeft;
         [SerializeField] private Image leftImage;
         [SerializeField] private Button buttonRight;
@@ -74,12 +73,12 @@ namespace umi3dBrowsers.container
             //vignetteContainerEvent.OnVignetteChangeMode += ChangeVignetteMode;
 
             buttonLeft.onClick.AddListener(() => {
-                if (vignetteDisplayers.Count > (int)vignetteMode)
-                    scrollbar.value -= scrollButtonSpeed / (vignetteDisplayers.Count - (int)vignetteMode);
+                //if (vignetteDisplayers.Count > (int)vignetteMode)
+                //    scrollbar.value -= scrollButtonSpeed / (vignetteDisplayers.Count - (int)vignetteMode);
             });
             buttonRight.onClick.AddListener(() => {
-                if (vignetteDisplayers.Count > (int)vignetteMode)
-                    scrollbar.value += scrollButtonSpeed / (vignetteDisplayers.Count - (int)vignetteMode);
+                //if (vignetteDisplayers.Count > (int)vignetteMode)
+                //    scrollbar.value += scrollButtonSpeed / (vignetteDisplayers.Count - (int)vignetteMode);
             });
         }
 
@@ -87,7 +86,7 @@ namespace umi3dBrowsers.container
         {
             new Task(async () => {
                 await Task.Yield();
-                scrollbar.value = 0;
+                //scrollbar.value = 0;
             }).Start(TaskScheduler.FromCurrentSynchronizationContext());
 
             //vignetteContainerEvent.OnVignetteReset?.Invoke();
@@ -288,7 +287,7 @@ namespace umi3dBrowsers.container
             gridLayout.constraintCount = data.VignetteRowAmount;
             gridLayout.spacing = data.VignetteSpace;
 
-            scrollbar.value = 0;
+            //scrollbar.value = 0;
 
             ResetVignettes();
         }

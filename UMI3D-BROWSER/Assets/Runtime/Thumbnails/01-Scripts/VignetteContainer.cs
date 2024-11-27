@@ -16,7 +16,6 @@ limitations under the License.
 
 using inetum.unityUtils;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -27,7 +26,6 @@ using umi3d.common.interaction.form;
 using umi3dBrowsers.displayer;
 using umi3dBrowsers.linker;
 using umi3dBrowsers.services.connection;
-using umi3dBrowsers.utils;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -48,7 +46,6 @@ namespace umi3dBrowsers.container
         [SerializeField] private ThumbnailContentMode vignetteMode;
         [SerializeField] private ThumbnailContentMode primaryVignetteMode;
         [SerializeField] private ThumbnailContentMode secondaryVignetteMode;
-        [SerializeField] private VignetteContainerEvent vignetteContainerEvent;
 
         [Header("Layout")]
         [SerializeField] private bool isFavorite;
@@ -73,7 +70,7 @@ namespace umi3dBrowsers.container
         {
             popupNotifier = new(this);
 
-            vignetteContainerEvent.OnVignetteReset += ResetVignettes;
+            //vignetteContainerEvent.OnVignetteReset += ResetVignettes;
             //vignetteContainerEvent.OnVignetteChangeMode += ChangeVignetteMode;
 
             buttonLeft.onClick.AddListener(() => {
@@ -93,7 +90,7 @@ namespace umi3dBrowsers.container
                 scrollbar.value = 0;
             }).Start(TaskScheduler.FromCurrentSynchronizationContext());
 
-            vignetteContainerEvent.OnVignetteReset?.Invoke();
+            //vignetteContainerEvent.OnVignetteReset?.Invoke();
         }
 
         private void Start()
@@ -103,8 +100,6 @@ namespace umi3dBrowsers.container
 
         private void OnDestroy()
         {
-            vignetteContainerEvent.OnVignetteReset -= ResetVignettes;
-
             NotificationHub.Default.Unsubscribe(this);
         }
 
@@ -170,7 +165,7 @@ namespace umi3dBrowsers.container
             vignette.SetupDisplay(pWorldData.worldName);
             vignette.SetupFavoriteButton(() => { 
                 pVirtualWorlds.ToggleWorldFavorite(pWorldData);
-                vignetteContainerEvent.OnVignetteReset?.Invoke(); 
+                //vignetteContainerEvent.OnVignetteReset?.Invoke(); 
             }, pWorldData.isFavorite);
             vignette.SetupRemoveButton(() => {
                 popupNotifier
@@ -184,7 +179,7 @@ namespace umi3dBrowsers.container
                         if (index == 1)
                         {
                             pVirtualWorlds.RemoveWorld(pWorldData);
-                            vignetteContainerEvent.OnVignetteReset?.Invoke();
+                            //vignetteContainerEvent.OnVignetteReset?.Invoke();
                         }
                     })
                     .Notify();
@@ -232,9 +227,7 @@ namespace umi3dBrowsers.container
             return pBuffer;
         }
 
-        public void ResetVignettes() => ResetVignettes(true);
-
-        public void ResetVignettes(bool runtime)
+        public void ResetVignettes()
         {
             if (!m_shouldResetAndFetchVignetteFromDB)
             {
@@ -244,10 +237,7 @@ namespace umi3dBrowsers.container
 
             for (var i = gridLayout.transform.childCount - 1; i >= 0; i--)
             {
-                if (runtime)
-                    Destroy(gridLayout.transform.GetChild(i).gameObject);
-                else
-                    DestroyImmediate(gridLayout.transform.GetChild(i).gameObject);
+                Destroy(gridLayout.transform.GetChild(i).gameObject);
             }
 
             vignetteDisplayers = PlayerPrefsManager.HasVirtualWorldsStored()
@@ -290,7 +280,7 @@ namespace umi3dBrowsers.container
                 m_emptyVignettes.Add(Instantiate(emptyVignettePrefab, gridLayout.transform));
         }
  
-        private void SetGridLayout(VignetteContainerData data, bool runtime = true)
+        private void SetGridLayout(VignetteContainerData data)
         {
             if (data == null) return;
 
@@ -300,7 +290,7 @@ namespace umi3dBrowsers.container
 
             scrollbar.value = 0;
 
-            ResetVignettes(runtime);
+            ResetVignettes();
         }
 
 

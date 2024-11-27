@@ -16,6 +16,7 @@ limitations under the License.
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using umi3d.browserRuntime.ui.thumbnails;
 using umi3d.common;
 using umi3d.common.interaction.form;
 using umi3d.common.interaction.form.ugui;
@@ -304,7 +305,7 @@ namespace umi3dBrowsers.container.formrenderer
                     vignetteContainer = newParent.container.GetComponent<VignetteContainer>();
                     vignetteContainer.ShouldResetAndFetchVignetteFromDB = false;
                     vignetteContainer.Clear();
-                    vignetteContainer.ChangePrimaryVignetteMode(E_VignetteScale.Mid);
+                    vignetteContainer.ChangePrimaryVignetteMode(ThumbnailContentMode.Mid);
 
                     HandleStyle(newParent.container, newParent.container.GetComponent<displayer.IDisplayer>(), newParent.Styles);
                     m_vignetteContainers.Add(vignetteContainer);

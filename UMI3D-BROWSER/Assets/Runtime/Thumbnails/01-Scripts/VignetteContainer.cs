@@ -76,7 +76,7 @@ namespace umi3dBrowsers.container
             popupNotifier = new(this);
 
             vignetteContainerEvent.OnVignetteReset += ResetVignettes;
-            vignetteContainerEvent.OnVignetteChangeMode += ChangeVignetteMode;
+            //vignetteContainerEvent.OnVignetteChangeMode += ChangeVignetteMode;
 
             buttonLeft.onClick.AddListener(() => {
                 if (vignetteDisplayers.Count > (int)vignetteMode)
@@ -106,18 +106,8 @@ namespace umi3dBrowsers.container
         private void OnDestroy()
         {
             vignetteContainerEvent.OnVignetteReset -= ResetVignettes;
-            vignetteContainerEvent.OnVignetteChangeMode -= ChangeVignetteMode;
-        }
 
-        [ContextMenu("Toggle vignette mode")]
-        public void ToggleVignette()
-        {
-            if (vignetteMode == E_VignetteScale.None) return;
-
-            if (vignetteMode == primaryVignetteMode)
-                vignetteContainerEvent.OnVignetteChangeMode?.Invoke(secondaryVignetteMode);
-            else if (vignetteMode == secondaryVignetteMode)
-                vignetteContainerEvent.OnVignetteChangeMode?.Invoke(primaryVignetteMode);
+            NotificationHub.Default.Unsubscribe(this);
         }
 
         public void ChangePrimaryVignetteMode(ThumbnailContentMode vignetteScale)

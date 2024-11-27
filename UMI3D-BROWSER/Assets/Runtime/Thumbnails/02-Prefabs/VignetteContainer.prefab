@@ -283,10 +283,9 @@ GameObject:
   - component: {fileID: 8339599667345245833}
   - component: {fileID: 3556868776948303928}
   - component: {fileID: 2894982637446897884}
-  - component: {fileID: 158142301285151395}
-  - component: {fileID: 875923210067362332}
+  - component: {fileID: 2175648764148472374}
   m_Layer: 5
-  m_Name: ToggleVignetteMode
+  m_Name: ToggleContentMode
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -392,41 +391,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 3556868776948303928}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5302419438018580643}
-        m_TargetAssemblyTypeName: umi3dBrowsers.container.VignetteContainer, Assembly-CSharp
-        m_MethodName: ToggleVignette
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
---- !u!65 &158142301285151395
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2676208664722498483}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 15, y: 15, z: 0.01}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &875923210067362332
+      m_Calls: []
+--- !u!114 &2175648764148472374
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -435,13 +401,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2676208664722498483}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 54201f7897bbda644b218cb41fa75e97, type: 3}
+  m_Script: {fileID: 11500000, guid: 139325521f0e0d646aa251c9832c3484, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scaleHorizontalRT: 0
-  childRT: {fileID: 0}
-  updateOnGUI: 0
-  setCenter: 0
 --- !u!1 &3049279360133243996
 GameObject:
   m_ObjectHideFlags: 0
@@ -491,7 +453,7 @@ GameObject:
   - component: {fileID: 5926664008287665032}
   - component: {fileID: 4324451535249047705}
   - component: {fileID: 5302419438018580643}
-  - component: {fileID: 960552460556117284}
+  - component: {fileID: 5310928499895711045}
   m_Layer: 5
   m_Name: VignetteContainer
   m_TagString: Untagged
@@ -606,7 +568,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   connectionServiceLinker: {fileID: 11400000, guid: 24604fe66de00534e9fe94635a6279cf,
     type: 2}
-  scaler: {fileID: 960552460556117284}
+  scaler: {fileID: 0}
   emptyVignettePrefab: {fileID: 1842928581106226447, guid: c1ced952cf1b8cc48b9bb7d6e98e0d02,
     type: 3}
   vignetteDisplayers: []
@@ -629,7 +591,7 @@ MonoBehaviour:
   scrollButtonSpeed: 1
   virtualWorlds:
     worlds: []
---- !u!114 &960552460556117284
+--- !u!114 &5310928499895711045
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -638,10 +600,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 3160502414842021976}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7831fdd9ac1e0fa44976294339e58742, type: 3}
+  m_Script: {fileID: 11500000, guid: efc87e7d8203900498601ae8be5e3b5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rescalUIOnStart: 0
+  contentMode: 0
 --- !u!1 &4734300663140872579
 GameObject:
   m_ObjectHideFlags: 0
@@ -902,8 +864,6 @@ GameObject:
   - component: {fileID: 6322684189187750620}
   - component: {fileID: 4121373014321927258}
   - component: {fileID: 858012872897415378}
-  - component: {fileID: 6678651157096608476}
-  - component: {fileID: 7849335808342634947}
   m_Layer: 5
   m_Name: Handle
   m_TagString: Untagged
@@ -968,43 +928,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!65 &6678651157096608476
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7059238020838405426}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Size: {x: 0, y: 0, z: 0.01}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &7849335808342634947
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7059238020838405426}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 54201f7897bbda644b218cb41fa75e97, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  scaleHorizontalRT: 0
-  childRT: {fileID: 0}
-  updateOnGUI: 0
-  setCenter: 0
 --- !u!1 &7700915209069597627
 GameObject:
   m_ObjectHideFlags: 0

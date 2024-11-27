@@ -13,14 +13,13 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-using System;
+
 using UnityEngine;
 
-namespace umi3dBrowsers.container
+namespace umi3d.browserRuntime.ui.thumbnails
 {
-    [CreateAssetMenu(menuName = "Vignette/Event")]
-    public class VignetteContainerEvent : ScriptableObject
+    public class ThumbnailsModel : MonoBehaviour
     {
-        public Action OnVignetteReset;
+        public ThumbnailContentMode contentMode;
     }
 }

@@ -18,8 +18,17 @@ using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.thumbnails
 {
-    public class ThumbnailsModel : MonoBehaviour
+    internal class ThumbnailsModelContainer : MonoBehaviour
     {
-        public ThumbnailContentMode contentMode;
+        static ThumbnailsModel _model;
+        public ThumbnailsModel model => _model;
+
+        void Awake()
+        {
+            if (_model == null)
+            {
+                _model = new();
+            }
+        }
     }
 }

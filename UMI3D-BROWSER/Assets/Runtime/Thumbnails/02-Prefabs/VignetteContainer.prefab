@@ -453,7 +453,7 @@ GameObject:
   - component: {fileID: 5926664008287665032}
   - component: {fileID: 4324451535249047705}
   - component: {fileID: 5302419438018580643}
-  - component: {fileID: 5310928499895711045}
+  - component: {fileID: 8719619823127192365}
   m_Layer: 5
   m_Name: VignetteContainer
   m_TagString: Untagged
@@ -578,8 +578,6 @@ MonoBehaviour:
   vignetteMode: 2
   primaryVignetteMode: 2
   secondaryVignetteMode: 8
-  vignetteContainerEvent: {fileID: 11400000, guid: 2511ab057e48ce441aa8fad3ed6a0e69,
-    type: 2}
   isFavorite: 0
   gridLayout: {fileID: 4684022820558560661}
   scrollbar: {fileID: 4416285529175177648}
@@ -590,7 +588,7 @@ MonoBehaviour:
   scrollButtonSpeed: 1
   virtualWorlds:
     worlds: []
---- !u!114 &5310928499895711045
+--- !u!114 &8719619823127192365
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -599,10 +597,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 3160502414842021976}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: efc87e7d8203900498601ae8be5e3b5d, type: 3}
+  m_Script: {fileID: 11500000, guid: 77ad52164d8286e4181ef53fdbba73be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  contentMode: 0
 --- !u!1 &4734300663140872579
 GameObject:
   m_ObjectHideFlags: 0

@@ -14,7 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -25,29 +24,20 @@ namespace umi3d.browserRuntime.ui.thumbnails
     {
         Button button;
 
-        ThumbnailsModel model;
-
-        Notifier notifier;
+        ThumbnailsModelContainer model;
 
         void Awake()
         {
             button = GetComponent<Button>();
             button.onClick.AddListener(OnClick);
 
-            model = GetComponentInParent<ThumbnailsModel>();
-
-            notifier = NotificationHub.Default
-                .GetNotifier<ThumbnailsNotificationKeys.ThumbnailsContentModeChanged>(this);
+            model = GetComponentInParent<ThumbnailsModelContainer>();
         }
 
         [ContextMenu("Toggle content mode")]
         void OnClick()
         {
-            notifier[ThumbnailsNotificationKeys.ThumbnailsContentModeChanged.ContentMode] =
-                model.contentMode == ThumbnailContentMode.Large
-                ? ThumbnailContentMode.Small
-                : ThumbnailContentMode.Large;
-            notifier.Notify();
+            model.model.ToggleContentMode();
         }
     }
 }

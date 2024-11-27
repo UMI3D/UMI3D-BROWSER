@@ -38,8 +38,6 @@ namespace umi3dBrowsers.container
         [SerializeField] private ConnectionServiceLinker connectionServiceLinker;
 
         [Header("Vignette")]
-        [SerializeField] private UIColliderScallerHandler scaler;
-        [Space]
         [SerializeField] private GameObject emptyVignettePrefab;
         [SerializeField] private List<VignetteDisplayer> vignetteDisplayers;
         private List<GameObject> m_emptyVignettes = new();
@@ -301,17 +299,10 @@ namespace umi3dBrowsers.container
             gridLayout.spacing = data.VignetteSpace;
 
             scrollbar.value = 0;
-            if (gameObject.activeSelf && isActiveAndEnabled)
-                StartCoroutine(ScaleColliders());
 
             ResetVignettes(runtime);
         }
 
-        IEnumerator ScaleColliders()
-        {
-            yield return new WaitForSeconds(0.35f);
-            scaler.ScaleColliders();
-        }
 
         public void UpdateNavigation()
         {

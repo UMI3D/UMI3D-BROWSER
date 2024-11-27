@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using umi3d.browserRuntime.ui.thumbnails;
 using UnityEngine;
 
 namespace umi3dBrowsers.container
@@ -7,8 +8,8 @@ namespace umi3dBrowsers.container
     [CreateAssetMenu(menuName = "Data/Ui/VignetteContainer")]
     public class VignetteContainerData : ScriptableObject
     {
-        [SerializeField] private E_VignetteScale m_vignetteScale;
-        public E_VignetteScale VignetteScale => m_vignetteScale;
+        [SerializeField] private ThumbnailContentMode m_vignetteScale;
+        public ThumbnailContentMode VignetteScale => m_vignetteScale;
         [SerializeField] private Vector2 m_vignetteSize;
         public Vector2 VignetteSize => m_vignetteSize;
         [SerializeField] private Vector2 m_vignetteSpace;
@@ -18,7 +19,7 @@ namespace umi3dBrowsers.container
         [SerializeField] private int m_vignetteRowAmount;
         public int VignetteRowAmount => m_vignetteRowAmount;
 
-        public static VignetteContainerData FindVignetteContainerDataByVignetteScale(E_VignetteScale vignetteScale, List<VignetteContainerData> datas)
+        public static VignetteContainerData FindVignetteContainerDataByVignetteScale(ThumbnailContentMode vignetteScale, List<VignetteContainerData> datas)
         {
             for (int i = 0; i < datas.Count; i++)
             {

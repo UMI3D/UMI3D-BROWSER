@@ -14,25 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System;
-using UnityEngine;
-
 namespace umi3d.browserRuntime.ui.thumbnails
 {
-    public static class ThumbnailsNotificationKeys 
+    public enum ThumbnailContentMode
     {
-        /// <summary>
-        /// Event raised when the content mode of the thumbnails changed.
-        /// </summary>
-        public class ThumbnailsContentModeChanged
-        {
-            /// <summary>
-            /// The new content mode.
-            /// </summary>
-            /// <remarks>
-            /// Value is <see cref="ThumbnailContentMode"/>.
-            /// </remarks>
-            public const string ContentMode = "ContentMode";
-        }
+        None = 0,
+        Large = 2,
+        Small = 8,
+        Mid = 3
     }
 }

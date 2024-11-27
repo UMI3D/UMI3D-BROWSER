@@ -22,6 +22,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using umi3d.browserRuntime.ui.connection.vignette;
 using umi3d.browserRuntime.ui.popup;
+using umi3d.browserRuntime.ui.thumbnails;
 using umi3d.common.interaction.form;
 using umi3dBrowsers.displayer;
 using umi3dBrowsers.linker;
@@ -46,9 +47,9 @@ namespace umi3dBrowsers.container
         [Space]
         [SerializeField] private List<VignetteContainerData> m_vignetteContainerDatas = new();
         [Space]
-        [SerializeField] private E_VignetteScale vignetteMode;
-        [SerializeField] private E_VignetteScale primaryVignetteMode;
-        [SerializeField] private E_VignetteScale secondaryVignetteMode;
+        [SerializeField] private ThumbnailContentMode vignetteMode;
+        [SerializeField] private ThumbnailContentMode primaryVignetteMode;
+        [SerializeField] private ThumbnailContentMode secondaryVignetteMode;
         [SerializeField] private VignetteContainerEvent vignetteContainerEvent;
 
         [Header("Layout")]
@@ -119,19 +120,19 @@ namespace umi3dBrowsers.container
                 vignetteContainerEvent.OnVignetteChangeMode?.Invoke(primaryVignetteMode);
         }
 
-        public void ChangePrimaryVignetteMode(E_VignetteScale vignetteScale)
+        public void ChangePrimaryVignetteMode(ThumbnailContentMode vignetteScale)
         {
             primaryVignetteMode = vignetteScale;
             ChangeVignetteMode(PlayerPrefs.GetInt(VignettePlayerPrefKeys.IsPrimaryVignetteMode, 1) == 1 ? primaryVignetteMode : secondaryVignetteMode);
         }
 
-        public void ChangeSecondaryVignetteMode(E_VignetteScale vignetteScale)
+        public void ChangeSecondaryVignetteMode(ThumbnailContentMode vignetteScale)
         {
             secondaryVignetteMode = vignetteScale;
             ChangeVignetteMode(PlayerPrefs.GetInt(VignettePlayerPrefKeys.IsPrimaryVignetteMode, 1) == 1 ? primaryVignetteMode : secondaryVignetteMode);
         }
 
-        public void ChangeVignetteMode(E_VignetteScale mode)
+        public void ChangeVignetteMode(ThumbnailContentMode mode)
         {
             vignetteMode = mode;
             SetGridLayout(VignetteContainerData.FindVignetteContainerDataByVignetteScale(vignetteMode, m_vignetteContainerDatas));
@@ -293,9 +294,9 @@ namespace umi3dBrowsers.container
             m_emptyVignettes = new();
 
             var nbrVignetteTotal = 0;
-            if (vignetteMode == E_VignetteScale.Small) nbrVignetteTotal = 8;
-            else if (vignetteMode == E_VignetteScale.Mid) nbrVignetteTotal = 3;
-            else if (vignetteMode == E_VignetteScale.Large) nbrVignetteTotal = 2;
+            if (vignetteMode == ThumbnailContentMode.Small) nbrVignetteTotal = 8;
+            else if (vignetteMode == ThumbnailContentMode.Mid) nbrVignetteTotal = 3;
+            else if (vignetteMode == ThumbnailContentMode.Large) nbrVignetteTotal = 2;
 
             for (var i = vignetteDisplayers.Count - nbrVignetteTotal; i < 0; i++)
                 m_emptyVignettes.Add(Instantiate(emptyVignettePrefab, gridLayout.transform));

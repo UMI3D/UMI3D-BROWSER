@@ -101,7 +101,8 @@ namespace umi3dBrowsers.container
         public void ChangeVignetteMode(ThumbnailContentMode mode)
         {
             vignetteMode = mode;
-            SetGridLayout(VignetteContainerData.FindVignetteContainerDataByVignetteScale(vignetteMode, m_vignetteContainerDatas));
+            //SetGridLayout(VignetteContainerData.FindVignetteContainerDataByVignetteScale(vignetteMode, m_vignetteContainerDatas));
+            // -> ResetVignettes();
             UpdateNavigation();
             FillWithEmptyVignettes();
 
@@ -263,18 +264,6 @@ namespace umi3dBrowsers.container
                 m_emptyVignettes.Add(Instantiate(emptyVignettePrefab, gridLayout.transform));
         }
  
-        private void SetGridLayout(VignetteContainerData data)
-        {
-            if (data == null) return;
-
-            gridLayout.cellSize = data.VignetteSize;
-            gridLayout.constraintCount = data.VignetteRowAmount;
-            gridLayout.spacing = data.VignetteSpace;
-
-            //scrollbar.value = 0;
-
-            ResetVignettes();
-        }
 
 
         public void UpdateNavigation()

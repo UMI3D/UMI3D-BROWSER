@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
+using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.thumbnails
 {
@@ -73,6 +74,12 @@ namespace umi3d.browserRuntime.ui.thumbnails
             //    scrollbar.value += scrollButtonSpeed / (vignetteDisplayers.Count - (int)vignetteMode);
         }
 
+        public void ResetSlider()
+        {
+            horizontalSliderValueNotifier[ThumbnailsNotificationKeys.SliderValueWillChanged.Value] = 0;
+            horizontalSliderValueNotifier.Notify();
+        }
+
         void SetHorizontalSliderValue(float value)
         {
             horizontalSliderValueNotifier[ThumbnailsNotificationKeys.SliderValueWillChanged.Value] = value;
@@ -86,5 +93,27 @@ namespace umi3d.browserRuntime.ui.thumbnails
         }
 
         #endregion
+
+        #region Layout
+
+        public Vector2 gridSize;
+        public float gridRowCount;
+        public Vector2 gridSpacing;
+
+        Notifier gridPropertiesNotifier;
+
+        public void SetGridProperties(Vector2 gridSize, float gridRowCount, Vector2 gridSpacing)
+        {
+            this.gridSize = gridSize;
+            this.gridRowCount = gridRowCount;
+            this.gridSpacing = gridSpacing;
+            gridPropertiesNotifier[ThumbnailsNotificationKeys.GridPropertiesWillChanged.Size] = gridSize;
+            gridPropertiesNotifier[ThumbnailsNotificationKeys.GridPropertiesWillChanged.RowCount] = gridRowCount;
+            gridPropertiesNotifier[ThumbnailsNotificationKeys.GridPropertiesWillChanged.Spacing] = gridSpacing;
+            gridPropertiesNotifier.Notify();
+        }
+
+        #endregion
+
     }
 }

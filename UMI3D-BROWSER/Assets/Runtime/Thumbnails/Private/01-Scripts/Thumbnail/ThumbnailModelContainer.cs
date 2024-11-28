@@ -21,11 +21,21 @@ namespace umi3d.browserRuntime.ui.thumbnails
     internal class ThumbnailModelContainer : MonoBehaviour
     {
         ThumbnailModel _model;
-        public ThumbnailModel model => _model;
-
-        void Awake()
+        public ThumbnailModel model
         {
-            _model = new();
+            get
+            {
+                if (_model == null)
+                {
+                    _model = new();
+                }
+                return _model;
+            }
+        }
+
+        public void SetModel(ThumbnailModel model)
+        {
+            _model = model;
         }
     }
 }

@@ -37,14 +37,11 @@ namespace umi3d.browserRuntime.ui.thumbnails
                 this,
                 Added
             );
-        }
 
-        void OnEnable()
-        {
-        }
-
-        void OnDisable()
-        {
+            NotificationHub.Default.Subscribe<ThumbnailsNotificationKeys.Deleted>(
+               this,
+               Deleted
+           );
         }
 
         void OnDestroy()
@@ -59,7 +56,68 @@ namespace umi3d.browserRuntime.ui.thumbnails
                 return;
             }
 
+            ThumbnailModelContainer modelContainer = FetchThumbnail();
+            ActiveThumbnail(modelContainer, thumbnail);
+        }
 
+        void Deleted(Notification notification)
+        {
+            if (!notification.TryGetInfoT(ThumbnailsNotificationKeys.Deleted.Thumbnail, out ThumbnailModel thumbnail))
+            {
+                return;
+            }
+
+            ThumbnailModelContainer container = FindActivatedThumbnail(thumbnail);
+            DeactivateThumbnail(container);
+        }
+
+        ThumbnailModelContainer FetchThumbnail()
+        {
+            ThumbnailModelContainer container = null;
+            if (deactivatedThumbnails.Count == 0)
+            {
+                GameObject go = Instantiate(thumbnailPrefab);
+                go.transform.SetParent(transform, false);
+                container = go.GetComponent<ThumbnailModelContainer>();
+            }
+            else
+            {
+                container = deactivatedThumbnails[deactivatedThumbnails.Count - 1];
+                deactivatedThumbnails.RemoveAt(deactivatedThumbnails.Count - 1);
+            }
+
+            activatedThumbnails.Add(container);
+
+            return container;
+        }
+
+        void ActiveThumbnail(ThumbnailModelContainer modelContainer, ThumbnailModel model)
+        {
+            modelContainer.SetModel(model);
+            modelContainer.gameObject.SetActive(true);
+        }
+
+        ThumbnailModelContainer FindActivatedThumbnail(ThumbnailModel thumbnail)
+        {
+
+            int index = activatedThumbnails
+                .FindIndex(_container => _container.model == thumbnail);
+            if (index == -1)
+            {
+                UnityEngine.Debug.LogError($"Error: Try to remove a thumbnail that is not active.");
+                return null;
+            }
+            ThumbnailModelContainer container = activatedThumbnails[index];
+            activatedThumbnails.RemoveAt(index);
+            deactivatedThumbnails.Add(container);
+
+            return container;
+        }
+
+        void DeactivateThumbnail(ThumbnailModelContainer modelContainer)
+        {
+            modelContainer?.SetModel(null);
+            modelContainer?.gameObject.SetActive(false);
         }
     }
 }

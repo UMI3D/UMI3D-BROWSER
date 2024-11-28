@@ -93,9 +93,14 @@ namespace umi3d.browserRuntime.ui.thumbnails
             public const string Spacing = "Spacing";
         }
 
-
-
         #region Thumbnail
+
+        /// <summary>
+        /// Event raised when a thumbnail will be selected.
+        /// </summary>
+        public class Select
+        {
+        }
 
         /// <summary>
         /// Event raised when the sprite of a thumbnail will change.
@@ -142,8 +147,22 @@ namespace umi3d.browserRuntime.ui.thumbnails
         /// <summary>
         /// Event raised when a thumbnail will be deleted.
         /// </summary>
-        public class DeleteThumbnail
+        public class Delete
         {
+        }
+
+        /// <summary>
+        /// Event raised when the sub buttons visibility of a thumbnail will change.
+        /// </summary>
+        public class SubButtonsVisibilityWillChange
+        {
+            /// <summary>
+            /// Whether the sub buttons are visible
+            /// </summary>
+            /// <remarks>
+            /// Value is <see cref="bool"/>.
+            /// </remarks>
+            public const string IsVisible = "IsVisible";
         }
 
         #endregion

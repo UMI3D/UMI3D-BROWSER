@@ -17,17 +17,21 @@ limitations under the License.
 using inetum.unityUtils;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.ui.thumbnails
 {
+    [RequireComponent(typeof(Button))]
     internal class ThumbnailFavoriteButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
     {
+        Button button;
         ThumbnailSubButtonImage subButtonImage;
 
         ThumbnailModelContainer model;
 
         void Awake()
         {
+            button = GetComponent<Button>();
             subButtonImage = GetComponentInChildren<ThumbnailSubButtonImage>();
 
             model = GetComponentInParent<ThumbnailModelContainer>();
@@ -46,6 +50,11 @@ namespace umi3d.browserRuntime.ui.thumbnails
 
         public void OnPointerEnter(PointerEventData eventData)
         {
+            if (!button.interactable)
+            {
+                return;
+            }
+
             if (!model.model.isFavorite)
             {
                 subButtonImage.OnPointerEnter();
@@ -54,6 +63,11 @@ namespace umi3d.browserRuntime.ui.thumbnails
 
         public void OnPointerExit(PointerEventData eventData)
         {
+            if (!button.interactable)
+            {
+                return;
+            }
+
             if (!model.model.isFavorite)
             {
                 subButtonImage.OnPointerExit();
@@ -62,12 +76,22 @@ namespace umi3d.browserRuntime.ui.thumbnails
 
         public void OnPointerDown(PointerEventData eventData)
         {
+            if (!button.interactable)
+            {
+                return;
+            }
+
             subButtonImage.OnPointerDown();
             model.model.ToggleFavorite();
         }
 
         public void OnPointerUp(PointerEventData eventData)
         {
+            if (!button.interactable)
+            {
+                return;
+            }
+
             if (!model.model.isFavorite)
             {
                 subButtonImage.OnPointerUp();

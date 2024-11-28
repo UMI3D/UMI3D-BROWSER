@@ -16,17 +16,20 @@ limitations under the License.
 
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.ui.thumbnails
 {
     internal class ThumbnailDeleteButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
     {
+        Button button;
         ThumbnailSubButtonImage subButtonImage;
 
         ThumbnailModelContainer model;
 
         void Awake()
         {
+            button = GetComponent<Button>();
             subButtonImage = GetComponentInChildren<ThumbnailSubButtonImage>();
 
             model = GetComponentInParent<ThumbnailModelContainer>();
@@ -34,22 +37,42 @@ namespace umi3d.browserRuntime.ui.thumbnails
 
         public void OnPointerEnter(PointerEventData eventData)
         {
+            if (!button.interactable)
+            {
+                return;
+            }
+
             subButtonImage.OnPointerEnter();
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
+            if (!button.interactable)
+            {
+                return;
+            }
+
             subButtonImage.OnPointerExit();
         }
 
         public void OnPointerDown(PointerEventData eventData)
         {
+            if (!button.interactable)
+            {
+                return;
+            }
+
             subButtonImage.OnPointerDown();
             model.model.Delete();
         }
 
         public void OnPointerUp(PointerEventData eventData)
         {
+            if (!button.interactable)
+            {
+                return;
+            }
+
             subButtonImage.OnPointerUp();
         }
     }

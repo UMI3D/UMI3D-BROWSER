@@ -23,6 +23,9 @@ namespace umi3d.browserRuntime.ui.thumbnails
     {
         public ThumbnailModel()
         {
+            selectNotifier = NotificationHub.Default
+                .GetNotifier<ThumbnailsNotificationKeys.Select>(this);
+
             imageChangedNotifier = NotificationHub.Default
                 .GetNotifier<ThumbnailsNotificationKeys.ImageSpriteWillChange>(this);
 
@@ -33,8 +36,22 @@ namespace umi3d.browserRuntime.ui.thumbnails
                .GetNotifier<ThumbnailsNotificationKeys.FavoriteStatusChanged>(this);
 
             deleteNotifier = NotificationHub.Default
-               .GetNotifier<ThumbnailsNotificationKeys.DeleteThumbnail>(this);
+               .GetNotifier<ThumbnailsNotificationKeys.Delete>(this);
+
+            subButtonVisibilityNotifier = NotificationHub.Default
+               .GetNotifier<ThumbnailsNotificationKeys.SubButtonsVisibilityWillChange>(this);
         }
+
+        #region Clicked
+
+        Notifier selectNotifier;
+
+        public void Select()
+        {
+            selectNotifier.Notify();
+        }
+
+        #endregion
 
         #region Image
 
@@ -81,6 +98,20 @@ namespace umi3d.browserRuntime.ui.thumbnails
         public void Delete()
         {
             deleteNotifier.Notify();
+        }
+
+        #endregion
+
+        #region Sub buttons
+
+        public bool isDisplaying = false;
+
+        Notifier subButtonVisibilityNotifier;
+
+        public void SetSubButtonVisibility(bool isVisible)
+        {
+            subButtonVisibilityNotifier[ThumbnailsNotificationKeys.SubButtonsVisibilityWillChange.IsVisible] = isVisible;
+            subButtonVisibilityNotifier.Notify();
         }
 
         #endregion

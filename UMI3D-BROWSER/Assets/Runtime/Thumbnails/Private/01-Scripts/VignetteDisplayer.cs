@@ -27,14 +27,6 @@ namespace umi3dBrowsers.displayer
     public class VignetteDisplayer : MonoBehaviour, ISubDisplayer
     {
 
-        [Space]
-        [SerializeField] VignetteInputField inputFieldBackground;
-
-
-        [Header("Input field backgroung")]
-        [SerializeField] private Image IF_background;
-        [SerializeField] private Image pen;
-
         [Header("Animation")]
         [SerializeField] private float hoverExitDelay;
 
@@ -55,8 +47,8 @@ namespace umi3dBrowsers.displayer
         private bool m_usesDeleteButton = true;
         public TMP_Text InputFieldText {
             get {
-                if (inputFieldText == null)
-                    inputFieldText = inputFieldBackground.GetComponentInChildren<TMP_Text>();
+                //if (inputFieldText == null)
+                //    inputFieldText = inputFieldBackground.GetComponentInChildren<TMP_Text>();
                 return inputFieldText;
             }
         }
@@ -64,41 +56,41 @@ namespace umi3dBrowsers.displayer
         private void Awake()
         {
             DisableSubComponents();
-            pen.gameObject.SetActive(false);
-            IF_background.enabled = false;
+            //pen.gameObject.SetActive(false);
+            //IF_background.enabled = false;
 
             //if (m_usesFavoriteButton)
             //    likeButton.OnHover += () => vignetteState = VignetteState.HoveringSubElement;
             //if (m_usesDeleteButton)
             //    trashButton.OnHover += () => vignetteState = VignetteState.HoveringSubElement;
-            inputFieldBackground.OnHover += () => {
-                vignetteState = VignetteState.HoveringSubElement;
+            //inputFieldBackground.OnHover += () => {
+            //    vignetteState = VignetteState.HoveringSubElement;
 
-                pen.gameObject.SetActive(true);
-                IF_background.enabled = true;
-            };
-            inputFieldBackground.OnHoverExit += () => {
-                pen.gameObject.SetActive(false);
-                IF_background.enabled = false;
-            };
+            //    pen.gameObject.SetActive(true);
+            //    IF_background.enabled = true;
+            //};
+            //inputFieldBackground.OnHoverExit += () => {
+            //    pen.gameObject.SetActive(false);
+            //    IF_background.enabled = false;
+            //};
 
             //if (m_usesFavoriteButton)
             //    likeButton.OnDisabled += () => DisableSubComponents();
             //if (m_usesDeleteButton)
             //    trashButton.OnDisabled += () => DisableSubComponents();
-            inputFieldBackground.OnDisabled += () => DisableSubComponents();
+            //inputFieldBackground.OnDisabled += () => DisableSubComponents();
         }
 
         private void OnDestroy()
         {
             //likeButton.OnDisabled -= () => DisableSubComponents();
             //trashButton.OnDisabled -= () => DisableSubComponents();
-            inputFieldBackground.OnDisabled -= () => DisableSubComponents();
+            //inputFieldBackground.OnDisabled -= () => DisableSubComponents();
         }
 
         public void SetupDisplay(string pName)
         {
-            inputFieldBackground.Text = pName;
+            //inputFieldBackground.Text = pName;
 
             //InputFieldText.color = normalImageColor;
         }
@@ -124,7 +116,7 @@ namespace umi3dBrowsers.displayer
 
         public void SetupRenameButton(Action<string> onRename)
         {
-            inputFieldBackground.InputField.onValueChanged.AddListener(value => onRename(value));
+            //inputFieldBackground.InputField.onValueChanged.AddListener(value => onRename(value));
         }
 
         public void HoverEnter(PointerEventData eventData)
@@ -158,7 +150,7 @@ namespace umi3dBrowsers.displayer
             //    likeButton.Disable();
             //if (m_usesDeleteButton)
             //    trashButton.Disable();
-            inputFieldBackground.Disable();
+            //inputFieldBackground.Disable();
         }
 
         private void DisableSubComponents()

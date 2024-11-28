@@ -28,75 +28,42 @@ namespace umi3dBrowsers.displayer
         [Space]
         [SerializeField] private Button button;
 
-        [Header("Animation")]
-        [SerializeField] private CanvasGroup canvasGroup;
-        [SerializeField, Range(0, 1f)] private float animationDuration = 0.5f;
-        [SerializeField] private AnimationCurve slideEase = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
 
 
+        //private void OnEnable()
+        //{
+        //    button.enabled = true;
 
-        private void OnEnable()
-        {
-            button.enabled = true;
+        //    if (_easeInOutCoroutine != null)
+        //    {
+        //        StopCoroutine(_easeInOutCoroutine);
+        //        _easeInOutCoroutine = null;
+        //    }
 
-            if (_easeInOutCoroutine != null)
-            {
-                StopCoroutine(_easeInOutCoroutine);
-                _easeInOutCoroutine = null;
-            }
-
-            _easeInOutCoroutine = StartCoroutine(EaseInOut(true));
-        }
+        //    _easeInOutCoroutine = StartCoroutine(EaseInOut(true));
+        //}
 
         public event Action OnClick;
         public event Action OnHover;
         public event Action OnDisabled;
 
-        private float _animationValue;
-        private Coroutine _easeInOutCoroutine;
 
+        //public void Disable()
+        //{
+        //    button.enabled = false;
 
+        //    if (_easeInOutCoroutine != null)
+        //    {
+        //        StopCoroutine(_easeInOutCoroutine);
+        //        _easeInOutCoroutine = null;
+        //    }
 
-        private IEnumerator EaseInOut(bool isEnabeling)
-        {
-            float startValue = _animationValue;
-            float endValue = isEnabeling ? 1 : 0;
-
-            float time = 0;
-            if (animationDuration > 0)
-            {
-                while (time < animationDuration)
-                {
-                    time += Time.deltaTime;
-
-                    float lerpFactor = slideEase.Evaluate(time / animationDuration);
-                    float currentValue = _animationValue = Mathf.Lerp(startValue, endValue, lerpFactor);
-
-                    canvasGroup.alpha = currentValue;
-
-                    yield return null;
-                }
-            }
-
-            if (!isEnabeling) OnDisabled?.Invoke();
-        }
-
-        public void Disable()
-        {
-            button.enabled = false;
-
-            if (_easeInOutCoroutine != null)
-            {
-                StopCoroutine(_easeInOutCoroutine);
-                _easeInOutCoroutine = null;
-            }
-
-            if (gameObject.activeSelf)
-            {
-                _easeInOutCoroutine = StartCoroutine(EaseInOut(false));
-            }
-        }
+        //    if (gameObject.activeSelf)
+        //    {
+        //        _easeInOutCoroutine = StartCoroutine(EaseInOut(false));
+        //    }
+        //}
     }
 }
 

@@ -27,19 +27,6 @@ namespace umi3dBrowsers.displayer
     public class VignetteDisplayer : MonoBehaviour, ISubDisplayer
     {
 
-        [Header("buttons")]
-        [SerializeField] private ButtonSubDisplayer likeButton;
-        [SerializeField] private Image likeImage;
-        [SerializeField] private Sprite normalLikeIcon;
-        [SerializeField] private Color normalLikeColor;
-        [SerializeField] private Sprite normaHoverLikeIcon;
-        [SerializeField] private Color normalHoverLikeColor;
-        [SerializeField] private Sprite selectedLikeIcon;
-        [SerializeField] private Color selectedLikeColor;
-        [SerializeField] private Sprite selectedHoverLikeIcon;
-        [SerializeField] private Color selectedHoverLikeColor;
-        [Space]
-        [SerializeField] private ButtonSubDisplayer trashButton;
         [Space]
         [SerializeField] VignetteInputField inputFieldBackground;
 
@@ -80,10 +67,10 @@ namespace umi3dBrowsers.displayer
             pen.gameObject.SetActive(false);
             IF_background.enabled = false;
 
-            if (m_usesFavoriteButton)
-                likeButton.OnHover += () => vignetteState = VignetteState.HoveringSubElement;
-            if (m_usesDeleteButton)
-                trashButton.OnHover += () => vignetteState = VignetteState.HoveringSubElement;
+            //if (m_usesFavoriteButton)
+            //    likeButton.OnHover += () => vignetteState = VignetteState.HoveringSubElement;
+            //if (m_usesDeleteButton)
+            //    trashButton.OnHover += () => vignetteState = VignetteState.HoveringSubElement;
             inputFieldBackground.OnHover += () => {
                 vignetteState = VignetteState.HoveringSubElement;
 
@@ -95,17 +82,17 @@ namespace umi3dBrowsers.displayer
                 IF_background.enabled = false;
             };
 
-            if (m_usesFavoriteButton)
-                likeButton.OnDisabled += () => DisableSubComponents();
-            if (m_usesDeleteButton)
-                trashButton.OnDisabled += () => DisableSubComponents();
+            //if (m_usesFavoriteButton)
+            //    likeButton.OnDisabled += () => DisableSubComponents();
+            //if (m_usesDeleteButton)
+            //    trashButton.OnDisabled += () => DisableSubComponents();
             inputFieldBackground.OnDisabled += () => DisableSubComponents();
         }
 
         private void OnDestroy()
         {
-            likeButton.OnDisabled -= () => DisableSubComponents();
-            trashButton.OnDisabled -= () => DisableSubComponents();
+            //likeButton.OnDisabled -= () => DisableSubComponents();
+            //trashButton.OnDisabled -= () => DisableSubComponents();
             inputFieldBackground.OnDisabled -= () => DisableSubComponents();
         }
 
@@ -125,21 +112,14 @@ namespace umi3dBrowsers.displayer
         {
             if (!m_usesFavoriteButton) return;
 
-            likeButton.OnClick += onFavorite;
+            //likeButton.OnClick += onFavorite;
 
-            likeImage.sprite = isFavorite ? selectedLikeIcon : normalLikeIcon;
-            likeImage.color = isFavorite ? selectedLikeColor : normalLikeColor;
-
-            //likeButton.NormalColor = isFavorite ? selectedLikeColor : normalLikeColor;
-            //likeButton.HoverColor = isFavorite ? selectedHoverLikeColor : normalHoverLikeColor;
-            //likeButton.NormalIcon = isFavorite ? selectedLikeIcon : normalLikeIcon;
-            //likeButton.HoverIcon = isFavorite ? selectedHoverLikeIcon : normaHoverLikeIcon;
         }
 
         public void SetupRemoveButton(Action onRemove)
         {
-            if (m_usesDeleteButton)
-                trashButton.OnClick += onRemove;
+            //if (m_usesDeleteButton)
+            //    trashButton.OnClick += onRemove;
         }
 
         public void SetupRenameButton(Action<string> onRename)
@@ -155,10 +135,10 @@ namespace umi3dBrowsers.displayer
 
             //InputFieldText.color = hoverImageColor;
 
-            if (m_usesFavoriteButton)
-                likeButton.gameObject.SetActive(true);
-            if (m_usesDeleteButton)
-                trashButton.gameObject.SetActive(true);
+            //if (m_usesFavoriteButton)
+            //    likeButton.gameObject.SetActive(true);
+            //if (m_usesDeleteButton)
+            //    trashButton.gameObject.SetActive(true);
         }
 
         public void HoverExit(PointerEventData eventData)
@@ -174,19 +154,19 @@ namespace umi3dBrowsers.displayer
         {
             onVignetteClicked?.Invoke();
             OnClick?.Invoke();
-            if (m_usesFavoriteButton)
-                likeButton.Disable();
-            if (m_usesDeleteButton)
-                trashButton.Disable();
+            //if (m_usesFavoriteButton)
+            //    likeButton.Disable();
+            //if (m_usesDeleteButton)
+            //    trashButton.Disable();
             inputFieldBackground.Disable();
         }
 
         private void DisableSubComponents()
         {
-            if (m_usesFavoriteButton)
-                likeButton.gameObject.SetActive(false);
-            if (m_usesDeleteButton)
-                trashButton.gameObject.SetActive(false);
+            //if (m_usesFavoriteButton)
+            //    likeButton.gameObject.SetActive(false);
+            //if (m_usesDeleteButton)
+            //    trashButton.gameObject.SetActive(false);
         }
 
         private IEnumerator HoverDelay()
@@ -195,10 +175,10 @@ namespace umi3dBrowsers.displayer
 
             if (vignetteState == VignetteState.notHovering)
             {
-                if (m_usesFavoriteButton)
-                    likeButton.Disable();
-                if (m_usesDeleteButton)
-                    trashButton.Disable();
+                //if (m_usesFavoriteButton)
+                //    likeButton.Disable();
+                //if (m_usesDeleteButton)
+                //    trashButton.Disable();
             }
         }
 
@@ -215,13 +195,13 @@ namespace umi3dBrowsers.displayer
         internal void SetDeleteActive(bool pUsesDeleteButton)
         {
             m_usesDeleteButton = pUsesDeleteButton;
-            trashButton.gameObject.SetActive(pUsesDeleteButton);
+            //trashButton.gameObject.SetActive(pUsesDeleteButton);
         }
 
         internal void SetFavoryActive(bool pUsesFavoriteButton)
         {
             m_usesFavoriteButton = pUsesFavoriteButton;
-            likeButton.gameObject.SetActive(pUsesFavoriteButton);
+            //likeButton.gameObject.SetActive(pUsesFavoriteButton);
         }
     }
 }

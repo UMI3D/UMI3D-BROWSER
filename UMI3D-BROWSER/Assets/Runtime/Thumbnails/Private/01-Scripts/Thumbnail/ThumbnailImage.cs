@@ -26,6 +26,7 @@ namespace umi3d.browserRuntime.ui.thumbnails
     {
         [SerializeField] Color imageColor;
         [SerializeField] Color imageHoverColor;
+        [SerializeField] Sprite defaultImage;
 
         Image image;
 
@@ -56,7 +57,9 @@ namespace umi3d.browserRuntime.ui.thumbnails
                 return;
             }
 
-            image.sprite = sprite;
+            image.sprite = sprite == null
+                ? defaultImage
+                : sprite;
         }
 
         public void OnPointerEnter(PointerEventData eventData)

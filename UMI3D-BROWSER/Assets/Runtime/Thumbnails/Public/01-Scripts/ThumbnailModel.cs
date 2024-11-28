@@ -113,6 +113,7 @@ namespace umi3d.browserRuntime.ui.thumbnails
 
         public void SetSubInputsVisibility(bool isVisible)
         {
+            this.isDisplaying = isVisible;
             subInputsVisibilityNotifier[ThumbnailsNotificationKeys.SubInputsVisibilityWillChange.IsVisible] = isVisible;
             subInputsVisibilityNotifier.Notify();
         }

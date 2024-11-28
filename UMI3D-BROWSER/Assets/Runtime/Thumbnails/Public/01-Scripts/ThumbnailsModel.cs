@@ -15,12 +15,15 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.thumbnails
 {
     public class ThumbnailsModel
     {
+        public List<ThumbnailModel> thumbnails = new();
+
         public ThumbnailsModel()
         {
             contentModeNotifier = NotificationHub.Default
@@ -31,6 +34,15 @@ namespace umi3d.browserRuntime.ui.thumbnails
 
             horizontalSliderValueNotifier = NotificationHub.Default
                 .GetNotifier<ThumbnailsNotificationKeys.SliderValueWillChange>(this);
+
+            gridPropertiesNotifier = NotificationHub.Default
+                .GetNotifier<ThumbnailsNotificationKeys.GridPropertiesWillChange>(this);
+
+            SliderButtonVisibilityNotifier = NotificationHub.Default
+               .GetNotifier<ThumbnailsNotificationKeys.SliderButtonVisibilityWillChange>(this);
+
+            thumbnailAddedNotifier = NotificationHub.Default
+                .GetNotifier<ThumbnailsNotificationKeys.Added>(this);
         }
 
         #region Content mode
@@ -55,9 +67,10 @@ namespace umi3d.browserRuntime.ui.thumbnails
 
         #region Horizontal slider
 
-        public float scrollButtonSpeed = 1.0f;
+        public const float scrollButtonSpeed = 1.0f;
 
         public float horizontalSliderValue;
+        public bool areSlideButtonVisible;
 
         Notifier horizontalSliderValueNotifier;
         Notifier SliderButtonVisibilityNotifier;
@@ -76,18 +89,21 @@ namespace umi3d.browserRuntime.ui.thumbnails
 
         public void ResetSlider()
         {
+            horizontalSliderValue = 0f;
             horizontalSliderValueNotifier[ThumbnailsNotificationKeys.SliderValueWillChange.Value] = 0;
             horizontalSliderValueNotifier.Notify();
         }
 
-        void SetHorizontalSliderValue(float value)
+        public void SetHorizontalSliderValue(float value)
         {
+            horizontalSliderValue = value;
             horizontalSliderValueNotifier[ThumbnailsNotificationKeys.SliderValueWillChange.Value] = value;
             horizontalSliderValueNotifier.Notify();
         }
 
         public void DisplaySlideButton(bool display)
         {
+            areSlideButtonVisible = display;
             SliderButtonVisibilityNotifier[ThumbnailsNotificationKeys.SliderButtonVisibilityWillChange.IsVisible] = display;
             SliderButtonVisibilityNotifier.Notify();
         }
@@ -97,12 +113,12 @@ namespace umi3d.browserRuntime.ui.thumbnails
         #region Layout
 
         public Vector2 gridSize;
-        public float gridRowCount;
+        public int gridRowCount;
         public Vector2 gridSpacing;
 
         Notifier gridPropertiesNotifier;
 
-        public void SetGridProperties(Vector2 gridSize, float gridRowCount, Vector2 gridSpacing)
+        public void SetGridProperties(Vector2 gridSize, int gridRowCount, Vector2 gridSpacing)
         {
             this.gridSize = gridSize;
             this.gridRowCount = gridRowCount;
@@ -115,5 +131,18 @@ namespace umi3d.browserRuntime.ui.thumbnails
 
         #endregion
 
+        #region Add Thumbnail
+
+        Notifier thumbnailAddedNotifier;
+
+        public void AddThumbnail(ThumbnailModel thumbnail)
+        {
+            if (thumbnails.Contains(thumbnail)) return;
+            thumbnails.Add(thumbnail);
+            thumbnailAddedNotifier[ThumbnailsNotificationKeys.Added.Thumbnail] = thumbnail;
+            thumbnailAddedNotifier.Notify();
+        }
+
+        #endregion
     }
 }

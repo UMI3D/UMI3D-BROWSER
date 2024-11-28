@@ -93,6 +93,20 @@ namespace umi3d.browserRuntime.ui.thumbnails
             public const string Spacing = "Spacing";
         }
 
+        /// <summary>
+        /// Event raised when a thumbnail has been added.
+        /// </summary>
+        public class Added
+        {
+            /// <summary>
+            /// The thumbnail.
+            /// </summary>
+            /// <remarks>
+            /// Value is <see cref="ThumbnailModel"/>.
+            /// </remarks>
+            public const string Thumbnail = "Thumbnail";
+        }
+
         #region Thumbnail
 
         /// <summary>

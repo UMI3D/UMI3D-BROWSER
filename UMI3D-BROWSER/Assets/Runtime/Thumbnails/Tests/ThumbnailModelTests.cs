@@ -39,7 +39,7 @@ public class ThumbnailModelTests
     {
         Assert.IsFalse(model.isFavorite);
 
-        model.UpdateFavoriteStatus(true);
+        model.SetFavoriteStatus(true);
 
         Assert.IsTrue(model.isFavorite);
     }
@@ -50,7 +50,7 @@ public class ThumbnailModelTests
         model.isFavorite = true;
         Assert.IsTrue(model.isFavorite);
 
-        model.UpdateFavoriteStatus(false);
+        model.SetFavoriteStatus(false);
 
         Assert.IsFalse(model.isFavorite);
     }

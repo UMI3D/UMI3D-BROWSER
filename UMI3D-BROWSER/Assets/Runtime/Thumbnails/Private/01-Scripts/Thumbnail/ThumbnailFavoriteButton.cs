@@ -36,7 +36,7 @@ namespace umi3d.browserRuntime.ui.thumbnails
 
             model = GetComponentInParent<ThumbnailModelContainer>();
 
-            NotificationHub.Default.Subscribe<ThumbnailsNotificationKeys.FavoriteStatusUpdated>(
+            NotificationHub.Default.Subscribe<ThumbnailsNotificationKeys.FavoriteStatusSet>(
                 this,
                 new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == model.model),
                 FavoriteStatusUpdated
@@ -100,7 +100,7 @@ namespace umi3d.browserRuntime.ui.thumbnails
 
         void FavoriteStatusUpdated(Notification notification)
         {
-            if (!notification.TryGetInfoT(ThumbnailsNotificationKeys.FavoriteStatusUpdated.IsFavorite, out bool isFavorite))
+            if (!notification.TryGetInfoT(ThumbnailsNotificationKeys.FavoriteStatusSet.IsFavorite, out bool isFavorite))
             {
                 return;
             }

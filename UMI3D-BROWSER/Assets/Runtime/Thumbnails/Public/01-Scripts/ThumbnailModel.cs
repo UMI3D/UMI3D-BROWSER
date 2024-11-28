@@ -31,11 +31,11 @@ namespace umi3d.browserRuntime.ui.thumbnails
             imageChangedNotifier = NotificationHub.Default
                 .GetNotifier<ThumbnailsNotificationKeys.ImageSpriteWillChange>(this);
 
-            updateFavoriteNotifier = NotificationHub.Default
-                .GetNotifier<ThumbnailsNotificationKeys.FavoriteStatusUpdated>(this);
+            favoriteSetNotifier = NotificationHub.Default
+                .GetNotifier<ThumbnailsNotificationKeys.FavoriteStatusSet>(this);
 
-            favoriteChangedNotifier = NotificationHub.Default
-               .GetNotifier<ThumbnailsNotificationKeys.FavoriteStatusChanged>(this);
+            favoriteUpdatedNotifier = NotificationHub.Default
+               .GetNotifier<ThumbnailsNotificationKeys.FavoriteStatusUpdated>(this);
 
             subInputsVisibilityNotifier = NotificationHub.Default
                .GetNotifier<ThumbnailsNotificationKeys.SubInputsVisibilityWillChange>(this);
@@ -77,21 +77,21 @@ namespace umi3d.browserRuntime.ui.thumbnails
 
         public bool isFavorite;
 
-        Notifier updateFavoriteNotifier;
-        Notifier favoriteChangedNotifier;
+        Notifier favoriteSetNotifier;
+        Notifier favoriteUpdatedNotifier;
 
-        public void UpdateFavoriteStatus(bool isFavorite)
+        public void SetFavoriteStatus(bool isFavorite)
         {
             this.isFavorite = isFavorite;
-            updateFavoriteNotifier[ThumbnailsNotificationKeys.FavoriteStatusUpdated.IsFavorite] = isFavorite;
-            updateFavoriteNotifier.Notify();
+            favoriteSetNotifier[ThumbnailsNotificationKeys.FavoriteStatusSet.IsFavorite] = isFavorite;
+            favoriteSetNotifier.Notify();
         }
 
         public void ToggleFavorite()
         {
             isFavorite = !isFavorite;
-            favoriteChangedNotifier[ThumbnailsNotificationKeys.FavoriteStatusChanged.IsFavorite] = isFavorite;
-            favoriteChangedNotifier.Notify();
+            favoriteUpdatedNotifier[ThumbnailsNotificationKeys.FavoriteStatusUpdated.IsFavorite] = isFavorite;
+            favoriteUpdatedNotifier.Notify();
         }
 
         #endregion

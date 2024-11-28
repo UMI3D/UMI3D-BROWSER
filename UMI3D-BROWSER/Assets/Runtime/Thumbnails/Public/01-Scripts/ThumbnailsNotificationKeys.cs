@@ -145,9 +145,9 @@ namespace umi3d.browserRuntime.ui.thumbnails
         }
 
         /// <summary>
-        /// Event raised when the favorite status of a thumbnail has changed.
+        /// Event raised when the favorite status of a thumbnail has been modify by the view.
         /// </summary>
-        public class FavoriteStatusChanged
+        public class FavoriteStatusUpdated
         {
             /// <summary>
             /// The favorite status.
@@ -159,9 +159,9 @@ namespace umi3d.browserRuntime.ui.thumbnails
         }
 
         /// <summary>
-        /// Event raised when the favorite status of a thumbnail has to be updated in the view.
+        /// Event raised when the favorite status of a thumbnail has been modify by the model and the view need to change.
         /// </summary>
-        public class FavoriteStatusUpdated
+        public class FavoriteStatusSet
         {
             /// <summary>
             /// The favorite status.

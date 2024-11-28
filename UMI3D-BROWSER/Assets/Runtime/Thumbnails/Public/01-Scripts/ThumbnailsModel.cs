@@ -142,6 +142,7 @@ namespace umi3d.browserRuntime.ui.thumbnails
         {
             if (thumbnails.Contains(thumbnail)) return;
             thumbnails.Add(thumbnail);
+            thumbnail.thumbnailsModel = this;
             thumbnailAddedNotifier[ThumbnailsNotificationKeys.Added.Thumbnail] = thumbnail;
             thumbnailAddedNotifier.Notify();
         }
@@ -156,6 +157,7 @@ namespace umi3d.browserRuntime.ui.thumbnails
         {
             if (!thumbnails.Contains(thumbnail)) return;
             thumbnails.Remove(thumbnail);
+            thumbnail.thumbnailsModel = null;
             thumbnailDeletedNotifier[ThumbnailsNotificationKeys.Deleted.Thumbnail] = thumbnail;
             thumbnailDeletedNotifier.Notify();
         }

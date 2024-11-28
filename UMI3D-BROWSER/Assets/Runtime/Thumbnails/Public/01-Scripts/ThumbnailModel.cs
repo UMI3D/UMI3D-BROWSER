@@ -97,7 +97,11 @@ namespace umi3d.browserRuntime.ui.thumbnails
 
         public void Delete()
         {
-            thumbnailsModel.Delete(this);
+            if (thumbnailsModel == null)
+            {
+                UnityEngine.Debug.LogError($"Error: Thumbnails model is null when trying to delete thumbnail.");
+            }
+            thumbnailsModel?.Delete(this);
         }
 
         #endregion

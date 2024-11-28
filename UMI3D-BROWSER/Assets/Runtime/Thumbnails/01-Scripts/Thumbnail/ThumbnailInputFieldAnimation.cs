@@ -17,15 +17,13 @@ limitations under the License.
 using inetum.unityUtils;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.ui.thumbnails
 {
-    [RequireComponent(typeof(CanvasGroup), typeof(Button))]
-    internal class ThumbnailSubButtonAnimation : MonoBehaviour
+    internal class ThumbnailInputFieldAnimation : MonoBehaviour
     {
-        CanvasGroup canvasGroup;
-        Button button;
+        CanvasGroup background;
+        CanvasGroup pen;
 
         [SerializeField, Range(0f, 1f)] float animationDuration = 0.5f;
 
@@ -36,11 +34,16 @@ namespace umi3d.browserRuntime.ui.thumbnails
 
         void Awake()
         {
-            canvasGroup = GetComponent<CanvasGroup>();
-            button = GetComponent<Button>();
+            CanvasGroup[] images = GetComponentsInChildren<CanvasGroup>();
+            background = images[0];
+            pen = images[1];
 
             animation
-               .SetApplyValue<float>(x => canvasGroup.alpha = x)
+               .SetApplyValue<float>(x =>
+               {
+                   background.alpha = x;
+                   pen.alpha = x;
+               })
                .SetLerp<float>(Easings.Lerp);
 
             model = GetComponentInParent<ThumbnailModelContainer>();
@@ -90,8 +93,6 @@ namespace umi3d.browserRuntime.ui.thumbnails
                 StopCoroutine(coroutine);
                 coroutine = null;
             }
-
-            button.interactable = true;
         }
 
         IEnumerator Hiding()
@@ -107,8 +108,6 @@ namespace umi3d.browserRuntime.ui.thumbnails
                 StopCoroutine(coroutine);
                 coroutine = null;
             }
-
-            button.interactable = false;
         }
     }
 }

@@ -165,6 +165,20 @@ namespace umi3d.browserRuntime.ui.thumbnails
             public const string IsVisible = "IsVisible";
         }
 
+        /// <summary>
+        /// Event raised when the name of the thumbnail will change.
+        /// </summary>
+        public class NameWillChange
+        {
+            /// <summary>
+            /// The name of the thumbnail.
+            /// </summary>
+            /// <remarks>
+            /// Value is <see cref="string"/>.
+            /// </remarks>
+            public const string Name = "Name";
+        }
+
         #endregion
     }
 }

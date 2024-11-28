@@ -115,5 +115,20 @@ namespace umi3d.browserRuntime.ui.thumbnails
         }
 
         #endregion
+
+        #region InputField
+
+        public string name;
+
+        Notifier updateNameNotifier;
+
+        public void UpdateName(string name)
+        {
+            this.name = name;
+            updateNameNotifier[ThumbnailsNotificationKeys.NameWillChange.Name] = name;
+            updateNameNotifier.Notify();
+        }
+
+        #endregion
     }
 }

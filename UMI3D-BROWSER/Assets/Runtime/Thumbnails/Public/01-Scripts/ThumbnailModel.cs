@@ -40,6 +40,9 @@ namespace umi3d.browserRuntime.ui.thumbnails
 
             subInputsVisibilityNotifier = NotificationHub.Default
                .GetNotifier<ThumbnailsNotificationKeys.SubInputsVisibilityWillChange>(this);
+
+            updateNameNotifier = NotificationHub.Default
+              .GetNotifier<ThumbnailsNotificationKeys.NameWillChange>(this);
         }
 
         #region Clicked

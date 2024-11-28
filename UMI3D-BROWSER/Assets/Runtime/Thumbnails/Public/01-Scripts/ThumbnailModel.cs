@@ -38,8 +38,8 @@ namespace umi3d.browserRuntime.ui.thumbnails
             deleteNotifier = NotificationHub.Default
                .GetNotifier<ThumbnailsNotificationKeys.Delete>(this);
 
-            subButtonVisibilityNotifier = NotificationHub.Default
-               .GetNotifier<ThumbnailsNotificationKeys.SubButtonsVisibilityWillChange>(this);
+            subInputsVisibilityNotifier = NotificationHub.Default
+               .GetNotifier<ThumbnailsNotificationKeys.SubInputsVisibilityWillChange>(this);
         }
 
         #region Clicked
@@ -102,16 +102,16 @@ namespace umi3d.browserRuntime.ui.thumbnails
 
         #endregion
 
-        #region Sub buttons
+        #region Sub Inputs
 
         public bool isDisplaying = false;
 
-        Notifier subButtonVisibilityNotifier;
+        Notifier subInputsVisibilityNotifier;
 
-        public void SetSubButtonVisibility(bool isVisible)
+        public void SetSubInputsVisibility(bool isVisible)
         {
-            subButtonVisibilityNotifier[ThumbnailsNotificationKeys.SubButtonsVisibilityWillChange.IsVisible] = isVisible;
-            subButtonVisibilityNotifier.Notify();
+            subInputsVisibilityNotifier[ThumbnailsNotificationKeys.SubInputsVisibilityWillChange.IsVisible] = isVisible;
+            subInputsVisibilityNotifier.Notify();
         }
 
         #endregion

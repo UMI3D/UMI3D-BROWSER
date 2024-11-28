@@ -36,7 +36,7 @@ namespace umi3d.browserRuntime.ui.thumbnails
 
         void Start()
         {
-            model.model.SetSubButtonVisibility(false);
+            model.model.SetSubInputsVisibility(false);
         }
 
         void OnClick()
@@ -46,12 +46,12 @@ namespace umi3d.browserRuntime.ui.thumbnails
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            model.model.SetSubButtonVisibility(true);
+            model.model.SetSubInputsVisibility(true);
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            model.model.SetSubButtonVisibility(false);
+            model.model.SetSubInputsVisibility(false);
         }
     }
 }

@@ -152,12 +152,12 @@ namespace umi3d.browserRuntime.ui.thumbnails
         }
 
         /// <summary>
-        /// Event raised when the sub buttons visibility of a thumbnail will change.
+        /// Event raised when the sub inputs visibility of a thumbnail will change.
         /// </summary>
-        public class SubButtonsVisibilityWillChange
+        public class SubInputsVisibilityWillChange
         {
             /// <summary>
-            /// Whether the sub buttons are visible
+            /// Whether the sub inputs are visible.
             /// </summary>
             /// <remarks>
             /// Value is <see cref="bool"/>.

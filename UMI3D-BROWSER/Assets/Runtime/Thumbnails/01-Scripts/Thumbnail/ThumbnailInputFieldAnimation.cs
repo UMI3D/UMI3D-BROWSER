@@ -48,7 +48,7 @@ namespace umi3d.browserRuntime.ui.thumbnails
 
             model = GetComponentInParent<ThumbnailModelContainer>();
 
-            NotificationHub.Default.Subscribe<ThumbnailsNotificationKeys.SubButtonsVisibilityWillChange>(
+            NotificationHub.Default.Subscribe<ThumbnailsNotificationKeys.SubInputsVisibilityWillChange>(
                 this,
                 new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == model.model),
                 SubButtonsVisibilityWillChange
@@ -62,7 +62,7 @@ namespace umi3d.browserRuntime.ui.thumbnails
 
         void SubButtonsVisibilityWillChange(Notification notification)
         {
-            if (!notification.TryGetInfoT(ThumbnailsNotificationKeys.SubButtonsVisibilityWillChange.IsVisible, out bool isVisible))
+            if (!notification.TryGetInfoT(ThumbnailsNotificationKeys.SubInputsVisibilityWillChange.IsVisible, out bool isVisible))
             {
                 return;
             }

@@ -7,11 +7,24 @@ using UnityEngine.TestTools;
 
 public class ThumbnailModelTests
 {
-    // A Test behaves as an ordinary method
+    ThumbnailModel model;
+
+    [SetUp]
+    public void SetUp()
+    {
+        model = new ThumbnailModel();
+    }
+
+    [TearDown]
+    public void TearDown()
+    {
+        model = null;
+    }
+
+
     [Test]
     public void GivenNoSprite_WhenSetImage_ThenSprite()
     {
-        ThumbnailModel model = new ThumbnailModel();
         Assert.IsNull(model.image);
 
         Texture2D texture = new Texture2D(100, 100);
@@ -24,7 +37,6 @@ public class ThumbnailModelTests
     [Test]
     public void GivenNoFavorite_WhenUpdateFavorite_ThenFavorite()
     {
-        ThumbnailModel model = new ThumbnailModel();
         Assert.IsFalse(model.isFavorite);
 
         model.UpdateFavoriteStatus(true);
@@ -35,7 +47,6 @@ public class ThumbnailModelTests
     [Test]
     public void GivenFavorite_WhenUpdateFavorite_ThenNotFavorite()
     {
-        ThumbnailModel model = new ThumbnailModel();
         model.isFavorite = true;
         Assert.IsTrue(model.isFavorite);
 
@@ -47,7 +58,6 @@ public class ThumbnailModelTests
     [Test]
     public void GivenNoFavorite_WhenToggleFavorite_ThenFavorite()
     {
-        ThumbnailModel model = new ThumbnailModel();
         Assert.IsFalse(model.isFavorite);
 
         model.ToggleFavorite();
@@ -58,7 +68,6 @@ public class ThumbnailModelTests
     [Test]
     public void GivenFavorite_WhenToggleFavorite_ThenNoFavorite()
     {
-        ThumbnailModel model = new ThumbnailModel();
         model.isFavorite = true;
         Assert.IsTrue(model.isFavorite);
 
@@ -70,7 +79,6 @@ public class ThumbnailModelTests
     [Test]
     public void GivenSubInputsHide_WhenSetVisible_ThenVisible()
     {
-        ThumbnailModel model = new ThumbnailModel();
         Assert.IsFalse(model.isDisplaying);
 
         model.SetSubInputsVisibility(true);
@@ -81,7 +89,6 @@ public class ThumbnailModelTests
     [Test]
     public void GivenSubInputsDisplay_WhenSetHide_ThenHide()
     {
-        ThumbnailModel model = new ThumbnailModel();
         model.isDisplaying = true;
         Assert.IsTrue(model.isDisplaying);
 
@@ -93,7 +100,6 @@ public class ThumbnailModelTests
     [Test]
     public void GivenNoName_WhenUpdateName_ThenNamed()
     {
-        ThumbnailModel model = new ThumbnailModel();
         Assert.IsTrue(string.IsNullOrEmpty(model.name));
 
         string name = "A gorgeous name";

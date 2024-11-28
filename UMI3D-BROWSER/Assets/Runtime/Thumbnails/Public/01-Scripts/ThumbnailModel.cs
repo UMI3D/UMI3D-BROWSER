@@ -21,6 +21,8 @@ namespace umi3d.browserRuntime.ui.thumbnails
 {
     public class ThumbnailModel 
     {
+        public ThumbnailsModel thumbnailsModel;
+
         public ThumbnailModel()
         {
             selectNotifier = NotificationHub.Default
@@ -34,9 +36,6 @@ namespace umi3d.browserRuntime.ui.thumbnails
 
             favoriteChangedNotifier = NotificationHub.Default
                .GetNotifier<ThumbnailsNotificationKeys.FavoriteStatusChanged>(this);
-
-            deleteNotifier = NotificationHub.Default
-               .GetNotifier<ThumbnailsNotificationKeys.Delete>(this);
 
             subInputsVisibilityNotifier = NotificationHub.Default
                .GetNotifier<ThumbnailsNotificationKeys.SubInputsVisibilityWillChange>(this);
@@ -96,11 +95,9 @@ namespace umi3d.browserRuntime.ui.thumbnails
 
         #region Delete
 
-        Notifier deleteNotifier;
-
         public void Delete()
         {
-            deleteNotifier.Notify();
+            thumbnailsModel.Delete(this);
         }
 
         #endregion

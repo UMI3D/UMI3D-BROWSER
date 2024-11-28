@@ -136,9 +136,36 @@ public class ThumbnailsModelTests
         Assert.AreEqual(model.thumbnails.Count, 0);
 
         ThumbnailModel thumbnail = new();
-        model.AddThumbnail(thumbnail);
+        model.Add(thumbnail);
 
         Assert.AreEqual(model.thumbnails.Count, 1);
         Assert.AreEqual(model.thumbnails[0], thumbnail);
+    }
+
+    [Test]
+    public void Given1Thumbnail_WhenAddSame_Then1Thumbnail()
+    {
+        ThumbnailModel thumbnail = new();
+        model.Add(thumbnail);
+        Assert.AreEqual(model.thumbnails.Count, 1);
+        Assert.AreEqual(model.thumbnails[0], thumbnail);
+
+        model.Add(thumbnail);
+
+        Assert.AreEqual(model.thumbnails.Count, 1);
+        Assert.AreEqual(model.thumbnails[0], thumbnail);
+    }
+
+    [Test]
+    public void Given1Thumbnail_WhenDelete_Then0Thumbnail()
+    {
+        ThumbnailModel thumbnail = new();
+        model.Add(thumbnail);
+        Assert.AreEqual(model.thumbnails.Count, 1);
+        Assert.AreEqual(model.thumbnails[0], thumbnail);
+
+        model.Delete(thumbnail);
+
+        Assert.AreEqual(model.thumbnails.Count, 0);
     }
 }

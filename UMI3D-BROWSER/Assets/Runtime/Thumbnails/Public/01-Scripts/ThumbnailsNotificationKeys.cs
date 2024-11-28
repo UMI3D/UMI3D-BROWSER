@@ -107,6 +107,20 @@ namespace umi3d.browserRuntime.ui.thumbnails
             public const string Thumbnail = "Thumbnail";
         }
 
+        /// <summary>
+        /// Event raised when a thumbnail has been deleted.
+        /// </summary>
+        public class Deleted
+        {
+            /// <summary>
+            /// The thumbnail.
+            /// </summary>
+            /// <remarks>
+            /// Value is <see cref="ThumbnailModel"/>.
+            /// </remarks>
+            public const string Thumbnail = "Thumbnail";
+        }
+
         #region Thumbnail
 
         /// <summary>
@@ -156,13 +170,6 @@ namespace umi3d.browserRuntime.ui.thumbnails
             /// Value is <see cref="bool"/>.
             /// </remarks>
             public const string IsFavorite = "IsFavorite";
-        }
-
-        /// <summary>
-        /// Event raised when a thumbnail will be deleted.
-        /// </summary>
-        public class Delete
-        {
         }
 
         /// <summary>

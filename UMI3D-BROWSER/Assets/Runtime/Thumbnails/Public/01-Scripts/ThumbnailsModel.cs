@@ -43,6 +43,9 @@ namespace umi3d.browserRuntime.ui.thumbnails
 
             thumbnailAddedNotifier = NotificationHub.Default
                 .GetNotifier<ThumbnailsNotificationKeys.Added>(this);
+
+            thumbnailDeletedNotifier = NotificationHub.Default
+                .GetNotifier<ThumbnailsNotificationKeys.Deleted>(this);
         }
 
         #region Content mode
@@ -135,12 +138,26 @@ namespace umi3d.browserRuntime.ui.thumbnails
 
         Notifier thumbnailAddedNotifier;
 
-        public void AddThumbnail(ThumbnailModel thumbnail)
+        public void Add(ThumbnailModel thumbnail)
         {
             if (thumbnails.Contains(thumbnail)) return;
             thumbnails.Add(thumbnail);
             thumbnailAddedNotifier[ThumbnailsNotificationKeys.Added.Thumbnail] = thumbnail;
             thumbnailAddedNotifier.Notify();
+        }
+
+        #endregion
+
+        #region Delete Thumbnails
+
+        Notifier thumbnailDeletedNotifier;
+
+        public void Delete(ThumbnailModel thumbnail)
+        {
+            if (!thumbnails.Contains(thumbnail)) return;
+            thumbnails.Remove(thumbnail);
+            thumbnailDeletedNotifier[ThumbnailsNotificationKeys.Deleted.Thumbnail] = thumbnail;
+            thumbnailDeletedNotifier.Notify();
         }
 
         #endregion

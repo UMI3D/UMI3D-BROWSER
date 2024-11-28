@@ -23,6 +23,7 @@ namespace umi3d.browserRuntime.ui.thumbnails
     internal class ThumbnailsFactory : MonoBehaviour
     {
         [SerializeField] GameObject thumbnailPrefab;
+        [SerializeField] GameObject emptyThumbnailPrefab;
 
         List<ThumbnailModelContainer> activatedThumbnails = new();
         List<ThumbnailModelContainer> deactivatedThumbnails = new();

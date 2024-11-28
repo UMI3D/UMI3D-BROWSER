@@ -187,9 +187,23 @@ namespace umi3d.browserRuntime.ui.thumbnails
         }
 
         /// <summary>
-        /// Event raised when the name of the thumbnail will change.
+        /// Event raised when the name of the thumbnail is set by the model.
         /// </summary>
-        public class NameWillChange
+        public class NameSet
+        {
+            /// <summary>
+            /// The name of the thumbnail.
+            /// </summary>
+            /// <remarks>
+            /// Value is <see cref="string"/>.
+            /// </remarks>
+            public const string Name = "Name";
+        }
+
+        /// <summary>
+        /// Event raised when the name of the thumbnail is updated by the view.
+        /// </summary>
+        public class NameUpdated
         {
             /// <summary>
             /// The name of the thumbnail.

@@ -36,6 +36,10 @@ namespace umi3d.browserRuntime.ui.thumbnails
         public void SetModel(ThumbnailModel model)
         {
             _model = model;
+            _model.SetImage(model.image);
+            _model.SetSubInputsVisibility(_model.areSubInputsVisible);
+            _model.UpdateFavoriteStatus(_model.isFavorite);
+            _model.SetName(_model.name);
         }
     }
 }

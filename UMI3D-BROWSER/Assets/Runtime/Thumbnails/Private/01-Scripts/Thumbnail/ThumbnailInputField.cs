@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.thumbnails
@@ -31,11 +32,32 @@ namespace umi3d.browserRuntime.ui.thumbnails
             inputField.onValueChanged.AddListener(OnValueChanged);
 
             model = GetComponentInParent<ThumbnailModelContainer>();
+
+            NotificationHub.Default.Subscribe<ThumbnailsNotificationKeys.NameSet>(
+                this,
+                new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == model.model),
+                NameSet
+            );
+        }
+
+        void OnDestroy()
+        {
+            NotificationHub.Default.Unsubscribe(this);
         }
 
         void OnValueChanged(string value)
         {
             model.model.UpdateName(value);
+        }
+
+        void NameSet(Notification notification)
+        {
+            if (!notification.TryGetInfoT(ThumbnailsNotificationKeys.NameSet.Name, out string name))
+            {
+                return;
+            }
+
+            inputField.SetTextWithoutNotify(name);
         }
     }
 }

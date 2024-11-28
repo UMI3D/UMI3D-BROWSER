@@ -40,8 +40,11 @@ namespace umi3d.browserRuntime.ui.thumbnails
             subInputsVisibilityNotifier = NotificationHub.Default
                .GetNotifier<ThumbnailsNotificationKeys.SubInputsVisibilityWillChange>(this);
 
+            setNameNotifier = NotificationHub.Default
+              .GetNotifier<ThumbnailsNotificationKeys.NameSet>(this);
+
             updateNameNotifier = NotificationHub.Default
-              .GetNotifier<ThumbnailsNotificationKeys.NameWillChange>(this);
+             .GetNotifier<ThumbnailsNotificationKeys.NameUpdated>(this);
         }
 
         #region Clicked
@@ -108,13 +111,13 @@ namespace umi3d.browserRuntime.ui.thumbnails
 
         #region Sub Inputs
 
-        public bool isDisplaying = false;
+        public bool areSubInputsVisible = false;
 
         Notifier subInputsVisibilityNotifier;
 
         public void SetSubInputsVisibility(bool isVisible)
         {
-            this.isDisplaying = isVisible;
+            this.areSubInputsVisible = isVisible;
             subInputsVisibilityNotifier[ThumbnailsNotificationKeys.SubInputsVisibilityWillChange.IsVisible] = isVisible;
             subInputsVisibilityNotifier.Notify();
         }
@@ -126,11 +129,19 @@ namespace umi3d.browserRuntime.ui.thumbnails
         public string name;
 
         Notifier updateNameNotifier;
+        Notifier setNameNotifier;
+
+        public void SetName(string name)
+        {
+            this.name = name;
+            setNameNotifier[ThumbnailsNotificationKeys.NameSet.Name] = name;
+            setNameNotifier.Notify();
+        }
 
         public void UpdateName(string name)
         {
             this.name = name;
-            updateNameNotifier[ThumbnailsNotificationKeys.NameWillChange.Name] = name;
+            updateNameNotifier[ThumbnailsNotificationKeys.NameUpdated.Name] = name;
             updateNameNotifier.Notify();
         }
 

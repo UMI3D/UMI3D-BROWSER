@@ -79,22 +79,22 @@ public class ThumbnailModelTests
     [Test]
     public void GivenSubInputsHide_WhenSetVisible_ThenVisible()
     {
-        Assert.IsFalse(model.isDisplaying);
+        Assert.IsFalse(model.areSubInputsVisible);
 
         model.SetSubInputsVisibility(true);
 
-        Assert.IsTrue(model.isDisplaying);
+        Assert.IsTrue(model.areSubInputsVisible);
     }
 
     [Test]
     public void GivenSubInputsDisplay_WhenSetHide_ThenHide()
     {
-        model.isDisplaying = true;
-        Assert.IsTrue(model.isDisplaying);
+        model.areSubInputsVisible = true;
+        Assert.IsTrue(model.areSubInputsVisible);
 
         model.SetSubInputsVisibility(false);
 
-        Assert.IsFalse(model.isDisplaying);
+        Assert.IsFalse(model.areSubInputsVisible);
     }
 
     [Test]

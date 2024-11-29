@@ -481,10 +481,9 @@ GameObject:
   - component: {fileID: 2247686735725056124}
   - component: {fileID: 2363022751813572197}
   - component: {fileID: 4324451535249047705}
-  - component: {fileID: 5302419438018580643}
   - component: {fileID: 8719619823127192365}
   m_Layer: 5
-  m_Name: VignetteContainer
+  m_Name: ThumbnailsContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -553,34 +552,6 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &5302419438018580643
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3160502414842021976}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e080908f1f0a9b4c8659d1e8116269e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  connectionServiceLinker: {fileID: 11400000, guid: 24604fe66de00534e9fe94635a6279cf,
-    type: 2}
-  emptyVignettePrefab: {fileID: 1842928581106226447, guid: c1ced952cf1b8cc48b9bb7d6e98e0d02,
-    type: 3}
-  vignetteDisplayers: []
-  m_vignetteContainerDatas:
-  - {fileID: 11400000, guid: 4fc00e52bc2bcc34e84a36370b1e488c, type: 2}
-  - {fileID: 11400000, guid: 6e20eb6852e1b5347a829a920166f17b, type: 2}
-  - {fileID: 11400000, guid: 83d293c9a07662846b6a177482793f0d, type: 2}
-  vignetteMode: 2
-  primaryVignetteMode: 2
-  secondaryVignetteMode: 8
-  isFavorite: 0
-  gridLayout: {fileID: 4684022820558560661}
-  virtualWorlds:
-    worlds: []
 --- !u!114 &8719619823127192365
 MonoBehaviour:
   m_ObjectHideFlags: 0

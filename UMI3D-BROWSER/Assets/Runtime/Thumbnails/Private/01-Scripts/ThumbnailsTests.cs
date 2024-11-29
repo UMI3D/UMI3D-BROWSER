@@ -36,7 +36,7 @@ namespace umi3d.browserRuntime.ui.thumbnails
         void Start()
         {
             SetMiddleSmall();
-            AddThumbnails();
+            Add2Thumbnails();
         }
 
         void ContentModeChanged(Notification notification)
@@ -80,8 +80,35 @@ namespace umi3d.browserRuntime.ui.thumbnails
             model.model.SetContentMode(ThumbnailContentMode.Middle);
         }
 
-        [ContextMenu("Add thumbnails")]
-        void AddThumbnails()
+        [ContextMenu("Add thumbnail")]
+        void AddThumbnail()
+        {
+            ThumbnailModel thumbnails1 = new()
+            {
+                name = $"Thumbnail {new System.Guid()}",
+            };
+            model.model.Add(thumbnails1);
+        }
+
+        [ContextMenu("Add 2 thumbnails")]
+        void Add2Thumbnails()
+        {
+            ThumbnailModel thumbnails1 = new()
+            {
+                name = "Thumbnail 1",
+            };
+            model.model.Add(thumbnails1);
+
+            ThumbnailModel thumbnails2 = new()
+            {
+                name = "Thumbnail 2",
+                isFavorite = true,
+            };
+            model.model.Add(thumbnails2);
+        }
+
+        [ContextMenu("Add 3 thumbnails")]
+        void Add3Thumbnails()
         {
             ThumbnailModel thumbnails1 = new()
             {

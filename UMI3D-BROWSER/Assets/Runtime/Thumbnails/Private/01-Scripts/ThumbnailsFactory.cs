@@ -28,6 +28,9 @@ namespace umi3d.browserRuntime.ui.thumbnails
         List<ThumbnailModelContainer> activatedThumbnails = new();
         List<ThumbnailModelContainer> deactivatedThumbnails = new();
 
+        List<GameObject> activatedEmpties = new();
+        List<GameObject> deactivatedEmpties = new();
+
         ThumbnailsModelContainer model;
 
         void Awake()
@@ -42,7 +45,12 @@ namespace umi3d.browserRuntime.ui.thumbnails
             NotificationHub.Default.Subscribe<ThumbnailsNotificationKeys.Deleted>(
                this,
                Deleted
-           );
+            );
+
+            NotificationHub.Default.Subscribe<ThumbnailsNotificationKeys.ContentModeChanged>(
+               this,
+               ContentModeChanged
+            );
         }
 
         void OnDestroy()
@@ -58,6 +66,7 @@ namespace umi3d.browserRuntime.ui.thumbnails
             }
 
             ThumbnailModelContainer modelContainer = FetchThumbnail();
+            UpdateEmpties();
             ActiveThumbnail(modelContainer, thumbnail);
         }
 
@@ -70,6 +79,43 @@ namespace umi3d.browserRuntime.ui.thumbnails
 
             ThumbnailModelContainer container = FindActivatedThumbnail(thumbnail);
             DeactivateThumbnail(container);
+            UpdateEmpties();
+        }
+
+        void ContentModeChanged(Notification notification)
+        {
+            UpdateEmpties();
+        }
+
+        void UpdateEmpties()
+        {
+            int numberOfEmpties = model.model.NumberOfEmptyToDisplay();
+            int diff;
+            if (activatedEmpties.Count == numberOfEmpties)
+            {
+                return;
+            }
+            else if (activatedEmpties.Count < numberOfEmpties)
+            {
+                diff = numberOfEmpties - activatedEmpties.Count;
+                for (int i = 0; i < diff; i++)
+                {
+                    AddEmpty();
+                }
+            }
+            else
+            {
+                diff = activatedEmpties.Count - numberOfEmpties;
+                for (int i = 0; i < diff; i++)
+                {
+                    RemoveEmpty();
+                }
+            }
+
+            for (int i = 0; i < activatedEmpties.Count; i++)
+            {
+                activatedEmpties[i].transform.SetAsLastSibling();
+            }
         }
 
         ThumbnailModelContainer FetchThumbnail()
@@ -88,6 +134,7 @@ namespace umi3d.browserRuntime.ui.thumbnails
             }
 
             activatedThumbnails.Add(container);
+            container.transform.SetAsLastSibling();
 
             return container;
         }
@@ -119,6 +166,38 @@ namespace umi3d.browserRuntime.ui.thumbnails
         {
             modelContainer?.SetModel(null);
             modelContainer?.gameObject.SetActive(false);
+        }
+
+        void AddEmpty()
+        {
+            GameObject go;
+            if (deactivatedEmpties.Count == 0)
+            {
+                go = Instantiate(emptyThumbnailPrefab);
+                go.transform.SetParent(transform, false);
+            }
+            else
+            {
+                go = deactivatedEmpties[deactivatedEmpties.Count - 1];
+                deactivatedEmpties.RemoveAt(deactivatedEmpties.Count - 1);
+            }
+
+            activatedEmpties.Add(go);
+            go.transform.SetAsLastSibling();
+            go.SetActive(true);
+        }
+
+        void RemoveEmpty()
+        {
+            if (activatedEmpties.Count == 0)
+            {
+                return;
+            }
+
+            GameObject go = activatedEmpties[activatedEmpties.Count - 1];
+            activatedEmpties.RemoveAt(activatedEmpties.Count - 1);
+            deactivatedEmpties.Add(go);
+            go.SetActive(false);
         }
     }
 }

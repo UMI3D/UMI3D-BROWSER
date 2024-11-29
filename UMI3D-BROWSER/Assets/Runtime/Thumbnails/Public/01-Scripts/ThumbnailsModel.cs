@@ -53,6 +53,10 @@ namespace umi3d.browserRuntime.ui.thumbnails
 
         #region Content mode
 
+        public const int SMALL_THUMBNAIL_PER_PAGE = 8;
+        public const int MEDIUM_THUMBNAIL_PER_PAGE = 3;
+        public const int LARGE_THUMBNAIL_PER_PAGE = 2;
+
         public ThumbnailContentMode contentMode;
         public ThumbnailContentMode primaryContentMode;
         public ThumbnailContentMode secondaryContentMode;
@@ -76,6 +80,22 @@ namespace umi3d.browserRuntime.ui.thumbnails
                : primaryContentMode;
             contentModeNotifier[ThumbnailsNotificationKeys.ContentModeChanged.ContentMode] = contentMode;
             contentModeNotifier.Notify();
+        }
+
+        public int NumberOfEmptyToDisplay()
+        {
+            switch (contentMode)
+            {
+                case ThumbnailContentMode.Small:
+                    return Mathf.Max(0, SMALL_THUMBNAIL_PER_PAGE - thumbnails.Count); 
+                case ThumbnailContentMode.Middle:
+                    return Mathf.Max(0, MEDIUM_THUMBNAIL_PER_PAGE - thumbnails.Count);
+                case ThumbnailContentMode.Large:
+                    return Mathf.Max(0, LARGE_THUMBNAIL_PER_PAGE - thumbnails.Count);
+                default:
+                    UnityEngine.Debug.LogError($"Error: Unhandled case.");
+                    return 0;
+            }
         }
 
         #endregion

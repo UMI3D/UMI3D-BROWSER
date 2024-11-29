@@ -18,6 +18,8 @@ public class ThumbnailsModelTests
         model = null;
     }
 
+    #region Content mode
+
     [Test]
     public void GivenSmall_WhenSetLarge_ThenLarge()
     {
@@ -117,6 +119,121 @@ public class ThumbnailsModelTests
     }
 
     [Test]
+    public void Given0ThumbnailAndSmall_WhenNumberOfEmpties_Then8()
+    {
+        model.contentMode = ThumbnailContentMode.Small;
+
+        int emptiesCount = model.NumberOfEmptyToDisplay();
+
+        Assert.AreEqual(emptiesCount, 8);
+    }
+
+    [Test]
+    public void Given0ThumbnailAndMedium_WhenNumberOfEmpties_Then3()
+    {
+        model.contentMode = ThumbnailContentMode.Middle;
+
+        int emptiesCount = model.NumberOfEmptyToDisplay();
+
+        Assert.AreEqual(emptiesCount, 3);
+    }
+
+    [Test]
+    public void Given0ThumbnailAndLarge_WhenNumberOfEmpties_Then2()
+    {
+        model.contentMode = ThumbnailContentMode.Large;
+
+        int emptiesCount = model.NumberOfEmptyToDisplay();
+
+        Assert.AreEqual(emptiesCount, 2);
+    }
+
+    [Test]
+    public void Given5ThumbnailAndSmall_WhenNumberOfEmpties_Then3()
+    {
+        model.contentMode = ThumbnailContentMode.Small;
+        for (int i = 0; i < 5; i++)
+        {
+            model.thumbnails.Add(new());
+        }
+
+        int emptiesCount = model.NumberOfEmptyToDisplay();
+
+        Assert.AreEqual(emptiesCount, 3);
+    }
+
+    [Test]
+    public void Given2ThumbnailAndMedium_WhenNumberOfEmpties_Then1()
+    {
+        model.contentMode = ThumbnailContentMode.Middle;
+        for (int i = 0; i < 2; i++)
+        {
+            model.thumbnails.Add(new());
+        }
+
+        int emptiesCount = model.NumberOfEmptyToDisplay();
+
+        Assert.AreEqual(emptiesCount, 1);
+    }
+
+    [Test]
+    public void Given1ThumbnailAndLarge_WhenNumberOfEmpties_Then1()
+    {
+        model.contentMode = ThumbnailContentMode.Large;
+        model.thumbnails.Add(new());
+
+        int emptiesCount = model.NumberOfEmptyToDisplay();
+
+        Assert.AreEqual(emptiesCount, 1);
+    }
+
+    [Test]
+    public void Given10ThumbnailAndSmall_WhenNumberOfEmpties_Then0()
+    {
+        model.contentMode = ThumbnailContentMode.Small;
+        for (int i = 0; i < 10; i++)
+        {
+            model.thumbnails.Add(new());
+        }
+
+        int emptiesCount = model.NumberOfEmptyToDisplay();
+
+        Assert.AreEqual(emptiesCount, 0);
+    }
+
+    [Test]
+    public void Given5ThumbnailAndMedium_WhenNumberOfEmpties_Then0()
+    {
+        model.contentMode = ThumbnailContentMode.Middle;
+        for (int i = 0; i < 5; i++)
+        {
+            model.thumbnails.Add(new());
+        }
+
+        int emptiesCount = model.NumberOfEmptyToDisplay();
+
+        Assert.AreEqual(emptiesCount, 0);
+    }
+
+    [Test]
+    public void Given3ThumbnailAndLarge_WhenNumberOfEmpties_Then0()
+    {
+        model.contentMode = ThumbnailContentMode.Large;
+        for (int i = 0; i < 3; i++)
+        {
+            model.thumbnails.Add(new());
+        }
+
+        int emptiesCount = model.NumberOfEmptyToDisplay();
+
+        Assert.AreEqual(emptiesCount, 0);
+    }
+
+    #endregion
+
+    #region Scrolling
+
+    [Test]
     public void GivenScroll0_WhenSlideLeft_Then0()
     {
         Assert.AreEqual(model.horizontalSliderValue, 0f);
@@ -190,6 +307,10 @@ public class ThumbnailsModelTests
         Assert.False(model.areSlideButtonVisible);
     }
 
+    #endregion
+
+    #region Layout
+
     [Test]
     public void GivenLayout0_WhenSetGrid_ThenNot0()
     {
@@ -206,6 +327,10 @@ public class ThumbnailsModelTests
         Assert.AreEqual(model.gridRowCount, rowCount);
         Assert.AreEqual(model.gridSpacing, spacing);
     }
+
+    #endregion
+
+    #region Add and Remove
 
     [Test]
     public void GivenNoThumbnail_WhenAdd_Then1Thumbnail()
@@ -245,4 +370,6 @@ public class ThumbnailsModelTests
 
         Assert.AreEqual(model.thumbnails.Count, 0);
     }
+
+    #endregion
 }

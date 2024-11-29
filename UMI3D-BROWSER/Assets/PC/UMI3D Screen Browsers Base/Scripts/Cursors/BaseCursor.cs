@@ -20,7 +20,7 @@ namespace umi3d.baseBrowser.cursor
     public class BaseCursor : inetum.unityUtils.SingleBehaviour<BaseCursor>
     {
         public enum CursorState { Default, Hover, Clicked, FollowCursor }
-        public enum CursorMovement { Free, Center, Confined, FreeHidden }
+        public enum CursorMovement { Free, Drawing, Center, Confined, FreeHidden }
 
         public event System.Action<CursorState> UpdateCursor;
 
@@ -140,6 +140,7 @@ namespace umi3d.baseBrowser.cursor
                     UnityEngine.Cursor.visible = false;
                     break;
                 case CursorMovement.Free:
+                case CursorMovement.Drawing:
                     UnityEngine.Cursor.lockState = UnityEngine.CursorLockMode.None;
                     UnityEngine.Cursor.visible = true;
                     break;

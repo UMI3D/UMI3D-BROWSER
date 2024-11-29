@@ -14,8 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
+using System;
 using umi3d.cdk;
 using umi3d.common;
+using umi3d.common.interaction;
 
 namespace umi3d.baseBrowser.inputs.interactions
 {
@@ -47,9 +50,18 @@ namespace umi3d.baseBrowser.inputs.interactions
             };
         }
 
+        public Action PressedDownOverrider = null;
+        public Action PressedUpOverrider = null;
+
         protected override void PressedDown()
         {
             onInputDown.Invoke();
+
+            if(PressedDownOverrider != null) 
+            {
+                PressedDownOverrider();
+                return;
+            }
 
             if (associatedInteraction == null) return;
 
@@ -83,17 +95,24 @@ namespace umi3d.baseBrowser.inputs.interactions
                 cdk.UMI3DClientServer.SendData(eventdto, true);
             }
             if (associatedInteraction.TriggerAnimationId != 0)
-                StartAnim(environmentId,associatedInteraction.TriggerAnimationId);
+                StartAnim(environmentId, associatedInteraction.TriggerAnimationId);
         }
 
         protected override void PressedUp()
         {
             onInputUp.Invoke();
 
+            if (PressedUpOverrider != null)
+            {
+                PressedUpOverrider();
+                return;
+            }
+
             if (associatedInteraction == null) return;
 
             if (associatedInteraction.ReleaseAnimationId != 0) StartAnim(environmentId, associatedInteraction.ReleaseAnimationId);
-            if (!associatedInteraction.hold || !risingEdgeEventSent) return;
+            if (!associatedInteraction.hold || !risingEdgeEventSent)
+                return;
 
             var eventdto = new common.interaction.EventStateChangedDto
             {
@@ -129,5 +148,16 @@ namespace umi3d.baseBrowser.inputs.interactions
                 anim.Start();
             }
         }
+
+        public override bool IsCompatibleWith(common.interaction.AbstractInteractionDto interaction) => base.IsCompatibleWith(interaction) && interaction is not DrawingInteractionDto;
+
+        public override void Dissociate()
+        {
+            base.Dissociate();
+            PressedDownOverrider = null;
+            PressedUpOverrider = null;
+        }
+
     }
+
 }

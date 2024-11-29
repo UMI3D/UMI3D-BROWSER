@@ -1,4 +1,4 @@
-/*
+﻿/*
 Copyright 2019 - 2023 Inetum
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,40 +13,38 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using umi3d.cdk.interaction;
-using umi3d.common.interaction;
 using UnityEngine;
 
 namespace umi3d.baseBrowser.inputs.interactions
 {
-    public class ManipulationGroupeForDesktop : BaseManipulationGroup
+    public class DrawGroupeForDesktop : BaseDrawGroup
     {
         /// <summary>
         /// List of inputs that will be used to manipulate an interactable.
         /// </summary>
         [SerializeField]
-        protected List<KeyboardManipulation> m_inputs = new List<KeyboardManipulation>();
+        protected List<KeyboardInteraction> toggleInputs = new ();
 
-        private void Start()
-        {
-            KeyboardShortcut.AddUpListener(ShortcutEnum.SwitchNextManipulation, () => ManipulationForDesktop.NextManipulation());
-        }
+        [SerializeField]
+        protected List<KeyboardInteraction> drawInputs = new();
 
         /// <summary>
         /// Bind this manipulation group.
         /// </summary>
         /// <param name="controller"></param>
         /// <param name="Inputs"></param>
-        public void Bind(AbstractController controller, List<KeyboardManipulation> Inputs)
+        public void Bind(AbstractController controller, List<KeyboardInteraction> toggles, List<KeyboardInteraction> draws)
         {
             Init(controller);
-            m_inputs = Inputs;
+            toggleInputs = toggles;
+            drawInputs = draws;
         }
 
         public override bool IsAvailable()
-            => base.IsAvailable() && m_inputs.Exists(activationButton => activationButton.IsAvailable());
+            => base.IsAvailable() 
+                && toggleInputs.Exists(activationButton => activationButton.IsAvailable())
+                && drawInputs.Exists(activationButton => activationButton.IsAvailable());
     }
 }

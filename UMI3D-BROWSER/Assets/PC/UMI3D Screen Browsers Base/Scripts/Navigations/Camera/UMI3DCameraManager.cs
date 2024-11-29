@@ -47,7 +47,8 @@ public sealed class UMI3DCameraManager
     {
         if (
                 (BaseCursor.Movement == BaseCursor.CursorMovement.Free
-                || BaseCursor.Movement == BaseCursor.CursorMovement.FreeHidden)
+                || BaseCursor.Movement == BaseCursor.CursorMovement.FreeHidden
+                || BaseCursor.Movement == BaseCursor.CursorMovement.Drawing)
             )
         {
             return;

@@ -52,6 +52,8 @@ namespace umi3d.browserRuntime.debug
         {
             // Application.version format : [Browser Version] Sdk: [SDK Version]
             var versions = Application.version.Split("Sdk: ");
+            if (versions.Length < 2)
+                return "";
 
             return
                 $"==================== Start UMI3D Report ====================\n" +

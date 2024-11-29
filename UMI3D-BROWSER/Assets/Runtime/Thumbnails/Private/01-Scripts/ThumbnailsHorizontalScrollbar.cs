@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
+using System.Collections;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
@@ -27,6 +28,8 @@ namespace umi3d.browserRuntime.ui.thumbnails
         Scrollbar scrollbar;
 
         ThumbnailsModelContainer model;
+
+        Coroutine checkSliderCoroutine;
 
         void Awake()
         {
@@ -44,22 +47,20 @@ namespace umi3d.browserRuntime.ui.thumbnails
                 this,
                 ThumbnailAdded
             );
+
+            checkSliderCoroutine = StartCoroutine(CheckSlider());
         }
 
         void OnDestroy()
         {
             NotificationHub.Default.Unsubscribe(this);
+
+            StopAllCoroutines();
         }
 
         void SliderValueChanged(float value)
         {
             model.model.horizontalSliderValue = value;
-            new Task(async () =>
-            {
-                await Task.Yield();
-
-                model.model.DisplaySlideButton(ShouldDisplaySlideButton());
-            }).Start(TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         void SliderValueSet(Notification notification)
@@ -85,6 +86,16 @@ namespace umi3d.browserRuntime.ui.thumbnails
         bool ShouldDisplaySlideButton()
         {
             return scrollbar.size < 1;
+        }
+
+        IEnumerator CheckSlider()
+        {
+            while (true)
+            {
+                yield return new WaitForSeconds(.5f);
+
+                model.model.DisplaySlideButton(ShouldDisplaySlideButton());
+            }
         }
     }
 }

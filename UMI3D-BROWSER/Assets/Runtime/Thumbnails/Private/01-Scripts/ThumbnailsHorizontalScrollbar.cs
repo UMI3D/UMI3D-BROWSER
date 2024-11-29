@@ -44,11 +44,6 @@ namespace umi3d.browserRuntime.ui.thumbnails
                 this,
                 ThumbnailAdded
             );
-
-            NotificationHub.Default.Subscribe<ThumbnailsNotificationKeys.Deleted>(
-                this,
-                ThumbnailDeleted
-            );
         }
 
         void OnDestroy()
@@ -59,6 +54,12 @@ namespace umi3d.browserRuntime.ui.thumbnails
         void SliderValueChanged(float value)
         {
             model.model.horizontalSliderValue = value;
+            new Task(async () =>
+            {
+                await Task.Yield();
+
+                model.model.DisplaySlideButton(ShouldDisplaySlideButton());
+            }).Start(TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         void SliderValueSet(Notification notification)
@@ -81,9 +82,9 @@ namespace umi3d.browserRuntime.ui.thumbnails
             }).Start(TaskScheduler.FromCurrentSynchronizationContext());
         }
 
-        void ThumbnailDeleted(Notification notification)
+        bool ShouldDisplaySlideButton()
         {
-            model.model.ComputeScrolling();
+            return scrollbar.size < 1;
         }
     }
 }

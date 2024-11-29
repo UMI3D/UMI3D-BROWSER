@@ -111,13 +111,6 @@ namespace umi3d.browserRuntime.ui.thumbnails
             SliderButtonVisibilityNotifier.Notify();
         }
 
-        public void ComputeScrolling()
-        {
-            int thumbnailsCount = thumbnails.Count;
-
-
-        }
-
         #endregion
 
         #region Layout

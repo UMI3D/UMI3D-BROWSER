@@ -16,6 +16,7 @@ limitations under the License.
 
 using inetum.unityUtils;
 using System.Collections.Generic;
+using umi3d.browserRuntime.ui.popup;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.thumbnails
@@ -46,6 +47,8 @@ namespace umi3d.browserRuntime.ui.thumbnails
 
             thumbnailDeletedNotifier = NotificationHub.Default
                 .GetNotifier<ThumbnailsNotificationKeys.Deleted>(this);
+
+            popupNotifier = new(this);
         }
 
         #region Content mode
@@ -151,6 +154,9 @@ namespace umi3d.browserRuntime.ui.thumbnails
 
         #region Delete Thumbnails
 
+        const string LOCALIZATION_TABLE = "UMI3D_inetum";
+
+        PopupNotifier popupNotifier;
         Notifier thumbnailDeletedNotifier;
 
         public void Delete(ThumbnailModel thumbnail)
@@ -160,6 +166,28 @@ namespace umi3d.browserRuntime.ui.thumbnails
             thumbnail.thumbnailsModel = null;
             thumbnailDeletedNotifier[ThumbnailsNotificationKeys.Deleted.Thumbnail] = thumbnail;
             thumbnailDeletedNotifier.Notify();
+        }
+
+        /// <summary>
+        /// Display a Dialogue box before deleting the thumbnail. Let the user choose.
+        /// </summary>
+        /// <param name="thumbnail"></param>
+        public void AskToDelete(ThumbnailModel thumbnail)
+        {
+            popupNotifier
+                .enqueue
+                .SetType(PopupType.Warning)
+                .SetArguments(("worldName", thumbnail.name))
+                .SetDescription(LOCALIZATION_TABLE, "popup_deleteWorld_description")
+                .SetButtons((LOCALIZATION_TABLE, "popup_cancel"), (LOCALIZATION_TABLE, "popup_yes"))
+                .SetButtonsAction(index =>
+                {
+                    if (index == 1)
+                    {
+                        Delete(thumbnail);
+                    }
+                })
+                .Notify();
         }
 
         #endregion

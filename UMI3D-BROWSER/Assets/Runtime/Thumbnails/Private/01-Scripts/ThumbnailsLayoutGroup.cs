@@ -61,7 +61,7 @@ namespace umi3d.browserRuntime.ui.thumbnails
                 return;
             }
 
-            gridLayoutGroup.cellSize = spacing;
+            gridLayoutGroup.cellSize = size;
             gridLayoutGroup.constraintCount = rowCount;
             gridLayoutGroup.spacing = spacing;
 

@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -24,6 +25,7 @@ namespace umi3d.browserRuntime.ui.thumbnails
     {
         Button button;
         ThumbnailSubButtonImage subButtonImage;
+        RectTransform rectTransform;
 
         ThumbnailModelContainer model;
 
@@ -31,8 +33,24 @@ namespace umi3d.browserRuntime.ui.thumbnails
         {
             button = GetComponent<Button>();
             subButtonImage = GetComponentInChildren<ThumbnailSubButtonImage>();
+            rectTransform = GetComponent<RectTransform>();
 
             model = GetComponentInParent<ThumbnailModelContainer>();
+
+            NotificationHub.Default.Subscribe<ThumbnailsNotificationKeys.ContentModeChanged>(
+               this,
+               ContentModeChanged
+           );
+        }
+
+        void Start()
+        {
+            SetContentMode(model.model.thumbnailsModel.contentMode);
+        }
+
+        void OnDestroy()
+        {
+            NotificationHub.Default.Unsubscribe(this);
         }
 
         public void OnPointerEnter(PointerEventData eventData)
@@ -74,6 +92,32 @@ namespace umi3d.browserRuntime.ui.thumbnails
             }
 
             subButtonImage.OnPointerUp();
+        }
+
+        void ContentModeChanged(Notification notification)
+        {
+            if (!notification.TryGetInfoT(ThumbnailsNotificationKeys.ContentModeChanged.ContentMode, out ThumbnailContentMode contentMode))
+            {
+                return;
+            }
+
+            SetContentMode(contentMode);
+        }
+
+        void SetContentMode(ThumbnailContentMode contentMode)
+        {
+            switch (contentMode)
+            {
+                case ThumbnailContentMode.Small:
+                    rectTransform.anchoredPosition = new Vector3(rectTransform.anchoredPosition.x, 25f);
+                    break;
+                case ThumbnailContentMode.Middle:
+                case ThumbnailContentMode.Large:
+                    rectTransform.anchoredPosition = new Vector3(rectTransform.anchoredPosition.x, 45f);
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

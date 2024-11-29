@@ -23,6 +23,7 @@ namespace umi3d.browserRuntime.ui.thumbnails
     internal class ThumbnailInputField : MonoBehaviour
     {
         TMPro.TMP_InputField inputField;
+        RectTransform rectTransform;
 
         ThumbnailModelContainer model;
 
@@ -31,6 +32,8 @@ namespace umi3d.browserRuntime.ui.thumbnails
             inputField = GetComponent<TMPro.TMP_InputField>();
             inputField.onValueChanged.AddListener(OnValueChanged);
 
+            rectTransform = GetComponent<RectTransform>();
+
             model = GetComponentInParent<ThumbnailModelContainer>();
 
             NotificationHub.Default.Subscribe<ThumbnailsNotificationKeys.NameSet>(
@@ -38,6 +41,16 @@ namespace umi3d.browserRuntime.ui.thumbnails
                 new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == model.model),
                 NameSet
             );
+
+            NotificationHub.Default.Subscribe<ThumbnailsNotificationKeys.ContentModeChanged>(
+                this,
+                ContentModeChanged
+            );
+        }
+
+        void Start()
+        {
+            SetContentMode(model.model.thumbnailsModel.contentMode);
         }
 
         void OnDestroy()
@@ -58,6 +71,32 @@ namespace umi3d.browserRuntime.ui.thumbnails
             }
 
             inputField.SetTextWithoutNotify(name);
+        }
+
+        void ContentModeChanged(Notification notification)
+        {
+            if (!notification.TryGetInfoT(ThumbnailsNotificationKeys.ContentModeChanged.ContentMode, out ThumbnailContentMode contentMode))
+            {
+                return;
+            }
+
+            SetContentMode(contentMode);
+        }
+
+        void SetContentMode(ThumbnailContentMode contentMode)
+        {
+            switch (contentMode)
+            {
+                case ThumbnailContentMode.Small:
+                    rectTransform.anchoredPosition = new Vector3(rectTransform.anchoredPosition.x, -15f);
+                    break;
+                case ThumbnailContentMode.Middle:
+                case ThumbnailContentMode.Large:
+                    rectTransform.anchoredPosition = new Vector3(rectTransform.anchoredPosition.x, 0f);
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

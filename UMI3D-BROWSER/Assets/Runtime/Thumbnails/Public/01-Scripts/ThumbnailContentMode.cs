@@ -18,9 +18,23 @@ namespace umi3d.browserRuntime.ui.thumbnails
 {
     public enum ThumbnailContentMode
     {
-        None = 0,
-        Large = 2,
-        Small = 8,
-        Mid = 3
+        /// <summary>
+        /// Small thumbnail that will be displayed in two rows.
+        /// </summary>
+        Small,
+        /// <summary>
+        /// Middle thumbnail that will be displayed in one row.
+        /// </summary>
+        /// <remarks>
+        /// This thumbnail is displayed in the organisation section.
+        /// </remarks>
+        Middle,
+        /// <summary>
+        /// Large thumbnail that will be displayed in one row.
+        /// </summary>
+        /// <remarks>
+        /// This thumbnail is displayed in the portal section.
+        /// </remarks>
+        Large
     }
 }

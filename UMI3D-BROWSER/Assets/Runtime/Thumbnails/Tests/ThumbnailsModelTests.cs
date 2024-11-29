@@ -19,8 +19,44 @@ public class ThumbnailsModelTests
     }
 
     [Test]
-    public void GivenSmallMode_WhenToggleMode_ThenLarge()
+    public void GivenSmall_WhenSetLarge_ThenLarge()
     {
+        model.contentMode = ThumbnailContentMode.Small;
+        Assert.AreEqual(model.contentMode, ThumbnailContentMode.Small);
+
+        model.SetContentMode(ThumbnailContentMode.Large);
+
+        Assert.AreEqual(model.contentMode, ThumbnailContentMode.Large);
+    }
+
+    [Test]
+    public void GivenMiddle_WhenSetLarge_ThenLarge()
+    {
+        model.contentMode = ThumbnailContentMode.Middle;
+        Assert.AreEqual(model.contentMode, ThumbnailContentMode.Middle);
+
+        model.SetContentMode(ThumbnailContentMode.Large);
+
+        Assert.AreEqual(model.contentMode, ThumbnailContentMode.Large);
+    }
+
+    [Test]
+    public void GivenLarge_WhenSetSmall_ThenSmall()
+    {
+        model.contentMode = ThumbnailContentMode.Large;
+        Assert.AreEqual(model.contentMode, ThumbnailContentMode.Large);
+
+        model.SetContentMode(ThumbnailContentMode.Small);
+
+        Assert.AreEqual(model.contentMode, ThumbnailContentMode.Small);
+    }
+
+    [Test]
+    public void GivenSmallModeSmallAndLarge_WhenToggleMode_ThenLarge()
+    {
+        model.primaryContentMode = ThumbnailContentMode.Large;
+        model.secondaryContentMode = ThumbnailContentMode.Small;
+        model.contentMode = ThumbnailContentMode.Small;
         Assert.AreEqual(model.contentMode, ThumbnailContentMode.Small);
 
         model.ToggleContentMode();
@@ -29,14 +65,55 @@ public class ThumbnailsModelTests
     }
 
     [Test]
-    public void GivenLargeMode_WhenToggleMode_ThenSmall()
+    public void GivenLargeModeSmallAndLarge_WhenToggleMode_ThenSmall()
     {
+        model.primaryContentMode = ThumbnailContentMode.Large;
+        model.secondaryContentMode = ThumbnailContentMode.Small;
         model.contentMode = ThumbnailContentMode.Large;
         Assert.AreEqual(model.contentMode, ThumbnailContentMode.Large);
 
         model.ToggleContentMode();
 
         Assert.AreEqual(model.contentMode, ThumbnailContentMode.Small);
+    }
+
+    [Test]
+    public void GivenSmallModeSmallAndMiddle_WhenToggleMode_ThenMiddle()
+    {
+        model.primaryContentMode = ThumbnailContentMode.Middle;
+        model.secondaryContentMode = ThumbnailContentMode.Small;
+        model.contentMode = ThumbnailContentMode.Small;
+        Assert.AreEqual(model.contentMode, ThumbnailContentMode.Small);
+
+        model.ToggleContentMode();
+
+        Assert.AreEqual(model.contentMode, ThumbnailContentMode.Middle);
+    }
+
+    [Test]
+    public void GivenMiddleModeSmallAndMiddle_WhenToggleMode_ThenSmall()
+    {
+        model.primaryContentMode = ThumbnailContentMode.Middle;
+        model.secondaryContentMode = ThumbnailContentMode.Small;
+        model.contentMode = ThumbnailContentMode.Middle;
+        Assert.AreEqual(model.contentMode, ThumbnailContentMode.Middle);
+
+        model.ToggleContentMode();
+
+        Assert.AreEqual(model.contentMode, ThumbnailContentMode.Small);
+    }
+
+    [Test]
+    public void GivenSmallAndMiddleButLarge_WhenToggleMode_ThenMiddle()
+    {
+        model.primaryContentMode = ThumbnailContentMode.Middle;
+        model.secondaryContentMode = ThumbnailContentMode.Small;
+        model.contentMode = ThumbnailContentMode.Large;
+        Assert.AreEqual(model.contentMode, ThumbnailContentMode.Large);
+
+        model.ToggleContentMode();
+
+        Assert.AreEqual(model.contentMode, ThumbnailContentMode.Middle);
     }
 
     [Test]

@@ -14,8 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System.Collections;
-using System.Collections.Generic;
+using inetum.unityUtils;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.thumbnails
@@ -27,19 +26,58 @@ namespace umi3d.browserRuntime.ui.thumbnails
         void Awake()
         {
             model = GetComponent<ThumbnailsModelContainer>();
+
+            NotificationHub.Default.Subscribe<ThumbnailsNotificationKeys.ContentModeChanged>(
+                this,
+                ContentModeChanged
+            );
         }
 
         void Start()
         {
+            SetMiddleSmall();
             AddThumbnails();
         }
 
-        void OnDisable()
+        void ContentModeChanged(Notification notification)
         {
+            if (!notification.TryGetInfoT(ThumbnailsNotificationKeys.ContentModeChanged.ContentMode, out ThumbnailContentMode contentMode))
+            {
+                return;
+            }
+
+            ThumbnailsGridProperties layout;
+            switch (contentMode)
+            {
+                case ThumbnailContentMode.Small:
+                    layout = model.model.smallContentModeLayout;
+                    model.model.SetGridProperties(layout.size, layout.rowCount, layout.spacing);
+                    break;
+                case ThumbnailContentMode.Middle:
+                    layout = model.model.middleContentModeLayout;
+                    model.model.SetGridProperties(layout.size, layout.rowCount, layout.spacing);
+                    break;
+                case ThumbnailContentMode.Large:
+                    layout = model.model.largeContentModeLayout;
+                    model.model.SetGridProperties(layout.size, layout.rowCount, layout.spacing);
+                    break;
+                default:
+                    break;
+            }
         }
 
-        void OnDestroy()
+        void SetLargeSmall()
         {
+            model.model.primaryContentMode = ThumbnailContentMode.Large;
+            model.model.secondaryContentMode = ThumbnailContentMode.Small;
+            model.model.SetContentMode(ThumbnailContentMode.Large);
+        }
+
+        void SetMiddleSmall()
+        {
+            model.model.primaryContentMode = ThumbnailContentMode.Middle;
+            model.model.secondaryContentMode = ThumbnailContentMode.Small;
+            model.model.SetContentMode(ThumbnailContentMode.Middle);
         }
 
         [ContextMenu("Add thumbnails")]

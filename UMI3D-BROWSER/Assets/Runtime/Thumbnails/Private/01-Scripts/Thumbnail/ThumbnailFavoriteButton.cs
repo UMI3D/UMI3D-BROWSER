@@ -26,6 +26,7 @@ namespace umi3d.browserRuntime.ui.thumbnails
     {
         Button button;
         ThumbnailSubButtonImage subButtonImage;
+        RectTransform rectTransform;
 
         ThumbnailModelContainer model;
 
@@ -33,6 +34,7 @@ namespace umi3d.browserRuntime.ui.thumbnails
         {
             button = GetComponent<Button>();
             subButtonImage = GetComponentInChildren<ThumbnailSubButtonImage>();
+            rectTransform = GetComponent<RectTransform>();
 
             model = GetComponentInParent<ThumbnailModelContainer>();
 
@@ -41,6 +43,17 @@ namespace umi3d.browserRuntime.ui.thumbnails
                 new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == model.model),
                 FavoriteStatusUpdated
             );
+
+            NotificationHub.Default.Subscribe<ThumbnailsNotificationKeys.ContentModeChanged>(
+                this,
+                ContentModeChanged
+            );
+
+        }
+
+        void Start()
+        {
+            SetContentMode(model.model.thumbnailsModel.contentMode);
         }
 
         void OnDestroy()
@@ -112,6 +125,32 @@ namespace umi3d.browserRuntime.ui.thumbnails
             else
             {
                 subButtonImage.OnPointerExit();
+            }
+        }
+
+        void ContentModeChanged(Notification notification)
+        {
+            if (!notification.TryGetInfoT(ThumbnailsNotificationKeys.ContentModeChanged.ContentMode, out ThumbnailContentMode contentMode))
+            {
+                return;
+            }
+
+            SetContentMode(contentMode);
+        }
+
+        void SetContentMode(ThumbnailContentMode contentMode)
+        {
+            switch (contentMode)
+            {
+                case ThumbnailContentMode.Small:
+                    rectTransform.anchoredPosition = new Vector3(rectTransform.anchoredPosition.x, 25f);
+                    break;
+                case ThumbnailContentMode.Middle:
+                case ThumbnailContentMode.Large:
+                    rectTransform.anchoredPosition = new Vector3(rectTransform.anchoredPosition.x, 45f);
+                    break;
+                default:
+                    break;
             }
         }
     }

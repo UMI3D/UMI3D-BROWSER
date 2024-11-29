@@ -305,7 +305,7 @@ namespace umi3dBrowsers.container.formrenderer
                     vignetteContainer = newParent.container.GetComponent<VignetteContainer>();
                     vignetteContainer.ShouldResetAndFetchVignetteFromDB = false;
                     vignetteContainer.Clear();
-                    vignetteContainer.ChangePrimaryVignetteMode(ThumbnailContentMode.Mid);
+                    vignetteContainer.ChangePrimaryVignetteMode(ThumbnailContentMode.Middle);
 
                     HandleStyle(newParent.container, newParent.container.GetComponent<displayer.IDisplayer>(), newParent.Styles);
                     m_vignetteContainers.Add(vignetteContainer);

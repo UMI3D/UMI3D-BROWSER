@@ -54,17 +54,26 @@ namespace umi3d.browserRuntime.ui.thumbnails
         #region Content mode
 
         public ThumbnailContentMode contentMode;
+        public ThumbnailContentMode primaryContentMode;
+        public ThumbnailContentMode secondaryContentMode;
 
         Notifier contentModeNotifier;
+
+        public void SetContentMode(ThumbnailContentMode contentMode)
+        {
+            this.contentMode = contentMode;
+            contentModeNotifier[ThumbnailsNotificationKeys.ContentModeChanged.ContentMode] = contentMode;
+            contentModeNotifier.Notify();
+        }
 
         /// <summary>
         /// Switch between <see cref="ThumbnailContentMode.Large"/> and <see cref="ThumbnailContentMode.Small"/>
         /// </summary>
         public void ToggleContentMode()
         {
-            contentMode = contentMode == ThumbnailContentMode.Large
-               ? ThumbnailContentMode.Small
-               : ThumbnailContentMode.Large;
+            contentMode = contentMode == primaryContentMode
+               ? secondaryContentMode
+               : primaryContentMode;
             contentModeNotifier[ThumbnailsNotificationKeys.ContentModeChanged.ContentMode] = contentMode;
             contentModeNotifier.Notify();
         }
@@ -117,6 +126,25 @@ namespace umi3d.browserRuntime.ui.thumbnails
         #endregion
 
         #region Layout
+
+        public ThumbnailsGridProperties smallContentModeLayout = 
+            new ThumbnailsGridProperties(
+                size: new(169f, 111f), 
+                rowCount: 2, 
+                spacing: new(11f, 30f)
+            );
+        public ThumbnailsGridProperties middleContentModeLayout =
+            new ThumbnailsGridProperties(
+                size: new(227f, 265f),
+                rowCount: 1,
+                spacing: new(24f, 0f)
+            );
+        public ThumbnailsGridProperties largeContentModeLayout =
+            new ThumbnailsGridProperties(
+                size: new(345f, 266f),
+                rowCount: 1,
+                spacing: new(24f, 30f)
+            );
 
         public Vector2 gridSize;
         public int gridRowCount;

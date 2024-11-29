@@ -33,14 +33,11 @@ namespace umi3d.browserRuntime.ui.thumbnails
             sliderValueSetNotifier = NotificationHub.Default
                 .GetNotifier<ThumbnailsNotificationKeys.SliderValueSet>(this);
 
-            sliderValueSetNotifier = NotificationHub.Default
-                .GetNotifier<ThumbnailsNotificationKeys.SliderValueSet>(this);
+            SliderButtonVisibilityNotifier = NotificationHub.Default
+               .GetNotifier<ThumbnailsNotificationKeys.SliderButtonVisibilityWillChange>(this);
 
             gridPropertiesNotifier = NotificationHub.Default
                 .GetNotifier<ThumbnailsNotificationKeys.GridPropertiesWillChange>(this);
-
-            SliderButtonVisibilityNotifier = NotificationHub.Default
-               .GetNotifier<ThumbnailsNotificationKeys.SliderButtonVisibilityWillChange>(this);
 
             thumbnailAddedNotifier = NotificationHub.Default
                 .GetNotifier<ThumbnailsNotificationKeys.Added>(this);

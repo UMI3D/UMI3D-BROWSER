@@ -44,6 +44,7 @@ namespace umi3d.browserRuntime.ui.thumbnails
 
             NotificationHub.Default.Subscribe<ThumbnailsNotificationKeys.ContentModeChanged>(
                 this,
+                new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == model.model.thumbnailsModel),
                 ContentModeChanged
             );
         }

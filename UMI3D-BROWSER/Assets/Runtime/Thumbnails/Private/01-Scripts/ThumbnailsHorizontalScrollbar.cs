@@ -40,15 +40,32 @@ namespace umi3d.browserRuntime.ui.thumbnails
 
             NotificationHub.Default.Subscribe<ThumbnailsNotificationKeys.SliderValueSet>(
                 this,
+                new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == model.model),
                 SliderValueSet
             );
 
             NotificationHub.Default.Subscribe<ThumbnailsNotificationKeys.Added>(
                 this,
+                new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == model.model),
                 ThumbnailAdded
             );
 
             checkSliderCoroutine = StartCoroutine(CheckSlider());
+        }
+
+        void OnEnable()
+        {
+            if (checkSliderCoroutine != null)
+            {
+                StopCoroutine(checkSliderCoroutine);
+            }
+            checkSliderCoroutine = StartCoroutine(CheckSlider());
+        }
+
+        private void OnDisable()
+        {
+            StopCoroutine(checkSliderCoroutine);
+            checkSliderCoroutine = null;
         }
 
         void OnDestroy()
@@ -93,7 +110,7 @@ namespace umi3d.browserRuntime.ui.thumbnails
             while (true)
             {
                 yield return new WaitForSeconds(.5f);
-
+                
                 model.model.DisplaySlideButton(ShouldDisplaySlideButton());
             }
         }

@@ -39,16 +39,19 @@ namespace umi3d.browserRuntime.ui.thumbnails
 
             NotificationHub.Default.Subscribe<ThumbnailsNotificationKeys.Added>(
                 this,
+                new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == model.model),
                 Added
             );
 
             NotificationHub.Default.Subscribe<ThumbnailsNotificationKeys.Deleted>(
                this,
+               new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == model.model),
                Deleted
             );
 
             NotificationHub.Default.Subscribe<ThumbnailsNotificationKeys.ContentModeChanged>(
                this,
+               new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == model.model),
                ContentModeChanged
             );
         }

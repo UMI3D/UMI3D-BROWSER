@@ -51,6 +51,7 @@ namespace umi3d.browserRuntime.ui.thumbnails
 
             NotificationHub.Default.Subscribe<ThumbnailsNotificationKeys.SliderButtonVisibilityWillChange>(
                 this,
+                new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == model.model),
                 SliderButtonVisibilityChanged
             );
 

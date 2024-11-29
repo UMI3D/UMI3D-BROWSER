@@ -65,22 +65,24 @@ namespace umi3d.baseBrowser.inputs.interactions
     public class DrawingManager : Singleton<DrawingManager>
     {
         public DrawingInteractionDto current;
+        public ulong currentEnvironmentId;
 
         static public bool IsAvailableFor(DrawingInteractionDto drawing)
         {
             return Instance?.current == null || Instance?.current == drawing;
         }
 
-        static public bool SwitchDrawing(DrawingInteractionDto drawing)
+        static public bool SwitchDrawing(ulong environmentId, DrawingInteractionDto drawing)
         {
-            return Instance?.InternalSwitchDrawing(drawing) ?? false;
+            return Instance?.InternalSwitchDrawing(environmentId, drawing) ?? false;
         }
 
-        protected bool InternalSwitchDrawing(DrawingInteractionDto drawing)
+        protected bool InternalSwitchDrawing(ulong environmentId, DrawingInteractionDto drawing)
         {
             if (this.current == null)
             {
                 this.current = drawing;
+                this.currentEnvironmentId = environmentId;
                 StartDrawingMode(drawing);
                 return true;
             }
@@ -94,20 +96,15 @@ namespace umi3d.baseBrowser.inputs.interactions
         }
 
         protected virtual void StartDrawingMode(DrawingInteractionDto drawing)
-        {
+        {}
 
-
-        }
         protected virtual void StopDrawingMode(DrawingInteractionDto drawing)
-        {
-
-        }
+        {}
 
         public virtual void StartDrawing(DrawingInteractionDto drawing)
         {
             if (drawing != current)
                 return;
-
 
             UnityEngine.Debug.Log("Drawing !!!!!!!!!!!!");
         }
@@ -118,6 +115,11 @@ namespace umi3d.baseBrowser.inputs.interactions
                 return;
 
             UnityEngine.Debug.Log("What a draw");
+        }
+
+        public virtual Vector3 Drawing(DrawingInteractionDto drawing)
+        {
+            return Vector3.zero;
         }
 
     }

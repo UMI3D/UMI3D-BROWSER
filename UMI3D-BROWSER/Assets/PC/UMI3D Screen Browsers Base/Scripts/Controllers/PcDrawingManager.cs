@@ -16,11 +16,21 @@ limitations under the License.
 using umi3d.baseBrowser.cursor;
 using umi3d.baseBrowser.inputs.interactions;
 using umi3d.common.interaction;
+using UnityEngine;
 
 namespace umi3d.desktopBrowser.Controller
 {
     public class PcDrawingManager : DrawingManager
     {
+        public float distance = 10f;
+
+        public override Vector3 Drawing(DrawingInteractionDto drawing)
+        {
+            var screenPos = Input.mousePosition;
+            screenPos.z = distance;
+            return Camera.main.ScreenToWorldPoint(screenPos);
+        }
+
         protected override void StartDrawingMode(DrawingInteractionDto drawing)
         {
             base.StartDrawingMode(drawing);

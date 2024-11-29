@@ -25,6 +25,8 @@ using umi3d.common;
 using umi3d.common.interaction;
 using umi3d.common.interaction.form.ui_toolkit;
 using UnityEngine;
+using UnityEngine.UIElements;
+using static umi3d.common.volume.GeometryTools;
 
 namespace umi3d.baseBrowser.inputs.interactions
 {
@@ -276,11 +278,19 @@ namespace umi3d.baseBrowser.inputs.interactions
     {
         #region Associate
 
+        bool isDrawing = false;
+        bool isDrawingActive = false;
+
+        ulong? lineId;
+        GameObject mesh;
+
         EventInteraction toggleInteraction;
         EventInteraction drawInteraction;
 
         public Func<EventInteraction> InstantiateToggle;
         public Func<EventInteraction> InstantiateInteraction;
+
+        List<Vector3> positions = new();
 
         public override void Associate(ulong environmentId, AbstractInteractionDto interaction, ulong toolId, ulong hoveredObjectId)
         {
@@ -343,15 +353,15 @@ namespace umi3d.baseBrowser.inputs.interactions
             if (!DrawingManager.IsAvailableFor(drawing))
                 return;
 
-            var active = DrawingManager.SwitchDrawing(drawing);
+            isDrawingActive = DrawingManager.SwitchDrawing(this.environmentId,drawing);
 
-            toggleInteraction.associatedInteraction.name = active ? DeactivateToggleName : ActivateToggleName;
+            toggleInteraction.associatedInteraction.name = isDrawingActive ? DeactivateToggleName : ActivateToggleName;
 
-            UnityEngine.Debug.Log($"SwitchDrawing to {active}");
+            UnityEngine.Debug.Log($"SwitchDrawing to {isDrawingActive}");
 
             var eventdto = new common.interaction.EventStateChangedDto
             {
-                active = active,
+                active = isDrawingActive,
                 boneType = bone,
                 id = associatedInteraction.id,
                 toolId = this.toolId,
@@ -361,7 +371,7 @@ namespace umi3d.baseBrowser.inputs.interactions
             };
             cdk.UMI3DClientServer.SendData(eventdto, true);
 
-            if (active)
+            if (isDrawingActive)
             {
                 if (associatedInteraction.TriggerAnimationId != 0)
                     StartAnim(environmentId, associatedInteraction.TriggerAnimationId);
@@ -378,22 +388,102 @@ namespace umi3d.baseBrowser.inputs.interactions
             
         }
 
-        private void DrawDown()
+        private async void DrawDown()
         {
             if (associatedInteraction is not DrawingInteractionDto drawing)
                 return;
 
-            DrawingManager.Instance.StartDrawing(drawing);
+            positions.Clear();
 
-            
+            DrawingManager.Instance.StartDrawing(drawing);
+            isDrawing = true;
+            mesh = null;
+            lineId = null;
+
+            if (drawing.LineId != 0)
+            {
+                var lineEntity = await UMI3DEnvironmentLoader.Instance.WaitUntilEntityLoaded(this.environmentId, drawing.LineId, new());
+                if ((lineEntity?.dto as GlTFNodeDto)?.extensions?.umi3d is UMI3DLineDto lineDto && lineEntity is UMI3DNodeInstance node)
+                {
+                    var template = UMI3DLineRendererLoader.GetOrCreateLine(node.GameObject, lineDto.clientLineId);
+                    var c = UMI3DLineRendererLoader.CopyLine(this.gameObject, template);
+                    lineId = c.Item2;
+                    c.Item1.positionCount = 0;
+                    UnityEngine.Debug.Log("Drawing line found");
+                }
+                else
+                    UnityEngine.Debug.Log($"Drawing line not found {lineEntity != null} {lineEntity.dto} {this.environmentId} {drawing.LineId}");
+            }
+            else
+                UnityEngine.Debug.Log("Drawing line not found");
+
+            if (drawing.MeshId != 0)
+            {
+                var meshEntity = await UMI3DEnvironmentLoader.Instance.WaitUntilEntityLoaded(this.environmentId, drawing.MeshId, new());
+                if (meshEntity is UMI3DNodeInstance node)
+                    mesh = node.GameObject;
+            }
+
         }
 
         private void DrawUp()
         {
             if (associatedInteraction is not DrawingInteractionDto drawing)
                 return;
+            isDrawing = false;
+
+            var drawingDto = new common.interaction.DrawingDto
+            {
+                drawingEnd = true,
+                clientLineId = lineId.HasValue ? lineId.Value : 0,
+                positions = positions.Select(p => p.Dto()).ToList(),
+
+                boneType = bone,
+                id = associatedInteraction.id,
+                toolId = this.toolId,
+                hoveredObjectId = hoveredObjectId,
+                bonePosition = (Vector3Dto)boneTransform.position.Dto(),
+                boneRotation = (Vector4Dto)boneTransform.rotation.Dto()
+            };
+            cdk.UMI3DClientServer.SendData(drawingDto, true);
 
             DrawingManager.Instance.StopDrawing(drawing);
+        }
+
+        protected void Update()
+        {
+            if (!isDrawingActive || !isDrawing)
+                return;
+
+            if (associatedInteraction is not DrawingInteractionDto drawing)
+                return;
+
+            Vector3 position = DrawingManager.Instance.Drawing(drawing);
+            positions.Add(position);
+
+            if(lineId.HasValue)
+            {
+                var line = UMI3DLineRendererLoader.GetLine(lineId.Value);
+                line.positionCount = positions.Count;
+                line.SetPositions(positions.ToArray());
+            }
+
+            //todo add delay
+            var drawingDto = new common.interaction.DrawingDto
+            {
+                drawingEnd = false,
+                clientLineId = lineId.HasValue ? lineId.Value : 0,
+                positions = positions.Select(p => p.Dto()).ToList(),
+
+                boneType = bone,
+                id = associatedInteraction.id,
+                toolId = this.toolId,
+                hoveredObjectId = hoveredObjectId,
+                bonePosition = (Vector3Dto)boneTransform.position.Dto(),
+                boneRotation = (Vector4Dto)boneTransform.rotation.Dto()
+            };
+            cdk.UMI3DClientServer.SendData(drawingDto, true);
+
         }
 
         protected async void StartAnim(ulong environmentId, ulong id)

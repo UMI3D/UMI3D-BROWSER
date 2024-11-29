@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -34,9 +35,19 @@ namespace umi3d.browserRuntime.ui.thumbnails
 
             model = GetComponentInParent<ThumbnailsModelContainer>();
 
-            NotificationHub.Default.Subscribe<ThumbnailsNotificationKeys.SliderValueWillChange>(
+            NotificationHub.Default.Subscribe<ThumbnailsNotificationKeys.SliderValueSet>(
                 this,
-                SliderValueWillChanged
+                SliderValueSet
+            );
+
+            NotificationHub.Default.Subscribe<ThumbnailsNotificationKeys.Added>(
+                this,
+                ThumbnailAdded
+            );
+
+            NotificationHub.Default.Subscribe<ThumbnailsNotificationKeys.Deleted>(
+                this,
+                ThumbnailDeleted
             );
         }
 
@@ -50,14 +61,29 @@ namespace umi3d.browserRuntime.ui.thumbnails
             model.model.horizontalSliderValue = value;
         }
 
-        void SliderValueWillChanged(Notification notification)
+        void SliderValueSet(Notification notification)
         {
-            if (!notification.TryGetInfoT(ThumbnailsNotificationKeys.SliderValueWillChange.Value, out float value))
+            if (!notification.TryGetInfoT(ThumbnailsNotificationKeys.SliderValueSet.Value, out float value))
             {
                 return;
             }
 
-            scrollbar.SetValueWithoutNotify(value);
+            scrollbar.value = value;
+        }
+
+        void ThumbnailAdded(Notification notification)
+        {
+            new Task(async () =>
+            {
+                await Task.Yield();
+
+                model.model.ResetSlider();
+            }).Start(TaskScheduler.FromCurrentSynchronizationContext());
+        }
+
+        void ThumbnailDeleted(Notification notification)
+        {
+            model.model.ComputeScrolling();
         }
     }
 }

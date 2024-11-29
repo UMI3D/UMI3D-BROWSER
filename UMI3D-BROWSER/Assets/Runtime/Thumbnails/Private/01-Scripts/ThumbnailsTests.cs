@@ -50,12 +50,20 @@ namespace umi3d.browserRuntime.ui.thumbnails
                 name = "Thumbnail 1",
             };
             model.model.Add(thumbnails1);
+
             ThumbnailModel thumbnails2 = new()
             {
                 name = "Thumbnail 2",
                 isFavorite = true,
             };
             model.model.Add(thumbnails2);
+
+            ThumbnailModel thumbnails3 = new()
+            {
+                name = "Thumbnail 3",
+                isFavorite = true,
+            };
+            model.model.Add(thumbnails3);
         }
     }
 }

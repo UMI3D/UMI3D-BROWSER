@@ -29,11 +29,11 @@ namespace umi3d.browserRuntime.ui.thumbnails
             contentModeNotifier = NotificationHub.Default
                 .GetNotifier<ThumbnailsNotificationKeys.ContentModeChanged>(this);
 
-            horizontalSliderValueNotifier = NotificationHub.Default
-                .GetNotifier<ThumbnailsNotificationKeys.SliderValueWillChange>(this);
+            sliderValueSetNotifier = NotificationHub.Default
+                .GetNotifier<ThumbnailsNotificationKeys.SliderValueSet>(this);
 
-            horizontalSliderValueNotifier = NotificationHub.Default
-                .GetNotifier<ThumbnailsNotificationKeys.SliderValueWillChange>(this);
+            sliderValueSetNotifier = NotificationHub.Default
+                .GetNotifier<ThumbnailsNotificationKeys.SliderValueSet>(this);
 
             gridPropertiesNotifier = NotificationHub.Default
                 .GetNotifier<ThumbnailsNotificationKeys.GridPropertiesWillChange>(this);
@@ -75,7 +75,7 @@ namespace umi3d.browserRuntime.ui.thumbnails
         public float horizontalSliderValue;
         public bool areSlideButtonVisible;
 
-        Notifier horizontalSliderValueNotifier;
+        Notifier sliderValueSetNotifier;
         Notifier SliderButtonVisibilityNotifier;
 
         public void SlideTowardLeft()
@@ -93,15 +93,15 @@ namespace umi3d.browserRuntime.ui.thumbnails
         public void ResetSlider()
         {
             horizontalSliderValue = 0f;
-            horizontalSliderValueNotifier[ThumbnailsNotificationKeys.SliderValueWillChange.Value] = 0;
-            horizontalSliderValueNotifier.Notify();
+            sliderValueSetNotifier[ThumbnailsNotificationKeys.SliderValueSet.Value] = 0f;
+            sliderValueSetNotifier.Notify();
         }
 
         public void SetHorizontalSliderValue(float value)
         {
             horizontalSliderValue = value;
-            horizontalSliderValueNotifier[ThumbnailsNotificationKeys.SliderValueWillChange.Value] = value;
-            horizontalSliderValueNotifier.Notify();
+            sliderValueSetNotifier[ThumbnailsNotificationKeys.SliderValueSet.Value] = value;
+            sliderValueSetNotifier.Notify();
         }
 
         public void DisplaySlideButton(bool display)
@@ -109,6 +109,13 @@ namespace umi3d.browserRuntime.ui.thumbnails
             areSlideButtonVisible = display;
             SliderButtonVisibilityNotifier[ThumbnailsNotificationKeys.SliderButtonVisibilityWillChange.IsVisible] = display;
             SliderButtonVisibilityNotifier.Notify();
+        }
+
+        public void ComputeScrolling()
+        {
+            int thumbnailsCount = thumbnails.Count;
+
+
         }
 
         #endregion

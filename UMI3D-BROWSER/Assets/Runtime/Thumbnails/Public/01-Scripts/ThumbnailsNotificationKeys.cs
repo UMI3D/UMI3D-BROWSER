@@ -38,7 +38,7 @@ namespace umi3d.browserRuntime.ui.thumbnails
         /// <summary>
         /// Event raised when the slider value will change.
         /// </summary>
-        public class SliderValueWillChange
+        public class SliderValueSet
         {
             /// <summary>
             /// The new value.

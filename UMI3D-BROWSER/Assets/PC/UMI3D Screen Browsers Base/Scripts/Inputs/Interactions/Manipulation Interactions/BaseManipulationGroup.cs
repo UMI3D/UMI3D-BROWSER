@@ -444,7 +444,7 @@ namespace umi3d.baseBrowser.inputs.interactions
                 bonePosition = (Vector3Dto)boneTransform.position.Dto(),
                 boneRotation = (Vector4Dto)boneTransform.rotation.Dto()
             };
-            cdk.UMI3DClientServer.SendData(drawingDto, true);
+            cdk.UMI3DClientServer.SendRequest(drawingDto, true);
 
             DrawingManager.Instance.StopDrawing(drawing);
         }
@@ -482,7 +482,7 @@ namespace umi3d.baseBrowser.inputs.interactions
                 bonePosition = (Vector3Dto)boneTransform.position.Dto(),
                 boneRotation = (Vector4Dto)boneTransform.rotation.Dto()
             };
-            cdk.UMI3DClientServer.SendData(drawingDto, true);
+            cdk.UMI3DClientServer.SendRequest(drawingDto, true);
 
         }
 

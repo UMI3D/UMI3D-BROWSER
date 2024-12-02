@@ -22,7 +22,7 @@ namespace umi3d.desktopBrowser.Controller
 {
     public class PcDrawingManager : DrawingManager
     {
-        public float distance = 0.5f;
+        public float distance = 1.5f;
 
         public override Vector3 GetDrawingWorldPoint(DrawingInteractionDto drawing)
         {

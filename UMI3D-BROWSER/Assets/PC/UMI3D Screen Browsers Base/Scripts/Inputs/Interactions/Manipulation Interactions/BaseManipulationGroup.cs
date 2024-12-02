@@ -292,6 +292,10 @@ namespace umi3d.baseBrowser.inputs.interactions
 
         List<Vector3> positions = new();
 
+        [SerializeField] private float lastUpdateTime = 0f;
+        [SerializeField] private float timeSynchronization = 0.3f;
+        [SerializeField] private float minDistance = 0.01f;
+
         public override void Associate(ulong environmentId, AbstractInteractionDto interaction, ulong toolId, ulong hoveredObjectId)
         {
             if (interaction is not DrawingInteractionDto drawing) 
@@ -393,6 +397,7 @@ namespace umi3d.baseBrowser.inputs.interactions
                 return;
 
             positions.Clear();
+            lastUpdateTime = Time.time;
 
             DrawingManager.Instance.StartDrawing(drawing);
             isDrawing = true;
@@ -408,13 +413,9 @@ namespace umi3d.baseBrowser.inputs.interactions
                     var c = UMI3DLineRendererLoader.CopyLine(this.gameObject, template);
                     lineId = c.Item2;
                     c.Item1.positionCount = 0;
-                    UnityEngine.Debug.Log("Drawing line found");
                 }
-                else
-                    UnityEngine.Debug.Log($"Drawing line not found {lineEntity != null} {lineEntity.dto} {this.environmentId} {drawing.LineId}");
             }
-            else
-                UnityEngine.Debug.Log("Drawing line not found");
+
 
             if (drawing.MeshId != 0)
             {
@@ -458,6 +459,11 @@ namespace umi3d.baseBrowser.inputs.interactions
                 return;
 
             Vector3 position = DrawingManager.Instance.GetDrawingWorldPoint(drawing);
+            if(positions.Count > 0 && Vector3.Distance(position, positions.Last()) < this.minDistance)
+            {
+                return;
+            }
+
             positions.Add(position);
 
             if(lineId.HasValue)
@@ -468,22 +474,25 @@ namespace umi3d.baseBrowser.inputs.interactions
                 line.SetPositions(positions.ToArray());
             }
 
-            //todo add delay
-            var drawingDto = new common.interaction.DrawingDto
+            if (Time.time >= timeSynchronization + lastUpdateTime)
             {
-                drawingEnd = false,
-                clientLineId = lineId.HasValue ? lineId.Value : 0,
-                positions = positions.Select(p => p.Dto()).ToList(),
+                //todo add delay
+                var drawingDto = new common.interaction.DrawingDto
+                {
+                    drawingEnd = false,
+                    clientLineId = lineId.HasValue ? lineId.Value : 0,
+                    positions = positions.Select(p => p.Dto()).ToList(),
 
-                boneType = bone,
-                id = associatedInteraction.id,
-                toolId = this.toolId,
-                hoveredObjectId = hoveredObjectId,
-                bonePosition = (Vector3Dto)boneTransform.position.Dto(),
-                boneRotation = (Vector4Dto)boneTransform.rotation.Dto()
-            };
-            cdk.UMI3DClientServer.SendRequest(drawingDto, true);
-
+                    boneType = bone,
+                    id = associatedInteraction.id,
+                    toolId = this.toolId,
+                    hoveredObjectId = hoveredObjectId,
+                    bonePosition = (Vector3Dto)boneTransform.position.Dto(),
+                    boneRotation = (Vector4Dto)boneTransform.rotation.Dto()
+                };
+                cdk.UMI3DClientServer.SendRequest(drawingDto, true);
+                lastUpdateTime = Time.time;
+            }
         }
 
         protected async void StartAnim(ulong environmentId, ulong id)

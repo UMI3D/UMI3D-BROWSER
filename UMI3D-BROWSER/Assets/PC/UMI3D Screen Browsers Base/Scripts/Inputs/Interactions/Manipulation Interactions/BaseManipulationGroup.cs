@@ -294,13 +294,14 @@ namespace umi3d.baseBrowser.inputs.interactions
 
         public override void Associate(ulong environmentId, AbstractInteractionDto interaction, ulong toolId, ulong hoveredObjectId)
         {
-            UnityEngine.Debug.Log($"Associate {this.associatedInteraction}");
+            if (interaction is not DrawingInteractionDto drawing) 
+                throw new System.Exception($"This input is not compatible with {interaction}");
 
-            if (interaction is not DrawingInteractionDto drawing) throw new System.Exception($"This input is not compatible with {interaction}");
+            if (!IsAvailableFor(drawing))
+                throw new System.Exception($"This input is not available for {drawing}");
 
-            if (!IsAvailableFor(drawing)) throw new System.Exception($"This input is not available for {drawing}");
-
-            if (!IsCompatibleWith(drawing)) throw new System.Exception("Trying to associate an uncompatible interaction !");
+            if (!IsCompatibleWith(drawing)) 
+                throw new System.Exception("Trying to associate an incompatible interaction !");
 
             AddGroup();
 
@@ -357,9 +358,7 @@ namespace umi3d.baseBrowser.inputs.interactions
 
             toggleInteraction.associatedInteraction.name = isDrawingActive ? DeactivateToggleName : ActivateToggleName;
 
-            UnityEngine.Debug.Log($"SwitchDrawing to {isDrawingActive}");
-
-            var eventdto = new common.interaction.EventStateChangedDto
+            var eventDto = new common.interaction.EventStateChangedDto
             {
                 active = isDrawingActive,
                 boneType = bone,
@@ -369,7 +368,7 @@ namespace umi3d.baseBrowser.inputs.interactions
                 bonePosition = (Vector3Dto)boneTransform.position.Dto(),
                 boneRotation = (Vector4Dto)boneTransform.rotation.Dto()
             };
-            cdk.UMI3DClientServer.SendData(eventdto, true);
+            cdk.UMI3DClientServer.SendRequest(eventDto, true);
 
             if (isDrawingActive)
             {

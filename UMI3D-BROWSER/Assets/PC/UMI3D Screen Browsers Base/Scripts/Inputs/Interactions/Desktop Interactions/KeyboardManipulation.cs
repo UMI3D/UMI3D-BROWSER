@@ -105,20 +105,10 @@ namespace umi3d.baseBrowser.inputs.interactions
         {}
 
         public virtual void StartDrawing(DrawingInteractionDto drawing)
-        {
-            if (drawing != current)
-                return;
-
-            UnityEngine.Debug.Log("Drawing !!!!!!!!!!!!");
-        }
+        {}
 
         public virtual void StopDrawing(DrawingInteractionDto drawing)
-        {
-            if (drawing != current)
-                return;
-
-            UnityEngine.Debug.Log("What a draw");
-        }
+        {}
 
         public virtual Vector3 GetDrawingWorldPoint(DrawingInteractionDto drawing)
         {

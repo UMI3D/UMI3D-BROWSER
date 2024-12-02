@@ -458,13 +458,14 @@ namespace umi3d.baseBrowser.inputs.interactions
             if (associatedInteraction is not DrawingInteractionDto drawing)
                 return;
 
-            Vector3 position = DrawingManager.Instance.Drawing(drawing);
+            Vector3 position = DrawingManager.Instance.GetDrawingWorldPoint(drawing);
             positions.Add(position);
 
             if(lineId.HasValue)
             {
                 var line = UMI3DLineRendererLoader.GetLine(lineId.Value);
                 line.positionCount = positions.Count;
+                line.useWorldSpace = true;
                 line.SetPositions(positions.ToArray());
             }
 
@@ -539,6 +540,9 @@ namespace umi3d.baseBrowser.inputs.interactions
                 RemoveManipulation(input);
                 //Destroy(input);
             }
+
+            if (associatedInteraction is DrawingInteractionDto drawing)
+                DrawingManager.SwitchDrawing(this.environmentId, drawing, true);
 
             RemoveGroup();
             associatedInteraction = null;

@@ -24,7 +24,7 @@ namespace umi3d.desktopBrowser.Controller
     {
         public float distance = 10f;
 
-        public override Vector3 Drawing(DrawingInteractionDto drawing)
+        public override Vector3 GetDrawingWorldPoint(DrawingInteractionDto drawing)
         {
             var screenPos = Input.mousePosition;
             screenPos.z = distance;

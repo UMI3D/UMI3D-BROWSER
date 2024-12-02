@@ -72,15 +72,18 @@ namespace umi3d.baseBrowser.inputs.interactions
             return Instance?.current == null || Instance?.current == drawing;
         }
 
-        static public bool SwitchDrawing(ulong environmentId, DrawingInteractionDto drawing)
+        static public bool SwitchDrawing(ulong environmentId, DrawingInteractionDto drawing, bool forceOff = false)
         {
-            return Instance?.InternalSwitchDrawing(environmentId, drawing) ?? false;
+            return Instance?.InternalSwitchDrawing(environmentId, drawing, forceOff) ?? false;
         }
 
-        protected bool InternalSwitchDrawing(ulong environmentId, DrawingInteractionDto drawing)
+        protected bool InternalSwitchDrawing(ulong environmentId, DrawingInteractionDto drawing, bool forceOff = false)
         {
             if (this.current == null)
             {
+                if(forceOff)
+                    return false;
+
                 this.current = drawing;
                 this.currentEnvironmentId = environmentId;
                 StartDrawingMode(drawing);
@@ -117,7 +120,7 @@ namespace umi3d.baseBrowser.inputs.interactions
             UnityEngine.Debug.Log("What a draw");
         }
 
-        public virtual Vector3 Drawing(DrawingInteractionDto drawing)
+        public virtual Vector3 GetDrawingWorldPoint(DrawingInteractionDto drawing)
         {
             return Vector3.zero;
         }

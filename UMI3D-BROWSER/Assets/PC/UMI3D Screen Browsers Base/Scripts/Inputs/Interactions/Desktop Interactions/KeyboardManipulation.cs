@@ -110,9 +110,9 @@ namespace umi3d.baseBrowser.inputs.interactions
         public virtual void StopDrawing(DrawingInteractionDto drawing)
         {}
 
-        public virtual Vector3 GetDrawingWorldPoint(DrawingInteractionDto drawing)
+        public virtual Vector3? GetDrawingWorldPoint(DrawingInteractionDto drawing, UMI3DNodeInstance gameObject)
         {
-            return Vector3.zero;
+            return null;
         }
 
     }

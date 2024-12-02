@@ -282,7 +282,7 @@ namespace umi3d.baseBrowser.inputs.interactions
         bool isDrawingActive = false;
 
         ulong? lineId;
-        GameObject mesh;
+        UMI3DNodeInstance mesh;
 
         EventInteraction toggleInteraction;
         EventInteraction drawInteraction;
@@ -421,7 +421,7 @@ namespace umi3d.baseBrowser.inputs.interactions
             {
                 var meshEntity = await UMI3DEnvironmentLoader.Instance.WaitUntilEntityLoaded(this.environmentId, drawing.MeshId, new());
                 if (meshEntity is UMI3DNodeInstance node)
-                    mesh = node.GameObject;
+                    mesh = node;
             }
 
         }
@@ -458,8 +458,12 @@ namespace umi3d.baseBrowser.inputs.interactions
             if (associatedInteraction is not DrawingInteractionDto drawing)
                 return;
 
-            Vector3 position = DrawingManager.Instance.GetDrawingWorldPoint(drawing);
-            if(positions.Count > 0 && Vector3.Distance(position, positions.Last()) < this.minDistance)
+            Vector3? positionTMP = DrawingManager.Instance.GetDrawingWorldPoint(drawing, mesh);
+            if (!positionTMP.HasValue)
+                return;
+            Vector3 position = positionTMP.Value;
+
+            if (positions.Count > 0 && Vector3.Distance(position, positions.Last()) < this.minDistance)
             {
                 return;
             }

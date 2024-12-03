@@ -307,6 +307,9 @@ namespace umi3d.baseBrowser.inputs.interactions
             if (!IsCompatibleWith(drawing)) 
                 throw new System.Exception("Trying to associate an incompatible interaction !");
 
+            isDrawing = false;
+            isDrawingActive = false;
+
             AddGroup();
 
             this.hoveredObjectId = hoveredObjectId;
@@ -560,6 +563,8 @@ namespace umi3d.baseBrowser.inputs.interactions
             associatedInteraction = null;
             toggleInteraction = null;
             drawInteraction = null;
+            isDrawing = false;
+            isDrawingActive = false;
         }
 
         protected void RemoveGroup()

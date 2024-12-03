@@ -26,6 +26,7 @@ using umi3d.common.interaction;
 using umi3d.common.interaction.form.ui_toolkit;
 using UnityEngine;
 using UnityEngine.UIElements;
+using UnityEngine.XR.OpenXR.Features.Interactions;
 using static umi3d.common.volume.GeometryTools;
 
 namespace umi3d.baseBrowser.inputs.interactions
@@ -336,6 +337,8 @@ namespace umi3d.baseBrowser.inputs.interactions
             drawInteraction.PressedUpOverrider = DrawUp;
             drawInteraction.PressedDownOverrider = DrawDown;
 
+            drawInteraction.HideMenuItem();
+
             toggleInteraction = InstantiateToggle();
 
             toggleInteraction.Menu = Menu;
@@ -363,7 +366,12 @@ namespace umi3d.baseBrowser.inputs.interactions
 
             isDrawingActive = DrawingManager.SwitchDrawing(this.environmentId,drawing);
 
+            toggleInteraction.HideMenuItem();
+
             toggleInteraction.associatedInteraction.name = isDrawingActive ? DeactivateToggleName : ActivateToggleName;
+            toggleInteraction.MenuItem.Name = toggleInteraction.associatedInteraction.name;
+
+            toggleInteraction.ShowMenuItem();
 
             var eventDto = new common.interaction.EventStateChangedDto
             {
@@ -381,11 +389,15 @@ namespace umi3d.baseBrowser.inputs.interactions
             {
                 if (associatedInteraction.TriggerAnimationId != 0)
                     StartAnim(environmentId, associatedInteraction.TriggerAnimationId);
+
+                drawInteraction.ShowMenuItem();
             }
             else
             {
                 if (associatedInteraction.ReleaseAnimationId != 0)
                     StartAnim(environmentId, associatedInteraction.ReleaseAnimationId);
+
+                drawInteraction.HideMenuItem();
             }
         }
 

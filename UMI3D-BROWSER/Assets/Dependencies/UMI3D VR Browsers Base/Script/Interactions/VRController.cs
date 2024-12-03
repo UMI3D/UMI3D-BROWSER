@@ -101,7 +101,7 @@ namespace umi3dVRBrowsersBase.interactions
         {
             base.Project(tool, releasable, reason, hoveredObjectId);
 
-            if (currentTool == tool) // It means projection succedded
+            if (currentTool == tool) // It means projection succeeded
             {
                 tool.onProjected(bone.BoneType);
             }

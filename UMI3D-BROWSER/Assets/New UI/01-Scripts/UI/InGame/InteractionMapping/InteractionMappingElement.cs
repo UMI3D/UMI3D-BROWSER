@@ -14,17 +14,19 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.ui.inGame.interactionMapping
 {
-    public class InteractionMappingElement : MonoBehaviour
+    public class InteractionMappingElement : MonoBehaviour, IComparable<InteractionMappingElement>
     {
         [SerializeField] private TMP_Text actionName;
         [SerializeField] private Transform keyContent;
         [SerializeField] private GameObject keyPrefab;
+        public int Order { get; set; }
 
         public void Initialize(string name)
         {
@@ -35,5 +37,8 @@ namespace umi3d.browserRuntime.ui.inGame.interactionMapping
         {
             Instantiate(keyPrefab, keyContent).GetComponent<Image>().sprite = sprite;
         }
+
+        public int CompareTo(InteractionMappingElement other) => other.Order - this.Order;
+        
     }
 }

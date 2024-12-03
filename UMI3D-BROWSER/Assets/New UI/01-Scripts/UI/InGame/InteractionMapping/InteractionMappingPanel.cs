@@ -82,17 +82,42 @@ namespace umi3d.browserRuntime.ui.inGame.interactionMapping
                 AddInteraction(action, _rows[name]);
             else
                 AddRowWith(name, action);
+            Reorder();
+        }
+
+        private void Reorder()
+        {
+            var rows = _rows.Values.ToList();
+            rows.Sort();
+
+            int minIndex = int.MaxValue;
+            foreach(var e in rows)
+            {
+                var index = e.transform.GetSiblingIndex();
+                if(index < minIndex)
+                    minIndex = index;
+            }
+            foreach (var e in rows)
+                e.transform.SetSiblingIndex(minIndex);
+
+
+
         }
 
         private void AddInteraction(InputAction action, InteractionMappingElement interactionMappingDisplayer)
         {
             if (action == null)
                 return;
+            var min = int.MaxValue;
             foreach (var inputControl in action.controls)
             {
-                var keySprite = inputSprites[inputKeys.FindIndex(a => a.controls.Contains(inputControl))];
+                var index = inputKeys.FindIndex(a => a.controls.Contains(inputControl));
+                if(index < min)
+                    min = index;
+                var keySprite = inputSprites[index];
                 interactionMappingDisplayer.Add(isQwerty ? keySprite.Qwerty : keySprite.Azerty);
             }
+            interactionMappingDisplayer.Order = min;
         }
 
         private void AddRowWith(string name, InputAction action)
@@ -106,9 +131,24 @@ namespace umi3d.browserRuntime.ui.inGame.interactionMapping
             _rows.Add(name, interactionMappingDisplayer);
         }
 
-        private void Hide(KeyboardInteraction interaction)
+        private void Hide(KeyboardInteraction interaction, string key)
         {
-            Hide();
+            key ??= "";
+            //Hide();
+            if (_rows.ContainsKey(key))
+            {
+                var row = _rows[key];
+                _rows.Remove(key);
+                DestroyImmediate(row.gameObject);
+            }
+
+            if(_rows.Count == 0)
+                gameObject.SetActive(false);
+
+            //gameObject.SetActive(false);
+            //foreach (var row in _rows)
+            //    DestroyImmediate(row.Value.gameObject);
+            //_rows.Clear();
         }
 
         private void Hide()

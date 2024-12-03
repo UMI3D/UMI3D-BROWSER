@@ -26,14 +26,27 @@ namespace umi3d.baseBrowser.inputs.interactions
         {
             base.CreateMenuItem();
 
+            ShowMenuItem();
+        }
+
+        public override void ShowMenuItem()
+        {
+            base.ShowMenuItem();
+            UnityEngine.Debug.Log($"Show {menuItem.Name}");
             Mapped?.Invoke(this, menuItem.Name, Key);
+        }
+
+        public override void HideMenuItem()
+        {
+            base.HideMenuItem();
+            UnityEngine.Debug.Log($"Hide {menuItem?.Name}");
+            Unmapped?.Invoke(this, menuItem?.Name);
         }
 
         public override void Dissociate()
         {
             base.Dissociate();
-
-            Unmapped?.Invoke(this);
+            HideMenuItem();
         }
 
         /// <summary>
@@ -43,6 +56,6 @@ namespace umi3d.baseBrowser.inputs.interactions
         /// <summary>
         /// Action raised when this interaction has been dissociated.
         /// </summary>
-        public static System.Action<KeyboardInteraction> Unmapped;
+        public static System.Action<KeyboardInteraction, string> Unmapped;
     }
 }

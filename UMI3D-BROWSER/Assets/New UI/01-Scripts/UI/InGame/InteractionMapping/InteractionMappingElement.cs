@@ -38,7 +38,12 @@ namespace umi3d.browserRuntime.ui.inGame.interactionMapping
             Instantiate(keyPrefab, keyContent).GetComponent<Image>().sprite = sprite;
         }
 
-        public int CompareTo(InteractionMappingElement other) => other.Order - this.Order;
+        /// <summary>
+        /// Use To invert sort a list of InteractionMappingElement
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        int IComparable<InteractionMappingElement>.CompareTo(InteractionMappingElement other) => other.Order - this.Order;
         
     }
 }

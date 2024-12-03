@@ -45,18 +45,11 @@ public sealed class UMI3DCameraManager
 
     public void HandleView()
     {
-        if (
-                (BaseCursor.Movement == BaseCursor.CursorMovement.Free
-                || BaseCursor.Movement == BaseCursor.CursorMovement.FreeHidden
-                )
-            )
-        {
+        if ((BaseCursor.Movement == BaseCursor.CursorMovement.Free
+                || BaseCursor.Movement == BaseCursor.CursorMovement.FreeHidden))
             return;
-        }
-
+        
         concreteFPSNavigation.HandleUserCamera();
-
-
 
         if(BaseCursor.Movement == BaseCursor.CursorMovement.Drawing)
         {

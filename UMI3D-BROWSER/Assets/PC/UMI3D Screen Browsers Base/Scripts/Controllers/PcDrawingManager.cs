@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+using System.Collections.Generic;
 using umi3d.baseBrowser.cursor;
 using umi3d.baseBrowser.inputs.interactions;
 using umi3d.cdk;
@@ -28,10 +29,10 @@ namespace umi3d.desktopBrowser.Controller
         public float distance = 1.5f;
         public float offset = 0.01f;
 
-        public override Vector3? GetDrawingWorldPoint(DrawingInteractionDto drawing, UMI3DNodeInstance gameObject)
+        public override Vector3? GetDrawingWorldPoint(DrawingInteractionDto drawing, List<UMI3DNodeInstance> nodes)
         {
             var screenPos = Input.mousePosition;
-            if (gameObject == null)
+            if (nodes == null || nodes.Count == 0)
             {
                 screenPos.z = distance;
                 return Camera.main.ScreenToWorldPoint(screenPos);
@@ -39,7 +40,7 @@ namespace umi3d.desktopBrowser.Controller
 
             Ray ray = Camera.main.ScreenPointToRay(screenPos);
             foreach(var hit in Physics.RaycastAll(ray))
-                if(hit.collider.GetComponentInParent<NodeContainer>().instance == gameObject)
+                if(nodes.Contains( hit.collider.GetComponentInParent<NodeContainer>().instance))
                     return hit.point + hit.normal * offset;
 
             return null;

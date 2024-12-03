@@ -14,6 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System.Collections.Generic;
+
 namespace umi3d.common.interaction
 {
     /// <summary>
@@ -30,7 +32,7 @@ namespace umi3d.common.interaction
         /// <summary>
         /// Id of the meshDto use to draw.
         /// </summary>
-        public ulong MeshId { get; set; }
+        public List<ulong> MeshIds { get; set; }
 
         public DrawingInteractionDto() : base() { }
     }

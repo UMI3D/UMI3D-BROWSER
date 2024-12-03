@@ -33,6 +33,20 @@ namespace umi3d.browserRuntime.worldController
         }
 
         /// <summary>
+        /// Event raised when a world controller has been updated.
+        /// </summary>
+        public class Updated
+        {
+            /// <summary>
+            /// The world controller that has been updated.
+            /// </summary>
+            /// <remarks>
+            /// Value is <see cref="WorldController"/>.
+            /// </remarks>
+            public const string WorldController = "WorldController";
+        }
+
+        /// <summary>
         /// Event raised when a world controller has been removed.
         /// </summary>
         public class Removed

@@ -15,10 +15,11 @@ limitations under the License.
 */
 
 using System;
+using System.Collections.Generic;
 
 namespace umi3d.browserRuntime.worldController
 {
-    public class WorldController 
+    public struct WorldController 
     {
         /// <summary>
         /// The url targeting the world controller.
@@ -36,5 +37,18 @@ namespace umi3d.browserRuntime.worldController
 
         public DateTime firstConnection;
         public DateTime lastConnection;
+
+        public struct ComparerOnUrl : IEqualityComparer<WorldController>
+        {
+            public bool Equals(WorldController wc1, WorldController wc2)
+            {
+                return wc1.url == wc2.url;
+            }
+
+            public int GetHashCode(WorldController wc)
+            {
+                return wc.url.GetHashCode();
+            }
+        }
     }
 }

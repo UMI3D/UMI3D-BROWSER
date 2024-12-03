@@ -55,6 +55,9 @@ namespace umi3d.browserRuntime.worldController
             addedNotifier = NotificationHub.Default
                 .GetNotifier<WorldControllersNotificationKeys.Added>(this);
 
+            updatedNotifier = NotificationHub.Default
+                .GetNotifier<WorldControllersNotificationKeys.Updated>(this);
+
             removedNotifier = NotificationHub.Default
                 .GetNotifier<WorldControllersNotificationKeys.Removed>(this);
         }
@@ -83,17 +86,45 @@ namespace umi3d.browserRuntime.worldController
 
         #endregion
 
+        #region Simplify URL
+
+        string SimplifyURL(string url)
+        {
+            url = url.TrimStart();
+            url = url.TrimEnd();
+
+            if (url.StartsWith("http://"))
+            {
+                url = url.Substring(7);
+            }
+            else if (url.StartsWith("https://"))
+            {
+                url = url.Substring(8);
+            }
+
+            return url;
+        }
+
+        #endregion
+
         #region Add
 
         Notifier addedNotifier;
 
         public void Add(WorldController worldController)
         {
-            if (data.worldControllers.Contains(worldController))
+            worldController.url = SimplifyURL(worldController.url);
+            int index = data.worldControllers.FindIndex(wc => wc.url == worldController.url);
+            if (index >= 0)
             {
                 return;
             }
 
+            _Add(worldController);
+        }
+
+        void _Add(WorldController worldController)
+        {
             data.worldControllers.Add(worldController);
 
             addedNotifier[WorldControllersNotificationKeys.Added.WorldController] = worldController;
@@ -116,6 +147,75 @@ namespace umi3d.browserRuntime.worldController
             data.worldControllers.RemoveAt(index);
 
             removedNotifier[WorldControllersNotificationKeys.Removed.WorldController] = worldController;
+        }
+
+        #endregion
+
+        #region Update
+
+        Notifier updatedNotifier;
+
+        public void Update(string url, string name, bool? isFavorite, System.DateTime? lastConnection)
+        {
+            url = SimplifyURL(url);
+            int index = data.worldControllers.FindIndex(wc => wc.url == url);
+            if (index < 0)
+            {
+                return;
+            }
+
+            WorldController worldController = data.worldControllers[index];
+            if (name != null)
+            {
+                worldController.name = name;
+            }
+            if (isFavorite.HasValue)
+            {
+                worldController.isFavorite = isFavorite.Value;
+            }
+            if (lastConnection.HasValue)
+            {
+                worldController.lastConnection = lastConnection.Value;
+            }
+
+            _Update(index, worldController);
+        }
+
+        void _Update(int index, WorldController worldController)
+        {
+            data.worldControllers[index] = worldController;
+
+            updatedNotifier[WorldControllersNotificationKeys.Updated.WorldController] = worldController;
+            updatedNotifier.Notify();
+        }
+
+        #endregion
+
+        #region Connection Succeeded
+
+        public void OnConnectionSucceeded(string url, string name)
+        {
+            url = SimplifyURL(url);
+            WorldController worldController;
+            int index = data.worldControllers.FindIndex(wc => wc.url == url);
+            if (index >= 0)
+            {
+                worldController = data.worldControllers[index];
+                worldController.lastConnection = System.DateTime.Now;
+                _Update(index, worldController);
+            }
+            else
+            {
+                worldController = new()
+                {
+                    url = url,
+                    name = name,
+                    isFavorite = false,
+                    firstConnection = System.DateTime.Now,
+                    lastConnection = System.DateTime.Now
+                };
+                _Add(worldController);
+            }
         }
 
         #endregion

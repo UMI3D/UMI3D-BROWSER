@@ -15,11 +15,10 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
-using umi3d.browserRuntime.ui.popup;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace umi3d.browserRuntime.ui.pu
+namespace umi3d.browserRuntime.ui.popup
 {
     internal class PopupIcon : MonoBehaviour
     {

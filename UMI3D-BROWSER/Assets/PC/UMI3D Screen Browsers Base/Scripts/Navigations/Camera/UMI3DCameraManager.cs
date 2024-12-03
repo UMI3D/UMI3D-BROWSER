@@ -48,7 +48,7 @@ public sealed class UMI3DCameraManager
         if (
                 (BaseCursor.Movement == BaseCursor.CursorMovement.Free
                 || BaseCursor.Movement == BaseCursor.CursorMovement.FreeHidden
-                || BaseCursor.Movement == BaseCursor.CursorMovement.Drawing)
+                )
             )
         {
             return;
@@ -56,10 +56,23 @@ public sealed class UMI3DCameraManager
 
         concreteFPSNavigation.HandleUserCamera();
 
+
+
+        if(BaseCursor.Movement == BaseCursor.CursorMovement.Drawing)
+        {
+            if (data.WantToLookAround)
+                BaseCursor.Mode = BaseCursor.DrawingMode.Center;
+            else
+            {
+                BaseCursor.Mode = BaseCursor.DrawingMode.Free;
+                return;
+            }
+        }
+
         data.cameraMode = E_CameraMode.Navigation; // Debug only.
         if (data.cameraMode != E_CameraMode.Locked)
         {
-            data.cameraMode = data.WantToLookAround
+            data.cameraMode = data.WantToLookAround && BaseCursor.Movement != BaseCursor.CursorMovement.Drawing
                 ? E_CameraMode.NeckMovement
                 : E_CameraMode.Navigation;
         }

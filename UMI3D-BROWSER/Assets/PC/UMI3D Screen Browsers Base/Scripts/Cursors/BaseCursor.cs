@@ -21,6 +21,7 @@ namespace umi3d.baseBrowser.cursor
     {
         public enum CursorState { Default, Hover, Clicked, FollowCursor }
         public enum CursorMovement { Free, Drawing, Center, Confined, FreeHidden }
+        public enum DrawingMode { Free, Center }
 
         public event System.Action<CursorState> UpdateCursor;
 
@@ -49,10 +50,26 @@ namespace umi3d.baseBrowser.cursor
             }
         }
 
+        public static DrawingMode Mode
+        {
+            get => Exists ? s_drawingMode : DrawingMode.Free;
+            set
+            {
+                if (Exists && s_drawingMode != value)
+                {
+                    s_drawingMode = value;
+                    s_drawingModeUpdated?.Invoke();
+                }
+            }
+        }
+
+
         private static CursorState s_state;
         private static event System.Action s_stateUpdated;
         private static CursorMovement s_movement;
         private static event System.Action s_movementUpdated;
+        private static DrawingMode s_drawingMode;
+        private static event System.Action s_drawingModeUpdated;
 
         protected System.Collections.Generic.Dictionary<object, CursorMovement> m_movementMap = new System.Collections.Generic.Dictionary<object, CursorMovement>();
         private bool m_isMovementCenterOrFreeHidden => Movement == CursorMovement.Center || Movement == CursorMovement.FreeHidden;
@@ -63,6 +80,8 @@ namespace umi3d.baseBrowser.cursor
             s_stateUpdated += UpdateEnvironmentCursor;
             s_movementUpdated += UpdateUnityCursor;
             s_movementUpdated += UpdateEnvironmentCursor;
+            s_drawingModeUpdated += UpdateUnityCursor;
+            s_drawingModeUpdated += UpdateEnvironmentCursor;
         }
 
         protected virtual void Start()
@@ -140,9 +159,20 @@ namespace umi3d.baseBrowser.cursor
                     UnityEngine.Cursor.visible = false;
                     break;
                 case CursorMovement.Free:
-                case CursorMovement.Drawing:
                     UnityEngine.Cursor.lockState = UnityEngine.CursorLockMode.None;
                     UnityEngine.Cursor.visible = true;
+                    break;
+                case CursorMovement.Drawing:
+                    if (s_drawingMode == DrawingMode.Free)
+                    {
+                        UnityEngine.Cursor.lockState = UnityEngine.CursorLockMode.None;
+                        UnityEngine.Cursor.visible = true;
+                    }
+                    else
+                    {
+                        UnityEngine.Cursor.lockState = UnityEngine.CursorLockMode.Locked;
+                        UnityEngine.Cursor.visible = false;
+                    }
                     break;
                 case CursorMovement.FreeHidden:
                     UnityEngine.Cursor.lockState = UnityEngine.CursorLockMode.None;

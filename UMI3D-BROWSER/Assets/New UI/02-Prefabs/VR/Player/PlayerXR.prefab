@@ -706,6 +706,11 @@ PrefabInstance:
       propertyPath: m_TrackedTransform
       value: 
       objectReference: {fileID: 6974482482457534490}
+    - target: {fileID: 559199571868597657, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
+        type: 3}
+      propertyPath: teleportingObject
+      value: 
+      objectReference: {fileID: 4883313436918982358}
     - target: {fileID: 683220484115717719, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
         type: 3}
       propertyPath: m_TrackedTransform
@@ -841,11 +846,6 @@ PrefabInstance:
       propertyPath: m_TrackedTransform
       value: 
       objectReference: {fileID: 3445585021603490684}
-    - target: {fileID: 2724734878250589391, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3154274054562746417, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
         type: 3}
       propertyPath: m_TrackedTransform
@@ -881,17 +881,6 @@ PrefabInstance:
       propertyPath: m_TrackedTransform
       value: 
       objectReference: {fileID: 3209498680141143848}
-    - target: {fileID: 4073440314472710487, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
-        type: 3}
-      propertyPath: m_PlanePrefab
-      value: 
-      objectReference: {fileID: 7142265552603235509, guid: a3d309f09eeaa4541ab1ce9a15ee52c0,
-        type: 3}
-    - target: {fileID: 4073440314472710487, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
-        type: 3}
-      propertyPath: m_DetectionMode
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 4102041326614191418, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
         type: 3}
       propertyPath: m_TrackedTransform
@@ -932,31 +921,6 @@ PrefabInstance:
       propertyPath: m_TrackedTransform
       value: 
       objectReference: {fileID: 8141930279390804461}
-    - target: {fileID: 4896852035845094633, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
-        type: 3}
-      propertyPath: m_IsTrigger
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5051064082787748696, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
-        type: 3}
-      propertyPath: m_ClearFlags
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5051064082787748696, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
-        type: 3}
-      propertyPath: m_BackGroundColor.b
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5051064082787748696, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
-        type: 3}
-      propertyPath: m_BackGroundColor.g
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5051064082787748696, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
-        type: 3}
-      propertyPath: m_BackGroundColor.r
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 5051064084671288343, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
         type: 3}
       propertyPath: m_Name
@@ -1029,17 +993,6 @@ PrefabInstance:
       objectReference: {fileID: 4883313436918982358}
     - target: {fileID: 5519844068936865581, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
         type: 3}
-      propertyPath: Repere
-      value: 
-      objectReference: {fileID: 3125165527598978782, guid: 8c6fb4b743361d446a6c72e3fd59ae43,
-        type: 3}
-    - target: {fileID: 5519844068936865581, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
-        type: 3}
-      propertyPath: XROrigin
-      value: 
-      objectReference: {fileID: 482466726570982930}
-    - target: {fileID: 5519844068936865581, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
-        type: 3}
       propertyPath: ManualCalibrator
       value: 
       objectReference: {fileID: 4610624171719084608}
@@ -1073,10 +1026,10 @@ PrefabInstance:
       propertyPath: m_TrackedTransform
       value: 
       objectReference: {fileID: 245928665657255986}
-    - target: {fileID: 6655976339166052065, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
+    - target: {fileID: 6398610618705284876, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
         type: 3}
-      propertyPath: m_IsTrigger
-      value: 1
+      propertyPath: action
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6689977364696969169, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
         type: 3}
@@ -1098,6 +1051,16 @@ PrefabInstance:
       propertyPath: m_TrackedTransform
       value: 
       objectReference: {fileID: 4906439393102361742}
+    - target: {fileID: 8208724808344802283, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
+        type: 3}
+      propertyPath: action
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8320935138428389734, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
+        type: 3}
+      propertyPath: teleportingObject
+      value: 
+      objectReference: {fileID: 4883313436918982358}
     - target: {fileID: 8342566669346317573, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
         type: 3}
       propertyPath: m_TrackedTransform
@@ -1143,19 +1106,13 @@ Camera:
     type: 3}
   m_PrefabInstance: {fileID: 4659797260771895813}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &482466726570982930 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5051064084671288343, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
-    type: 3}
-  m_PrefabInstance: {fileID: 4659797260771895813}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &482466726570982940 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5051064084671288345, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
     type: 3}
   m_PrefabInstance: {fileID: 4659797260771895813}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 482466726570982930}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e0cb9aa70a22847b5925ee5f067c10a9, type: 3}
@@ -1185,7 +1142,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 4659797260771895813}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 482466726570982930}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d028af21d4933f04492005d052464cf0, type: 3}
@@ -1437,7 +1394,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 4659797260771895813}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 482466726570982930}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 82bc72d2ecc8add47b2fe00d40318500, type: 3}

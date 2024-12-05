@@ -71,6 +71,9 @@ namespace ClientLBE
             StartCoroutine(GetARPlanes());
 
             UMI3DEnvironmentLoader.Instance.onEnvironmentLoaded.AddListener(() => StartCalibrationScene());
+
+            Transform scene = Player.transform.parent;
+            Instantiate(Repere, scene.position, scene.rotation);
         }
 
         public void SendUserAdmin()
@@ -107,8 +110,10 @@ namespace ClientLBE
             Debug.Log("REMY : LBEGroupEvent !");
             lBEGroupDto = LbeGroupDtoData;
 
-            if(lBEGroupDto.UserAR.Count + lBEGroupDto.UserVR.Count >= 1)
+            if(lBEGroupDto.UserAR.Count + lBEGroupDto.UserVR.Count > 1)
             {
+                Debug.Log("REMY : LBEGroupEvent 2");
+
                 CreatGuardianServer(lBEGroupDto.ARAnchors);
             }
             AddCapsulesToCurrentARUsers(); 
@@ -382,10 +387,13 @@ namespace ClientLBE
             if (Player != null)
             {
                 Transform scene = Player.transform.parent;
+                Instantiate(Repere, scene.position, scene.rotation);
+
 
                 if (scene != null)
                 {
- 
+                    Debug.Log("REMY : Calibration Scene !");
+
                     calibrator.transform.rotation = Quaternion.Euler(0.0f, calibrator.transform.rotation.eulerAngles.y, 0.0f);
                     calibrator.transform.SetParent(null, true);
                     Player.transform.SetParent(calibrator.transform, true);
@@ -404,6 +412,8 @@ namespace ClientLBE
                     guardianParent.transform.position = new Vector3(calibrator.transform.position.x, 0.0f, calibrator.transform.position.z);
 
                     Instantiate(Repere, scene.position, scene.rotation);
+
+                   // Instantiate(Repere, calibrator.position, calibrator.rotation);
 
                     GetGuardianArea();
                 }
@@ -514,6 +524,8 @@ namespace ClientLBE
 
                     userGuardianDto.ARAnchors.Add(newAnchor);              
                 }
+                Debug.LogWarning("REMY : SendGuardianInServer -> X : " + userGuardianDto.ARAnchors[0].position.X + " . Y : " + userGuardianDto.ARAnchors[0].position.Y + " . Z : " + userGuardianDto.ARAnchors[0].position.Z);
+
 
                 var loadingParameters = UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DLoadingParameters;
                 userGuardianDto.ARiD = loadingParameters.BrowserType;

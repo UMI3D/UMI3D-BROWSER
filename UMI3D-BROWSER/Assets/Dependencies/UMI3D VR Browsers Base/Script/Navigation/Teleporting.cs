@@ -56,12 +56,20 @@ namespace umi3dVRBrowsersBase.navigation
         {
             //LoadingScreenDisplayer.OnLoadingScreenDislayed.AddListener(() => isLoadingScreenDisplayed = true);
             //LoadingScreenDisplayer.OnLoadingScreenHidden.AddListener(() => isLoadingScreenDisplayed = false);
+            Debug.Log("REMY : Teleporting script has been initialized.");
+        }
+
+        protected virtual void Start()
+        {
+            Debug.Log("REMY : Teleporting script is running.");
         }
 
         // Individual or group teleportation based on the isGroupTeleport flag
         [ContextMenu("Teleport")]
         public void Teleport()
         {
+            Debug.Log("REMY : Go Teleport.");
+
             if (isLoadingScreenDisplayed)
             {
                 Debug.Log("Teleporting.Teleport.isLoadingScreenDisplayed=false");
@@ -70,25 +78,27 @@ namespace umi3dVRBrowsersBase.navigation
 
             Debug.LogError("Commented when merged");
 
-            //Vector3? position = arc.GetPointedPoint();
-            //if (position.HasValue)
-            //{
-            //    if (GroupTeleportation.isGroupTeleport)
-            //    {
-            //        Debug.Log("Teleporting.Teleport.isGroupTeleport=true");
-            //        groupTeleportation.TeleportGroup(position.Value, teleportingObject.transform, centerEyeAnchor.transform);
-            //    }
-            //    else
-            //    {
-            //        Debug.Log("Teleporting.Teleport.isGroupTeleport=false");
-            //        TeleportIndividual(position.Value);
-            //    }
-            //}
+            Vector3? position = arc.GetPointedPoint();
+            if (position.HasValue)
+            {
+                if (GroupTeleportation.isGroupTeleport)
+                {
+                    Debug.Log("REMY : Teleporting.Teleport.isGroupTeleport=true");
+                    groupTeleportation.TeleportGroup(position.Value, teleportingObject.transform, centerEyeAnchor.transform);
+                }
+                else
+                {
+                    Debug.Log("REMY : Teleporting.Teleport.isGroupTeleport=false");
+                    TeleportIndividual(position.Value);
+                }
+            }
         }
 
         // Function of individual teleportation
         private void TeleportIndividual(Vector3 position)
         {
+            Debug.Log("REMY : Teleport Individual");
+
             Vector3 offset = teleportingObject.transform.rotation * centerEyeAnchor.transform.localPosition;
             teleportingObject.transform.position = new Vector3(position.x - offset.x,
                                                                    position.y,

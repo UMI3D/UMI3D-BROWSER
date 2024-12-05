@@ -27,7 +27,7 @@ namespace umi3d.browserRuntime.navigation
         /// <summary>
         /// Flag for groupTeleportation
         /// </summary>
-        public static bool isGroupTeleport = false; //TODO: Remettre à false une fois initialisé au lancement selon si arène en AR et déplacement de groupe activé A RETIRER AVANT MERGE DE LA BRANCHE SINON AR POUR TOUT LE MONDE
+        public static bool isGroupTeleport = true; //TODO: Remettre à false une fois initialisé au lancement selon si arène en AR et déplacement de groupe activé A RETIRER AVANT MERGE DE LA BRANCHE SINON AR POUR TOUT LE MONDE
 
         /*/// <summary>
         /// Flag for using common guardian
@@ -39,9 +39,11 @@ namespace umi3d.browserRuntime.navigation
         /// </summary>
         public void TeleportGroup(Vector3 newPosition, Transform transformPlayer, Transform transformCamera)
         {
+            Debug.Log("REMY : Ok Teleport Group !! ");
+
             // Calculate the offset of the leader
             Vector3 leaderOffset = transformPlayer.rotation * transformCamera.localPosition;
-            Vector3Dto teleportLeaderPosition = new Vector3Dto() { X = newPosition.x - leaderOffset.x, Y = newPosition.y, Z = newPosition.z - leaderOffset.z }; // Appliquez cet offset à la nouvelle position pour le leader
+            Vector3Dto teleportLeaderPosition = new Vector3Dto() { X = newPosition.x - leaderOffset.x, Y = newPosition.y - leaderOffset.y, Z = newPosition.z - leaderOffset.z }; // Appliquez cet offset à la nouvelle position pour le leader
 
             // Position of leader before teleportation
             Vector3 currentLeaderPosition = transformPlayer.position;

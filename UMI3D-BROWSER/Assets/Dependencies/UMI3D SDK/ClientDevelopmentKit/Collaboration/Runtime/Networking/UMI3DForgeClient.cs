@@ -782,6 +782,7 @@ namespace umi3d.cdk.collaboration
                 case UMI3DOperationKeys.SetLBEGroupRequest:
                     MainThreadManager.Run(() =>
                     {
+                        Debug.Log("REMY : LBEGroupSyncRequestDTO");
                         LBEGroupSyncRequestDTO  lBEGroupRequestDTO = UMI3DSerializer.Read<LBEGroupSyncRequestDTO >(container);
 
                         var lBEGroup = new LBEGroupSyncRequestDTO ()

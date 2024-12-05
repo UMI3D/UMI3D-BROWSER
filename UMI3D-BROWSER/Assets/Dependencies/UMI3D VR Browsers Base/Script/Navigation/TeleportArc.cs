@@ -167,7 +167,7 @@ namespace umi3dVRBrowsersBase.navigation
         /// Displays teleportation arc.
         /// </summary>
         [ContextMenu("Display")]
-        void Display()
+        public void Display()
         {
             if (updateRoutine != null)
                 return;
@@ -179,7 +179,7 @@ namespace umi3dVRBrowsersBase.navigation
         /// Hides teleportation arc.
         /// </summary>
         [ContextMenu("Hide")]
-        void Hide()
+        public void Hide()
         {
             if (updateRoutine == null)
                 return;
@@ -197,7 +197,7 @@ namespace umi3dVRBrowsersBase.navigation
         /// Tries to find impact point.
         /// </summary>
         /// <returns></returns>
-        Vector3? GetPointedPoint()
+        public Vector3? GetPointedPoint()
         {
             if (impactPoint.activeSelf)
                 return impactPoint.transform.position;

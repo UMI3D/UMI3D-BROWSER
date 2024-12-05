@@ -30,6 +30,11 @@ namespace umi3d.common.interaction
         public ulong LineId { get; set; }
 
         /// <summary>
+        /// State if the interaction can be done in 3D.
+        /// </summary>
+        public bool CanDrawInSpace { get; set; }
+
+        /// <summary>
         /// Id of the meshDto use to draw.
         /// </summary>
         public List<ulong> MeshIds { get; set; }

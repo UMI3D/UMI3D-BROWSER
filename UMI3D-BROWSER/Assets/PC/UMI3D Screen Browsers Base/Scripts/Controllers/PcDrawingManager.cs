@@ -27,21 +27,25 @@ namespace umi3d.desktopBrowser.Controller
     public class PcDrawingManager : DrawingManager
     {
         public float distance = 1.5f;
+        public float objectDistance = 3f;
         public float offset = 0.01f;
 
         public override Vector3? GetDrawingWorldPoint(DrawingInteractionDto drawing, List<UMI3DNodeInstance> nodes)
         {
             var screenPos = Input.mousePosition;
-            if (nodes == null || nodes.Count == 0)
+            if (nodes != null && nodes.Count > 0)
+            {
+                Ray ray = Camera.main.ScreenPointToRay(screenPos);
+                foreach (var hit in Physics.RaycastAll(ray, objectDistance))
+                    if (nodes.Contains(hit.collider.GetComponentInParent<NodeContainer>().instance))
+                        return hit.point + hit.normal * offset;
+            }
+
+            if (drawing.CanDrawInSpace)
             {
                 screenPos.z = distance;
                 return Camera.main.ScreenToWorldPoint(screenPos);
             }
-
-            Ray ray = Camera.main.ScreenPointToRay(screenPos);
-            foreach(var hit in Physics.RaycastAll(ray))
-                if(nodes.Contains( hit.collider.GetComponentInParent<NodeContainer>().instance))
-                    return hit.point + hit.normal * offset;
 
             return null;
         }

@@ -32,14 +32,12 @@ namespace umi3d.baseBrowser.inputs.interactions
         public override void ShowMenuItem()
         {
             base.ShowMenuItem();
-            UnityEngine.Debug.Log($"Show {menuItem.Name}");
             Mapped?.Invoke(this, menuItem.Name, Key);
         }
 
         public override void HideMenuItem()
         {
             base.HideMenuItem();
-            UnityEngine.Debug.Log($"Hide {menuItem?.Name}");
             Unmapped?.Invoke(this, menuItem?.Name);
         }
 

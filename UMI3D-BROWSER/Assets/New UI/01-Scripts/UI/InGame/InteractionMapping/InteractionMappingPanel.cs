@@ -33,10 +33,12 @@ namespace umi3d.browserRuntime.ui.inGame.interactionMapping
         [SerializeField] private Transform mappingContent;
         [SerializeField] private GameObject mappingPrefab;
         [SerializeField] private List<InputAction> inputKeys;
-        [SerializeField] private List<Sprite> inputSprites;
+        [SerializeField] private List<KeySprite> inputSprites;
         [SerializeField] private Sprite leftClickSprite;
 
         private Dictionary<string, InteractionMappingElement> _rows;
+
+        private bool isQwerty => Keyboard.current.aKey.displayName.ToLower() == "a"; // In qwerty mode, it return an "a"
 
         private void Awake()
         {
@@ -85,7 +87,10 @@ namespace umi3d.browserRuntime.ui.inGame.interactionMapping
             if (action == null)
                 return;
             foreach (var inputControl in action.controls)
-                interactionMappingDisplayer.Add(inputSprites[inputKeys.FindIndex(a => a.controls.Contains(inputControl))]);
+            {
+                var keySprite = inputSprites[inputKeys.FindIndex(a => a.controls.Contains(inputControl))];
+                interactionMappingDisplayer.Add(isQwerty ? keySprite.Qwerty : keySprite.Azerty);
+            }
         }
 
         private void AddRowWith(string name, InputAction action)
@@ -141,5 +146,12 @@ namespace umi3d.browserRuntime.ui.inGame.interactionMapping
         {
             Hide();
         }
+    }
+
+    [Serializable]
+    public struct KeySprite
+    {
+        public Sprite Azerty;
+        public Sprite Qwerty;
     }
 }

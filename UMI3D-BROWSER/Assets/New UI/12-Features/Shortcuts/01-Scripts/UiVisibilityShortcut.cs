@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
+using umi3d.baseBrowser.cursor;
 using umi3d.baseBrowser.inputs.interactions;
 using umi3d.browserRuntime.ui;
 using UnityEngine;
@@ -23,6 +24,8 @@ namespace umi3d.browserRuntime.shortcuts
 {
     public class UiVisibilityShortcut : MonoBehaviour
     {
+        private bool internalVisibilityState = true;
+
         private void OnEnable()
         {
             KeyboardShortcut.AddDownListener(ShortcutEnum.ToggleUiVisibility, ToggleUiVisibility);
@@ -35,7 +38,18 @@ namespace umi3d.browserRuntime.shortcuts
 
         private void ToggleUiVisibility()
         {
-            NotificationHub.Default.Notify(this, UiNotificationKeys.ToggleVisibility);
+            internalVisibilityState = !internalVisibilityState;
+
+            if (internalVisibilityState)
+            {
+                NotificationHub.Default.Notify(this, UiNotificationKeys.Show);
+                BaseCursor.UnSetMovement(this);
+            } else
+            {
+                var cursorMode = BaseCursor.Movement;
+                NotificationHub.Default.Notify(this, UiNotificationKeys.Hide);
+                BaseCursor.SetMovement(this, cursorMode);
+            }
         }
     }
 }

@@ -23,12 +23,23 @@ namespace umi3d.browserRuntime.ui
     {
         private void Awake()
         {
-            NotificationHub.Default.Subscribe(this, UiNotificationKeys.ToggleVisibility, ToggleVisibility);
+            NotificationHub.Default.Subscribe(this, UiNotificationKeys.Show, Show);
+            NotificationHub.Default.Subscribe(this, UiNotificationKeys.Hide, Hide);
         }
 
-        private void ToggleVisibility()
+        void OnDestroy()
         {
-            gameObject.SetActive(!gameObject.activeSelf);
+            NotificationHub.Default.Unsubscribe(this);
+        }
+
+        private void Show()
+        {
+            gameObject.SetActive(true);
+        }
+
+        private void Hide()
+        {
+            gameObject.SetActive(false);
         }
     }
 }

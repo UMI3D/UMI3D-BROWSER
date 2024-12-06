@@ -18,6 +18,7 @@ namespace umi3d.browserRuntime.ui
 {
     public static class UiNotificationKeys
     {
-        public static readonly string ToggleVisibility = "ui-visibility-toggle";
+        public static readonly string Show = "ui-show";
+        public static readonly string Hide = "ui-hide";
     }
 }

@@ -295,6 +295,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 654858137801913921}
+    - targetCorrespondingSourceObject: {fileID: 5737028902229674419, guid: f4d8c12ad9571464087a7bb922bc48bb,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4419253666134152825}
     - targetCorrespondingSourceObject: {fileID: 5544760081601926436, guid: f4d8c12ad9571464087a7bb922bc48bb,
         type: 3}
       insertIndex: -1
@@ -306,6 +310,48 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 5993178554287749343}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2067725382219723116 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5737028902229674419, guid: f4d8c12ad9571464087a7bb922bc48bb,
+    type: 3}
+  m_PrefabInstance: {fileID: 5993178554287749343}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4419253666134152825
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2067725382219723116}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 857f4032b11f03049ba61f0dc1ee285b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onInputDown:
+    m_PersistentCalls:
+      m_Calls: []
+  onInputUp:
+    m_PersistentCalls:
+      m_Calls: []
+  Key:
+    m_Name: Key
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 6a466ee4-a37a-43d6-be3a-c641ff8e862d
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 5bfd9612-edd3-4b1b-8919-5fb247349605
+      m_Path: <Keyboard>/f1
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Key
+      m_Flags: 0
+    m_Flags: 0
+  Shortcut: 14
 --- !u!1 &2067725382735961461 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5737028900505413034, guid: f4d8c12ad9571464087a7bb922bc48bb,

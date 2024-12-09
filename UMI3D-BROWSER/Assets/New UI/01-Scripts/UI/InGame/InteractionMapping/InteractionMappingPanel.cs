@@ -133,7 +133,7 @@ namespace umi3d.browserRuntime.ui.inGame.interactionMapping
         private void Hide(KeyboardInteraction interaction, string key)
         {
             key ??= "";
-            //Hide();
+            
             if (_rows.ContainsKey(key))
             {
                 var row = _rows[key];
@@ -143,11 +143,6 @@ namespace umi3d.browserRuntime.ui.inGame.interactionMapping
 
             if(_rows.Count == 0)
                 gameObject.SetActive(false);
-
-            //gameObject.SetActive(false);
-            //foreach (var row in _rows)
-            //    DestroyImmediate(row.Value.gameObject);
-            //_rows.Clear();
         }
 
         private void Hide()

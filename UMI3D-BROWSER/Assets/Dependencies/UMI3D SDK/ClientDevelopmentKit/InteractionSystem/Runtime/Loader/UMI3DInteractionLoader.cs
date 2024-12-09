@@ -115,7 +115,6 @@ namespace umi3d.cdk.interaction
                 {
                     case EventDto dto:
 
-                        UnityEngine.Debug.Log($"{dto is DrawingInteractionDto} hello {value.propertyKey}");
                         if (dto is DrawingInteractionDto drawing)
                             switch (value.propertyKey)
                             {

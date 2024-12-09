@@ -103,25 +103,6 @@ namespace umi3d.desktopBrowser.Controller
                 manipulation.boneTransform = Controller.hoverBoneTransform;
             });
 
-            //DrawModeToggleInteraction.S_Toggles?.ForEach(manipulation =>
-            //{
-            //    this.KeyboardToggleInteraction.Add(manipulation);
-            //    manipulation.Init(Controller);
-            //    manipulation.bone = Controller.interactionBoneType;
-            //    manipulation.Menu = ObjectMenu.menu;
-            //    manipulation.boneTransform = Controller.hoverBoneTransform;
-            //});
-            //DrawModeDrawInteraction.S_Draws?.ForEach(manipulation =>
-            //{
-            //    this.KeyboardDrawInteraction.Add(manipulation);
-            //    manipulation.Init(Controller);
-            //    manipulation.bone = Controller.interactionBoneType;
-            //    manipulation.Menu = ObjectMenu.menu;
-            //    manipulation.boneTransform = Controller.hoverBoneTransform;
-            //});
-
-
-
             (ManipulationGroup as ManipulationGroupeForDesktop).Bind(Controller, KeyboardManipulations);
             ManipulationGroup.bone = Controller.interactionBoneType;
             ManipulationGroup.boneTransform = Controller.hoverBoneTransform;
@@ -141,9 +122,7 @@ namespace umi3d.desktopBrowser.Controller
         /// </summary>
         public void Update()
         {
-            //if (Input.GetKeyDown(InputLayoutManager.GetInputCode(InputLayoutManager.Input.ContextualMenuNavigationDirect)) || Input.mouseScrollDelta.y < 0)
-            //    m_navigationDirect++;
-            //else if (Input.mouseScrollDelta.y > 0) m_navigationDirect--;
+
         }
 
         #endregion

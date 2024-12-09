@@ -35,8 +35,8 @@ namespace umi3d.desktopBrowser.Controller
         protected List<KeyboardInteraction> KeyboardInteractions = new ();
         protected List<KeyboardManipulation> KeyboardManipulations = new ();
 
-        protected List<EventInteraction> KeyboardToggleInteraction = new ();
-        protected List<EventInteraction> KeyboardDrawInteraction = new ();
+        protected List<KeyboardInteraction> KeyboardToggleInteraction = new ();
+        protected List<KeyboardInteraction> KeyboardDrawInteraction = new ();
 
         public List<AbstractUMI3DInput> Inputs
         {
@@ -75,8 +75,6 @@ namespace umi3d.desktopBrowser.Controller
             KeyboardEmote.S_Emotes.AddRange(Controller.KeyboardEmotes.GetComponents<KeyboardEmote>());
             KeyboardNavigation.S_Navigations.AddRange(Controller.KeyboardNavigations.GetComponents<KeyboardNavigation>());
             KeyboardManipulation.S_Manipulations.AddRange(Controller.KeyboardManipulations.GetComponents<KeyboardManipulation>());
-            DrawModeToggleInteraction.S_Toggles.AddRange(Controller.DrawToggleInteractions.GetComponents<DrawModeToggleInteraction>());
-            DrawModeDrawInteraction.S_Draws.AddRange(Controller.DrawInteractions.GetComponents<DrawModeDrawInteraction>());
         }
         /// <summary>
         /// <inheritdoc/>
@@ -85,7 +83,7 @@ namespace umi3d.desktopBrowser.Controller
         {
             KeyboardInteraction.S_Interactions?.ForEach(interaction =>
             {
-                KeyboardInteractions.Add(interaction);
+                this.KeyboardInteractions.Add(interaction);
                 this.KeyboardToggleInteraction.Add(interaction);
                 this.KeyboardDrawInteraction.Add(interaction);
                 interaction.Init(Controller);
@@ -109,7 +107,7 @@ namespace umi3d.desktopBrowser.Controller
             ManipulationGroup.Menu = Controller.ManipulationMenu.menu;
             ManipulationGroup.InstanciateManipulation = InstanciateManipulation;
 
-            (DrawGroup as DrawGroupeForDesktop).Bind(Controller, KeyboardInteractions, KeyboardInteractions);
+            (DrawGroup as DrawGroupeForDesktop).Bind(Controller, KeyboardToggleInteraction, KeyboardDrawInteraction);
             DrawGroup.bone = Controller.interactionBoneType;
             DrawGroup.Menu = Controller.ManipulationMenu.menu;
             DrawGroup.boneTransform = Controller.hoverBoneTransform;
@@ -193,8 +191,6 @@ namespace umi3d.desktopBrowser.Controller
             KeyboardEmote.S_Emotes.ForEach(interaction => interaction.ResetTouchInteraction());
             KeyboardNavigation.S_Navigations.ForEach(interaction => interaction.ResetTouchInteraction());
             KeyboardManipulation.S_Manipulations.ForEach(interaction => interaction.ResetTouchInteraction());
-            DrawModeToggleInteraction.S_Toggles.ForEach(interaction => interaction.ResetTouchInteraction());
-            DrawModeDrawInteraction.S_Draws.ForEach(interaction => interaction.ResetTouchInteraction());
 
         }
     }

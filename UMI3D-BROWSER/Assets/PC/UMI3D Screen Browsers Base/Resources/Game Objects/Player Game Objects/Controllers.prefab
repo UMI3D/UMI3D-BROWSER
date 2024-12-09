@@ -51,6 +51,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_isActive: 0
+  lastUpdateTime: 0
+  timeSynchronization: 0.3
+  minDistance: 0.01
   toggleInputs: []
   drawInputs: []
 --- !u!1 &4961771076093077964
@@ -85,66 +88,6 @@ Transform:
   - {fileID: 3437024025467046420}
   m_Father: {fileID: 5737028900505413029}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &5492237659457927789
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3655792878844775185}
-  - component: {fileID: 7475703230941430759}
-  m_Layer: 0
-  m_Name: DrawInteractions
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &3655792878844775185
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5492237659457927789}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 5737028900505413029}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7475703230941430759
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5492237659457927789}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c814d6e14624d0f4db4b1c315b93bf77, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onInputDown:
-    m_PersistentCalls:
-      m_Calls: []
-  onInputUp:
-    m_PersistentCalls:
-      m_Calls: []
-  Key:
-    m_Name: Key
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: 75b98212-d5a8-4cbf-8843-57c2abdf1d8e
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings: []
-    m_Flags: 0
-  drawGroup: {fileID: 0}
 --- !u!1 &5544760081601926436
 GameObject:
   m_ObjectHideFlags: 0
@@ -214,8 +157,6 @@ Transform:
   - {fileID: 5737028901965113654}
   - {fileID: 4304136304215375691}
   - {fileID: 4891275689946750873}
-  - {fileID: 3655792878844775185}
-  - {fileID: 7085586204039167644}
   - {fileID: 826376368401800085}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -275,8 +216,8 @@ MonoBehaviour:
   KeyboardEmotes: {fileID: 5737028900827975624}
   KeyboardNavigations: {fileID: 5737028901654668679}
   KeyboardManipulations: {fileID: 5544760081601926436}
-  DrawToggleInteractions: {fileID: 8769038744807521689}
-  DrawInteractions: {fileID: 5492237659457927789}
+  DrawToggleInteractions: {fileID: 0}
+  DrawInteractions: {fileID: 0}
   MobileAction: {fileID: 6903327770410949538}
   ObjectMenu: {fileID: 0}
   ManipulationMenu: {fileID: 11400000, guid: 55f6abd47af8d764eb2709ef7830c073, type: 2}
@@ -1675,66 +1616,6 @@ MonoBehaviour:
   onInputUp:
     m_PersistentCalls:
       m_Calls: []
---- !u!1 &8769038744807521689
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7085586204039167644}
-  - component: {fileID: 232485936741262526}
-  m_Layer: 0
-  m_Name: DrawToggleInteractions
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &7085586204039167644
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8769038744807521689}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 5737028900505413029}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &232485936741262526
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8769038744807521689}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5deaa7961df35954fb5e3581ade5b15e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onInputDown:
-    m_PersistentCalls:
-      m_Calls: []
-  onInputUp:
-    m_PersistentCalls:
-      m_Calls: []
-  Key:
-    m_Name: Key
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: ac24e916-8b8b-40bd-abc4-07a1aac3e7b8
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings: []
-    m_Flags: 0
-  drawGroup: {fileID: 0}
 --- !u!1001 &5737028901854242779
 PrefabInstance:
   m_ObjectHideFlags: 0

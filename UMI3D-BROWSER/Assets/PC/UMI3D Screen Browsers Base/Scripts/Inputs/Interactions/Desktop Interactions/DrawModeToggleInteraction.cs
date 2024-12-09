@@ -29,8 +29,6 @@ namespace umi3d.baseBrowser.inputs.interactions
         protected override void PressedDown()
         {
             onInputDown.Invoke();
-
-
         }
 
         protected override void PressedUp()

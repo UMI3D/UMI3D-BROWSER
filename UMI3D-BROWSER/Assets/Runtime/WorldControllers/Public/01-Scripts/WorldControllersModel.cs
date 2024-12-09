@@ -220,6 +220,23 @@ namespace umi3d.browserRuntime.worldController
 
         #endregion
 
+        #region Filter
+
+        WorldControllersFiltered _filtered;
+        WorldControllersFiltered filtered
+        {
+            get
+            {
+                if (_filtered == null)
+                {
+                    _filtered = new(data.worldControllers);
+                }
+                return _filtered;
+            }
+        }
+
+        #endregion
+
         #region Favorites
 
         public IEnumerable<WorldController> favorites

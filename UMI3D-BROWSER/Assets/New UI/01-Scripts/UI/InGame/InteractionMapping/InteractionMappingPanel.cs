@@ -91,17 +91,16 @@ namespace umi3d.browserRuntime.ui.inGame.interactionMapping
             rows.Sort();
 
             int minIndex = int.MaxValue;
+
             foreach(var e in rows)
             {
                 var index = e.transform.GetSiblingIndex();
                 if(index < minIndex)
                     minIndex = index;
             }
+
             foreach (var e in rows)
                 e.transform.SetSiblingIndex(minIndex);
-
-
-
         }
 
         private void AddInteraction(InputAction action, InteractionMappingElement interactionMappingDisplayer)

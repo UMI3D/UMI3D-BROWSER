@@ -236,37 +236,5 @@ namespace umi3d.browserRuntime.worldController
         }
 
         #endregion
-
-        #region Favorites
-
-        public IEnumerable<WorldController> favorites
-        {
-            get
-            {
-                return data.worldControllers.Where(worldController => worldController.isFavorite);
-            }
-        }
-
-        #endregion
-
-        #region Sorted By
-
-        public IEnumerable<WorldController> sortByFirstConnection
-        {
-            get
-            {
-                return data.worldControllers.OrderBy(worldController => worldController.firstConnection);
-            }
-        }
-
-        public IEnumerable<WorldController> sortByLastConnection
-        {
-            get
-            {
-                return data.worldControllers.OrderBy(worldController => worldController.lastConnection).Reverse();
-            }
-        }
-
-        #endregion
     }
 }

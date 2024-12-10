@@ -25,7 +25,7 @@ public class WorldControllersFilteredTests
             name = "Favorite, Today, Today",
             isFavorite = true,
             firstConnection = DateTime.Today,
-            lastConnection = DateTime.Today
+            lastConnection = DateTime.Now.AddHours(-5)
         };
         worldController2 = new()
         {
@@ -33,7 +33,7 @@ public class WorldControllersFilteredTests
             name = "Not Favorite, 3D, Today",
             isFavorite = false,
             firstConnection = DateTime.Today.AddDays(-3),
-            lastConnection = DateTime.Today
+            lastConnection = DateTime.Now
         };
         worldController3 = new()
         {
@@ -73,6 +73,8 @@ public class WorldControllersFilteredTests
         worldControllers.Clear();
         worldControllers = null;
     }
+
+    #region Filtering
 
     [Test]
     public void GivenNoFilters_WhenGetFiltered_ThenSameList()
@@ -207,4 +209,144 @@ public class WorldControllersFilteredTests
         Assert.AreEqual(filtered.Count, 1);
         Assert.AreEqual(filtered[0], worldController1);
     }
+
+    #endregion
+
+    #region Sorting
+
+    [Test]
+    public void GivenSortByFirstConnectAsc_WhenGetSorted_ThenSameListButSorted()
+    {
+        Assert.AreEqual(worldControllersFiltered.sortingField, SortingField.FirstConnection);
+        Assert.AreEqual(worldControllersFiltered.sorting, Sorting.Ascending);
+
+        List<WorldController> sorted = worldControllersFiltered.SortedList;
+
+        Assert.AreEqual(sorted.Count, worldControllers.Count);
+        Assert.AreEqual(sorted.Count, 5);
+        Assert.AreEqual(sorted[0], worldController5);
+        Assert.AreEqual(sorted[1], worldController3);
+        Assert.AreEqual(sorted[2], worldController4);
+        Assert.AreEqual(sorted[3], worldController2);
+        Assert.AreEqual(sorted[4], worldController1);
+    }
+
+    [Test]
+    public void GivenSortByFirstConnectDsc_WhenGetSorted_ThenSameListButSorted()
+    {
+        worldControllersFiltered.sorting = Sorting.Descending;
+        Assert.AreEqual(worldControllersFiltered.sortingField, SortingField.FirstConnection);
+        Assert.AreEqual(worldControllersFiltered.sorting, Sorting.Descending);
+
+        List<WorldController> sorted = worldControllersFiltered.SortedList;
+
+        Assert.AreEqual(sorted.Count, worldControllers.Count);
+        Assert.AreEqual(sorted.Count, 5);
+        Assert.AreEqual(sorted[0], worldController1);
+        Assert.AreEqual(sorted[1], worldController2);
+        Assert.AreEqual(sorted[2], worldController4);
+        Assert.AreEqual(sorted[3], worldController3);
+        Assert.AreEqual(sorted[4], worldController5);
+    }
+
+    [Test]
+    public void GivenSortByLastConnectAsc_WhenGetSorted_ThenSameListButSorted()
+    {
+        worldControllersFiltered.sortingField = SortingField.LastConnection;
+        Assert.AreEqual(worldControllersFiltered.sortingField, SortingField.LastConnection);
+        Assert.AreEqual(worldControllersFiltered.sorting, Sorting.Ascending);
+
+        List<WorldController> sorted = worldControllersFiltered.SortedList;
+
+        Assert.AreEqual(sorted.Count, worldControllers.Count);
+        Assert.AreEqual(sorted.Count, 5);
+        Assert.AreEqual(sorted[0], worldController5);
+        Assert.AreEqual(sorted[1], worldController3);
+        Assert.AreEqual(sorted[2], worldController4);
+        Assert.AreEqual(sorted[3], worldController1);
+        Assert.AreEqual(sorted[4], worldController2);
+    }
+
+    [Test]
+    public void GivenSortByLastConnectDsc_WhenGetSorted_ThenSameListButSorted()
+    {
+        worldControllersFiltered.sortingField = SortingField.LastConnection;
+        worldControllersFiltered.sorting = Sorting.Descending;
+        Assert.AreEqual(worldControllersFiltered.sortingField, SortingField.LastConnection);
+        Assert.AreEqual(worldControllersFiltered.sorting, Sorting.Descending);
+
+        List<WorldController> sorted = worldControllersFiltered.SortedList;
+
+        Assert.AreEqual(sorted.Count, worldControllers.Count);
+        Assert.AreEqual(sorted.Count, 5);
+        Assert.AreEqual(sorted[0], worldController2);
+        Assert.AreEqual(sorted[1], worldController1);
+        Assert.AreEqual(sorted[2], worldController4);
+        Assert.AreEqual(sorted[3], worldController3);
+        Assert.AreEqual(sorted[4], worldController5);
+    }
+
+    #endregion
+
+    #region Filtering & Sorting
+
+    [Test]
+    public void GivenFavoriteAndSortedByFstConAsc_WhenGetFiltered_ThenOnlyFavoriteAndSorted()
+    {
+        worldControllersFiltered.isFavorite = true;
+        worldControllersFiltered.sortingField = SortingField.FirstConnection;
+        worldControllersFiltered.sorting = Sorting.Ascending;
+
+        List<WorldController> result = worldControllersFiltered.filteredAndSortedList;
+
+        Assert.AreEqual(result.Count, 2);
+        Assert.AreEqual(result[0], worldController3);
+        Assert.AreEqual(result[1], worldController1);
+    }
+
+    [Test]
+    public void GivenFavoriteAndSortedByFstConDsc_WhenGetFiltered_ThenOnlyFavoriteAndSorted()
+    {
+        worldControllersFiltered.isFavorite = true;
+        worldControllersFiltered.sortingField = SortingField.FirstConnection;
+        worldControllersFiltered.sorting = Sorting.Descending;
+
+        List<WorldController> result = worldControllersFiltered.filteredAndSortedList;
+
+        Assert.AreEqual(result.Count, 2);
+        Assert.AreEqual(result[0], worldController1);
+        Assert.AreEqual(result[1], worldController3);
+    }
+
+    [Test]
+    public void GivenNoFavoriteAndSortedByFstConAsc_WhenGetFiltered_ThenOnlyNotFavoriteAndSorted()
+    {
+        worldControllersFiltered.isFavorite = false;
+        worldControllersFiltered.sortingField = SortingField.FirstConnection;
+        worldControllersFiltered.sorting = Sorting.Ascending;
+
+        List<WorldController> result = worldControllersFiltered.filteredAndSortedList;
+
+        Assert.AreEqual(result.Count, 3);
+        Assert.AreEqual(result[0], worldController5);
+        Assert.AreEqual(result[1], worldController4);
+        Assert.AreEqual(result[2], worldController2);
+    }
+
+    [Test]
+    public void GivenNoFavoriteAndSortedByFstConDsc_WhenGetFiltered_ThenOnlyNotFavoriteAndSorted()
+    {
+        worldControllersFiltered.isFavorite = false;
+        worldControllersFiltered.sortingField = SortingField.FirstConnection;
+        worldControllersFiltered.sorting = Sorting.Descending;
+
+        List<WorldController> result = worldControllersFiltered.filteredAndSortedList;
+
+        Assert.AreEqual(result.Count, 3);
+        Assert.AreEqual(result[0], worldController2);
+        Assert.AreEqual(result[1], worldController4);
+        Assert.AreEqual(result[2], worldController5);
+    }
+
+    #endregion
 }

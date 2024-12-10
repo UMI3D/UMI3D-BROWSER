@@ -34,6 +34,32 @@ namespace umi3d.browserRuntime.worldController
             }
         }
 
+        public List<WorldController> SortedList
+        {
+            get
+            {
+                List<WorldController> result = new(worldControllers);
+
+                result.Sort(Sort);
+
+                return result;
+            }
+        }
+
+        public List<WorldController> filteredAndSortedList
+        {
+            get
+            {
+                List<WorldController> result = worldControllers
+                    .Where(Filter)
+                    .ToList();
+
+                result.Sort(Sort);
+
+                return result;
+            }
+        }
+
         #region Filtering
 
         public bool? isFavorite;
@@ -41,12 +67,6 @@ namespace umi3d.browserRuntime.worldController
         public Period firstConnectionPeriod;
         public Period lastConnectionPeriod;
 
-        #endregion
-
-        public WorldControllersFiltered(List<WorldController> worldControllers) 
-        {
-            this.worldControllers = worldControllers;
-        }
 
         public bool Filter(WorldController worldController)
         {
@@ -131,6 +151,51 @@ namespace umi3d.browserRuntime.worldController
 
             return false;
         }
+
+        #endregion
+
+        #region Sorting
+
+        public SortingField sortingField;
+        public Sorting sorting;
+
+        public int Sort(WorldController wc1, WorldController w2)
+        {
+            switch (sortingField)
+            {
+                case SortingField.FirstConnection:
+                    return SortByDate(wc1.firstConnection, w2.firstConnection);
+                case SortingField.LastConnection:
+                    return SortByDate(wc1.lastConnection, w2.lastConnection);
+                default:
+                    UnityEngine.Debug.Log($"Error: Unhandled case.");
+                    return 0;
+            }
+        }
+
+        int SortByDate(System.DateTime wc1, System.DateTime wc2)
+        {
+            if (wc1 < wc2)
+            {
+                return sorting == Sorting.Ascending ? -1 : 1;
+            }
+            else if (wc1 == wc2)
+            {
+                return 0;
+            }
+            else
+            {
+                return sorting == Sorting.Ascending ? 1 : -1;
+            }
+        }
+
+        #endregion
+
+        public WorldControllersFiltered(List<WorldController> worldControllers) 
+        {
+            this.worldControllers = worldControllers;
+        }
+
 
         public IEnumerator<WorldController> GetEnumerator()
         {

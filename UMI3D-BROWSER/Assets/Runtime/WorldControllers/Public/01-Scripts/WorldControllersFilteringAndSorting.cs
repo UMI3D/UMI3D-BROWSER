@@ -20,7 +20,7 @@ using System.Linq;
 
 namespace umi3d.browserRuntime.worldController
 {
-    public class WorldControllersFiltered : IEnumerable<WorldController>
+    public class WorldControllersFilteringAndSorting : IEnumerable<WorldController>
     {
         List<WorldController> worldControllers;
 
@@ -191,11 +191,10 @@ namespace umi3d.browserRuntime.worldController
 
         #endregion
 
-        public WorldControllersFiltered(List<WorldController> worldControllers) 
+        public WorldControllersFilteringAndSorting(List<WorldController> worldControllers) 
         {
             this.worldControllers = worldControllers;
         }
-
 
         public IEnumerator<WorldController> GetEnumerator()
         {

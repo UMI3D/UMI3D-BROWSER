@@ -220,18 +220,18 @@ namespace umi3d.browserRuntime.worldController
 
         #endregion
 
-        #region Filter
+        #region Filtering and Sorting
 
-        WorldControllersFiltered _filtered;
-        WorldControllersFiltered filtered
+        WorldControllersFilteringAndSorting _filteringAndSorting;
+        WorldControllersFilteringAndSorting filteringAndSorting
         {
             get
             {
-                if (_filtered == null)
+                if (_filteringAndSorting == null)
                 {
-                    _filtered = new(data.worldControllers);
+                    _filteringAndSorting = new(data.worldControllers);
                 }
-                return _filtered;
+                return _filteringAndSorting;
             }
         }
 

@@ -220,33 +220,18 @@ namespace umi3d.browserRuntime.worldController
 
         #endregion
 
-        #region Favorites
+        #region Filtering and Sorting
 
-        public IEnumerable<WorldController> favorites
+        WorldControllersFilteringAndSorting _filteringAndSorting;
+        WorldControllersFilteringAndSorting filteringAndSorting
         {
             get
             {
-                return data.worldControllers.Where(worldController => worldController.isFavorite);
-            }
-        }
-
-        #endregion
-
-        #region Sorted By
-
-        public IEnumerable<WorldController> sortByFirstConnection
-        {
-            get
-            {
-                return data.worldControllers.OrderBy(worldController => worldController.firstConnection);
-            }
-        }
-
-        public IEnumerable<WorldController> sortByLastConnection
-        {
-            get
-            {
-                return data.worldControllers.OrderBy(worldController => worldController.lastConnection).Reverse();
+                if (_filteringAndSorting == null)
+                {
+                    _filteringAndSorting = new(data.worldControllers);
+                }
+                return _filteringAndSorting;
             }
         }
 

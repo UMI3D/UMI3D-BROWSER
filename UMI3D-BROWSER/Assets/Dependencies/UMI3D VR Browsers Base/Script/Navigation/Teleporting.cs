@@ -79,12 +79,23 @@ namespace umi3dVRBrowsersBase.navigation
             Debug.LogError("Commented when merged");
 
             Vector3? position = arc.GetPointedPoint();
+
+            Debug.Log("REMY Position teleport Arc -> " + position.Value);
+
+
             if (position.HasValue)
             {
                 if (GroupTeleportation.isGroupTeleport)
                 {
                     Debug.Log("REMY : Teleporting.Teleport.isGroupTeleport=true");
-                    groupTeleportation.TeleportGroup(position.Value, teleportingObject.transform, centerEyeAnchor.transform);
+                    // Capture la position initiale
+                    groupTeleportation.OnTeleportStart(teleportingObject.transform);
+
+                    // Effectue la téléportation
+                    TeleportIndividual(position.Value);
+
+                    // Capture la position finale
+                    groupTeleportation.OnTeleportEnd(teleportingObject.transform, position.Value.y);
                 }
                 else
                 {
@@ -97,12 +108,11 @@ namespace umi3dVRBrowsersBase.navigation
         // Function of individual teleportation
         private void TeleportIndividual(Vector3 position)
         {
-            Debug.Log("REMY : Teleport Individual");
+            Debug.Log("REMY : Teleport Individual + position Y -> " + position.y);
 
-            Vector3 offset = teleportingObject.transform.rotation * centerEyeAnchor.transform.localPosition;
-            teleportingObject.transform.position = new Vector3(position.x - offset.x,
-                                                                   position.y,
-                                                                   position.z - offset.z);
+            Vector3 offset = centerEyeAnchor.transform.position - teleportingObject.transform.position;
+
+            teleportingObject.transform.position = new Vector3(position.x - offset.x, position.y, position.z - offset.z);
         }
     }
 }

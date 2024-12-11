@@ -29,6 +29,8 @@ namespace umi3d.browserRuntime.navigation
         /// </summary>
         public static bool isGroupTeleport = true; //TODO: Remettre à false une fois initialisé au lancement selon si arène en AR et déplacement de groupe activé A RETIRER AVANT MERGE DE LA BRANCHE SINON AR POUR TOUT LE MONDE
 
+        private Vector3 initialPlayerPosition;
+
         /*/// <summary>
         /// Flag for using common guardian
         /// </summary>
@@ -37,27 +39,42 @@ namespace umi3d.browserRuntime.navigation
         /// <summary>
         /// Function of group teleportation
         /// </summary>
-        public void TeleportGroup(Vector3 newPosition, Transform transformPlayer, Transform transformCamera)
+        /// 
+
+        public void OnTeleportStart(Transform transformPlayer)
         {
-            Debug.Log("REMY : Ok Teleport Group !! ");
+            // Sauvegarde la position initiale
+            initialPlayerPosition = transformPlayer.position;
+            Debug.Log("REMY : Position initiale sauvegardée : " + initialPlayerPosition);
+        }
 
-            // Calculate the offset of the leader
-            Vector3 leaderOffset = transformPlayer.rotation * transformCamera.localPosition;
-            Vector3Dto teleportLeaderPosition = new Vector3Dto() { X = newPosition.x - leaderOffset.x, Y = newPosition.y - leaderOffset.y, Z = newPosition.z - leaderOffset.z }; // Appliquez cet offset à la nouvelle position pour le leader
+        public void OnTeleportEnd(Transform transformPlayer, float Yposition)
+        {
+            // Récupère la position finale après la téléportation
+            Vector3 finalPlayerPosition = new Vector3(transformPlayer.position.x, Yposition, transformPlayer.position.z);
+            Vector3 teleportationVector = new Vector3(finalPlayerPosition.x - initialPlayerPosition.x, Yposition , finalPlayerPosition.z - initialPlayerPosition.z);
 
-            // Position of leader before teleportation
-            Vector3 currentLeaderPosition = transformPlayer.position;
+            Debug.Log("REMY : Téléportation terminée. Vecteur de déplacement : " + teleportationVector);
 
+            // Envoie le vecteur de déplacement au serveur
+            SendTeleportationVectorToServer(teleportationVector);
+        }
+
+
+        private void SendTeleportationVectorToServer(Vector3 teleportationVector)
+        {
             var tGroupRequest = new TeleportGroupRequestDto()
             {
-                teleportLeaderPosition = teleportLeaderPosition,
-                currentLeaderPosition = new Vector3Dto() { X = currentLeaderPosition.x, Y = currentLeaderPosition.y, Z = currentLeaderPosition.z }
+                teleportationVector = new Vector3Dto()
+                {
+                    X = teleportationVector.x,
+                    Y = teleportationVector.y,
+                    Z = teleportationVector.z
+                }
             };
 
             UMI3DClientServer.SendRequest(tGroupRequest, true);
-
-            // Move the leader to the new position
-            transformPlayer.position = new Vector3(teleportLeaderPosition.X, teleportLeaderPosition.Y, teleportLeaderPosition.Z);
+            Debug.Log("REMY : Vecteur de déplacement envoyé au serveur : " + teleportationVector);
         }
     }
 }

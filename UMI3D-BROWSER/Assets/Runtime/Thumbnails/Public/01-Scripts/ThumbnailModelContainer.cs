@@ -18,7 +18,7 @@ using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.thumbnails
 {
-    internal class ThumbnailModelContainer : MonoBehaviour
+    public class ThumbnailModelContainer : MonoBehaviour
     {
         ThumbnailModel _model;
         public ThumbnailModel model

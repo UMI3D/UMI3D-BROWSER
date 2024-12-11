@@ -18,7 +18,7 @@ using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.thumbnails
 {
-    internal class ThumbnailsModelContainer : MonoBehaviour
+    public class ThumbnailsModelContainer : MonoBehaviour
     {
         ThumbnailsModel _model;
         public ThumbnailsModel model
@@ -30,14 +30,6 @@ namespace umi3d.browserRuntime.ui.thumbnails
                     _model = new();
                 }
                 return _model;
-            }
-        }
-
-        void Awake()
-        {
-            if (_model == null)
-            {
-                _model = new();
             }
         }
     }

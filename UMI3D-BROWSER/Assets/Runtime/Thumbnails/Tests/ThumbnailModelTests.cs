@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using NUnit.Framework;
 using umi3d.browserRuntime.ui.thumbnails;
 using UnityEngine;
-using UnityEngine.TestTools;
 
 public class ThumbnailModelTests
 {

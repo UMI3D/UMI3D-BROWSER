@@ -15,10 +15,7 @@ limitations under the License.
 */
 using System.Collections;
 using System.Collections.Generic;
-using umi3d.cdk;
-using umi3d.common.interaction;
 using UnityEngine;
-using inetum.unityUtils;
 
 namespace umi3d.baseBrowser.inputs.interactions
 {
@@ -59,61 +56,5 @@ namespace umi3d.baseBrowser.inputs.interactions
             });
 
         }
-    }
-
-
-    public class DrawingManager : Singleton<DrawingManager>
-    {
-        public DrawingInteractionDto current;
-        public ulong currentEnvironmentId;
-
-        static public bool IsAvailableFor(DrawingInteractionDto drawing)
-        {
-            return Instance?.current == null || Instance?.current == drawing;
-        }
-
-        static public bool SwitchDrawing(ulong environmentId, DrawingInteractionDto drawing, bool forceOff = false)
-        {
-            return Instance?.InternalSwitchDrawing(environmentId, drawing, forceOff) ?? false;
-        }
-
-        protected bool InternalSwitchDrawing(ulong environmentId, DrawingInteractionDto drawing, bool forceOff = false)
-        {
-            if (this.current == null)
-            {
-                if(forceOff)
-                    return false;
-
-                this.current = drawing;
-                this.currentEnvironmentId = environmentId;
-                StartDrawingMode(drawing);
-                return true;
-            }
-
-            if (this.current != drawing)
-                throw new System.Exception("Drawing is already under going");
-
-            StopDrawingMode(drawing);
-            this.current = null;
-            return false;
-        }
-
-        protected virtual void StartDrawingMode(DrawingInteractionDto drawing)
-        {}
-
-        protected virtual void StopDrawingMode(DrawingInteractionDto drawing)
-        {}
-
-        public virtual void StartDrawing(DrawingInteractionDto drawing)
-        {}
-
-        public virtual void StopDrawing(DrawingInteractionDto drawing)
-        {}
-
-        public virtual Vector3? GetDrawingWorldPoint(DrawingInteractionDto drawing, List<UMI3DNodeInstance> nodes)
-        {
-            return null;
-        }
-
     }
 }

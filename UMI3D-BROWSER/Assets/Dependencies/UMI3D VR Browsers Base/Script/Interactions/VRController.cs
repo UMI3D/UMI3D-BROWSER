@@ -15,13 +15,19 @@ limitations under the License.
 */
 
 using System.Collections.Generic;
+using System.Linq;
+using umi3d.baseBrowser.cursor;
+using umi3d.baseBrowser.inputs.interactions;
+using umi3d.cdk;
 using umi3d.cdk.interaction;
 using umi3d.cdk.menu;
 using umi3d.cdk.menu.interaction;
 using umi3d.cdk.userCapture.tracking;
 using umi3d.common;
 using umi3d.common.interaction;
+using umi3dBrowsers.interaction.selection.zoneselection;
 using umi3dVRBrowsersBase.interactions.input;
+using umi3dVRBrowsersBase.interactions.selection.cursor;
 using umi3dVRBrowsersBase.ui.playerMenu;
 using UnityEngine;
 
@@ -70,6 +76,11 @@ namespace umi3dVRBrowsersBase.interactions
 
         protected virtual void Awake()
         {
+            if (!VRDrawingManager.Exists)
+                new VRDrawingManager();
+
+            (VRDrawingManager.Instance as VRDrawingManager).Declare(this);
+
             ObjectMenu = Resources.Load<MenuAsset>("ParametersMenu");
 
             UnityEngine.Physics.queriesHitBackfaces = true;
@@ -356,5 +367,56 @@ namespace umi3dVRBrowsersBase.interactions
         }
 
         #endregion Methods
+    }
+
+
+    public class VRDrawingManager : DrawingManager
+    {
+        List<(VRController,RayCursor)> vRControllers = new();
+
+        public void Declare(VRController controller)
+        {
+           vRControllers.Add((controller, controller.gameObject.GetComponentInChildren<RayCursor>()));
+        }
+
+        public float distance = 1.5f;
+        public float objectDistance = 3f;
+        public float offset = 0.01f;
+
+        public override Vector3? GetDrawingWorldPoint(DrawingInteractionDto drawing, List<UMI3DNodeInstance> nodes)
+        {
+
+            var cursor = vRControllers
+                .FirstOrDefault(c =>
+                        c.Item1.HoldInput.CurrentInteraction() == drawing
+                        || c.Item1.booleanInputs
+                                .Any(b => b.CurrentInteraction() == drawing)
+                ).Item2;
+
+            if (nodes != null && nodes.Count > 0)
+            {
+                var zone = new RaySelectionZone<NodeContainer>(cursor.transform.position, cursor.transform.up);
+                foreach(var nodeAndRay in zone.GetObjectsOnRayWithRayCastHits())
+                    if(nodes.Contains(nodeAndRay.Key.instance))
+                        return nodeAndRay.Value.point + nodeAndRay.Value.normal * offset;
+            }
+
+            if (drawing.CanDrawInSpace)
+                return cursor.transform.position + cursor.transform.up * offset;
+            
+            return null;
+        }
+
+        //protected override void StartDrawingMode(DrawingInteractionDto drawing)
+        //{
+        //    base.StartDrawingMode(drawing);
+        //    BaseCursor.SetMovement(this, BaseCursor.CursorMovement.Drawing);
+        //}
+
+        //protected override void StopDrawingMode(DrawingInteractionDto drawing)
+        //{
+        //    base.StopDrawingMode(drawing);
+        //    BaseCursor.UnSetMovement(this);
+        //}
     }
 }

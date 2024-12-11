@@ -19,7 +19,7 @@ using UnityEngine;
 
 namespace umi3d.baseBrowser.inputs.interactions
 {
-    public class DrawGroupeForDesktop : BaseDrawGroup
+    public class DrawGroupForDesktop : BaseDrawGroup
     {
         /// <summary>
         /// List of inputs that will be used to manipulate an interactable.

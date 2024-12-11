@@ -107,7 +107,7 @@ namespace umi3d.desktopBrowser.Controller
             ManipulationGroup.Menu = Controller.ManipulationMenu.menu;
             ManipulationGroup.InstanciateManipulation = InstanciateManipulation;
 
-            (DrawGroup as DrawGroupeForDesktop).Bind(Controller, KeyboardToggleInteraction, KeyboardDrawInteraction);
+            (DrawGroup as DrawGroupForDesktop).Bind(Controller, KeyboardToggleInteraction, KeyboardDrawInteraction);
             DrawGroup.bone = Controller.interactionBoneType;
             DrawGroup.Menu = Controller.ManipulationMenu.menu;
             DrawGroup.boneTransform = Controller.hoverBoneTransform;

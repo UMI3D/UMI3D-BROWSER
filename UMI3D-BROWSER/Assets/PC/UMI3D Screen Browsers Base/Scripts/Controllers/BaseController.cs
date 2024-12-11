@@ -133,7 +133,7 @@ namespace umi3d.baseBrowser.Controller
                     Controller = this,
                     ObjectMenu = ObjectMenu,
                     ManipulationGroup = ManipulationGroupInputs.Find(a => a is ManipulationGroupeForDesktop),
-                    DrawGroup = DrawGroupInputs.Find(a => a is DrawGroupeForDesktop),
+                    DrawGroup = DrawGroupInputs.Find(a => a is DrawGroupForDesktop),
                 }
             );
             m_controllers.Add

@@ -33,6 +33,30 @@ namespace umi3d.browserRuntime.ui.thumbnails
             /// Value is <see cref="ThumbnailContentMode"/>.
             /// </remarks>
             public const string ContentMode = "ContentMode";
+
+            /// <summary>
+            /// The size of the grid.
+            /// </summary>
+            /// <remarks>
+            /// Value is <see cref="Vector2"/>.
+            /// </remarks>
+            public const string Size = "Size";
+
+            /// <summary>
+            /// The row count of the grid.
+            /// </summary>
+            /// <remarks>
+            /// Value is <see cref="int"/>.
+            /// </remarks>
+            public const string RowCount = "RowCount";
+
+            /// <summary>
+            /// The spacing of the grid.
+            /// </summary>
+            /// <remarks>
+            /// Value is <see cref="Vector2"/>.
+            /// </remarks>
+            public const string Spacing = "Spacing";
         }
 
         /// <summary>
@@ -61,36 +85,6 @@ namespace umi3d.browserRuntime.ui.thumbnails
             /// Value is <see cref="bool"/>.
             /// </remarks>
             public const string IsVisible = "IsVisible";
-        }
-
-        /// <summary>
-        /// Event raised when the properties of the grid will change.
-        /// </summary>
-        public class GridPropertiesWillChange
-        {
-            /// <summary>
-            /// The size of the grid.
-            /// </summary>
-            /// <remarks>
-            /// Value is <see cref="Vector2"/>.
-            /// </remarks>
-            public const string Size = "Size";
-
-            /// <summary>
-            /// The row count of the grid.
-            /// </summary>
-            /// <remarks>
-            /// Value is <see cref="int"/>.
-            /// </remarks>
-            public const string RowCount = "RowCount";
-
-            /// <summary>
-            /// The spacing of the grid.
-            /// </summary>
-            /// <remarks>
-            /// Value is <see cref="Vector2"/>.
-            /// </remarks>
-            public const string Spacing = "Spacing";
         }
 
         /// <summary>

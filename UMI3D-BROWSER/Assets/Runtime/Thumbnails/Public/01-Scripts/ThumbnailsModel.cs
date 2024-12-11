@@ -36,9 +36,6 @@ namespace umi3d.browserRuntime.ui.thumbnails
             SliderButtonVisibilityNotifier = NotificationHub.Default
                .GetNotifier<ThumbnailsNotificationKeys.SliderButtonVisibilityWillChange>(this);
 
-            gridPropertiesNotifier = NotificationHub.Default
-                .GetNotifier<ThumbnailsNotificationKeys.GridPropertiesWillChange>(this);
-
             thumbnailAddedNotifier = NotificationHub.Default
                 .GetNotifier<ThumbnailsNotificationKeys.Added>(this);
 
@@ -47,55 +44,6 @@ namespace umi3d.browserRuntime.ui.thumbnails
 
             popupNotifier = new(this);
         }
-
-        #region Content mode
-
-        public const int SMALL_THUMBNAIL_PER_PAGE = 8;
-        public const int MEDIUM_THUMBNAIL_PER_PAGE = 3;
-        public const int LARGE_THUMBNAIL_PER_PAGE = 2;
-
-        public ThumbnailContentMode contentMode;
-        public ThumbnailContentMode primaryContentMode;
-        public ThumbnailContentMode secondaryContentMode;
-
-        Notifier contentModeNotifier;
-
-        public void SetContentMode(ThumbnailContentMode contentMode)
-        {
-            this.contentMode = contentMode;
-            contentModeNotifier[ThumbnailsNotificationKeys.ContentModeChanged.ContentMode] = contentMode;
-            contentModeNotifier.Notify();
-        }
-
-        /// <summary>
-        /// Switch between <see cref="ThumbnailContentMode.Large"/> and <see cref="ThumbnailContentMode.Small"/>
-        /// </summary>
-        public void ToggleContentMode()
-        {
-            contentMode = contentMode == primaryContentMode
-               ? secondaryContentMode
-               : primaryContentMode;
-            contentModeNotifier[ThumbnailsNotificationKeys.ContentModeChanged.ContentMode] = contentMode;
-            contentModeNotifier.Notify();
-        }
-
-        public int NumberOfEmptyToDisplay()
-        {
-            switch (contentMode)
-            {
-                case ThumbnailContentMode.Small:
-                    return Mathf.Max(0, SMALL_THUMBNAIL_PER_PAGE - thumbnails.Count); 
-                case ThumbnailContentMode.Middle:
-                    return Mathf.Max(0, MEDIUM_THUMBNAIL_PER_PAGE - thumbnails.Count);
-                case ThumbnailContentMode.Large:
-                    return Mathf.Max(0, LARGE_THUMBNAIL_PER_PAGE - thumbnails.Count);
-                default:
-                    UnityEngine.Debug.LogError($"Error: Unhandled case.");
-                    return 0;
-            }
-        }
-
-        #endregion
 
         #region Horizontal slider
 
@@ -144,6 +92,10 @@ namespace umi3d.browserRuntime.ui.thumbnails
 
         #region Layout
 
+        public const int SMALL_THUMBNAIL_PER_PAGE = 8;
+        public const int MEDIUM_THUMBNAIL_PER_PAGE = 3;
+        public const int LARGE_THUMBNAIL_PER_PAGE = 2;
+
         public ThumbnailsGridProperties smallContentModeLayout = 
             new ThumbnailsGridProperties(
                 size: new(169f, 111f), 
@@ -163,21 +115,80 @@ namespace umi3d.browserRuntime.ui.thumbnails
                 spacing: new(24f, 30f)
             );
 
+        public ThumbnailContentMode contentMode;
+        public ThumbnailContentMode primaryContentMode;
+        public ThumbnailContentMode secondaryContentMode;
+
         public Vector2 gridSize;
         public int gridRowCount;
         public Vector2 gridSpacing;
 
-        Notifier gridPropertiesNotifier;
+        Notifier contentModeNotifier;
 
-        public void SetGridProperties(Vector2 gridSize, int gridRowCount, Vector2 gridSpacing)
+        public void SetContentMode(ThumbnailContentMode contentMode)
         {
-            this.gridSize = gridSize;
-            this.gridRowCount = gridRowCount;
-            this.gridSpacing = gridSpacing;
-            gridPropertiesNotifier[ThumbnailsNotificationKeys.GridPropertiesWillChange.Size] = gridSize;
-            gridPropertiesNotifier[ThumbnailsNotificationKeys.GridPropertiesWillChange.RowCount] = gridRowCount;
-            gridPropertiesNotifier[ThumbnailsNotificationKeys.GridPropertiesWillChange.Spacing] = gridSpacing;
-            gridPropertiesNotifier.Notify();
+            this.contentMode = contentMode;
+            UpdateGrid();
+            contentModeNotifier[ThumbnailsNotificationKeys.ContentModeChanged.ContentMode] = contentMode;
+            contentModeNotifier[ThumbnailsNotificationKeys.ContentModeChanged.Size] = gridSize;
+            contentModeNotifier[ThumbnailsNotificationKeys.ContentModeChanged.RowCount] = gridRowCount;
+            contentModeNotifier[ThumbnailsNotificationKeys.ContentModeChanged.Spacing] = gridSpacing;
+            contentModeNotifier.Notify();
+        }
+
+        /// <summary>
+        /// Switch between <see cref="ThumbnailContentMode.Large"/> and <see cref="ThumbnailContentMode.Small"/>
+        /// </summary>
+        public void ToggleContentMode()
+        {
+            contentMode = contentMode == primaryContentMode
+               ? secondaryContentMode
+               : primaryContentMode;
+            UpdateGrid();
+            contentModeNotifier[ThumbnailsNotificationKeys.ContentModeChanged.ContentMode] = contentMode;
+            contentModeNotifier[ThumbnailsNotificationKeys.ContentModeChanged.Size] = gridSize;
+            contentModeNotifier[ThumbnailsNotificationKeys.ContentModeChanged.RowCount] = gridRowCount;
+            contentModeNotifier[ThumbnailsNotificationKeys.ContentModeChanged.Spacing] = gridSpacing;
+            contentModeNotifier.Notify();
+        }
+
+        public int NumberOfEmptyToDisplay()
+        {
+            switch (contentMode)
+            {
+                case ThumbnailContentMode.Small:
+                    return Mathf.Max(0, SMALL_THUMBNAIL_PER_PAGE - thumbnails.Count);
+                case ThumbnailContentMode.Middle:
+                    return Mathf.Max(0, MEDIUM_THUMBNAIL_PER_PAGE - thumbnails.Count);
+                case ThumbnailContentMode.Large:
+                    return Mathf.Max(0, LARGE_THUMBNAIL_PER_PAGE - thumbnails.Count);
+                default:
+                    UnityEngine.Debug.LogError($"Error: Unhandled case.");
+                    return 0;
+            }
+        }
+
+        void UpdateGrid()
+        {
+            ThumbnailsGridProperties layout;
+            switch (contentMode)
+            {
+                case ThumbnailContentMode.Small:
+                    layout = smallContentModeLayout;
+                    break;
+                case ThumbnailContentMode.Middle:
+                    layout = middleContentModeLayout;
+                    break;
+                case ThumbnailContentMode.Large:
+                    layout = largeContentModeLayout;
+                    break;
+                default:
+                    UnityEngine.Debug.Log($"Error: Unhandled case.");
+                    return;
+            }
+            gridSize = layout.size;
+            gridRowCount = layout.rowCount;
+            gridSpacing = layout.spacing;
         }
 
         #endregion

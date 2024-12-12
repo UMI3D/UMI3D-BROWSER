@@ -129,7 +129,19 @@ namespace BrowserDesktop
 
             StartCoroutine(SynchronizationCoroutine());
 
+            StartCoroutine(CheckIfCorrectlyStarted());
+
             IsSynchronizing = false;
+        }
+
+        private IEnumerator CheckIfCorrectlyStarted()
+        {
+            var wait = new WaitForSeconds((browser.browserClient.engineStartupTimeout/1000f) + 4f);
+
+            yield return wait;
+
+            if (!browser.browserClient.ReadySignalReceived)
+                NotifyErrorOnStartUp();
         }
 
         /// <summary>

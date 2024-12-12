@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using umi3d.baseBrowser.cursor;
+using umi3d.browserRuntime.inputField;
 using umi3d.browserRuntime.notificationKeys;
 using umi3d.browserRuntime.ui.inGame.tablet;
 using umi3d.cdk;
@@ -34,7 +35,7 @@ namespace umi3d.browserRuntime.contextualMenu
     {
         [SerializeField] private Transform content;
         [SerializeField] private Button clsoeButton;
-        [SerializeField] private GameObject stringParameterDisplayPrefab;
+        [SerializeField] private InputFieldFactory inputFieldModel;
         [SerializeField] private GameObject booleanParameterDisplayPrefab;
         [SerializeField] private GameObject sliderParameterDisplayPrefab;
         [SerializeField] private GameObject dropdownParameterDisplayPrefab;
@@ -90,14 +91,17 @@ namespace umi3d.browserRuntime.contextualMenu
             {
                 case StringParameterDto stringParameter:
                 {
-                    var stringGameObject = Instantiate(stringParameterDisplayPrefab, content);
-                    stringGameObject.GetComponentInChildren<TMP_Text>().text = stringParameter.name;
-                    var inputfield = stringGameObject.GetComponentInChildren<TMP_InputField>();
-                    inputfield.text = stringParameter.value;
-                    inputfield.onSubmit.AddListener(newValue => {
-                        stringParameter.value = newValue;
-                        SendRequest(stringParameter);
-                    });
+                    var stringGameObject = inputFieldModel.CreateInputField(content, 
+                        stringParameter.name, 
+                        stringParameter.value,
+                        null,
+                        stringParameter.IsMultiLine, 
+                        stringParameter.NbLine, 
+                        newValue => {
+                            stringParameter.value = newValue;
+                            SendRequest(stringParameter);
+                        }
+                    );
                     return;
                 }
                 case BooleanParameterDto booleanParameter:

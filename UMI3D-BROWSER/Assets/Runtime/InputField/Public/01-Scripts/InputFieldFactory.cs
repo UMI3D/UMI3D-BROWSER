@@ -14,32 +14,59 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// Todo : Add Pooling
-// Todo : Work with the model view
-
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.inputField
 {
     [Serializable]
-    public class InputFieldFactory 
+    public class InputFieldFactory : MonoBehaviour
     {
-        [SerializeField] GameObject singleLinePrefab;
-        [SerializeField] GameObject multiLinePrefab;
+        [SerializeField] InputFieldModelContainer singleLinePrefab;
+        [SerializeField] InputFieldModelContainer multiLinePrefab;
 
-        public GameObject CreateInputField(Transform parent, string title, string value, string placeholder, bool isMultiline, int nbLine, Action<string> onTextSubmited = null)
+        List<InputFieldModelContainer> lstInputFieldsUsed;
+        Queue<InputFieldModelContainer> lstInputFieldsAvailable;
+
+        public GameObject GetOrCreateInputField(Transform parent, string title, string value, string placeholder, bool isMultiline, int nbLine, Action<string> onTextSubmited = null)
         {
             if (nbLine < 1) nbLine = 1;
 
-            var inputFieldGameobject = GameObject.Instantiate(isMultiline ? multiLinePrefab : singleLinePrefab);
-            /*
-            inputFieldGameobject.GetComponent<InputFieldTitleView>().SetTitle(title);
-            inputFieldGameobject.GetComponent<InputFieldView>().Setup(value, placeholder, isMultiline ? nbLine : 1, onTextSubmited);
+            InputFieldModelContainer inputFieldModelContainer;
+            if (!lstInputFieldsAvailable.TryDequeue(out inputFieldModelContainer))
+                inputFieldModelContainer = GameObject.Instantiate(isMultiline ? multiLinePrefab : singleLinePrefab);
 
-            inputFieldGameobject.transform.SetParent(parent, false);*/
+            inputFieldModelContainer.gameObject.SetActive(true);
+            inputFieldModelContainer.transform.SetParent(parent, false);
 
-            return inputFieldGameobject;
+            if (title != null || title != string.Empty)
+                inputFieldModelContainer.model.SetTitle(title);
+            if (value != null || value != string.Empty)
+                inputFieldModelContainer.model.SetValue(value);
+            if (placeholder != null || placeholder != string.Empty)
+                inputFieldModelContainer.model.SetPlaceholder(placeholder);
+            if (nbLine != 1)
+                inputFieldModelContainer.model.SetNbrLines(isMultiline ? nbLine : 1);
+
+            return inputFieldModelContainer.gameObject;
+        }
+
+        public void Return(GameObject inputFieldGameobject)
+        {
+            var inputFieldModelContainer = inputFieldGameobject.GetComponent<InputFieldModelContainer>();
+            if (!inputFieldModelContainer)
+                return;
+
+            if (!lstInputFieldsUsed.Contains(inputFieldModelContainer))
+                return;
+
+            lstInputFieldsUsed.Remove(inputFieldModelContainer);
+            lstInputFieldsAvailable.Append(inputFieldModelContainer);
+
+            inputFieldModelContainer.gameObject.SetActive(false);
+            inputFieldModelContainer.transform.SetParent(transform, false);
         }
     }
 }

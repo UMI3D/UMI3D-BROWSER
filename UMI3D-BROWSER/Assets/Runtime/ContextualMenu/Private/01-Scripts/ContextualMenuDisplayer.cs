@@ -91,7 +91,7 @@ namespace umi3d.browserRuntime.contextualMenu
             {
                 case StringParameterDto stringParameter:
                 {
-                    var stringGameObject = inputFieldModel.CreateInputField(content, 
+                    var stringGameObject = inputFieldModel.GetOrCreateInputField(content, 
                         stringParameter.name, 
                         stringParameter.value,
                         null,

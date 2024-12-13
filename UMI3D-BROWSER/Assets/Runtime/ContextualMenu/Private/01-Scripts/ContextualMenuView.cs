@@ -15,9 +15,12 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
+using System.Collections.Generic;
+using System.Security.Cryptography;
 using umi3d.baseBrowser.cursor;
 using umi3d.browserRuntime.notificationKeys;
 using umi3d.browserRuntime.ui.inGame.tablet;
+using umi3d.common.interaction;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.contextualMenu
@@ -37,8 +40,14 @@ namespace umi3d.browserRuntime.ui.contextualMenu
             gameObject.SetActive(false);
         }
 
-        private void Display()
+        private void Display(Notification notification)
         {
+            if (!notification.TryGetInfoT(InteractionNotificationKeys.DisplayParameters.parameters, out List<AbstractParameterDto> parameters))
+                return;
+
+            if (gameObject.activeSelf || parameters.Count <= 0)
+                return;
+
             gameObject.SetActive(true);
             BaseCursor.SetMovement(this, BaseCursor.CursorMovement.Free);
         }

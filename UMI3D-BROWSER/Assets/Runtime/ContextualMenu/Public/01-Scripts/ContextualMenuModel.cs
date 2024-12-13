@@ -15,14 +15,18 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
+using System;
 using System.Collections.Generic;
 using umi3d.browserRuntime.notificationKeys;
+using umi3d.browserRuntime.ui.inGame.tablet;
 using umi3d.common.interaction;
 
 namespace umi3d.browserRuntime.ui.contextualMenu
 {
     public class ContextualMenuModel
     {
+        bool _isActive = false;
+
         Notifier _addParameterNotifier;
 
         public ContextualMenuModel()
@@ -30,8 +34,11 @@ namespace umi3d.browserRuntime.ui.contextualMenu
             _addParameterNotifier = NotificationHub.Default.GetNotifier<ContextualMenuNotificationKeys.AddParameter>(this);
 
             NotificationHub.Default.Subscribe<InteractionNotificationKeys.DisplayParameters>(this, DisplayParameters);
+
+            NotificationHub.Default.Subscribe<ContextualMenuNotificationKeys.Close>(this, Hide);
+            NotificationHub.Default.Subscribe(this, TabletNotificationKeys.Open, Hide);
         }
-        
+
         ~ContextualMenuModel()
         {
             NotificationHub.Default.Unsubscribe(this);
@@ -42,8 +49,9 @@ namespace umi3d.browserRuntime.ui.contextualMenu
             if (!notification.TryGetInfoT(InteractionNotificationKeys.DisplayParameters.parameters, out List<AbstractParameterDto> parameters))
                 return;
 
-            if (parameters.Count <= 0)
+            if (_isActive || parameters.Count <= 0)
                 return;
+            _isActive = true;
 
             var paramtersTemp = new List<AbstractParameterDto>(parameters);
             paramtersTemp.Reverse(); // Reverse to show element above in front (layout in the object is set to reverse too)
@@ -53,6 +61,11 @@ namespace umi3d.browserRuntime.ui.contextualMenu
                 _addParameterNotifier[ContextualMenuNotificationKeys.AddParameter.Parameter] = param;
                 _addParameterNotifier.Notify();
             }
+        }
+
+        private void Hide(Notification notification)
+        {
+            _isActive = false;
         }
     }
 }

@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using umi3d.baseBrowser.cursor;
 using umi3d.baseBrowser.inputs.interactions;
 using umi3d.cdk;
+using umi3d.cdk.interaction;
 using umi3d.common.interaction;
 using umi3dVRBrowsersBase.interactions.selection.cursor;
 using umi3dVRBrowsersBase.ui;
@@ -30,7 +31,7 @@ namespace umi3d.desktopBrowser.Controller
         public float objectDistance = 3f;
         public float offset = 0.01f;
 
-        public override Vector3? GetDrawingWorldPoint(DrawingInteractionDto drawing, List<UMI3DNodeInstance> nodes)
+        public override Vector3? GetDrawingWorldPoint(DrawingInteractionDto drawing, List<UMI3DNodeInstance> nodes, AbstractUMI3DInput input)
         {
             var screenPos = Input.mousePosition;
             if (nodes != null && nodes.Count > 0)

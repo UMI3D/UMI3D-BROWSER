@@ -79,8 +79,6 @@ namespace umi3dVRBrowsersBase.interactions
             if (!VRDrawingManager.Exists)
                 new VRDrawingManager();
 
-            (VRDrawingManager.Instance as VRDrawingManager).Declare(this);
-
             ObjectMenu = Resources.Load<MenuAsset>("ParametersMenu");
 
             UnityEngine.Physics.queriesHitBackfaces = true;
@@ -89,6 +87,11 @@ namespace umi3dVRBrowsersBase.interactions
                 input.Init(this);
             foreach (AbstractUMI3DInput input in booleanInputs)
                 input.Init(this);
+        }
+
+        private void Start()
+        {
+            (VRDrawingManager.Instance as VRDrawingManager).Declare(this);
         }
 
         protected virtual void Update()
@@ -382,27 +385,28 @@ namespace umi3dVRBrowsersBase.interactions
         public float distance = 1.5f;
         public float objectDistance = 3f;
         public float offset = 0.01f;
+        public float handOffset = 0f;
 
-        public override Vector3? GetDrawingWorldPoint(DrawingInteractionDto drawing, List<UMI3DNodeInstance> nodes)
+        public override Vector3? GetDrawingWorldPoint(DrawingInteractionDto drawing, List<UMI3DNodeInstance> nodes, AbstractUMI3DInput input)
         {
 
             var cursor = vRControllers
                 .FirstOrDefault(c =>
-                        c.Item1.HoldInput.CurrentInteraction() == drawing
+                        c.Item1.HoldInput == input
                         || c.Item1.booleanInputs
-                                .Any(b => b.CurrentInteraction() == drawing)
+                                .Any(b => b == input)
                 ).Item2;
 
             if (nodes != null && nodes.Count > 0)
             {
                 var zone = new RaySelectionZone<NodeContainer>(cursor.transform.position, cursor.transform.up);
                 foreach(var nodeAndRay in zone.GetObjectsOnRayWithRayCastHits())
-                    if(nodes.Contains(nodeAndRay.Key.instance))
+                    if(nodeAndRay.Value.distance <= distance &&  nodes.Contains(nodeAndRay.Key.instance))
                         return nodeAndRay.Value.point + nodeAndRay.Value.normal * offset;
             }
 
             if (drawing.CanDrawInSpace)
-                return cursor.transform.position + cursor.transform.up * offset;
+                return cursor.transform.position + cursor.transform.up * handOffset;
             
             return null;
         }

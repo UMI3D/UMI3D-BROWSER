@@ -223,7 +223,7 @@ namespace umi3d.baseBrowser.inputs.interactions
             if (associatedInteraction is not DrawingInteractionDto drawing)
                 return;
 
-            Vector3? positionTMP = DrawingManager.Instance.GetDrawingWorldPoint(drawing, meshes);
+            Vector3? positionTMP = DrawingManager.Instance.GetDrawingWorldPoint(drawing, meshes, this);
             if (!positionTMP.HasValue)
                 return;
             Vector3 position = positionTMP.Value;

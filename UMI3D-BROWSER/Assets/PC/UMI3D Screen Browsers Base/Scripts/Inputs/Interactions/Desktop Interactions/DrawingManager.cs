@@ -18,6 +18,7 @@ using umi3d.cdk;
 using umi3d.common.interaction;
 using UnityEngine;
 using inetum.unityUtils;
+using umi3d.cdk.interaction;
 
 namespace umi3d.baseBrowser.inputs.interactions
 {
@@ -69,7 +70,7 @@ namespace umi3d.baseBrowser.inputs.interactions
         public virtual void StopDrawing(DrawingInteractionDto drawing)
         {}
 
-        public virtual Vector3? GetDrawingWorldPoint(DrawingInteractionDto drawing, List<UMI3DNodeInstance> nodes)
+        public virtual Vector3? GetDrawingWorldPoint(DrawingInteractionDto drawing, List<UMI3DNodeInstance> nodes, AbstractUMI3DInput input)
         {
             return null;
         }

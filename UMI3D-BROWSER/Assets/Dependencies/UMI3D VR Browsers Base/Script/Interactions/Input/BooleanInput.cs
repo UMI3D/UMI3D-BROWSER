@@ -72,6 +72,7 @@ namespace umi3dVRBrowsersBase.interactions.input
         [HideInInspector]
         public static VRInteractionEvent BooleanEvent = new VRInteractionEvent();
 
+        public ulong environmentId { get; protected set; }
 
         bool isDrawing = false;
 
@@ -132,13 +133,15 @@ namespace umi3dVRBrowsersBase.interactions.input
 
             if (IsCompatibleWith(interaction))
             {
+                this.environmentId = environmentId;
+
                 vrInput.AddOnStateUpListener(VRInput_onStateUp);
                 vrInput.AddOnStateDownListener(VRInput_onStateDown);
 
                 risingEdgeEventSent = false;
                 isDrawing = false;
 
-                UnityAction<bool> action = (bool pressDown) =>
+                UnityAction<bool> action = async (bool pressDown) =>
                 {
                     DrawingInteractionDto drawing = interaction as DrawingInteractionDto;
                     if (pressDown)
@@ -157,6 +160,35 @@ namespace umi3dVRBrowsersBase.interactions.input
                             }, true);
                             risingEdgeEventSent = true;
                             isDrawing = drawing != null;
+
+                            if (isDrawing)
+                            {
+                                if (drawing.LineId != 0)
+                                {
+                                    var lineEntity = await UMI3DEnvironmentLoader.Instance.WaitUntilEntityLoaded(this.environmentId, drawing.LineId, new());
+                                    if ((lineEntity?.dto as GlTFNodeDto)?.extensions?.umi3d is UMI3DLineDto lineDto && lineEntity is UMI3DNodeInstance node)
+                                    {
+                                        var template = UMI3DLineRendererLoader.GetOrCreateLine(node.GameObject, lineDto.clientLineId);
+                                        var c = UMI3DLineRendererLoader.CopyLine(this.gameObject, template);
+                                        lineId = c.Item2;
+                                        c.Item1.positionCount = 0;
+                                        positions.Clear();
+                                    }
+                                }
+                                else
+                                    lineId = null;
+
+                                if (drawing.MeshIds != null)
+                                    foreach (var meshId in drawing.MeshIds)
+                                    {
+                                        var meshEntity = await UMI3DEnvironmentLoader.Instance.WaitUntilEntityLoaded(this.environmentId, meshId, new());
+                                        if (meshEntity is UMI3DNodeInstance node)
+                                            meshes.Add(node);
+                                    }
+                                else
+                                    meshes.Clear();
+                            }
+
                         }
                         else
                         {
@@ -213,11 +245,16 @@ namespace umi3dVRBrowsersBase.interactions.input
                                     boneRotation = boneTransform.rotation.Dto(),
                                 }, true);
                                 risingEdgeEventSent = false;
-                                isDrawing = false;
+                               
                             }
+
                         }
                         (controller as VRController).IsInputPressed = false;
                         isDown = false;
+                        isDrawing = false;
+                        lineId = null;
+                        positions.Clear();
+                        meshes.Clear();
                         onInputUp.Invoke();
 
 
@@ -321,6 +358,9 @@ namespace umi3dVRBrowsersBase.interactions.input
 
             risingEdgeEventSent = false;
             isDrawing = false;
+            lineId = null;
+            positions.Clear();
+            meshes.Clear();
         }
 
         /// <summary>
@@ -344,7 +384,7 @@ namespace umi3dVRBrowsersBase.interactions.input
             if (associatedInteraction is not DrawingInteractionDto drawing)
                 return;
 
-            Vector3? positionTMP = DrawingManager.Instance.GetDrawingWorldPoint(drawing, meshes);
+            Vector3? positionTMP = DrawingManager.Instance.GetDrawingWorldPoint(drawing, meshes, this);
             if (!positionTMP.HasValue)
                 return;
             Vector3 position = positionTMP.Value;

@@ -27,12 +27,10 @@ namespace umi3d.browserRuntime.inputField
         [SerializeField] InputFieldModelContainer _singleLinePrefab;
         [SerializeField] InputFieldModelContainer _multiLinePrefab;
 
-        List<InputFieldModelContainer> _lstInputFieldsUsed = new();
         Queue<InputFieldModelContainer> _lstInputFieldsAvailable = new();
 
         public GameObject GetOrCreateInputField(Transform parent, bool isMultiline)
         {
-            Debug.Log("GetOrCreateInputField", this);
             InputFieldModelContainer inputFieldModelContainer;
             if (!_lstInputFieldsAvailable.TryDequeue(out inputFieldModelContainer))
                 inputFieldModelContainer = GameObject.Instantiate(isMultiline ? _multiLinePrefab : _singleLinePrefab);
@@ -67,11 +65,7 @@ namespace umi3d.browserRuntime.inputField
             if (!inputFieldModelContainer)
                 return;
 
-            if (!_lstInputFieldsUsed.Contains(inputFieldModelContainer))
-                return;
-
-            _lstInputFieldsUsed.Remove(inputFieldModelContainer);
-            _lstInputFieldsAvailable.Append(inputFieldModelContainer);
+            _lstInputFieldsAvailable.Enqueue(inputFieldModelContainer);
 
             inputFieldModelContainer.gameObject.SetActive(false);
             inputFieldModelContainer.transform.SetParent(transform, false);

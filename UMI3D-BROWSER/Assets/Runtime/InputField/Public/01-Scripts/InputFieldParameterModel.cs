@@ -40,7 +40,6 @@ namespace umi3d.browserRuntime.inputField
 
         public void SetDto(StringParameterDto newDto)
         {
-            UnityEngine.Debug.Log("SetDto");
             dto = newDto;
             model.SetTitle(dto.name);
             model.SetValue(dto.value);

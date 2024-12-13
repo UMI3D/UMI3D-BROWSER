@@ -53,10 +53,10 @@ namespace umi3d.browserRuntime.inputField
             {
                 _inputField.text = value;
             }
+            /* TODO : Update height with nbr of line
             if (notification.TryGetInfoT(InputFieldNotificationsKeys.InputFieldSet.NbrLine, out string nbrLine))
             {
-                // TODO : Update height with nbr of line
-            }
+            }*/
         }
     }
 }

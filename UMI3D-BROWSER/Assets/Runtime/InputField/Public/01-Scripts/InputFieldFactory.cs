@@ -24,22 +24,30 @@ namespace umi3d.browserRuntime.inputField
     [Serializable]
     public class InputFieldFactory : MonoBehaviour
     {
-        [SerializeField] InputFieldModelContainer singleLinePrefab;
-        [SerializeField] InputFieldModelContainer multiLinePrefab;
+        [SerializeField] InputFieldModelContainer _singleLinePrefab;
+        [SerializeField] InputFieldModelContainer _multiLinePrefab;
 
-        List<InputFieldModelContainer> lstInputFieldsUsed;
-        Queue<InputFieldModelContainer> lstInputFieldsAvailable;
+        List<InputFieldModelContainer> _lstInputFieldsUsed = new();
+        Queue<InputFieldModelContainer> _lstInputFieldsAvailable = new();
 
-        public GameObject GetOrCreateInputField(Transform parent, string title, string value, string placeholder, bool isMultiline, int nbLine, Action<string> onTextSubmited = null)
+        public GameObject GetOrCreateInputField(Transform parent, bool isMultiline)
         {
-            if (nbLine < 1) nbLine = 1;
-
+            Debug.Log("GetOrCreateInputField", this);
             InputFieldModelContainer inputFieldModelContainer;
-            if (!lstInputFieldsAvailable.TryDequeue(out inputFieldModelContainer))
-                inputFieldModelContainer = GameObject.Instantiate(isMultiline ? multiLinePrefab : singleLinePrefab);
+            if (!_lstInputFieldsAvailable.TryDequeue(out inputFieldModelContainer))
+                inputFieldModelContainer = GameObject.Instantiate(isMultiline ? _multiLinePrefab : _singleLinePrefab);
 
             inputFieldModelContainer.gameObject.SetActive(true);
             inputFieldModelContainer.transform.SetParent(parent, false);
+
+            return inputFieldModelContainer.gameObject;
+        }
+
+        public GameObject GetOrCreateInputField(Transform parent, string title, string value, string placeholder, bool isMultiline, int nbLine)
+        {
+            if (nbLine < 1) nbLine = 1;
+
+            InputFieldModelContainer inputFieldModelContainer = GetOrCreateInputField(parent, isMultiline).GetComponent<InputFieldModelContainer>();
 
             if (title != null || title != string.Empty)
                 inputFieldModelContainer.model.SetTitle(title);
@@ -59,11 +67,11 @@ namespace umi3d.browserRuntime.inputField
             if (!inputFieldModelContainer)
                 return;
 
-            if (!lstInputFieldsUsed.Contains(inputFieldModelContainer))
+            if (!_lstInputFieldsUsed.Contains(inputFieldModelContainer))
                 return;
 
-            lstInputFieldsUsed.Remove(inputFieldModelContainer);
-            lstInputFieldsAvailable.Append(inputFieldModelContainer);
+            _lstInputFieldsUsed.Remove(inputFieldModelContainer);
+            _lstInputFieldsAvailable.Append(inputFieldModelContainer);
 
             inputFieldModelContainer.gameObject.SetActive(false);
             inputFieldModelContainer.transform.SetParent(transform, false);

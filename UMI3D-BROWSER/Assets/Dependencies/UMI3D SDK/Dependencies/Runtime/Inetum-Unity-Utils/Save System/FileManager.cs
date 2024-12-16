@@ -16,7 +16,7 @@ limitations under the License.
 using System;
 using System.IO;
 using UnityEngine;
-using InetumPath = inetum.unityUtils.Path;
+using InetumPath = inetum.unityUtils.systemIO.Path;
 
 namespace inetum.unityUtils.saveSystem
 {

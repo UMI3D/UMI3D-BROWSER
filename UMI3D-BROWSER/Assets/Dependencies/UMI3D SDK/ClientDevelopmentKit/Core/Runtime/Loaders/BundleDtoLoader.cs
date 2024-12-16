@@ -131,12 +131,12 @@ namespace umi3d.cdk
 #endif
                         }
 
-                        AssetBundleUnloadOperation op = bundle.UnloadAsync(false);
+                        var op = bundle.UnloadAsync(false);
 
                         while (op.isDone)
                             await UMI3DAsyncManager.Yield();
                     }
-                    catch(System.Exception ex)
+                    catch (System.Exception ex)
                     {
                         UMI3DLogger.LogException(ex, scope);
                     }
@@ -190,7 +190,7 @@ namespace umi3d.cdk
                     string matchingPath = data.assets.Keys.FirstOrDefault(path => path.Contains(pathIfObjectInBundle));
                     if (matchingPath != null)
                         result = data.assets[matchingPath];
-                        
+
                     if (result != null)
                     {
                         isAsset = true;
@@ -279,7 +279,7 @@ namespace umi3d.cdk
 
             foreach (GameObject obj in scene.GetRootGameObjects())
             {
-                obj.transform.SetParent(sceneObj.transform);              
+                obj.transform.SetParent(sceneObj.transform);
 
                 foreach (Camera cam in obj.GetComponentsInChildren<Camera>())
                 {

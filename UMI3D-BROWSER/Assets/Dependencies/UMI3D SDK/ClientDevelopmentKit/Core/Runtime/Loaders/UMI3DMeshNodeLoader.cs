@@ -256,7 +256,7 @@ namespace umi3d.cdk
             }
         }
 
-        private async Task CallbackAfterLoadingForMesh(ulong environmentId,GameObject go, UMI3DMeshNodeDto dto, Transform parent, Vector3 rotationOffsetByLoader, object data)
+        private async Task CallbackAfterLoadingForMesh(ulong environmentId, GameObject go, UMI3DMeshNodeDto dto, Transform parent, Vector3 rotationOffsetByLoader, object data)
         {
             var modelTracker = parent.gameObject.AddComponent<ModelTracker>();
             GameObject root = null;
@@ -274,7 +274,7 @@ namespace umi3d.cdk
 
             GameObject instance = null;
             UMI3DNodeInstance nodeInstance = environmentManager.GetNodeInstance(environmentId, dto.id);
-           
+
             instance = GameObject.Instantiate(root, parent, true);
 
             if (data is Scene scene)

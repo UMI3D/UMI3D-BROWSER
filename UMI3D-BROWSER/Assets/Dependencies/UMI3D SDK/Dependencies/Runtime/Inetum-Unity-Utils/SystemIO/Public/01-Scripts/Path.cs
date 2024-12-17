@@ -20,10 +20,16 @@ namespace inetum.unityUtils.systemIO
 {
     public static class Path
     {
-        public static readonly char[] charsToTrim = { 
+        static readonly char[] charsToTrim = { 
             System.IO.Path.DirectorySeparatorChar, 
             System.IO.Path.AltDirectorySeparatorChar 
         };
+
+        static readonly char[] invalidPathChars
+            = System.IO.Path.GetInvalidPathChars();
+
+        static readonly char[] invalidFileNameChars
+            = System.IO.Path.GetInvalidFileNameChars();
 
         /// <summary>
         /// This method combines multiple path strings into a single path, ensuring that directory separators are correctly handled.<br/>
@@ -172,6 +178,65 @@ namespace inetum.unityUtils.systemIO
             }
 
             return path;
+        }
+
+        /// <summary>
+        /// This method checks if a given file name is valid.<br/>
+        /// A valid file name is not null, not empty, and does not contain any invalid characters.<br/>
+        /// <br/>
+        /// <example>
+        /// Given a file name when checking if it is valid then return true or false.<br/>
+        /// <code>
+        /// bool result1 = Path.IsValideFileName(null); // result1 = false
+        /// bool result2 = "".IsValideFileName(); // result2 = false
+        /// bool result3 = "Value".IsValideFileName(); // result3 = true
+        /// </code> 
+        /// </example>
+        /// </summary>
+        /// <param name="fileName">The file name to check.</param>
+        /// <returns>True if the file name is valid, otherwise false.</returns>
+        public static bool IsValideFileName(this string fileName)
+        {
+            if (string.IsNullOrEmpty(fileName)) { return false; }
+
+            foreach (char c in invalidFileNameChars)
+            {
+                if (fileName.Contains(c)) { return false; }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// This method checks if a given path is valid.<br/>
+        /// A valid path is not null, not empty, and does not contain any invalid characters unless allowed.<br/>
+        /// <br/>
+        /// <example>
+        /// Given a path when checking if it is valid then return true or false.<br/>
+        /// <code>
+        /// bool result1 = Path.IsValidePath(null); // result1 = false
+        /// bool result2 = Path.IsValidePath(null, true); // result2 = true
+        /// bool result3 = "".IsValidePath(); // result3 = false
+        /// bool result4 = "".IsValidePath(true); // result4 = true
+        /// bool result5 = "Value".IsValidePath(); // result5 = true
+        /// </code> 
+        /// </example>
+        /// </summary>
+        /// <param name="path">The path to check.</param>
+        /// <param name="allowNullAndEmpty">If true, allows null and empty paths.</param>
+        /// <returns>True if the path is valid, otherwise false.</returns>
+        public static bool IsValidePath(this string path, bool allowNullAndEmpty = false)
+        {
+            if (string.IsNullOrEmpty(path))
+            {
+                if (allowNullAndEmpty) { return true; }
+                else { return false; }
+            }
+
+            foreach (char c in invalidPathChars)
+            {
+                if (path.Contains(c)) { return false; }
+            }
+            return true;
         }
     }
 }

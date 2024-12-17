@@ -475,4 +475,118 @@ public class PathTests
             });
         }
     }
+
+    public class IsValideFileNameTest
+    {
+        [Test]
+        public void GivenNull_WhenIsValideFileName_ThenFalse()
+        {
+            // Nothing
+
+            bool result = Path.IsValideFileName(null);
+
+            Assert.False(result);
+        }
+
+        [Test]
+        public void GivenEmpty_WhenIsValideFileName_ThenFalse()
+        {
+            // Nothing
+
+            bool result = "".IsValideFileName();
+
+            Assert.False(result);
+        }
+
+        [Test]
+        public void GivenInvalid_WhenIsValideFileName_ThenFalse()
+        {
+            char[] invalidFileNameChar
+            = System.IO.Path.GetInvalidFileNameChars();
+
+            foreach (char c in invalidFileNameChar)
+            {
+                bool result = c.ToString().IsValideFileName();
+
+                Assert.False(result);
+            }
+        }
+
+        [Test]
+        public void GivenValideValue_WhenIsValideFileName_ThenTrue()
+        {
+            string value = "Value";
+
+            bool result = value.IsValideFileName();
+
+            Assert.True(result);
+        }
+    }
+
+    public class IsValidePathTest
+    {
+        [Test]
+        public void GivenNull_WhenIsValidePath_ThenFalse()
+        {
+            // Nothing
+
+            bool result = Path.IsValidePath(null);
+
+            Assert.False(result);
+        }
+
+        [Test]
+        public void GivenNull_WhenIsValidePathAllowNullAndEmpty_ThenTrue()
+        {
+            // Nothing
+
+            bool result = Path.IsValidePath(null, true);
+
+            Assert.True(result);
+        }
+
+        [Test]
+        public void GivenEmpty_WhenIsValidePath_ThenFalse()
+        {
+            // Nothing
+
+            bool result = "".IsValidePath();
+
+            Assert.False(result);
+        }
+
+        [Test]
+        public void GivenEmpty_WhenIsValidePathAllowNullAndEmpty_ThenTrue()
+        {
+            // Nothing
+
+            bool result = "".IsValidePath(true);
+
+            Assert.True(result);
+        }
+
+        [Test]
+        public void GivenInvalid_WhenIsValidePath_ThenFalse()
+        {
+            char[] invalidChars
+            = System.IO.Path.GetInvalidPathChars();
+
+            foreach (char c in invalidChars)
+            {
+                bool result = c.ToString().IsValidePath();
+
+                Assert.False(result);
+            }
+        }
+
+        [Test]
+        public void GivenValideValue_WhenIsValidePath_ThenTrue()
+        {
+            string value = "Value";
+
+            bool result = value.IsValidePath();
+
+            Assert.True(result);
+        }
+    }
 }

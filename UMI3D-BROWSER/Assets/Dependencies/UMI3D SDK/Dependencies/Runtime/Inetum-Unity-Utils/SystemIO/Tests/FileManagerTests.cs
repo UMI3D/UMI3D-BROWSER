@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using inetum.unityUtils.systemIO;
 using NUnit.Framework;
 using UnityEngine;

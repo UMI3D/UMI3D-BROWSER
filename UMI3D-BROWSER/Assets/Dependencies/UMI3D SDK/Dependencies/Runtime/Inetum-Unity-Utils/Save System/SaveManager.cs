@@ -169,7 +169,7 @@ namespace inetum.unityUtils.saveSystem
                 case SavingSystem.FileSystem:
                     //return FileManager.MoveFile(fileName, newFileName);
                 case SavingSystem.PlayerPrefs:
-                    return PlayerPrefsManager.MoveFile(fileName, newFileName);
+                    return PlayerPrefsManager.Move(fileName, newFileName);
                 default:
                     Debug.LogError($"Unknown saving system {savingSystem}");
                     return false;

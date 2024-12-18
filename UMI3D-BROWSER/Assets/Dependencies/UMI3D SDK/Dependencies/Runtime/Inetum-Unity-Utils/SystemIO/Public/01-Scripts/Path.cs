@@ -60,7 +60,7 @@ namespace inetum.unityUtils.systemIO
                 result = _Combine(result, trimmedPaths[i]);
             }
 
-            return result;
+            return result.ReplaceSeparatorByAltDirectorySeparatorChar();
         }
 
         static string _Combine(string path1, string path2)

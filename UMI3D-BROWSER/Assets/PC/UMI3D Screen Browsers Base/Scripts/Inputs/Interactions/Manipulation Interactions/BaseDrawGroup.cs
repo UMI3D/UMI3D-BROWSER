@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+using inetum.unityUtils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +32,8 @@ namespace umi3d.baseBrowser.inputs.interactions
         bool isDrawing = false;
         bool isDrawingActive = false;
 
+        ParticleSystem particleSystem;
+
         ulong? lineId;
         List<UMI3DNodeInstance> meshes = new();
 
@@ -45,6 +48,12 @@ namespace umi3d.baseBrowser.inputs.interactions
         [SerializeField] private float lastUpdateTime = 0f;
         [SerializeField] private float timeSynchronization = 0.3f;
         [SerializeField] private float minDistance = 0.01f;
+
+        private void Start()
+        {
+            particleSystem = gameObject.GetComponentInChildren<ParticleSystem>();
+            particleSystem.Stop();
+        }
 
         public override void Associate(ulong environmentId, AbstractInteractionDto interaction, ulong toolId, ulong hoveredObjectId)
         {
@@ -177,6 +186,7 @@ namespace umi3d.baseBrowser.inputs.interactions
                     var c = UMI3DLineRendererLoader.CopyLine(this.gameObject, template);
                     lineId = c.Item2;
                     c.Item1.positionCount = 0;
+
                 }
             }
 
@@ -213,6 +223,9 @@ namespace umi3d.baseBrowser.inputs.interactions
             cdk.UMI3DClientServer.SendRequest(drawingDto, true);
 
             DrawingManager.Instance.StopDrawing(drawing);
+
+            if (particleSystem.isPlaying)
+                particleSystem.Stop();
         }
 
         protected void Update()
@@ -225,13 +238,30 @@ namespace umi3d.baseBrowser.inputs.interactions
 
             Vector3? positionTMP = DrawingManager.Instance.GetDrawingWorldPoint(drawing, meshes, this);
             if (!positionTMP.HasValue)
+            {
+                if (particleSystem.isPlaying)
+                    particleSystem.Stop();
                 return;
+            }
+
             Vector3 position = positionTMP.Value;
 
             if (positions.Count > 0 && Vector3.Distance(position, positions.Last()) < this.minDistance)
             {
+                if (particleSystem.isPlaying)
+                    particleSystem.Stop();
                 return;
             }
+
+            if (positions.Count > 0)
+                particleSystem.transform.SetPositionAndRotation(position, Quaternion.LookRotation(positions.Last() - position));
+            else
+                particleSystem.transform.SetPositionAndRotation(position, Quaternion.LookRotation(Vector3.up));
+
+            if (particleSystem.isStopped)
+                particleSystem.Play();
+
+            particleSystem.Emit(1);
 
             positions.Add(position);
 
@@ -327,6 +357,8 @@ namespace umi3d.baseBrowser.inputs.interactions
             drawInteraction = null;
             isDrawing = false;
             isDrawingActive = false;
+            if (particleSystem.isPlaying)
+                particleSystem.Stop();
         }
 
         protected void RemoveGroup()

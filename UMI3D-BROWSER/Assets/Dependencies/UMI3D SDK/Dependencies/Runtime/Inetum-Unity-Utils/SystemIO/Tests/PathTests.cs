@@ -120,7 +120,7 @@ public class PathTests
         }
 
         [Test]
-        public void GivenValue1BackSlashAndValue2_WhenCombine_ThenValueSlashValue()
+        public void GivenValue1BackslashAndValue2_WhenCombine_ThenValueSlashValue()
         {
             string value1 = "Value1\\";
             string value2 = "Value2";
@@ -128,6 +128,17 @@ public class PathTests
             string result = Path.Combine(value1, value2);
 
             Assert.AreEqual(result, "Value1/Value2");
+        }
+
+        [Test]
+        public void GivenBackslashInTheMiddleOfValue1AndValue2_WhenCombine_ThenValueSlashValueAndTheBackslashReplaceBySlash()
+        {
+            string value1 = "Val\\ue1";
+            string value2 = "Value2";
+
+            string result = Path.Combine(value1, value2);
+
+            Assert.AreEqual(result, "Val/ue1/Value2");
         }
     }
 

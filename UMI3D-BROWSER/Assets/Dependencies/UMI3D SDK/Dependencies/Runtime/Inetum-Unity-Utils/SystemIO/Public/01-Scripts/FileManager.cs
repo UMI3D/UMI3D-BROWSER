@@ -158,11 +158,11 @@ namespace inetum.unityUtils.systemIO
         }
 
         /// <summary>
-        /// This method deletes a file at the given partial file name path.<br/>
+        /// This method deletes a file at the given path.<br/>
         /// It constructs the full path from the partial path, checks if the file exists, and attempts to delete it.<br/>
         /// <br/>
         /// <example>
-        /// Given a partial file name path when deleting the file then return true or false.<br/>
+        /// Given a partial file path when deleting the file then return true or false.<br/>
         /// <code>
         /// bool result1 = FileManager.Delete(null); // result1 = false
         /// bool result2 = FileManager.Delete("TestFile"); // result2 = false (if file does not exist)
@@ -170,19 +170,19 @@ namespace inetum.unityUtils.systemIO
         /// </code> 
         /// </example>
         /// </summary>
-        /// <param name="partialFileNamePath">The partial file name path of the file to delete.</param>
+        /// <param name="filePath">The file path of the file to delete.</param>
         /// <returns>True if the file was successfully deleted, otherwise false.</returns>
-        public static bool Delete(string partialFileNamePath)
+        public static bool Delete(string filePath)
         {
-            string fullPath = FullPathFromPersistentDataPath(partialFileNamePath);
+            string fullPath = FullPathFromPersistentDataPath(filePath);
 
-            if (string.IsNullOrEmpty(partialFileNamePath))
+            if (string.IsNullOrEmpty(filePath))
             {
                 Debug.LogError($"[FileManager.Delete] Try to delete a file (at: {fullPath}) that doesn't exist.");
                 return false;
             }
 
-            if (!Exists(partialFileNamePath))
+            if (!Exists(filePath))
             {
                 if (System.IO.Directory.Exists(fullPath))
                 {
@@ -210,22 +210,32 @@ namespace inetum.unityUtils.systemIO
         }
 
         /// <summary>
-        /// Move a file from <paramref name="fileName"/> to <paramref name="newFileName"/>.<br/>
-        /// If <paramref name="newFileName"/> already exist it will be overridden.
+        /// Moves a file from one location to another, creating directories if needed.<br/>
+        /// <br/>
+        /// <example>
+        /// Given a file path, target directory, and new file name when moving the file then return true and the new path.
+        /// <code>
+        /// bool result = FileManager.Move("TestDirectory/TestFile", "NewTestDirectory", "newTestFile", out string newPath);
+        /// // result = true
+        /// // newPath = "/AppData/LocalLow/CompanyName/ProductName/NewTestDirectory/newTestFile"
+        /// </code>
+        /// </example>
         /// </summary>
-        /// <param name="fileName"></param>
-        /// <param name="newFileName"></param>
-        /// <returns></returns>
+        /// <param name="fileToMovePath">The path of the file to move.</param>
+        /// <param name="directories">The target directory where the file should be moved.</param>
+        /// <param name="fileName">The new name of the file.</param>
+        /// <param name="newPath">The new path of the moved file.</param>
+        /// <returns>True if the file was moved successfully, otherwise false.</returns>
         public static bool Move(
-            string partialFileNamePath,
+            string fileToMovePath,
             string directories,
             string fileName,
             out string newPath
         )
         {
-            string fullPath = FullPathFromPersistentDataPath(partialFileNamePath);
+            string fullPath = FullPathFromPersistentDataPath(fileToMovePath);
 
-            if (!Exists(partialFileNamePath))
+            if (!Exists(fullPath))
             {
                 Debug.LogError($"[FileManager.MoveFile] Failed to move file because file does not exist {fullPath}.");
                 newPath = null;
@@ -282,11 +292,11 @@ namespace inetum.unityUtils.systemIO
         }
 
         /// <summary>
-        /// This method checks if a file exists at the given partial file name path.<br/>
+        /// This method checks if a file exists at the given file path.<br/>
         /// It constructs the full path from the partial path and checks for the file's existence.<br/>
         /// <br/>
         /// <example>
-        /// Given a partial file name path when checking if the file exists then return true or false.<br/>
+        /// Given a file path when checking if the file exists then return true or false.<br/>
         /// <code>
         /// bool result1 = FileManager.Exists(null); // result1 = false
         /// bool result2 = FileManager.Exists(""); // result2 = false
@@ -295,11 +305,11 @@ namespace inetum.unityUtils.systemIO
         /// </code> 
         /// </example>
         /// </summary>
-        /// <param name="partialFileNamePath">The partial file name path to check.</param>
+        /// <param name="filePath">The partial or full file path to check.</param>
         /// <returns>True if the file exists, otherwise false.</returns>
-        public static bool Exists(string partialFileNamePath)
+        public static bool Exists(string filePath)
         {
-            string fullPath = FullPathFromPersistentDataPath(partialFileNamePath);
+            string fullPath = FullPathFromPersistentDataPath(filePath);
             return System.IO.File.Exists(fullPath);
         }
 
@@ -317,6 +327,11 @@ namespace inetum.unityUtils.systemIO
         /// <returns>The full path combining the persistent data path and the given relative path.</returns>
         public static string FullPathFromPersistentDataPath(string path)
         {
+            if (path?.StartsWith(Application.persistentDataPath) ?? false)
+            {
+                path = path.Substring(Application.persistentDataPath.Length);
+            }
+
             return Path.Combine(Application.persistentDataPath, path);
         }
     }

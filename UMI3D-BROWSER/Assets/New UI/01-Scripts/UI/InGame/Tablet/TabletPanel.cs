@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using umi3d.baseBrowser.cursor;
 using UnityEngine;
 using static umi3d.baseBrowser.cursor.BaseCursor;

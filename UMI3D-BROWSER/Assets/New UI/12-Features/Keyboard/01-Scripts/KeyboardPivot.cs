@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using umi3d.browserRuntime.UX;
 using umi3d.cdk.notification;
 using UnityEngine;

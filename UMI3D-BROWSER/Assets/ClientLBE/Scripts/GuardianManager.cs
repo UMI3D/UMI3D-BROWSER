@@ -55,7 +55,7 @@ namespace ClientLBE
         private float orientationOffset;
 
         private List<ARPlane> planesToCalibrate = new List<ARPlane>();
-        private LBEGroupSyncRequestDTO lBEGroupDto = new LBEGroupSyncRequestDTO();
+        public LBEGroupSyncRequestDTO lBEGroupDto = new LBEGroupSyncRequestDTO();
 
         #endregion
 

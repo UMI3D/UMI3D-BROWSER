@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using umi3d.cdk;
 using umi3d.common;
 using umi3d.browserRuntime.navigation;
+using umi3d.cdk.collaboration;
 
 namespace umi3dVRBrowsersBase.navigation
 {
@@ -28,6 +29,9 @@ namespace umi3dVRBrowsersBase.navigation
     /// </summary>
     public class Teleporting : MonoBehaviour
     {
+        public ClientLBE.GuardianManager guardianManager; // Assurez-vous de référencer le GuardianManager
+
+
         /// <summary>
         /// Player object.
         /// </summary>
@@ -38,7 +42,7 @@ namespace umi3dVRBrowsersBase.navigation
         /// </summary>
         public GameObject centerEyeAnchor;
 
-        public GameObject calibrateur;
+        //public GameObject calibrateur;
 
         /// <summary>
         /// Teleportation preview.
@@ -64,15 +68,53 @@ namespace umi3dVRBrowsersBase.navigation
             Debug.Log("REMY : Teleporting script is running.");
         }
 
+        bool IsLeaderInGroup()
+        {
+            if (guardianManager == null)
+            {
+                Debug.LogError("REMI GuardianManagerServer non assigné dans UMI3DLBEManager !");
+                return false;
+            }
+
+            // Vérifie chaque groupe pour voir si leaderId correspond à AdminUserId
+            if (guardianManager.lBEGroupDto != null)
+            {
+                var collaborationServer = UMI3DCollaborationClientServer.Instance; // Accès à l'instance
+                if (collaborationServer != null)
+                {
+                    ulong userId = collaborationServer.GetUserId();
+                    Debug.Log($"REMY ID utilisateur : {userId}");
+
+                   if (guardianManager.lBEGroupDto.AdminUserId == userId)
+                   {
+                       return true;
+                   }
+                    else
+                    {
+                        return false;
+
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                // Aucun groupe trouvé où leaderId est AdminUserId
+                Debug.LogWarning($"REMY : Aucun groupe trouvé où leaderId est AdminUserId.");
+                return false;
+            }         
+        }
+
         // Individual or group teleportation based on the isGroupTeleport flag
         [ContextMenu("Teleport")]
         public void Teleport()
         {
-            Debug.Log("REMY : Go Teleport.");
 
-            if (isLoadingScreenDisplayed)
+            if (isLoadingScreenDisplayed) // A supprimer ?
             {
-                Debug.Log("Teleporting.Teleport.isLoadingScreenDisplayed=false");
                 return;
             }
 
@@ -80,14 +122,12 @@ namespace umi3dVRBrowsersBase.navigation
 
             Vector3? position = arc.GetPointedPoint();
 
-            Debug.Log("REMY Position teleport Arc -> " + position.Value);
-
-
             if (position.HasValue)
             {
-                if (GroupTeleportation.isGroupTeleport)
+                bool isLeader = IsLeaderInGroup();
+
+                if (/*GroupTeleportation.isGroupTeleport*/isLeader == true) // -> controler si le user qui demande la téléportation est un leader ou non
                 {
-                    Debug.Log("REMY : Teleporting.Teleport.isGroupTeleport=true");
                     // Capture la position initiale
                     groupTeleportation.OnTeleportStart(teleportingObject.transform);
 
@@ -99,7 +139,6 @@ namespace umi3dVRBrowsersBase.navigation
                 }
                 else
                 {
-                    Debug.Log("REMY : Teleporting.Teleport.isGroupTeleport=false");
                     TeleportIndividual(position.Value);
                 }
             }
@@ -108,10 +147,7 @@ namespace umi3dVRBrowsersBase.navigation
         // Function of individual teleportation
         private void TeleportIndividual(Vector3 position)
         {
-            Debug.Log("REMY : Teleport Individual + position Y -> " + position.y);
-
             Vector3 offset = centerEyeAnchor.transform.position - teleportingObject.transform.position;
-
             teleportingObject.transform.position = new Vector3(position.x - offset.x, position.y, position.z - offset.z);
         }
     }

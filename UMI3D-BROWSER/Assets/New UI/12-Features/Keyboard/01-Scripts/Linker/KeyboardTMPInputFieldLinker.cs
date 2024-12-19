@@ -14,10 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
-using System.Collections;
-using System.Collections.Generic;
-using umi3d.browserRuntime.NotificationKeys;
+using inetum.unityUtils.observation;
 using UnityEngine;
 using UnityEngine.Events;
 

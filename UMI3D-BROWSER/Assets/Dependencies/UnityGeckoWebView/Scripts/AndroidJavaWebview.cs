@@ -14,8 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
 using inetum.unityUtils.extensions;
+using inetum.unityUtils.observation;
 using System;
 using UnityEngine;
 

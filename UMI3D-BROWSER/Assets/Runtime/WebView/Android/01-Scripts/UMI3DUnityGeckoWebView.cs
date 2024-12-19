@@ -14,8 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 using com.inetum.unitygeckowebview;
-using inetum.unityUtils;
-using System.Collections;
+using inetum.unityUtils.observation;
 using umi3d.cdk;
 using umi3d.common;
 using umi3d.common.interaction;

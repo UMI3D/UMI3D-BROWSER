@@ -14,8 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using System.Collections.Generic;
-using System.ComponentModel;
 using umi3d.baseBrowser.cursor;
 using umi3d.baseBrowser.inputs.interactions;
 using umi3d.browserRuntime.notificationKeys;

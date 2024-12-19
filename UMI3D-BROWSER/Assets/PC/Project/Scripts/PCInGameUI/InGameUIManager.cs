@@ -14,13 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using umi3d.baseBrowser.cursor;
 using umi3d.baseBrowser.inputs.interactions;
 using umi3d.browserRuntime.ui.inGame;
 using umi3d.browserRuntime.ui.inGame.tablet;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using static umi3d.baseBrowser.cursor.BaseCursor;
 
 namespace umi3dBrowsers.ingame_ui

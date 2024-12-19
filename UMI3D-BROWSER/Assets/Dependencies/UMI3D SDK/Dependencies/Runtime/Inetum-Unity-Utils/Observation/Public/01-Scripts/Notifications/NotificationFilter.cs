@@ -18,7 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace inetum.unityUtils
+namespace inetum.unityUtils.observation
 {
     public enum FilterType
     {

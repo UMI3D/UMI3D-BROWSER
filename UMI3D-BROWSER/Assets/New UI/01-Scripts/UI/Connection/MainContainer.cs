@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using System;
 using System.Threading.Tasks;
 using TMPro;
@@ -30,7 +31,6 @@ using umi3dBrowsers.services.title;
 using UnityEngine;
 using UnityEngine.Localization.Settings;
 using UnityEngine.UI;
-using utils.tweens;
 
 namespace umi3dBrowsers
 {

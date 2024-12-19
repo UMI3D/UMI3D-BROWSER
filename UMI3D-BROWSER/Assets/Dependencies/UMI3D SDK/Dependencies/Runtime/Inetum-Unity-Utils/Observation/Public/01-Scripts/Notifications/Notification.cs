@@ -17,7 +17,7 @@ limitations under the License.
 using System;
 using System.Collections.Generic;
 
-namespace inetum.unityUtils
+namespace inetum.unityUtils.observation
 {
     /// <summary>
     /// The notification send by the publisher to the subscribers.

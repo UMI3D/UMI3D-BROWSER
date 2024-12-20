@@ -4,9 +4,18 @@ using inetum.unityUtils.observation;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
+using AutoFixture;
 
 public class NotificationTests
 {
+    public struct FooStruct: IFooA { }
+    public class FooClass: IFooA { }
+    public enum FooEnum { }
+
+    public interface IFooA { }
+
+    public interface IFooB { }
+
     public class ConstructorTest
     {
         [Test]
@@ -123,234 +132,540 @@ public class NotificationTests
 
     public class TryGetInfoTest
     {
-        [Test]
-        public void GivenNotification_WhenTryGetInfoNullKey_ThenLogErrorAndNull()
-        {
-            Notification notificationNullInfo = new("id", this, null);
-            Notification notificationEmptyInfo = new("id", this, new());
-            Notification notificationInfo = new("id", this, new() { { "An info", true } });
+        Fixture fixture;
 
-            LogAssert.Expect(LogType.Error, $"[Notification.TryGetInfo] Error: key is null for notification 'id'.");
+        [SetUp]
+        public void Setup()
+        {
+            fixture = new Fixture();
+        }
+
+        [TearDown]
+        public void Teardown()
+        {
+            fixture = null;
+        }
+
+        [Test]
+        public void GivenNotification_WhenTryGetInfoWithNullKey_ThenLogErrorAndFalseAndNull()
+        {
+            string id = fixture.Create<string>();
+            string key = fixture.Create<string>();
+            Notification notificationNullInfo = new(id, this, null);
+            Notification notificationEmptyInfo = new(id, this, new());
+            Notification notificationInfo = new(id, this, new() { { key, true } });
+
+            LogAssert.Expect(LogType.Error, $"[Notification.TryGetInfo] Error: key is null for notification '{id}'.");
             bool result1 = notificationNullInfo.TryGetInfo(null, out object info1);
-            LogAssert.Expect(LogType.Error, $"[Notification.TryGetInfo] Error: key is null for notification 'id'.");
+            LogAssert.Expect(LogType.Error, $"[Notification.TryGetInfo] Error: key is null for notification '{id}'.");
             bool result2 = notificationEmptyInfo.TryGetInfo(null, out object info2);
-            LogAssert.Expect(LogType.Error, $"[Notification.TryGetInfo] Error: key is null for notification 'id'.");
+            LogAssert.Expect(LogType.Error, $"[Notification.TryGetInfo] Error: key is null for notification '{id}'.");
             bool result3 = notificationInfo.TryGetInfo(null, out object info3);
 
-            //TODO
+            Assert.False(result1);
+            Assert.False(result2);
+            Assert.False(result3);
             Assert.Null(info1);
             Assert.Null(info2);
             Assert.Null(info3);
         }
 
         [Test]
-        public void GivenNotification_WhenTryGetInfoKeyThatDoesNotExist_ThenLogErrorAndNull()
+        public void GivenNotification_WhenTryGetInfoKeyWithUnmatchedKey_ThenLogErrorAndFalseAndNull()
         {
-            Notification notificationNullInfo = new("id", this, null);
-            Notification notificationEmptyInfo = new("id", this, new());
-            Notification notificationInfo = new("id", this, new() { { "An info", true } });
+            string id = fixture.Create<string>();
+            string infoKey = fixture.Create<string>();
+            Notification notificationNullInfo = new(id, this, null);
+            Notification notificationEmptyInfo = new(id, this, new());
+            Notification notificationInfo = new(id, this, new() { { infoKey, true } });
+            string unmatchedKey = fixture.Create<string>();
 
-            string errorMessage = $"[Notification.TryGetInfo] Error: key 'Key that does not exist' not found for notification 'id'.\n" +
+            string errorMessage = $"[Notification.TryGetInfo] Error: key '{unmatchedKey}' not found for notification '{id}'.\n" +
                         $"Reason: info is null.";
             LogAssert.Expect(LogType.Error, errorMessage);
-            bool result1 = notificationNullInfo.TryGetInfo("Key that does not exist", out object info1);
+            bool result1 = notificationNullInfo.TryGetInfo(unmatchedKey, out object info1);
 
-            errorMessage = $"[Notification.TryGetInfo] Error: key 'Key that does not exist' not found for notification 'id'.\n" +
+            errorMessage = $"[Notification.TryGetInfo] Error: key '{unmatchedKey}' not found for notification '{id}'.\n" +
                         $"Reason: info is empty.";
             LogAssert.Expect(LogType.Error, errorMessage);
-            bool result2 = notificationEmptyInfo.TryGetInfo("Key that does not exist", out object info2);
+            bool result2 = notificationEmptyInfo.TryGetInfo(unmatchedKey, out object info2);
 
-            errorMessage = $"[Notification.TryGetInfo] Error: key 'Key that does not exist' not found for notification 'id'.\n" +
-                        $"Reason: info does not contain 'Key that does not exist'.";
+            errorMessage = $"[Notification.TryGetInfo] Error: key '{unmatchedKey}' not found for notification '{id}'.\n" +
+                        $"Reason: info does not contain '{unmatchedKey}'.";
             LogAssert.Expect(LogType.Error, errorMessage);
-            bool result3 = notificationInfo.TryGetInfo("Key that does not exist", out object info3);
+            bool result3 = notificationInfo.TryGetInfo(unmatchedKey, out object info3);
 
-            //TODO
+            Assert.False(result1);
+            Assert.False(result2);
+            Assert.False(result3);
             Assert.Null(info1);
             Assert.Null(info2);
             Assert.Null(info3);
         }
 
         [Test]
-        public void GivenNotification_WhenTryGetInfoNullKeyNoLogError_ThenNull()
+        public void GivenNotification_WhenTryGetInfoWithNullKeyAndNoLogError_ThenFalseAndNull()
         {
-            Notification notificationNullInfo = new("id", this, null);
-            Notification notificationEmptyInfo = new("id", this, new());
-            Notification notificationInfo = new("id", this, new() { { "An info", true } });
+            string id = fixture.Create<string>();
+            string infoKey = fixture.Create<string>();
+            Notification notificationNullInfo = new(id, this, null);
+            Notification notificationEmptyInfo = new(id, this, new());
+            Notification notificationInfo = new(id, this, new() { { infoKey, true } });
 
             bool result1 = notificationNullInfo.TryGetInfo(null, out object info1, false);
             bool result2 = notificationEmptyInfo.TryGetInfo(null, out object info2, false);
             bool result3 = notificationInfo.TryGetInfo(null, out object info3, false);
 
-            //TODO
+            Assert.False(result1);
+            Assert.False(result2);
+            Assert.False(result3);
             Assert.Null(info1);
             Assert.Null(info2);
             Assert.Null(info3);
         }
 
         [Test]
-        public void GivenNotification_WhenTryGetInfoKeyThatDoesNotExistNoLogError_ThenNull()
+        public void GivenNotification_WhenTryGetInfoKeyWithUnmatchedKeyAndNoLogError_ThenFalseAndNull()
         {
-            Notification notificationNullInfo = new("id", this, null);
-            Notification notificationEmptyInfo = new("id", this, new());
-            Notification notificationInfo = new("id", this, new() { { "An info", true } });
+            string id = fixture.Create<string>();
+            string infoKey = fixture.Create<string>();
+            Notification notificationNullInfo = new(id, this, null);
+            Notification notificationEmptyInfo = new(id, this, new());
+            Notification notificationInfo = new(id, this, new() { { infoKey, true } });
+            string unmatchedKey = fixture.Create<string>();
 
-            bool result1 = notificationNullInfo.TryGetInfo("Key that does not exist", out object info1, false);
-            bool result2 = notificationEmptyInfo.TryGetInfo("Key that does not exist", out object info2, false);
-            bool result3 = notificationInfo.TryGetInfo("Key that does not exist", out object info3, false);
+            bool result1 = notificationNullInfo.TryGetInfo(unmatchedKey, out object info1, false);
+            bool result2 = notificationEmptyInfo.TryGetInfo(unmatchedKey, out object info2, false);
+            bool result3 = notificationInfo.TryGetInfo(unmatchedKey, out object info3, false);
 
-            //TODO
+            Assert.False(result1);
+            Assert.False(result2);
+            Assert.False(result3);
             Assert.Null(info1);
             Assert.Null(info2);
             Assert.Null(info3);
         }
 
         [Test]
-        public void GivenNotification_WhenTryGetInfoWithKeyThatExists_ThenValue()
+        public void GivenNotification_WhenTryGetInfoWithClass_ThenTrueAndValue()
         {
-            bool value = true;
-            Notification notification = new("id", this, new() { { "An info", value } });
+            string id = fixture.Create<string>();
+            string infoKey = fixture.Create<string>();
+            FooClass value = new();
+            Notification notification = new(id, this, new() { { infoKey, value } });
 
-            bool result = notification.TryGetInfo("An info", out object info);
+            bool result = notification.TryGetInfo(infoKey, out object info);
 
-            //TODO
+            Assert.True(result);
             Assert.AreEqual(info, value);
         }
 
         [Test]
-        public void GivenNotification_WhenTryGetInfoWithValueNull_ThenValueNull()
+        public void GivenNotification_WhenTryGetInfoWithStruct_ThenTrueAndValue()
         {
+            string id = fixture.Create<string>();
+            string infoKey = fixture.Create<string>();
+            FooStruct value = new();
+            Notification notification = new(id, this, new() { { infoKey, value } });
+
+            bool result = notification.TryGetInfo(infoKey, out object info);
+
+            Assert.True(result);
+            Assert.AreEqual(info, value);
+        }
+
+        [Test]
+        public void GivenNotification_WhenTryGetInfoWithEnum_ThenTrueAndValue()
+        {
+            string id = fixture.Create<string>();
+            string infoKey = fixture.Create<string>();
+            FooEnum value = new();
+            Notification notification = new(id, this, new() { { infoKey, value } });
+
+            bool result = notification.TryGetInfo(infoKey, out object info);
+
+            Assert.True(result);
+            Assert.AreEqual(info, value);
+        }
+
+        [Test]
+        public void GivenNotification_WhenTryGetInfoWithInterface_ThenTrueAndValue()
+        {
+            string id = fixture.Create<string>();
+            string infoKey1 = fixture.Create<string>();
+            string infoKey2 = fixture.Create<string>();
+            IFooA value1 = new FooStruct();
+            IFooA value2 = new FooClass();
+            Notification notification = new(id, this, new() { { infoKey1, value1 }, { infoKey2, value2 } });
+
+            bool result1 = notification.TryGetInfo(infoKey1, out object info1);
+            bool result2 = notification.TryGetInfo(infoKey2, out object info2);
+
+            Assert.True(result1);
+            Assert.AreEqual(info1, value1);
+            Assert.True(result2);
+            Assert.AreEqual(info2, value2);
+        }
+
+        [Test]
+        public void GivenNotification_WhenTryGetInfoWithValueNull_ThenTrueAndValueNull()
+        {
+            string id = fixture.Create<string>();
+            string infoKey = fixture.Create<string>();
             string value = null;
-            Notification notification = new("id", this, new() { { "An info", value } });
+            Notification notification = new(id, this, new() { { infoKey, value } });
 
-            bool result = notification.TryGetInfo("An info", out object info);
+            bool result = notification.TryGetInfo(infoKey, out object info);
 
-            //TODO
+            Assert.True(result);
             Assert.AreEqual(info, value);
         }
     }
 
     public class TryGetInfoTTest
     {
-        [Test]
-        public void GivenNotification_WhenTryGetInfoTNullKey_ThenLogErrorAndNull()
+        Fixture fixture;
+
+        [SetUp]
+        public void Setup()
         {
-            Notification notificationNullInfo = new("id", this, null);
-            Notification notificationEmptyInfo = new("id", this, new());
-            Notification notificationInfo = new("id", this, new() { { "An info", true } });
+            fixture = new Fixture();
+        }
 
-            LogAssert.Expect(LogType.Error, $"[Notification.TryGetInfo] Error: key is null for notification 'id'.");
-            notificationNullInfo.TryGetInfoT(null, out object info1);
-            LogAssert.Expect(LogType.Error, $"[Notification.TryGetInfo] Error: key is null for notification 'id'.");
-            notificationEmptyInfo.TryGetInfoT(null, out object info2);
-            LogAssert.Expect(LogType.Error, $"[Notification.TryGetInfo] Error: key is null for notification 'id'.");
-            notificationInfo.TryGetInfoT(null, out object info3);
+        [TearDown]
+        public void Teardown()
+        {
+            fixture = null;
+        }
 
+        [Test]
+        public void GivenNotification_WhenTryGetInfoTWithNullKey_ThenLogErrorAndFalseAndNull()
+        {
+            string id = fixture.Create<string>();
+            string key = fixture.Create<string>();
+            Notification notificationNullInfo = new(id, this, null);
+            Notification notificationEmptyInfo = new(id, this, new());
+            Notification notificationInfo = new(id, this, new() { { key, true } });
+            string errorMessage = $"[Notification.TryGetInfo] Error: key is null for notification '{id}'.";
+
+            LogAssert.Expect(LogType.Error, errorMessage);
+            bool result1 = notificationNullInfo.TryGetInfoT(null, out object info1);
+            LogAssert.Expect(LogType.Error, errorMessage);
+            bool result2 = notificationEmptyInfo.TryGetInfoT(null, out object info2);
+            LogAssert.Expect(LogType.Error, errorMessage);
+            bool result3 = notificationInfo.TryGetInfoT(null, out object info3);
+
+            Assert.False(result1);
+            Assert.False(result2);
+            Assert.False(result3);
             Assert.Null(info1);
             Assert.Null(info2);
             Assert.Null(info3);
         }
 
         [Test]
-        public void GivenNotification_WhenTryGetInfoTKeyThatDoesNotExist_ThenLogErrorAndNull()
+        public void GivenNotification_WhenTryGetInfoTWithUnmatchedKey_ThenLogErrorAndFalseAndNull()
         {
-            Notification notificationNullInfo = new("id", this, null);
-            Notification notificationEmptyInfo = new("id", this, new());
-            Notification notificationInfo = new("id", this, new() { { "An info", true } });
+            string id = fixture.Create<string>();
+            string infoKey = fixture.Create<string>();
+            Notification notificationNullInfo = new(id, this, null);
+            Notification notificationEmptyInfo = new(id, this, new());
+            Notification notificationInfo = new(id, this, new() { { infoKey, true } });
+            string unmatchedKey = fixture.Create<string>();
+            string errorMessage;
 
-            string errorMessage = $"[Notification.TryGetInfo] Error: key 'Key that does not exist' not found for notification 'id'.\n" +
+            errorMessage = $"[Notification.TryGetInfo] Error: key '{unmatchedKey}' not found for notification '{id}'.\n" +
                         $"Reason: info is null.";
             LogAssert.Expect(LogType.Error, errorMessage);
-            notificationNullInfo.TryGetInfoT("Key that does not exist", out object info1);
+            bool result1 = notificationNullInfo.TryGetInfoT(unmatchedKey, out object info1);
 
-            errorMessage = $"[Notification.TryGetInfo] Error: key 'Key that does not exist' not found for notification 'id'.\n" +
+            errorMessage = $"[Notification.TryGetInfo] Error: key '{unmatchedKey}' not found for notification '{id}'.\n" +
                         $"Reason: info is empty.";
             LogAssert.Expect(LogType.Error, errorMessage);
-            notificationEmptyInfo.TryGetInfoT("Key that does not exist", out object info2);
+            bool result2 = notificationEmptyInfo.TryGetInfoT(unmatchedKey, out object info2);
 
-            errorMessage = $"[Notification.TryGetInfo] Error: key 'Key that does not exist' not found for notification 'id'.\n" +
-                        $"Reason: info does not contain 'Key that does not exist'.";
+            errorMessage = $"[Notification.TryGetInfo] Error: key '{unmatchedKey}' not found for notification '{id}'.\n" +
+                        $"Reason: info does not contain '{unmatchedKey}'.";
             LogAssert.Expect(LogType.Error, errorMessage);
-            notificationInfo.TryGetInfoT("Key that does not exist", out object info3);
+            bool result3 = notificationInfo.TryGetInfoT(unmatchedKey, out object info3);
 
+            Assert.False(result1);
+            Assert.False(result2);
+            Assert.False(result3);
             Assert.Null(info1);
             Assert.Null(info2);
             Assert.Null(info3);
         }
 
         [Test]
-        public void GivenNotification_WhenTryGetInfoTNullKeyNoLogError_ThenNull()
+        public void GivenNotification_WhenTryGetInfoTWithNullKeyNoLogError_ThenFalseAndNull()
         {
-            Notification notificationNullInfo = new("id", this, null);
-            Notification notificationEmptyInfo = new("id", this, new());
-            Notification notificationInfo = new("id", this, new() { { "An info", true } });
+            string id = fixture.Create<string>();
+            string infoKey = fixture.Create<string>();
+            Notification notificationNullInfo = new(id, this, null);
+            Notification notificationEmptyInfo = new(id, this, new());
+            Notification notificationInfo = new(id, this, new() { { infoKey, true } });
 
-            notificationNullInfo.TryGetInfo(null, out object info1, false);
-            notificationEmptyInfo.TryGetInfo(null, out object info2, false);
-            notificationInfo.TryGetInfo(null, out object info3, false);
+            bool result1 = notificationNullInfo.TryGetInfo(null, out object info1, false);
+            bool result2 = notificationEmptyInfo.TryGetInfo(null, out object info2, false);
+            bool result3 = notificationInfo.TryGetInfo(null, out object info3, false);
 
+            Assert.False(result1);
+            Assert.False(result2);
+            Assert.False(result3);
             Assert.Null(info1);
             Assert.Null(info2);
             Assert.Null(info3);
         }
 
         [Test]
-        public void GivenNotification_WhenTryGetInfoTKeyThatDoesNotExistNoLogError_ThenNull()
+        public void GivenNotification_WhenTryGetInfoTWithUnmatchedKeyAndNoLogError_ThenFalseAndNull()
         {
-            Notification notificationNullInfo = new("id", this, null);
-            Notification notificationEmptyInfo = new("id", this, new());
-            Notification notificationInfo = new("id", this, new() { { "An info", true } });
+            string id = fixture.Create<string>();
+            string infoKey = fixture.Create<string>();
+            Notification notificationNullInfo = new(id, this, null);
+            Notification notificationEmptyInfo = new(id, this, new());
+            Notification notificationInfo = new(id, this, new() { { infoKey, true } });
+            string unmatchedKey = fixture.Create<string>();
 
-            notificationNullInfo.TryGetInfo("Key that does not exist", out object info1, false);
-            notificationEmptyInfo.TryGetInfo("Key that does not exist", out object info2, false);
-            notificationInfo.TryGetInfo("Key that does not exist", out object info3, false);
+            bool result1 = notificationNullInfo.TryGetInfo(unmatchedKey, out object info1, false);
+            bool result2 = notificationEmptyInfo.TryGetInfo(unmatchedKey, out object info2, false);
+            bool result3 = notificationInfo.TryGetInfo(unmatchedKey, out object info3, false);
 
+            Assert.False(result1);
+            Assert.False(result2);
+            Assert.False(result3);
             Assert.Null(info1);
             Assert.Null(info2);
             Assert.Null(info3);
         }
 
         [Test]
-        public void GivenNotification_WhenTryGetInfoTWithKeyThatExistsButWrongType_ThenNullAndLogError()
+        public void GivenNotification_WhenTryGetInfoTWithStructValueButWrongType_ThenLogErrorAndFalseAndNull()
         {
-            bool value = true;
-            Notification notification = new("id", this, new() { { "An info", value } });
+            string id = fixture.Create<string>();
+            string infoKey = fixture.Create<string>();
+            FooStruct value = new();
+            Notification notification = new(id, this, new() { { infoKey, value } });
+            string errorMessage;
 
-            string errorMessage = $"[Notification.TryGetInfoT] Error: notification 'id' does not contain key 'An info' of type {typeof(string)}.\n" +
-                        $"Type of the object is {typeof(bool)}.";
+            errorMessage = 
+            $"[Notification.TryGetInfoT] Error: notification '{id}' does not contain key '{infoKey}' of type {typeof(FooClass)}.\n" +
+            $"Type of the object is {typeof(FooStruct)}.";
             LogAssert.Expect(LogType.Error, errorMessage);
-            notification.TryGetInfoT("An info", out string info);
+            bool result1 = notification.TryGetInfoT(infoKey, out FooClass info1);
+            errorMessage =
+            $"[Notification.TryGetInfoT] Error: notification '{id}' does not contain key '{infoKey}' of type {typeof(FooEnum)}.\n" +
+            $"Type of the object is {typeof(FooStruct)}.";
+            LogAssert.Expect(LogType.Error, errorMessage);
+            bool result2 = notification.TryGetInfoT(infoKey, out FooEnum info2);
+            errorMessage =
+            $"[Notification.TryGetInfoT] Error: notification '{id}' does not contain key '{infoKey}' of type {typeof(bool)}.\n" +
+            $"Type of the object is {typeof(FooStruct)}.";
+            LogAssert.Expect(LogType.Error, errorMessage);
+            bool result3 = notification.TryGetInfoT(infoKey, out bool info3);
 
-            Assert.Null(info);
+            Assert.False(result1);
+            Assert.Null(info1);
+            Assert.False(result2);
+            Assert.AreEqual(info2, default(FooEnum));
+            Assert.False(result3);
+            Assert.AreEqual(info3, default(bool));
         }
 
         [Test]
-        public void GivenNotification_WhenTryGetInfoTWithKeyThatExistsAndValueNullButWrongType_ThenNullAndLogError()
+        public void GivenNotification_WhenTryGetInfoTWithClassValueButWrongType_ThenLogErrorAndFalseAndNull()
         {
-            string value = null;
-            Notification notification = new("id", this, new() { { "An info", value } });
+            string id = fixture.Create<string>();
+            string infoKey = fixture.Create<string>();
+            FooClass value = new();
+            Notification notification = new(id, this, new() { { infoKey, value } });
+            string errorMessage;
 
-            string errorMessage = $"[Notification.TryGetInfoT] Error: notification 'id' does not contain key 'An info' of type {typeof(bool)}.\n" +
-                        $"Type of the object is {typeof(string)}.";
+            errorMessage = 
+            $"[Notification.TryGetInfoT] Error: notification '{id}' does not contain key '{infoKey}' of type {typeof(FooStruct)}.\n" +
+            $"Type of the object is {typeof(FooClass)}.";
             LogAssert.Expect(LogType.Error, errorMessage);
-            bool result = notification.TryGetInfoT("An info", out bool info);
+            bool result1 = notification.TryGetInfoT(infoKey, out FooStruct info1);
+            errorMessage =
+            $"[Notification.TryGetInfoT] Error: notification '{id}' does not contain key '{infoKey}' of type {typeof(FooEnum)}.\n" +
+            $"Type of the object is {typeof(FooClass)}.";
+            LogAssert.Expect(LogType.Error, errorMessage);
+            bool result2 = notification.TryGetInfoT(infoKey, out FooEnum info2);
+            errorMessage =
+            $"[Notification.TryGetInfoT] Error: notification '{id}' does not contain key '{infoKey}' of type {typeof(string)}.\n" +
+            $"Type of the object is {typeof(FooClass)}.";
+            LogAssert.Expect(LogType.Error, errorMessage);
+            bool result3 = notification.TryGetInfoT(infoKey, out string info3);
 
-            Assert.False(result);
-            Assert.Null(info);
+            Assert.False(result1);
+            Assert.AreEqual(info1, default(FooStruct));
+            Assert.False(result2);
+            Assert.AreEqual(info2, default(FooEnum));
+            Assert.False(result3);
+            Assert.Null(info3);
         }
 
         [Test]
-        public void GivenNotification_WhenTryGetInfoTWithKeyThatExistsAndValueNull_ThenValue()
+        public void GivenNotification_WhenTryGetInfoTWithEnumValueButWrongType_ThenLogErrorAndFalseAndNull()
         {
-            string value = null;
-            Notification notification = new("id", this, new() { { "An info", value } });
+            string id = fixture.Create<string>();
+            string infoKey = fixture.Create<string>();
+            FooEnum value = new();
+            Notification notification = new(id, this, new() { { infoKey, value } });
+            string errorMessage;
 
-            //string errorMessage = $"[Notification.TryGetInfoT] Error: notification 'id' does not contain key 'An info' of type {typeof(bool)}.\n" +
-            //            $"Type of the object is {typeof(string)}.";
-            //LogAssert.Expect(LogType.Error, errorMessage);
-            notification.TryGetInfoT("An info", out string info);
+            errorMessage =
+            $"[Notification.TryGetInfoT] Error: notification '{id}' does not contain key '{infoKey}' of type {typeof(FooStruct)}.\n" +
+            $"Type of the object is {typeof(FooEnum)}.";
+            LogAssert.Expect(LogType.Error, errorMessage);
+            bool result1 = notification.TryGetInfoT(infoKey, out FooStruct info1);
+            errorMessage =
+            $"[Notification.TryGetInfoT] Error: notification '{id}' does not contain key '{infoKey}' of type {typeof(FooClass)}.\n" +
+            $"Type of the object is {typeof(FooEnum)}.";
+            LogAssert.Expect(LogType.Error, errorMessage);
+            bool result2 = notification.TryGetInfoT(infoKey, out FooClass info2);
+            errorMessage =
+            $"[Notification.TryGetInfoT] Error: notification '{id}' does not contain key '{infoKey}' of type {typeof(LogOption)}.\n" +
+            $"Type of the object is {typeof(FooEnum)}.";
+            LogAssert.Expect(LogType.Error, errorMessage);
+            bool result3 = notification.TryGetInfoT(infoKey, out LogOption info3);
 
-            Assert.Null(info);
+            Assert.False(result1);
+            Assert.AreEqual(info1, default(FooStruct));
+            Assert.False(result2);
+            Assert.Null(info2);
+            Assert.False(result3);
+            Assert.AreEqual(info3, default(LogOption));
+        }
+
+        [Test]
+        public void GivenNotification_WhenTryGetInfoTWithInterfaceValueButWrongType_ThenLogErrorAndFalseAndNull()
+        {
+            // TODO interfaces.
+
+            string id = fixture.Create<string>();
+            string infoKey = fixture.Create<string>();
+            FooEnum value = new();
+            Notification notification = new(id, this, new() { { infoKey, value } });
+            string errorMessage;
+
+            errorMessage =
+            $"[Notification.TryGetInfoT] Error: notification '{id}' does not contain key '{infoKey}' of type {typeof(FooStruct)}.\n" +
+            $"Type of the object is {typeof(FooEnum)}.";
+            LogAssert.Expect(LogType.Error, errorMessage);
+            bool result1 = notification.TryGetInfoT(infoKey, out FooStruct info1);
+            errorMessage =
+            $"[Notification.TryGetInfoT] Error: notification '{id}' does not contain key '{infoKey}' of type {typeof(FooClass)}.\n" +
+            $"Type of the object is {typeof(FooEnum)}.";
+            LogAssert.Expect(LogType.Error, errorMessage);
+            bool result2 = notification.TryGetInfoT(infoKey, out FooClass info2);
+            errorMessage =
+            $"[Notification.TryGetInfoT] Error: notification '{id}' does not contain key '{infoKey}' of type {typeof(LogOption)}.\n" +
+            $"Type of the object is {typeof(FooEnum)}.";
+            LogAssert.Expect(LogType.Error, errorMessage);
+            bool result3 = notification.TryGetInfoT(infoKey, out LogOption info3);
+
+            Assert.False(result1);
+            Assert.AreEqual(info1, default(FooStruct));
+            Assert.False(result2);
+            Assert.Null(info2);
+            Assert.False(result3);
+            Assert.AreEqual(info3, default(LogOption));
+        }
+
+        [Test]
+        public void GivenNotification_WhenTryGetInfoTWithValueNullButWrongValueType_TheLogErrorAndFalseAndNull()
+        {
+            string id = fixture.Create<string>();
+            string infoKey = fixture.Create<string>();
+            FooClass value = null;
+            Notification notification = new(id, this, new() { { infoKey, value } });
+            string errorMessage;
+
+            errorMessage =
+            $"[Notification.TryGetInfoT] Error: notification '{id}' does not contain key '{infoKey}' of type {typeof(FooStruct)}.\n" +
+            $"Type of the object is Unknown because the value is null.";
+            LogAssert.Expect(LogType.Error, errorMessage);
+            bool result1 = notification.TryGetInfoT(infoKey, out FooStruct info1);
+            errorMessage =
+            $"[Notification.TryGetInfoT] Error: notification '{id}' does not contain key '{infoKey}' of type {typeof(FooEnum)}.\n" +
+            $"Type of the object is Unknown because the value is null.";
+            LogAssert.Expect(LogType.Error, errorMessage);
+            bool result2 = notification.TryGetInfoT(infoKey, out FooEnum info2);
+
+            Assert.False(result1);
+            Assert.AreEqual(info1, default(FooStruct));
+            Assert.False(result2);
+            Assert.AreEqual(info2, default(FooEnum));
+        }
+
+        [Test]
+        public void GivenNotification_WhenTryGetInfoTWithValueNullAndRefType_ThenLogWarningAndTrueAndNull()
+        {
+            string id = fixture.Create<string>();
+            string infoKey = fixture.Create<string>();
+            FooClass value = null;
+            Notification notification = new(id, this, new() { { infoKey, value } });
+            string errorMessage;
+
+            errorMessage =
+            $"[Notification.TryGetInfoT] Warning: notification '{id}' has a null value for key '{infoKey}'.\n" +
+            $"The initial type of a null value is Unknown but you are trying to cast it in '{typeof(string)}'.";
+            LogAssert.Expect(LogType.Warning, errorMessage);
+            bool result1 = notification.TryGetInfoT(infoKey, out string info1);
+            errorMessage =
+            $"[Notification.TryGetInfoT] Warning: notification '{id}' has a null value for key '{infoKey}'.\n" +
+            $"The initial type of a null value is Unknown but you are trying to cast it in '{typeof(FooClass)}'.";
+            LogAssert.Expect(LogType.Warning, errorMessage);
+            bool result2 = notification.TryGetInfoT(infoKey, out FooClass info2);
+
+            Assert.True(result1);
+            Assert.Null(info1);
+            Assert.True(result2);
+            Assert.Null(info2);
+        }
+
+        [Test]
+        public void GivenNotification_WhenTryGetInfoTWithClass_ThenTruAndValue()
+        {
+            string id = fixture.Create<string>();
+            string infoKey = fixture.Create<string>();
+            FooClass value = new();
+            Notification notification = new(id, this, new() { { infoKey, value } });
+
+            bool result = notification.TryGetInfoT(infoKey, out FooClass info);
+
+            Assert.True(result);
+            Assert.AreEqual(info, value);
+        }
+
+        [Test]
+        public void GivenNotification_WhenTryGetInfoTWithEnum_ThenTruAndValue()
+        {
+            string id = fixture.Create<string>();
+            string infoKey = fixture.Create<string>();
+            FooEnum value = new();
+            Notification notification = new(id, this, new() { { infoKey, value } });
+
+            bool result = notification.TryGetInfoT(infoKey, out FooEnum info);
+
+            Assert.True(result);
+            Assert.AreEqual(info, value);
+        }
+
+        [Test]
+        public void GivenNotification_WhenTryGetInfoTWithStruct_ThenTruAndValue()
+        {
+            string id = fixture.Create<string>();
+            string infoKey = fixture.Create<string>();
+            FooStruct value = new();
+            Notification notification = new(id, this, new() { { infoKey, value } });
+
+            bool result = notification.TryGetInfoT(infoKey, out FooStruct info);
+
+            Assert.True(result);
+            Assert.AreEqual(info, value);
         }
     }
 }

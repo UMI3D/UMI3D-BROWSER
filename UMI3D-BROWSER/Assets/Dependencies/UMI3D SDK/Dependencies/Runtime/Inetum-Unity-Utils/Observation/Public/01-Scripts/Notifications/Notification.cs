@@ -153,20 +153,44 @@ namespace inetum.unityUtils.observation
                 return false;
             }
 
+            if (infoObject == null)
+            {
+                info = default;
+                string error;
+                Type type = typeof(T);
+                if (type.IsValueType || type.IsEnum)
+                {
+                    if (logError)
+                    {
+                        error =
+                        $"[Notification.TryGetInfoT] Error: notification '{ID}' does not contain key '{key}' of type {typeof(T)}.\n" +
+                        $"Type of the object is Unknown because the value is null.";
+                        UnityEngine.Debug.LogError(error);
+                    }
+                    return false;
+                } else
+                {
+                    if (logError)
+                    {
+                        error =
+                        $"[Notification.TryGetInfoT] Warning: notification '{ID}' has a null value for key '{key}'.\n" +
+                        $"The initial type of a null value is Unknown but you are trying to cast it in '{typeof(T)}'.";
+                        UnityEngine.Debug.LogWarning(error);
+                    }
+                    return true;
+                }
+            }
+
+
             // Try to cast the information.
             if (infoObject is not T infoT)
             {
                 info = default;
-                if (infoObject == null)
-                {
-                    // If infoObject is not T but is null then return true.
-                    return true;
-                }
-
                 if (logError)
                 {
-                    string error = $"[Notification.TryGetInfoT] Error: notification '{ID}' does not contain key '{key}' of type {typeof(T)}.\n" +
-                        $"Type of the object is {infoObject.GetType()}.";
+                    string error = 
+                    $"[Notification.TryGetInfoT] Error: notification '{ID}' does not contain key '{key}' of type {typeof(T)}.\n" +
+                    $"Type of the object is {infoObject.GetType()}.";
                     UnityEngine.Debug.LogError(error);
                 }
                 return false;

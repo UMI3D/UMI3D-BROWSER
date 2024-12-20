@@ -47,7 +47,7 @@ namespace umi3d.baseBrowser.inputs.interactions
 
         [SerializeField] private float lastUpdateTime = 0f;
         [SerializeField] private float timeSynchronization = 0.3f;
-        [SerializeField] private float minDistance = 0.01f;
+        [SerializeField] private float minDistance = 0.05f;
 
         private void Start()
         {

@@ -44,13 +44,36 @@ namespace inetum.unityUtils.observation
         Notification() { }
 
         /// <summary>
-        /// Notification constructor. Initialize all the information
+        /// Initializes a new instance of the Notification class.<br/>
+        /// Logs an error if the id is null or empty, or if the publisher is null.<br/>
+        /// <br/>
+        /// <example>
+        /// Given an id, publisher, and info when constructing a Notification then create a notification.<br/>
+        /// <code>
+        /// Notification notification = new(id, publisher, info);
+        /// // notification.ID == id
+        /// // notification.Publisher == publisher
+        /// // notification.Info == info
+        /// </code>
+        /// </example>
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="publisher"></param>
-        /// <param name="info"></param>
+        /// <param name="id">The unique identifier for the notification.</param>
+        /// <param name="publisher">The publisher of the notification.</param>
+        /// <param name="info">Additional information related to the notification.</param>
         public Notification(string id, object publisher, Dictionary<string, object> info)
         {
+            if (string.IsNullOrEmpty(id))
+            {
+                UnityEngine.Debug.LogError($"[Notification.Notification] Error: create a new notification with id null or empty.");
+            }
+
+            if (publisher == null)
+            {
+                string message = $"[Notification.Notification] Error: create a new notification with a null publisher.\n" +
+                    $"Having a null publisher is a bad practice because it increase complexity while debugging.";
+                UnityEngine.Debug.LogError(message);
+            }
+
             ID = id;
             Publisher = publisher;
             Info = info;
@@ -65,19 +88,53 @@ namespace inetum.unityUtils.observation
         /// <returns></returns>
         public bool TryGetInfo(string key, out Object info, bool logError = true)
         {
-            // If 'Info' is null then there is no additional information.
+            // Key cannot be null.
+            if (key == null)
+            {
+                info = null;
+                if (logError)
+                {
+                    UnityEngine.Debug.LogError($"[Notification.TryGetInfo] Error: key is null for notification '{ID}'.");
+                }
+                return false;
+            }
+
+            string errorMessage;
             if (Info == null)
             {
                 info = null;
                 if (logError)
                 {
-                    UnityEngine.Debug.LogError($"Notification: '{ID}' does not contain info id: '{key}'.");
+                    errorMessage = $"[Notification.TryGetInfo] Error: key '{key}' not found for notification '{ID}'.\n" +
+                        $"Reason: info is null.";
+                    UnityEngine.Debug.LogError(errorMessage);
+                }
+                return false;
+            }
+            else if (Info.Count == 0)
+            {
+                info = null;
+                if (logError)
+                {
+                    errorMessage = $"[Notification.TryGetInfo] Error: key '{key}' not found for notification '{ID}'.\n" +
+                        $"Reason: info is empty.";
+                    UnityEngine.Debug.LogError(errorMessage);
+                }
+                return false;
+            }
+            else if (!Info.TryGetValue(key, out info))
+            {
+                info = null;
+                if (logError)
+                {
+                    errorMessage = $"[Notification.TryGetInfo] Error: key '{key}' not found for notification '{ID}'.\n" +
+                        $"Reason: info does not contain '{key}'.";
+                    UnityEngine.Debug.LogError(errorMessage);
                 }
                 return false;
             }
 
-            // Try to find the value corresponding to that 'key'.
-            return Info.TryGetValue(key, out info);
+            return true;
         }
 
         /// <summary>
@@ -108,8 +165,8 @@ namespace inetum.unityUtils.observation
 
                 if (logError)
                 {
-                    string error = $"Notification: '{ID}' does not contain info id: '{key}' of type {typeof(T)}.";
-                    error += $"\nType of the object is {infoObject.GetType()}\n";
+                    string error = $"[Notification.TryGetInfoT] Error: notification '{ID}' does not contain key '{key}' of type {typeof(T)}.\n" +
+                        $"Type of the object is {infoObject.GetType()}.";
                     UnityEngine.Debug.LogError(error);
                 }
                 return false;

@@ -60,7 +60,7 @@ namespace inetum.unityUtils.observation
         /// <param name="id">The unique identifier for the notification.</param>
         /// <param name="publisher">The publisher of the notification.</param>
         /// <param name="info">Additional information related to the notification.</param>
-        public Notification(string id, object publisher, Dictionary<string, object> info)
+        public Notification(string id, object publisher, Dictionary<string, object> info) : this()
         {
             if (string.IsNullOrEmpty(id))
             {
@@ -80,12 +80,21 @@ namespace inetum.unityUtils.observation
         }
 
         /// <summary>
-        /// Try to get the information stored with this <paramref name="key"/>.<br/>
-        /// Return true if the information exist, else false.
+        /// Tries to retrieve information associated with a given key from the notification.<br/>
+        /// If the key is null or not found, it logs an error (if logError is true) and returns false.<br/>
+        /// <br/>
+        /// <example>
+        /// Given a notification and a key, when the key is found in the notification's info, then return true and the associated info.<br/>
+        /// <code>
+        /// Notification notification = new Notification("id", this, new() { { "key", "value" } });
+        /// bool result = notification.TryGetInfo("key", out object info); // result = true, info = "value"
+        /// </code>
+        /// </example>
         /// </summary>
-        /// <param name="key"></param>
-        /// <param name="info"></param>
-        /// <returns></returns>
+        /// <param name="key">The key to search for in the notification's info.</param>
+        /// <param name="info">The output parameter that will hold the associated info if the key is found.</param>
+        /// <param name="logError">Optional parameter to log errors if the key is not found. Default is true.</param>
+        /// <returns>True if the key is found and info is retrieved; otherwise, false.</returns>
         public bool TryGetInfo(string key, out Object info, bool logError = true)
         {
             // Key cannot be null.
@@ -138,13 +147,23 @@ namespace inetum.unityUtils.observation
         }
 
         /// <summary>
-        /// Try to get the information stored with this <paramref name="key"/>.<br/>
-        /// Return true if the information exist and is of type <typeparamref name="T"/>, else false.
+        /// Tries to retrieve information of a specified type associated with a given key from the notification.<br/>
+        /// If the key is null or not found or if the type does not match, it logs an error (if logError is true) and returns false.<br/>
+        /// If the value is null and the type is a reference type, it logs a warning and returns true.<br/>
+        /// <br/>
+        /// <example>
+        /// Given a notification and a key, when the key is found in the notification's info and the type matches, then return true and the associated info.<br/>
+        /// <code>
+        /// Notification notification = new Notification("id", this, new() { { "key", "value" } });
+        /// bool result = notification.TryGetInfoT("key", out string info); // result = true, info = "value"
+        /// </code>
+        /// </example>
         /// </summary>
-        /// <param name="key"></param>
-        /// <param name="info"></param>
-        /// <param name="logError">Whether a log error will be display if no value is found.</param>
-        /// <returns></returns>
+        /// <typeparam name="T">The type of the information to retrieve.</typeparam>
+        /// <param name="key">The key to search for in the notification's info.</param>
+        /// <param name="info">The output parameter that will hold the associated info if the key is found and the type matches.</param>
+        /// <param name="logError">Optional parameter to log errors if the key is not found or the type does not match. Default is true.</param>
+        /// <returns>True if the key is found and info is retrieved; otherwise, false.</returns>
         public bool TryGetInfoT<T>(string key, out T info, bool logError = true)
         {
             if (!TryGetInfo(key, out object infoObject, logError))
@@ -158,7 +177,8 @@ namespace inetum.unityUtils.observation
                 info = default;
                 string error;
                 Type type = typeof(T);
-                if (type.IsValueType || type.IsEnum)
+                
+                if (!IsNullable(type) && type.IsValueType || type.IsEnum)
                 {
                     if (logError)
                     {
@@ -181,7 +201,6 @@ namespace inetum.unityUtils.observation
                 }
             }
 
-
             // Try to cast the information.
             if (infoObject is not T infoT)
             {
@@ -200,45 +219,9 @@ namespace inetum.unityUtils.observation
             return true;
         }
 
-        /// <summary>
-        /// Try to get the information stored with this <paramref name="key"/>.<br/>
-        /// Return true if the information exist and is of type <see cref="Nullable{T}"/>, else false.
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="info"></param>
-        /// <param name="logError">Whether a log error will be display if no value is found.</param>
-        /// <returns></returns>
-        public bool TryGetInfoNullableT<T>(string key, out Nullable<T> info, bool logError = true)
-            where T : struct
+        bool IsNullable(Type type)
         {
-            if (!TryGetInfo(key, out object infoObject, logError))
-            {
-                info = default;
-                return false;
-            }
-
-            // Try to cast the information.
-            if (infoObject is not T infoT)
-            {
-                info = null;
-                if (infoObject == null)
-                {
-                    // If infoObject is not T but is null then return true.
-                    // No cast exist to Nullable<T>.
-                    return true;
-                }
-
-                if (logError)
-                {
-                    string error = $"Notification: '{ID}' does not contain info id: '{key}' of type {typeof(T)}.";
-                    error += $"\nType of the object is {infoObject.GetType()}";
-                    UnityEngine.Debug.LogError(error);
-                }
-                return false;
-            }
-
-            info = infoT;
-            return true;
+            return Nullable.GetUnderlyingType(type) != null;
         }
 
         /// <summary>

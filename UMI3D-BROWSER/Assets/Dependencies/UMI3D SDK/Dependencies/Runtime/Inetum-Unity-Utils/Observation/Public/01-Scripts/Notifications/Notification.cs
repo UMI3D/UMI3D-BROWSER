@@ -225,18 +225,44 @@ namespace inetum.unityUtils.observation
         }
 
         /// <summary>
-        /// Display a log error.
+        /// Logs an error message indicating that a notification does not contain a specified key.
         /// </summary>
-        /// <param name="subscriber"></param>
-        /// <param name="infoKey"></param>
+        /// <param name="subscriber">The subscriber name.</param>
+        /// <param name="infoKey">The key that is missing in the notification's info</param>
         public void LogError(string subscriber, string infoKey, string message = null)
         {
-            string error = $"[{subscriber}] notification: '{ID}' does not contain info id: '{infoKey}'.";
-            if (!string.IsNullOrEmpty(error))
+            string error = "";
+            if (subscriber == null)
             {
-                error += "\n";
-                error += message;
+                error += "[NULL]";
+            } else if (subscriber == "")
+            {
+                error += "[EMPTY]";
+            } else
+            {
+                error += $"[{subscriber}]";
             }
+
+            error += $" notification: '{ID}' does not contain key: ";
+
+            if (infoKey == null)
+            {
+                error += "'NULL'.";
+            }
+            else if (infoKey == "")
+            {
+                error += "'EMPTY'.";
+            }
+            else
+            {
+                error += $"'{infoKey}'.";
+            }
+
+            if (!string.IsNullOrEmpty(message))
+            {
+                error += "\n" + message;
+            }
+
             UnityEngine.Debug.LogError(error);
         }
     }

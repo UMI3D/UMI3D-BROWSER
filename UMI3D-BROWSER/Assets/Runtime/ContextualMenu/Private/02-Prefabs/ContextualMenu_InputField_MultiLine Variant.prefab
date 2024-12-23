@@ -87,12 +87,12 @@ PrefabInstance:
     - target: {fileID: 5036984490360664696, guid: 72751e09e9115ad4485573172d5191b8,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 246
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5036984490360664696, guid: 72751e09e9115ad4485573172d5191b8,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 120
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5036984490360664696, guid: 72751e09e9115ad4485573172d5191b8,
         type: 3}
@@ -212,12 +212,12 @@ PrefabInstance:
     - target: {fileID: 8150545510291871567, guid: 72751e09e9115ad4485573172d5191b8,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8150545510291871567, guid: 72751e09e9115ad4485573172d5191b8,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8150545510291871567, guid: 72751e09e9115ad4485573172d5191b8,
         type: 3}
@@ -256,7 +256,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6906331231180619490, guid: 72751e09e9115ad4485573172d5191b8,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 8379569934403241615}
+      addedObject: {fileID: 8296489986056677799}
   m_SourcePrefab: {fileID: 100100000, guid: 72751e09e9115ad4485573172d5191b8, type: 3}
 --- !u!1 &5300545716407485744 stripped
 GameObject:
@@ -264,7 +264,7 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1609867091183877074}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &8379569934403241615
+--- !u!114 &8296489986056677799
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -273,6 +273,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 5300545716407485744}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eecae909e0ec3cc4ea170697f3033547, type: 3}
+  m_Script: {fileID: 11500000, guid: 240d1068e40c3174e8a129c36c93fd41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

@@ -15,6 +15,8 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
+using System.Reflection.Emit;
+using Unity.VisualScripting.YamlDotNet.Core.Tokens;
 
 namespace umi3d.browserRuntime.ui.inputField
 {
@@ -45,13 +47,22 @@ namespace umi3d.browserRuntime.ui.inputField
         }
 
         /// <summary>
-        /// Set the label of the input field.
-        /// Send a <see cref="InputFieldNotificationsKeys.InputFieldSet"/> notification.
+        /// Sets the label and updates its visibility status.<br/>
+        /// Send a <see cref="InputFieldNotificationsKeys.InputFieldSet"/> notification.<br/>
+        /// <br/>
+        /// <example>
+        /// Given a new label, when setting the label, then the label is updated and its visibility is set accordingly.
+        /// <code>
+        /// _model.SetLabel("Test Label"); // label = "Test Label", isLabelVisible = true
+        /// _model.SetLabel(""); // label = "", isLabelVisible = false
+        /// _model.SetLabel(null); // label = null, isLabelVisible = false
+        /// </code>
+        /// </example>
         /// </summary>
-        /// <param name="newLabel"></param>
-        public void SetTitle(string newLabel)
+        /// <param name="newLabel">The new label to set.</param>
+        public void SetLabel(string newLabel)
         {
-            isLabelVisible = label == null || label == string.Empty;
+            isLabelVisible = !string.IsNullOrEmpty(newLabel);
             label = newLabel;
             _setNotifier[InputFieldNotificationsKeys.InputFieldSet.IsLabelVisible] = isLabelVisible;
             _setNotifier[InputFieldNotificationsKeys.InputFieldSet.Label] = label;
@@ -59,10 +70,17 @@ namespace umi3d.browserRuntime.ui.inputField
         }
 
         /// <summary>
-        /// Set the value of the input field.
-        /// Send a <see cref="InputFieldNotificationsKeys.InputFieldSet"/> notification.
+        /// Sets the value of the input field and notifies the change.<br/>
+        /// Send a <see cref="InputFieldNotificationsKeys.InputFieldSet"/> notification. <br/>
+        /// <br/>
+        /// <example>
+        /// Given a new value when setting the value then the value is updated and notification is sent.
+        /// <code>
+        /// _model.SetValue("Test Value");
+        /// </code>
+        /// </example>
         /// </summary>
-        /// <param name="newValue"></param>
+        /// <param name="newValue">The new value to set.</param>
         public void SetValue(string newValue)
         {
             value = newValue;
@@ -70,11 +88,19 @@ namespace umi3d.browserRuntime.ui.inputField
             _setNotifier.Notify();
         }
 
+
         /// <summary>
-        /// Update the value of the input field.
-        /// Send a <see cref="InputFieldNotificationsKeys.InputFieldUpdated"/> notification.
+        /// Sets the value of the input field and notifies the change.<br/>
+        /// Send a <see cref="InputFieldNotificationsKeys.InputFieldUpdated"/> notification. <br/>
+        /// <br/>
+        /// <example>
+        /// Given a new value when setting the value then the value is updated and notification is sent.
+        /// <code>
+        /// _model.SetValue("Test Value");
+        /// </code>
+        /// </example>
         /// </summary>
-        /// <param name="newValue"></param>
+        /// <param name="newValue">The new value to set.</param>
         public void UpdateValue(string newValue)
         {
             value = newValue;
@@ -82,11 +108,18 @@ namespace umi3d.browserRuntime.ui.inputField
             _updateNotifier.Notify();
         }
 
-        /// <summary>
-        /// Set the placeholder of the input field.
-        /// Send a <see cref="InputFieldNotificationsKeys.InputFieldSet"/> notification.
+        /// /// <summary>
+        /// This method sets a new placeholder for the input field and notifies the change.<br/>
+        /// Send a <see cref="InputFieldNotificationsKeys.InputFieldSet"/> notification.<br/>
+        /// <br/>
+        /// <example>
+        /// Given a new placeholder string when setting the placeholder then the placeholder is updated and notification is sent.
+        /// <code>
+        /// _model.SetPlaceholder("New Placeholder");
+        /// </code> 
+        /// </example>
         /// </summary>
-        /// <param name="newPlaceholder"></param>
+        /// <param name="newPlaceholder">The new placeholder string to set.</param>
         public void SetPlaceholder(string newPlaceholder)
         {
             placeholder = newPlaceholder;
@@ -94,23 +127,23 @@ namespace umi3d.browserRuntime.ui.inputField
             _setNotifier.Notify();
         }
 
-        /// <summary>
-        /// Set the number of the that the input field will display.
-        /// Send a <see cref="InputFieldNotificationsKeys.InputFieldSet"/> notification.
+        /// /// <summary>
+        /// This method sets a new number of lines for the input field and notifies the change.<br/>
+        /// Send a <see cref="InputFieldNotificationsKeys.InputFieldSet"/> notification.<br/>
+        /// <br/>
+        /// <example>
+        /// Given a new number of lines when setting the number of lines then the number of lines is updated and notification is sent.
+        /// <code>
+        /// _model.SetNbrLines(2);
+        /// </code> 
+        /// </example>
         /// </summary>
-        /// <param name="newNbrLine"></param>
+        /// <param name="newNbrLine">The new number of lines to set.</param>
         public void SetNbrLines(int newNbrLine)
         {
             nbrLine = newNbrLine;
             _setNotifier[InputFieldNotificationsKeys.InputFieldSet.NbrLine] = nbrLine;
             _setNotifier.Notify();
-        }
-
-        public int GetInputHeight(int heightOnLine)
-        {
-            // TODO: Calcul input height
-
-            return 0;
         }
     }
 }

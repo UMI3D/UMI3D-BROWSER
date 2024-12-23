@@ -51,7 +51,7 @@ namespace umi3d.browserRuntime.ui.inputField
         public void SetDto(StringParameterDto newDto)
         {
             dto = newDto;
-            model.SetTitle(dto.name);
+            model.SetLabel(dto.name);
             model.SetValue(dto.value);
             model.SetNbrLines(dto.NbLine);
         }

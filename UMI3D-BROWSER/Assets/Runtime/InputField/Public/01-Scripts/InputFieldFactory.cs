@@ -47,7 +47,7 @@ namespace umi3d.browserRuntime.ui.inputField
             InputFieldModelContainer inputFieldModelContainer = GameObject.Instantiate(isMultiline ? _multiLinePrefab : _singleLinePrefab);
 
             if (label != null || label != string.Empty)
-                inputFieldModelContainer.model.SetTitle(label);
+                inputFieldModelContainer.model.SetLabel(label);
             if (value != null || value != string.Empty)
                 inputFieldModelContainer.model.SetValue(value);
             if (placeholder != null || placeholder != string.Empty)

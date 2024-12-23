@@ -18,7 +18,7 @@ using inetum.unityUtils;
 using TMPro;
 using UnityEngine;
 
-namespace umi3d.browserRuntime.inputField
+namespace umi3d.browserRuntime.ui.inputField
 {
     public class InputFieldPlaceholderView : MonoBehaviour
     {

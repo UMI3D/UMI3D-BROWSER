@@ -16,9 +16,14 @@ limitations under the License.
 
 using UnityEngine;
 
-namespace umi3d.browserRuntime.inputField
+namespace umi3d.browserRuntime.ui.inputField
 {
-    public class InputFieldParameter : MonoBehaviour
+    /// <summary>
+    /// Container of an <see cref="InputFieldParameterModel"/>. 
+    /// Used with an <see cref="InputFieldModelContainer"/>.
+    /// </summary>
+    [RequireComponent(typeof(InputFieldModelContainer))]
+    public class InputFieldParameterModelContainer : MonoBehaviour
     {
         public InputFieldParameterModel parameterModel;
 

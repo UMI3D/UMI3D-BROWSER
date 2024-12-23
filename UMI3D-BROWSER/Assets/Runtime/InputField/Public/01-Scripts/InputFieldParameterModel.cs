@@ -18,8 +18,14 @@ using inetum.unityUtils;
 using umi3d.common.interaction;
 using umi3d.cdk;
 
-namespace umi3d.browserRuntime.inputField
+namespace umi3d.browserRuntime.ui.inputField
 {
+    /// <summary>
+    /// Model of an input field element for a <see cref="StringParameterDto"/>.
+    /// </summary>
+    /// <remarks>
+    /// Need an <see cref="InputFieldModel"/> to work. (set by <see cref="InputFieldParameterModelContainer"/> placed on the same gameobject of <see cref="InputFieldModelContainer"/>)
+    /// </remarks>
     public class InputFieldParameterModel 
     {
         public StringParameterDto dto;
@@ -38,6 +44,10 @@ namespace umi3d.browserRuntime.inputField
             NotificationHub.Default.Unsubscribe(this);
         }
 
+        /// <summary>
+        /// Set the value of the input field using a <see cref="StringParameterDto"/>
+        /// </summary>
+        /// <param name="newDto"></param>
         public void SetDto(StringParameterDto newDto)
         {
             dto = newDto;
@@ -46,6 +56,11 @@ namespace umi3d.browserRuntime.inputField
             model.SetNbrLines(dto.NbLine);
         }
 
+        /// <summary>
+        /// Called by <see cref="InputFieldNotificationsKeys.InputFieldUpdated"/>.
+        /// Update the <see cref="StringParameterDto"/> with the value changed by the user.
+        /// </summary>
+        /// <param name="notification"></param>
         private void ValueUpdated(Notification notification)
         {
             if (!notification.TryGetInfoT(InputFieldNotificationsKeys.InputFieldUpdated.Value, out string value))

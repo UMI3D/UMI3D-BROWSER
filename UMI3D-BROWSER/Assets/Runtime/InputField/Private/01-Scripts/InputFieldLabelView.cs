@@ -18,10 +18,10 @@ using inetum.unityUtils;
 using TMPro;
 using UnityEngine;
 
-namespace umi3d.browserRuntime.inputField
+namespace umi3d.browserRuntime.ui.inputField
 {
     [RequireComponent(typeof(TMP_Text))]
-    public class InputFieldTitleView : MonoBehaviour
+    public class InputFieldLabelView : MonoBehaviour
     {
         TMP_Text _text;
 
@@ -42,14 +42,14 @@ namespace umi3d.browserRuntime.inputField
 
         private void TitleSet(Notification notification)
         {
-            if (!notification.TryGetInfoT(InputFieldNotificationsKeys.InputFieldSet.IsTitleVisible, out bool isActive))
+            if (!notification.TryGetInfoT(InputFieldNotificationsKeys.InputFieldSet.IsLabelVisible, out bool isActive))
             {
                 gameObject.SetActive(isActive);
                 if (!isActive)
                     return;
             }
 
-            if (!notification.TryGetInfoT(InputFieldNotificationsKeys.InputFieldSet.Title, out string newTitle))
+            if (!notification.TryGetInfoT(InputFieldNotificationsKeys.InputFieldSet.Label, out string newTitle))
             {
                 _text.text = newTitle;
             }

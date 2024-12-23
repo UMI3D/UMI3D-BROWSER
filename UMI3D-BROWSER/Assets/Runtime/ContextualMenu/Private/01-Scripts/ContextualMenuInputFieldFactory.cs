@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using umi3d.browserRuntime.inputField;
+using umi3d.browserRuntime.ui.inputField;
 using umi3d.common.interaction;
 using UnityEngine;
 
@@ -33,7 +33,7 @@ namespace umi3d.browserRuntime.ui.contextualMenu
         public GameObject GetOrCreate(Transform parent, StringParameterDto dto)
         {
             var inputFieldGameobject = _inputFieldFactory.GetOrCreateInputField(parent, dto.IsMultiLine);
-            inputFieldGameobject.GetComponent<InputFieldParameter>().parameterModel.SetDto(dto);
+            inputFieldGameobject.GetComponent<InputFieldParameterModelContainer>().parameterModel.SetDto(dto);
             return inputFieldGameobject;
         }
 

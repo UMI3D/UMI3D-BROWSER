@@ -14,22 +14,64 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-namespace umi3d.browserRuntime.inputField
+namespace umi3d.browserRuntime.ui.inputField
 {
     public class InputFieldNotificationsKeys
     {
+        /// <summary>
+        /// Event raised when the input field is changed by the code
+        /// </summary>
         public class InputFieldSet
         {
-            public static readonly string IsTitleVisible = "inputfield-update-isTitleVisible";
-            public static readonly string Title = "inputfield-update-title";
-            public static readonly string Value = "inputfield-update-value";
-            public static readonly string Placeholder = "inputfield-update-placeholder";
-            public static readonly string NbrLine = "inputfield-update-nbrLine";
+            /// <summary>
+            /// If display the label of the inputfield
+            /// </summary>
+            /// <remarks>
+            /// Value is <see cref="bool"/>
+            /// </remarks>
+            public const string IsLabelVisible = "IsLabelVisible";
+            /// <summary>
+            /// The label of the inputfield
+            /// </summary>
+            /// <remarks>
+            /// Value is <see cref="string"/>
+            /// </remarks>
+            public const string Label = "Label";
+            /// <summary>
+            /// The value of the inputfield
+            /// </summary>
+            /// <remarks>
+            /// Value is <see cref="string"/>
+            /// </remarks>
+            public const string Value = "Value";
+            /// <summary>
+            /// The placeholder of the inputfield
+            /// </summary>
+            /// <remarks>
+            /// Value is <see cref="string"/>
+            /// </remarks>
+            public const string Placeholder = "Placeholder";
+            /// <summary>
+            /// The nbr of line that the input field can display
+            /// </summary>
+            /// <remarks>
+            /// Value is <see cref="int"/>
+            /// </remarks>
+            public const string NbrLine = "NbrLine";
         }
 
+        /// <summary>
+        /// Event raised when the input field is changed by the user
+        /// </summary>
         public class InputFieldUpdated
         {
-            public static readonly string Value = "inputfield-update-value";
+            /// <summary>
+            /// The new value
+            /// </summary>
+            /// <remarks>
+            /// Value is <see cref="string"/>
+            /// </remarks>
+            public const string Value = "Value";
         }
     }
 }

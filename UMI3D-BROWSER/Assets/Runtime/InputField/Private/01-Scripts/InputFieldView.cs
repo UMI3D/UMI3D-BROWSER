@@ -18,7 +18,7 @@ using inetum.unityUtils;
 using TMPro;
 using UnityEngine;
 
-namespace umi3d.browserRuntime.inputField
+namespace umi3d.browserRuntime.ui.inputField
 {
     [RequireComponent(typeof(TMP_InputField))]
     public class InputFieldView : MonoBehaviour
@@ -53,10 +53,10 @@ namespace umi3d.browserRuntime.inputField
             {
                 _inputField.text = value;
             }
-            /* TODO : Update height with nbr of line
             if (notification.TryGetInfoT(InputFieldNotificationsKeys.InputFieldSet.NbrLine, out string nbrLine))
             {
-            }*/
+                // TODO :
+            }
         }
     }
 }

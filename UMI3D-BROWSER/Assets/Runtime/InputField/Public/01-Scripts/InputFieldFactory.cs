@@ -30,21 +30,38 @@ namespace umi3d.browserRuntime.ui.inputField
 
         Queue<InputFieldModelContainer> _lstInputFieldsAvailable = new();
 
+        public int AvailableInputFieldCount => _lstInputFieldsAvailable.Count;
+
         /// <summary>
-        /// Create or get an input field from the pool and set it up.
+        /// This method retrieves an available input field from the pool or creates a new one if none are available.<br/>
+        /// It then sets up the input field with the provided parameters and returns the GameObject.<br/>
+        /// <br/>
+        /// <example>
+        /// Given valid parameters for a single line input field:
+        /// <code>
+        /// Transform parent = new GameObject().transform;
+        /// bool isMultiline = false;
+        /// string label = "Test Label";
+        /// string value = "Test Value";
+        /// string placeholder = "Test Placeholder";
+        /// int nbLine = 1;
+        /// GameObject inputField = _inputFieldFactory.GetOrCreateInputField(parent, isMultiline, label, value, placeholder, nbLine);
+        /// </code>
+        /// </example>
         /// </summary>
-        /// <param name="parent">Transform where the input field will be attached.</param>
-        /// <param name="label">Label of the input field.</param>
-        /// <param name="value">Value of the input field.</param>
-        /// <param name="placeholder">Placeholder of the input field.</param>
-        /// <param name="isMultiline">Is singel or multi line.</param>
-        /// <param name="nbLine">The number of line wanted. If isMultiline is false, it is automaticly 1.</param>
-        /// <returns></returns>
+        /// <param name="parent">The parent transform to which the input field will be attached.</param>
+        /// <param name="isMultiline">Indicates whether the input field should be multiline.</param>
+        /// <param name="label">The label text for the input field.</param>
+        /// <param name="value">The initial value of the input field.</param>
+        /// <param name="placeholder">The placeholder text for the input field.</param>
+        /// <param name="nbLine">The number of lines for the input field. Defaults to 1.</param>
+        /// <returns>The created or retrieved input field GameObject.</returns>
         public GameObject GetOrCreateInputField(Transform parent, bool isMultiline, string label = "", string value = "", string placeholder = "", int nbLine = 1)
         {
             if (nbLine < 1) nbLine = 1;
 
-            InputFieldModelContainer inputFieldModelContainer = GameObject.Instantiate(isMultiline ? _multiLinePrefab : _singleLinePrefab);
+            if (!_lstInputFieldsAvailable.TryDequeue(out var inputFieldModelContainer))
+                inputFieldModelContainer = GameObject.Instantiate(isMultiline ? _multiLinePrefab : _singleLinePrefab);
 
             if (label != null || label != string.Empty)
                 inputFieldModelContainer.model.SetLabel(label);
@@ -55,13 +72,25 @@ namespace umi3d.browserRuntime.ui.inputField
             if (nbLine != 1)
                 inputFieldModelContainer.model.SetNbrLines(isMultiline ? nbLine : 1);
 
+            inputFieldModelContainer.gameObject.SetActive(true);
+
             return inputFieldModelContainer.gameObject;
         }
 
         /// <summary>
-        /// Return an input field to the pool to be used later.
+        /// This method returns an input field GameObject to the pool, deactivates it, and reassigns its parent.<br/>
+        /// <br/>
+        /// <example>
+        /// Given an input field created by the factory:
+        /// <code>
+        /// Transform parent = new GameObject().transform;
+        /// bool isMultiline = false;
+        /// GameObject inputField = _inputFieldFactory.GetOrCreateInputField(parent, isMultiline);
+        /// _inputFieldFactory.Return(inputField);
+        /// </code>
+        /// </example>
         /// </summary>
-        /// <param name="inputFieldGameobject"></param>
+        /// <param name="inputFieldGameobject">The input field GameObject to be returned to the pool.</param>
         public void Return(GameObject inputFieldGameobject)
         {
             var inputFieldModelContainer = inputFieldGameobject.GetComponent<InputFieldModelContainer>();

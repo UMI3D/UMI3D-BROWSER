@@ -17,6 +17,7 @@ limitations under the License.
 using AutoFixture;
 using inetum.unityUtils.observation;
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.TestTools;
@@ -669,6 +670,37 @@ public class NotificationTests
 
             Assert.True(result);
             Assert.AreEqual(info, value);
+        }
+
+        [Test]
+        public void GivenNotification_WhenTryGetInfoTWithNullable_ThenTruAndValue()
+        {
+            string id = fixture.Create<string>();
+            string infoKey1 = fixture.Create<string>();
+            string infoKey2 = fixture.Create<string>();
+            string infoKey3 = fixture.Create<string>();
+            FooStruct? value1 = new();
+            FooStruct value2 = new();
+            Notification notification = new(
+                id, 
+                this, 
+                new() { { infoKey1, value1 }, { infoKey2, value2 }, { infoKey3, null } }
+            );
+
+            bool result1 = notification.TryGetInfoT(infoKey1, out FooStruct? info1);
+            bool result2 = notification.TryGetInfoT(infoKey2, out FooStruct? info2);
+            bool result3 = notification.TryGetInfoT(infoKey3, out FooStruct? info3);
+
+            Assert.True(result1);
+            Assert.True(info1.HasValue);
+            Assert.AreEqual(info1.Value, value1.Value);
+
+            Assert.True(result2);
+            Assert.True(info2.HasValue);
+            Assert.AreEqual(info2.Value, value2);
+
+            Assert.True(result3);
+            Assert.False(info3.HasValue);
         }
     }
 }

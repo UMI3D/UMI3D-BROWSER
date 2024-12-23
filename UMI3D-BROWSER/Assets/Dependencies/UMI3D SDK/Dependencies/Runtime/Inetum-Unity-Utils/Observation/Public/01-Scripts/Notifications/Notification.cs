@@ -60,7 +60,7 @@ namespace inetum.unityUtils.observation
         /// <param name="id">The unique identifier for the notification.</param>
         /// <param name="publisher">The publisher of the notification.</param>
         /// <param name="info">Additional information related to the notification.</param>
-        public Notification(string id, object publisher, Dictionary<string, object> info)
+        public Notification(string id, object publisher, Dictionary<string, object> info) : this()
         {
             if (string.IsNullOrEmpty(id))
             {
@@ -177,7 +177,8 @@ namespace inetum.unityUtils.observation
                 info = default;
                 string error;
                 Type type = typeof(T);
-                if (type.IsValueType || type.IsEnum)
+                
+                if (!IsNullable(type) && type.IsValueType || type.IsEnum)
                 {
                     if (logError)
                     {
@@ -200,7 +201,6 @@ namespace inetum.unityUtils.observation
                 }
             }
 
-
             // Try to cast the information.
             if (infoObject is not T infoT)
             {
@@ -219,45 +219,9 @@ namespace inetum.unityUtils.observation
             return true;
         }
 
-        /// <summary>
-        /// Try to get the information stored with this <paramref name="key"/>.<br/>
-        /// Return true if the information exist and is of type <see cref="Nullable{T}"/>, else false.
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="info"></param>
-        /// <param name="logError">Whether a log error will be display if no value is found.</param>
-        /// <returns></returns>
-        public bool TryGetInfoNullableT<T>(string key, out Nullable<T> info, bool logError = true)
-            where T : struct
+        bool IsNullable(Type type)
         {
-            if (!TryGetInfo(key, out object infoObject, logError))
-            {
-                info = default;
-                return false;
-            }
-
-            // Try to cast the information.
-            if (infoObject is not T infoT)
-            {
-                info = null;
-                if (infoObject == null)
-                {
-                    // If infoObject is not T but is null then return true.
-                    // No cast exist to Nullable<T>.
-                    return true;
-                }
-
-                if (logError)
-                {
-                    string error = $"Notification: '{ID}' does not contain info id: '{key}' of type {typeof(T)}.";
-                    error += $"\nType of the object is {infoObject.GetType()}";
-                    UnityEngine.Debug.LogError(error);
-                }
-                return false;
-            }
-
-            info = infoT;
-            return true;
+            return Nullable.GetUnderlyingType(type) != null;
         }
 
         /// <summary>

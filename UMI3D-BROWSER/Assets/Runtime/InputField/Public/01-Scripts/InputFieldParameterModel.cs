@@ -45,9 +45,21 @@ namespace umi3d.browserRuntime.ui.inputField
         }
 
         /// <summary>
-        /// Set the value of the input field using a <see cref="StringParameterDto"/>
+        /// This method sets the DTO for the input field model and updates the model's label, value, and number of lines accordingly.<br/>
+        /// <br/>
+        /// <example>
+        /// Given a StringParameterDto:
+        /// <code>
+        /// StringParameterDto dto = new StringParameterDto() {
+        ///     name = "Test Dto",
+        ///     value = "Test Value",
+        ///     NbLine = 1
+        /// };
+        /// _model.SetDto(dto);
+        /// </code>
+        /// </example>
         /// </summary>
-        /// <param name="newDto"></param>
+        /// <param name="newDto">The new DTO to be set.</param>
         public void SetDto(StringParameterDto newDto)
         {
             dto = newDto;

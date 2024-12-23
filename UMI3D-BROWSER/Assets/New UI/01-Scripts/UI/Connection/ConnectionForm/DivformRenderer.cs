@@ -193,7 +193,8 @@ namespace umi3dBrowsers.container.formrenderer
                                 button.onClick.AddListener(() => { connectionToImmersiveLinker.Leave(); });
                                 break;
                             case umi3d.common.interaction.form.ButtonType.Back:
-                                button.onClick.AddListener(() => { _answer.isBack = true; ValidateForm(inputAnswerDto.inputId); });
+                                button.onClick.AddListener(() => {
+                                    _answer.isBack = true; ValidateForm(inputAnswerDto.inputId); });
                                 break;
                         }
                     }); break;

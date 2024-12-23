@@ -53,9 +53,17 @@ namespace umi3d.browserRuntime.ui.inputField
             {
                 _inputField.text = value;
             }
-            if (notification.TryGetInfoT(InputFieldNotificationsKeys.InputFieldSet.NbrLine, out string nbrLine))
+
+            if (notification.TryGetInfoT(InputFieldNotificationsKeys.InputFieldSet.NbrLine, out int nbrLine))
             {
-                // TODO :
+                RectTransform textAreaTransform = _inputField.textViewport.GetComponent<RectTransform>();
+                float padding = textAreaTransform.offsetMin.y + textAreaTransform.offsetMax.y;
+
+                TMP_Text textComponent = _inputField.textComponent;
+                float desiredHeight = textComponent.GetPreferredValues(new string('\n', nbrLine)).y;
+
+                RectTransform rectTransform = GetComponent<RectTransform>();
+                rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, desiredHeight);
             }
         }
     }

@@ -73,6 +73,7 @@ namespace umi3d.browserRuntime.ui.toggle
         public void OnPointerClick(PointerEventData eventData)
         {
             _modelContainer.model.ToggleValue();
+            Play_SliderGoTo(_modelContainer.model.value ? 1 : 0);
         }
 
         private void ToggleSet(Notification notification)

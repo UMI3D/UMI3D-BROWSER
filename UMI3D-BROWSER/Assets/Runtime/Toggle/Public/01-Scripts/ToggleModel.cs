@@ -15,9 +15,8 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
-using umi3d.browserRuntime.ui.toggle;
 
-namespace umi3d
+namespace umi3d.browserRuntime.ui.toggle
 {
     public class ToggleModel 
     {
@@ -56,7 +55,9 @@ namespace umi3d
 
         public void ToggleValue()
         {
-            SetValue(!value);
+            value = !value;
+            _setNotifier[ToggleNotificationKeys.ToggleUpdated.Value] = value;
+            _setNotifier.Notify();
         }
     }
 }

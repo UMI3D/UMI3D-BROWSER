@@ -18,6 +18,10 @@ using inetum.unityUtils;
 
 namespace umi3d.browserRuntime.ui.toggle
 {
+    /// <summary>
+    /// Model of a toggle element
+    /// </summary>
+
     public class ToggleModel 
     {
         public bool isLabelVisible { get; private set; } = false;
@@ -37,6 +41,20 @@ namespace umi3d.browserRuntime.ui.toggle
             _updateNotifier = NotificationHub.Default.GetNotifier<ToggleNotificationKeys.ToggleUpdated>(this);
         }
 
+        /// <summary>
+        /// Sets the label to the specified value and updates the visibility status.<br/>
+        /// Send a <see cref="ToggleNotificationKeys.ToggleSet"/> notification.<br/>
+        /// <br/>
+        /// <example>
+        /// Given a new label string, when setting the label, then the visibility status and label value are updated accordingly.
+        /// <code>
+        /// _toggleModel.SetLabel("Test Label");
+        /// // isLabelVisible = true
+        /// // label = "Test Label"
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <param name="newLabel">The new label string to set. If null or empty, the label will be hidden.</param>
         public void SetLabel(string newLabel)
         {
             isLabelVisible = !string.IsNullOrEmpty(newLabel);
@@ -46,6 +64,19 @@ namespace umi3d.browserRuntime.ui.toggle
             _setNotifier.Notify();
         }
 
+        /// <summary>
+        /// Sets the value to the specified boolean value and notifies any observers.<br/>
+        /// Send a <see cref="ToggleNotificationKeys.ToggleSet"/> notification.<br/>
+        /// <br/>
+        /// <example>
+        /// Given a new boolean value, when setting the value, then the value is updated and observers are notified.
+        /// <code>
+        /// _toggleModel.SetValue(true);
+        /// // value = true
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <param name="newValue">The new boolean value to set.</param>
         public void SetValue(bool newValue)
         {
             value = newValue;
@@ -53,11 +84,24 @@ namespace umi3d.browserRuntime.ui.toggle
             _setNotifier.Notify();
         }
 
+        /// <summary>
+        /// Toggles the current boolean value and notifies any observers.<br/>
+        /// Send a <see cref="ToggleNotificationKeys.ToggleUpdated"/> notification.<br/>
+        /// <br/>
+        /// <example>
+        /// Given the current value, when toggling the value, then the value is inverted and observers are notified.
+        /// <code>
+        /// _toggleModel.ToggleValue();
+        /// // if value was true, it becomes false
+        /// // if value was false, it becomes true
+        /// </code>
+        /// </example>
+        /// </summary>
         public void ToggleValue()
         {
             value = !value;
-            _setNotifier[ToggleNotificationKeys.ToggleUpdated.Value] = value;
-            _setNotifier.Notify();
+            _updateNotifier[ToggleNotificationKeys.ToggleUpdated.Value] = value;
+            _updateNotifier.Notify();
         }
     }
 }

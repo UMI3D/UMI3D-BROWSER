@@ -63,6 +63,7 @@ public class ToggleModelTests
             Assert.IsNull(_toggleModel.label);
         }
     }
+
     public class SetValue
     {
         private ToggleModel _toggleModel;

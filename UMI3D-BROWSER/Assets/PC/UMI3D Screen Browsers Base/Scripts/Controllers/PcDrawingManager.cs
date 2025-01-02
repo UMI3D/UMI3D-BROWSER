@@ -28,7 +28,7 @@ namespace umi3d.desktopBrowser.Controller
     public class PcDrawingManager : DrawingManager
     {
         public float distance = 1.5f;
-        public float objectDistance = 3f;
+        public float objectDistance = 10f;
         public float offset = 0.01f;
 
         public override Vector3? GetDrawingWorldPoint(DrawingInteractionDto drawing, List<UMI3DNodeInstance> nodes, AbstractUMI3DInput input)

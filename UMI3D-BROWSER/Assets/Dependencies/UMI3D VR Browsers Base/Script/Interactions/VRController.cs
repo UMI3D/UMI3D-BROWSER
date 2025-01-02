@@ -383,7 +383,7 @@ namespace umi3dVRBrowsersBase.interactions
         }
 
         public float distance = 1.5f;
-        public float objectDistance = 3f;
+        public float objectDistance = 10f;
         public float offset = 0.01f;
         public float handOffset = 0f;
 

@@ -18,16 +18,16 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace umi3dBrowsers.displayer
+namespace umi3d.browserRuntime.ui.toggle
 {
     [AddComponentMenu("UMI3D_UI/Toggle Switch Group", 30)]
     public class ToggleSwitchGroupManager : MonoBehaviour
     {
         [Header("Start Value")]
-        [SerializeField] private ToggleSwitch initialToggleSwitch;
+        [SerializeField] private ToggleSwitch _initialToggleSwitch;
 
         [Header("Toggle Options")]
-        [SerializeField] private bool allCanBeToggleOff;
+        [SerializeField] private bool _allCanBeToggleOff;
 
         private List<ToggleSwitch> _toggleSwitchies = new();
 
@@ -35,62 +35,60 @@ namespace umi3dBrowsers.displayer
         {
             ToggleSwitch[] toggleSwitches = GetComponentsInChildren<ToggleSwitch>();
             foreach (ToggleSwitch toggleSwitch in toggleSwitches)
-            {
                 RegisterToggleButtonToGroup(toggleSwitch);
-            }
         }
 
         private void RegisterToggleButtonToGroup(ToggleSwitch toggleSwitch)
         {
-            if (_toggleSwitchies.Contains(toggleSwitch)) return;
+            if (_toggleSwitchies.Contains(toggleSwitch)) 
+                return;
 
+            toggleSwitch.onToggleOff += () => ToggleGroup(toggleSwitch);
+            toggleSwitch.onToggleOn += () => ToggleGroup(toggleSwitch);
             _toggleSwitchies.Add(toggleSwitch);
-            toggleSwitch.SetupForManager(this);
         }
 
         private void Start()
         {
-            bool areAllToggleOff = true;
             foreach (var button in _toggleSwitchies) 
             {
-                if (!button.CurrentValue) return;
-
-                areAllToggleOff = false;
-                break;
+                if (!button.CurrentValue) 
+                    return;
             }
 
-            if (!areAllToggleOff || allCanBeToggleOff) return;
+            if (_allCanBeToggleOff) 
+                return;
 
-            if (initialToggleSwitch != null)
-                initialToggleSwitch.ToggleByGroupManager(true);
+            if (_initialToggleSwitch != null)
+                _initialToggleSwitch.SetValue(true);
             else
-                _toggleSwitchies[0].ToggleByGroupManager(true);
+                _toggleSwitchies[0].SetValue(true);
 
         }
 
         internal void ToggleGroup(ToggleSwitch toggleSwitch)
         {
-            if (_toggleSwitchies.Count <= 1) return;
+            if (_toggleSwitchies.Count <= 1) 
+                return;
 
-            if (allCanBeToggleOff && toggleSwitch.CurrentValue)
+            if (_allCanBeToggleOff && toggleSwitch.CurrentValue)
             {
                 foreach(var button in _toggleSwitchies)
                 {
-                    if(button == null) continue;
+                    if(button == null || button == toggleSwitch) 
+                        continue;
 
-                    button.ToggleByGroupManager(false);
+                    button.SetValue(false);
                 }
             }
             else
             {
                 foreach(var button in _toggleSwitchies)
                 {
-                    if (button == null) continue;
+                    if (button == null) 
+                        continue;
 
-                    if (button == toggleSwitch)
-                        button.ToggleByGroupManager(true);
-                    else
-                        button.ToggleByGroupManager(false);
+                    button.SetValue(button == toggleSwitch);
                 }
             }
         }

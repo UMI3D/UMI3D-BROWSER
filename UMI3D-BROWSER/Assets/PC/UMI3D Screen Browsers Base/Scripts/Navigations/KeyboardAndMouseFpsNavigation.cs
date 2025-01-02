@@ -32,6 +32,7 @@ namespace umi3d.baseBrowser.Navigation
             );
 
             data.WantToLookAround = KeyboardNavigation.IsPressed(NavigationEnum.FreeView);
+            data.WantToLookAroundInDrawMode = KeyboardNavigation.IsPressed(NavigationEnum.FreeViewInDrawMode);
         }
 
         public void HandleUserInput()

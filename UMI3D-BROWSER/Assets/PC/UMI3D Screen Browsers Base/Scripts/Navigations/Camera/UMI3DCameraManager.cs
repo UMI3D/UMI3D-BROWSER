@@ -53,7 +53,7 @@ public sealed class UMI3DCameraManager
 
         if(BaseCursor.Movement == BaseCursor.CursorMovement.Drawing)
         {
-            if (data.WantToLookAround)
+            if (data.WantToLookAroundInDrawMode)
                 BaseCursor.Mode = BaseCursor.DrawingMode.Center;
             else
             {

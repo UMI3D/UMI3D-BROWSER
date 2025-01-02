@@ -52,7 +52,7 @@ namespace umi3d.browserRuntime.ui.toggle
             if (!_lstTogglesAvaible.TryDequeue(out var toggleModelContainer))
                 toggleModelContainer = GameObject.Instantiate(_togglePrefab);
 
-            if (string.IsNullOrEmpty(label))
+            if (!string.IsNullOrEmpty(label))
                 toggleModelContainer.model.SetLabel(label);
             toggleModelContainer.model.SetValue(value);
 

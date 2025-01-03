@@ -7,7 +7,7 @@ using UnityEngine.TestTools;
 
 public class ToggleModelTests
 {
-    public class SetLabel
+    public class SetLabelTests
     {
         private ToggleModel _toggleModel;
 
@@ -64,7 +64,7 @@ public class ToggleModelTests
         }
     }
 
-    public class SetValue
+    public class SetValueTests
     {
         private ToggleModel _toggleModel;
 
@@ -101,7 +101,7 @@ public class ToggleModelTests
         }
     }
 
-    public class ToggleValue
+    public class ToggleValueTests
     {
         private ToggleModel _toggleModel;
 

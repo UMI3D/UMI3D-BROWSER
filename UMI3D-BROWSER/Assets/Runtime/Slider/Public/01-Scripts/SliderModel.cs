@@ -23,6 +23,8 @@ namespace umi3d.browserRuntime.ui.slider
         public bool isLabelVisible { get; private set; } = false;
         public string label { get; private set; }
         public float value { get; private set; }
+        public float maxValue { get; private set; }
+        public float minValue { get; private set; }
         public bool isInteger { get; private set; } = false;
 
         Notifier _setNotifier;
@@ -34,6 +36,8 @@ namespace umi3d.browserRuntime.ui.slider
             _setNotifier[SliderNotifiactionKeys.SliderSet.IsLabelVisible] = isLabelVisible;
             _setNotifier[SliderNotifiactionKeys.SliderSet.Label] = label;
             _setNotifier[SliderNotifiactionKeys.SliderSet.Value] = value;
+            _setNotifier[SliderNotifiactionKeys.SliderSet.MaxValue] = maxValue;
+            _setNotifier[SliderNotifiactionKeys.SliderSet.MinValue] = minValue;
             _setNotifier[SliderNotifiactionKeys.SliderSet.IsInteger] = isInteger;
 
             _updateNotifier = NotificationHub.Default.GetNotifier<SliderNotifiactionKeys.SliderUpdated>(this);
@@ -47,6 +51,7 @@ namespace umi3d.browserRuntime.ui.slider
             _setNotifier[SliderNotifiactionKeys.SliderSet.Label] = label;
             _setNotifier.Notify();
         }
+
         public void SetValue(float newValue)
         {
             value = newValue;
@@ -59,6 +64,20 @@ namespace umi3d.browserRuntime.ui.slider
             value = newValue;
             _updateNotifier[SliderNotifiactionKeys.SliderSet.Value] = value;
             _updateNotifier.Notify();
+        }
+
+        public void SetMaxValue(float newValue)
+        {
+            maxValue = newValue;
+            _setNotifier[SliderNotifiactionKeys.SliderSet.MaxValue] = value;
+            _setNotifier.Notify();
+        }
+
+        public void SetMinValue(float newValue)
+        {
+            minValue = newValue;
+            _setNotifier[SliderNotifiactionKeys.SliderSet.MinValue] = value;
+            _setNotifier.Notify();
         }
 
         public void SetPlaceholder(bool newIsInteger)

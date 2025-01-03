@@ -45,6 +45,20 @@ namespace umi3d.browserRuntime.ui.slider
             /// </remarks>
             public const string Value = "Value";
             /// <summary>
+            /// The max value of the slider
+            /// </summary>
+            /// <remarks>
+            /// Value is <see cref="float"/>
+            /// </remarks>
+            public const string MaxValue = "MaxValue";
+            /// <summary>
+            /// The min value of the slider
+            /// </summary>
+            /// <remarks>
+            /// Value is <see cref="float"/>
+            /// </remarks>
+            public const string MinValue = "MinValue";
+            /// <summary>
             /// If the slider is integer or float
             /// </summary>
             /// <remarks>

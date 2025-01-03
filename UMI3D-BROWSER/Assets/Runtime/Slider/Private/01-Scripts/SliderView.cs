@@ -55,7 +55,15 @@ namespace umi3d.browserRuntime.ui.slider
                 _slider.wholeNumbers = isInteger;
             }
 
-            // TODO : Add max / min
+            if (notification.TryGetInfoT(SliderNotifiactionKeys.SliderSet.MaxValue, out float maxValue))
+            {
+                _slider.maxValue = maxValue;
+            }
+
+            if (notification.TryGetInfoT(SliderNotifiactionKeys.SliderSet.MinValue, out float minValue))
+            {
+                _slider.minValue = minValue;
+            }
 
             if (notification.TryGetInfoT(SliderNotifiactionKeys.SliderSet.Value, out float value))
             {

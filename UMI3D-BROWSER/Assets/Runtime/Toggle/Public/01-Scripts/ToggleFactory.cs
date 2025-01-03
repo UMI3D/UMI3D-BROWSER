@@ -52,11 +52,12 @@ namespace umi3d.browserRuntime.ui.toggle
             if (!_lstTogglesAvaible.TryDequeue(out var toggleModelContainer))
                 toggleModelContainer = GameObject.Instantiate(_togglePrefab);
 
+            toggleModelContainer.gameObject.SetActive(true);
+            toggleModelContainer.transform.SetParent(parent, false);
+
             if (!string.IsNullOrEmpty(label))
                 toggleModelContainer.model.SetLabel(label);
             toggleModelContainer.model.SetValue(value);
-
-            toggleModelContainer.gameObject.SetActive(true);
 
             return toggleModelContainer.gameObject;
         }

@@ -134,7 +134,7 @@ namespace umi3d.browserRuntime.ui.popup
 
             if (currentPopupInfo.HasValue && currentPopupInfo.Value.id.HasValue && currentPopupInfo.Value.id.Value == id)
             {
-                notification.TryGetInfoNullableT(PopupNotificationKeys.DequeuePopup.ActionIndex, out int? index, false);
+                notification.TryGetInfoT(PopupNotificationKeys.DequeuePopup.ActionIndex, out int? index, false);
                 closeCurrentPopupNotifier[PopupNotificationKeys.CloseCurrentOpenedPopup.ActionIndex] = index;
                 closeCurrentPopupNotifier.Notify();
                 return;
@@ -182,7 +182,7 @@ namespace umi3d.browserRuntime.ui.popup
                 return;
             }
 
-            notification.TryGetInfoNullableT(PopupNotificationKeys.ReplaceCurrentOpenedPopup.ActionIndex, out int? index, false);
+            notification.TryGetInfoT(PopupNotificationKeys.ReplaceCurrentOpenedPopup.ActionIndex, out int? index, false);
             if (index.HasValue)
             {
                 currentPopupInfo.Value.buttonActions?.Invoke(index.Value);

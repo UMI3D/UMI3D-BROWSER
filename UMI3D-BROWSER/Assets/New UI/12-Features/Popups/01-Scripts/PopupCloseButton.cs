@@ -71,7 +71,7 @@ namespace umi3d.browserRuntime.ui.popup
 
         void CloseCurrentOpenedPopup(Notification notification)
         {
-            notification.TryGetInfoNullableT(PopupNotificationKeys.CloseCurrentOpenedPopup.ActionIndex, out int? index, false);
+            notification.TryGetInfoT(PopupNotificationKeys.CloseCurrentOpenedPopup.ActionIndex, out int? index, false);
             if (index.HasValue)
             {
                 popupInfo.buttonActions?.Invoke(index.Value);

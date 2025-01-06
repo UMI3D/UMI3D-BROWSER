@@ -86,13 +86,7 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         void OnDisable()
         {
-            NotificationHub.Default.Unsubscribe<KeyboardNotificationKeys.AnimationSettings>(this);
-
-            NotificationHub.Default.Unsubscribe(this, KeyboardNotificationKeys.SpecialKeyPressed);
-
-            NotificationHub.Default.Unsubscribe<KeyboardNotificationKeys.TextFieldSelected>(this);
-
-            NotificationHub.Default.Unsubscribe<KeyboardNotificationKeys.TextFieldDeselected>(this);
+            NotificationHub.Default.Unsubscribe(this);
         }
 
         void Close()

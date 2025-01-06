@@ -61,7 +61,7 @@ namespace umi3d.browserRuntime.ui.settings
 
         void OnDestroy()
         {
-            NotificationHub.Default.Unsubscribe<SettingsNotificationKeys.NewPanelSelected>(this);
+            NotificationHub.Default.Unsubscribe(this);
         }
 
         public void OnPointerEnter(PointerEventData eventData)

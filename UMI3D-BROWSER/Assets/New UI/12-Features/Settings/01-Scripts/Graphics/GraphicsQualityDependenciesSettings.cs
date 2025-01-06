@@ -32,7 +32,7 @@ namespace umi3d.browserRuntime.ui.settings
 
         void OnDestroy()
         {
-            NotificationHub.Default.Unsubscribe<SettingsNotificationKeys.QualityChanged>(this);
+            NotificationHub.Default.Unsubscribe(this);
         }
 
         void QualityChanged(Notification notification)

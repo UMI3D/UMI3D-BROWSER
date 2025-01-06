@@ -50,11 +50,7 @@ namespace umi3d.browserRuntime.ui.popup
 
         void OnDestroy()
         {
-            NotificationHub.Default
-                .Unsubscribe<PopupNotificationKeys.DisplayPopup>(this);
-
-            NotificationHub.Default
-                .Unsubscribe<PopupNotificationKeys.CloseCurrentOpenedPopup>(this);
+            NotificationHub.Default.Unsubscribe(this);
         }
 
         void NewPopup(Notification notification)

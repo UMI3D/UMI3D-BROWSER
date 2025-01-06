@@ -109,11 +109,7 @@ namespace com.inetum.unitygeckowebview
         {
             base.OnDisable();
 
-            NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.InteractibilityChanged);
-
-            NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.WebViewTextFieldSelected);
-
-            NotificationHub.Default.Unsubscribe<GeckoWebViewNotificationKeys.TextureSizeChanged>(this);
+            NotificationHub.Default.Unsubscribe(this);
         }
 
         public override void OnPointerDown(PointerEventData eventData)

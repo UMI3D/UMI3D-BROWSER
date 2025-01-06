@@ -182,7 +182,7 @@ namespace inetum.unityUtils.observation
             _subscriberToID.Remove(subscriber);
         }
 
-        public void Unsubscribe(Object subscriber, string id)
+        public void Unsubscribe(Object subscriber, ID id)
         {
             string subscriberName = subscriber is string
                 ? subscriber as string
@@ -234,11 +234,6 @@ namespace inetum.unityUtils.observation
             {
                 _subscriptions.Remove(id);
             }
-        }
-
-        public void Unsubscribe<T>(Object subscriber)
-        {
-            Unsubscribe(subscriber, typeof(T).FullName);
         }
 
         #endregion

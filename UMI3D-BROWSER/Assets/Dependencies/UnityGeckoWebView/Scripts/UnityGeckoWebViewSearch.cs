@@ -70,9 +70,7 @@ namespace com.inetum.unitygeckowebview.samples
 
         void OnDisable()
         {
-            NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.Loading);
-
-            NotificationHub.Default.Unsubscribe<GeckoWebViewNotificationKeys.WebViewSizeChanged>(this);
+            NotificationHub.Default.Unsubscribe(this);
         }
 
         void Loading(Notification notification)

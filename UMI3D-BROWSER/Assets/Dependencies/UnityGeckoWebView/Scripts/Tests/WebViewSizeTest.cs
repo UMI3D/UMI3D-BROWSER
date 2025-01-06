@@ -58,7 +58,7 @@ namespace com.inetum.unitygeckowebview
         {
             resize.onClick.RemoveListener(Resize);
 
-            NotificationHub.Default.Unsubscribe<GeckoWebViewNotificationKeys.WebViewSizeChanged>(this);
+            NotificationHub.Default.Unsubscribe(this);
         }
 
         void Notify()

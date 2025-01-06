@@ -117,9 +117,7 @@ namespace com.inetum.unitygeckowebview
 
         void OnDisable()
         {
-            NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.Rendering);
-
-            NotificationHub.Default.Unsubscribe<GeckoWebViewNotificationKeys.TextureSizeChanged>(this);
+            NotificationHub.Default.Unsubscribe(this);
         }
 
         void OnDestroy()

@@ -38,7 +38,7 @@ namespace umi3d.browserRuntime.ui.settings
 
         void OnDestroy()
         {
-            NotificationHub.Default.Unsubscribe<SettingsNotificationKeys.MicrophoneModeChanged>(this);
+            NotificationHub.Default.Unsubscribe(this);
         }
 
         void ModeChanged(Notification notification)

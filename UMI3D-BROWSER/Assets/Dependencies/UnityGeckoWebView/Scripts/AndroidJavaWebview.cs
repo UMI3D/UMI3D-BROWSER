@@ -71,11 +71,7 @@ namespace com.inetum.unitygeckowebview
 
         void OnDisable()
         {
-            NotificationHub.Default.Unsubscribe<GeckoWebViewNotificationKeys.ScrollChanged>(this);
-
-            NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.History);
-
-            NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.Search);
+            NotificationHub.Default.Unsubscribe(this);
         }
 
         void OnApplicationPause(bool pause)

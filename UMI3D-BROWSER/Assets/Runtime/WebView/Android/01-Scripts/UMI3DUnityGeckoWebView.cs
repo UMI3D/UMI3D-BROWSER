@@ -82,9 +82,7 @@ namespace umi3d.browserRuntime.webView.android
 
         void OnDisable()
         {
-            NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.Loading);
-
-            NotificationHub.Default.Unsubscribe<GeckoWebViewNotificationKeys.SynchronizationChanged>(this);
+            NotificationHub.Default.Unsubscribe(this);
         }
 
         public override void Init(UMI3DWebViewDto dto)

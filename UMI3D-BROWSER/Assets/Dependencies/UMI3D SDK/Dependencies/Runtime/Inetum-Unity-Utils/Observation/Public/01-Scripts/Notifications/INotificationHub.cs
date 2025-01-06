@@ -68,13 +68,7 @@ namespace inetum.unityUtils.observation
         /// </summary>
         /// <param name="subscriber">The object waiting for notification. Must not be null. If subscriber is static then user typeof().FullName.</param>
         /// <param name="id">Id of the notification.</param>
-        public void Unsubscribe(Object subscriber, string id);
-
-        /// <summary>
-        /// Remove matching entries concerning a specific <paramref name="subscriber"/> and id: <typeparamref name="T"/>.
-        /// </summary>
-        /// <param name="subscriber">The object waiting for notification. Must not be null. If subscriber is static then user typeof().FullName.</param>
-        public void Unsubscribe<T>(Object subscriber);
+        public void Unsubscribe(Object subscriber, ID id);
 
         #endregion
 

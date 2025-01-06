@@ -71,17 +71,7 @@ namespace umi3d.browserRuntime.ui.popup
 
         void OnDestroy()
         {
-            NotificationHub.Default
-             .Unsubscribe<PopupNotificationKeys.EnqueuePopup>(this);
-
-            NotificationHub.Default
-             .Unsubscribe<PopupNotificationKeys.DequeuePopup>(this);
-
-            NotificationHub.Default
-            .Unsubscribe<PopupNotificationKeys.PopupClosed>(this);
-
-            NotificationHub.Default
-             .Unsubscribe<PopupNotificationKeys.ReplaceCurrentOpenedPopup>(this);
+            NotificationHub.Default.Unsubscribe(this);
         }
 
         void NewPopupEnqueued(Notification notification)

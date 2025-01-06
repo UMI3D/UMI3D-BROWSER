@@ -52,8 +52,8 @@ namespace umi3d.browserRuntime.ui.keyboard
             NotificationHub.Default.Subscribe(
                 this,
                 KeyboardNotificationKeys.AddOrRemoveCharacters,
-                new FilterByRef(FilterType.AcceptAllExcept, this),
-                AddOrRemoveCharacters
+                AddOrRemoveCharacters,
+                new FilterByRef(FilterType.AcceptAllExcept, this)
             );
 
             NotificationHub.Default.Subscribe(

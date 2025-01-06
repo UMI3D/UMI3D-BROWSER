@@ -33,21 +33,30 @@ namespace umi3d.browserRuntime.ui.popup
 
         void Awake()
         {
-            NotificationHub.Default
-                .Subscribe<PopupNotificationKeys.EnqueuePopup>(
+            NotificationHub.Default.Subscribe(
                 this,
-                new FilterByRef(FilterType.AcceptAllExcept, this),
-                NewPopupEnqueued
+                ID.FromType<PopupNotificationKeys.EnqueuePopup>(),
+                NewPopupEnqueued,
+                new FilterByRef(FilterType.AcceptAllExcept, this)
             );
 
-            NotificationHub.Default
-                .Subscribe<PopupNotificationKeys.DequeuePopup>(this, DequeuePopup);
+            NotificationHub.Default.Subscribe(
+                this,
+                ID.FromType<PopupNotificationKeys.DequeuePopup>(),
+                DequeuePopup
+            );
 
-            NotificationHub.Default
-                .Subscribe<PopupNotificationKeys.PopupClosed>(this, PopupClosed);
+            NotificationHub.Default.Subscribe(
+                this, 
+                ID.FromType<PopupNotificationKeys.PopupClosed>(),
+                PopupClosed
+            );
 
-            NotificationHub.Default
-                .Subscribe<PopupNotificationKeys.ReplaceCurrentOpenedPopup>(this, ReplaceCurrentOpenedPopup);
+            NotificationHub.Default.Subscribe(
+                this,
+                ID.FromType<PopupNotificationKeys.ReplaceCurrentOpenedPopup>(),
+                ReplaceCurrentOpenedPopup
+            );
 
             popup = Instantiate(popupPrefab);
             popup.transform.SetParent(transform, false);

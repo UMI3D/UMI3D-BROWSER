@@ -48,8 +48,9 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         void OnEnable()
         {
-            NotificationHub.Default.Subscribe<KeyboardNotificationKeys.OpenOrClose>(
+            NotificationHub.Default.Subscribe(
                 this,
+                ID.FromType<KeyboardNotificationKeys.OpenOrClose>(),
                 Animate
             );
         }

@@ -32,15 +32,15 @@ namespace umi3d.browserRuntime.ui.popup
             button = GetComponent<Button>();
             button.onClick.AddListener(Click);
 
-            NotificationHub.Default
-               .Subscribe<PopupNotificationKeys.DisplayPopup>(
+            NotificationHub.Default.Subscribe(
                this,
+               ID.FromType<PopupNotificationKeys.DisplayPopup>(),
                NewPopup
            );
 
-            NotificationHub.Default
-               .Subscribe<PopupNotificationKeys.CloseCurrentOpenedPopup>(
+            NotificationHub.Default.Subscribe(
                this,
+               ID.FromType<PopupNotificationKeys.CloseCurrentOpenedPopup>(),
                CloseCurrentOpenedPopup
            );
 

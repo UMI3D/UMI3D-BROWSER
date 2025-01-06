@@ -955,7 +955,6 @@ namespace umi3d.cdk.collaboration
                 NotificationHub.Default.Subscribe(
                     this,
                     QuittingManagerNotificationKey.ApplicationIsQuitting,
-                    null,
                     ApplicationQuit
                 );
             }

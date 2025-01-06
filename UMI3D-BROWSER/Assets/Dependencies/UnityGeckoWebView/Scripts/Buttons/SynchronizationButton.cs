@@ -104,8 +104,9 @@ namespace com.inetum.unitygeckowebview
 
         void OnEnable()
         {
-            NotificationHub.Default.Subscribe<GeckoWebViewNotificationKeys.WebViewSizeChanged>(
+            NotificationHub.Default.Subscribe(
                 this, 
+                ID.FromType<GeckoWebViewNotificationKeys.WebViewSizeChanged>(),
                 WebViewSizeChanged
             );
 
@@ -115,13 +116,15 @@ namespace com.inetum.unitygeckowebview
                InteractibilityChanged
            );
 
-            NotificationHub.Default.Subscribe<GeckoWebViewNotificationKeys.SynchronizationAdministrationChanged>(
+            NotificationHub.Default.Subscribe(
                this,
+               ID.FromType<GeckoWebViewNotificationKeys.SynchronizationAdministrationChanged>(),
                SynchronizationAdministrationChanged
            );
 
-            NotificationHub.Default.Subscribe<GeckoWebViewNotificationKeys.Desynchronization>(
+            NotificationHub.Default.Subscribe(
                this,
+               ID.FromType<GeckoWebViewNotificationKeys.Desynchronization>(),
                Desynchronization
            );
 

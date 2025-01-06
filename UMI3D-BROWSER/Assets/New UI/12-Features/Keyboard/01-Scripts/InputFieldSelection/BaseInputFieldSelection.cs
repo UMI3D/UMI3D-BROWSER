@@ -78,16 +78,18 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         public virtual void OnEnable()
         {
-            NotificationHub.Default.Subscribe<KeyboardNotificationKeys.TextFieldSelected>(
+            NotificationHub.Default.Subscribe(
                 this,
-                new FilterByRef(FilterType.AcceptAllExcept, this),
-                TextFieldSelected
+                ID.FromType<KeyboardNotificationKeys.TextFieldSelected>(),
+                TextFieldSelected,
+                new FilterByRef(FilterType.AcceptAllExcept, this)
             );
 
-            NotificationHub.Default.Subscribe<KeyboardNotificationKeys.TextFieldDeselected>(
+            NotificationHub.Default.Subscribe(
                this,
-               new FilterByRef(FilterType.AcceptAllExcept, this),
-               TextFieldDeselected
+               ID.FromType<KeyboardNotificationKeys.TextFieldDeselected>(),
+               TextFieldDeselected,
+               new FilterByRef(FilterType.AcceptAllExcept, this)
            );
         }
 

@@ -98,8 +98,9 @@ namespace com.inetum.unitygeckowebview
                 WebViewTextFieldSelected
             );
 
-            NotificationHub.Default.Subscribe<GeckoWebViewNotificationKeys.TextureSizeChanged>(
+            NotificationHub.Default.Subscribe(
                 this,
+                ID.FromType<GeckoWebViewNotificationKeys.TextureSizeChanged>(),
                 TextureSizeChanged
             );
         }

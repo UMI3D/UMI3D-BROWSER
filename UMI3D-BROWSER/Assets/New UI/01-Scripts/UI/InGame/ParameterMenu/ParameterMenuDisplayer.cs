@@ -39,8 +39,9 @@ public class ParameterMenuDisplayer : MonoBehaviour
 
     private void Awake()
     {
-        NotificationHub.Default.Subscribe<InteractionNotificationKeys.DisplayParameters>(
+        NotificationHub.Default.Subscribe(
             this,
+            ID.FromType<InteractionNotificationKeys.DisplayParameters>(),
             DisplayParameters
         );
 

@@ -50,8 +50,9 @@ namespace com.inetum.unitygeckowebview
 
         void OnEnable()
         {
-            NotificationHub.Default.Subscribe<GeckoWebViewNotificationKeys.ScrollChanged>(
+            NotificationHub.Default.Subscribe(
                 this,
+                ID.FromType<GeckoWebViewNotificationKeys.ScrollChanged>(),
                 ScrollChanged
             );
 

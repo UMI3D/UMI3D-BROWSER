@@ -46,10 +46,11 @@ namespace com.inetum.unitygeckowebview
         {
             resize.onClick.AddListener(Resize);
 
-            NotificationHub.Default.Subscribe<GeckoWebViewNotificationKeys.WebViewSizeChanged>(
+            NotificationHub.Default.Subscribe(
                 this,
-                new FilterByRef(FilterType.AcceptAllExcept, this),
-                SizeChanged
+                ID.FromType<GeckoWebViewNotificationKeys.WebViewSizeChanged>(),
+                SizeChanged,
+                new FilterByRef(FilterType.AcceptAllExcept, this)
             );
         }
 

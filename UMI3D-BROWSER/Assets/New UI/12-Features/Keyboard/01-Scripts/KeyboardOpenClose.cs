@@ -57,8 +57,9 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         void OnEnable()
         {
-            NotificationHub.Default.Subscribe<KeyboardNotificationKeys.AnimationSettings>(
+            NotificationHub.Default.Subscribe(
                 this,
+                ID.FromType<KeyboardNotificationKeys.AnimationSettings>(),
                 EnableOrDisableAnimation
             );
 
@@ -68,16 +69,18 @@ namespace umi3d.browserRuntime.ui.keyboard
                 SpecialKeyPressed
             );
 
-            NotificationHub.Default.Subscribe<KeyboardNotificationKeys.TextFieldSelected>(
+            NotificationHub.Default.Subscribe(
                 this,
-                new FilterByRef(FilterType.AcceptAllExcept, this),
-                TextFieldSelected
+                ID.FromType<KeyboardNotificationKeys.TextFieldSelected>(),
+                TextFieldSelected,
+                new FilterByRef(FilterType.AcceptAllExcept, this)
             );
 
-            NotificationHub.Default.Subscribe<KeyboardNotificationKeys.TextFieldDeselected>(
+            NotificationHub.Default.Subscribe(
                 this,
-                new FilterByRef(FilterType.AcceptAllExcept, this),
-                TextFieldDeselected
+                ID.FromType<KeyboardNotificationKeys.TextFieldDeselected>(),
+                TextFieldDeselected,
+                new FilterByRef(FilterType.AcceptAllExcept, this)
             );
         }
 

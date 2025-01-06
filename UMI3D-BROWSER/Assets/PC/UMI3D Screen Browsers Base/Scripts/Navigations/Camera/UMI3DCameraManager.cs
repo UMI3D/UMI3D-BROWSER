@@ -36,7 +36,11 @@ public sealed class UMI3DCameraManager
 
     public UMI3DCameraManager()
     {
-        NotificationHub.Default.Subscribe(this, UMI3DClientNotificatonKeys.CameraPropertiesNotification, null, CameraPropertiesReception);
+        NotificationHub.Default.Subscribe(
+            this, 
+            UMI3DClientNotificatonKeys.CameraPropertiesNotification, 
+            CameraPropertiesReception
+        );
     }
 
     public void HandleView()

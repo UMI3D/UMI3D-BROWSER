@@ -158,7 +158,6 @@ namespace umi3d.browserRuntime.ui.windowBar
             NotificationHub.Default.Subscribe(
                 typeof(WindowsManager).FullName,
                 WindowsManagerNotificationKey.Minimize,
-                null,
                 Minimize
             );
 
@@ -166,7 +165,6 @@ namespace umi3d.browserRuntime.ui.windowBar
             NotificationHub.Default.Subscribe(
                 typeof(WindowsManager).FullName,
                 WindowsManagerNotificationKey.Maximize,
-                null,
                 Maximize
             );
 
@@ -174,7 +172,6 @@ namespace umi3d.browserRuntime.ui.windowBar
             NotificationHub.Default.Subscribe(
                  typeof(WindowsManager).FullName,
                  WindowsManagerNotificationKey.FullScreenModeWillChange,
-                 null,
                  FullScreenWillChange
              );
         }

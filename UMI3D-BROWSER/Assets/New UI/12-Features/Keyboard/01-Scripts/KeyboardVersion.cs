@@ -25,9 +25,9 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         void Awake()
         {
-            NotificationHub.Default.Subscribe<KeyboardNotificationKeys.ChangeVersion>(
+            NotificationHub.Default.Subscribe(
                 this,
-                null,
+                ID.FromType<KeyboardNotificationKeys.ChangeVersion>(),
                 VersionChanged
             );
         }

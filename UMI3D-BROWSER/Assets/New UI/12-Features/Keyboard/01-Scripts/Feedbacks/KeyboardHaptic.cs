@@ -32,7 +32,6 @@ namespace umi3d.browserRuntime.ui.keyboard
             NotificationHub.Default.Subscribe(
                 this,
                 KeyboardNotificationKeys.KeyHovered,
-                null,
                 Haptic
             );
         }

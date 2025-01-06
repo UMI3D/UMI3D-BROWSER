@@ -42,8 +42,9 @@ namespace com.inetum.unitygeckowebview
 
         void OnEnable()
         {
-            NotificationHub.Default.Subscribe<GeckoWebViewNotificationKeys.WebViewSizeChanged>(
+            NotificationHub.Default.Subscribe(
                 this, 
+                ID.FromType<GeckoWebViewNotificationKeys.WebViewSizeChanged>(),
                 WebViewSizeChanged
             );
 

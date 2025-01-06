@@ -48,10 +48,11 @@ namespace umi3d.browserRuntime.ui.settings
 
             content = transform.parent.GetChild(1).gameObject;
 
-            NotificationHub.Default.Subscribe<SettingsNotificationKeys.NewPanelSelected>(
+            NotificationHub.Default.Subscribe(
                 this,
-                new FilterByRef(FilterType.AcceptAllExcept, this),
-                Deactivate
+                ID.FromType<SettingsNotificationKeys.NewPanelSelected>(),
+                Deactivate,
+                new FilterByRef(FilterType.AcceptAllExcept, this)
             );
 
             notifier = NotificationHub.Default

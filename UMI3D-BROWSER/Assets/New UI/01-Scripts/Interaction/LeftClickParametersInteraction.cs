@@ -29,13 +29,15 @@ public class LeftClickParametersInteraction : MonoBehaviour
 
     private void Awake()
     {
-        NotificationHub.Default.Subscribe<InteractionNotificationKeys.ParameterInputFound>(
+        NotificationHub.Default.Subscribe(
             this,
+            ID.FromType<InteractionNotificationKeys.ParameterInputFound>(),
             ParameterInputFound
         );
 
-        NotificationHub.Default.Subscribe<InteractionNotificationKeys.ToolReleased>(
+        NotificationHub.Default.Subscribe(
             this,
+            ID.FromType<InteractionNotificationKeys.ToolReleased>(),
             ToolReleased
         );
 

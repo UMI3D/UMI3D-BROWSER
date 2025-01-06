@@ -29,8 +29,9 @@ namespace umi3d.browserRuntime.ui.settings
         {
             instanceID = GetComponentInParent<SettingsContent>().GetInstanceID();
 
-            NotificationHub.Default.Subscribe<SettingsNotificationKeys.MicrophoneModeChanged>(
+            NotificationHub.Default.Subscribe(
                 this,
+                ID.FromType<SettingsNotificationKeys.MicrophoneModeChanged>(),
                 ModeChanged
             );
         }

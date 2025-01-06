@@ -25,14 +25,17 @@ namespace umi3d.browserRuntime.ui.popup
         {
             gameObject.SetActive(false);
 
-            NotificationHub.Default
-                 .Subscribe<PopupNotificationKeys.DisplayPopup>(
+            NotificationHub.Default.Subscribe(
                  this,
+                 ID.FromType<PopupNotificationKeys.DisplayPopup>(),
                  NewPopup
              );
 
-            NotificationHub.Default
-                .Subscribe<PopupNotificationKeys.PopupClosed>(this, PopupClosed);
+            NotificationHub.Default.Subscribe(
+                this,
+                ID.FromType<PopupNotificationKeys.PopupClosed>(),
+                PopupClosed
+            );
         }
 
         void OnDestroy()

@@ -50,13 +50,15 @@ namespace umi3d.baseBrowser.inputs.interactions
         {
             base.Awake();
 
-            NotificationHub.Default.Subscribe<InputNotificationKeys.TextEditionStart>(
+            NotificationHub.Default.Subscribe(
                 this,
+                ID.FromType<InputNotificationKeys.TextEditionStart>(),
                 TextEditionStart
             );
 
-            NotificationHub.Default.Subscribe<InputNotificationKeys.TextEditionStop>(
+            NotificationHub.Default.Subscribe(
                 this,
+                ID.FromType<InputNotificationKeys.TextEditionStop>(),
                 TextEditionStop
             );
         }

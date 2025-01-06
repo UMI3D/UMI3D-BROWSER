@@ -74,9 +74,9 @@ namespace inetum.unityUtils.observation
 
         public void Subscribe(
             Object subscriber,
-            string id,
-            INotificationFilter publishersFilter,
-            Action<Notification> action
+            ID id,
+            Action<Notification> action,
+            INotificationFilter publishersFilter = null
         )
         {
             if (isNotifying(id))
@@ -121,66 +121,14 @@ namespace inetum.unityUtils.observation
             }
         }
 
-        public void Subscribe<T>(
-            Object subscriber,
-            INotificationFilter publishersFilter,
-            Action<Notification> action
-        )
-        {
-            Subscribe(subscriber, typeof(T).FullName, publishersFilter, action);
-        }
-
         public void Subscribe(
             Object subscriber,
-            string id,
-            INotificationFilter publishersFilter,
-            Action action
+            ID id,
+            Action action,
+            INotificationFilter publishersFilter = null
         )
         {
-            Subscribe(subscriber, id, publishersFilter, notification => action());
-        }
-
-        public void Subscribe<T>(
-            Object subscriber,
-            INotificationFilter publishersFilter,
-            Action action
-        )
-        {
-            Subscribe(subscriber, typeof(T).FullName, publishersFilter, action);
-        }
-
-        public void Subscribe(
-            Object subscriber,
-            string id,
-            Action<Notification> action
-        )
-        {
-            Subscribe(subscriber, id, null, action);
-        }
-
-        public void Subscribe<T>(
-            Object subscriber,
-            Action<Notification> action
-        )
-        {
-            Subscribe(subscriber, typeof(T).FullName, null, action);
-        }
-
-        public void Subscribe(
-            Object subscriber,
-            string id,
-            Action action
-        )
-        {
-            Subscribe(subscriber, id, null, action);
-        }
-
-        public void Subscribe<T>(
-            Object subscriber,
-            Action action
-        )
-        {
-            Subscribe(subscriber, typeof(T).FullName, action);
+            Subscribe(subscriber, id, notification => action(), publishersFilter);
         }
 
         #endregion

@@ -23,8 +23,9 @@ namespace umi3d.browserRuntime.ui.settings
     {
         void Awake()
         {
-            NotificationHub.Default.Subscribe<SettingsNotificationKeys.QualityChanged>(
+            NotificationHub.Default.Subscribe(
                 this,
+                ID.FromType<SettingsNotificationKeys.QualityChanged>(),
                 QualityChanged
             );
         }

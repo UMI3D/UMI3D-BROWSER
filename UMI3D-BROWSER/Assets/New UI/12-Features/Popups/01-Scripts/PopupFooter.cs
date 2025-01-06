@@ -30,9 +30,9 @@ namespace umi3d.browserRuntime.ui.popup
 
         void Awake()
         {
-            NotificationHub.Default
-                .Subscribe<PopupNotificationKeys.DisplayPopup>(
+            NotificationHub.Default.Subscribe(
                 this,
+                ID.FromType<PopupNotificationKeys.DisplayPopup>(),
                 NewPopup
             );
         }

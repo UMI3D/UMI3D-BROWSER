@@ -43,12 +43,15 @@ public class NotificationTests
             object publisher = null;
             Dictionary<string, object> info = null;
 
-            LogAssert.Expect(LogType.Error, $"[Notification.Notification] Error: create a new notification with id null or empty.");
-            string message = $"[Notification.Notification] Error: create a new notification with a null publisher.\n" +
-                    $"Having a null publisher is a bad practice because it increase complexity while debugging.";
-            LogAssert.Expect(LogType.Error, message);
+            string message1 =
+            $"[Notification.Notification] Error: create a new notification with id null or empty.";
+            string message2 = 
+            $"[Notification.Notification] Error: create a new notification with a null publisher.\n" +
+            $"Having a null publisher is a bad practice because it increase complexity while debugging.";
             Notification notification = new(id, publisher, info);
 
+            LogAssert.Expect(LogType.Error, message1);
+            LogAssert.Expect(LogType.Error, message2);
             Assert.AreEqual(notification.ID, id);
             Assert.AreEqual(notification.Publisher, publisher);
             Assert.AreEqual(notification.Info, info);
@@ -61,12 +64,15 @@ public class NotificationTests
             object publisher = null;
             Dictionary<string, object> info = null;
 
-            LogAssert.Expect(LogType.Error, $"[Notification.Notification] Error: create a new notification with id null or empty.");
-            string message = $"[Notification.Notification] Error: create a new notification with a null publisher.\n" +
-                    $"Having a null publisher is a bad practice because it increase complexity while debugging.";
-            LogAssert.Expect(LogType.Error, message);
+            string message1 =
+            $"[Notification.Notification] Error: create a new notification with id null or empty.";
+            string message2 = 
+            $"[Notification.Notification] Error: create a new notification with a null publisher.\n" +
+            $"Having a null publisher is a bad practice because it increase complexity while debugging.";
             Notification notification = new(id, publisher, info);
 
+            LogAssert.Expect(LogType.Error, message1);
+            LogAssert.Expect(LogType.Error, message2);
             Assert.AreEqual(notification.ID, id);
             Assert.AreEqual(notification.Publisher, publisher);
             Assert.AreEqual(notification.Info, info);
@@ -79,9 +85,9 @@ public class NotificationTests
             object publisher = this;
             Dictionary<string, object> info = null;
 
-            LogAssert.Expect(LogType.Error, $"[Notification.Notification] Error: create a new notification with id null or empty.");
             Notification notification = new(id, publisher, info);
 
+            LogAssert.Expect(LogType.Error, $"[Notification.Notification] Error: create a new notification with id null or empty.");
             Assert.AreEqual(notification.ID, id);
             Assert.AreEqual(notification.Publisher, publisher);
             Assert.AreEqual(notification.Info, info);
@@ -94,9 +100,9 @@ public class NotificationTests
             object publisher = this;
             Dictionary<string, object> info = null;
 
-            LogAssert.Expect(LogType.Error, $"[Notification.Notification] Error: create a new notification with id null or empty.");
             Notification notification = new(id, publisher, info);
 
+            LogAssert.Expect(LogType.Error, $"[Notification.Notification] Error: create a new notification with id null or empty.");
             Assert.AreEqual(notification.ID, id);
             Assert.AreEqual(notification.Publisher, publisher);
             Assert.AreEqual(notification.Info, info);
@@ -109,11 +115,12 @@ public class NotificationTests
             object publisher = null;
             Dictionary<string, object> info = null;
 
-            string message = $"[Notification.Notification] Error: create a new notification with a null publisher.\n" +
-                    $"Having a null publisher is a bad practice because it increase complexity while debugging.";
-            LogAssert.Expect(LogType.Error, message);
+            string message = 
+            $"[Notification.Notification] Error: create a new notification with a null publisher.\n" +
+            $"Having a null publisher is a bad practice because it increase complexity while debugging.";
             Notification notification = new(id, publisher, info);
 
+            LogAssert.Expect(LogType.Error, message);
             Assert.AreEqual(notification.ID, id);
             Assert.AreEqual(notification.Publisher, publisher);
             Assert.AreEqual(notification.Info, info);
@@ -701,6 +708,34 @@ public class NotificationTests
 
             Assert.True(result3);
             Assert.False(info3.HasValue);
+        }
+    }
+
+    public class LogErrorTest
+    {
+        [Test]
+        public void GivenNullNullNull_WhenConstructor_ThenLogError()
+        {
+            string id = new Fixture().Create<string>();
+            Notification notification = new(id, this, null);
+            string infoKey = new Fixture().Create<string>();
+            string message = "This is an error message";
+
+            string erroMessage1 =
+            $"[NULL] notification: '{id}' does not contain key: 'NULL'.";
+            notification.LogError(null, null, null);
+
+            string erroMessage2 =
+            $"[EMPTY] notification: '{id}' does not contain key: 'EMPTY'.";
+            notification.LogError("", "", "");
+
+            string erroMessage3 =
+            $"[{GetType().FullName}] notification: '{id}' does not contain key: '{infoKey}'.\n" + message;
+            notification.LogError(GetType().FullName, infoKey, message);
+
+            LogAssert.Expect(LogType.Error, erroMessage1);
+            LogAssert.Expect(LogType.Error, erroMessage2);
+            LogAssert.Expect(LogType.Error, erroMessage3);
         }
     }
 }

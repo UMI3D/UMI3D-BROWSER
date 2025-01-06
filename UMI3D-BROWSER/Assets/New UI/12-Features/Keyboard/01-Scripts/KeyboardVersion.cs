@@ -50,8 +50,9 @@ namespace umi3d.browserRuntime.ui.keyboard
         {
             currentVersion = currentVersion == KeyboardLocalisationVersion.QWERTY ? KeyboardLocalisationVersion.AZERTY : KeyboardLocalisationVersion.QWERTY;
             UnityEngine.Debug.Log($"test switch version to {currentVersion}");
-            NotificationHub.Default.Notify<KeyboardNotificationKeys.ChangeVersion>(
+            NotificationHub.Default.Notify(
                 this,
+                ID.FromType<KeyboardNotificationKeys.ChangeVersion>(),
                 new()
                 {
                     { KeyboardNotificationKeys.ChangeVersion.Version, currentVersion }

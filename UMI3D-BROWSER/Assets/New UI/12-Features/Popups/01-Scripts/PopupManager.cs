@@ -193,7 +193,7 @@ namespace umi3d.browserRuntime.ui.popup
         {
             if (popupsInfo.Count == 0)
             {
-                NotificationHub.Default.Notify<PopupNotificationKeys.AllPopupAreClosed>(this);
+                NotificationHub.Default.Notify(this, ID.FromType<PopupNotificationKeys.AllPopupAreClosed>());
                 return;
             }
 

@@ -242,9 +242,9 @@ namespace inetum.unityUtils.observation
 
         public int Notify(
             Object publisher,
-            string id,
-            INotificationFilter subscribersFilter,
-            Dictionary<string, Object> info = null
+            ID id,
+            Dictionary<string, Object> info = null,
+            INotificationFilter subscribersFilter = null
         )
         {
             int observers = 0;
@@ -290,32 +290,6 @@ namespace inetum.unityUtils.observation
             notifyStatus[id] = false;
 
             return observers;
-        }
-
-        public int Notify<T>(
-            Object publisher,
-            INotificationFilter subscribersFilter,
-            Dictionary<string, Object> info = null
-        )
-        {
-            return Notify(publisher, typeof(T).FullName, subscribersFilter, info);
-        }
-
-        public int Notify(
-            Object publisher,
-            string id,
-            Dictionary<string, Object> info = null
-        )
-        {
-            return Notify(publisher, id, null, info);
-        }
-
-        public int Notify<T>(
-            Object publisher,
-            Dictionary<string, Object> info = null
-        )
-        {
-            return Notify(publisher, typeof(T).FullName, info);
         }
 
         #endregion

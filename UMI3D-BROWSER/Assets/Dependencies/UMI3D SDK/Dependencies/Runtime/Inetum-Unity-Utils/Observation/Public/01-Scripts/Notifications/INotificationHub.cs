@@ -84,46 +84,9 @@ namespace inetum.unityUtils.observation
         /// <returns></returns>
         public int Notify(
             Object publisher,
-            string id,
-            INotificationFilter subscribersFilter,
-            Dictionary<string, Object> info = null
-        );
-
-        /// <summary>
-        /// Send a notification to all the concerning subscribers. Return the number of observers that have been notified.
-        /// </summary>
-        /// <param name="publisher">The object sending the notification. Must not be null. Ideally must correspond to object.GetType().FullName.</param>
-        /// <param name="subscribersFilter">The notifications that pass this filter test can be sent to the subscribers.</param>
-        /// <param name="info">Additional information.</param>
-        /// <returns></returns>
-        public int Notify<T>(
-            Object publisher,
-            INotificationFilter subscribersFilter,
-            Dictionary<string, Object> info = null
-        );
-
-        /// <summary>
-        /// Send a notification to all the concerning subscribers. Return the number of observers that have been notified.
-        /// </summary>
-        /// <param name="publisher">The object sending the notification. Must not be null. Ideally must correspond to object.GetType().FullName.</param>
-        /// <param name="id">Id of the notification.</param>
-        /// <param name="info">Additional information.</param>
-        /// <returns></returns>
-        int Notify(
-            Object publisher,
-            string id,
-            Dictionary<string, Object> info = null
-        );
-
-        /// <summary>
-        /// Send a notification to all the concerning subscribers. Return the number of observers that have been notified.
-        /// </summary>
-        /// <param name="publisher">The object sending the notification. Must not be null. Ideally must correspond to object.GetType().FullName.</param>
-        /// <param name="info">Additional information.</param>
-        /// <returns></returns>
-        int Notify<T>(
-            Object publisher,
-            Dictionary<string, Object> info = null
+            ID id,
+            Dictionary<string, Object> info = null,
+            INotificationFilter subscribersFilter = null
         );
 
         #endregion

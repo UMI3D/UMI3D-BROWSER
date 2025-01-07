@@ -101,17 +101,11 @@ namespace umi3d.baseBrowser.inputs.interactions
             return null;
         }
 
-        public virtual void CreateLine()
-        {
-        }
-
         public virtual async Task Init(IDrawerData drawer, DrawingInteractionDto drawing)
         {
-            drawer.Positions.Clear();
-            drawer.Meshes.Clear();
-            drawer.LineId = null;
-
             await CreateLine(drawer, drawing);
+
+            drawer.Meshes.Clear();
 
             if (drawing.MeshIds != null)
                 foreach (var meshId in drawing.MeshIds)
@@ -124,6 +118,9 @@ namespace umi3d.baseBrowser.inputs.interactions
 
         public virtual async Task CreateLine(IDrawerData drawer, DrawingInteractionDto drawing)
         {
+            drawer.Positions.Clear();
+            drawer.LineId = null;
+
             if (drawing.LineId != 0)
             {
                 var lineEntity = await UMI3DEnvironmentLoader.Instance.WaitUntilEntityLoaded(drawer.environmentId, drawing.LineId, new());
@@ -137,7 +134,7 @@ namespace umi3d.baseBrowser.inputs.interactions
             }
         }
 
-        public virtual void DrawUpdate(DrawingInteractionDto drawing, ParticleSystem particleSystem, IDrawerData drawer)
+        public virtual async void DrawUpdate(DrawingInteractionDto drawing, ParticleSystem particleSystem, IDrawerData drawer)
         {
             Vector3? positionTMP = DrawingManager.Instance.GetDrawingWorldPoint(drawing, drawer.Meshes, drawer.Input);
             if (!positionTMP.HasValue)
@@ -167,12 +164,6 @@ namespace umi3d.baseBrowser.inputs.interactions
 
             particleSystem?.Emit(1);
 
-            if(drawer.Positions.Count > 100)
-            {
-                //New Line
-
-            }
-
             drawer.Positions.Add(position);
 
             if (drawer.LineId.HasValue)
@@ -183,7 +174,7 @@ namespace umi3d.baseBrowser.inputs.interactions
                 line.SetPositions(drawer.Positions.ToArray());
             }
 
-            if (Time.time >= drawer.TimeSynchronization + drawer.LastUpdateTime)
+            if (Time.time >= drawer.TimeSynchronization + drawer.LastUpdateTime || drawer.Positions.Count > 100)
             {
                 //todo add delay
                 var drawingDto = new common.interaction.DrawingDto
@@ -201,6 +192,13 @@ namespace umi3d.baseBrowser.inputs.interactions
                 };
                 cdk.UMI3DClientServer.SendRequest(drawingDto, true);
                 drawer.LastUpdateTime = Time.time;
+
+                if(drawer.Positions.Count > 100)
+                {
+                    await CreateLine(drawer, drawing);
+                    drawer.Positions.Add(position);
+                }
+
             }
         }
 

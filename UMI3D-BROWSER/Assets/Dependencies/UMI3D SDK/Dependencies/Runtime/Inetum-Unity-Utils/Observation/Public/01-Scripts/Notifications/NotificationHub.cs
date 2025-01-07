@@ -126,19 +126,9 @@ namespace inetum.unityUtils.observation
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public bool isNotifying(string id)
+        public bool isNotifying(ID id)
         {
             return notifyStatus.TryGetValue(id, out bool isNotifying) && isNotifying;
-        }
-
-        /// <summary>
-        /// Whether id is being notified.
-        /// </summary>
-        /// <typeparam name="T">The id of the notification.</typeparam>
-        /// <returns></returns>
-        public bool isNotifying<T>()
-        {
-            return notifyStatus.TryGetValue(typeof(T).FullName, out bool isNotifying) && isNotifying;
         }
 
         public void Subscribe(
@@ -202,95 +192,63 @@ namespace inetum.unityUtils.observation
             }
         }
 
-        public void Unsubscribe(Object subscriber)
+        public void Unsubscribe(object subscriber, ID? id = null)
         {
             string subscriberName = subscriber is string
                 ? subscriber as string
                 : subscriber.GetType().FullName;
 
-            // Check if that 'subscriber' listen to any notification.
+            // Check if that 'subscriber' listen to any notifications.
             if (!_subscriberToID.TryGetValue(subscriber, out HashSet<string> ids))
             {
-                UnityEngine.Debug.LogWarning($"[NotificationHub] Try to unsubscribe {subscriberName} but subscriber has not subscribed yet.");
+                UnityEngine.Debug.LogWarning($"[NotificationHub] Warning: no subscription for '{subscriberName}'.");
                 // If subscriber is not listening to notification then return;
                 return;
             }
 
-            // Loop through all the ids that this 'subscriber' is listening to.
-            foreach (string id in ids)
+            if (id == null)
             {
-                // Check if subscriptions exist for 'id'.
-                if (!_subscriptions.TryGetValue(id, out List<Subscription> subscriptions))
+                // Loop through all the ids that this 'subscriber' is listening to.
+                foreach (string _id in ids)
                 {
-                    UnityEngine.Debug.LogError($"[{nameof(Unsubscribe)}] Try remove subscriptions for {subscriberName}. No subscription for {id}, that should not happen.");
-                    continue;
+                    RemoveIdForSubscriber(_id, subscriber, subscriberName);
                 }
-
-                if (isNotifying(id))
-                {
-                    UnityEngine.Debug.LogError($"[{nameof(Unsubscribe)}] Try remove subscriptions for {subscriberName}. Try to unsubscribe to {id} while Notify is running with that id, that should not happen.");
-                    continue;
-                }
-
-                // Remove all the subscriptions concerning 'subscriber'.
-                subscriptions.RemoveAll(sub => sub.subscriber == subscriber);
-
-                // Remove id from the subscriptions if there is no more subscribers.
-                if (subscriptions.Count == 0)
-                {
-                    _subscriptions.Remove(id);
-                }
-            }
-
-            // Clear the ids.
-            ids.Clear();
-
-            // Remove 'subscriber' from '_subscriberToID'.
-            _subscriberToID.Remove(subscriber);
-        }
-
-        public void Unsubscribe(Object subscriber, ID id)
-        {
-            string subscriberName = subscriber is string
-                ? subscriber as string
-                : subscriber.GetType().FullName;
-
-            // Check if that 'subscriber' listen to any notification.
-            if (!_subscriberToID.TryGetValue(subscriber, out HashSet<string> ids))
+            } else
             {
-                UnityEngine.Debug.LogWarning($"[NotificationHub] Try to unsubscribe {subscriberName} but subscriber has not subscribed yet.");
-                // If subscriber is not listening to notifications then return;
-                return;
+                RemoveIdForSubscriber(id, subscriber, subscriberName);
             }
 
-            // Check if 'subscriber' listen to 'id'.
-            if (!ids.Contains(id))
+            if (id == null)
             {
-                UnityEngine.Debug.LogWarning($"[NotificationHub] Try to unsubscribe {subscriberName} with id {id} but subscriber has not subscribed to this id yet.");
-                // If subscriber is not listening to 'id' then return;
-                return;
-            }
-
-            if (isNotifying(id))
+                // Clear the ids.
+                ids.Clear();
+            } else
             {
-                UnityEngine.Debug.LogError($"[{nameof(Unsubscribe)}] Try to unsubscribe {subscriberName} with id {id} while Notify is running with that id, that should not happen.");
-                return;
+                // Remove this 'id' from the list of listen ids.
+                ids.Remove(id);
             }
 
-            // Remove this 'id' from the list of listen ids.
-            ids.Remove(id);
 
             // If there is not more ids then remove 'subscriber' from '_subscriberToID'.
             if (ids.Count == 0)
             {
                 _subscriberToID.Remove(subscriber);
             }
+        }
 
+        private bool RemoveIdForSubscriber(string id, object subscriber, string subscriberName)
+        {
             // Check if subscriptions exist for 'id'.
             if (!_subscriptions.TryGetValue(id, out List<Subscription> subscriptions))
             {
-                UnityEngine.Debug.LogError($"[{nameof(Unsubscribe)}] Try remove subscriptions for {subscriberName}. No subscription for {id}, that should not happen.");
-                return;
+                UnityEngine.Debug.LogError($"[NotificationHub] Error: no id '{id}' for subscriber '{subscriberName}'.");
+                return false;
+            }
+
+            if (isNotifying(id))
+            {
+                UnityEngine.Debug.LogError($"[{nameof(Unsubscribe)}] Try remove subscriptions for {subscriberName}. Try to unsubscribe to {id} while Notify is running with that id, that should not happen.");
+                return false;
             }
 
             // Remove all the subscriptions concerning 'subscriber'.
@@ -301,12 +259,14 @@ namespace inetum.unityUtils.observation
             {
                 _subscriptions.Remove(id);
             }
+
+            return true;
         }
 
         public int Notify(
-            Object publisher,
+            object publisher,
             ID id,
-            Dictionary<string, Object> info = null,
+            Dictionary<string, object> info = null,
             INotificationFilter subscribersFilter = null
         )
         {

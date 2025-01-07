@@ -36,9 +36,9 @@ namespace umi3d.browserRuntime.ui.keyboard
         void Awake()
         {
             selectionNotifier = NotificationHub.Default
-                .GetNotifier<KeyboardNotificationKeys.TextFieldSelected>(this);
+                .GetNotifier(this, ID.FromType<KeyboardNotificationKeys.TextFieldSelected>());
             deselectionNotifier = NotificationHub.Default
-                .GetNotifier<KeyboardNotificationKeys.TextFieldDeselected>(this);
+                .GetNotifier(this, ID.FromType<KeyboardNotificationKeys.TextFieldDeselected>());
         }
 
         void OnEnable()

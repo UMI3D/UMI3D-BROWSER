@@ -220,8 +220,6 @@ namespace inetum.unityUtils.observation
             }
         }
 
-        #region Notify
-
         public int Notify(
             Object publisher,
             ID id,
@@ -274,13 +272,9 @@ namespace inetum.unityUtils.observation
             return observers;
         }
 
-        #endregion
-
-        #region GetNotifier
-
         public Notifier GetNotifier(
             Object publisher,
-            string id,
+            ID id,
             INotificationFilter subscribersFilter = null,
             Dictionary<string, Object> info = null
         )
@@ -293,17 +287,6 @@ namespace inetum.unityUtils.observation
                 this
             );
         }
-
-        public Notifier GetNotifier<T>(
-            Object publisher,
-            INotificationFilter subscribersFilter = null,
-            Dictionary<string, Object> info = null
-        )
-        {
-            return GetNotifier(publisher, typeof(T).FullName, subscribersFilter, info);
-        }
-
-        #endregion
 
         /// <summary>
         /// Class representing a subscription to a notification.

@@ -39,7 +39,7 @@ namespace umi3d.browserRuntime.ui.settings
             graphicsSettings = GetComponentInParent<GraphicsSettings>();
 
             notifier = NotificationHub.Default
-                .GetNotifier<SettingsNotificationKeys.QualityChanged>(this);
+                .GetNotifier(this, ID.FromType<SettingsNotificationKeys.QualityChanged>());
         }
 
         void Start()

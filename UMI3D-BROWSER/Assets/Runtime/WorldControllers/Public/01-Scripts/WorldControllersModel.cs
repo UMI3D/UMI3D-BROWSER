@@ -14,9 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
-using System.Collections.Generic;
-using System.Linq;
+using inetum.unityUtils.observation;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.worldController
@@ -53,13 +51,13 @@ namespace umi3d.browserRuntime.worldController
             }
 
             addedNotifier = NotificationHub.Default
-                .GetNotifier<WorldControllersNotificationKeys.Added>(this);
+                .GetNotifier(this, ID.FromType<WorldControllersNotificationKeys.Added>());
 
             updatedNotifier = NotificationHub.Default
-                .GetNotifier<WorldControllersNotificationKeys.Updated>(this);
+                .GetNotifier(this, ID.FromType<WorldControllersNotificationKeys.Updated>());
 
             removedNotifier = NotificationHub.Default
-                .GetNotifier<WorldControllersNotificationKeys.Removed>(this);
+                .GetNotifier(this, ID.FromType<WorldControllersNotificationKeys.Removed>());
         }
 
         #region Loading and Saving

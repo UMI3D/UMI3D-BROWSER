@@ -47,7 +47,7 @@ namespace umi3d.browserRuntime.ui.keyboard
             selection.allowSelection = !waitForSubmit;
 
             deselectionNotifier = NotificationHub.Default
-                .GetNotifier<KeyboardNotificationKeys.TextFieldDeselected>(this);
+                .GetNotifier(this, ID.FromType<KeyboardNotificationKeys.TextFieldDeselected>());
         }
 
         void OnEnable()

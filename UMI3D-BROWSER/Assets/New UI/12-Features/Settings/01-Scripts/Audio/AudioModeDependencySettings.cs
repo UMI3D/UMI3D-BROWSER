@@ -32,7 +32,7 @@ namespace umi3d.browserRuntime.ui.settings
             NotificationHub.Default.Subscribe(
                 this,
                 ID.FromType<SettingsNotificationKeys.MicrophoneModeChanged>(),
-                ModeChanged
+                (Callback)ModeChanged
             );
         }
 

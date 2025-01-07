@@ -163,10 +163,10 @@ namespace umi3d.baseBrowser.Controller
             });
 
             parameterInputFoundNotifier = NotificationHub.Default
-                .GetNotifier<InteractionNotificationKeys.ParameterInputFound>(this);
+                .GetNotifier(this, ID.FromType<InteractionNotificationKeys.ParameterInputFound>());
 
             toolReleasedNotifier = NotificationHub.Default
-                .GetNotifier<InteractionNotificationKeys.ToolReleased>(this);
+                .GetNotifier(this, ID.FromType<InteractionNotificationKeys.ToolReleased>());
         }
 
         private void Instance_onNodeGameObjectSet(UMI3DNodeInstance node, GameObject oldGameObject)

@@ -33,8 +33,9 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         void Awake()
         {
-            openOrCloseNotifier = NotificationHub.Default.GetNotifier<KeyboardNotificationKeys.OpenOrClose>(
+            openOrCloseNotifier = NotificationHub.Default.GetNotifier(
                 this,
+                ID.FromType<KeyboardNotificationKeys.OpenOrClose>(),
                 null,
                 new()
                 {

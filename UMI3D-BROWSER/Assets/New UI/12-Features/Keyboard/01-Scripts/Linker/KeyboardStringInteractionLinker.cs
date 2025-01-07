@@ -30,7 +30,7 @@ namespace umi3d.browserRuntime.ui.keyboard
         void Awake()
         {
             selectionNotifier = NotificationHub.Default
-                .GetNotifier<KeyboardNotificationKeys.TextFieldSelected>(this);
+                .GetNotifier(this, ID.FromType<KeyboardNotificationKeys.TextFieldSelected>());
         }
 
         void OnEnable()

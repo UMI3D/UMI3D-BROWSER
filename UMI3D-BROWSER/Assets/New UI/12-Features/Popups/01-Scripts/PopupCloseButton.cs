@@ -35,17 +35,17 @@ namespace umi3d.browserRuntime.ui.popup
             NotificationHub.Default.Subscribe(
                this,
                ID.FromType<PopupNotificationKeys.DisplayPopup>(),
-               NewPopup
+               (Callback)NewPopup
            );
 
             NotificationHub.Default.Subscribe(
                this,
                ID.FromType<PopupNotificationKeys.CloseCurrentOpenedPopup>(),
-               CloseCurrentOpenedPopup
+               (Callback)CloseCurrentOpenedPopup
            );
 
             closeNotifier = NotificationHub.Default
-               .GetNotifier<PopupNotificationKeys.PopupClosed>(this);
+               .GetNotifier(this, ID.FromType<PopupNotificationKeys.PopupClosed>());
         }
 
         void OnDestroy()

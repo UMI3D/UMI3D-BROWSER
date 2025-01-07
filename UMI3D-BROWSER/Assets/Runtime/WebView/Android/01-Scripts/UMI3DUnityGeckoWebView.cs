@@ -44,13 +44,13 @@ namespace umi3d.browserRuntime.webView.android
             );
 
             textureSizeChangedNotifier = NotificationHub.Default
-                .GetNotifier<GeckoWebViewNotificationKeys.TextureSizeChanged>(this);
+                .GetNotifier(this, ID.FromType<GeckoWebViewNotificationKeys.TextureSizeChanged>());
 
             sizeChangedNotifier = NotificationHub.Default
-                .GetNotifier<GeckoWebViewNotificationKeys.WebViewSizeChanged>(this);
+                .GetNotifier(this, ID.FromType<GeckoWebViewNotificationKeys.WebViewSizeChanged>());
 
             ScrollNotifier = NotificationHub.Default
-                .GetNotifier<GeckoWebViewNotificationKeys.ScrollChanged>(this);
+                .GetNotifier(this, ID.FromType<GeckoWebViewNotificationKeys.ScrollChanged>());
 
             interactibilityNotifier = NotificationHub.Default.GetNotifier(
                 this,
@@ -58,10 +58,10 @@ namespace umi3d.browserRuntime.webView.android
             );
 
             synchronizationAdministrationNotifier = NotificationHub.Default
-                .GetNotifier<GeckoWebViewNotificationKeys.SynchronizationAdministrationChanged>(this);
+                .GetNotifier(this, ID.FromType<GeckoWebViewNotificationKeys.SynchronizationAdministrationChanged>());
 
             desynchronizeNotifier = NotificationHub.Default
-                .GetNotifier<GeckoWebViewNotificationKeys.Desynchronization>(this);
+                .GetNotifier(this, ID.FromType<GeckoWebViewNotificationKeys.Desynchronization>());
         }
 
         void OnEnable()

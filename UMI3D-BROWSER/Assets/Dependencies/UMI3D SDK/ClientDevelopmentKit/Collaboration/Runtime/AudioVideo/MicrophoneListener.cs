@@ -38,7 +38,7 @@ namespace umi3d.cdk.collaboration
             NotificationHub.Default.Subscribe(
                 this,
                 QuittingManagerNotificationKey.ApplicationIsQuitting,
-                _OnApplicationQuit
+                (Callback)_OnApplicationQuit
             );
 
             UMI3DUser.OnUserMicrophoneIdentityUpdated.AddListener(IdentityUpdate);

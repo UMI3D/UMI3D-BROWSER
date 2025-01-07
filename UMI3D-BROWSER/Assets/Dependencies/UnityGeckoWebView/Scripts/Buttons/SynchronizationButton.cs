@@ -91,7 +91,7 @@ namespace com.inetum.unitygeckowebview
             localScale = rectTransform.localScale;
 
             synchronizationNotifier = NotificationHub.Default
-                .GetNotifier<GeckoWebViewNotificationKeys.SynchronizationChanged>(this);
+                .GetNotifier(this, ID.FromType<GeckoWebViewNotificationKeys.SynchronizationChanged>());
 
             button.interactable = false;
             IsRecording = false;

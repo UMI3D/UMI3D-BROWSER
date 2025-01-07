@@ -51,12 +51,12 @@ namespace umi3d.browserRuntime.ui.settings
             NotificationHub.Default.Subscribe(
                 this,
                 ID.FromType<SettingsNotificationKeys.NewPanelSelected>(),
-                Deactivate,
+                (Callback)Deactivate,
                 new FilterByRef(FilterType.AcceptAllExcept, this)
             );
 
             notifier = NotificationHub.Default
-                .GetNotifier<SettingsNotificationKeys.NewPanelSelected>(this);
+                .GetNotifier(this, ID.FromType<SettingsNotificationKeys.NewPanelSelected>());
         }
 
         void OnDestroy()

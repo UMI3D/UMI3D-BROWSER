@@ -31,7 +31,7 @@ namespace umi3d.browserRuntime.ui.popup
             NotificationHub.Default.Subscribe(
                this,
                ID.FromType<PopupNotificationKeys.DisplayPopup>(),
-               NewPopup
+               (Callback)NewPopup
            );
         }
 

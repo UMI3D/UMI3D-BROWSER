@@ -955,7 +955,7 @@ namespace umi3d.cdk.collaboration
                 NotificationHub.Default.Subscribe(
                     this,
                     QuittingManagerNotificationKey.ApplicationIsQuitting,
-                    ApplicationQuit
+                    (Callback)ApplicationQuit
                 );
             }
             HasBeenSet = true;

@@ -31,7 +31,7 @@ namespace com.inetum.unitygeckowebview
         void Awake()
         {
             sizeChangedNotifier = NotificationHub.Default
-                .GetNotifier<GeckoWebViewNotificationKeys.WebViewSizeChanged>(this);
+                .GetNotifier(this, ID.FromType<GeckoWebViewNotificationKeys.WebViewSizeChanged>());
 
             width.text = "1";
             height.text = "1";

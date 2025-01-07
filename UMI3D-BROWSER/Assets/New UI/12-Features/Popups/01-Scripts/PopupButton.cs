@@ -42,7 +42,7 @@ namespace umi3d.browserRuntime.ui.popup
             stringEvent = GetComponentInChildren<LocalizeStringEvent>();
 
             closeNotifier = NotificationHub.Default
-                .GetNotifier<PopupNotificationKeys.PopupClosed>(this);
+                .GetNotifier(this, ID.FromType<PopupNotificationKeys.PopupClosed>());
         }
 
         void Click()

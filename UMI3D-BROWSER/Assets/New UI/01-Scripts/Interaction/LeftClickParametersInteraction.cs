@@ -42,7 +42,7 @@ public class LeftClickParametersInteraction : MonoBehaviour
         );
 
         displayParameterNotifier = NotificationHub.Default
-                .GetNotifier<InteractionNotificationKeys.DisplayParameters>(this);
+                .GetNotifier(this, ID.FromType<InteractionNotificationKeys.DisplayParameters>());
 
         _parameters = new List<AbstractParameterDto>();
     }

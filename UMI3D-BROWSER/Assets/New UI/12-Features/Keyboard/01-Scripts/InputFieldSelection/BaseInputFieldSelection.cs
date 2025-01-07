@@ -73,7 +73,7 @@ namespace umi3d.browserRuntime.ui.keyboard
             this.context = context;
 
             selectionNotifier = NotificationHub.Default
-                .GetNotifier<KeyboardNotificationKeys.TextFieldSelected>(this);
+                .GetNotifier(this, ID.FromType<KeyboardNotificationKeys.TextFieldSelected>());
         }
 
         public virtual void OnEnable()

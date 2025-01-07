@@ -36,8 +36,6 @@ namespace inetum.unityUtils.observation
             INotificationFilter publishersFilter = null
         );
 
-        #region Unsubscibe
-
         /// <summary>
         /// Remove all entries concerning a specific <paramref name="subscriber"/>.
         /// </summary>
@@ -50,10 +48,6 @@ namespace inetum.unityUtils.observation
         /// <param name="subscriber">The object waiting for notification. Must not be null. If subscriber is static then user typeof().FullName.</param>
         /// <param name="id">Id of the notification.</param>
         public void Unsubscribe(Object subscriber, ID id);
-
-        #endregion
-
-        #region Notify
 
         /// <summary>
         /// Send a notification to all the concerning subscribers. Return the number of observers that have been notified.
@@ -70,10 +64,6 @@ namespace inetum.unityUtils.observation
             INotificationFilter subscribersFilter = null
         );
 
-        #endregion
-
-        #region GetNotifier
-
         /// <summary>
         /// Get a <see cref="Notifier"/>. Use that to optimize notification sending.
         /// </summary>
@@ -84,24 +74,9 @@ namespace inetum.unityUtils.observation
         /// <returns></returns>
         public Notifier GetNotifier(
             Object publisher,
-            string id,
+            ID id,
             INotificationFilter subscribersFilter = null,
             Dictionary<string, Object> info = null
         );
-
-        /// <summary>
-        /// Get a <see cref="Notifier"/>. Use that to optimize notification sending.
-        /// </summary>
-        /// <param name="publisher"></param>
-        /// <param name="subscribersFilter"></param>
-        /// <param name="info"></param>
-        /// <returns></returns>
-        public Notifier GetNotifier<T>(
-            Object publisher,
-            INotificationFilter subscribersFilter = null,
-            Dictionary<string, Object> info = null
-        );
-
-        #endregion
     }
 }

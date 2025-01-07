@@ -36,26 +36,26 @@ namespace umi3d.browserRuntime.ui.popup
             NotificationHub.Default.Subscribe(
                 this,
                 ID.FromType<PopupNotificationKeys.EnqueuePopup>(),
-                NewPopupEnqueued,
+                (Callback)NewPopupEnqueued,
                 new FilterByRef(FilterType.AcceptAllExcept, this)
             );
 
             NotificationHub.Default.Subscribe(
                 this,
                 ID.FromType<PopupNotificationKeys.DequeuePopup>(),
-                DequeuePopup
+                (Callback)DequeuePopup
             );
 
             NotificationHub.Default.Subscribe(
                 this, 
                 ID.FromType<PopupNotificationKeys.PopupClosed>(),
-                PopupClosed
+                (Callback)PopupClosed
             );
 
             NotificationHub.Default.Subscribe(
                 this,
                 ID.FromType<PopupNotificationKeys.ReplaceCurrentOpenedPopup>(),
-                ReplaceCurrentOpenedPopup
+                (Callback)ReplaceCurrentOpenedPopup
             );
 
             popup = Instantiate(popupPrefab);
@@ -63,10 +63,10 @@ namespace umi3d.browserRuntime.ui.popup
             popup.SetActive(false);
 
             displayPopupNotifier = NotificationHub.Default
-                .GetNotifier<PopupNotificationKeys.DisplayPopup>(this);
+                .GetNotifier(this, ID.FromType<PopupNotificationKeys.DisplayPopup>());
 
             closeCurrentPopupNotifier = NotificationHub.Default
-                .GetNotifier<PopupNotificationKeys.CloseCurrentOpenedPopup>(this);
+                .GetNotifier(this, ID.FromType<PopupNotificationKeys.CloseCurrentOpenedPopup>());
         }
 
         void OnDestroy()

@@ -99,7 +99,6 @@ public class NotificationHubTests
         }
     }
 
-
     public class SubscribeTest
     {
         Fixture fixture;
@@ -144,7 +143,16 @@ public class NotificationHubTests
 
             NotificationHub.Default.Subscribe(subscriber, id, (Callback)(() => { }));
 
-
+            IEnumerable<object> subscribers = NotificationHub.Default.GetSubscribersFor(id);
+            IEnumerator<object> subscribersEnumerator = subscribers.GetEnumerator();
+            IEnumerable<string> ids = NotificationHub.Default.GetIdsFor(subscriber);
+            IEnumerator<string> idsEnumerator = ids.GetEnumerator();
+            Assert.AreEqual(1, subscribers.Count());
+            Assert.True(subscribersEnumerator.MoveNext());
+            Assert.AreEqual(subscribersEnumerator.Current, subscriber);
+            Assert.AreEqual(1, ids.Count());
+            Assert.True(idsEnumerator.MoveNext());
+            Assert.AreEqual(idsEnumerator.Current, id.id);
         }
     }
 

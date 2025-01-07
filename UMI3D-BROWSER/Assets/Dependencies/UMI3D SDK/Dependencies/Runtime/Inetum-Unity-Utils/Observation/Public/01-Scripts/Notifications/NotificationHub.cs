@@ -160,8 +160,6 @@ namespace inetum.unityUtils.observation
                 return;
             }
 
-
-
             if (isNotifying(id))
             {
                 string subscriberName = subscriber is string

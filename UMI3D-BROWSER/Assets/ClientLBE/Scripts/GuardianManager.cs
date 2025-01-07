@@ -664,10 +664,13 @@ namespace ClientLBE
                 localVertexRotations.Add(tempVerticesTransform[i].transform.localRotation);
             }
 
-            if (guardianMesh.transform.parent != null)
+            /*if (guardianMesh.transform.parent != null)
             {
                 guardianMesh.transform.parent = null;
-            }
+            }*/
+            guardianMesh.transform.SetParent(XROrigin.transform, true);
+
+            Debug.Log("REMY : Parent Guardian Mesh -> " + guardianMesh.transform.parent);
         }
     }
 }

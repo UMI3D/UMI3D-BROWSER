@@ -275,8 +275,8 @@ namespace inetum.unityUtils.observation
         public Notifier GetNotifier(
             Object publisher,
             ID id,
-            INotificationFilter subscribersFilter = null,
-            Dictionary<string, Object> info = null
+            Dictionary<string, Object> info = null,
+            INotificationFilter subscribersFilter = null
         )
         {
             return new Notifier(

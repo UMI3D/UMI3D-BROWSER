@@ -36,7 +36,6 @@ namespace umi3d.browserRuntime.ui.keyboard
             openOrCloseNotifier = NotificationHub.Default.GetNotifier(
                 this,
                 ID.FromType<KeyboardNotificationKeys.OpenOrClose>(),
-                null,
                 new()
                 {
                     { KeyboardNotificationKeys.OpenOrClose.IsOpening, isOpen },

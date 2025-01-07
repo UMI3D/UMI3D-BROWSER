@@ -62,7 +62,7 @@ namespace umi3d.mobileBrowser.Controller
             m_mainAction.Init(Controller);
             m_mainAction.bone = Controller.interactionBoneType;
             m_mainAction.Menu = ObjectMenu.menu;
-            m_mainAction.boneTransform = Controller.hoverBoneTransform;
+            m_mainAction.BoneTransform = Controller.hoverBoneTransform;
         }
         /// <summary>
         /// <inheritdoc/>

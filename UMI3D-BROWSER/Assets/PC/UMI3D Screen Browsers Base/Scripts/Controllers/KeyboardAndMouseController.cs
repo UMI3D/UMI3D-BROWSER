@@ -89,7 +89,7 @@ namespace umi3d.desktopBrowser.Controller
                 interaction.Init(Controller);
                 interaction.bone = Controller.interactionBoneType;
                 interaction.Menu = ObjectMenu.menu;
-                interaction.boneTransform = Controller.hoverBoneTransform;
+                interaction.BoneTransform = Controller.hoverBoneTransform;
             });
 
             KeyboardManipulation.S_Manipulations?.ForEach(manipulation =>
@@ -98,19 +98,19 @@ namespace umi3d.desktopBrowser.Controller
                 manipulation.Init(Controller);
                 manipulation.bone = Controller.interactionBoneType;
                 manipulation.Menu = ObjectMenu.menu;
-                manipulation.boneTransform = Controller.hoverBoneTransform;
+                manipulation.BoneTransform = Controller.hoverBoneTransform;
             });
 
             (ManipulationGroup as ManipulationGroupeForDesktop).Bind(Controller, KeyboardManipulations);
             ManipulationGroup.bone = Controller.interactionBoneType;
-            ManipulationGroup.boneTransform = Controller.hoverBoneTransform;
+            ManipulationGroup.BoneTransform = Controller.hoverBoneTransform;
             ManipulationGroup.Menu = Controller.ManipulationMenu.menu;
             ManipulationGroup.InstanciateManipulation = InstanciateManipulation;
 
             (DrawGroup as DrawGroupForDesktop).Bind(Controller, KeyboardToggleInteraction, KeyboardDrawInteraction);
             DrawGroup.bone = Controller.interactionBoneType;
             DrawGroup.Menu = Controller.ManipulationMenu.menu;
-            DrawGroup.boneTransform = Controller.hoverBoneTransform;
+            DrawGroup.BoneTransform = Controller.hoverBoneTransform;
             DrawGroup.InstantiateInteraction = InstantiateInteraction;
             DrawGroup.InstantiateToggle = InstantiateToggle;
         }
@@ -154,7 +154,7 @@ namespace umi3d.desktopBrowser.Controller
             manip.strength = strength;
             manip.frameIndicator = frameIndicator;
             manip.manipulationCursor = manipulationCursor;
-            manip.boneTransform = Controller.hoverBoneTransform;
+            manip.BoneTransform = Controller.hoverBoneTransform;
 
             return manip;
         }
@@ -164,7 +164,7 @@ namespace umi3d.desktopBrowser.Controller
             var toggle = KeyboardToggleInteraction.Find(i => i.IsAvailable());
 
             toggle.Init(Controller);
-            toggle.boneTransform = Controller.hoverBoneTransform;
+            toggle.BoneTransform = Controller.hoverBoneTransform;
 
             return toggle;
         }
@@ -174,7 +174,7 @@ namespace umi3d.desktopBrowser.Controller
             var toggle = KeyboardDrawInteraction.Find(i => i.IsAvailable());
 
             toggle.Init(Controller);
-            toggle.boneTransform = Controller.hoverBoneTransform;
+            toggle.BoneTransform = Controller.hoverBoneTransform;
 
             return toggle;
         }

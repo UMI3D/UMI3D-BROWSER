@@ -146,7 +146,7 @@ namespace umi3d.baseBrowser.Controller
             if (input is IInteractionWithBone interactionWithBone)
             {
                 interactionWithBone.bone = interactionBoneType;
-                interactionWithBone.boneTransform = hoverBoneTransform;
+                interactionWithBone.BoneTransform = hoverBoneTransform;
             }
 
             input.Menu = ObjectMenu.menu;

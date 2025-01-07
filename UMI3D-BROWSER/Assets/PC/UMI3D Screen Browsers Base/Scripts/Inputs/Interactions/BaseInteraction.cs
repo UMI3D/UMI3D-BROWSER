@@ -33,7 +33,7 @@ namespace umi3d.baseBrowser.inputs.interactions
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
-        public Transform boneTransform { get; set; }
+        public Transform BoneTransform { get; set; }
 
         /// <summary>
         /// <inheritdoc/>

@@ -19,9 +19,35 @@ using umi3d.common.interaction;
 using UnityEngine;
 using inetum.unityUtils;
 using umi3d.cdk.interaction;
+using System.Linq;
+using umi3d.common;
+using static umi3d.common.volume.GeometryTools;
+using UnityEngine.UIElements;
+using System.Threading.Tasks;
+using GLTFast.Schema;
 
 namespace umi3d.baseBrowser.inputs.interactions
 {
+
+    public interface IDrawerData
+    {
+        ulong environmentId { get; }
+        GameObject gameObject { get; }
+        AbstractUMI3DInput Input { get; }
+        Transform BoneTransform { get; }
+        uint BoneType { get; }
+        ulong ToolId { get; }
+        ulong HoveredObjectId { get; }
+        ulong? LineId { get; set; }
+        List<UMI3DNodeInstance> Meshes { get; set; }
+
+        List<Vector3> Positions { get; set; }
+
+        float LastUpdateTime { get; set; }
+        float TimeSynchronization { get; set; }
+        float MinDistance { get; set; }
+    }
+
     public class DrawingManager : Singleton<DrawingManager>
     {
         public DrawingInteractionDto current;
@@ -73,6 +99,109 @@ namespace umi3d.baseBrowser.inputs.interactions
         public virtual Vector3? GetDrawingWorldPoint(DrawingInteractionDto drawing, List<UMI3DNodeInstance> nodes, AbstractUMI3DInput input)
         {
             return null;
+        }
+
+        public virtual void CreateLine()
+        {
+        }
+
+        public virtual async Task Init(IDrawerData drawer, DrawingInteractionDto drawing)
+        {
+            drawer.Positions.Clear();
+            drawer.Meshes.Clear();
+            drawer.LineId = null;
+
+            await CreateLine(drawer, drawing);
+
+            if (drawing.MeshIds != null)
+                foreach (var meshId in drawing.MeshIds)
+                {
+                    var meshEntity = await UMI3DEnvironmentLoader.Instance.WaitUntilEntityLoaded(drawer.environmentId, meshId, new());
+                    if (meshEntity is UMI3DNodeInstance node)
+                        drawer.Meshes.Add(node);
+                }
+        }
+
+        public virtual async Task CreateLine(IDrawerData drawer, DrawingInteractionDto drawing)
+        {
+            if (drawing.LineId != 0)
+            {
+                var lineEntity = await UMI3DEnvironmentLoader.Instance.WaitUntilEntityLoaded(drawer.environmentId, drawing.LineId, new());
+                if ((lineEntity?.dto as GlTFNodeDto)?.extensions?.umi3d is UMI3DLineDto lineDto && lineEntity is UMI3DNodeInstance node)
+                {
+                    var template = UMI3DLineRendererLoader.GetOrCreateLine(node.GameObject, lineDto.clientLineId);
+                    var c = UMI3DLineRendererLoader.CopyLine(drawer.gameObject, template);
+                    drawer.LineId = c.Item2;
+                    c.Item1.positionCount = 0;
+                }
+            }
+        }
+
+        public virtual void DrawUpdate(DrawingInteractionDto drawing, ParticleSystem particleSystem, IDrawerData drawer)
+        {
+            Vector3? positionTMP = DrawingManager.Instance.GetDrawingWorldPoint(drawing, drawer.Meshes, drawer.Input);
+            if (!positionTMP.HasValue)
+            {
+                //Cut line here ?
+                if (particleSystem?.isPlaying ?? false)
+                    particleSystem.Stop();
+                return;
+            }
+
+            Vector3 position = positionTMP.Value;
+
+            if (drawer.Positions.Count > 0 && Vector3.Distance(position, drawer.Positions.Last()) < drawer.MinDistance)
+            {
+                if (particleSystem?.isPlaying ?? false)
+                    particleSystem.Stop();
+                return;
+            }
+
+            if (drawer.Positions.Count > 0)
+                particleSystem?.transform.SetPositionAndRotation(position, Quaternion.LookRotation(drawer.Positions.Last() - position));
+            else
+                particleSystem?.transform.SetPositionAndRotation(position, Quaternion.LookRotation(Vector3.up));
+
+            if (particleSystem?.isStopped ?? false)
+                particleSystem.Play();
+
+            particleSystem?.Emit(1);
+
+            if(drawer.Positions.Count > 100)
+            {
+                //New Line
+
+            }
+
+            drawer.Positions.Add(position);
+
+            if (drawer.LineId.HasValue)
+            {
+                var line = UMI3DLineRendererLoader.GetLine(drawer.LineId.Value);
+                line.positionCount = drawer.Positions.Count;
+                line.useWorldSpace = true;
+                line.SetPositions(drawer.Positions.ToArray());
+            }
+
+            if (Time.time >= drawer.TimeSynchronization + drawer.LastUpdateTime)
+            {
+                //todo add delay
+                var drawingDto = new common.interaction.DrawingDto
+                {
+                    drawingEnd = false,
+                    clientLineId = drawer.LineId.HasValue ? drawer.LineId.Value : 0,
+                    positions = drawer.Positions.Select(p => p.Dto()).ToList(),
+
+                    boneType = drawer.BoneType,
+                    id = drawing.id,
+                    toolId = drawer.ToolId,
+                    hoveredObjectId = drawer.HoveredObjectId,
+                    bonePosition = (Vector3Dto)drawer.BoneTransform.position.Dto(),
+                    boneRotation = (Vector4Dto)drawer.BoneTransform.rotation.Dto()
+                };
+                cdk.UMI3DClientServer.SendRequest(drawingDto, true);
+                drawer.LastUpdateTime = Time.time;
+            }
         }
 
     }

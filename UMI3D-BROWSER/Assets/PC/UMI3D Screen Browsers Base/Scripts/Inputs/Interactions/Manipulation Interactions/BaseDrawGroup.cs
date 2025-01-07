@@ -22,20 +22,18 @@ using umi3d.cdk.interaction;
 using umi3d.common;
 using umi3d.common.interaction;
 using UnityEngine;
+using static umi3d.baseBrowser.inputs.interactions.BaseDrawGroup;
 
 namespace umi3d.baseBrowser.inputs.interactions
 {
-    public abstract class BaseDrawGroup : BaseGroup<DrawingInteractionDto, AbstractUMI3DInput>
+    public abstract class BaseDrawGroup : BaseGroup<DrawingInteractionDto, AbstractUMI3DInput>, IDrawerData
     {
         #region Associate
 
         bool isDrawing = false;
         bool isDrawingActive = false;
 
-        ParticleSystem particleSystem;
-
-        ulong? lineId;
-        List<UMI3DNodeInstance> meshes = new();
+        ParticleSystem _particleSystem;
 
         EventInteraction toggleInteraction;
         EventInteraction drawInteraction;
@@ -43,16 +41,32 @@ namespace umi3d.baseBrowser.inputs.interactions
         public Func<EventInteraction> InstantiateToggle;
         public Func<EventInteraction> InstantiateInteraction;
 
-        List<Vector3> positions = new();
-
         [SerializeField] private float lastUpdateTime = 0f;
         [SerializeField] private float timeSynchronization = 0.3f;
         [SerializeField] private float minDistance = 0.05f;
 
+        string ActivateToggleName => $"Activate {this.associatedInteraction.name}";
+        string DeactivateToggleName => $"Deactivate {this.associatedInteraction.name}";
+
+        public AbstractUMI3DInput Input => this;
+
+        public uint BoneType => this.bone;
+
+        public ulong ToolId => this.toolId;
+
+        public ulong HoveredObjectId => this.hoveredObjectId;
+
+        public ulong? LineId { get; set; } = null;
+        public List<UMI3DNodeInstance> Meshes { get; set; } = new();
+        public List<Vector3> Positions { get; set; } = new();
+        public float LastUpdateTime { get => lastUpdateTime; set => lastUpdateTime = value; }
+        public float TimeSynchronization { get => timeSynchronization; set => timeSynchronization = value; }
+        public float MinDistance { get => minDistance; set => minDistance = value; }
+
         private void Start()
         {
-            particleSystem = gameObject.GetComponentInChildren<ParticleSystem>();
-            particleSystem.Stop();
+            _particleSystem = gameObject.GetComponentInChildren<ParticleSystem>();
+            _particleSystem?.Stop();
         }
 
         public override void Associate(ulong environmentId, AbstractInteractionDto interaction, ulong toolId, ulong hoveredObjectId)
@@ -106,11 +120,7 @@ namespace umi3d.baseBrowser.inputs.interactions
 
             toggleInteraction.PressedUpOverrider = ToggleUp;
             toggleInteraction.PressedDownOverrider = ToggleDown;
-
         }
-
-        string ActivateToggleName => $"Activate {this.associatedInteraction.name}";
-        string DeactivateToggleName => $"Deactivate {this.associatedInteraction.name}";
 
         private void ToggleDown()
         {
@@ -138,8 +148,8 @@ namespace umi3d.baseBrowser.inputs.interactions
                 id = associatedInteraction.id,
                 toolId = this.toolId,
                 hoveredObjectId = hoveredObjectId,
-                bonePosition = (Vector3Dto)boneTransform.position.Dto(),
-                boneRotation = (Vector4Dto)boneTransform.rotation.Dto()
+                bonePosition = (Vector3Dto)BoneTransform.position.Dto(),
+                boneRotation = (Vector4Dto)BoneTransform.rotation.Dto()
             };
             cdk.UMI3DClientServer.SendRequest(eventDto, true);
 
@@ -169,36 +179,12 @@ namespace umi3d.baseBrowser.inputs.interactions
             if (associatedInteraction is not DrawingInteractionDto drawing)
                 return;
 
-            positions.Clear();
             lastUpdateTime = Time.time;
 
             DrawingManager.Instance.StartDrawing(drawing);
             isDrawing = true;
-            meshes.Clear();
-            lineId = null;
 
-            if (drawing.LineId != 0)
-            {
-                var lineEntity = await UMI3DEnvironmentLoader.Instance.WaitUntilEntityLoaded(this.environmentId, drawing.LineId, new());
-                if ((lineEntity?.dto as GlTFNodeDto)?.extensions?.umi3d is UMI3DLineDto lineDto && lineEntity is UMI3DNodeInstance node)
-                {
-                    var template = UMI3DLineRendererLoader.GetOrCreateLine(node.GameObject, lineDto.clientLineId);
-                    var c = UMI3DLineRendererLoader.CopyLine(this.gameObject, template);
-                    lineId = c.Item2;
-                    c.Item1.positionCount = 0;
-
-                }
-            }
-
-
-            if (drawing.MeshIds != null)
-                foreach (var meshId in drawing.MeshIds)
-                {
-                    var meshEntity = await UMI3DEnvironmentLoader.Instance.WaitUntilEntityLoaded(this.environmentId, meshId, new());
-                    if (meshEntity is UMI3DNodeInstance node)
-                        meshes.Add(node);
-                }
-
+            await DrawingManager.Instance.Init(this, drawing);
         }
 
         private void DrawUp()
@@ -210,22 +196,22 @@ namespace umi3d.baseBrowser.inputs.interactions
             var drawingDto = new common.interaction.DrawingDto
             {
                 drawingEnd = true,
-                clientLineId = lineId.HasValue ? lineId.Value : 0,
-                positions = positions.Select(p => p.Dto()).ToList(),
+                clientLineId = LineId.HasValue ? LineId.Value : 0,
+                positions = Positions.Select(p => p.Dto()).ToList(),
 
                 boneType = bone,
                 id = associatedInteraction.id,
                 toolId = this.toolId,
                 hoveredObjectId = hoveredObjectId,
-                bonePosition = (Vector3Dto)boneTransform.position.Dto(),
-                boneRotation = (Vector4Dto)boneTransform.rotation.Dto()
+                bonePosition = (Vector3Dto)BoneTransform.position.Dto(),
+                boneRotation = (Vector4Dto)BoneTransform.rotation.Dto()
             };
             cdk.UMI3DClientServer.SendRequest(drawingDto, true);
 
             DrawingManager.Instance.StopDrawing(drawing);
 
-            if (particleSystem.isPlaying)
-                particleSystem.Stop();
+            if (_particleSystem?.isPlaying ?? false)
+                _particleSystem.Stop();
         }
 
         protected void Update()
@@ -236,62 +222,7 @@ namespace umi3d.baseBrowser.inputs.interactions
             if (associatedInteraction is not DrawingInteractionDto drawing)
                 return;
 
-            Vector3? positionTMP = DrawingManager.Instance.GetDrawingWorldPoint(drawing, meshes, this);
-            if (!positionTMP.HasValue)
-            {
-                if (particleSystem.isPlaying)
-                    particleSystem.Stop();
-                return;
-            }
-
-            Vector3 position = positionTMP.Value;
-
-            if (positions.Count > 0 && Vector3.Distance(position, positions.Last()) < this.minDistance)
-            {
-                if (particleSystem.isPlaying)
-                    particleSystem.Stop();
-                return;
-            }
-
-            if (positions.Count > 0)
-                particleSystem.transform.SetPositionAndRotation(position, Quaternion.LookRotation(positions.Last() - position));
-            else
-                particleSystem.transform.SetPositionAndRotation(position, Quaternion.LookRotation(Vector3.up));
-
-            if (particleSystem.isStopped)
-                particleSystem.Play();
-
-            particleSystem.Emit(1);
-
-            positions.Add(position);
-
-            if(lineId.HasValue)
-            {
-                var line = UMI3DLineRendererLoader.GetLine(lineId.Value);
-                line.positionCount = positions.Count;
-                line.useWorldSpace = true;
-                line.SetPositions(positions.ToArray());
-            }
-
-            if (Time.time >= timeSynchronization + lastUpdateTime)
-            {
-                //todo add delay
-                var drawingDto = new common.interaction.DrawingDto
-                {
-                    drawingEnd = false,
-                    clientLineId = lineId.HasValue ? lineId.Value : 0,
-                    positions = positions.Select(p => p.Dto()).ToList(),
-
-                    boneType = bone,
-                    id = associatedInteraction.id,
-                    toolId = this.toolId,
-                    hoveredObjectId = hoveredObjectId,
-                    bonePosition = (Vector3Dto)boneTransform.position.Dto(),
-                    boneRotation = (Vector4Dto)boneTransform.rotation.Dto()
-                };
-                cdk.UMI3DClientServer.SendRequest(drawingDto, true);
-                lastUpdateTime = Time.time;
-            }
+            DrawingManager.Instance.DrawUpdate(drawing, _particleSystem, this);
         }
 
         protected async void StartAnim(ulong environmentId, ulong id)
@@ -357,8 +288,8 @@ namespace umi3d.baseBrowser.inputs.interactions
             drawInteraction = null;
             isDrawing = false;
             isDrawingActive = false;
-            if (particleSystem.isPlaying)
-                particleSystem.Stop();
+            if (_particleSystem?.isPlaying ?? false)
+                _particleSystem.Stop();
         }
 
         protected void RemoveGroup()

@@ -28,6 +28,7 @@ using System.Collections.Generic;
 using System;
 using umi3d.baseBrowser.inputs.interactions;
 using System.Linq;
+using umi3d.cdk.interaction;
 
 namespace umi3dVRBrowsersBase.interactions.input
 {
@@ -35,7 +36,7 @@ namespace umi3dVRBrowsersBase.interactions.input
     /// Input for UMI3D Event.
     /// </summary>
     [System.Serializable]
-    public class BooleanInput : AbstractVRInput
+    public class BooleanInput : AbstractVRInput, IDrawerData
     {
         #region Fields
 
@@ -74,12 +75,22 @@ namespace umi3dVRBrowsersBase.interactions.input
 
         public ulong environmentId { get; protected set; }
 
+        public AbstractUMI3DInput Input => this;
+        public Transform BoneTransform => this.boneTransform;
+        public uint BoneType => this.boneType;
+
+        public ulong ToolId => this.toolId;
+
+        public ulong HoveredObjectId => this.hoveredObjectId;
+
+        public ulong? LineId { get; set; }
+        public List<UMI3DNodeInstance> Meshes { get; set; }
+        public List<Vector3> Positions { get; set; }
+        public float LastUpdateTime { get => lastUpdateTime; set => lastUpdateTime = value; }
+        public float TimeSynchronization { get => timeSynchronization; set => timeSynchronization = value; }
+        public float MinDistance { get => minDistance; set => minDistance = value; }
+
         bool isDrawing = false;
-
-        ulong? lineId;
-        List<UMI3DNodeInstance> meshes = new();
-
-        List<Vector3> positions = new();
 
         [SerializeField] private float lastUpdateTime = 0f;
         [SerializeField] private float timeSynchronization = 0.3f;
@@ -163,30 +174,7 @@ namespace umi3dVRBrowsersBase.interactions.input
 
                             if (isDrawing)
                             {
-                                if (drawing.LineId != 0)
-                                {
-                                    var lineEntity = await UMI3DEnvironmentLoader.Instance.WaitUntilEntityLoaded(this.environmentId, drawing.LineId, new());
-                                    if ((lineEntity?.dto as GlTFNodeDto)?.extensions?.umi3d is UMI3DLineDto lineDto && lineEntity is UMI3DNodeInstance node)
-                                    {
-                                        var template = UMI3DLineRendererLoader.GetOrCreateLine(node.GameObject, lineDto.clientLineId);
-                                        var c = UMI3DLineRendererLoader.CopyLine(this.gameObject, template);
-                                        lineId = c.Item2;
-                                        c.Item1.positionCount = 0;
-                                        positions.Clear();
-                                    }
-                                }
-                                else
-                                    lineId = null;
-
-                                if (drawing.MeshIds != null)
-                                    foreach (var meshId in drawing.MeshIds)
-                                    {
-                                        var meshEntity = await UMI3DEnvironmentLoader.Instance.WaitUntilEntityLoaded(this.environmentId, meshId, new());
-                                        if (meshEntity is UMI3DNodeInstance node)
-                                            meshes.Add(node);
-                                    }
-                                else
-                                    meshes.Clear();
+                                await DrawingManager.Instance.Init(this, drawing);
                             }
 
                         }
@@ -224,8 +212,8 @@ namespace umi3dVRBrowsersBase.interactions.input
                                     umi3d.cdk.UMI3DClientServer.SendRequest(new umi3d.common.interaction.DrawingDto
                                     {
                                         drawingEnd = true,
-                                        clientLineId = lineId.HasValue ? lineId.Value : 0,
-                                        positions = positions.Select(p => p.Dto()).ToList(),
+                                        clientLineId = LineId.HasValue ? LineId.Value : 0,
+                                        positions = Positions.Select(p => p.Dto()).ToList(),
 
                                         boneType = boneType,
                                         id = associatedInteraction.id,
@@ -252,9 +240,9 @@ namespace umi3dVRBrowsersBase.interactions.input
                         (controller as VRController).IsInputPressed = false;
                         isDown = false;
                         isDrawing = false;
-                        lineId = null;
-                        positions.Clear();
-                        meshes.Clear();
+                        LineId = null;
+                        Positions.Clear();
+                        Meshes.Clear();
                         onInputUp.Invoke();
 
 
@@ -358,9 +346,9 @@ namespace umi3dVRBrowsersBase.interactions.input
 
             risingEdgeEventSent = false;
             isDrawing = false;
-            lineId = null;
-            positions.Clear();
-            meshes.Clear();
+            LineId = null;
+            Positions.Clear();
+            Meshes.Clear();
         }
 
         /// <summary>
@@ -384,45 +372,8 @@ namespace umi3dVRBrowsersBase.interactions.input
             if (associatedInteraction is not DrawingInteractionDto drawing)
                 return;
 
-            Vector3? positionTMP = DrawingManager.Instance.GetDrawingWorldPoint(drawing, meshes, this);
-            if (!positionTMP.HasValue)
-                return;
-            Vector3 position = positionTMP.Value;
-
-            if (positions.Count > 0 && Vector3.Distance(position, positions.Last()) < this.minDistance)
-            {
-                return;
-            }
-
-            positions.Add(position);
-
-            if (lineId.HasValue)
-            {
-                var line = UMI3DLineRendererLoader.GetLine(lineId.Value);
-                line.positionCount = positions.Count;
-                line.useWorldSpace = true;
-                line.SetPositions(positions.ToArray());
-            }
-
-            if (Time.time >= timeSynchronization + lastUpdateTime)
-            {
-                //todo add delay
-                var drawingDto = new umi3d.common.interaction.DrawingDto
-                {
-                    drawingEnd = false,
-                    clientLineId = lineId.HasValue ? lineId.Value : 0,
-                    positions = positions.Select(p => p.Dto()).ToList(),
-
-                    boneType = boneType,
-                    id = associatedInteraction.id,
-                    toolId = this.toolId,
-                    hoveredObjectId = hoveredObjectId,
-                    bonePosition = (Vector3Dto)boneTransform.position.Dto(),
-                    boneRotation = (Vector4Dto)boneTransform.rotation.Dto()
-                };
-                umi3d.cdk.UMI3DClientServer.SendRequest(drawingDto, true);
-                lastUpdateTime = Time.time;
-            }
+            DrawingManager.Instance.DrawUpdate(drawing, null, this);
         }
+        
     }
 }

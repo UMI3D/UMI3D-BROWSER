@@ -46,8 +46,8 @@ namespace umi3d.baseBrowser.inputs.interactions
                 id = associatedInteraction.id,
                 toolId = this.toolId,
                 hoveredObjectId = hoveredObjectId,
-                bonePosition = (Vector3Dto)boneTransform.position.Dto(),
-                boneRotation = (Vector4Dto)boneTransform.rotation.Dto()
+                bonePosition = (Vector3Dto)BoneTransform.position.Dto(),
+                boneRotation = (Vector4Dto)BoneTransform.rotation.Dto()
             };
             cdk.UMI3DClientServer.SendData(formAnswer, true);
         }

@@ -35,7 +35,7 @@ namespace umi3d.browserRuntime.ui.keyboard
             NotificationHub.Default.Subscribe(
                 this,
                 KeyboardNotificationKeys.ChangeMode,
-                SwitchToCharacter
+                (Callback)SwitchToCharacter
             );
         }
 

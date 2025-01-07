@@ -105,13 +105,13 @@ namespace com.inetum.unitygeckowebview
             NotificationHub.Default.Subscribe(
                 this,
                 GeckoWebViewNotificationKeys.Rendering,
-                RenderingProcess
+                (Callback)RenderingProcess
             );
 
             NotificationHub.Default.Subscribe(
                 this, 
                 ID.FromType<GeckoWebViewNotificationKeys.TextureSizeChanged>(),
-                TextureSizeChanged
+                (Callback)TextureSizeChanged
             );
         }
 

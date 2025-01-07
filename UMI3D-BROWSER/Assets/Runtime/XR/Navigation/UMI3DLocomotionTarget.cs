@@ -48,7 +48,7 @@ namespace umi3d.browserRuntime.navigation
                 NotificationHub.Default.Subscribe(
                     this,
                     LocomotionNotificationKeys.SnapTurn,
-                    SnapTurn
+                    (Callback)SnapTurn
                 );
             }
 
@@ -57,7 +57,7 @@ namespace umi3d.browserRuntime.navigation
                 NotificationHub.Default.Subscribe(
                     this,
                     LocomotionNotificationKeys.Teleportation,
-                    Teleport
+                    (Callback)Teleport
                 );
             }
         }

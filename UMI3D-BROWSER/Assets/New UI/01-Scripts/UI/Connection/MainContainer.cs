@@ -89,8 +89,8 @@ namespace umi3dBrowsers
             
             NotificationHub.Default.Subscribe(
                 this, 
-                QuittingManagerNotificationKey.RequestToQuit, 
-                TryToQuit
+                QuittingManagerNotificationKey.RequestToQuit,
+                (Callback)TryToQuit
             );
 
             navBarButtonsColors.colorMultiplier = 1.0f;

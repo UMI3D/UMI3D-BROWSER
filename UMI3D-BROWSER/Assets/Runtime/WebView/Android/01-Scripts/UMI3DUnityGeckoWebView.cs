@@ -69,13 +69,13 @@ namespace umi3d.browserRuntime.webView.android
             NotificationHub.Default.Subscribe(
                 this,
                 GeckoWebViewNotificationKeys.Loading,
-                UrlLoaded
+                (Callback)UrlLoaded
             );
 
             NotificationHub.Default.Subscribe(
                 this,
                 ID.FromType<GeckoWebViewNotificationKeys.SynchronizationChanged>(),
-                Synchronize,
+                (Callback)Synchronize,
                 new FilterByRef(FilterType.AcceptAllExcept, this)
             );
         }

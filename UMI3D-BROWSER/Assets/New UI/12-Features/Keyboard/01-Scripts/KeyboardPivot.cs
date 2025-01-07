@@ -44,7 +44,7 @@ namespace umi3d.browserRuntime.ui.keyboard
             NotificationHub.Default.Subscribe(
                 this,
                 ID.FromType<KeyboardNotificationKeys.TextFieldSelected>(),
-                TextFieldSelected
+                (Callback)TextFieldSelected
             );
         }
 

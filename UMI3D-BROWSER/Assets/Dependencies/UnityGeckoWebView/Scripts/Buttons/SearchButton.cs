@@ -45,13 +45,13 @@ namespace com.inetum.unitygeckowebview
             NotificationHub.Default.Subscribe(
                 this, 
                 ID.FromType<GeckoWebViewNotificationKeys.WebViewSizeChanged>(),
-                WebViewSizeChanged
+                (Callback)WebViewSizeChanged
             );
 
             NotificationHub.Default.Subscribe(
                this,
                GeckoWebViewNotificationKeys.InteractibilityChanged,
-               InteractibilityChanged
+               (Callback)InteractibilityChanged
            );
         }
 

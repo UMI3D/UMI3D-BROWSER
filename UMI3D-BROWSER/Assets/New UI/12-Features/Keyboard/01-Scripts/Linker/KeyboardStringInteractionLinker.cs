@@ -38,20 +38,20 @@ namespace umi3d.browserRuntime.ui.keyboard
             NotificationHub.Default.Subscribe(
                 this,
                 KeyboardNotificationKeys.AddOrRemoveCharacters,
-                AddOrRemoveCharacters
+                (Callback)AddOrRemoveCharacters
             );
 
             NotificationHub.Default.Subscribe(
                 this,
                 ID.FromType<KeyboardNotificationKeys.TextFieldSelected>(),
-                OtherTextFieldSelected,
+                (Callback)OtherTextFieldSelected,
                 new FilterByRef(FilterType.AcceptAllExcept, this)
             );
 
             NotificationHub.Default.Subscribe(
                 this,
                 ID.FromType<KeyboardNotificationKeys.TextFieldDeselected>(),
-                TextFieldDeselected,
+                (Callback)TextFieldDeselected,
                 new FilterByRef(FilterType.AcceptAllExcept, this)
             );
         }

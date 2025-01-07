@@ -42,10 +42,10 @@ public class ParameterMenuDisplayer : MonoBehaviour
         NotificationHub.Default.Subscribe(
             this,
             ID.FromType<InteractionNotificationKeys.DisplayParameters>(),
-            DisplayParameters
+            (Callback)DisplayParameters
         );
 
-        NotificationHub.Default.Subscribe(this, TabletNotificationKeys.Open, Hide);
+        NotificationHub.Default.Subscribe(this, TabletNotificationKeys.Open, (Callback)Hide);
 
         clsoeButton.onClick.AddListener(Hide);
 

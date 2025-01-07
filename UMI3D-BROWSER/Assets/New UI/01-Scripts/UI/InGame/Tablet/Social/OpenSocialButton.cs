@@ -30,7 +30,7 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
             button = GetComponent<Button>();
             button.onClick.AddListener(OpenSocial);
 
-            NotificationHub.Default.Subscribe(this, TabletNotificationKeys.ClickButtonSocial, Click);
+            NotificationHub.Default.Subscribe(this, TabletNotificationKeys.ClickButtonSocial, (Callback)Click);
         }
 
         private void OnDestroy()

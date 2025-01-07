@@ -99,7 +99,7 @@ namespace umi3dVRBrowsersBase.navigation
             NotificationHub.Default.Subscribe(
                 this,
                 LocomotionNotificationKeys.Teleportation,
-                Teleport
+                (Callback)Teleport
             );
         }
 

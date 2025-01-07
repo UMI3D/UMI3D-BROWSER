@@ -51,7 +51,7 @@ namespace umi3d.browserRuntime.ui.keyboard
             NotificationHub.Default.Subscribe(
                 this,
                 ID.FromType<KeyboardNotificationKeys.OpenOrClose>(),
-                Animate
+                (Callback)Animate
             );
         }
 

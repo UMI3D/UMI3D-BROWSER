@@ -31,8 +31,8 @@ namespace umi3d.browserRuntime.ui.inGame.audio
         {
             audioSource = GetComponent<AudioSource>();
 
-            NotificationHub.Default.Subscribe(this, InGameNotificationKeys.PlayHoverSound, PlayHover);
-            NotificationHub.Default.Subscribe(this, InGameNotificationKeys.PlayClickSound, PlayerClick);
+            NotificationHub.Default.Subscribe(this, InGameNotificationKeys.PlayHoverSound, (Callback)PlayHover);
+            NotificationHub.Default.Subscribe(this, InGameNotificationKeys.PlayClickSound, (Callback)PlayerClick);
         }
 
         private void PlayHover()

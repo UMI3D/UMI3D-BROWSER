@@ -57,13 +57,13 @@ namespace umi3d.browserRuntime.ui.keyboard
             NotificationHub.Default.Subscribe(
                this,
                KeyboardNotificationKeys.ChangeMode,
-               ABCOrSymbol
+               (Callback)ABCOrSymbol
            );
 
             NotificationHub.Default.Subscribe(
                this,
                KeyboardNotificationKeys.AddOrRemoveCharacters,
-               AddOrRemoveCharacters
+               (Callback)AddOrRemoveCharacters
            );
         }
 

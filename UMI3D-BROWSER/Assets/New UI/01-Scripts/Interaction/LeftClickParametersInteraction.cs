@@ -32,13 +32,13 @@ public class LeftClickParametersInteraction : MonoBehaviour
         NotificationHub.Default.Subscribe(
             this,
             ID.FromType<InteractionNotificationKeys.ParameterInputFound>(),
-            ParameterInputFound
+            (Callback)ParameterInputFound
         );
 
         NotificationHub.Default.Subscribe(
             this,
             ID.FromType<InteractionNotificationKeys.ToolReleased>(),
-            ToolReleased
+            (Callback)ToolReleased
         );
 
         displayParameterNotifier = NotificationHub.Default

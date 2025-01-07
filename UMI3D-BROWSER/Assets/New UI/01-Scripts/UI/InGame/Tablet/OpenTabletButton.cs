@@ -28,8 +28,8 @@ namespace umi3d.browserRuntime.ui.inGame.tablet
         private void Awake()
         {
             GetComponent<Button>().onClick.AddListener(OpenTablet);
-            NotificationHub.Default.Subscribe(this, TabletNotificationKeys.Open, HideButton);
-            NotificationHub.Default.Subscribe(this, TabletNotificationKeys.Close, ShowButton);
+            NotificationHub.Default.Subscribe(this, TabletNotificationKeys.Open, (Callback)HideButton);
+            NotificationHub.Default.Subscribe(this, TabletNotificationKeys.Close, (Callback)ShowButton);
         }
 
         private void OnDestroy()

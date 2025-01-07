@@ -23,8 +23,8 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.libraries
     {
         private void Awake()
         {
-            NotificationHub.Default.Subscribe(this, TabletNotificationKeys.OpenLibraries, Open);
-            NotificationHub.Default.Subscribe(this, TabletNotificationKeys.CloseScreens, Close);
+            NotificationHub.Default.Subscribe(this, TabletNotificationKeys.OpenLibraries, (Callback)Open);
+            NotificationHub.Default.Subscribe(this, TabletNotificationKeys.CloseScreens, (Callback)Close);
         }
 
         private void OnDestroy()

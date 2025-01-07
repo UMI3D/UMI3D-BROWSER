@@ -53,13 +53,13 @@ namespace umi3d.baseBrowser.inputs.interactions
             NotificationHub.Default.Subscribe(
                 this,
                 ID.FromType<InputNotificationKeys.TextEditionStart>(),
-                TextEditionStart
+                (Callback)TextEditionStart
             );
 
             NotificationHub.Default.Subscribe(
                 this,
                 ID.FromType<InputNotificationKeys.TextEditionStop>(),
-                TextEditionStop
+                (Callback)TextEditionStop
             );
         }
 

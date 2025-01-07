@@ -107,25 +107,25 @@ namespace com.inetum.unitygeckowebview
             NotificationHub.Default.Subscribe(
                 this, 
                 ID.FromType<GeckoWebViewNotificationKeys.WebViewSizeChanged>(),
-                WebViewSizeChanged
+                (Callback)WebViewSizeChanged
             );
 
             NotificationHub.Default.Subscribe(
                this,
                GeckoWebViewNotificationKeys.InteractibilityChanged,
-               InteractibilityChanged
+               (Callback)InteractibilityChanged
            );
 
             NotificationHub.Default.Subscribe(
                this,
                ID.FromType<GeckoWebViewNotificationKeys.SynchronizationAdministrationChanged>(),
-               SynchronizationAdministrationChanged
+               (Callback)SynchronizationAdministrationChanged
            );
 
             NotificationHub.Default.Subscribe(
                this,
                ID.FromType<GeckoWebViewNotificationKeys.Desynchronization>(),
-               Desynchronization
+               (Callback)Desynchronization
            );
 
             button.onClick.AddListener(ToggleSynchronization);

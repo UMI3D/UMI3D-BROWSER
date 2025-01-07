@@ -49,7 +49,7 @@ namespace com.inetum.unitygeckowebview
             NotificationHub.Default.Subscribe(
                 this,
                 ID.FromType<GeckoWebViewNotificationKeys.WebViewSizeChanged>(),
-                SizeChanged,
+                (Callback)SizeChanged,
                 new FilterByRef(FilterType.AcceptAllExcept, this)
             );
         }

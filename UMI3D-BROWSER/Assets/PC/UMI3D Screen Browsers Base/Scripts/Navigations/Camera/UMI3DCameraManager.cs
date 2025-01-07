@@ -38,8 +38,8 @@ public sealed class UMI3DCameraManager
     {
         NotificationHub.Default.Subscribe(
             this, 
-            UMI3DClientNotificatonKeys.CameraPropertiesNotification, 
-            CameraPropertiesReception
+            UMI3DClientNotificatonKeys.CameraPropertiesNotification,
+            (Callback)CameraPropertiesReception
         );
     }
 

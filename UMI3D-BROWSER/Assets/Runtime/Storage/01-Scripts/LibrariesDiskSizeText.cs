@@ -32,7 +32,7 @@ namespace umi3d.browserRuntime.ui.libraries
         private void Awake()
         {
             text = GetComponent<LocalizeStringEvent>();
-            NotificationHub.Default.Subscribe(this, LibraryNotificationKeys.LibraryDeleted, UpdateText);
+            NotificationHub.Default.Subscribe(this, LibraryNotificationKeys.LibraryDeleted, (Callback)UpdateText);
         }
 
         private void OnEnable()

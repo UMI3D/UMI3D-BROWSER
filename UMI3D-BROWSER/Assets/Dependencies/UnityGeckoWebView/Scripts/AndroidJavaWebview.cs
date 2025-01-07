@@ -53,19 +53,19 @@ namespace com.inetum.unitygeckowebview
             NotificationHub.Default.Subscribe(
                 this,
                 ID.FromType<GeckoWebViewNotificationKeys.ScrollChanged>(),
-                ScrollChanged
+                (Callback)ScrollChanged
             );
 
             NotificationHub.Default.Subscribe(
                 this,
                 GeckoWebViewNotificationKeys.History,
-                HistoryButtonPressed
+                (Callback)HistoryButtonPressed
             );
 
             NotificationHub.Default.Subscribe(
                 this,
                 GeckoWebViewNotificationKeys.Search,
-                Search
+                (Callback)Search
             );
         }
 

@@ -89,19 +89,19 @@ namespace com.inetum.unitygeckowebview
             NotificationHub.Default.Subscribe(
                 this,
                 GeckoWebViewNotificationKeys.InteractibilityChanged,
-                InteractibilityChanged
+                (Callback)InteractibilityChanged
             );
 
             NotificationHub.Default.Subscribe(
                 this,
                 GeckoWebViewNotificationKeys.WebViewTextFieldSelected,
-                WebViewTextFieldSelected
+                (Callback)WebViewTextFieldSelected
             );
 
             NotificationHub.Default.Subscribe(
                 this,
                 ID.FromType<GeckoWebViewNotificationKeys.TextureSizeChanged>(),
-                TextureSizeChanged
+                (Callback)TextureSizeChanged
             );
         }
 

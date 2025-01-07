@@ -33,7 +33,7 @@ namespace umi3d.browserRuntime.ui.inGame.bottomBar
         {
             button.onClick.AddListener(Mute);
 
-            NotificationHub.Default.Subscribe(this, InGameNotificationKeys.MuteChanged, UpdateIcon);
+            NotificationHub.Default.Subscribe(this, InGameNotificationKeys.MuteChanged, (Callback)UpdateIcon);
         }
 
         private void OnEnable()

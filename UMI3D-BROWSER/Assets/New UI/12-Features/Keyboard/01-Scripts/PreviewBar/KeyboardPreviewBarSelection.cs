@@ -198,7 +198,7 @@ namespace umi3d.browserRuntime.ui.keyboard
             NotificationHub.Default.Subscribe(
                this,
                KeyboardNotificationKeys.AskPreviewFocus,
-               Focus
+               (Callback)Focus
            );
 
 #if UNITY_EDITOR

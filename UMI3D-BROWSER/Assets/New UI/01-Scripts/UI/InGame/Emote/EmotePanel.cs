@@ -59,9 +59,9 @@ namespace umi3d.browserRuntime.ui.inGame.emote
             EmoteManager.Instance.EmotesLoaded += Setup;
             EmoteManager.Instance.EmoteEnded += CloseEmoteMenu;
 
-            NotificationHub.Default.Subscribe(this, EmoteNotificationKeys.Open, Open);
-            NotificationHub.Default.Subscribe(this, EmoteNotificationKeys.Close, Close);
-            NotificationHub.Default.Subscribe(this, ID.FromType<EmoteNotificationKeys.Play>(), PlayEmote);
+            NotificationHub.Default.Subscribe(this, EmoteNotificationKeys.Open, (Callback)Open);
+            NotificationHub.Default.Subscribe(this, EmoteNotificationKeys.Close, (Callback)Close);
+            NotificationHub.Default.Subscribe(this, ID.FromType<EmoteNotificationKeys.Play>(), (Callback)PlayEmote);
 
             gameObject.SetActive(false);
         }

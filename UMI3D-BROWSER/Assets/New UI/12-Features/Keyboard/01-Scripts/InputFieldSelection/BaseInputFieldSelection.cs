@@ -81,14 +81,14 @@ namespace umi3d.browserRuntime.ui.keyboard
             NotificationHub.Default.Subscribe(
                 this,
                 ID.FromType<KeyboardNotificationKeys.TextFieldSelected>(),
-                TextFieldSelected,
+                (Callback)TextFieldSelected,
                 new FilterByRef(FilterType.AcceptAllExcept, this)
             );
 
             NotificationHub.Default.Subscribe(
                this,
                ID.FromType<KeyboardNotificationKeys.TextFieldDeselected>(),
-               TextFieldDeselected,
+               (Callback)TextFieldDeselected,
                new FilterByRef(FilterType.AcceptAllExcept, this)
            );
         }

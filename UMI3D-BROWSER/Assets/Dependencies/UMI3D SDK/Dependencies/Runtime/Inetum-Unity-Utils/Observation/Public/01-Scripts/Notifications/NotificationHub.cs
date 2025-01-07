@@ -70,12 +70,10 @@ namespace inetum.unityUtils.observation
             return notifyStatus.TryGetValue(typeof(T).FullName, out bool isNotifying) && isNotifying;
         }
 
-        #region Subscribe
-
         public void Subscribe(
             Object subscriber,
             ID id,
-            Action<Notification> action,
+            Callback action,
             INotificationFilter publishersFilter = null
         )
         {
@@ -120,20 +118,6 @@ namespace inetum.unityUtils.observation
                 _subscriberToID.Add(subscriber, new HashSet<string>() { id });
             }
         }
-
-        public void Subscribe(
-            Object subscriber,
-            ID id,
-            Action action,
-            INotificationFilter publishersFilter = null
-        )
-        {
-            Subscribe(subscriber, id, notification => action(), publishersFilter);
-        }
-
-        #endregion
-
-        #region Unsubscribe
 
         public void Unsubscribe(Object subscriber)
         {
@@ -235,8 +219,6 @@ namespace inetum.unityUtils.observation
                 _subscriptions.Remove(id);
             }
         }
-
-        #endregion
 
         #region Notify
 

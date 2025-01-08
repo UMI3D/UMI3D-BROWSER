@@ -29,6 +29,12 @@ public class NotificationHubTests
     {
         class FooClass { }
 
+        [TearDown]
+        public void TearDown()
+        {
+            NotificationHub.Default.Clear();
+        }
+
         [Test]
         public void GivenIdNull_WhenGettingSubscribersForId_ThenLogError()
         {
@@ -63,10 +69,33 @@ public class NotificationHubTests
             Assert.True(subscribersEnumerator.MoveNext());
             Assert.AreEqual(subscribersEnumerator.Current, subscriber2);
         }
+
+        [Test]
+        public void GivenTwoSubscriptionsWithSameIDAndSubscriber_WhenGettingSubscribersForId_ThenOneSubscriber()
+        {
+            Fixture fixture = new();
+            object subscriber = this;
+            ID id = fixture.Create<string>();
+
+            NotificationHub.Default.Subscribe(subscriber, id, (Callback)(() => { }));
+            NotificationHub.Default.Subscribe(subscriber, id, (Callback)(() => { }));
+
+            IEnumerable<object> subscribers = NotificationHub.Default.GetSubscribersFor(id);
+            IEnumerator<object> subscribersEnumerator = subscribers.GetEnumerator();
+            Assert.AreEqual(1, subscribers.Count());
+            Assert.True(subscribersEnumerator.MoveNext());
+            Assert.AreEqual(subscribersEnumerator.Current, subscriber);
+        }
     }
 
     public class GetIdsForTest
     {
+        [TearDown]
+        public void TearDown()
+        {
+            NotificationHub.Default.Clear();
+        }
+
         [Test]
         public void GivenIdNull_WhenGettingIdsForSubscriber_ThenLogError()
         {
@@ -78,7 +107,7 @@ public class NotificationHubTests
         }
 
         [Test]
-        public void GivenIdAndASubscriptions_WhenGettingIdsForSubscriber_ThenSubscribers()
+        public void GivenIdAndASubscriptions_WhenGettingIdsForSubscriber_ThenIds()
         {
             Fixture fixture = new();
             object subscriber = this;
@@ -97,6 +126,68 @@ public class NotificationHubTests
             Assert.True(idsEnumerator.MoveNext());
             Assert.AreEqual(idsEnumerator.Current, id2.id);
         }
+
+        [Test]
+        public void GivenTwoSubscriptionsWithSameIDAndSubscriber_WhenGettingIdsForSubscriber_ThenOneId()
+        {
+            Fixture fixture = new();
+            object subscriber = this;
+            ID id = fixture.Create<string>();
+
+            NotificationHub.Default.Subscribe(subscriber, id, (Callback)(() => { }));
+            NotificationHub.Default.Subscribe(subscriber, id, (Callback)(() => { }));
+
+            IEnumerable<string> ids = NotificationHub.Default.GetIdsFor(subscriber);
+            IEnumerator<string> idsEnumerator = ids.GetEnumerator();
+            Assert.AreEqual(1, ids.Count());
+            Assert.True(idsEnumerator.MoveNext());
+            Assert.AreEqual(idsEnumerator.Current, id.id);
+        }
+    }
+
+    public class NumberOfSubscriptionsForTest
+    {
+        [TearDown]
+        public void TearDown()
+        {
+            NotificationHub.Default.Clear();
+        }
+
+        [Test]
+        public void GivenNoSubscriptionAndSubscriberOrIdNull_WhenGettingTheNumberOfSubscriptionForASubscriber_ThenLogError()
+        {
+            Fixture fixture = new Fixture();
+            string id = fixture.Create<string>();
+
+            int count1 = NotificationHub.Default.NumberOfSubscriptionsFor(null);
+            int count2 = NotificationHub.Default.NumberOfSubscriptionsFor(null, id);
+            int count3 = NotificationHub.Default.NumberOfSubscriptionsFor(this);
+            int count4 = NotificationHub.Default.NumberOfSubscriptionsFor(this, id);
+
+            LogAssert.Expect(LogType.Error, "[NotificationHub.NumberOfSubscriptionsFor] Error: subscriber is null.");
+            LogAssert.Expect(LogType.Error, "[NotificationHub.NumberOfSubscriptionsFor] Error: subscriber is null.");
+            Assert.AreEqual(0, count1);
+            Assert.AreEqual(0, count2);
+            Assert.AreEqual(0, count3);
+            Assert.AreEqual(0, count4);
+        }
+
+        [Test]
+        public void GivenTwoSubscriptionsForOneSubscriber_WhenGettingTheNumberOfSubscriptionForASubscriber_Then2Subscriptions()
+        {
+            Fixture fixture = new();
+            object subscriber = this;
+            ID id1 = fixture.Create<string>();
+            ID id2 = fixture.Create<string>();
+            NotificationHub.Default.Subscribe(subscriber, id1, (Callback)(() => { }));
+            NotificationHub.Default.Subscribe(subscriber, id2, (Callback)(() => { }));
+
+            int count1 = NotificationHub.Default.NumberOfSubscriptionsFor(subscriber);
+            int count2 = NotificationHub.Default.NumberOfSubscriptionsFor(subscriber, id1);
+
+            Assert.AreEqual(2, count1);
+            Assert.AreEqual(1, count2);
+        }
     }
 
     public class SubscribeTest
@@ -113,6 +204,7 @@ public class NotificationHubTests
         public void TearDown()
         {
             fixture = null;
+            NotificationHub.Default.Clear();
         }
 
         [Test]
@@ -136,13 +228,15 @@ public class NotificationHubTests
         }
 
         [Test]
-        public void GivenSubscriberAndId_WhenSubscribing_ThenLogError()
+        public void GivenSubscriberAndId_WhenSubscribing_ThenASubscriptionHasBeenAdded()
         {
             object subscriber = this;
             ID id = fixture.Create<string>();
 
             NotificationHub.Default.Subscribe(subscriber, id, (Callback)(() => { }));
 
+            int count = NotificationHub.Default.NumberOfSubscriptionsFor(subscriber, id);
+            Assert.AreEqual(1, count);
             IEnumerable<object> subscribers = NotificationHub.Default.GetSubscribersFor(id);
             IEnumerator<object> subscribersEnumerator = subscribers.GetEnumerator();
             IEnumerable<string> ids = NotificationHub.Default.GetIdsFor(subscriber);
@@ -154,9 +248,116 @@ public class NotificationHubTests
             Assert.True(idsEnumerator.MoveNext());
             Assert.AreEqual(idsEnumerator.Current, id.id);
         }
+
+        [Test]
+        public void GivenSubscriberAndId_WhenSubscribingThreeTimes_ThenThreeSubscriptionsHaveBeenAdded()
+        {
+            object subscriber = this;
+            ID id1 = fixture.Create<string>();
+            ID id2 = fixture.Create<string>();
+
+            NotificationHub.Default.Subscribe(subscriber, id1, (Callback)(() => { }));
+            NotificationHub.Default.Subscribe(subscriber, id1, (Callback)(() => { }));
+            NotificationHub.Default.Subscribe(subscriber, id2, (Callback)(() => { }));
+
+            int count1 = NotificationHub.Default.NumberOfSubscriptionsFor(subscriber, id1);
+            Assert.AreEqual(2, count1);
+            int count2 = NotificationHub.Default.NumberOfSubscriptionsFor(subscriber);
+            Assert.AreEqual(3, count2);
+        }
+
+
+        //[Test]
+        //public void GivenSubscriberAndId_WhenSubscribingThreeTimes_ThenThreeSubscriptionsHaveBeenAdded()
+        //{
+        //    object subscriber = this;
+        //    ID id1 = fixture.Create<string>();
+        //    ID id2 = fixture.Create<string>();
+
+        //    NotificationHub.Default.Subscribe(subscriber, id1, (Callback)(() => 
+        //    {
+        //        NotificationHub.Default.Subscribe(subscriber, id1, (Callback)(() => { }));
+        //    }));
+        //    NotificationHub.Default.Subscribe(subscriber, id1, (Callback)(() => { }));
+
+        //    int count1 = NotificationHub.Default.NumberOfSubscriptionsFor(subscriber, id1);
+        //    Assert.AreEqual(2, count1);
+        //    int count2 = NotificationHub.Default.NumberOfSubscriptionsFor(subscriber);
+        //    Assert.AreEqual(3, count2);
+        //}
     }
 
+    public class UnsubscribeTest
+    {
+        class FooClass { }
 
-    
+        Fixture fixture;
+
+        [SetUp]
+        public void SetUp()
+        {
+            fixture = new Fixture();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            fixture = null;
+            NotificationHub.Default.Clear();
+        }
+
+        [Test]
+        public void GivenNoSubscriptionAndNullSubscriber_WhenUnsubscribing_ThenLogError()
+        {
+            ID id = fixture.Create<string>();
+
+            NotificationHub.Default.Unsubscribe(null);
+            NotificationHub.Default.Unsubscribe(null, id);
+
+            LogAssert.Expect(LogType.Error, "[NotificationHub.Unsubscribe] Error: subscriber is null.");
+            LogAssert.Expect(LogType.Error, "[NotificationHub.Unsubscribe] Error: subscriber is null.");
+        }
+
+        [Test]
+        public void GivenNoSubscription_WhenUnsubscribing_ThenLogWarning()
+        {
+            ID id = fixture.Create<string>();
+
+            NotificationHub.Default.Unsubscribe(this);
+            NotificationHub.Default.Unsubscribe(this, id);
+
+            LogAssert.Expect(LogType.Warning, $"[NotificationHub.Unsubscribe] Warning: no subscription for '{this.GetType().FullName}'.");
+            LogAssert.Expect(LogType.Warning, $"[NotificationHub.Unsubscribe] Warning: no subscription for '{this.GetType().FullName}'.");
+        }
+
+        [Test]
+        public void GivenSubscription_WhenUnsubscribing_ThenSubscriptionIsRemoved()
+        {
+            object subscriber1 = this;
+            object subscriber2 = new FooClass();
+            ID id1 = fixture.Create<string>();
+            ID id2 = fixture.Create<string>();
+            NotificationHub.Default.Subscribe(subscriber1, id1, (Callback)(() => { }));
+            NotificationHub.Default.Subscribe(subscriber1, id2, (Callback)(() => { }));
+            NotificationHub.Default.Subscribe(subscriber2, id1, (Callback)(() => { }));
+
+            // First test ---- Start ----.
+            NotificationHub.Default.Unsubscribe(subscriber2);
+
+            int count1 = NotificationHub.Default.NumberOfSubscriptionsFor(subscriber2);
+            Assert.AreEqual(0, count1);
+            // First test ---- End ----.
+
+            // Second test ---- Start ----.
+            NotificationHub.Default.Unsubscribe(subscriber1, id1);
+
+            int count2 = NotificationHub.Default.NumberOfSubscriptionsFor(subscriber1);
+            Assert.AreEqual(1, count2);
+            string id = NotificationHub.Default.GetIdsFor(subscriber1).First();
+            Assert.AreEqual(id2, id);
+            // Second test ---- End ----.
+        }
+    }
+
 
 }

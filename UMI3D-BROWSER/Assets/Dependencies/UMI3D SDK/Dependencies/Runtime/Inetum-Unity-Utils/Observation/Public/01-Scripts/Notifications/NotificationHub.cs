@@ -16,7 +16,9 @@ limitations under the License.
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Security.Policy;
 
 namespace inetum.unityUtils.observation
 {
@@ -38,19 +40,15 @@ namespace inetum.unityUtils.observation
         }
         static NotificationHub _default;
 
+        readonly object _lockObject = new object();
+
         /// <summary>
         /// ID to subscriptions.
         /// </summary>
         Dictionary<string, List<Subscription>> _subscriptions = new();
         /// <summary>
-        /// Subscriber to IDs.
+        /// An empty subscribers array to return when there are no subscriptions for the given ID.
         /// </summary>
-        Dictionary<object, HashSet<string>> _subscriberToID = new();
-        /// <summary>
-        /// The status of notification for a given ID.
-        /// </summary>
-        Dictionary<string, bool> notifyStatus = new();
-
         static readonly object[] emptySubscribers = new object[0];
         /// <summary>
         /// Retrieves the subscribers for a given ID.<br/>
@@ -83,9 +81,18 @@ namespace inetum.unityUtils.observation
                 return emptySubscribers;
             }
 
-            return subscriptions.Select(subscription => subscription.subscriber);
+            return subscriptions
+                .Select(subscription => subscription.subscriber)
+                .Distinct();
         }
 
+        /// <summary>
+        /// Subscriber to IDs.
+        /// </summary>
+        Dictionary<object, HashSet<string>> _subscriberToID = new();
+        /// <summary>
+        /// An empty ids array to return when there are no IDs associated with the given subscriber 
+        /// </summary>
         static readonly string[] emptyIds = new string[0];
         /// <summary>
         /// Retrieves the IDs associated with a given subscriber.<br/>
@@ -122,14 +129,65 @@ namespace inetum.unityUtils.observation
         }
 
         /// <summary>
-        /// Whether <paramref name="id"/> is being notified.
+        /// This method returns the number of subscriptions for a given subscriber.<br/>
+        /// If an ID is provided, it counts the subscriptions for that specific ID.<br/>
+        /// If no ID is provided, it counts all subscriptions for the subscriber across all IDs.<br/>
+        /// <br/>
+        /// <example>
+        /// Given a subscriber and an optional ID, when getting the number of subscriptions for the subscriber, then return the count of subscriptions.<br/>
+        /// <code>
+        /// NotificationHub.Default.Subscribe(subscriber, id1, (Callback)(() => { }));
+        /// NotificationHub.Default.Subscribe(subscriber, id2, (Callback)(() => { }));
+        ///
+        /// NotificationHub.Default.NumberOfSubscriptionsFor(subscriber); // return 2
+        /// NotificationHub.Default.NumberOfSubscriptionsFor(subscriber, id1); // return 1
+        /// </code>
+        /// </example>
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public bool isNotifying(ID id)
+        /// <param name="subscriber">The subscriber object.</param>
+        /// <param name="id">The optional ID for which to count subscriptions.</param>
+        /// <returns>The number of subscriptions for the given subscriber and optional ID.</returns>
+        public int NumberOfSubscriptionsFor(object subscriber, ID? id = null)
         {
-            return notifyStatus.TryGetValue(id, out bool isNotifying) && isNotifying;
+            if (subscriber == null)
+            {
+                UnityEngine.Debug.LogError($"[NotificationHub.NumberOfSubscriptionsFor] Error: subscriber is null.");
+                return 0;
+            }
+
+            if (id != null)
+            {
+                if (!_subscriptions.TryGetValue(id, out List<Subscription> subscriptions))
+                {
+                    return 0;
+                }
+
+                return subscriptions
+                    .Where(subscription => subscription.subscriber == subscriber)
+                    .Count();
+            } else
+            {
+                if (!_subscriberToID.TryGetValue(subscriber, out HashSet<string> ids))
+                {
+                    return 0;
+                }
+
+                int count = 0;
+                foreach (string _id in ids)
+                {
+                    count += NumberOfSubscriptionsFor(subscriber, _id);
+                }
+
+                return count;
+            }
         }
+
+        readonly object _notifyingCountLockObject = new object();
+        int notifyingCount;
+        bool isNotifying => notifyingCount > 0;
+
+        Queue<Subscription> waitingSubscriptionsToBeAdded = new();
+        Queue<Rejection> waitingRejectionsToBeRemoved = new();
 
         public void Subscribe(
             object subscriber,
@@ -150,24 +208,25 @@ namespace inetum.unityUtils.observation
                 return;
             }
 
-            if (isNotifying(id))
-            {
-                string subscriberName = subscriber is string
-                   ? subscriber as string
-                   : subscriber.GetType().FullName;
-                UnityEngine.Debug.LogError($"[{nameof(Subscribe)}] Try to subscribe {subscriberName} with id {id} while Notify is running with that id, that should not happen.");
-            }
-
             // Create a subscription entry.
             Subscription subscription = new()
             {
+                id = id,
                 subscriber = subscriber,
-                publishersFilter = publishersFilter,
-                action = action
+                action = action,
+                publishersFilter = publishersFilter
             };
 
+            lock (_lockObject)
+            {
+                _Subscribe(subscription);
+            }
+        }
+
+        void _Subscribe(Subscription subscription)
+        {
             // Check if subscriptions already exist for that 'id'.
-            if (_subscriptions.TryGetValue(id, out List<Subscription> subscriptions))
+            if (_subscriptions.TryGetValue(subscription.id, out List<Subscription> subscriptions))
             {
                 // If subscriptions already exist then add this subscription.
                 subscriptions.Add(subscription);
@@ -175,79 +234,91 @@ namespace inetum.unityUtils.observation
             else
             {
                 // If no subscriptions exist for that 'id' create a new association 'id' -> subscriptions.
-                _subscriptions.Add(id, new List<Subscription>() { subscription });
+                _subscriptions.Add(subscription.id, new List<Subscription>() { subscription });
             }
 
             // Check if this 'subscriber' already listen to notifications.
-            if (_subscriberToID.TryGetValue(subscriber, out HashSet<string> ids))
+            if (_subscriberToID.TryGetValue(subscription.subscriber, out HashSet<string> ids))
             {
                 // Add the 'id' to the list of listen ids, if the list didn't contain this 'id' already.
                 // This list is a set, that means there is no duplicate ids.
-                ids.Add(id);
+                ids.Add(subscription.id);
             }
             else
             {
                 // If that 'subscriber' listen to no one, create a new association 'subscriber' -> ids.
-                _subscriberToID.Add(subscriber, new HashSet<string>() { id });
+                _subscriberToID.Add(subscription.subscriber, new HashSet<string>() { subscription.id });
             }
         }
 
         public void Unsubscribe(object subscriber, ID? id = null)
         {
-            string subscriberName = subscriber is string
-                ? subscriber as string
-                : subscriber.GetType().FullName;
-
-            // Check if that 'subscriber' listen to any notifications.
-            if (!_subscriberToID.TryGetValue(subscriber, out HashSet<string> ids))
+            if (subscriber == null)
             {
-                UnityEngine.Debug.LogWarning($"[NotificationHub] Warning: no subscription for '{subscriberName}'.");
+                UnityEngine.Debug.LogError($"[NotificationHub.Unsubscribe] Error: subscriber is null.");
+                return;
+            }
+
+            Rejection rejection = new(subscriber, id);
+
+            lock (_lockObject)
+            {
+                _Unsubscribe(rejection);
+            }
+        }
+
+        void _Unsubscribe(Rejection rejection)
+        {
+            // Check if that 'subscriber' listen to any notifications.
+            if (!_subscriberToID.TryGetValue(rejection.subscriber, out HashSet<string> ids))
+            {
+                UnityEngine.Debug.LogWarning($"[NotificationHub.Unsubscribe] Warning: no subscription for '{rejection.subscriberName}'.");
                 // If subscriber is not listening to notification then return;
                 return;
             }
 
-            if (id == null)
+            if (rejection.id == null)
             {
+                // Remove all the subscription for that 'subscriber'.
                 // Loop through all the ids that this 'subscriber' is listening to.
                 foreach (string _id in ids)
                 {
-                    RemoveIdForSubscriber(_id, subscriber, subscriberName);
+                    RemoveIdForSubscriber(_id, rejection.subscriber);
                 }
-            } else
-            {
-                RemoveIdForSubscriber(id, subscriber, subscriberName);
-            }
 
-            if (id == null)
-            {
                 // Clear the ids.
                 ids.Clear();
+
+                _subscriberToID.Remove(rejection.subscriber);
             } else
             {
+                if (!ids.Contains(rejection.id))
+                {
+                    return;
+                }
+                RemoveIdForSubscriber(rejection.id, rejection.subscriber);
+
                 // Remove this 'id' from the list of listen ids.
-                ids.Remove(id);
-            }
+                ids.Remove(rejection.id);
 
-
-            // If there is not more ids then remove 'subscriber' from '_subscriberToID'.
-            if (ids.Count == 0)
-            {
-                _subscriberToID.Remove(subscriber);
+                // If there is not more ids then remove 'subscriber' from '_subscriberToID'.
+                if (ids.Count == 0)
+                {
+                    _subscriberToID.Remove(rejection.subscriber);
+                }
             }
         }
 
-        private bool RemoveIdForSubscriber(string id, object subscriber, string subscriberName)
+        bool RemoveIdForSubscriber(string id, object subscriber)
         {
             // Check if subscriptions exist for 'id'.
             if (!_subscriptions.TryGetValue(id, out List<Subscription> subscriptions))
             {
-                UnityEngine.Debug.LogError($"[NotificationHub] Error: no id '{id}' for subscriber '{subscriberName}'.");
-                return false;
-            }
+                string subscriberName = subscriber is string
+                   ? subscriber as string
+                   : subscriber.GetType().FullName;
 
-            if (isNotifying(id))
-            {
-                UnityEngine.Debug.LogError($"[{nameof(Unsubscribe)}] Try remove subscriptions for {subscriberName}. Try to unsubscribe to {id} while Notify is running with that id, that should not happen.");
+                UnityEngine.Debug.LogError($"[NotificationHub] Error: no id '{id}' for subscriber '{subscriberName}'.");
                 return false;
             }
 
@@ -279,21 +350,25 @@ namespace inetum.unityUtils.observation
                 ? publisher as string
                 : publisher.GetType().FullName;
 
-                UnityEngine.Debug.LogWarning($"[NotificationHub] {publisherName} try to notify with id {id} but no one is listening.");
+                UnityEngine.Debug.LogWarning($"[NotificationHub] Warning: {publisherName} try to notify with id {id} but no one is listening.");
                 return observers;
             }
 
             // Create the notification.
             Notification notification = new Notification(id, publisher, info);
 
-            notifyStatus[id] = true;
-
-            for (int i = 0; i < subscriptions.Count; i++)
+            List<Subscription> subscriptionsCopy;
+            // To be thread safe.
+            lock (_lockObject)
             {
-                Subscription subscription = subscriptions[i];
+                subscriptionsCopy = new List<Subscription>(subscriptions);
+            }
+
+            for (int i = 0; i < subscriptionsCopy.Count; i++)
+            {
+                Subscription subscription = subscriptionsCopy[i];
                 // filter the notification by subscribers and publishers.
-                if ((subscribersFilter == null || subscribersFilter.IsAccepted(subscription.subscriber))
-                    && (subscription.publishersFilter == null || subscription.publishersFilter.IsAccepted(publisher)))
+                if (IsNotificationAccepted(subscribersFilter, subscription, publisher))
                 {
                     try
                     {
@@ -310,13 +385,23 @@ namespace inetum.unityUtils.observation
                 }
             }
 
-            notifyStatus[id] = false;
-
             return observers;
         }
 
+        bool IsNotificationAccepted(
+            INotificationFilter subscribersFilter, 
+            Subscription subscription, 
+            object publisher
+        )
+        {
+            bool canSendToSubscriber = subscribersFilter?.IsAccepted(subscription.subscriber) ?? true;
+            bool canSubscriberReceiveFromSubscriber = subscription.publishersFilter?.IsAccepted(publisher) ?? true;
+
+            return canSendToSubscriber && canSubscriberReceiveFromSubscriber;
+        }
+
         public Notifier GetNotifier(
-            Object publisher,
+            object publisher,
             ID id,
             Dictionary<string, Object> info = null,
             INotificationFilter subscribersFilter = null
@@ -337,9 +422,19 @@ namespace inetum.unityUtils.observation
         class Subscription
         {
             /// <summary>
+            /// Id of the notification.
+            /// </summary>
+            public string id;
+
+            /// <summary>
             /// The object that wait for a notification. If subscriber is static then user typeof().FullName.
             /// </summary>
             public object subscriber;
+
+            /// <summary>
+            /// Action to execute when the notification is received.
+            /// </summary>
+            public Action<Notification> action;
 
             /// <summary>
             /// Only the notifications that pass this filter test can be sent to this <see cref="subscriber"/>.<br/>
@@ -347,11 +442,40 @@ namespace inetum.unityUtils.observation
             /// If null the <see cref="Subscriber"/> listen to everyone.
             /// </summary>
             public INotificationFilter publishersFilter;
+        }
+
+        struct Rejection
+        {
+            /// <summary>
+            /// The object that wait for a notification. If subscriber is static then user typeof().FullName.
+            /// </summary>
+            public object subscriber;
 
             /// <summary>
-            /// Action to execute when the notification is received.
+            /// Id of the notification.
             /// </summary>
-            public Action<Notification> action;
+            public ID? id;
+
+            /// <summary>
+            /// The descriptive name of the subscriber to display in log.
+            /// </summary>
+            public string subscriberName;
+
+            public Rejection(object subscriber, ID? id)
+            {
+                this.subscriber = subscriber;
+                this.id = id;
+                subscriberName = subscriber is string
+                    ? subscriber as string
+                    : subscriber.GetType().FullName;
+            }
+        }
+
+        [Conditional("UNITY_EDITOR")]
+        public void Clear()
+        {
+            _subscriberToID.Clear();
+            _subscriptions.Clear();
         }
     }
 }

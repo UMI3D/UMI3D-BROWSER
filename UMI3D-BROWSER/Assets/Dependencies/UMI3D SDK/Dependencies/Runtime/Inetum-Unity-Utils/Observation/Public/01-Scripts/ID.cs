@@ -40,5 +40,11 @@ namespace inetum.unityUtils.observation
         {
             return new ID(id);
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is string str) { return id == str; }
+            else { return base.Equals(obj); }
+        }
     }
 }

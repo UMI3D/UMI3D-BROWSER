@@ -228,7 +228,14 @@ namespace inetum.unityUtils.observation
             // Check if subscriptions already exist for that 'id'.
             if (_subscriptions.TryGetValue(subscription.id, out List<Subscription> subscriptions))
             {
-                // If subscriptions already exist then add this subscription.
+                // If subscriptions already exist then check if a subscription already exist for that 'subscriber'.
+                int index = subscriptions.FindIndex(sub => sub.subscriber == subscription.subscriber);
+                if (index >= 0)
+                {
+                    subscriptions[index] = subscription;
+                }
+
+                // Else add this subscription.
                 subscriptions.Add(subscription);
             }
             else
@@ -341,21 +348,31 @@ namespace inetum.unityUtils.observation
             INotificationFilter subscribersFilter = null
         )
         {
-            int observers = 0;
+            if (publisher == null)
+            {
+                UnityEngine.Debug.LogWarning($"[NotificationHub.Notify] Warning: publisher is null. A null publisher makes debugging difficult.");
+            }
+
+            if (string.IsNullOrEmpty(id))
+            {
+                string publisherName = publisher is string
+                ? publisher as string
+                : (publisher?.GetType().FullName ?? "Unknown");
+
+                UnityEngine.Debug.LogError($"[NotificationHub.Notify] Error: id is null or empty when publisher '{publisherName}' try to notify.");
+                return 0;
+            }
 
             // Check if there are subscription for that 'id'.
             if (!_subscriptions.TryGetValue(id, out List<Subscription> subscriptions))
             {
                 string publisherName = publisher is string
                 ? publisher as string
-                : publisher.GetType().FullName;
+                : (publisher?.GetType().FullName ?? "Unknown");
 
-                UnityEngine.Debug.LogWarning($"[NotificationHub] Warning: {publisherName} try to notify with id {id} but no one is listening.");
-                return observers;
+                UnityEngine.Debug.LogWarning($"[NotificationHub.Notify] Warning: '{publisherName}' try to notify with id '{id}' but no one is listening.");
+                return 0;
             }
-
-            // Create the notification.
-            Notification notification = new Notification(id, publisher, info);
 
             List<Subscription> subscriptionsCopy;
             // To be thread safe.
@@ -364,6 +381,9 @@ namespace inetum.unityUtils.observation
                 subscriptionsCopy = new List<Subscription>(subscriptions);
             }
 
+            // Create the notification.
+            Notification notification = new Notification(id, publisher, info);
+            int observers = 0;
             for (int i = 0; i < subscriptionsCopy.Count; i++)
             {
                 Subscription subscription = subscriptionsCopy[i];

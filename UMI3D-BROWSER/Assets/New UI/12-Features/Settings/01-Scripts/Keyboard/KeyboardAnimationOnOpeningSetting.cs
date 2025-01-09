@@ -40,7 +40,7 @@ namespace umi3d.browserRuntime.ui.settings
             KeyboardSettings = GetComponentInParent<KeyboardSettings>();
 
             notifier = NotificationHub.Default
-                .GetNotifier<KeyboardNotificationKeys.ChangeVersion>(this);
+                .GetNotifier<KeyboardNotificationKeys.AnimationSettings>(this);
             notifier[KeyboardNotificationKeys.AnimationSettings.AnimationType] = KeyboardAnimationType.OpenOrClose;
         }
 

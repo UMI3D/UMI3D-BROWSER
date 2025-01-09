@@ -82,9 +82,9 @@ namespace form_generator
         public string GetUrl(string path)
         {
             path = path.TrimDirectorySeparator();
-            path = path.ReplaceSeparatorByAltDirectorySeparatorChar();
-            path = path.InsertAltDirectorySeparatorChar(0);
-            return System.Uri.EscapeUriString(inetum.unityUtils.systemIO.Path.Combine(path));
+            path = path.ReplaceBackslashsBySlashs();
+            path = path.InsertSlashAt(0);
+            return System.Uri.EscapeUriString(Path.Combine(path));
         }
 
         internal List<StyleDto> GetStyles()

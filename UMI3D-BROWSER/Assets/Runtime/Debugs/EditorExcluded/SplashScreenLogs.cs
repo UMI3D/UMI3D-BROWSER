@@ -26,6 +26,12 @@ namespace umi3d.browserRuntime.debug
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSplashScreen)]
         static void LogAtStart()
         {
+#if UNITY_EDITOR
+            if (Application.isEditor)
+            {
+                return;
+            }
+#endif
             UnityEngine.Debug.Log(BrowserIdentity() + DeviceConfig());
 
             Application.lowMemory += LowMemory;

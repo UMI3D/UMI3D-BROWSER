@@ -1121,15 +1121,12 @@ namespace umi3d.cdk
 
                 try
                 {
-                    string path = null;
-                    string dicPath = null;
-                    string url = null;
-
-                    path = Path.Combine(directoryPath, name);
-                    path = path.ReplaceSeparatorByAltDirectorySeparatorChar();
+                    string path = Path.Combine(directoryPath, name);
                     path = System.Uri.UnescapeDataString(path);
-                    dicPath = System.IO.Path.GetDirectoryName(path);
-                    url = Path.Combine(baseUrl, name);
+
+                    string dicPath = System.IO.Path.GetDirectoryName(path);
+
+                    string url = Path.Combine(baseUrl, name);
 
                     await DownloadFile(key, dicPath, path, url, name, progress);
                     data.files.Add(new Data(url, path, name));

@@ -42,7 +42,11 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.menu.principal
             info.SetActive(false);
             activeBackground.SetActive(false);
 
-            NotificationHub.Default.Subscribe(this, TabletNotificationKeys.NewScreenSelected, Deactivate);
+            NotificationHub.Default.Subscribe(
+                this, 
+                TabletNotificationKeys.NewScreenSelected,
+                (Callback)Deactivate
+            );
         }
 
         public void Click()

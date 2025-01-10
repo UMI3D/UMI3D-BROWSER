@@ -88,8 +88,8 @@ namespace umi3dBrowsers
             
             NotificationHub.Default.Subscribe(
                 this, 
-                QuittingManagerNotificationKey.RequestToQuit, 
-                TryToQuit
+                QuittingManagerNotificationKey.RequestToQuit,
+                (Callback)TryToQuit
             );
 
             navBarButtonsColors.colorMultiplier = 1.0f;
@@ -206,7 +206,10 @@ namespace umi3dBrowsers
             UMI3DClientServer.Instance.OnConnectionLost.AddListener(OnConnectionLost);
             UMI3DCollaborationClientServer.Instance.OnForceLogoutMessage.AddListener(OnForceLogoutMessage);
             connectionServiceLinker.OnMediaServerPingSuccess += (virtualWorldData) => {
-                NotificationHub.Default.Notify<PopupNotificationKeys.CloseCurrentOpenedPopup>(this);
+                NotificationHub.Default.Notify(
+                    this,
+                    ID.FromType<PopupNotificationKeys.CloseCurrentOpenedPopup>()
+                );
             };
             connectionServiceLinker.OnAsksToLoadLibrairies += (ids, action) => action?.Invoke(true);
 

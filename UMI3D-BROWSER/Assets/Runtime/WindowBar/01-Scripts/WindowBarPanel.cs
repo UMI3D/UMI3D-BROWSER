@@ -28,7 +28,11 @@ namespace umi3d.browserRuntime.ui.windowBar
             transform.parent.gameObject.SetActive(false);
             return;
 #endif
-            NotificationHub.Default.Subscribe(this, WindowsManagerNotificationKey.FullScreenModeChanged, OnFullScreenModeChanged);
+            NotificationHub.Default.Subscribe(
+                this, 
+                WindowsManagerNotificationKey.FullScreenModeChanged,
+                (Callback)OnFullScreenModeChanged
+            );
             transform.parent.gameObject.SetActive(WindowsManager.IsWindowInFullScreen);
         }
 

@@ -29,8 +29,10 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         void Awake()
         {
-            animationNotifier = NotificationHub.Default
-                .GetNotifier<KeyboardNotificationKeys.AnimationSettings>(this);
+            animationNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                ID.FromType<KeyboardNotificationKeys.AnimationSettings>()
+            );
         }
 
         void Start()

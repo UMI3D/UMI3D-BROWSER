@@ -34,7 +34,6 @@ namespace umi3d.browserRuntime.ui.keyboard
             keyPressedNotifier = NotificationHub.Default.GetNotifier(
                 this,
                 KeyboardNotificationKeys.SpecialKeyPressed,
-                null,
                 new()
                 {
                     { KeyboardNotificationKeys.Info.SpecialKey, SpecialKey.Enter }

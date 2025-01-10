@@ -40,9 +40,10 @@ namespace umi3d.browserRuntime.ui.keyboard
         {
             playerRequest.supplierChanged += PlayerRequest_supplierChanged;
 
-            NotificationHub.Default.Subscribe<KeyboardNotificationKeys.TextFieldSelected>(
+            NotificationHub.Default.Subscribe(
                 this,
-                TextFieldSelected
+                ID.FromType<KeyboardNotificationKeys.TextFieldSelected>(),
+                (Callback)TextFieldSelected
             );
         }
 
@@ -50,7 +51,7 @@ namespace umi3d.browserRuntime.ui.keyboard
         {
             playerRequest.supplierChanged -= PlayerRequest_supplierChanged;
 
-            NotificationHub.Default.Unsubscribe<KeyboardNotificationKeys.TextFieldSelected>(this);
+            NotificationHub.Default.Unsubscribe(this);
         }
 
         void PlayerRequest_supplierChanged()

@@ -23,7 +23,11 @@ namespace umi3d.browserRuntime.ui.inGame
     {
         private void Awake()
         {
-            NotificationHub.Default.Subscribe(this, InGameNotificationKeys.EnableInGameUi, SetActive);
+            NotificationHub.Default.Subscribe(
+                this, 
+                InGameNotificationKeys.EnableInGameUi, 
+                (Callback)SetActive
+            );
             gameObject.SetActive(false);
         }
 

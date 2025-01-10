@@ -50,31 +50,28 @@ namespace com.inetum.unitygeckowebview
 
         void OnEnable()
         {
-            NotificationHub.Default.Subscribe<GeckoWebViewNotificationKeys.ScrollChanged>(
+            NotificationHub.Default.Subscribe(
                 this,
-                ScrollChanged
+                ID.FromType<GeckoWebViewNotificationKeys.ScrollChanged>(),
+                (Callback)ScrollChanged
             );
 
             NotificationHub.Default.Subscribe(
                 this,
                 GeckoWebViewNotificationKeys.History,
-                HistoryButtonPressed
+                (Callback)HistoryButtonPressed
             );
 
             NotificationHub.Default.Subscribe(
                 this,
                 GeckoWebViewNotificationKeys.Search,
-                Search
+                (Callback)Search
             );
         }
 
         void OnDisable()
         {
-            NotificationHub.Default.Unsubscribe<GeckoWebViewNotificationKeys.ScrollChanged>(this);
-
-            NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.History);
-
-            NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.Search);
+            NotificationHub.Default.Unsubscribe(this);
         }
 
         void OnApplicationPause(bool pause)

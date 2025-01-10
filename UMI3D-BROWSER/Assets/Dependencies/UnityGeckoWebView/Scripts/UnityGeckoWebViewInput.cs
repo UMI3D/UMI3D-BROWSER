@@ -89,18 +89,19 @@ namespace com.inetum.unitygeckowebview
             NotificationHub.Default.Subscribe(
                 this,
                 GeckoWebViewNotificationKeys.InteractibilityChanged,
-                InteractibilityChanged
+                (Callback)InteractibilityChanged
             );
 
             NotificationHub.Default.Subscribe(
                 this,
                 GeckoWebViewNotificationKeys.WebViewTextFieldSelected,
-                WebViewTextFieldSelected
+                (Callback)WebViewTextFieldSelected
             );
 
-            NotificationHub.Default.Subscribe<GeckoWebViewNotificationKeys.TextureSizeChanged>(
+            NotificationHub.Default.Subscribe(
                 this,
-                TextureSizeChanged
+                ID.FromType<GeckoWebViewNotificationKeys.TextureSizeChanged>(),
+                (Callback)TextureSizeChanged
             );
         }
 
@@ -108,11 +109,7 @@ namespace com.inetum.unitygeckowebview
         {
             base.OnDisable();
 
-            NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.InteractibilityChanged);
-
-            NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.WebViewTextFieldSelected);
-
-            NotificationHub.Default.Unsubscribe<GeckoWebViewNotificationKeys.TextureSizeChanged>(this);
+            NotificationHub.Default.Unsubscribe(this);
         }
 
         public override void OnPointerDown(PointerEventData eventData)

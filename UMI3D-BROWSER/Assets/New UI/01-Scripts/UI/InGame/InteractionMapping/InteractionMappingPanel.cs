@@ -42,14 +42,16 @@ namespace umi3d.browserRuntime.ui.inGame.interactionMapping
 
         private void Awake()
         {
-            NotificationHub.Default.Subscribe<InteractionNotificationKeys.ParameterInputFound>(
+            NotificationHub.Default.Subscribe(
                 this,
-                ParameterInputFound
+                ID.FromType<InteractionNotificationKeys.ParameterInputFound>(),
+                (Callback)ParameterInputFound
             );
 
-            NotificationHub.Default.Subscribe<InteractionNotificationKeys.ToolReleased>(
+            NotificationHub.Default.Subscribe(
                 this,
-                ToolReleased
+                ID.FromType<InteractionNotificationKeys.ToolReleased>(),
+                (Callback)ToolReleased
             );
 
             KeyboardInteraction.Mapped += Show;

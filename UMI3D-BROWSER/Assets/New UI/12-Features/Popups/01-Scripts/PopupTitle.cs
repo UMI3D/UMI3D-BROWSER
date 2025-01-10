@@ -31,17 +31,16 @@ namespace umi3d.browserRuntime.ui.popup
             text = GetComponent<TMPro.TMP_Text>();
             stringEvent = GetComponent<LocalizeStringEvent>();
 
-            NotificationHub.Default
-               .Subscribe<PopupNotificationKeys.DisplayPopup>(
+            NotificationHub.Default.Subscribe(
                this,
-               NewPopup
+               ID.FromType<PopupNotificationKeys.DisplayPopup>(),
+               (Callback)NewPopup
            );
         }
 
         void OnDestroy()
         {
-            NotificationHub.Default
-                .Unsubscribe<PopupNotificationKeys.DisplayPopup>(this);
+            NotificationHub.Default.Unsubscribe(this);
         }
 
         void NewPopup(Notification notification)

@@ -33,8 +33,16 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.userNotification
         private void Awake()
         {
             notificationLoader.Notification2DReceived += AddNotification;
-            NotificationHub.Default.Subscribe(this, TabletNotificationKeys.OpenUserNotification, Open);
-            NotificationHub.Default.Subscribe(this, TabletNotificationKeys.CloseScreens, Close);
+            NotificationHub.Default.Subscribe(
+                this, 
+                TabletNotificationKeys.OpenUserNotification,
+                (Callback)Open
+            );
+            NotificationHub.Default.Subscribe(
+                this, 
+                TabletNotificationKeys.CloseScreens, 
+                (Callback)Close
+            );
         }
 
         private void OnDestroy()

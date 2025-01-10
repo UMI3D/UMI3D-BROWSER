@@ -159,24 +159,21 @@ namespace umi3d.browserRuntime.ui.windowBar
             NotificationHub.Default.Subscribe(
                 typeof(WindowsManager).FullName,
                 WindowsManagerNotificationKey.Minimize,
-                null,
-                Minimize
+                (Callback)Minimize
             );
 
             // Windowed the window when 'WindowsManagerNotificationKey.Windowed' is sent.
             NotificationHub.Default.Subscribe(
                 typeof(WindowsManager).FullName,
                 WindowsManagerNotificationKey.Maximize,
-                null,
-                Maximize
+                (Callback)Maximize
             );
 
             // Switch full screen mode when 'WindowsManagerNotificationKey.FullScreenModeWillChange' is sent.
             NotificationHub.Default.Subscribe(
                  typeof(WindowsManager).FullName,
                  WindowsManagerNotificationKey.FullScreenModeWillChange,
-                 null,
-                 FullScreenWillChange
+                 (Callback)FullScreenWillChange
              );
         }
 

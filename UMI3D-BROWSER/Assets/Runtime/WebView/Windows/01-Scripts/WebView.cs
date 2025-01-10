@@ -375,16 +375,20 @@ namespace BrowserDesktop
         {
             IsWebViewFocused = true;
 
-            NotificationHub.Default
-                .Notify<InputNotificationKeys.TextEditionStart>(this);
+            NotificationHub.Default.Notify(
+                this,
+                ID.FromType<InputNotificationKeys.TextEditionStart>()
+            );
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
             IsWebViewFocused = false;
 
-            NotificationHub.Default
-               .Notify<InputNotificationKeys.TextEditionStop>(this);
+            NotificationHub.Default.Notify(
+                this,
+                ID.FromType<InputNotificationKeys.TextEditionStop>()
+            );
         }
 
         public void SetWorldSpace()

@@ -43,25 +43,35 @@ namespace umi3d.browserRuntime.webView.android
                 GeckoWebViewNotificationKeys.Search
             );
 
-            textureSizeChangedNotifier = NotificationHub.Default
-                .GetNotifier<GeckoWebViewNotificationKeys.TextureSizeChanged>(this);
+            textureSizeChangedNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                ID.FromType<GeckoWebViewNotificationKeys.TextureSizeChanged>()
+            );
 
-            sizeChangedNotifier = NotificationHub.Default
-                .GetNotifier<GeckoWebViewNotificationKeys.WebViewSizeChanged>(this);
+            sizeChangedNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                ID.FromType<GeckoWebViewNotificationKeys.WebViewSizeChanged>()
+            );
 
-            ScrollNotifier = NotificationHub.Default
-                .GetNotifier<GeckoWebViewNotificationKeys.ScrollChanged>(this);
+            ScrollNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                ID.FromType<GeckoWebViewNotificationKeys.ScrollChanged>()
+            );
 
             interactibilityNotifier = NotificationHub.Default.GetNotifier(
                 this,
                 GeckoWebViewNotificationKeys.InteractibilityChanged
             );
 
-            synchronizationAdministrationNotifier = NotificationHub.Default
-                .GetNotifier<GeckoWebViewNotificationKeys.SynchronizationAdministrationChanged>(this);
+            synchronizationAdministrationNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                ID.FromType<GeckoWebViewNotificationKeys.SynchronizationAdministrationChanged>()
+            );
 
-            desynchronizeNotifier = NotificationHub.Default
-                .GetNotifier<GeckoWebViewNotificationKeys.Desynchronization>(this);
+            desynchronizeNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                ID.FromType<GeckoWebViewNotificationKeys.Desynchronization>()
+            );
         }
 
         void OnEnable()
@@ -69,21 +79,20 @@ namespace umi3d.browserRuntime.webView.android
             NotificationHub.Default.Subscribe(
                 this,
                 GeckoWebViewNotificationKeys.Loading,
-                UrlLoaded
+                (Callback)UrlLoaded
             );
 
-            NotificationHub.Default.Subscribe<GeckoWebViewNotificationKeys.SynchronizationChanged>(
+            NotificationHub.Default.Subscribe(
                 this,
-                new FilterByRef(FilterType.AcceptAllExcept, this),
-                Synchronize
+                ID.FromType<GeckoWebViewNotificationKeys.SynchronizationChanged>(),
+                (Callback)Synchronize,
+                new FilterByRef(FilterType.AcceptAllExcept, this)
             );
         }
 
         void OnDisable()
         {
-            NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.Loading);
-
-            NotificationHub.Default.Unsubscribe<GeckoWebViewNotificationKeys.SynchronizationChanged>(this);
+            NotificationHub.Default.Unsubscribe(this);
         }
 
         public override void Init(UMI3DWebViewDto dto)

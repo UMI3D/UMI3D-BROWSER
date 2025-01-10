@@ -50,14 +50,20 @@ namespace umi3d.browserRuntime.worldController
                 _data = null;
             }
 
-            addedNotifier = NotificationHub.Default
-                .GetNotifier<WorldControllersNotificationKeys.Added>(this);
+            addedNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                ID.FromType<WorldControllersNotificationKeys.Added>()
+            );
 
-            updatedNotifier = NotificationHub.Default
-                .GetNotifier<WorldControllersNotificationKeys.Updated>(this);
+            updatedNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                ID.FromType<WorldControllersNotificationKeys.Updated>()
+            );
 
-            removedNotifier = NotificationHub.Default
-                .GetNotifier<WorldControllersNotificationKeys.Removed>(this);
+            removedNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                ID.FromType<WorldControllersNotificationKeys.Removed>()
+            );
         }
 
         #region Loading and Saving

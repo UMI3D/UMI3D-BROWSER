@@ -105,20 +105,19 @@ namespace com.inetum.unitygeckowebview
             NotificationHub.Default.Subscribe(
                 this,
                 GeckoWebViewNotificationKeys.Rendering,
-                RenderingProcess
+                (Callback)RenderingProcess
             );
 
-            NotificationHub.Default.Subscribe<GeckoWebViewNotificationKeys.TextureSizeChanged>(
+            NotificationHub.Default.Subscribe(
                 this, 
-                TextureSizeChanged
+                ID.FromType<GeckoWebViewNotificationKeys.TextureSizeChanged>(),
+                (Callback)TextureSizeChanged
             );
         }
 
         void OnDisable()
         {
-            NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.Rendering);
-
-            NotificationHub.Default.Unsubscribe<GeckoWebViewNotificationKeys.TextureSizeChanged>(this);
+            NotificationHub.Default.Unsubscribe(this);
         }
 
         void OnDestroy()

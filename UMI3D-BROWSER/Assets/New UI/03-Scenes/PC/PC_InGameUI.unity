@@ -16793,7 +16793,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 708113010454291534}
   m_HandleRect: {fileID: 4986032221806324110}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -17572,6 +17572,22 @@ MonoBehaviour:
   - m_Name: Input Action
     m_Type: 0
     m_ExpectedControlType: 
+    m_Id: 51c8a6be-b2cc-440f-9760-275d9f58733d
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: aa162c4a-4cb6-477a-ad57-2597504114a4
+      m_Path: <Keyboard>/g
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Input Action
+      m_Flags: 0
+    m_Flags: 0
+  - m_Name: Input Action
+    m_Type: 0
+    m_ExpectedControlType: 
     m_Id: dfe39834-1fd8-4ada-b6b9-774dad62db31
     m_Processors: 
     m_Interactions: 
@@ -17626,6 +17642,8 @@ MonoBehaviour:
     Qwerty: {fileID: 21300000, guid: 8ce2c10bf29469d408cd8011044411fc, type: 3}
   - Azerty: {fileID: 21300000, guid: 7a861412e4e4ad74186b02924fe2727a, type: 3}
     Qwerty: {fileID: 21300000, guid: 7a861412e4e4ad74186b02924fe2727a, type: 3}
+  - Azerty: {fileID: 21300000, guid: 5f6bb5b0809759f478cdb84c19a624e8, type: 3}
+    Qwerty: {fileID: 21300000, guid: 5f6bb5b0809759f478cdb84c19a624e8, type: 3}
   - Azerty: {fileID: 21300000, guid: 40e1b55b11bdc794a9a7328836475f85, type: 3}
     Qwerty: {fileID: 21300000, guid: 40e1b55b11bdc794a9a7328836475f85, type: 3}
   - Azerty: {fileID: 21300000, guid: 56328f941a781aa4690664989930c72e, type: 3}

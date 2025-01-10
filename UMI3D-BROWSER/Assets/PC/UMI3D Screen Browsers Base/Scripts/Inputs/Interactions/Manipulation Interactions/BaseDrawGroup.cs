@@ -189,8 +189,9 @@ namespace umi3d.baseBrowser.inputs.interactions
 
         private void DrawUp()
         {
-            if (associatedInteraction is not DrawingInteractionDto drawing)
+            if (associatedInteraction is not DrawingInteractionDto drawing || !isDrawing)
                 return;
+
             isDrawing = false;
 
             var drawingDto = new common.interaction.DrawingDto

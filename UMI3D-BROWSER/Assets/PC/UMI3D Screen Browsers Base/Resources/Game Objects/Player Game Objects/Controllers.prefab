@@ -903,6 +903,7 @@ GameObject:
   - component: {fileID: 5737028901777104617}
   - component: {fileID: 5737028901777104622}
   - component: {fileID: 5737028901777104613}
+  - component: {fileID: 5300359947952941924}
   m_Layer: 0
   m_Name: KeyboardActions
   m_TagString: Untagged
@@ -1059,6 +1060,41 @@ MonoBehaviour:
     - m_Name: 
       m_Id: 5924197c-69eb-436f-8065-85b6a8ae2f5f
       m_Path: <Keyboard>/f
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Key
+      m_Flags: 0
+    m_Flags: 0
+--- !u!114 &5300359947952941924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5737028901777104620}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 506f9aff047fa574ca37824e1e3ca845, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onInputDown:
+    m_PersistentCalls:
+      m_Calls: []
+  onInputUp:
+    m_PersistentCalls:
+      m_Calls: []
+  Key:
+    m_Name: Key
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: bda10299-4f37-479f-8f9a-a75cffb5db20
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 5924197c-69eb-436f-8065-85b6a8ae2f5f
+      m_Path: <Keyboard>/g
       m_Interactions: 
       m_Processors: 
       m_Groups: 

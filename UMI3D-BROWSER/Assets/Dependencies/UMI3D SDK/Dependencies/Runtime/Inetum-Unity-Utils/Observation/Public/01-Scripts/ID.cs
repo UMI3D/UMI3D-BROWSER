@@ -46,5 +46,15 @@ namespace inetum.unityUtils.observation
             if (obj is string str) { return id == str; }
             else { return base.Equals(obj); }
         }
+
+        public override int GetHashCode()
+        {
+            return _id?.GetHashCode() ?? base.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return _id?.ToString() ?? "";
+        }
     }
 }

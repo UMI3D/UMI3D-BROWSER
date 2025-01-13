@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
+using inetum.unityUtils.lifeCycle;
 using inetum.unityUtils.observation;
 using System;
 using System.Collections.Generic;
@@ -37,7 +37,7 @@ namespace umi3d.cdk.collaboration
 
             NotificationHub.Default.Subscribe(
                 this,
-                QuittingManagerNotificationKey.ApplicationIsQuitting,
+                ID.FromType<QuittingNotificationKeys.ApplicationIsQuitting>(),
                 (Callback)_OnApplicationQuit
             );
 

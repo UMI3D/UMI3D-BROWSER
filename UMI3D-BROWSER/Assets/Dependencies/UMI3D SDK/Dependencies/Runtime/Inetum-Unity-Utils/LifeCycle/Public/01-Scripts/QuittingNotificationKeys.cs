@@ -1,5 +1,5 @@
 /*
-Copyright 2019 - 2024 Inetum
+Copyright 2019 - 2025 Inetum
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,30 +14,21 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils.lifeCycle;
+using System;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
-namespace umi3d.browserRuntime.ui.windowBar
+namespace inetum.unityUtils.lifeCycle
 {
-    public class CloseApplicationButton : MonoBehaviour
+    public static class QuittingNotificationKeys 
     {
-        [SerializeField] private Button button;
-        private void Awake()
+        public class AskForConfirmation
         {
-            button.onClick.AddListener(Close);
+            public const string Publisher = "Publisher";
         }
 
-        private void OnDestroy()
+        public class ApplicationIsQuitting
         {
-            button.onClick.RemoveListener(Close);
-        }
-
-        private void Close()
-        {
-            Quitting.instance.Quit(this, true);
-            EventSystem.current.SetSelectedGameObject(null);
+            public const string Publisher = "Publisher";
         }
     }
 }

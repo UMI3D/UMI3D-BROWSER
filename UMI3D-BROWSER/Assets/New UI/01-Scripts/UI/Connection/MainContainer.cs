@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
+using inetum.unityUtils.lifeCycle;
 using inetum.unityUtils.observation;
 using System;
 using System.Threading.Tasks;
@@ -74,7 +75,6 @@ namespace umi3dBrowsers
         [SerializeField] private PanelData m_mainMenuPanel;
         [SerializeField] private PanelData m_formPanel;
 
-        private Notifier m_quittingNotifier;
         private Notifier m_enableInGameUiNotifier;
 
         const string POPUP_TABLE = "BrowserPopups";
@@ -84,12 +84,11 @@ namespace umi3dBrowsers
         {
             popupNotifier = new(this);
 
-            m_quittingNotifier = NotificationHub.Default.GetNotifier(this, QuittingManagerNotificationKey.QuittingConfirmation);
             m_enableInGameUiNotifier = NotificationHub.Default.GetNotifier(this, InGameNotificationKeys.EnableInGameUi);
             
             NotificationHub.Default.Subscribe(
                 this, 
-                QuittingManagerNotificationKey.RequestToQuit,
+                ID.FromType<QuittingNotificationKeys.AskForConfirmation>(),
                 (Callback)TryToQuit
             );
 
@@ -174,15 +173,14 @@ namespace umi3dBrowsers
                 .SetButtons((POPUP_TABLE, "CloseApplication_buttonCancel"), (POPUP_TABLE, "CloseApplication_buttonClose"))
                 .SetButtonsAction(index =>
                 {
-                    m_quittingNotifier[QuittingManagerNotificationKey.QuittingConfirmationInfo.Confirmation] = index == 1;
-                    m_quittingNotifier.Notify();
+                    Quitting.instance.Confirmation(this, index == 1);
                 })
                 .Notify();
         }
 
         private void OnDestroy()
         {
-            NotificationHub.Default.Unsubscribe(this, QuittingManagerNotificationKey.RequestToQuit);
+            NotificationHub.Default.Unsubscribe(this);
 
             connectionServiceLinker.OnTryToConnect -= OnTryToConnect;
             connectionServiceLinker.OnConnectionFailure -= OnConnectionFailure;

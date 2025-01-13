@@ -954,7 +954,7 @@ namespace umi3d.cdk.collaboration
             if (!HasBeenSet)
             {
                 Quitting.instance.SubscribeFor(
-                    Quitting.SubscriptionType.QuittingStarted,
+                    Quitting.SubscriptionType.IsQuitting,
                     this,
                     (Callback)ApplicationQuit
                 );

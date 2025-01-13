@@ -14,17 +14,61 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using inetum.unityUtils.lifeCycle;
 using inetum.unityUtils.observation;
 using NUnit.Framework;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.TestTools;
 
 public class QuittingTests
 {
+    public class StateTest
+    {
+        [TearDown]
+        public void TearDown()
+        {
+            Quitting.instance.Reset();
+            Quitting.instance.UnsubscribeFor(Quitting.SubscriptionType.Confirmation, this);
+            Quitting.instance.UnsubscribeFor(Quitting.SubscriptionType.IsQuitting, this);
+        }
+
+        [Test]
+        public void GivenNothing_WhenCheckingState_ThenNotQuitting()
+        {
+            Assert.AreEqual(Quitting.QuittingState.NotQuitting, Quitting.instance.state);
+            Assert.False(Quitting.instance);
+            Assert.False(Quitting.instance.isQuitting);
+            Assert.AreEqual((bool)Quitting.instance, Quitting.instance.isQuitting);
+            Assert.False(Quitting.instance.isWaitingForConfirmation);
+        }
+
+        [Test]
+        public void GivenQuittingAskForConfirmation_WhenCheckingState_ThenWaitsForConfirmation()
+        {
+            Quitting.instance.Quit(this);
+
+            Assert.AreEqual(Quitting.QuittingState.WaitsForConfirmation, Quitting.instance.state);
+            Assert.False(Quitting.instance);
+            Assert.False(Quitting.instance.isQuitting);
+            Assert.AreEqual((bool)Quitting.instance, Quitting.instance.isQuitting);
+            Assert.True(Quitting.instance.isWaitingForConfirmation);
+        }
+
+        [Test]
+        public void GivenQuitting_WhenCheckingState_ThenIsQuitting()
+        {
+            Quitting.instance.Quit(this, false);
+
+            Assert.AreEqual(Quitting.QuittingState.IsQuitting, Quitting.instance.state);
+            Assert.True(Quitting.instance);
+            Assert.True(Quitting.instance.isQuitting);
+            Assert.AreEqual((bool)Quitting.instance, Quitting.instance.isQuitting);
+            Assert.False(Quitting.instance.isWaitingForConfirmation);
+        }
+    }
+
     public class QuitTest
     {
         [TearDown]
@@ -32,13 +76,7 @@ public class QuittingTests
         {
             Quitting.instance.Reset();
             Quitting.instance.UnsubscribeFor(Quitting.SubscriptionType.Confirmation, this);
-            Quitting.instance.UnsubscribeFor(Quitting.SubscriptionType.QuittingStarted, this);
-        }
-
-        [Test]
-        public void GivenNothing_WhenDoingNothing_ThenNotQuitting()
-        {
-            Assert.AreEqual(Quitting.QuittingState.NotQuitting, Quitting.instance.state);
+            Quitting.instance.UnsubscribeFor(Quitting.SubscriptionType.IsQuitting, this);
         }
 
         [Test]
@@ -60,7 +98,7 @@ public class QuittingTests
             );
             int quittingCount = 0;
             Quitting.instance.SubscribeFor(
-                Quitting.SubscriptionType.QuittingStarted,
+                Quitting.SubscriptionType.IsQuitting,
                 this,
                 (Callback)(() => { quittingCount++; })
             );
@@ -94,7 +132,7 @@ public class QuittingTests
             );
             int quittingCount = 0;
             Quitting.instance.SubscribeFor(
-                Quitting.SubscriptionType.QuittingStarted,
+                Quitting.SubscriptionType.IsQuitting,
                 this,
                 (Callback)(() => { quittingCount++; })
             );
@@ -111,7 +149,7 @@ public class QuittingTests
         {
             Quitting.instance.Reset();
             Quitting.instance.UnsubscribeFor(Quitting.SubscriptionType.Confirmation, this);
-            Quitting.instance.UnsubscribeFor(Quitting.SubscriptionType.QuittingStarted, this);
+            Quitting.instance.UnsubscribeFor(Quitting.SubscriptionType.IsQuitting, this);
         }
 
         [Test]
@@ -170,7 +208,7 @@ public class QuittingTests
         {
             Quitting.instance.Reset();
             Quitting.instance.UnsubscribeFor(Quitting.SubscriptionType.Confirmation, this);
-            Quitting.instance.UnsubscribeFor(Quitting.SubscriptionType.QuittingStarted, this);
+            Quitting.instance.UnsubscribeFor(Quitting.SubscriptionType.IsQuitting, this);
         }
 
         [Test]
@@ -182,7 +220,7 @@ public class QuittingTests
             LogAssert.Expect(LogType.Error, $"[NotificationHub.Subscribe] Error: subscriber is null for id '{id}'.");
 
             // --- New Test ---
-            Quitting.instance.SubscribeFor(Quitting.SubscriptionType.QuittingStarted, null, (Callback)(() => { }));
+            Quitting.instance.SubscribeFor(Quitting.SubscriptionType.IsQuitting, null, (Callback)(() => { }));
             id = ID.FromType<QuittingNotificationKeys.ApplicationIsQuitting>();
             LogAssert.Expect(LogType.Error, $"[NotificationHub.Subscribe] Error: subscriber is null for id '{id}'.");
         }
@@ -200,7 +238,7 @@ public class QuittingTests
             Assert.AreEqual(this, subscribersEnumerator.Current);
 
             // --- New Test ---
-            Quitting.instance.SubscribeFor(Quitting.SubscriptionType.QuittingStarted, this, (Callback)(() => { }));
+            Quitting.instance.SubscribeFor(Quitting.SubscriptionType.IsQuitting, this, (Callback)(() => { }));
             id = ID.FromType<QuittingNotificationKeys.ApplicationIsQuitting>();
             subscribers = NotificationHub.Default.GetSubscribersFor(id);
             Assert.AreEqual(1, subscribers.Count());
@@ -243,7 +281,7 @@ public class QuittingTests
                 count++;
             }
             Quitting.instance.SubscribeFor(Quitting.SubscriptionType.Confirmation, this, (Callback)CallbackAskForConfirmation);
-            Quitting.instance.SubscribeFor(Quitting.SubscriptionType.QuittingStarted, this, (Callback)CallbackApplicationIsQuitting);
+            Quitting.instance.SubscribeFor(Quitting.SubscriptionType.IsQuitting, this, (Callback)CallbackApplicationIsQuitting);
 
             // --- New Test ---
             Quitting.instance.Quit(this, true);
@@ -262,7 +300,7 @@ public class QuittingTests
         {
             Quitting.instance.Reset();
             Quitting.instance.UnsubscribeFor(Quitting.SubscriptionType.Confirmation, this);
-            Quitting.instance.UnsubscribeFor(Quitting.SubscriptionType.QuittingStarted, this);
+            Quitting.instance.UnsubscribeFor(Quitting.SubscriptionType.IsQuitting, this);
         }
 
         [Test]
@@ -274,7 +312,7 @@ public class QuittingTests
             LogAssert.Expect(LogType.Error, $"[NotificationHub.Unsubscribe] Error: subscriber is null.");
 
             // --- New Test ---
-            Quitting.instance.UnsubscribeFor(Quitting.SubscriptionType.QuittingStarted, null);
+            Quitting.instance.UnsubscribeFor(Quitting.SubscriptionType.IsQuitting, null);
             id = ID.FromType<QuittingNotificationKeys.ApplicationIsQuitting>();
             LogAssert.Expect(LogType.Error, $"[NotificationHub.Unsubscribe] Error: subscriber is null.");
         }
@@ -283,7 +321,7 @@ public class QuittingTests
         public void GivenSubscription_WhenUnsubscribingFor_ThenSubscriberRemovedFromNotificationHub()
         {
             Quitting.instance.SubscribeFor(Quitting.SubscriptionType.Confirmation, this, (Callback)(() => { }));
-            Quitting.instance.SubscribeFor(Quitting.SubscriptionType.QuittingStarted, this, (Callback)(() => { }));
+            Quitting.instance.SubscribeFor(Quitting.SubscriptionType.IsQuitting, this, (Callback)(() => { }));
 
 
             // --- New Test ---
@@ -293,7 +331,7 @@ public class QuittingTests
             Assert.AreEqual(0, subscribers.Count());
 
             // --- New Test ---
-            Quitting.instance.UnsubscribeFor(Quitting.SubscriptionType.QuittingStarted, this);
+            Quitting.instance.UnsubscribeFor(Quitting.SubscriptionType.IsQuitting, this);
             id = ID.FromType<QuittingNotificationKeys.ApplicationIsQuitting>();
             subscribers = NotificationHub.Default.GetSubscribersFor(id);
             Assert.AreEqual(0, subscribers.Count());

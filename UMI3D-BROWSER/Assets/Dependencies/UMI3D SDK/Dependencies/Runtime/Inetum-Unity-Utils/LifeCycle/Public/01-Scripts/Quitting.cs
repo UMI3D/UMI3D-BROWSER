@@ -21,7 +21,7 @@ using UnityEngine;
 
 namespace inetum.unityUtils.lifeCycle
 {
-    public class Quitting 
+    public class Quitting
     {
         public enum QuittingState
         {
@@ -31,8 +31,14 @@ namespace inetum.unityUtils.lifeCycle
         }
         public enum SubscriptionType
         {
+            /// <summary>
+            /// Be notified when a confirmation is necessary to quit.
+            /// </summary>
             Confirmation,
-            QuittingStarted
+            /// <summary>
+            /// Be notified when the application is quitting.
+            /// </summary>
+            IsQuitting
         }
 
         public static Quitting instance => _instance.Value;
@@ -55,11 +61,24 @@ namespace inetum.unityUtils.lifeCycle
         Notifier askForConfirmationNotifier;
         Notifier applicationIsQuittingNotifier;
 
+        readonly object _lockObject = new object();
         QuittingState _state = QuittingState.NotQuitting;
         public QuittingState state
         {
-            get => _state;
-            private set => _state = value;
+            get
+            {
+                lock (_lockObject)
+                {
+                    return _state;
+                }
+            }
+            private set
+            {
+                lock (_lockObject)
+                {
+                    _state = value;
+                }
+            }
         }
 
         public bool isWaitingForConfirmation => state == QuittingState.WaitsForConfirmation;
@@ -81,6 +100,11 @@ namespace inetum.unityUtils.lifeCycle
         /// <param name="askForConfirmation">If true, asks for confirmation before quitting; otherwise, quits immediately.</param>
         public void Quit(object publisher, bool askForConfirmation = true)
         {
+            if (publisher == null)
+            {
+                UnityEngine.Debug.LogWarning($"[Quitting.Quit] Warning: publisher is null.");
+            }
+
             if (askForConfirmation)
             {
                 _AskToQuit(publisher);
@@ -107,6 +131,11 @@ namespace inetum.unityUtils.lifeCycle
         /// <param name="quit">If true, confirms and proceeds to quit; otherwise, aborts the quitting process.</param>
         public void Confirm(object publisher, bool quit = true)
         {
+            if (publisher == null)
+            {
+                UnityEngine.Debug.LogWarning($"[Quitting.Quit] Warning: publisher is null.");
+            }
+
             if (quit)
             {
                 _Quit(publisher);
@@ -139,11 +168,11 @@ namespace inetum.unityUtils.lifeCycle
                 case SubscriptionType.Confirmation:
                     id = ID.FromType<QuittingNotificationKeys.AskForConfirmation>();
                     break;
-                case SubscriptionType.QuittingStarted:
+                case SubscriptionType.IsQuitting:
                     id = ID.FromType<QuittingNotificationKeys.ApplicationIsQuitting>();
                     break;
                 default:
-                    UnityEngine.Debug.LogError($"[QuittingModel.WantsToQuit] Error: Unhandled case.");
+                    UnityEngine.Debug.LogError($"[Quitting.SubscribeFor] Error: Unhandled case.");
                     break;
             }
 
@@ -175,11 +204,11 @@ namespace inetum.unityUtils.lifeCycle
                 case SubscriptionType.Confirmation:
                     id = ID.FromType<QuittingNotificationKeys.AskForConfirmation>();
                     break;
-                case SubscriptionType.QuittingStarted:
+                case SubscriptionType.IsQuitting:
                     id = ID.FromType<QuittingNotificationKeys.ApplicationIsQuitting>();
                     break;
                 default:
-                    UnityEngine.Debug.LogError($"[QuittingModel.WantsToQuit] Error: Unhandled case.");
+                    UnityEngine.Debug.LogError($"[Quitting.UnsubscribeFor] Error: Unhandled case.");
                     break;
             }
 
@@ -199,7 +228,7 @@ namespace inetum.unityUtils.lifeCycle
             switch (state)
             {
                 case QuittingState.NotQuitting:
-                    UnityEngine.Debug.LogError($"[QuittingModel.WantsToQuit] Error: state should not have this value.");
+                    UnityEngine.Debug.LogError($"[Quitting.WantsToQuit] Error: state should not have this value.");
                     return false;
 
                 case QuittingState.WaitsForConfirmation:
@@ -209,7 +238,7 @@ namespace inetum.unityUtils.lifeCycle
                     return true;
 
                 default:
-                    UnityEngine.Debug.LogError($"[QuittingModel.WantsToQuit] Error: Unhandled case.");
+                    UnityEngine.Debug.LogError($"[Quitting.WantsToQuit] Error: Unhandled case.");
                     return true;
             }
         }

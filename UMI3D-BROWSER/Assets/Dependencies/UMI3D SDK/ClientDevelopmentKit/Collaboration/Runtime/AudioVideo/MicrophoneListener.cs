@@ -36,7 +36,7 @@ namespace umi3d.cdk.collaboration
             base.Start();
 
             Quitting.instance.SubscribeFor(
-                Quitting.SubscriptionType.QuittingStarted,
+                Quitting.SubscriptionType.IsQuitting,
                 this,
                 (Callback)_OnApplicationQuit
             );

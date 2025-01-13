@@ -22,17 +22,22 @@ using UnityEngine;
 namespace umi3d.browserRuntime.ui.contextualMenu
 {
     [RequireComponent(typeof(ContextualMenuInputFieldFactory))]
+    [RequireComponent(typeof(ContextualMenuSliderFactory))]
     public class ContextualMenuFactory : MonoBehaviour
     {
         [SerializeField] Transform _content;
 
         ContextualMenuInputFieldFactory _inputFieldFactory;
         List<GameObject> _inputFields;
+        ContextualMenuSliderFactory _sliderFactory;
+        List<GameObject> _sliders;
 
         private void Awake()
         {
             _inputFieldFactory = GetComponent<ContextualMenuInputFieldFactory>();
             _inputFields = new List<GameObject>();
+            _sliderFactory = GetComponent<ContextualMenuSliderFactory>();
+            _sliders = new List<GameObject>();
 
             NotificationHub.Default.Subscribe<ContextualMenuNotificationKeys.AddParameter>(this, AddParameter);
             NotificationHub.Default.Subscribe<ContextualMenuNotificationKeys.Close>(this, Clean);
@@ -56,6 +61,16 @@ namespace umi3d.browserRuntime.ui.contextualMenu
                     _inputFields.Add(_inputFieldFactory.GetOrCreate(_content, stringParameter));
                     break;
                 }
+                case FloatRangeParameterDto floatRangeParameter:
+                {
+                    _sliders.Add(_sliderFactory.GetOrCreate(_content, floatRangeParameter));
+                    break;
+                }
+                case IntegerRangeParameterDto intRangeParameter:
+                {
+                    _sliders.Add(_sliderFactory.GetOrCreate(_content, intRangeParameter));
+                    break;
+                }
             }
         }
 
@@ -63,6 +78,8 @@ namespace umi3d.browserRuntime.ui.contextualMenu
         {
             foreach (var inputField in _inputFields)
                 _inputFieldFactory.Return(inputField);
+            foreach (var slider in _sliders)
+                _sliderFactory.Return(slider);
         }
     }
 }

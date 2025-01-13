@@ -14,8 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using NAudio.SoundFont;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using UnityEditor;
@@ -28,19 +28,12 @@ namespace umi3d.browserEditor.BuildTool
     {
         public static string GetApplicationName(TargetDto target)
         {
-            string name = $"UMI3D Browser";
+            string name = $"UMI3D";
 
-            // To differentiate the XR version.
-            switch (target.Target)
+            // To differentiate the desktop and the VR version on windows.
+            if (target.Target == E_Target.SteamVR)
             {
-                case E_Target.Quest:
-                case E_Target.Focus:
-                case E_Target.Pico:
-                case E_Target.SteamXR:
-                    name += $" XR";
-                    break;
-                default:
-                    break;
+                name += $" SteamVR";
             }
 
             // To differentiate the alpha, beta and production version.
@@ -58,32 +51,159 @@ namespace umi3d.browserEditor.BuildTool
         }
 
         /// <summary>
-        /// doc: https://docs.unity3d.com/Manual/cus-naming.html
+        /// The name of the built file name. This name is not the one displayed in the app library.
         /// </summary>
         /// <param name="target"></param>
+        /// <param name="version"></param>
+        /// <param name="withExtension"></param>
         /// <returns></returns>
-        public static string GetPackageName(TargetDto target)
+        public static string GetBuiltFileName(TargetDto target, VersionDTO version, bool withExtension)
         {
-            // currently the quest has a custom package name due to 
-            // applab old version.
-            var packageName = target.Target switch
-            {
-                E_Target.Quest => "com.inetum.OculusQuestBrowser",
-                _ => "com.inetum.umi3d_browser"
-            };
+            string name;
 
-            // To differentiate the XR version.
-            switch (target.Target)
+            if (target.Target == E_Target.Windows)
             {
-                case E_Target.Focus:
-                case E_Target.Pico:
-                case E_Target.SteamXR:
-                    packageName += $"_xr";
-                    break;
-                // Todo: tmp due to applab old version.
-                case E_Target.Quest:
-                default:
-                    break;
+                // Legacy name for the Windows browser
+                name = "UMI3D-Browser-Desktop";
+            } else
+            {
+                name = $"UMI3D" +
+                    $"_{target.Target}" +
+                    $"_Browser" +
+                    $"_{target.releaseCycle.GetReleaseInitial()}.{version.VersionFromNow()}";
+            }
+
+            if (withExtension)
+            {
+                switch (target.Target)
+                {
+                    case E_Target.Quest:
+                    case E_Target.Focus:
+                    case E_Target.Pico:
+                        name += ".apk";
+                        break;
+                    case E_Target.SteamVR:
+                    case E_Target.Windows:
+                        name += ".exe";
+                        break;
+                    default:
+                        UnityEngine.Debug.LogError("Unhandled case");
+                        break;
+                }
+            }
+            return name;
+        }
+
+        public static string GetBuildPath(VersionDTO version, VersionDTO sdkVersion, TargetDto target, bool addExeDir)
+        {
+            string path = 
+                $"{target.BuildFolder}/" +
+                $"{target.releaseCycle}/" +
+                $"{version.VersionFromNow()}_SDK{sdkVersion.Version()}/";
+
+            if (addExeDir)
+            {
+                // Additional folder for Standalone built.
+                path += $"{GetBuiltFileName(target, version, withExtension: false)}/";
+            }
+
+            return path;
+        }
+
+        /// <summary>
+        /// Set the Application version.
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="newVersion"></param>
+        /// <param name="sdkVersion"></param>
+        public static void SetVersion(TargetDto target, VersionDTO newVersion, VersionDTO sdkVersion)
+        {
+            PlayerSettings.bundleVersion = $"{target.releaseCycle.GetReleaseInitial()}.{newVersion.VersionFromNow()} Sdk: {sdkVersion.Version()}";
+        }
+
+        /// <summary>
+        /// Set the Application version during play mode.
+        /// </summary>
+        /// <remarks>Do not use this method in build.</remarks>
+        /// <param name="newVersion"></param>
+        /// <param name="sdkVersion"></param>
+        [Conditional("UNITY_EDITOR")]
+        public static void SetVersion(VersionDTO newVersion, VersionDTO sdkVersion)
+        {
+            PlayerSettings.bundleVersion = $"{newVersion.VersionFromNow()} Sdk: {sdkVersion.Version()}";
+        }
+
+        #region Conditional settings
+
+        /// <summary>
+        /// Copy the license and paste in where the new build has been created.
+        /// </summary>
+        /// <remarks>This method is called only if target is UNITY_STANDALONE.</remarks>
+        /// <param name="licensePath"></param>
+        /// <param name="version"></param>
+        /// <param name="sdkVersion"></param>
+        /// <param name="target"></param>
+        [Conditional("UNITY_STANDALONE")]
+        public static void CopyLicense(string licensePath, VersionDTO version, VersionDTO sdkVersion, TargetDto target)
+        {
+            if (string.IsNullOrEmpty(licensePath))
+            {
+                UnityEngine.Debug.LogError($"[UMI3D] Build Tool: license path is empty");
+                return;
+            }
+            File.Copy(
+                licensePath, 
+                $"{GetBuildPath(version, sdkVersion, target, true)}license.txt", 
+                true
+            );
+        }
+
+        /// <summary>
+        /// Set the keystore information (keystore path, password).
+        /// </summary>
+        /// <remarks>This method is called only if target is UNITY_ANDROID.</remarks>
+        /// <param name="password"></param>
+        /// <param name="path"></param>
+        [Conditional("UNITY_ANDROID")]
+        public static void SetKeystore(string password, string path)
+        {
+            PlayerSettings.Android.useCustomKeystore = true;
+            PlayerSettings.Android.keystoreName = path;
+            PlayerSettings.keyaliasPass = password;
+            PlayerSettings.keystorePass = password;
+        }
+
+        /// <summary>
+        /// Set the android bundle version code.
+        /// </summary>
+        /// <remarks>This method is called only if target is UNITY_ANDROID.</remarks>
+        /// <param name="versionModel"></param>
+        [Conditional("UNITY_ANDROID")]
+        public static void SetBundleVersionCode(UMI3DBuildToolVersion_SO versionModel)
+        {
+            PlayerSettings.Android.bundleVersionCode = versionModel.newVersion.BundleVersion;
+        }
+
+        /// <summary>
+        /// Set the application identifier.<br/>
+        /// <br/>
+        /// doc: https://docs.unity3d.com/Manual/cus-naming.html
+        /// </summary>
+        /// <remarks>This method is called only if target is UNITY_ANDROID or UNITY_IOS or UNITY_STANDALONE_OSX</remarks>
+        /// <param name="target"></param>
+        [Conditional("UNITY_ANDROID"), Conditional("UNITY_IOS"), Conditional("UNITY_STANDALONE_OSX")]
+        public static void SetApplicationIdentifier(TargetDto target)
+        {
+            string packageName;
+
+            if (target.Target == E_Target.Quest)
+            {
+                // Legacy name due to applab old version.
+                packageName = "com.inetum.OculusQuestBrowser";
+            }
+            else
+            {
+                packageName = "com.inetum.umi3d_browser";
             }
 
             switch (target.releaseCycle)
@@ -96,99 +216,10 @@ namespace umi3d.browserEditor.BuildTool
                     break;
             }
 
-            return packageName;
+            PlayerSettings.applicationIdentifier = packageName;
         }
 
-        public static string GetExeName(TargetDto target, VersionDTO version, bool withExtension)
-        {
-            string name 
-                = $"UMI3D" +
-                $"_{target.Target}" +
-                $"_Browser" +
-                $"_{target.releaseCycle.GetReleaseInitial()}" +
-                $"_{version.VersionFromNow}";
-            if (withExtension)
-            {
-                switch (target.Target)
-                {
-                    case E_Target.Quest:
-                    case E_Target.Focus:
-                    case E_Target.Pico:
-                        name += ".apk";
-                        break;
-                    case E_Target.SteamXR:
-                        name += ".exe";
-                        break;
-                    default:
-                        break;
-                }
-            }
-            return name;
-        }
-
-        public static string GetBuildPath(VersionDTO version, VersionDTO sdkVersion, TargetDto target, bool addExeDir)
-        {
-            string path = 
-                $"{target.BuildFolder}/" +
-                $"{target.releaseCycle}/" +
-                $"{version.VersionFromNow}_SDK{sdkVersion.Version}/";
-
-            if (addExeDir)
-            {
-                path += $"{GetExeName(target, version, withExtension: false)}/";
-            }
-
-            return path;
-        }
-
-        public static void CreateBuildPath(VersionDTO version, VersionDTO sdkVersion, TargetDto target, bool overwrite)
-        {
-            string path = GetBuildPath(
-                version, 
-                sdkVersion, 
-                target, 
-                addExeDir: EditorUserBuildSettings.selectedBuildTargetGroup == BuildTargetGroup.Standalone
-            );
-            if (Directory.Exists(path))
-            {
-                if (overwrite)
-                {
-                    Directory.Delete(path, true);
-                    Directory.CreateDirectory(path);
-                }
-            }
-            else
-            {
-                Directory.CreateDirectory(path);
-            }
-        }
-
-        public static void CopyLicense(string licensePath, VersionDTO version, VersionDTO sdkVersion, TargetDto target)
-        {
-            if (EditorUserBuildSettings.selectedBuildTargetGroup != BuildTargetGroup.Standalone)
-            {
-                return;
-            }
-
-            if (string.IsNullOrEmpty(licensePath))
-            {
-                UnityEngine.Debug.LogError($"[UMI3D] Build Tool: license path is empty");
-                return;
-            }
-            File.Copy(
-                licensePath, 
-                $"{GetBuildPath(version, sdkVersion, target, EditorUserBuildSettings.selectedBuildTargetGroup == BuildTargetGroup.Standalone)}license.txt", 
-                true
-            );
-        }
-
-        public static void SetKeystore(string password, string path)
-        {
-            PlayerSettings.Android.useCustomKeystore = true;
-            PlayerSettings.Android.keystoreName = path;
-            PlayerSettings.keyaliasPass = password;
-            PlayerSettings.keystorePass = password;
-        }
+        #endregion
 
         public static BuildReport BuildPlayer(VersionDTO version, VersionDTO sdkVersion, TargetDto target)
         {
@@ -221,7 +252,7 @@ namespace umi3d.browserEditor.BuildTool
                     target, 
                     addExeDir: EditorUserBuildSettings.selectedBuildTargetGroup == BuildTargetGroup.Standalone
                 ) 
-                + GetExeName(target, version, withExtension: true);
+                + GetBuiltFileName(target, version, withExtension: true);
             pbo.target = target.Target.GetBuildTarget();
             pbo.options = BuildOptions.None;
 

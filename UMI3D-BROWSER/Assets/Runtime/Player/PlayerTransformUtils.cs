@@ -14,12 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System;
+using inetum.unityUtils.math;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.player
 {
-    public static class PlayerTransformUtils 
+    public static class PlayerTransformUtils
     {
         /// <summary>
         /// Center the <paramref name="camera"/>.
@@ -28,75 +28,55 @@ namespace umi3d.browserRuntime.player
         /// <param name="camera"></param>
         public static void CenterCamera(Transform offset, Transform camera)
         {
-            // Get the height of the camera.
-            float height = camera.localPosition.y;
+            // Filter the translation to keep the height of the camera.
+            Vector3 translationFilter = new Vector3(1f, 0f, 1f);
+
+            // Filter the rotation to avoid rotate the x and z axis.
+            Vector3 rotationFilter = Vector3.up;
+
+            Transform parent = offset.transform.parent;
 
             // Center the camera.
-            MoveAndRotateOffsetToCenterObject(offset, camera);
-
-            // Reapply the camera height.
-            offset.localPosition = new()
-            {
-                x = offset.localPosition.x,
-                y = offset.localPosition.y + height,
-                z = offset.localPosition.z
-            };
+            offset.TranslateAndRotateParentToCenterChild(
+                camera,
+                parent.position,
+                parent.rotation,
+                translationFilter,
+                rotationFilter
+            );
         }
 
         /// <summary>
-        /// Move the <paramref name="player"/> by placing the <paramref name="camera"/> at the position <paramref name="p"/>.
+        /// Translate the <paramref name="player"/> by placing the <paramref name="camera"/> at the position <paramref name="p"/>.<br/>
+        /// <br/>
+        /// At the end of this method the camera x and z coordinates will be respectively px and pz. The y position of the camera will not change.
         /// </summary>
         /// <param name="player"></param>
         /// <param name="camera"></param>
         /// <param name="p"></param>
-        public static void MovePlayerAndCenterCamera(Transform player, Transform camera, Vector3 p)
+        public static void TranslatePlayerAndCenterCamera(Transform player, Transform camera, Vector3 p)
         {
-            // Move player to position.
+            // Move player to position to set the camera y coordinate.
             player.localPosition = p;
 
-            // Get the offset of the camera compared to the player.
-            Vector3 positionOffset = player.GetPositionOffset(camera);
-
-            // Move the player to center the camera at the position p.
-            player.localPosition -= new Vector3()
-            {
-                x = positionOffset.x,
-                y = 0,
-                z = positionOffset.z
-            };
+            // Center the camera at p but not the y coordinate.
+            player.TranslateParentToCenterChild(camera, p, new Vector3(1f, 0f, 1f));
         }
 
         /// <summary>
-        /// Move and rotate <paramref name="offsetToMove"/> so that <paramref name="objectToCenter"/> is center in position and rotation compared to <paramref name="offsetToMove"/>'s parent.
+        /// Rotate the <paramref name="player"/> by placing the <paramref name="camera"/> at the rotation <paramref name="r"/>.<br/>
+        /// <br/>
+        /// At the end of this method the camera y rotation will be py. The x and z rotations of the camera will not change.
         /// </summary>
-        /// <param name="offsetToMove"></param>
-        /// <param name="objectToCenter"></param>
-        public static void MoveAndRotateOffsetToCenterObject(Transform offsetToMove, Transform objectToCenter)
+        /// <param name="player"></param>
+        /// <param name="camera"></param>
+        /// <param name="r"></param>
+        public static void RotatePlayerAndCenterCamera(Transform player, Transform camera, Quaternion r)
         {
-            // === Move the offsetToMove. ===
+            // Rotate player to r.
+            player.rotation = r;
 
-            // Reset the local position of offsetToMove.
-            offsetToMove.localPosition = Vector3.zero;
-
-            // Get the local position of objectToCenter
-            Vector3 localPosition = offsetToMove.GetPositionOffset(objectToCenter);
-
-            // Move offsetToMove so that the world position of objectToCenter is equal to offsetToMove's parent position.
-            offsetToMove.localPosition -= localPosition;
-
-            // === Rotate the offsetToMove. ===
-
-            // Reset the local rotation of offsetToMove.
-            offsetToMove.localRotation = Quaternion.identity;
-
-            // Get the world position of objectToCenter.
-            Vector3 worldPosition = objectToCenter.transform.position;
-
-            // Get the rotation of objectToCenter
-            Quaternion localRotation = offsetToMove.GetRotationOffset(objectToCenter);
-
-            // Rotate offsetToMove so that the rotation of the objectToCenter is identity.
-            offsetToMove.RotateAround(worldPosition, Vector3.up, -localRotation.eulerAngles.y);
+            player.RotateParentToCenterChild(camera, r, Vector3.up);
         }
 
         /// <summary>
@@ -108,28 +88,6 @@ namespace umi3d.browserRuntime.player
         public static void SnapTurn(Transform player, Transform camera, float angle)
         {
             player.RotateAround(camera.position, Vector3.up, angle);
-        }
-
-        /// <summary>
-        /// Get the position offset from <paramref name="source"/> to <paramref name="objectWithOffset"/>.
-        /// </summary>
-        /// <param name="source"></param>
-        /// <param name="objectWithOffset"></param>
-        /// <returns></returns>
-        public static Vector3 GetPositionOffset(this Transform source, Transform objectWithOffset)
-        {
-            return objectWithOffset.position - source.position;
-        }
-
-        /// <summary>
-        /// Get the rotation offset from <paramref name="source"/> to <paramref name="objectWithOffset"/>.
-        /// </summary>
-        /// <param name="source"></param>
-        /// <param name="objectWithOffset"></param>
-        /// <returns></returns>
-        public static Quaternion GetRotationOffset(this Transform source, Transform objectWithOffset)
-        {
-            return Quaternion.Inverse(source.rotation) * objectWithOffset.rotation;
         }
     }
 }

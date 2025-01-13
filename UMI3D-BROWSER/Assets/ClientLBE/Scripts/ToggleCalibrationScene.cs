@@ -12,13 +12,13 @@ namespace ClientLBE
         void Start()
         {
             automaticCalibrationToggle = this.GetComponent<Toggle>();
-            automaticCalibrationToggle.onValueChanged.AddListener(SwitchOrientationPanel);
+            automaticCalibrationToggle.onValueChanged.AddListener(ToggleManualCalibrator);
+            automaticCalibrationToggle.isOn = true;
         }
 
-        public void SwitchOrientationPanel(bool value)
+        public void ToggleManualCalibrator(bool value)
         {
-            GuardianManager.Instance.ToggleCalibrationScene(value);
-            orientationPanel.gameObject.SetActive(value);
+            GuardianManager.Instance.ToggleCalibrationScene(value);       
         }
     }
 }

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3421977617135507454}
   - component: {fileID: 7273073511288436273}
   - component: {fileID: 5732369140058227721}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Row3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -86,7 +86,8 @@ GameObject:
   - component: {fileID: 4449733561910359218}
   - component: {fileID: 2254524327230086150}
   - component: {fileID: 8307730134778736312}
-  m_Layer: 0
+  - component: {fileID: 3888807288710580995}
+  m_Layer: 5
   m_Name: KeyboardCenterRows
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -167,6 +168,25 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &3888807288710580995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3249372216791332920}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7951c64acb0fa62458bf30a60089fe2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 0
+  m_CheckFor2DOcclusion: 0
+  m_CheckFor3DOcclusion: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RaycastTriggerInteraction: 1
 --- !u!1 &3745613132619637529
 GameObject:
   m_ObjectHideFlags: 0
@@ -178,7 +198,7 @@ GameObject:
   - component: {fileID: 2940821627465017158}
   - component: {fileID: 2901417386208423240}
   - component: {fileID: 7748816594226069135}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Row6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -253,7 +273,7 @@ GameObject:
   - component: {fileID: 2343746853725346218}
   - component: {fileID: 2666621383583885374}
   - component: {fileID: 5696528320929304364}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Row1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -328,7 +348,7 @@ GameObject:
   - component: {fileID: 2759086647413288440}
   - component: {fileID: 1714008047226227210}
   - component: {fileID: 8720993508381480710}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Row5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -403,7 +423,7 @@ GameObject:
   - component: {fileID: 7450739132515261506}
   - component: {fileID: 6063441376380010011}
   - component: {fileID: 2184219393712541072}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Row4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -478,7 +498,7 @@ GameObject:
   - component: {fileID: 9017613046197515735}
   - component: {fileID: 455126234254669005}
   - component: {fileID: 3785336487504201814}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Row2
   m_TagString: Untagged
   m_Icon: {fileID: 0}

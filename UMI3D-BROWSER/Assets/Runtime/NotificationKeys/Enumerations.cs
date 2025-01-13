@@ -39,15 +39,11 @@ namespace umi3d.browserRuntime.NotificationKeys
     }
 
     /// <summary>
-    /// The locomotion types.
+    /// Opening state of an object.
     /// </summary>
-    [Flags]
-    public enum LocomotionType
+    public enum OpeningState
     {
-        None = 0,
-        SnapTurn = 1,
-        ContinuousTurn = 1 << 1,
-        Teleportation = 1 << 2,
-        Move = 1 << 3,
+        Open,
+        Close
     }
 }

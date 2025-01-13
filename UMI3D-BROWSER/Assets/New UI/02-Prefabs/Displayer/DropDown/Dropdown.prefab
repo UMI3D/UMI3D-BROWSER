@@ -117,6 +117,7 @@ MonoBehaviour:
   scaleHorizontalRT: 0
   childRT: {fileID: 0}
   updateOnGUI: 0
+  setCenter: 0
 --- !u!114 &5092203174705374693
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -138,7 +139,7 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 0.16078432, g: 0.16078432, b: 0.16078432, a: 1}
+    m_NormalColor: {r: 0.18039216, g: 0.18039216, b: 0.18039216, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -161,6 +162,12 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+  objectToEnableOnHover: []
+  autoUnHover: 0
+  objectToEnableOnClick: []
+  autoDeselect: 0
+  autoInitStyles: 1
+  relatedButtonStyles: []
 --- !u!114 &8576709676097607150
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -176,9 +183,9 @@ MonoBehaviour:
   text: {fileID: 1570480272119263334}
   title: {fileID: 0}
   dropdownButton: {fileID: 5092203174705374693}
-  thisColor: {r: 0.16037738, g: 0.16037738, b: 0.16037738, a: 1}
+  thisColor: {r: 0.18039216, g: 0.18039216, b: 0.18039216, a: 1}
   lightGridColor: {r: 0.254717, g: 0.254717, b: 0.254717, a: 1}
-  darkGridColor: {r: 0.16078432, g: 0.16078432, b: 0.16078432, a: 1}
+  darkGridColor: {r: 0.18039216, g: 0.18039216, b: 0.18039216, a: 1}
   isLightToBeginWith: 0
   hightLight: {r: 0.5471698, g: 0.5471698, b: 0.5471698, a: 1}
   itemPrefab: {fileID: 2462115079048964667, guid: 763863f334031304c81614dfdac6bebd,
@@ -257,7 +264,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
   m_AnchoredPosition: {x: -35.2, y: 0}
-  m_SizeDelta: {x: 20, y: 20}
+  m_SizeDelta: {x: 11, y: 8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &9039323733596146026
 CanvasRenderer:
@@ -331,8 +338,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -7.5, y: -0.5}
-  m_SizeDelta: {x: -35, y: -13}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8945496733415333700
 CanvasRenderer:
@@ -426,7 +433,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 38.169617, y: 0, z: 0, w: 0}
+  m_margin: {x: 25, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0

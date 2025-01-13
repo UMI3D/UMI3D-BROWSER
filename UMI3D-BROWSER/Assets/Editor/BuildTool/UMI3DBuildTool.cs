@@ -152,8 +152,23 @@ namespace umi3d.browserEditor.BuildTool
             buildView.Set();
         }
 
+        private void OnEnable()
+        {
+            EditorApplication.playModeStateChanged += playModeStateChanged;
+        }
+
+        void OnDisable()
+        {
+            EditorApplication.playModeStateChanged -= playModeStateChanged;
+        }
+
         void ApplyTargetOptions(E_Target target)
         {
+            if (Application.isPlaying)
+            {
+                return;
+            }
+
             ApplyScenes();
 
             // Switch target if needed and toggle options.
@@ -165,6 +180,11 @@ namespace umi3d.browserEditor.BuildTool
 
         void ApplyScenes()
         {
+            if (Application.isPlaying)
+            {
+                return;
+            }
+
             EditorBuildSettings.scenes = sceneModel.GetScenesForTarget(
                 targetModel.currentTarget
             ).Select(scene =>
@@ -185,21 +205,29 @@ namespace umi3d.browserEditor.BuildTool
         /// <returns></returns>
         int BuildTarget(TargetDto target, bool revealInFinder)
         {
-            // Update App name, Version and Android.BundleVersion.
+            // Application name. It is the one display in AppData/LocalLow.
             PlayerSettings.productName = BuildToolHelper.GetApplicationName(target);
-            PlayerSettings.applicationIdentifier = BuildToolHelper.GetPackageName(target);
-            PlayerSettings.bundleVersion = $"{target.releaseCycle.GetReleaseInitial()}_{versionModel.newVersion.VersionFromNow} Sdk: {versionModel.sdkVersion.Version}";
-            PlayerSettings.Android.bundleVersionCode = versionModel.newVersion.BundleVersion;
+            // Version number of the application.
+            BuildToolHelper.SetVersion(target, versionModel.newVersion, versionModel.sdkVersion);
 
+            // ------ Conditional compilation settings ------
+            // Set the keystore information (Android only).
             BuildToolHelper.SetKeystore(keystoreModel.password, keystoreModel.path);
-
+            // Set the bundle version code (Android only).
+            BuildToolHelper.SetBundleVersionCode(versionModel);
+            // Set the application identifier (Android, iOS and macOS only).
+            BuildToolHelper.SetApplicationIdentifier(target);
+            // Update the installer (standalone only).
             InstallerHelper.UpdateInstaller(
                 targetModel.installer,
                 targetModel.license,
+                targetModel.AppId,
                 versionModel.newVersion,
                 versionModel.sdkVersion,
                 target
             );
+            // ------ Conditional compilation settings ------
+
             var report = BuildToolHelper.BuildPlayer(
                 versionModel.newVersion,
                 versionModel.sdkVersion,
@@ -216,17 +244,47 @@ namespace umi3d.browserEditor.BuildTool
                     target
                 );
             }
+
+            // Set the application name for the editor. It is the one display in AppData/LocalLow.
+            // This way developer will have 3 data folder in AppData/LocalLow :
+            // - UMI3D (for the Windows browser).
+            // - UMI3D SteamVR (for the steamVR browser).
+            // - UMI3D Editor (for the editor).
+            PlayerSettings.productName = "UMI3D Editor";
+            // Reset Version to avoir modifying ProjectSettings.asset.
+            PlayerSettings.bundleVersion = "Version will be set dynamically in build or in play mode";
+
             return reportInt;
         }
 
         void BuildSelectedTargets(params TargetDto[] target)
         {
+            if (Application.isPlaying)
+            {
+                return;
+            }
+
             versionModel.UpdateOldVersion();
             versionModel.UpdateSDKVersion();
             for (int i = 0; i < target.Length; i++)
             {
                 ApplyTargetOptions(target[i].Target);
                 BuildTarget(target[i], i == target.Length - 1);
+            }
+        }
+
+        void playModeStateChanged(PlayModeStateChange state)
+        {
+            switch (state)
+            {
+                case PlayModeStateChange.EnteredPlayMode:
+                    BuildToolHelper.SetVersion(versionModel.newVersion, versionModel.sdkVersion);
+                    break;
+                case PlayModeStateChange.ExitingPlayMode:
+                case PlayModeStateChange.EnteredEditMode:
+                case PlayModeStateChange.ExitingEditMode:
+                default:
+                    break;
             }
         }
     }

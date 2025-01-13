@@ -36,53 +36,63 @@ namespace umi3d.browserEditor.utils
             partialPath = path.Substring(0, path.Length - fileName.Length - 3);
         }
 
-        [MenuItem(itemName: "Assets/Create/Custom Script/UMI3D Class", isValidateFunction: false, priority: 51)]
-        public static void CreateUmi3dClassTemplate()
-        {
-            ProjectWindowUtil.CreateScriptAssetFromTemplateFile
-            (
-                $"{partialPath}/Umi3dClassTemplate.txt",
-                "Umi3dClass.cs"
-            );
-        }
-
-        [MenuItem(itemName: "Assets/Create/Custom Script/UMI3D Struct", isValidateFunction: false, priority: 51)]
-        public static void CreateUmi3DStructTemplate()
-        {
-            ProjectWindowUtil.CreateScriptAssetFromTemplateFile
-            (
-                $"{partialPath}/Umi3dStructTemplate.txt",
-                "Umi3dStruct.cs"
-            );
-        }
-
-        [MenuItem(itemName: "Assets/Create/Custom Script/UMI3D Enum", isValidateFunction: false, priority: 51)]
-        public static void CreateUmi3DEnumTemplate()
-        {
-            ProjectWindowUtil.CreateScriptAssetFromTemplateFile
-            (
-                $"{partialPath}/Umi3dEnumTemplate.txt",
-                "Umi3dEnum.cs"
-            );
-        }
-
-        [MenuItem(itemName: "Assets/Create/Custom Script/UMI3D Interface", isValidateFunction: false, priority: 51)]
-        public static void CreateUmi3DInterfaceTemplate()
-        {
-            ProjectWindowUtil.CreateScriptAssetFromTemplateFile
-            (
-                $"{partialPath}/Umi3dInterfaceTemplate.txt",
-                "Umi3dInterface.cs"
-            );
-        }
-
-        [MenuItem(itemName: "Assets/Create/Custom Script/Monobehaviour", isValidateFunction: false, priority: 51)]
+        [MenuItem(itemName: "Assets/Create/Custom Script/Monobehaviour", isValidateFunction: false, priority: 1)]
         public static void CreateMonobehaviourTemplate()
         {
             ProjectWindowUtil.CreateScriptAssetFromTemplateFile
            (
                $"{partialPath}/MonobehaviourTemplate.txt",
-               "NewBehaviourScript.cs"
+               "UMI3DMonobehaviour.cs"
+           );
+        }
+
+        [MenuItem(itemName: "Assets/Create/Custom Script/Class", isValidateFunction: false, priority: 2)]
+        public static void CreateUmi3dClassTemplate()
+        {
+            ProjectWindowUtil.CreateScriptAssetFromTemplateFile
+            (
+                $"{partialPath}/Umi3dClassTemplate.txt",
+                "UMI3DClass.cs"
+            );
+        }
+
+        [MenuItem(itemName: "Assets/Create/Custom Script/Struct", isValidateFunction: false, priority: 3)]
+        public static void CreateUmi3DStructTemplate()
+        {
+            ProjectWindowUtil.CreateScriptAssetFromTemplateFile
+            (
+                $"{partialPath}/Umi3dStructTemplate.txt",
+                "UMI3DStruct.cs"
+            );
+        }
+
+        [MenuItem(itemName: "Assets/Create/Custom Script/Enum", isValidateFunction: false, priority: 4)]
+        public static void CreateUmi3DEnumTemplate()
+        {
+            ProjectWindowUtil.CreateScriptAssetFromTemplateFile
+            (
+                $"{partialPath}/Umi3dEnumTemplate.txt",
+                "UMI3DEnum.cs"
+            );
+        }
+
+        [MenuItem(itemName: "Assets/Create/Custom Script/Interface", isValidateFunction: false, priority: 5)]
+        public static void CreateUmi3DInterfaceTemplate()
+        {
+            ProjectWindowUtil.CreateScriptAssetFromTemplateFile
+            (
+                $"{partialPath}/Umi3dInterfaceTemplate.txt",
+                "UMI3DInterface.cs"
+            );
+        }
+
+        [MenuItem(itemName: "Assets/Create/Custom Script/ScriptableObject", isValidateFunction: false, priority: 6)]
+        public static void CreateScriptableTemplate()
+        {
+            ProjectWindowUtil.CreateScriptAssetFromTemplateFile
+           (
+               $"{partialPath}/Umi3dScriptableTemplate.txt",
+               "UMI3DScriptable.cs"
            );
         }
     }

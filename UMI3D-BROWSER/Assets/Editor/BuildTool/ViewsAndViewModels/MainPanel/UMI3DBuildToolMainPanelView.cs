@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using System;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -25,6 +26,7 @@ namespace umi3d.browserEditor.BuildTool
         umi3d.debug.UMI3DLogger logger;
 
         public VisualElement root;
+        VisualElement blockingLayer;
 
         public UMI3DBuildToolVersionView versionView;
         public UMI3DBuildToolScenesContainerView sceneContainerView;
@@ -43,6 +45,23 @@ namespace umi3d.browserEditor.BuildTool
             );
             sceneContainerView = new(root);
             targetsContainerView = new(root);
+            EditorApplication.playModeStateChanged += playModeStateChanged;
+        }
+
+        ~UMI3DBuildToolMainPanelView()
+        {
+            EditorApplication.playModeStateChanged -= playModeStateChanged;
+        }
+
+        void playModeStateChanged(PlayModeStateChange state)
+        {
+            if (blockingLayer == null)
+            {
+                return;
+            }
+            blockingLayer.style.display = Application.isPlaying
+                ? DisplayStyle.Flex
+                : DisplayStyle.None;
         }
 
         public void Bind()
@@ -50,6 +69,7 @@ namespace umi3d.browserEditor.BuildTool
             versionView.Bind();
             sceneContainerView.Bind();
             targetsContainerView.Bind();
+            blockingLayer = root.Q<VisualElement>("blockingLayer");
         }
 
         public void Set()
@@ -57,6 +77,9 @@ namespace umi3d.browserEditor.BuildTool
             versionView.Set();
             sceneContainerView.Set();
             targetsContainerView.Set();
+            blockingLayer.style.display = Application.isPlaying
+               ? DisplayStyle.Flex
+               : DisplayStyle.None;
         }
 
         public void Unbind()

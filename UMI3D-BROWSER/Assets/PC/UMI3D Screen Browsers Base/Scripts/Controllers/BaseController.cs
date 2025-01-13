@@ -13,16 +13,21 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using System.Collections.Generic;
 using umi3d.baseBrowser.cursor;
 using umi3d.baseBrowser.inputs.interactions;
+using umi3d.browserRuntime.notificationKeys;
 using umi3d.cdk;
+using umi3d.cdk.collaboration;
 using umi3d.cdk.interaction;
 using umi3d.cdk.menu;
 using umi3d.common;
 using umi3d.common.interaction;
 using umi3d.desktopBrowser.Controller;
 using umi3d.mobileBrowser.Controller;
+using umi3dVRBrowsersBase.interactions.selection.cursor;
 using UnityEngine;
 
 namespace umi3d.baseBrowser.Controller
@@ -47,7 +52,6 @@ namespace umi3d.baseBrowser.Controller
         protected InteractionMapper InteractionMapper;
         [SerializeField]
         protected Transform CameraTransform;
-        public LeftClickParametersInteraction LeftClickParametersInteraction;
 
         [Header("Actions' parents")]
         public GameObject ParameterActions;
@@ -74,7 +78,7 @@ namespace umi3d.baseBrowser.Controller
         public IConcreteController CurrentController;
 
         protected List<IConcreteController> m_controllers = new List<IConcreteController>();
-        
+
         [Header("Bone Type")]
         /// <summary>
         /// Avatar bone linked to this input.
@@ -91,12 +95,14 @@ namespace umi3d.baseBrowser.Controller
         protected int m_navigationDirect = 0;
         protected AutoProjectOnHover reason = new AutoProjectOnHover();
 
-        public event System.Action OnRelease;
-
         public static event System.Action<ulong> HoverEnter;
         public static event System.Action<ulong> HoverUpdate;
         public static event System.Action<ulong> HoverExit;
         public static bool CanProcess = false;
+
+        Notifier parameterInputFoundNotifier;
+        Notifier toolReleasedNotifier;
+
         #endregion
 
         #region Monobehaviour Life Cycle
@@ -119,8 +125,8 @@ namespace umi3d.baseBrowser.Controller
             //TODO instantiate concrete controllers.
             m_controllers.Add
             (
-                new KeyboardAndMouseController() 
-                { 
+                new KeyboardAndMouseController()
+                {
                     Controller = this,
                     ObjectMenu = ObjectMenu,
                     ManipulationGroup = ManipulationGroupInputs.Find(a => a is ManipulationGroupeForDesktop)
@@ -143,6 +149,42 @@ namespace umi3d.baseBrowser.Controller
             UMI3DEnvironmentLoader.Instance.onEnvironmentLoaded?.AddListener(() => {
                 CanProcess = true;
             });
+
+            UMI3DCollaborationClientServer.Instance?.OnRedirectionStarted?.AddListener(() => {
+                if(currentTool != null && currentToolId == currentTool.id)
+                    Release(currentTool, new RequestedFromMenu());
+            });
+
+            UMI3DCollaborationClientServer.Instance?.OnLeavingEnvironment?.AddListener(() =>
+            {
+                if (currentTool != null && currentToolId == currentTool.id)
+                    Release(currentTool, new RequestedFromMenu());
+            });
+
+            parameterInputFoundNotifier = NotificationHub.Default
+                .GetNotifier<InteractionNotificationKeys.ParameterInputFound>(this);
+
+            toolReleasedNotifier = NotificationHub.Default
+                .GetNotifier<InteractionNotificationKeys.ToolReleased>(this);
+        }
+
+        private void Instance_onNodeGameObjectSet(UMI3DNodeInstance node, GameObject oldGameObject)
+        {
+            NodeContainer container;
+            if (oldGameObject != null)
+            {
+                container = oldGameObject.GetComponent<NodeContainer>();
+                if (container != null)
+                    GameObject.Destroy(container);
+            }
+
+            container = node.GameObject.GetOrAddComponent<NodeContainer>();
+            container.instance = node;
+        }
+
+        protected virtual void OnEnable()
+        {
+            UMI3DEnvironmentLoader.Instance.onNodeGameObjectSet += Instance_onNodeGameObjectSet;
         }
 
         protected virtual void Start()
@@ -157,7 +199,7 @@ namespace umi3d.baseBrowser.Controller
             m_navigationDirect = 0;
             MouseHandler();
         }
-        protected virtual void Update() 
+        protected virtual void Update()
         {
             CurrentController?.Update();
         }
@@ -169,6 +211,8 @@ namespace umi3d.baseBrowser.Controller
             KeyboardEmote.S_Emotes.Clear();
             KeyboardNavigation.S_Navigations.Clear();
             KeyboardManipulation.S_Manipulations.Clear();
+
+            UMI3DEnvironmentLoader.Instance.onNodeGameObjectSet -= Instance_onNodeGameObjectSet;
         }
         #endregion
 
@@ -194,7 +238,7 @@ namespace umi3d.baseBrowser.Controller
         }
         protected void UnequipeForceProjection()
         {
-            InteractionMapper.ReleaseTool(currentTool.environmentId,currentTool.id, new RequestedByUser());
+            InteractionMapper.ReleaseTool(currentTool.environmentId, currentTool.id, new RequestedByUser());
             mouseData.ForceProjection = false;
             mouseData.CurrentHovered = null;
             mouseData.CurrentHoveredTransform = null;
@@ -242,7 +286,9 @@ namespace umi3d.baseBrowser.Controller
                 RemoveForceProjectionReleaseButton();
             }
             tool.onReleased(interactionBoneType);
-            OnRelease?.Invoke();
+
+            toolReleasedNotifier[InteractionNotificationKeys.ToolReleased.tool] = tool;
+            toolReleasedNotifier.Notify();
         }
         /// <summary>
         /// <inheritdoc/>
@@ -378,33 +424,54 @@ namespace umi3d.baseBrowser.Controller
             var raycastInfo = common.Physics.RaycastAll(ray, 100f);
 
             //1. Cast a ray to find all interactables
-            List<(RaycastHit, InteractableContainer)> interactables = new List<(RaycastHit, InteractableContainer)>();
+            List<(RaycastHit, InteractableContainer, bool)> interactables = new();
             for (int i = 0; i < raycastInfo.hitCount; i++)
             {
                 RaycastHit hit = raycastInfo.hits[i];
                 if (hit.collider.gameObject.GetComponentInParent<cdk.UMI3DLoadingHandler>() == null) continue;
+                var nodeContainer = hit.collider.gameObject.GetComponentInParent<NodeContainer>()?.instance.IsBlockingInteraction ?? false;
                 var interactable = hit.collider.gameObject.GetComponent<InteractableContainer>();
                 if (interactable == null) interactable = hit.collider.gameObject.GetComponentInParent<InteractableContainer>();
-                if (interactable != null) interactables.Add((hit, interactable));
+                if (nodeContainer || interactable != null)
+                    interactables.Add((hit, interactable, nodeContainer));
             }
 
             //2. Sort them by hasPriority and distance from user
-            interactables.Sort(delegate ((RaycastHit, InteractableContainer) x, (RaycastHit, InteractableContainer) y)
+            interactables.Sort(delegate ((RaycastHit, InteractableContainer, bool) x, (RaycastHit, InteractableContainer, bool) y)
             {
-                if (x.Item2.Interactable.HasPriority && !y.Item2.Interactable.HasPriority) return -1;
-                else if (!x.Item2.Interactable.HasPriority && y.Item2.Interactable.HasPriority) return 1;
+                var xp = x.Item2?.Interactable.HasPriority ?? false;
+                var yp = y.Item2?.Interactable.HasPriority ?? false;
+
+
+                var whenXisCloser = (!yp || x.Item3 || xp);
+                var WhenXisFurther = !(!xp || y.Item3 || yp);
+
+
+                int res;
+
+                if (whenXisCloser == WhenXisFurther)
+                {
+                    res = whenXisCloser ? -1 : 1;
+                }
                 else
                 {
-                    if (Vector3.Distance(CameraTransform.position, x.Item1.point) >= Vector3.Distance(CameraTransform.position, y.Item1.point))
-                        return 1;
-                    else
-                        return -1;
+                    var xIsCloser = (Vector3.Distance(CameraTransform.position, x.Item1.point) <= Vector3.Distance(CameraTransform.position, y.Item1.point));
+                    res = (xIsCloser && whenXisCloser || !xIsCloser && WhenXisFurther) ? -1 : 1;
                 }
+
+                return res;
             });
 
-            foreach ((RaycastHit, InteractableContainer) entry in interactables)
+            foreach ((RaycastHit, InteractableContainer, bool) entry in interactables)
             {
                 InteractableContainer interactableContainer = entry.Item2;
+                if (interactableContainer is null)
+                {
+                    if (entry.Item3)
+                        break;
+                    continue;
+                }
+
                 Interactable interactable = interactableContainer.Interactable;
                 RaycastHit hit = entry.Item1;
 
@@ -452,14 +519,14 @@ namespace umi3d.baseBrowser.Controller
                     &&
                     (mouseData.CurrentHoveredId != mouseData.LastHoveredId)
                     &&
-                    associatedInputs.ContainsKey((mouseData.CurrentHovered.dto.id, UMI3DGlobalID.EnvironmentId)))
+                    associatedInputs.ContainsKey((mouseData.CurrentHovered.dto.id, mouseData.CurrentHovered.environmentId)))
                 {
-                    foreach (var input in associatedInputs[(mouseData.CurrentHovered.dto.id, UMI3DGlobalID.EnvironmentId)])
+                    foreach (var input in associatedInputs[(mouseData.CurrentHovered.dto.id, mouseData.CurrentHovered.environmentId)])
                         input.UpdateHoveredObjectId(mouseData.CurrentHoveredId);
                 }
 
                 var v = new Vector4(hoverBoneTransform.rotation.x, hoverBoneTransform.rotation.y, hoverBoneTransform.rotation.z, hoverBoneTransform.rotation.w);
-                mouseData.CurrentHovered.Hovered(hoverBoneType,hoverBoneTransform.position,v, mouseData.CurrentHoveredId, mouseData.Position, mouseData.Normal, mouseData.Direction);
+                mouseData.CurrentHovered.Hovered(hoverBoneType, hoverBoneTransform.position, v, mouseData.CurrentHoveredId, mouseData.Position, mouseData.Normal, mouseData.Direction);
             }
         }
         private void OldHoverExitAndCurrentHoverEnter()
@@ -474,7 +541,7 @@ namespace umi3d.baseBrowser.Controller
             ulong lastHoverId = mouseData.LastHoveredId;
             var v = new Vector4(hoverBoneTransform.rotation.x, hoverBoneTransform.rotation.y, hoverBoneTransform.rotation.z, hoverBoneTransform.rotation.w);
             mouseData.OldHovered
-                .HoverExit(hoverBoneType,hoverBoneTransform.position,v, lastHoverId, mouseData.LastPosition, mouseData.LastNormal, mouseData.LastDirection);
+                .HoverExit(hoverBoneType, hoverBoneTransform.position, v, lastHoverId, mouseData.LastPosition, mouseData.LastNormal, mouseData.LastDirection);
 
             ulong hoverExitAnimationId = mouseData.OldHovered.dto.HoverExitAnimationId;
             ulong hoverExitAnimationEnvId = mouseData.OldHovered.environmentId;
@@ -486,11 +553,11 @@ namespace umi3d.baseBrowser.Controller
                     new SetUMI3DPropertyData(
                         mouseData.OldHovered.environmentId,
                         new SetEntityPropertyDto()
-                            {
-                                entityId = hoverExitAnimationId,
-                                property = UMI3DPropertyKeys.AnimationPlaying,
-                                value = true
-                            },
+                        {
+                            entityId = hoverExitAnimationId,
+                            property = UMI3DPropertyKeys.AnimationPlaying,
+                            value = true
+                        },
                         UMI3DEnvironmentLoader.GetEntity(hoverExitAnimationEnvId, hoverExitAnimationId)
                         )
                     );
@@ -507,7 +574,7 @@ namespace umi3d.baseBrowser.Controller
             ulong currentHoverId = mouseData.CurrentHoveredId;
             var v = new Vector4(hoverBoneTransform.rotation.x, hoverBoneTransform.rotation.y, hoverBoneTransform.rotation.z, hoverBoneTransform.rotation.w);
             mouseData.CurrentHovered
-                .HoverEnter(hoverBoneType,hoverBoneTransform.position,v, currentHoverId, mouseData.Position, mouseData.Normal, mouseData.Direction);
+                .HoverEnter(hoverBoneType, hoverBoneTransform.position, v, currentHoverId, mouseData.Position, mouseData.Normal, mouseData.Direction);
 
             ulong hoverEnterAnimationId = mouseData.CurrentHovered.dto.HoverEnterAnimationId;
             if (hoverEnterAnimationId != 0)

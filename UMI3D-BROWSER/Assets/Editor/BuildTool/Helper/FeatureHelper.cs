@@ -31,7 +31,7 @@ namespace umi3d.browserEditor.BuildTool
                     DisableAllFeatures(BuildTargetGroup.Android, except: E_Feature.Meta);
                     EnableFeatures(BuildTargetGroup.Android, E_Feature.Meta);
                     break;
-                case E_Target.SteamXR:
+                case E_Target.SteamVR:
                     break;
                 case E_Target.Focus:
                     DisableAllFeatures(BuildTargetGroup.Android, except: E_Feature.Vive);

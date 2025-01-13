@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using umi3dBrowsers.linker;
+using umi3dBrowsers.services.connection;
 using UnityEngine;
 using static umi3dBrowsers.MainContainer;
 
@@ -16,20 +17,39 @@ namespace umi3dBrowsers.services.title
         [Header("Linkers")]
         [SerializeField] private ConnectionServiceLinker connectionServiceLinker;
 
+        private string worldName; 
+
         private void Awake()
         {
-            connectionServiceLinker.OnMediaServerPingSuccess += (virtualWorldData) =>
-            {
-                SetTitle(TitleType.connectionTitle, "Connected to", virtualWorldData.worldName, true, true);
+            connectionServiceLinker.OnMediaServerPingSuccess += (virtualWorldData) => {
+                worldName = virtualWorldData.worldName;
             };
 
-            connectionServiceLinker.OnParamFormDtoReceived += (connectionFormDto) =>
-            {
-                SetTitle(TitleType.connectionTitle, "", connectionFormDto?.name ?? "", true, true);
+            connectionServiceLinker.OnParamFormDtoReceived += (connectionFormDto) => {
+                if (connectionFormDto?.name == "login")
+                {
+                    SetTitle(TitleType.connectionTitle, "connect_to", worldName);
+                    return;
+                }
+                SetTitle(TitleType.connectionTitle, "connect_to_a", connectionFormDto?.name ?? "");
             };
 
             connectionServiceLinker.OnDivFormDtoReceived += (connectionFormDto) => {
-                SetTitle(TitleType.connectionTitle, "", connectionFormDto?.name ?? "", true, true);
+                if (connectionFormDto?.name == "login")
+                {
+                    SetTitle(TitleType.connectionTitle, "connect_to", worldName);
+                    return;
+                }
+                SetTitle(TitleType.connectionTitle, "connect_to_a", connectionFormDto?.name ?? "");
+            };
+
+            connectionServiceLinker.OnWaitReceived += (connectionFormDto) => {
+                if (connectionFormDto?.name == "login")
+                {
+                    SetTitle(TitleType.connectionTitle, "connect_to", worldName);
+                    return;
+                }
+                SetTitle(TitleType.connectionTitle, "connect_to_a", connectionFormDto?.name ?? "");
             };
         }
 

@@ -24,6 +24,7 @@ using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using System.Collections.Generic;
 using umi3dVRBrowsersBase.rendering;
+using inetum.unityUtils.observation;
 
 namespace umi3dVRBrowsersBase.connection
 {

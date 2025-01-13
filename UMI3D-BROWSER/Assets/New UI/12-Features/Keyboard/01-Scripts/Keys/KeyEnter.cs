@@ -14,13 +14,37 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System.Collections;
-using System.Collections.Generic;
+using inetum.unityUtils.observation;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.keyboard
 {
     public class KeyEnter : MonoBehaviour
     {
+        PointerDownBehaviour pointerDown;
+
+        Notifier keyPressedNotifier;
+
+        void Awake()
+        {
+            pointerDown = GetComponent<PointerDownBehaviour>();
+            pointerDown.isSimpleClick = true;
+            pointerDown.pointerClickedSimple += PointerDown;
+
+            keyPressedNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                KeyboardNotificationKeys.SpecialKeyPressed,
+                null,
+                new()
+                {
+                    { KeyboardNotificationKeys.Info.SpecialKey, SpecialKey.Enter }
+                }
+            );
+        }
+
+        void PointerDown()
+        {
+            keyPressedNotifier.Notify();
+        }
     }
 }

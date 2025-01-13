@@ -24,7 +24,7 @@ namespace umi3d.common
         public ulong FrameId { get; set; } = 0;
 
         /// <summary>
-        /// Scale of the user in the new referentiel. 
+        /// Scale of the user in the new referential. 
         /// Not to be misunderstood with the height.
         /// A user should be at full height with a scale of one.
         /// </summary>

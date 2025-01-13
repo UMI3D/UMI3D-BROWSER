@@ -25,7 +25,7 @@ namespace umi3d.browserEditor.BuildTool
         Quest = 1, 
         Focus = 2, 
         Pico = 4, 
-        SteamXR = 8,
+        SteamVR = 8,
         Windows = 16,
     }
 
@@ -38,9 +38,9 @@ namespace umi3d.browserEditor.BuildTool
                 E_Target.Quest => BuildTarget.Android,
                 E_Target.Focus => BuildTarget.Android,
                 E_Target.Pico => BuildTarget.Android,
-                E_Target.SteamXR => BuildTarget.StandaloneWindows64,
-                E_Target.Windows => BuildTarget.StandaloneWindows,
-                _ => BuildTarget.StandaloneWindows
+                E_Target.SteamVR => BuildTarget.StandaloneWindows64,
+                E_Target.Windows => BuildTarget.StandaloneWindows64,
+                _ => BuildTarget.StandaloneWindows64
             };
         }
     }

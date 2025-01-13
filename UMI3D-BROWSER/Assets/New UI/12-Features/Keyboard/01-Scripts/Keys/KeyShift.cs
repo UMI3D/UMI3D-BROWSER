@@ -14,10 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
-using System.Collections;
+using inetum.unityUtils.observation;
 using System.Collections.Generic;
-using umi3d.browserRuntime.NotificationKeys;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -153,13 +151,14 @@ namespace umi3d.browserRuntime.ui.keyboard
                 return;
             }
 
-            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.IsAddingCharacters, out bool isAdding))
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.TextFieldTextUpdate, out TextFieldTextUpdate textUpdate))
             {
-                UnityEngine.Debug.LogError($"[KeyShift] No KeyboardNotificationKeys.Info.IsAddingCharacters keys.");
                 return;
             }
 
-            if (isAdding && notification.TryGetInfoT(KeyboardNotificationKeys.Info.Characters, out char character) && character == ' ')
+            if (textUpdate == TextFieldTextUpdate.AddCharacters 
+                && notification.TryGetInfoT(KeyboardNotificationKeys.Info.Characters, out char character, false) 
+                && character == ' ')
             {
                 return;
             }

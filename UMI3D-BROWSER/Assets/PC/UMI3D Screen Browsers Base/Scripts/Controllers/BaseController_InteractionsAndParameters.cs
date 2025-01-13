@@ -17,6 +17,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using umi3d.baseBrowser.inputs.interactions;
+using umi3d.browserRuntime.notificationKeys;
 using umi3d.cdk.interaction;
 using umi3d.common.interaction;
 using UnityEngine;
@@ -25,8 +26,6 @@ namespace umi3d.baseBrowser.Controller
 {
     public partial class BaseController
     {
-        public event Action<AbstractParameterDto> OnAddParameter;
-
         public override List<AbstractUMI3DInput> inputs
         {
             get
@@ -195,16 +194,22 @@ namespace umi3d.baseBrowser.Controller
         /// <exception cref="System.NotImplementedException"></exception>
         public override AbstractUMI3DInput FindInput(AbstractParameterDto param, bool unused = true)
         {
-            OnAddParameter?.Invoke(param);
-            if (param is FloatRangeParameterDto) return FindInput(floatRangeParameterInputs, i => i.IsAvailable(), ParameterActions);
-            else if (param is FloatParameterDto) return FindInput(floatParameterInputs, i => i.IsAvailable(), ParameterActions);
-            else if (param is IntegerParameterDto) return FindInput(intParameterInputs, i => i.IsAvailable());
+            AbstractUMI3DInput input = null;
+            if (param is FloatRangeParameterDto) input = FindInput(floatRangeParameterInputs, i => i.IsAvailable(), ParameterActions);
+            else if (param is FloatParameterDto) input = FindInput(floatParameterInputs, i => i.IsAvailable(), ParameterActions);
+            else if (param is IntegerParameterDto) input = FindInput(intParameterInputs, i => i.IsAvailable());
             else if (param is IntegerRangeParameterDto) throw new System.NotImplementedException();
-            else if (param is BooleanParameterDto) return FindInput(boolParameterInputs, i => i.IsAvailable(), ParameterActions);
-            else if (param is StringParameterDto) return FindInput(stringParameterInputs, i => i.IsAvailable(), ParameterActions);
-            else if (param is EnumParameterDto<string>) return FindInput(stringEnumParameterInputs, i => i.IsAvailable(), ParameterActions);
-            else if (param is UploadFileParameterDto) return FindInput(uploadFileParameterInputs, i => i.IsAvailable(), ParameterActions);
+            else if (param is BooleanParameterDto) input = FindInput(boolParameterInputs, i => i.IsAvailable(), ParameterActions);
+            else if (param is StringParameterDto) input = FindInput(stringParameterInputs, i => i.IsAvailable(), ParameterActions);
+            else if (param is EnumParameterDto<string>) input = FindInput(stringEnumParameterInputs, i => i.IsAvailable(), ParameterActions);
+            else if (param is UploadFileParameterDto) input = FindInput(uploadFileParameterInputs, i => i.IsAvailable(), ParameterActions);
             else throw new System.Exception("Input not found !!!!!!!!!!!");
+
+            parameterInputFoundNotifier[InteractionNotificationKeys.ParameterInputFound.parameterDto] = param;
+            parameterInputFoundNotifier[InteractionNotificationKeys.ParameterInputFound.parameterInput] = input;
+            parameterInputFoundNotifier.Notify();
+
+            return input;
         }
 
         #region Find Manipulations

@@ -1,3 +1,5 @@
+using inetum.unityUtils.math;
+using umi3d.browserRuntime.player;
 using umi3d.cdk;
 using umi3d.common;
 using umi3dBrowsers.linker;
@@ -22,19 +24,8 @@ namespace umi3dBrowsers
         }
         public void RepositionPlayer()
         {
-            if ((UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DLoadingParameters).BrowserType != XRBrowserTypes.AR)
-            {
-                playerTransform.position = transform.position;
-                playerTransform.rotation = transform.rotation;
-#if UMI3D_XR
-                if((UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DLoadingParameters).BrowserType == XRBrowserTypes.AR)
-                {
-                    var cameraTransform = Camera.main.transform;
-                    cameraTransform.parent.localEulerAngles = new Vector3(0, -cameraTransform.localEulerAngles.y, 0);
-                    cameraTransform.parent.localPosition = new Vector3(-cameraTransform.localPosition.x, 0, -cameraTransform.localPosition.z);
-                }
-#endif
-            }      
+            PlayerTransformUtils.RotatePlayerAndCenterCamera(playerTransform, Camera.main.transform, transform.rotation);
+            PlayerTransformUtils.TranslatePlayerAndCenterCamera(playerTransform, Camera.main.transform, transform.position);
         }
     }
 }

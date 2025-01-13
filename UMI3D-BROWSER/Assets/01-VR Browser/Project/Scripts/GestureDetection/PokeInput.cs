@@ -34,8 +34,8 @@ public class VRPokeInputObserver : MonoBehaviour
     {
         pokeCollider = pokeCollider == null ? GetComponent<Collider>() : pokeCollider;
 
-        selectionManager.selectableSelector.selectionEvent.AddListener((e) => AddSelected(e.selectedObject.gameObject));
-        selectionManager.selectableSelector.deselectionEvent.AddListener((e) => RemoveSelected(e.selectedObject.gameObject));
+        //selectionManager.selectionEvent.AddListener((e) => AddSelected(e.selectedObject.gameObject));
+        //selectionManager.selectableSelector.deselectionEvent.AddListener((e) => RemoveSelected(e.selectedObject.gameObject));
 
         selectionManager.interactableSelector.selectionEvent.AddListener((e) => AddSelected(e.selectedObject.gameObject));
         selectionManager.interactableSelector.deselectionEvent.AddListener((e) => RemoveSelected(e.selectedObject.gameObject));

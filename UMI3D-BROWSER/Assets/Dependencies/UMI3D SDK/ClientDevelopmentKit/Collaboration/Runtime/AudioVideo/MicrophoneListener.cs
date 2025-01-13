@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -51,11 +52,17 @@ namespace umi3d.cdk.collaboration
             UMI3DCollaborationClientServer.Instance.OnLeaving.AddListener(Reset);
 
             UMI3DCollaborationClientServer.Instance.OnRedirectionAborted.AddListener(Heartbeat);
-            UMI3DEnvironmentClient.EnvironementLoaded.AddListener(Heartbeat);
+            UMI3DEnvironmentClient.EnvironmentLoaded.AddListener(Heartbeat);
 
             identity = new Identity(GetIdentity);
 
             pushToTalkKeycode = KeyCode.M;
+
+            MicrophoneListener.Instance.Subscribe(value => {
+                MainThreadDispatcher.UnityMainThreadDispatcher.Instance().Enqueue(() => {
+                    UMI3DClientServer.SendRequest(ConferenceRequest.GetUserIsSpeakingStatusRequest(UMI3DCollaborationClientServer.Instance.GetUserId(), value), true); 
+                });
+            });
         }
 
         public override void ResetAudioConference()
@@ -104,7 +111,7 @@ namespace umi3d.cdk.collaboration
             UMI3DUser.OnUserMicrophoneServerUpdated.RemoveListener(ServerUpdate);
             UMI3DUser.OnUserMicrophoneUseMumbleUpdated.RemoveListener(UseMumbleUpdate);
 
-            UMI3DEnvironmentClient.EnvironementLoaded.RemoveListener(Heartbeat);
+            UMI3DEnvironmentClient.EnvironmentLoaded.RemoveListener(Heartbeat);
         }
         #endregion
 
@@ -271,7 +278,6 @@ namespace umi3d.cdk.collaboration
                 new DebugInfo<float>("DB",()=>{ return db; }),
                 new DebugInfo<bool>("Saturated",()=>{ return saturated; })
             };
-
         }
 
         public string GetLogName()

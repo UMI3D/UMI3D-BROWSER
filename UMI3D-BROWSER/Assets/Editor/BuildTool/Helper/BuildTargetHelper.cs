@@ -40,7 +40,7 @@ namespace umi3d.browserEditor.BuildTool
                 case E_Target.Quest:
                 case E_Target.Focus:
                 case E_Target.Pico:
-                case E_Target.SteamXR:
+                case E_Target.SteamVR:
                     ChangeDeviceConditionalCompilation(MultiDevice.XR);
                     break;
                 case E_Target.Windows:
@@ -59,7 +59,7 @@ namespace umi3d.browserEditor.BuildTool
                         BuildTargetGroup.Android, 
                         BuildTarget.Android
                     );
-                case E_Target.SteamXR:
+                case E_Target.SteamVR:
                     return ChangeBuildTarget(
                         BuildTargetGroup.Standalone,
                         BuildTarget.StandaloneWindows64
@@ -67,7 +67,7 @@ namespace umi3d.browserEditor.BuildTool
                 case E_Target.Windows:
                     return ChangeBuildTarget(
                         BuildTargetGroup.Standalone,
-                        BuildTarget.StandaloneWindows
+                        BuildTarget.StandaloneWindows64
                     );
                 default:
                     return -1;

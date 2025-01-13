@@ -29,6 +29,10 @@ namespace umi3dBrowsers.linker
         public event Action<umi3d.common.interaction.form.ConnectionFormDto> OnDivFormDtoReceived;
         public void DivFormDtoReceived(umi3d.common.interaction.form.ConnectionFormDto data) { OnDivFormDtoReceived?.Invoke(data); }
 
+        public event Action<WaitConnectionDto> OnWaitReceived;
+        public void WaitReceived(WaitConnectionDto data) { OnWaitReceived?.Invoke(data); }
+
+
         public event Action<List<string>, Action<bool>> OnAsksToLoadLibrairies;
         public void AsksToLoadLibrairies(List<string> ids, Action<bool> action) { OnAsksToLoadLibrairies?.Invoke(ids, action);}
 
@@ -41,10 +45,13 @@ namespace umi3dBrowsers.linker
         public event Action<bool> OnSendAnswerToLibrariesDownloadAsk;
         public void SendAnswerToLibrariesDownloadAsk(bool v) { OnSendAnswerToLibrariesDownloadAsk?.Invoke(v); }
 
-        public event Action<FormAnswerDto> OnSendFormAnwser;
-        public void SendFormAnswer(FormAnswerDto formAnswer) { OnSendFormAnwser?.Invoke(formAnswer); }
+        public event Action<FormAnswerDto> OnSendFormAnswer;
+        public void SendFormAnswer(FormAnswerDto formAnswer) { OnSendFormAnswer?.Invoke(formAnswer); }
 
-        public event Action<umi3d.common.interaction.form.FormAnswerDto> OnSendDivFormAnwser;
-        public void SendDivFormAnswer(umi3d.common.interaction.form.FormAnswerDto formAnswer) { OnSendDivFormAnwser?.Invoke(formAnswer); }
+        public event Action<umi3d.common.interaction.form.FormAnswerDto> OnSendDivFormAnswer;
+        public void SendDivFormAnswer(umi3d.common.interaction.form.FormAnswerDto formAnswer) { OnSendDivFormAnswer?.Invoke(formAnswer); }
+
+        public event Action OnSendWaitAnswer;
+        public void SendWaitAnswer() { OnSendWaitAnswer?.Invoke(); }
     }
 }

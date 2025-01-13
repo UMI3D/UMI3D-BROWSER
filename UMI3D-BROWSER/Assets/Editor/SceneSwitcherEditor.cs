@@ -13,29 +13,75 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+using System.Linq;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 
-namespace umi3d
+namespace umi3d.browserEditor.scenes
 {
     public static class SceneSwitcherEditor
     {
-        [MenuItem("Scenes/Start Scene", priority = 0)]
-        static void LoadStartScene()
+        /// <summary>
+        /// Path of the folder that contains scenes.
+        /// </summary>
+        const string FOLDER_PATH = "Assets/New UI/03-Scenes";
+
+        static string[] scenePaths;
+
+        [InitializeOnLoadMethod]
+        public static void FindScenes()
         {
-            LoadScene("Assets/New UI/03-Scenes/StartScene(new).unity");
+            string[] sceneGUIDs = AssetDatabase.FindAssets("t:Scene", new[] { FOLDER_PATH });
+            scenePaths = sceneGUIDs.Select(guid => AssetDatabase.GUIDToAssetPath(guid)).ToArray();
+        }
+
+        [MenuItem("Scenes/Start Scene", priority = 0)]
+        public static void LoadStartScene()
+        {
+            LoadScene(GetScenePath("StartScene(new)"));
         }
 
         [MenuItem("Scenes/Connection Scene", priority = 1)]
-        static void LoadConnectionScene()
+        public static void LoadConnectionScene()
         {
-            LoadScene("Assets/New UI/03-Scenes/ConnectionScene(new).unity");
+            LoadScene(GetScenePath("ConnectionScene(new)"));
         }
 
         [MenuItem("Scenes/MainImmersive Scene", priority = 2)]
-        static void LoadMainImmersiveScene()
+        public static void LoadMainImmersiveScene()
         {
-            LoadScene("Assets/New UI/03-Scenes/MainImmersive(new).unity");
+            LoadScene(GetScenePath("MainImmersive(new)"));
+        }
+
+        [MenuItem("Scenes/PC/Window Bar", priority = 3)]
+        public static void LoadPCWindowBar()
+        {
+            LoadScene(GetScenePath("WindowBar"));
+        }
+
+        [MenuItem("Scenes/PC/UI In Game", priority = 4)]
+        public static void LoadPCUIInGame()
+        {
+            LoadScene(GetScenePath("PC_InGameUI"));
+        }
+
+        static string GetScenePath(string sceneName)
+        {
+            if (scenePaths == null || scenePaths.Length == 0)
+            {
+                UnityEngine.Debug.LogError($"Error: no scenes found.");
+                return null;
+            }
+
+            foreach (string scenePath in scenePaths)
+            {
+                if (scenePath.Contains(sceneName))
+                {
+                    return scenePath;
+                }
+            }
+
+            return null;
         }
 
         static void LoadScene(string path)

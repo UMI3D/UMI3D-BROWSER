@@ -14,9 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
-using System.Collections;
-using System.Collections.Generic;
+using inetum.unityUtils.observation;
 using umi3d.browserRuntime.NotificationKeys;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -42,7 +40,7 @@ namespace umi3d.browserRuntime.xr
         [SerializeField] InputActionReference m_TeleportModeCancel;
 
         [Tooltip("Whether the teleportation is enabled with this controller.")]
-        [SerializeField] bool enableTeleportation;
+        [SerializeField] bool enableTeleportation = true;
 
         //[SerializeField]
         //[Tooltip("The reference to the action of moving the XR Origin with this controller.")]
@@ -58,7 +56,7 @@ namespace umi3d.browserRuntime.xr
         [SerializeField] InputActionReference m_SnapTurn;
 
         [Tooltip("Whether the snap turn is enabled with this controller.")]
-        [SerializeField] bool enableSnapTurn;
+        [SerializeField] bool enableSnapTurn = true;
 
         //[SerializeField]
         //[Tooltip("The reference to the action of continuous turning the XR Origin with this controller.")]

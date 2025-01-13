@@ -77,7 +77,7 @@ namespace umi3d.cdk
             var nodeDto = data.dto as UMI3DMeshNodeDto;
             if (data.node == null)
             {
-                throw (new Umi3dException("Node gameobject is not referenced. Dto should be an UMI3DAbstractNodeDto."));
+                throw (new common.Umi3dException("Node gameobject is not referenced. Dto should be an UMI3DAbstractNodeDto."));
             }
 
             await base.ReadUMI3DExtension(data);
@@ -92,6 +92,7 @@ namespace umi3d.cdk
             string pathIfInBundle = fileToLoad.pathIfInBundle;
             IResourcesLoader loader = loadingManager.AbstractLoadingParameters.SelectLoader(ext);
             Vector3 offset = Vector3.zero;
+
             if (loader is AbstractMeshDtoLoader meshLoader)
                 offset = meshLoader.GetRotationOffset();
             if (loader != null)
@@ -106,26 +107,14 @@ namespace umi3d.cdk
                     }
                     else if (o is (GameObject go, Scene scene))
                     {
-                        /*Debug.LogError("TODO : to improve");
-                        var transforms = new List<GameObject>();
-                        for (int i = 0; i < go.transform.childCount; i++)
-                        {
-                            transforms.Add(go.transform.GetChild(i).gameObject);
-                        }*/
-
                         await CallbackAfterLoadingForMesh(data.environmentId, go, meshDto, data.node.transform, offset, scene);
-
-                        /*foreach (var goo in transforms.ToArray())
-                        {
-                            GameObject.Destroy(goo);
-                        }*/
                     }
                 }
                 else
-                    throw (new Umi3dException($"Cast not valid for {o.GetType()} into GameObject or {data.dto.GetType()} into UMI3DMeshNodeDto"));
+                    throw (new common.Umi3dException($"Cast not valid for {o.GetType()} into GameObject or {data.dto.GetType()} into UMI3DMeshNodeDto"));
             }
             else
-                throw (new Umi3dException($"No loader found for {ext}"));
+                throw (new common.Umi3dException($"No loader found for {ext}"));
         }
 
         /// <summary>
@@ -205,6 +194,8 @@ namespace umi3d.cdk
             if (!resourcesManager.IsSubModelsSetFor(file.url, file.libraryKey))
             {
                 var copy = GameObject.Instantiate(goInCache, resourcesManager.CacheTransform);// goInCache.transform.parent);
+                FixLightMaps(goInCache.GetComponentsInChildren<Renderer>(), copy.GetComponentsInChildren<Renderer>());
+
                 foreach (LODGroup lodgroup in copy.GetComponentsInChildren<LODGroup>())
                     GameObject.Destroy(lodgroup);
 
@@ -269,7 +260,7 @@ namespace umi3d.cdk
             }
         }
 
-        private async Task CallbackAfterLoadingForMesh(ulong environmentId,GameObject go, UMI3DMeshNodeDto dto, Transform parent, Vector3 rotationOffsetByLoader, object data)
+        private async Task CallbackAfterLoadingForMesh(ulong environmentId, GameObject go, UMI3DMeshNodeDto dto, Transform parent, Vector3 rotationOffsetByLoader, object data)
         {
             var modelTracker = parent.gameObject.AddComponent<ModelTracker>();
             GameObject root = null;
@@ -281,18 +272,14 @@ namespace umi3d.cdk
             else
             {
                 root = go;
+                root.transform.localPosition = Vector3.zero;
+                root.transform.localRotation = Quaternion.identity;
             }
 
             GameObject instance = null;
             UMI3DNodeInstance nodeInstance = environmentManager.GetNodeInstance(environmentId, dto.id);
 
             instance = GameObject.Instantiate(root, parent, true);
-
-            if (data is Scene scene)
-            {
-                GameObject.Destroy(go);
-                nodeInstance.scene = scene;
-            }
 
             AbstractMeshDtoLoader.ShowModelRecursively(instance);
             Renderer[] renderers = instance.GetComponentsInChildren<Renderer>();
@@ -318,6 +305,13 @@ namespace umi3d.cdk
                 }
             }
 
+            if (data is Scene scene)
+            {
+                nodeInstance.scene = scene; 
+                FixLightMaps(root.GetComponentsInChildren<Renderer>(), renderers);
+                GameObject.Destroy(go);
+            }
+
             instance.transform.localPosition = root.transform.localPosition;
             instance.transform.localScale = root.transform.localScale;
             instance.transform.localEulerAngles = root.transform.localEulerAngles;
@@ -325,19 +319,17 @@ namespace umi3d.cdk
             SetCollider(dto.id, nodeInstance, colliderDto);
             SetMaterialOverided(dto, nodeInstance);
             SetLightMap(instance, nodeInstance);
-            SetBlendShapeRef(instance, nodeInstance, dto);
-
+            SetBlendShapeRef(nodeInstance, dto);
 
             nodeInstance.IsPartOfNavmesh = dto.isPartOfNavmesh;
             nodeInstance.IsTraversable = dto.isTraversable;
             nodeInstance.IsBlockingInteraction = dto.isBlockingInteraction;
-
         }
 
-        private void SetBlendShapeRef(GameObject instance, UMI3DNodeInstance nodeInstance, UMI3DMeshNodeDto dto, bool setValue = true)
+        private void SetBlendShapeRef(UMI3DNodeInstance nodeInstance, UMI3DMeshNodeDto dto, bool setValue = true)
         {
             IEnumerable<Renderer> childrenSkinnedMesh = GetChildRenderersWhithoutOtherModel(nodeInstance).Where(s => s is SkinnedMeshRenderer);
-            foreach (var skinnedMesh in childrenSkinnedMesh)
+            foreach (Renderer skinnedMesh in childrenSkinnedMesh)
             {
                 SkinnedMeshRenderer skm = (skinnedMesh as SkinnedMeshRenderer);
                 if (skm.sharedMesh.blendShapeCount > 0 && !nodeInstance.skmToUpdateWithBlendShapes.Contains(skm))
@@ -349,19 +341,18 @@ namespace umi3d.cdk
                     if (setValue)
                         try
                         {
-                            for (int i = 0; i < skm.sharedMesh.blendShapeCount; i++)
+                            for (int i = 0; i < dto.blendShapesValues.Count; i++)
                             {
                                 skm.SetBlendShapeWeight(i, dto.blendShapesValues[i]);
                             }
                         }
                         catch (Exception e)
                         {
-                            Debug.LogError("Cannot apply blendshape values. " + e);
+                            Debug.LogError($"Cannot apply blendshape values. Skinned Mesh Renderer {skm.name} has {skm.sharedMesh.blendShapeCount} blendshapes whereas dto has {dto.blendShapesValues.Count}." + e);
                         }
                 }
             }
         }
-
 
         /// <summary>
         /// If the node has a <see cref="PrefabLightmapData"/>, makes sure to refresh once its references are updated.
@@ -393,6 +384,30 @@ namespace umi3d.cdk
             yield return null;
         }
 
+        /// <summary>
+        /// Fix objects copied from a scene without lightmaps. 
+        /// A bug was submitted to Unity : it's an expected behavior as this isn’t really a use-case lightmaps
+        /// support out of the box. It does work in Player but not in Editor due to Player build serialization
+        /// being slightly different.
+        /// However we apply the workaround for both Player and Editor just in case (performance impact seems slight).
+        /// </summary>
+        /// <param name="baseRenderers">Renderers from original objects</param>
+        /// <param name="newRenderers">Renderers created</param>
+        public static void FixLightMaps(Renderer[] baseRenderers, Renderer[] newRenderers)
+        {
+            if (baseRenderers.Length != newRenderers.Length)
+            {
+                UMI3DLogger.LogError("Impossible to fix lightmaps, renderers lists don't match : " + baseRenderers.Length + " vs " + newRenderers.Length,
+                    DebugScope.CDK);
 
+                return;
+            }
+
+            for (int i = 0; i < baseRenderers.Length; i++)
+            {
+                newRenderers[i].lightmapIndex = baseRenderers[i].lightmapIndex;
+                newRenderers[i].lightmapScaleOffset = baseRenderers[i].lightmapScaleOffset;
+            }
+        }
     }
 }

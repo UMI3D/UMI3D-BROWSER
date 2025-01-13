@@ -653,7 +653,7 @@ namespace umi3d.cdk
 
         public async Task DeleteEntityInstance(ulong environmentId, ulong entityId, List<CancellationToken> tokens = null)
         {
-            if (UMI3DResourcesManager.isKnowedLibrary(entityId))
+            if (UMI3DResourcesManager.IsKnownLibrary(entityId))
                 UMI3DResourcesManager.UnloadLibrary(entityId);
             else
                 await entitiesCollection[environmentId].DeleteEntity(entityId, tokens);
@@ -925,7 +925,7 @@ namespace umi3d.cdk
         /// <returns></returns>
         public static async Task<bool> SetEntity(ulong environmentId, ulong entityId, SetUMI3DPropertyContainerData data)
         {
-           // UnityMainThreadDispatcher.Instance().Enqueue(() => UnityEngine.Debug.Log($"SetEntityProperty {environmentId} {entityId}"));
+            // UnityMainThreadDispatcher.Instance().Enqueue(() => UnityEngine.Debug.Log($"SetEntityProperty {environmentId} {entityId}"));
             if (await Instance.entitiesCollection[environmentId].SetEntity(entityId,data, ReadValueEntity))
                 return true;
             else

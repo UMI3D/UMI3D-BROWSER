@@ -122,8 +122,11 @@ namespace umi3d.cdk
 
         [SerializeField, Tooltip("True if the browser uses a head mounted display.")]
         private bool hasHeadMountedDisplay;
-        public bool HasHeadMountedDisplay => hasHeadMountedDisplay;
-        public bool SetHasHeadMountedDisplay(bool value) => hasHeadMountedDisplay = value;
+        public bool HasHeadMountedDisplay
+        {
+            get => hasHeadMountedDisplay;
+            set => hasHeadMountedDisplay = value;
+        }
 
         [EditorReadOnly, SerializeField, ConstEnum(typeof(XRBrowserTypes), typeof(uint))]
         private uint browserType;
@@ -367,7 +370,7 @@ namespace umi3d.cdk
                     int height = tex.height;
 
                     // Compute shader may be faster ?
-                    InvertTextureJob job = new () { width = width, height = height, original = original, result = inverted };
+                    InvertTextureJob job = new() { width = width, height = height, original = original, result = inverted };
                     job.Schedule().Complete();
 
                     tex.SetPixelData(inverted, 0);

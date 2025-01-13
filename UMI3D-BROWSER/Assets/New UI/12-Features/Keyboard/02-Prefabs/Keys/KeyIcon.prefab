@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7825954131393227894}
   - component: {fileID: 7564091869250432842}
   - component: {fileID: 1829169138022007994}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -87,15 +87,14 @@ GameObject:
   - component: {fileID: 5098743133763029022}
   - component: {fileID: 3974700365862635689}
   - component: {fileID: 6524146797873469911}
+  - component: {fileID: 7092625995685998456}
   - component: {fileID: 7714634391371666230}
   - component: {fileID: 3919676845038646996}
-  - component: {fileID: 1809827633896406955}
-  - component: {fileID: 1483451282032099210}
   - component: {fileID: 8873234004733204232}
   - component: {fileID: 3035742776615921275}
   - component: {fileID: 586288627104333832}
   - component: {fileID: 7644406396059052029}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: KeyIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -162,6 +161,25 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &7092625995685998456
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6430663099506593935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7951c64acb0fa62458bf30a60089fe2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 0
+  m_CheckFor2DOcclusion: 0
+  m_CheckFor3DOcclusion: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RaycastTriggerInteraction: 1
 --- !u!114 &7714634391371666230
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -219,43 +237,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   style: 0
---- !u!65 &1809827633896406955
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6430663099506593935}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 100, y: 100, z: 0.01}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1483451282032099210
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6430663099506593935}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 54201f7897bbda644b218cb41fa75e97, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  scaleHorizontalRT: 0
-  childRT: {fileID: 0}
-  updateOnGUI: 0
-  setCenter: 0
 --- !u!114 &8873234004733204232
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -321,7 +302,7 @@ GameObject:
   - component: {fileID: 9007366596534572612}
   - component: {fileID: 5202680948836481305}
   - component: {fileID: 4989794819946632768}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}

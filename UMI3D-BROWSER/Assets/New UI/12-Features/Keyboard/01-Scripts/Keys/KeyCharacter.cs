@@ -14,10 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
-using System.Collections;
+using inetum.unityUtils.observation;
 using System.Collections.Generic;
-using umi3d.browserRuntime.NotificationKeys;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.keyboard
@@ -30,7 +28,7 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         static Dictionary<string, object> info = new()
         {
-            { KeyboardNotificationKeys.Info.IsAddingCharacters, true },
+            { KeyboardNotificationKeys.Info.TextFieldTextUpdate, TextFieldTextUpdate.AddCharacters },
             { KeyboardNotificationKeys.Info.Characters, 'a' }
         };
 

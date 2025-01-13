@@ -14,29 +14,19 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
-using System.Collections;
-using System.Collections.Generic;
-using umi3d.browserRuntime.NotificationKeys;
+using inetum.unityUtils.observation;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.keyboard
 {
     public class KeyboardVersion : MonoBehaviour
     {
-        public enum Version
-        {
-            QWERTY,
-            AZERTY
-        }
-
-        [SerializeField] Version version;
+        [SerializeField] KeyboardLocalisationVersion version;
 
         void Awake()
         {
-            NotificationHub.Default.Subscribe(
+            NotificationHub.Default.Subscribe<KeyboardNotificationKeys.ChangeVersion>(
                 this,
-                KeyboardNotificationKeys.ChangeVersion,
                 null,
                 VersionChanged
             );
@@ -44,29 +34,27 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         void VersionChanged(Notification notification)
         {
-            if (!notification.TryGetInfoT(KeyboardNotificationKeys.Info.Version, out string _version))
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.ChangeVersion.Version, out KeyboardLocalisationVersion _version))
             {
-                UnityEngine.Debug.LogError($"[KeyboardVersion] notification information does not contain {KeyboardNotificationKeys.Info.Version}.");
                 return;
             }
 
-            gameObject.SetActive(version.ToString() == _version);
+            gameObject.SetActive(version == _version);
         }
 
 #if UNITY_EDITOR
-        static Version currentVersion = Version.QWERTY;
+        static KeyboardLocalisationVersion currentVersion = KeyboardLocalisationVersion.QWERTY;
 
         [ContextMenu("TestSwitch")]
         void TestSwitch()
         {
-            currentVersion = currentVersion == Version.QWERTY ? Version.AZERTY : Version.QWERTY;
+            currentVersion = currentVersion == KeyboardLocalisationVersion.QWERTY ? KeyboardLocalisationVersion.AZERTY : KeyboardLocalisationVersion.QWERTY;
             UnityEngine.Debug.Log($"test switch version to {currentVersion}");
-            NotificationHub.Default.Notify(
+            NotificationHub.Default.Notify<KeyboardNotificationKeys.ChangeVersion>(
                 this,
-                KeyboardNotificationKeys.ChangeVersion,
                 new()
                 {
-                    { KeyboardNotificationKeys.Info.Version, currentVersion.ToString() }
+                    { KeyboardNotificationKeys.ChangeVersion.Version, currentVersion }
                 }
             );
         }

@@ -24,17 +24,30 @@ namespace umi3d.browserRuntime.debug
         /// Log Browser identity report on game start.
         /// </summary>
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSplashScreen)]
-        static void LogBrowserIdentity()
+        static void LogAtStart()
         {
-            UnityEngine.Debug.Log(BrowserIdentity());
+            UnityEngine.Debug.Log(BrowserIdentity() + DeviceConfig());
+
+            Application.lowMemory += LowMemory;
+            Application.quitting += Quitting;
         }
 
-        public static string BrowserIdentity()
+        static void LowMemory()
+        {
+            UnityEngine.Debug.LogError($"[UMI3D] Low memory callback.\n");
+        }
+
+        static void Quitting()
+        {
+            UnityEngine.Debug.Log($"[UMI3D] Application is quitting");
+        }
+
+        static string BrowserIdentity()
         {
             // Application.version format : [Browser Version] Sdk: [SDK Version]
             var versions = Application.version.Split("Sdk: ");
 
-            var log =
+            return
                 $"==================== Start UMI3D Report ====================\n" +
                 $"\n" +
                 $"[UMI3D] Company: {Application.companyName}\n" +
@@ -42,11 +55,32 @@ namespace umi3d.browserRuntime.debug
                 $"[UMI3D] Version: {versions[0]}\n" +
                 $"[UMI3D] SDK Version: {versions[1]}\n" +
                 $"\n" +
-                $"==================== End UMI3D Report ====================\n" +
+                $"===================== End UMI3D Report =====================\n" +
                 $"\n";
+        }
 
-
-            return log;
+        static string DeviceConfig()
+        {
+            return
+                $"================ Start Device Config Report ================\n" +
+                $"\n" +
+                $"[UMI3D] OS: {SystemInfo.operatingSystem}\n" +
+                $"\n" +
+                $"[UMI3D] Device model: {SystemInfo.deviceModel}\n" +
+                $"[UMI3D] Device type: {SystemInfo.deviceType}\n" +
+                $"\n" +
+                $"[UMI3D] Processor Count: {SystemInfo.processorCount}\n" +
+                $"[UMI3D] Processor frequency: {SystemInfo.processorFrequency}\n" +
+                $"[UMI3D] Processor type: {SystemInfo.processorType}\n" +
+                $"\n" +
+                $"[UMI3D] Graphics device name: {SystemInfo.graphicsDeviceName}\n" +
+                $"[UMI3D] Graphics device type: {SystemInfo.graphicsDeviceType}\n" +
+                $"[UMI3D] Graphics memory size: {SystemInfo.graphicsMemorySize}\n" +
+                $"\n" +
+                $"[UMI3D] System memory size: {SystemInfo.systemMemorySize}\n" +
+                $"\n" +
+                $"================= End Device Config Report =================\n" +
+                $"\n";
         }
     }
 }

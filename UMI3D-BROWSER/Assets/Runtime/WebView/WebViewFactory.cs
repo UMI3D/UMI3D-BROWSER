@@ -13,33 +13,77 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-using UnityEngine;
-using umi3d.cdk;
-using System.Threading.Tasks;
 using inetum.unityUtils.multiTarget;
-using com.inetum.unitygeckowebview;
+using System.Threading.Tasks;
+using umi3d.cdk;
+using UnityEngine;
+#if UNITY_EDITOR
+using Process = System.Diagnostics.Process;
+#endif
 
-namespace umi3d.runtimeBrowser.webView
+namespace umi3d.browserRuntime.webView
 {
     public class WebViewFactory : AbstractWebViewFactory
     {
         public MultiTargetReference<GameObject> template;
 
+#if UNITY_STANDALONE_WIN
+        /// <summary>
+        /// Last time a webview was created.
+        /// </summary>
+        static float lastTimeWebViewCreated = 0;
+
+        /// <summary>
+        /// Delay in seconds between web view creation.
+        /// </summary>
+        readonly float creationDelay = 3f;
+
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+
+#if UNITY_EDITOR
+            // Name of process launched in background by webViews.
+            const string webEngineProcessName = "UnityWebBrowser.Engine.Cef";
+            Process[] processes = Process.GetProcessesByName(webEngineProcessName);
+
+            foreach (Process process in processes)
+            {
+                process.Kill();
+            }
+#endif
+        }
+#endif
+
         public override async Task<AbstractUMI3DWebView> CreateWebView()
         {
-            if (template.Reference == null)
+            GameObject template = this.template.Reference;
+            if (template == null)
             {
                 return null;
             }
 
-            MetaQuestSoundWorkAround.SetAudioWorkAround();
+#if UNITY_STANDALONE_WIN
+            while (lastTimeWebViewCreated != 0 && lastTimeWebViewCreated + creationDelay > Time.time)
+            {
+                await UMI3DAsyncManager.Yield();
+            }
 
-            GameObject go = Instantiate(template.Reference);
+            lock (this)
+            {
+                lastTimeWebViewCreated = Time.time;
+
+                GameObject go = Instantiate(template);
+                return go.GetComponent<AbstractUMI3DWebView>();
+            }
+#elif UNITY_ANDROID
+            GameObject go = Instantiate(template);
             AbstractUMI3DWebView view = go.GetComponent<AbstractUMI3DWebView>();
 
             await UMI3DAsyncManager.Yield();
 
             return view;
+#endif
         }
     }
 }

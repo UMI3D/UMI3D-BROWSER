@@ -15,6 +15,7 @@ using BeardedManStudios.Forge.Networking;
 using BeardedManStudios.Forge.Networking.Frame;
 using BeardedManStudios.Forge.Networking.Unity;
 using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -499,14 +500,25 @@ namespace umi3d.cdk.collaboration
                     });
                     break;
                 case FrameRequestDto frame:
-                    bool waitforreparenting = true;
+                    bool waitForReparenting = true;
                     MainThreadManager.Run(async () =>
                     {
                         UMI3DNavigation.SetFrame(UMI3DGlobalID.EnvironmentId, frame);
                         await UMI3DAsyncManager.Yield();
-                        waitforreparenting = false;
+                        waitForReparenting = false;
                     });
-                    while (waitforreparenting)
+                    while (waitForReparenting)
+                        await UMI3DAsyncManager.Yield();
+                    break;
+                case MicrophoneStatusRequestDto statusRequest:
+                    bool waitForMSRequest = true;
+                    MainThreadManager.Run(async () =>
+                    {
+                        await AudioManager.OnMicrophoneStatusRequest(statusRequest.status);
+                        await UMI3DAsyncManager.Yield();
+                        waitForMSRequest = false;
+                    });
+                    while (waitForMSRequest)
                         await UMI3DAsyncManager.Yield();
                     break;
                 case NavigateDto navigate:
@@ -682,6 +694,23 @@ namespace umi3d.cdk.collaboration
                             await UMI3DAsyncManager.Yield();
                     }
                     break;
+                case UMI3DOperationKeys.MicrophoneRequest:
+                    bool status = UMI3DSerializer.Read<bool>(container);
+
+                    bool waitForMSRequest = true;
+                    MainThreadManager.Run(async () =>
+                    {
+                        await AudioManager.OnMicrophoneStatusRequest(status);
+                        await UMI3DAsyncManager.Yield();
+                        waitForMSRequest = false;
+                    });
+                    while (waitForMSRequest)
+                        await UMI3DAsyncManager.Yield();
+                    break;
+                case UMI3DOperationKeys.CanUnmuteMicrophoneRequest:
+                    bool canUnmute = UMI3DSerializer.Read<bool>(container);
+                    MicrophoneListener.canUnmute = canUnmute;
+                    break;
                 case UMI3DOperationKeys.GetLocalInfoRequest:
                     string key = UMI3DSerializer.Read<string>(container);
                     MainThreadManager.Run(() =>
@@ -782,7 +811,6 @@ namespace umi3d.cdk.collaboration
                 case UMI3DOperationKeys.SetLBEGroupRequest:
                     MainThreadManager.Run(() =>
                     {
-                        Debug.Log("REMY : LBEGroupSyncRequestDTO");
                         LBEGroupSyncRequestDTO  lBEGroupRequestDTO = UMI3DSerializer.Read<LBEGroupSyncRequestDTO >(container);
 
                         var lBEGroup = new LBEGroupSyncRequestDTO ()
@@ -967,12 +995,20 @@ namespace umi3d.cdk.collaboration
         {
             if (IsConnected)
             {
-                ulong timestep = NetworkManager.Instance.Networker.Time.Timestep;
-                bool isTcpClient = NetworkManager.Instance.Networker is TCPClient;
-                bool isTcp = NetworkManager.Instance.Networker is BaseTCP;
+                try
+                {
+                    ulong timestep = NetworkManager.Instance.Networker.Time.Timestep;
+                    bool isTcpClient = NetworkManager.Instance.Networker is TCPClient;
+                    bool isTcp = NetworkManager.Instance.Networker is BaseTCP;
 
-                var bin = new Binary(timestep, isTcpClient, data, Receivers.All, channel, isTcp);
-                client.Send(bin, isReliable);
+                    var bin = new Binary(timestep, isTcpClient, data, Receivers.All, channel, isTcp);
+                    client.Send(bin, isReliable);
+                }
+                catch(Exception ex)
+                {
+                    UMI3DLogger.LogError("Error while sending data to the server", scope);
+                    UMI3DLogger.LogException(ex, scope);
+                }
             }
         }
 

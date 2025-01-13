@@ -1,7 +1,5 @@
-using Moq;
+
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using umi3dBrowsers.connection;
 using UnityEngine;
 

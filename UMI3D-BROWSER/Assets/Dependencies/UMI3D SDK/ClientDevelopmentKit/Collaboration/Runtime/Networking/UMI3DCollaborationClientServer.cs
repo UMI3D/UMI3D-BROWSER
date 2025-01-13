@@ -189,7 +189,7 @@ namespace umi3d.cdk.collaboration
                         //Connection will not restart without this...
                         await Task.Yield();
 
-                        MultiProgress progress = EnvironmentProgress?.Invoke() ?? new MultiProgress("Joinning Environment");
+                        MultiProgress progress = EnvironmentProgress?.Invoke() ?? new MultiProgress("Joining Environment");
                         onProgress.Invoke(progress);
 
                         worldControllerClient = connectingWorldControllerClient;
@@ -212,7 +212,10 @@ namespace umi3d.cdk.collaboration
             }
             UMI3DCollaborationClientServer.Instance.IsRedirectionInProgress = false;
             if (aborted)
+            {
+                Instance.status = StatusType.ACTIVE;
                 Instance.OnRedirectionAborted.Invoke();
+            }
         }
 
         public static void Connect(MediaDto dto, Action<string> failed = null)

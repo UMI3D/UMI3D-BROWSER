@@ -12,4 +12,5 @@
     <ui:VisualElement name="Space" style="min-height: 30px; display: none;" />
     <ui:ListView focusable="true" name="LV_Targets" />
     <ui:Button text="Build" parse-escape-sequences="true" display-tooltip-when-elided="true" name="B_Build" />
+    <ui:VisualElement name="blockingLayer" style="opacity: 0.5; position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-color: rgb(51, 88, 96); display: flex;" />
 </ui:UXML>

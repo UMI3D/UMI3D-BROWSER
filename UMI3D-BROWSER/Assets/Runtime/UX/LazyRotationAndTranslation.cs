@@ -59,6 +59,7 @@ namespace umi3d.browserRuntime.UX
 
             if (target == null)
             {
+                UnityEngine.Debug.LogError($"[LazyRotationAndTranslation] Target is null.");
                 yield break;
             }
 
@@ -75,6 +76,12 @@ namespace umi3d.browserRuntime.UX
         /// </summary>
         public void Rest()
         {
+            if (target == null)
+            {
+                UnityEngine.Debug.LogError($"[LazyRotationAndTranslation] Target is null.");
+                return;
+            }
+
             (this as IFollowable).TranslateToward(target.position, 0f);
             (this as IFollowable).RotateToward(target.rotation, 0f, rotationFilter);
         }

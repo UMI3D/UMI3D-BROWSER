@@ -1,0 +1,145 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: BrowserSettings Shared Data
+  m_EditorClassIdentifier: 
+  m_TableCollectionName: BrowserSettings
+  m_TableCollectionNameGuidString: 5cb580bb4bda89243baa568bbdae119e
+  m_Entries:
+  - m_Id: 235092996096
+    m_Key: Enabled
+    m_Metadata:
+      m_Items: []
+  - m_Id: 654397566976
+    m_Key: Disabled
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1384609116160
+    m_Key: anti-aliasing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4102551662592
+    m_Key: GraphicsQuality
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4510963625984
+    m_Key: low
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4581306298368
+    m_Key: Medium
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4671966179328
+    m_Key: high
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4776718921728
+    m_Key: custom
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5202784710656
+    m_Key: renderScale
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1741110651285504
+    m_Key: audio
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1747434239848448
+    m_Key: volumeEnvironment
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1752789929848832
+    m_Key: conversationVolume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1754727161425920
+    m_Key: noiseThreshold
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1785590054023168
+    m_Key: microphone
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1786043349233664
+    m_Key: mode
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1786542383329280
+    m_Key: alwaysSend
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1786760902373376
+    m_Key: amplitude
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1786905840742400
+    m_Key: pushToTtalk
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1791889584058368
+    m_Key: noiseReduction
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1793838538715136
+    m_Key: loopBack
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1810372745129984
+    m_Key: animationOnKeyPressed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3181626479767552
+    m_Key: resetAudioLabel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3181855409074176
+    m_Key: resetAudioButton
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5068119535017984
+    m_Key: Storage_Title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5068310497484800
+    m_Key: Settings_Title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5073103777456128
+    m_Key: Notifications_Title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5073199554387968
+    m_Key: Social_Title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5099565905633280
+    m_Key: Enable
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5099710986608640
+    m_Key: Disable
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 1220034183917731842
+  references:
+    version: 2
+    RefIds:
+    - rid: 1220034183917731842
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables,
+        asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1730297536042

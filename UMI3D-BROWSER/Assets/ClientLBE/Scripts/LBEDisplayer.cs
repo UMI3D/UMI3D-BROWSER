@@ -4,13 +4,14 @@ using umi3dBrowsers.displayer;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using TMPro;
 
 
 namespace ClientLBE
 {
     public class LBEDisplayer : MonoBehaviour
     {
-        [SerializeField] private TMP_UMI3DUIInputField urlField; // Champ texte
+        [SerializeField] private TMP_InputField urlField; // Champ texte
         [SerializeField] private Button submitButton; // Bouton de validation
 
 

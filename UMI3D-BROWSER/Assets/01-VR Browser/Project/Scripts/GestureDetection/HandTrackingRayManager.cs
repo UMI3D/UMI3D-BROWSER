@@ -56,7 +56,7 @@ public class HandTrackingRayManager : MonoBehaviour
     private void DisableRay()
     {
         selectionManager.interactableSelector.SelectionParadigmMode = AbstractVRSelector<InteractableContainer>.SelectionParadigm.PROXIMITY_ONLY;
-        selectionManager.selectableSelector.SelectionParadigmMode = AbstractVRSelector<Selectable>.SelectionParadigm.PROXIMITY_ONLY;
+        //selectionManager.selectableSelector.SelectionParadigmMode = AbstractVRSelector<Selectable>.SelectionParadigm.PROXIMITY_ONLY;
         selectionManager.elementSelector.SelectionParadigmMode = AbstractVRSelector<AbstractClientInteractableElement>.SelectionParadigm.PROXIMITY_ONLY;
         isRayDisabled = true;
         selectionManager.pointingCursor.Hide();
@@ -66,7 +66,7 @@ public class HandTrackingRayManager : MonoBehaviour
     private void EnableRay()
     {
         selectionManager.interactableSelector.SelectionParadigmMode = AbstractVRSelector<InteractableContainer>.SelectionParadigm.ALL;
-        selectionManager.selectableSelector.SelectionParadigmMode = AbstractVRSelector<Selectable>.SelectionParadigm.ALL;
+        //selectionManager.selectableSelector.SelectionParadigmMode = AbstractVRSelector<Selectable>.SelectionParadigm.ALL;
         selectionManager.elementSelector.SelectionParadigmMode = AbstractVRSelector<AbstractClientInteractableElement>.SelectionParadigm.ALL;
         isRayDisabled = false;
         selectionManager.pointingCursor.Display();

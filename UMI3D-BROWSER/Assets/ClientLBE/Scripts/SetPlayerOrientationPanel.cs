@@ -10,38 +10,43 @@ namespace ClientLBE
     {
         public Camera playerCamera;
         public float fadeDuration = 0.5f;
-        public List<Collider> ButonCollider = new List<Collider>();
+        public List<GameObject> ButonOrientationPanel = new List<GameObject>();
 
         private CanvasGroup canvasGroup;
+
+        public bool isPanelOpen = false;
 
         private void Start()
         {
             canvasGroup = this.GetComponent<CanvasGroup>();
 
-            for (int i = 0; i < ButonCollider.Count; i++)
+            for (int i = 0; i < ButonOrientationPanel.Count; i++)
             {
-                ButonCollider[i].enabled = false;
+                ButonOrientationPanel[i].SetActive(false);
             }
         }
 
         public void OpenPanel()
         {
-            for(int i = 0; i<ButonCollider.Count; i++)
+            for(int i = 0; i<ButonOrientationPanel.Count; i++)
             {
-                ButonCollider[i].enabled = true;
+                ButonOrientationPanel[i].SetActive(true);
             }
 
             this.transform.position = new Vector3(playerCamera.transform.position.x, 0.0f, playerCamera.transform.position.z);
             StartCoroutine(FadeCanvasGroup(0f, 1f, fadeDuration));
+            isPanelOpen = true;
         }
 
         public void ClosePanel()
         {
-            for (int i = 0; i < ButonCollider.Count; i++)
+            for (int i = 0; i < ButonOrientationPanel.Count; i++)
             {
-                ButonCollider[i].enabled = false;
+                ButonOrientationPanel[i].SetActive(false);
             }
             StartCoroutine(FadeCanvasGroup(1f, 0f, fadeDuration));
+            isPanelOpen = false;
+
         }
 
         private IEnumerator FadeCanvasGroup(float startAlpha, float endAlpha, float duration)

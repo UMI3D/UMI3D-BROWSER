@@ -14,8 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils.observation;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -39,6 +39,8 @@ namespace umi3d.browserRuntime.ui.keyboard
         Vector3 downPosition;
         RectTransform rectTransform;
 
+        bool withAnimation;
+
         void Awake()
         {
             key = GetComponent<Key>();
@@ -48,6 +50,11 @@ namespace umi3d.browserRuntime.ui.keyboard
             rectTransform = transform.GetChild(0).GetComponent<RectTransform>();
             upPosition = rectTransform.anchoredPosition3D;
             downPosition = upPosition + new Vector3(0, 0, depth);
+
+            NotificationHub.Default.Subscribe<KeyboardNotificationKeys.AnimationSettings>(
+                this,
+                EnableOrDisableAnimation
+            );
         }
 
         void OnEnable()
@@ -67,13 +74,17 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         void PointerDown()
         {
+            if (!withAnimation)
+            {
+                return;
+            }
+
             if (coroutine != null)
             {
                 StopCoroutine(coroutine);
             }
             coroutine = StartCoroutine(MoveKey());
         }
-
 
         IEnumerator MoveKey()
         {
@@ -95,6 +106,26 @@ namespace umi3d.browserRuntime.ui.keyboard
 
                 yield return null;
             }
+        }
+
+        void EnableOrDisableAnimation(Notification notification)
+        {
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.AnimationSettings.AnimationType, out KeyboardAnimationType animationType))
+            {
+                return;
+            }
+
+            if (animationType != KeyboardAnimationType.KeyPress)
+            {
+                return;
+            }
+
+            if (!notification.TryGetInfoT(KeyboardNotificationKeys.AnimationSettings.WithAnimation, out bool withAnimation))
+            {
+                return;
+            }
+
+            this.withAnimation = withAnimation;
         }
     }
 }

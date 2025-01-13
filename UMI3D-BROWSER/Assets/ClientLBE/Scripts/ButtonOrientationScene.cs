@@ -7,7 +7,7 @@ namespace ClientLBE
     public class ButtonOrientationScene : MonoBehaviour
     {
         private Button orientationSceneButton;
-        private bool onOffOrientationPanel = false;
+        public static bool onOffOrientationPanel = false;
 
         private void Start()
         {
@@ -18,13 +18,19 @@ namespace ClientLBE
         [ContextMenu("Turn on/off Orientation panel choice before connection scene.")]
         void SwitchOrientationPanel()
         {
-            onOffOrientationPanel = !onOffOrientationPanel;
 
-            if (onOffOrientationPanel)
-                SetPlayerOrientationPanel.Instance.OpenPanel();
+            if(GuardianManager.Instance.automaticCalibration)
+            {
+                onOffOrientationPanel = !onOffOrientationPanel;
 
-            else
-                SetPlayerOrientationPanel.Instance.ClosePanel();
+                if (onOffOrientationPanel)
+                    SetPlayerOrientationPanel.Instance.OpenPanel();
+
+
+                else
+                    SetPlayerOrientationPanel.Instance.ClosePanel();
+            }
+            
         }
     }
 }

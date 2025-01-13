@@ -34,7 +34,7 @@ namespace umi3d.browserEditor.BuildTool
                 case E_Target.Pico:
                     DisableAllPlugins(BuildTargetGroup.Android, except: E_Plugin.OpenXR);
                     break;
-                case E_Target.SteamXR:
+                case E_Target.SteamVR:
                     DisableAllPlugins(BuildTargetGroup.Standalone, except: E_Plugin.OpenXR);
                     break;
                 case E_Target.Windows:
@@ -49,7 +49,7 @@ namespace umi3d.browserEditor.BuildTool
                 case E_Target.Pico:
                     EnablePlugin(BuildTargetGroup.Android, E_Plugin.OpenXR);
                     break;
-                case E_Target.SteamXR:
+                case E_Target.SteamVR:
                     EnablePlugin(BuildTargetGroup.Standalone, E_Plugin.OpenXR);
                     break;
             }

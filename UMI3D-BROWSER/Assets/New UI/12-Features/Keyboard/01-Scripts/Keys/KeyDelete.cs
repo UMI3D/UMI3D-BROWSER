@@ -14,10 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using System.Collections;
 using System.Collections.Generic;
-using umi3d.browserRuntime.NotificationKeys;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.keyboard
@@ -36,7 +35,7 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         Dictionary<string, object> info = new()
         {
-            { KeyboardNotificationKeys.Info.IsAddingCharacters, false },
+            { KeyboardNotificationKeys.Info.TextFieldTextUpdate, TextFieldTextUpdate.RemoveCharacters },
             { KeyboardNotificationKeys.Info.DeletionPhase, 0 }
         };
 
@@ -49,7 +48,7 @@ namespace umi3d.browserRuntime.ui.keyboard
             key.PointerUp += PointerUp;
         }
 
-        private void PointerDown()
+        void PointerDown()
         {
             if (coroutine != null)
             {
@@ -58,10 +57,13 @@ namespace umi3d.browserRuntime.ui.keyboard
             coroutine = StartCoroutine(Delete());
         }
 
-        private void PointerUp()
+        void PointerUp()
         {
-            StopCoroutine(coroutine);
-            coroutine = null;
+            if (coroutine != null)
+            {
+                StopCoroutine(coroutine);
+                coroutine = null;
+            }
         }
 
         IEnumerator Delete()

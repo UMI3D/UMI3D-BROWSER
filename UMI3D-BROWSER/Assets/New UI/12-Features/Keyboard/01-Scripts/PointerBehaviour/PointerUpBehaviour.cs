@@ -14,9 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -24,18 +23,6 @@ namespace umi3d.browserRuntime.ui
 {
     public class PointerUpBehaviour : PointerBehaviour, IPointerUpHandler
     {
-        private void Awake()
-        {
-            if (!isSimpleClick)
-            {
-                info = new()
-                {
-                    { NKCount, 1 },
-                    { NKIsImmediate, true }
-                };
-            }
-        }
-
         public void OnPointerUp(PointerEventData eventData)
         {
             if (isSimpleClick)
@@ -44,6 +31,7 @@ namespace umi3d.browserRuntime.ui
             }
             else
             {
+                this.eventData = eventData;
                 OnMultiClick();
             }
         }
@@ -64,6 +52,7 @@ namespace umi3d.browserRuntime.ui
             numberOfClick++;
 
             // Raise the 'pointerClick' event each time the pointer is up.
+            info[NKPointerEvent] = eventData;
             info[NKCount] = numberOfClick;
             info[NKIsImmediate] = true;
             OnPointerClicked(new Notification(
@@ -90,6 +79,7 @@ namespace umi3d.browserRuntime.ui
 
             // After the 'timeOut' is reached a 'pointerClick' event is raised.
             // If only one down has been made it is a single click else it is a multi click.
+            info[NKPointerEvent] = eventData;
             info[NKCount] = numberOfClick;
             info[NKIsImmediate] = false;
             OnPointerClicked(new Notification(

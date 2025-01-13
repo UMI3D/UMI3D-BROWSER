@@ -14,9 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
-using System.Collections;
-using System.Collections.Generic;
+using inetum.unityUtils.observation;
 using umi3d.browserRuntime.NotificationKeys;
 using umi3d.browserRuntime.player;
 using UnityEngine;
@@ -76,13 +74,11 @@ namespace umi3d.browserRuntime.navigation
         {
             if (!notification.TryGetInfoT(LocomotionNotificationKeys.Info.Direction, out int direction))
             {
-                notification.LogError(nameof(UMI3DVRPlayer), LocomotionNotificationKeys.Info.Direction);
                 return;
             }
 
             if (!notification.TryGetInfoT(LocomotionNotificationKeys.Info.TurnAmount, out float turnAmount))
             {
-                notification.LogError(nameof(UMI3DVRPlayer), LocomotionNotificationKeys.Info.TurnAmount);
                 return;
             }
 
@@ -121,7 +117,7 @@ namespace umi3d.browserRuntime.navigation
                 return;
             }
 
-            PlayerTransformUtils.MovePlayerAndCenterCamera(transform, mainCamera.transform, position);
+            PlayerTransformUtils.TranslatePlayerAndCenterCamera(transform, mainCamera.transform, position);
         }
     }
 }

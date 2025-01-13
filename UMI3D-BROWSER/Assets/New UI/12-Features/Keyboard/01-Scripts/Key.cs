@@ -14,11 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using umi3d.browserRuntime.NotificationKeys;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -33,6 +30,9 @@ namespace umi3d.browserRuntime.ui.keyboard
         public event Action PointerUp;
 
         PointerDownBehaviour pointerDown;
+
+        Notifier keyUpNotifier;
+        Notifier keyEnterNotifier;
 
         void Awake()
         {
@@ -49,16 +49,16 @@ namespace umi3d.browserRuntime.ui.keyboard
             }
             // Disable to avoid pointer event to be trigger directly from the pointerDownBehaviour class.
             pointerDown.enabled = false;
-        }
 
-        private void OnEnable()
-        {
+            keyUpNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                KeyboardNotificationKeys.KeyClicked
+            );
 
-        }
-
-        private void OnDestroy()
-        {
-
+            keyEnterNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                KeyboardNotificationKeys.KeyHovered
+            );
         }
 
         public void OnPointerDown(PointerEventData eventData)
@@ -68,10 +68,8 @@ namespace umi3d.browserRuntime.ui.keyboard
                 return;
             }
 
-            UnityEngine.Debug.Log($"[Key] down");
             buttonPressed = true;
             pointerDown.OnPointerDown(eventData);
-            //NotificationHub.Default.Notify(this, KeyboardNotificationKeys.AskPreviewFocus);
         }
 
         public void OnPointerUp(PointerEventData eventData)
@@ -81,17 +79,12 @@ namespace umi3d.browserRuntime.ui.keyboard
                 return;
             }
 
-            // Don't work yet
-            UnityEngine.Debug.Log($"[Key] up");
             buttonPressed = false;
             pointerDown.OnPointerUp(eventData);
             PointerUp?.Invoke();
 
-            NotificationHub.Default.Notify(
-              this,
-              KeyboardNotificationKeys.KeyClicked,
-              null
-          );
+            keyUpNotifier.Notify();
+            NotificationHub.Default.Notify(this, KeyboardNotificationKeys.AskPreviewFocus);
         }
         
         public void OnPointerEnter(PointerEventData eventData)
@@ -101,14 +94,8 @@ namespace umi3d.browserRuntime.ui.keyboard
                 return;
             }
 
-            NotificationHub.Default.Notify(
-                this,
-                KeyboardNotificationKeys.KeyHovered,
-                null
-            );
-
-            // Don't work yet
-            //UnityEngine.Debug.Log($"[Key] enter");
+            keyEnterNotifier[KeyboardNotificationKeys.Info.PointerEventData] = eventData;
+            keyEnterNotifier.Notify();
         }
 
         public void OnPointerExit(PointerEventData eventData)
@@ -118,8 +105,6 @@ namespace umi3d.browserRuntime.ui.keyboard
                 return;
             }
 
-            // Don't work yet
-            //UnityEngine.Debug.Log($"[Key] exit");
             pointerDown.OnPointerExit(eventData);
         }
     }

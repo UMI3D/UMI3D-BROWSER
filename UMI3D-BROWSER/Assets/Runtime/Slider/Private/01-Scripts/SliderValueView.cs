@@ -34,6 +34,7 @@ namespace umi3d
             _modelContainer = GetComponentInParent<SliderModelContainer>();
 
             NotificationHub.Default.Subscribe<SliderNotifiactionKeys.SliderSet>(this, new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == _modelContainer.model), SliderSet);
+            NotificationHub.Default.Subscribe<SliderNotifiactionKeys.SliderUpdated>(this, new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == _modelContainer.model), SliderUpdated);
         }
 
         private void OnDestroy()
@@ -44,6 +45,12 @@ namespace umi3d
         private void SliderSet(Notification notification)
         {
             if (notification.TryGetInfoT(SliderNotifiactionKeys.SliderSet.Value, out float value))
+                _text.text = value.ToString();
+        }
+
+        private void SliderUpdated(Notification notification)
+        {
+            if (notification.TryGetInfoT(SliderNotifiactionKeys.SliderUpdated.Value, out float value))
                 _text.text = value.ToString();
         }
     }

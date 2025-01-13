@@ -27,7 +27,10 @@ namespace umi3d.browserRuntime.shortcuts
 
         private void Awake()
         {
-            playEmoteNotifier = NotificationHub.Default.GetNotifier<EmoteNotificationKeys.Play>(this);
+            playEmoteNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                ID.FromType<EmoteNotificationKeys.Play>()
+            );
         }
 
 

@@ -37,11 +37,15 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         void Awake()
         {
-            localisationVersionNotifier = NotificationHub.Default
-                .GetNotifier<KeyboardNotificationKeys.ChangeVersion>(this);
+            localisationVersionNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                ID.FromType<KeyboardNotificationKeys.ChangeVersion>()
+            );
 
-            animationSettingsNotifier = NotificationHub.Default
-                .GetNotifier<KeyboardNotificationKeys.AnimationSettings>(this);
+            animationSettingsNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                ID.FromType<KeyboardNotificationKeys.AnimationSettings>()
+            );
         }
 
         void Start()

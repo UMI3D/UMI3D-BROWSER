@@ -30,11 +30,15 @@ namespace com.inetum.unitygeckowebview
 
         void Awake()
         {
-            synchronisationAdministrationNotifier = NotificationHub.Default
-                .GetNotifier<GeckoWebViewNotificationKeys.SynchronizationAdministrationChanged>(this);
+            synchronisationAdministrationNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                ID.FromType<GeckoWebViewNotificationKeys.SynchronizationAdministrationChanged>()
+            );
 
-            desynchronizationNotifier = NotificationHub.Default
-                .GetNotifier<GeckoWebViewNotificationKeys.Desynchronization>(this);
+            desynchronizationNotifier = NotificationHub.Default.GetNotifier(
+                this, 
+                ID.FromType<GeckoWebViewNotificationKeys.Desynchronization>()
+            );
         }
 
         void Start()

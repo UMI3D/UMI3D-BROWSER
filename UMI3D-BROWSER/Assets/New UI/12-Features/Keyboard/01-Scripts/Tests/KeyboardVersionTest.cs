@@ -31,8 +31,10 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         void Start()
         {
-            versionNotifier = NotificationHub.Default
-                .GetNotifier<KeyboardNotificationKeys.ChangeVersion>(this);
+            versionNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                ID.FromType<KeyboardNotificationKeys.ChangeVersion>()
+            );
 
             int index = dropdown != null ? dropdown.value : 0;
 

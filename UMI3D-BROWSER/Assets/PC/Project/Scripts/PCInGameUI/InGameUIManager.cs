@@ -35,7 +35,11 @@ namespace umi3dBrowsers.ingame_ui
         private void Awake()
         {
             KeyboardShortcut.AddDownListener(ShortcutEnum.DisplayHideGameMenu, ToggleInGamePanel);
-            NotificationHub.Default.Subscribe(this, InGameNotificationKeys.EnableInGameUi, SetActive);
+            NotificationHub.Default.Subscribe(
+                this, 
+                InGameNotificationKeys.EnableInGameUi, 
+                (Callback)SetActive
+            );
 
             BaseCursor.SetMovement(this, CursorMovement.Free);
         }

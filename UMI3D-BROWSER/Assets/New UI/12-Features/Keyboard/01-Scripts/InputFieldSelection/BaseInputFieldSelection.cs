@@ -72,30 +72,32 @@ namespace umi3d.browserRuntime.ui.keyboard
         {
             this.context = context;
 
-            selectionNotifier = NotificationHub.Default
-                .GetNotifier<KeyboardNotificationKeys.TextFieldSelected>(this);
+            selectionNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                ID.FromType<KeyboardNotificationKeys.TextFieldSelected>()
+            );
         }
 
         public virtual void OnEnable()
         {
-            NotificationHub.Default.Subscribe<KeyboardNotificationKeys.TextFieldSelected>(
+            NotificationHub.Default.Subscribe(
                 this,
-                new FilterByRef(FilterType.AcceptAllExcept, this),
-                TextFieldSelected
+                ID.FromType<KeyboardNotificationKeys.TextFieldSelected>(),
+                (Callback)TextFieldSelected,
+                new FilterByRef(FilterType.AcceptAllExcept, this)
             );
 
-            NotificationHub.Default.Subscribe<KeyboardNotificationKeys.TextFieldDeselected>(
+            NotificationHub.Default.Subscribe(
                this,
-               new FilterByRef(FilterType.AcceptAllExcept, this),
-               TextFieldDeselected
+               ID.FromType<KeyboardNotificationKeys.TextFieldDeselected>(),
+               (Callback)TextFieldDeselected,
+               new FilterByRef(FilterType.AcceptAllExcept, this)
            );
         }
 
         public virtual void OnDisable()
         {
-            NotificationHub.Default.Unsubscribe<KeyboardNotificationKeys.TextFieldSelected>(this);
-
-            NotificationHub.Default.Unsubscribe<KeyboardNotificationKeys.TextFieldDeselected>(this);
+            NotificationHub.Default.Unsubscribe(this);
         }
 
         /// <summary>

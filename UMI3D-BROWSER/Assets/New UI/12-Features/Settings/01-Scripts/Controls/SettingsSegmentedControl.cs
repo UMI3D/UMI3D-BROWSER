@@ -58,8 +58,8 @@ namespace umi3d.browserRuntime.ui.settings
 
             NotificationHub.Default.Subscribe(
                 this, 
-                SettingsNotificationKeys.NewToggleCustomSelected + instanceID, 
-                Deactivate
+                SettingsNotificationKeys.NewToggleCustomSelected + instanceID,
+                (Callback)Deactivate
             );
         }
 

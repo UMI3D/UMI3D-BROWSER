@@ -27,12 +27,18 @@ namespace umi3d.browserRuntime.ui.keyboard
         void Start()
         {
             UnityEngine.Debug.LogWarning($"Warning : HotFix for keyboard.");
-            animationNotifier = NotificationHub.Default.GetNotifier<KeyboardNotificationKeys.AnimationSettings>(this);
+            animationNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                ID.FromType<KeyboardNotificationKeys.AnimationSettings>()
+            );
             animationNotifier[KeyboardNotificationKeys.AnimationSettings.AnimationType] = KeyboardAnimationType.OpenOrClose;
             animationNotifier[KeyboardNotificationKeys.AnimationSettings.WithAnimation] = false;
             animationNotifier.Notify();
 
-            versionNotifier = NotificationHub.Default.GetNotifier<KeyboardNotificationKeys.ChangeVersion>(this);
+            versionNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                ID.FromType<KeyboardNotificationKeys.ChangeVersion>()
+            );
             versionNotifier[KeyboardNotificationKeys.ChangeVersion.Version] = KeyboardLocalisationVersion.AZERTY;
             versionNotifier.Notify();
         }

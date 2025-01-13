@@ -39,8 +39,10 @@ namespace umi3d.browserRuntime.ui.settings
 
             KeyboardSettings = GetComponentInParent<KeyboardSettings>();
 
-            notifier = NotificationHub.Default
-                .GetNotifier<KeyboardNotificationKeys.ChangeVersion>(this);
+            notifier = NotificationHub.Default.GetNotifier(
+                this,
+                ID.FromType<KeyboardNotificationKeys.ChangeVersion>()
+            );
         }
 
         void Start()

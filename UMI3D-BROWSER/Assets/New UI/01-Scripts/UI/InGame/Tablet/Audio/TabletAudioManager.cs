@@ -31,8 +31,16 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.audio
         {
             audioSource = GetComponent<AudioSource>();
 
-            NotificationHub.Default.Subscribe(this, TabletNotificationKeys.PlayHoverSound, PlayHover);
-            NotificationHub.Default.Subscribe(this, TabletNotificationKeys.PlayClickSound, PlayerClick);
+            NotificationHub.Default.Subscribe(
+                this, 
+                TabletNotificationKeys.PlayHoverSound,
+                (Callback)PlayHover
+            );
+            NotificationHub.Default.Subscribe(
+                this, 
+                TabletNotificationKeys.PlayClickSound, 
+                (Callback)PlayerClick
+            );
         }
 
         private void PlayHover()

@@ -23,8 +23,16 @@ namespace umi3d.browserRuntime.ui
     {
         private void Awake()
         {
-            NotificationHub.Default.Subscribe(this, UiNotificationKeys.Show, Show);
-            NotificationHub.Default.Subscribe(this, UiNotificationKeys.Hide, Hide);
+            NotificationHub.Default.Subscribe(
+                this, 
+                UiNotificationKeys.Show, 
+                (Callback)Show
+            );
+            NotificationHub.Default.Subscribe(
+                this, 
+                UiNotificationKeys.Hide, 
+                (Callback)Hide
+            );
         }
 
         void OnDestroy()

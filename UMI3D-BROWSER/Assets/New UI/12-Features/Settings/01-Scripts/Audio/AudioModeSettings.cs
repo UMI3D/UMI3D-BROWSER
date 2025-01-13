@@ -39,8 +39,10 @@ namespace umi3d.browserRuntime.ui.settings
 
             audioSettings = GetComponentInParent<AudioSettings>();
 
-            notifier = NotificationHub.Default
-                .GetNotifier<SettingsNotificationKeys.MicrophoneModeChanged>(this);
+            notifier = NotificationHub.Default.GetNotifier(
+                this,
+                ID.FromType<SettingsNotificationKeys.MicrophoneModeChanged>()
+            );
         }
 
         void Start()

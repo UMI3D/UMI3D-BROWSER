@@ -15,7 +15,6 @@ limitations under the License.
 */
 
 using inetum.unityUtils.observation;
-using System.Threading;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -42,8 +41,7 @@ namespace inetum.unityUtils
             NotificationHub.Default.Subscribe(
                 typeof(QuittingManager).FullName,
                 QuittingManagerNotificationKey.QuittingConfirmation,
-                null,
-                QuittingConfirmation
+                (Callback)QuittingConfirmation
             );
         }
 

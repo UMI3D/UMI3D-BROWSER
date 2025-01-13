@@ -29,8 +29,9 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         void Awake()
         {
-            selectionNotifier = NotificationHub.Default
-                .GetNotifier<KeyboardNotificationKeys.TextFieldSelected>(this);
+            selectionNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                ID.FromType<KeyboardNotificationKeys.TextFieldSelected>());
         }
 
         void OnEnable()
@@ -38,29 +39,27 @@ namespace umi3d.browserRuntime.ui.keyboard
             NotificationHub.Default.Subscribe(
                 this,
                 KeyboardNotificationKeys.AddOrRemoveCharacters,
-                AddOrRemoveCharacters
+                (Callback)AddOrRemoveCharacters
             );
 
-            NotificationHub.Default.Subscribe<KeyboardNotificationKeys.TextFieldSelected>(
+            NotificationHub.Default.Subscribe(
                 this,
-                new FilterByRef(FilterType.AcceptAllExcept, this),
-                OtherTextFieldSelected
+                ID.FromType<KeyboardNotificationKeys.TextFieldSelected>(),
+                (Callback)OtherTextFieldSelected,
+                new FilterByRef(FilterType.AcceptAllExcept, this)
             );
 
-            NotificationHub.Default.Subscribe<KeyboardNotificationKeys.TextFieldDeselected>(
+            NotificationHub.Default.Subscribe(
                 this,
-                new FilterByRef(FilterType.AcceptAllExcept, this),
-                TextFieldDeselected
+                ID.FromType<KeyboardNotificationKeys.TextFieldDeselected>(),
+                (Callback)TextFieldDeselected,
+                new FilterByRef(FilterType.AcceptAllExcept, this)
             );
         }
 
         void OnDisable()
         {
-            NotificationHub.Default.Unsubscribe(this, KeyboardNotificationKeys.AddOrRemoveCharacters);
-
-            NotificationHub.Default.Unsubscribe<KeyboardNotificationKeys.TextFieldSelected>(this);
-
-            NotificationHub.Default.Unsubscribe<KeyboardNotificationKeys.TextFieldDeselected>(this);
+            NotificationHub.Default.Unsubscribe(this);
         }
 
         public void TextFieldSelected(string text)

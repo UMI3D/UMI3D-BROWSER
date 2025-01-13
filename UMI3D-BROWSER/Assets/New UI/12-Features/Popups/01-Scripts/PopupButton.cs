@@ -41,8 +41,10 @@ namespace umi3d.browserRuntime.ui.popup
             text = GetComponentInChildren<TMPro.TMP_Text>();
             stringEvent = GetComponentInChildren<LocalizeStringEvent>();
 
-            closeNotifier = NotificationHub.Default
-                .GetNotifier<PopupNotificationKeys.PopupClosed>(this);
+            closeNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                ID.FromType<PopupNotificationKeys.PopupClosed>()
+            );
         }
 
         void Click()

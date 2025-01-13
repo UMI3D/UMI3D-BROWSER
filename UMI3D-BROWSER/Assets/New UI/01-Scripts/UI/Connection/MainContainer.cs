@@ -173,7 +173,7 @@ namespace umi3dBrowsers
                 .SetButtons((POPUP_TABLE, "CloseApplication_buttonCancel"), (POPUP_TABLE, "CloseApplication_buttonClose"))
                 .SetButtonsAction(index =>
                 {
-                    Quitting.instance.Confirmation(this, index == 1);
+                    Quitting.instance.Confirm(this, index == 1);
                 })
                 .Notify();
         }

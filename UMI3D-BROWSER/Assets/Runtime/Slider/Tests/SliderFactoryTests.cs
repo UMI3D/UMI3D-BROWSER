@@ -10,7 +10,7 @@ public class SliderFactoryTests
     public class GetOrCreateSlider
     {
         private SliderFactory _sliderFactory;
-        private SliderModelContainer _prefab;
+        private Transform _parentTransform;
 
         [SetUp]
         public void SetUp()
@@ -18,8 +18,11 @@ public class SliderFactoryTests
             // Given: Initial state of the class
             var gameObject = new GameObject();
             _sliderFactory = gameObject.AddComponent<SliderFactory>();
-            _prefab = new GameObject().AddComponent<SliderModelContainer>();
-            _sliderFactory.GetType().GetField("_prefab", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).SetValue(_sliderFactory, _prefab);
+            _parentTransform = new GameObject().transform;
+
+            // Assuming _intPrefab and _floatPrefab are set up in the inspector or via code
+            _sliderFactory.GetType().GetField("_intPrefab", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).SetValue(_sliderFactory, new GameObject().AddComponent<SliderModelContainer>());
+            _sliderFactory.GetType().GetField("_floatPrefab", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).SetValue(_sliderFactory, new GameObject().AddComponent<SliderModelContainer>());
         }
 
         [TearDown]
@@ -27,67 +30,86 @@ public class SliderFactoryTests
         {
             // Clean up after each test
             Object.DestroyImmediate(_sliderFactory.gameObject);
-            Object.DestroyImmediate(_prefab.gameObject);
+            Object.DestroyImmediate(_parentTransform.gameObject);
         }
 
         [Test]
-        public void GivenNoAvailableSliders_WhenCreatingSlider_ThenNewSliderIsCreated()
+        public void GivenValidParameters_WhenCreatingIntegerSlider_ThenIntegerSliderIsCreated()
         {
-            // Given: No available sliders in the queue
-            Transform parent = new GameObject().transform;
+            // Given: Initial state of the class is already set up in SetUp method
 
-            // When: Creating a new slider
-            var slider = _sliderFactory.GetOrCreateSlider(parent);
+            // When: Creating an integer slider
+            var slider = _sliderFactory.GetOrCreateSlider(_parentTransform, "TestLabel", 5, 0, 10, true);
 
-            // Then: A new slider is created
+            // Then: Verify the slider is created and has the correct properties
             Assert.IsNotNull(slider);
-            Assert.IsTrue(slider.activeSelf);
-        }
-
-        [Test]
-        public void GivenAvailableSlider_WhenCreatingSlider_ThenSliderIsReused()
-        {
-            // Given: An available slider in the queue
-            Transform parent = new GameObject().transform;
-            var availableSlider = GameObject.Instantiate(_prefab);
-            _sliderFactory.GetType().GetField("_lstSlidersAvailable", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).SetValue(_sliderFactory, new Queue<SliderModelContainer>(new[] { availableSlider }));
-
-            // When: Creating a new slider
-            var slider = _sliderFactory.GetOrCreateSlider(parent);
-
-            // Then: The available slider is reused
-            Assert.AreEqual(availableSlider.gameObject, slider);
-            Assert.IsTrue(slider.activeSelf);
-        }
-
-        [Test]
-        public void GivenValidParameters_WhenCreatingSlider_ThenSliderIsConfiguredCorrectly()
-        {
-            // Given: Valid parameters for the slider
-            Transform parent = new GameObject().transform;
-            string label = "Test Label";
-            float value = 5;
-            float minValue = 0;
-            float maxValue = 10;
-            bool isInteger = true;
-
-            // When: Creating a new slider
-            var slider = _sliderFactory.GetOrCreateSlider(parent, label, value, minValue, maxValue, isInteger);
             var sliderModel = slider.GetComponent<SliderModelContainer>().model;
+            Assert.AreEqual("TestLabel", sliderModel.label);
+            Assert.AreEqual(0, sliderModel.minValue);
+            Assert.AreEqual(10, sliderModel.maxValue);
+            Assert.AreEqual(5, sliderModel.value);
+            Assert.IsTrue(sliderModel.isInteger);
+        }
 
-            // Then: The slider is configured correctly
-            Assert.AreEqual(label, sliderModel.label);
-            Assert.AreEqual(value, sliderModel.value);
-            Assert.AreEqual(minValue, sliderModel.minValue);
-            Assert.AreEqual(maxValue, sliderModel.maxValue);
-            Assert.AreEqual(isInteger, sliderModel.isInteger);
+        [Test]
+        public void GivenValidParameters_WhenCreatingFloatSlider_ThenFloatSliderIsCreated()
+        {
+            // Given: Initial state of the class is already set up in SetUp method
+
+            // When: Creating a float slider
+            var slider = _sliderFactory.GetOrCreateSlider(_parentTransform, "TestLabel", 5.5f, 0, 10, false);
+
+            // Then: Verify the slider is created and has the correct properties
+            Assert.IsNotNull(slider);
+            var sliderModel = slider.GetComponent<SliderModelContainer>().model;
+            Assert.AreEqual("TestLabel", sliderModel.label);
+            Assert.AreEqual(0, sliderModel.minValue);
+            Assert.AreEqual(10, sliderModel.maxValue);
+            Assert.AreEqual(5.5f, sliderModel.value);
+            Assert.IsFalse(sliderModel.isInteger);
+        }
+
+        [Test]
+        public void GivenNoAvailableIntegerSliders_WhenCreatingIntegerSlider_ThenNewIntegerSliderIsCreated()
+        {
+            // Given: No available integer sliders in the queue
+
+            // When: Creating an integer slider
+            var slider = _sliderFactory.GetOrCreateSlider(_parentTransform, "TestLabel", 5, 0, 10, true);
+
+            // Then: Verify a new integer slider is created
+            Assert.IsNotNull(slider);
+            var sliderModel = slider.GetComponent<SliderModelContainer>().model;
+            Assert.AreEqual("TestLabel", sliderModel.label);
+            Assert.AreEqual(0, sliderModel.minValue);
+            Assert.AreEqual(10, sliderModel.maxValue);
+            Assert.AreEqual(5, sliderModel.value);
+            Assert.IsTrue(sliderModel.isInteger);
+        }
+
+        [Test]
+        public void GivenNoAvailableFloatSliders_WhenCreatingFloatSlider_ThenNewFloatSliderIsCreated()
+        {
+            // Given: No available float sliders in the queue
+
+            // When: Creating a float slider
+            var slider = _sliderFactory.GetOrCreateSlider(_parentTransform, "TestLabel", 5.5f, 0, 10, false);
+
+            // Then: Verify a new float slider is created
+            Assert.IsNotNull(slider);
+            var sliderModel = slider.GetComponent<SliderModelContainer>().model;
+            Assert.AreEqual("TestLabel", sliderModel.label);
+            Assert.AreEqual(0, sliderModel.minValue);
+            Assert.AreEqual(10, sliderModel.maxValue);
+            Assert.AreEqual(5.5f, sliderModel.value);
+            Assert.IsFalse(sliderModel.isInteger);
         }
     }
 
     public class Return
     {
         private SliderFactory _sliderFactory;
-        private SliderModelContainer _prefab;
+        private Transform _parentTransform;
 
         [SetUp]
         public void SetUp()
@@ -95,8 +117,11 @@ public class SliderFactoryTests
             // Given: Initial state of the class
             var gameObject = new GameObject();
             _sliderFactory = gameObject.AddComponent<SliderFactory>();
-            _prefab = new GameObject().AddComponent<SliderModelContainer>();
-            _sliderFactory.GetType().GetField("_prefab", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).SetValue(_sliderFactory, _prefab);
+            _parentTransform = new GameObject().transform;
+
+            // Assuming _intPrefab and _floatPrefab are set up in the inspector or via code
+            _sliderFactory.GetType().GetField("_intPrefab", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).SetValue(_sliderFactory, new GameObject().AddComponent<SliderModelContainer>());
+            _sliderFactory.GetType().GetField("_floatPrefab", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).SetValue(_sliderFactory, new GameObject().AddComponent<SliderModelContainer>());
         }
 
         [TearDown]
@@ -104,62 +129,107 @@ public class SliderFactoryTests
         {
             // Clean up after each test
             Object.DestroyImmediate(_sliderFactory.gameObject);
-            Object.DestroyImmediate(_prefab.gameObject);
+            Object.DestroyImmediate(_parentTransform.gameObject);
         }
 
         [Test]
-        public void GivenSliderGameObject_WhenReturningSlider_ThenSliderIsAddedToQueue()
+        public void GivenValidParameters_WhenCreatingIntegerSlider_ThenIntegerSliderIsCreated()
         {
-            // Given: A slider GameObject
-            var sliderGameObject = GameObject.Instantiate(_prefab).gameObject;
+            // Given: Initial state of the class is already set up in SetUp method
 
-            // When: Returning the slider
-            _sliderFactory.Return(sliderGameObject);
+            // When: Creating an integer slider
+            var slider = _sliderFactory.GetOrCreateSlider(_parentTransform, "TestLabel", 5, 0, 10, true);
 
-            // Then: The slider is added to the queue
-            var queue = (Queue<SliderModelContainer>)_sliderFactory.GetType().GetField("_lstSlidersAvailable", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(_sliderFactory);
-            Assert.AreEqual(1, queue.Count);
-            Assert.AreEqual(sliderGameObject, queue.Peek().gameObject);
+            // Then: Verify the slider is created and has the correct properties
+            Assert.IsNotNull(slider);
+            var sliderModel = slider.GetComponent<SliderModelContainer>().model;
+            Assert.AreEqual("TestLabel", sliderModel.label);
+            Assert.AreEqual(0, sliderModel.minValue);
+            Assert.AreEqual(10, sliderModel.maxValue);
+            Assert.AreEqual(5, sliderModel.value);
+            Assert.IsTrue(sliderModel.isInteger);
         }
 
         [Test]
-        public void GivenSliderGameObject_WhenReturningSlider_ThenSliderIsDeactivated()
+        public void GivenValidParameters_WhenCreatingFloatSlider_ThenFloatSliderIsCreated()
         {
-            // Given: A slider GameObject
-            var sliderGameObject = GameObject.Instantiate(_prefab).gameObject;
+            // Given: Initial state of the class is already set up in SetUp method
 
-            // When: Returning the slider
-            _sliderFactory.Return(sliderGameObject);
+            // When: Creating a float slider
+            var slider = _sliderFactory.GetOrCreateSlider(_parentTransform, "TestLabel", 5.5f, 0, 10, false);
 
-            // Then: The slider is deactivated
-            Assert.IsFalse(sliderGameObject.activeSelf);
+            // Then: Verify the slider is created and has the correct properties
+            Assert.IsNotNull(slider);
+            var sliderModel = slider.GetComponent<SliderModelContainer>().model;
+            Assert.AreEqual("TestLabel", sliderModel.label);
+            Assert.AreEqual(0, sliderModel.minValue);
+            Assert.AreEqual(10, sliderModel.maxValue);
+            Assert.AreEqual(5.5f, sliderModel.value);
+            Assert.IsFalse(sliderModel.isInteger);
         }
 
         [Test]
-        public void GivenSliderGameObject_WhenReturningSlider_ThenSliderParentIsSetToFactory()
+        public void GivenNoAvailableIntegerSliders_WhenCreatingIntegerSlider_ThenNewIntegerSliderIsCreated()
         {
-            // Given: A slider GameObject
-            var sliderGameObject = GameObject.Instantiate(_prefab).gameObject;
+            // Given: No available integer sliders in the queue
 
-            // When: Returning the slider
-            _sliderFactory.Return(sliderGameObject);
+            // When: Creating an integer slider
+            var slider = _sliderFactory.GetOrCreateSlider(_parentTransform, "TestLabel", 5, 0, 10, true);
 
-            // Then: The slider's parent is set to the factory
-            Assert.AreEqual(_sliderFactory.transform, sliderGameObject.transform.parent);
+            // Then: Verify a new integer slider is created
+            Assert.IsNotNull(slider);
+            var sliderModel = slider.GetComponent<SliderModelContainer>().model;
+            Assert.AreEqual("TestLabel", sliderModel.label);
+            Assert.AreEqual(0, sliderModel.minValue);
+            Assert.AreEqual(10, sliderModel.maxValue);
+            Assert.AreEqual(5, sliderModel.value);
+            Assert.IsTrue(sliderModel.isInteger);
         }
 
         [Test]
-        public void GivenInvalidSliderGameObject_WhenReturningSlider_ThenSliderIsNotAddedToQueue()
+        public void GivenNoAvailableFloatSliders_WhenCreatingFloatSlider_ThenNewFloatSliderIsCreated()
         {
-            // Given: An invalid slider GameObject (without SliderModelContainer component)
-            var invalidSliderGameObject = new GameObject();
+            // Given: No available float sliders in the queue
+
+            // When: Creating a float slider
+            var slider = _sliderFactory.GetOrCreateSlider(_parentTransform, "TestLabel", 5.5f, 0, 10, false);
+
+            // Then: Verify a new float slider is created
+            Assert.IsNotNull(slider);
+            var sliderModel = slider.GetComponent<SliderModelContainer>().model;
+            Assert.AreEqual("TestLabel", sliderModel.label);
+            Assert.AreEqual(0, sliderModel.minValue);
+            Assert.AreEqual(10, sliderModel.maxValue);
+            Assert.AreEqual(5.5f, sliderModel.value);
+            Assert.IsFalse(sliderModel.isInteger);
+        }
+
+        [Test]
+        public void GivenIntegerSlider_WhenReturningSlider_ThenSliderIsAddedToIntegerQueue()
+        {
+            // Given: An integer slider
+            var slider = _sliderFactory.GetOrCreateSlider(_parentTransform, "TestLabel", 5, 0, 10, true);
 
             // When: Returning the slider
-            _sliderFactory.Return(invalidSliderGameObject);
+            _sliderFactory.Return(slider);
 
-            // Then: The slider is not added to the queue
-            var queue = (Queue<SliderModelContainer>)_sliderFactory.GetType().GetField("_lstSlidersAvailable", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(_sliderFactory);
-            Assert.AreEqual(0, queue.Count);
+            // Then: Verify the slider is added to the integer queue and deactivated
+            Assert.AreEqual(1, _sliderFactory.AvailableIntSlider);
+            Assert.IsFalse(slider.activeSelf);
+        }
+
+        [Test]
+        public void GivenFloatSlider_WhenReturningSlider_ThenSliderIsAddedToFloatQueue()
+        {
+            // Given: A float slider
+            var slider = _sliderFactory.GetOrCreateSlider(_parentTransform, "TestLabel", 5.5f, 0, 10, false);
+
+            // When: Returning the slider
+            _sliderFactory.Return(slider);
+
+            // Then: Verify the slider is added to the float queue and deactivated
+            Assert.AreEqual(1, _sliderFactory.AvailableFloatSlider);
+            Assert.IsFalse(slider.activeSelf);
         }
     }
 }

@@ -21,14 +21,28 @@ namespace umi3d.browserRuntime.ui.slider
 {
     public class SliderFactory : MonoBehaviour
     {
-        [SerializeField] SliderModelContainer _prefab;
+        [SerializeField] SliderModelContainer _intPrefab;
+        [SerializeField] SliderModelContainer _floatPrefab;
 
-        Queue<SliderModelContainer> _lstSlidersAvailable = new();
+        Queue<SliderModelContainer> _lstIntSlidersAvailable = new();
+        Queue<SliderModelContainer> _lstFloatSlidersAvailable = new();
+
+        public int AvailableIntSlider => _lstIntSlidersAvailable.Count;
+        public int AvailableFloatSlider => _lstFloatSlidersAvailable.Count;
 
         public GameObject GetOrCreateSlider(Transform parent, string label = "", float value = 0, float minValue = 0, float maxValue = 10, bool isInteger = false)
         {
-            if (!_lstSlidersAvailable.TryDequeue(out var sliderModelContainer))
-                sliderModelContainer = GameObject.Instantiate(_prefab);
+            SliderModelContainer sliderModelContainer;
+            if (isInteger)
+            {
+                if (!_lstIntSlidersAvailable.TryDequeue(out sliderModelContainer))
+                    sliderModelContainer = GameObject.Instantiate(_intPrefab);
+            }
+            else
+            {
+                if (!_lstIntSlidersAvailable.TryDequeue(out sliderModelContainer))
+                    sliderModelContainer = GameObject.Instantiate(_floatPrefab);
+            }
 
             sliderModelContainer.gameObject.SetActive(true);
 
@@ -48,7 +62,10 @@ namespace umi3d.browserRuntime.ui.slider
             if (!sliderModelContainer)
                 return;
 
-            _lstSlidersAvailable.Enqueue(sliderModelContainer);
+            if (sliderModelContainer.model.isInteger)
+                _lstIntSlidersAvailable.Enqueue(sliderModelContainer);
+            else
+                _lstFloatSlidersAvailable.Enqueue(sliderModelContainer);
 
             sliderModelContainer.gameObject.SetActive(false);
             sliderModelContainer.transform.SetParent(transform, false);

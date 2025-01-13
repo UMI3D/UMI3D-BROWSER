@@ -50,11 +50,6 @@ namespace umi3d.browserRuntime.ui.slider
 
         private void SliderSet(Notification notification)
         {
-            if (notification.TryGetInfoT(SliderNotifiactionKeys.SliderSet.IsInteger, out bool isInteger))
-            {
-                _slider.wholeNumbers = isInteger;
-            }
-
             if (notification.TryGetInfoT(SliderNotifiactionKeys.SliderSet.MaxValue, out float maxValue))
             {
                 _slider.maxValue = maxValue;

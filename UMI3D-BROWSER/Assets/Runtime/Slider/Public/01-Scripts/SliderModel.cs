@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
+using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.slider
 {
@@ -54,33 +55,37 @@ namespace umi3d.browserRuntime.ui.slider
 
         public void SetValue(float newValue)
         {
-            value = newValue;
+            value = Mathf.Clamp(newValue, minValue, maxValue);
             _setNotifier[SliderNotifiactionKeys.SliderSet.Value] = value;
             _setNotifier.Notify();
         }
 
         public void UpdateValue(float newValue)
         {
-            value = newValue;
-            _updateNotifier[SliderNotifiactionKeys.SliderSet.Value] = value;
+            value = Mathf.Clamp(newValue, minValue, maxValue);
+            _updateNotifier[SliderNotifiactionKeys.SliderUpdated.Value] = value;
             _updateNotifier.Notify();
         }
 
         public void SetMaxValue(float newValue)
         {
             maxValue = newValue;
-            _setNotifier[SliderNotifiactionKeys.SliderSet.MaxValue] = value;
+            value = Mathf.Clamp(value, minValue, maxValue);
+            _setNotifier[SliderNotifiactionKeys.SliderSet.MaxValue] = maxValue;
+            _setNotifier[SliderNotifiactionKeys.SliderSet.Value] = value;
             _setNotifier.Notify();
         }
 
         public void SetMinValue(float newValue)
         {
             minValue = newValue;
-            _setNotifier[SliderNotifiactionKeys.SliderSet.MinValue] = value;
+            value = Mathf.Clamp(value, minValue, maxValue);
+            _setNotifier[SliderNotifiactionKeys.SliderSet.MinValue] = minValue;
+            _setNotifier[SliderNotifiactionKeys.SliderSet.Value] = value;
             _setNotifier.Notify();
         }
 
-        public void SetPlaceholder(bool newIsInteger)
+        public void SetIsInteger(bool newIsInteger)
         {
             isInteger = newIsInteger;
             _setNotifier[SliderNotifiactionKeys.SliderSet.IsInteger] = isInteger;

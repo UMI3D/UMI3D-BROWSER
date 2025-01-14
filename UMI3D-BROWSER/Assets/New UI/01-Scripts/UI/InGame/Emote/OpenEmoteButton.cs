@@ -14,8 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
-using System;
+using inetum.unityUtils.observation;
 using System.Collections.Generic;
 using umi3d.cdk.collaboration.emotes;
 using UnityEngine;
@@ -31,8 +30,16 @@ namespace umi3d.browserRuntime.ui.inGame.emote
         private void Awake()
         {
             button.onClick.AddListener(ToggleEmote);
-            NotificationHub.Default.Subscribe(this, EmoteNotificationKeys.Open, ShowBackground);
-            NotificationHub.Default.Subscribe(this, EmoteNotificationKeys.Close, HideBackground);
+            NotificationHub.Default.Subscribe(
+                this, 
+                EmoteNotificationKeys.Open, 
+                (Callback)ShowBackground
+            );
+            NotificationHub.Default.Subscribe(
+                this, 
+                EmoteNotificationKeys.Close, 
+                (Callback)HideBackground
+            );
             activeBackground.SetActive(false);
 
             EmoteManager.Instance.EmotesLoaded += Setup;

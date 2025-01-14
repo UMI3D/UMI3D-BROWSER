@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using umi3d.baseBrowser.inputs.interactions;
 using umi3d.browserRuntime.ui.inGame.emote;
 using UnityEngine;
@@ -27,7 +27,10 @@ namespace umi3d.browserRuntime.shortcuts
 
         private void Awake()
         {
-            playEmoteNotifier = NotificationHub.Default.GetNotifier<EmoteNotificationKeys.Play>(this);
+            playEmoteNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                ID.FromType<EmoteNotificationKeys.Play>()
+            );
         }
 
 

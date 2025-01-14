@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using umi3d.browserRuntime.ui.keyboard;
 using UnityEngine;
 using UnityEngine.UI;
@@ -39,8 +39,10 @@ namespace umi3d.browserRuntime.ui.settings
 
             KeyboardSettings = GetComponentInParent<KeyboardSettings>();
 
-            notifier = NotificationHub.Default
-                .GetNotifier<KeyboardNotificationKeys.ChangeVersion>(this);
+            notifier = NotificationHub.Default.GetNotifier(
+                this,
+                ID.FromType<KeyboardNotificationKeys.ChangeVersion>()
+            );
             notifier[KeyboardNotificationKeys.AnimationSettings.AnimationType] = KeyboardAnimationType.KeyPress;
         }
 

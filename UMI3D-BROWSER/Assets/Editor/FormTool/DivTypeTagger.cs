@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
+using inetum.unityUtils.systemIO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -80,11 +81,9 @@ namespace form_generator
 
         public string GetUrl(string path)
         {
-            path = path.Replace(@"\", "/");
-            if (path != null && path != "" && !path.StartsWith("/") /*|| Path.StartsWith(@"\")*/)
-            {
-                path = "/" + path;
-            }
+            path = path.TrimDirectorySeparator();
+            path = path.ReplaceBackslashsBySlashs();
+            path = path.InsertSlashAt(0);
             return System.Uri.EscapeUriString(Path.Combine(path));
         }
 

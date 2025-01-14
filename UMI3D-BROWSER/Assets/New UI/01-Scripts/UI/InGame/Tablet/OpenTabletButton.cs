@@ -14,8 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
-using System;
+using inetum.unityUtils.observation;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -28,8 +27,16 @@ namespace umi3d.browserRuntime.ui.inGame.tablet
         private void Awake()
         {
             GetComponent<Button>().onClick.AddListener(OpenTablet);
-            NotificationHub.Default.Subscribe(this, TabletNotificationKeys.Open, HideButton);
-            NotificationHub.Default.Subscribe(this, TabletNotificationKeys.Close, ShowButton);
+            NotificationHub.Default.Subscribe(
+                this, 
+                TabletNotificationKeys.Open, 
+                (Callback)HideButton
+            );
+            NotificationHub.Default.Subscribe(
+                this, 
+                TabletNotificationKeys.Close, 
+                (Callback)ShowButton
+            );
         }
 
         private void OnDestroy()

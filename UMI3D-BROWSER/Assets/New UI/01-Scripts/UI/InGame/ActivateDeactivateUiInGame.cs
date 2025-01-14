@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.inGame
@@ -23,7 +23,11 @@ namespace umi3d.browserRuntime.ui.inGame
     {
         private void Awake()
         {
-            NotificationHub.Default.Subscribe(this, InGameNotificationKeys.EnableInGameUi, SetActive);
+            NotificationHub.Default.Subscribe(
+                this, 
+                InGameNotificationKeys.EnableInGameUi, 
+                (Callback)SetActive
+            );
             gameObject.SetActive(false);
         }
 

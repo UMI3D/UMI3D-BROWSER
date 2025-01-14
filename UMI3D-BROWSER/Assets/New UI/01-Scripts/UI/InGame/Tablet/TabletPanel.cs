@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using umi3d.baseBrowser.cursor;
 using UnityEngine;
 using static umi3d.baseBrowser.cursor.BaseCursor;
@@ -25,8 +25,16 @@ namespace umi3d.browserRuntime.ui.inGame.tablet
     {
         private void Awake()
         {
-            NotificationHub.Default.Subscribe(this, TabletNotificationKeys.Open, Open);
-            NotificationHub.Default.Subscribe(this, TabletNotificationKeys.Close, Close);
+            NotificationHub.Default.Subscribe(
+                this, 
+                TabletNotificationKeys.Open,
+                (Callback)Open
+            );
+            NotificationHub.Default.Subscribe(
+                this, 
+                TabletNotificationKeys.Close, 
+                (Callback)Close
+            );
             gameObject.SetActive(false);
         }
 

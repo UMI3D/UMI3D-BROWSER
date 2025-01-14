@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using System;
 #if UNITY_STANDALONE_WIN
 using System.Runtime.InteropServices;
@@ -159,24 +159,21 @@ namespace umi3d.browserRuntime.ui.windowBar
             NotificationHub.Default.Subscribe(
                 typeof(WindowsManager).FullName,
                 WindowsManagerNotificationKey.Minimize,
-                null,
-                Minimize
+                (Callback)Minimize
             );
 
             // Windowed the window when 'WindowsManagerNotificationKey.Windowed' is sent.
             NotificationHub.Default.Subscribe(
                 typeof(WindowsManager).FullName,
                 WindowsManagerNotificationKey.Maximize,
-                null,
-                Maximize
+                (Callback)Maximize
             );
 
             // Switch full screen mode when 'WindowsManagerNotificationKey.FullScreenModeWillChange' is sent.
             NotificationHub.Default.Subscribe(
                  typeof(WindowsManager).FullName,
                  WindowsManagerNotificationKey.FullScreenModeWillChange,
-                 null,
-                 FullScreenWillChange
+                 (Callback)FullScreenWillChange
              );
         }
 

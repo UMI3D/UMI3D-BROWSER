@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using System;
 using UnityEngine;
 using UnityEngine.Localization.Components;
@@ -41,8 +41,10 @@ namespace umi3d.browserRuntime.ui.popup
             text = GetComponentInChildren<TMPro.TMP_Text>();
             stringEvent = GetComponentInChildren<LocalizeStringEvent>();
 
-            closeNotifier = NotificationHub.Default
-                .GetNotifier<PopupNotificationKeys.PopupClosed>(this);
+            closeNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                ID.FromType<PopupNotificationKeys.PopupClosed>()
+            );
         }
 
         void Click()

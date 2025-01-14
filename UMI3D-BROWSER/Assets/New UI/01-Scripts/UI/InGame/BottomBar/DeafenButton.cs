@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -38,7 +38,11 @@ namespace umi3d.browserRuntime.ui.inGame.bottomBar
             button.onClick.AddListener(Deafen);
 
             deafenNotifier = NotificationHub.Default.GetNotifier(this, InGameNotificationKeys.DeafenChanged);
-            NotificationHub.Default.Subscribe(this, InGameNotificationKeys.DeafenChanged, UpdateIcon);
+            NotificationHub.Default.Subscribe(
+                this, 
+                InGameNotificationKeys.DeafenChanged, 
+                (Callback)UpdateIcon
+            );
         }
 
         private void OnDestroy()

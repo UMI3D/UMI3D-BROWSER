@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,8 +54,16 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.social
 
         void Awake()
         {
-            NotificationHub.Default.Subscribe(this, TabletNotificationKeys.OpenSocial, Open);
-            NotificationHub.Default.Subscribe(this, TabletNotificationKeys.CloseScreens, Close);
+            NotificationHub.Default.Subscribe(
+                this, 
+                TabletNotificationKeys.OpenSocial, 
+                (Callback)Open
+            );
+            NotificationHub.Default.Subscribe(
+                this, 
+                TabletNotificationKeys.CloseScreens, 
+                (Callback)Close
+            );
 
             // Reset
             _Reset();

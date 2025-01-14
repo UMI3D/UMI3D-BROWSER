@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using System.Collections.Generic;
 using umi3d.baseBrowser.inputs.interactions;
 using umi3d.browserRuntime.notificationKeys;
@@ -29,18 +29,22 @@ public class LeftClickParametersInteraction : MonoBehaviour
 
     private void Awake()
     {
-        NotificationHub.Default.Subscribe<InteractionNotificationKeys.ParameterInputFound>(
+        NotificationHub.Default.Subscribe(
             this,
-            ParameterInputFound
+            ID.FromType<InteractionNotificationKeys.ParameterInputFound>(),
+            (Callback)ParameterInputFound
         );
 
-        NotificationHub.Default.Subscribe<InteractionNotificationKeys.ToolReleased>(
+        NotificationHub.Default.Subscribe(
             this,
-            ToolReleased
+            ID.FromType<InteractionNotificationKeys.ToolReleased>(),
+            (Callback)ToolReleased
         );
 
-        displayParameterNotifier = NotificationHub.Default
-                .GetNotifier<InteractionNotificationKeys.DisplayParameters>(this);
+        displayParameterNotifier = NotificationHub.Default.GetNotifier(
+            this,
+            ID.FromType<InteractionNotificationKeys.DisplayParameters>()
+        );
 
         _parameters = new List<AbstractParameterDto>();
     }

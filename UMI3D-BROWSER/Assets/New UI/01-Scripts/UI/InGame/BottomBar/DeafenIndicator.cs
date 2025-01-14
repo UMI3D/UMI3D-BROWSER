@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using umi3d.browserRuntime.ui.settings;
 using UnityEngine;
 
@@ -27,8 +27,16 @@ namespace umi3d.browserRuntime.ui.inGame.bottomBar
 
         private void Awake()
         {
-            NotificationHub.Default.Subscribe(this, InGameNotificationKeys.DeafenChanged, DeafenChagned);
-            NotificationHub.Default.Subscribe(this, SettingsNotificationKeys.SetDeafenIndicator, Set);
+            NotificationHub.Default.Subscribe(
+                this, 
+                InGameNotificationKeys.DeafenChanged,
+                (Callback)DeafenChagned
+            );
+            NotificationHub.Default.Subscribe(
+                this, 
+                SettingsNotificationKeys.SetDeafenIndicator,
+                (Callback)Set
+            );
             gameObject.SetActive(false);
         }
 

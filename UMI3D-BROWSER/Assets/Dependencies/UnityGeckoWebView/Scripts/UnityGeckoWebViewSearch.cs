@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using UnityEngine;
 
 namespace com.inetum.unitygeckowebview.samples
@@ -58,20 +58,19 @@ namespace com.inetum.unitygeckowebview.samples
             NotificationHub.Default.Subscribe(
                 this,
                 GeckoWebViewNotificationKeys.Loading,
-                Loading
+                (Callback)Loading
             );
 
-            NotificationHub.Default.Subscribe<GeckoWebViewNotificationKeys.WebViewSizeChanged>(
+            NotificationHub.Default.Subscribe(
                 this,
-                WebViewSizeChanged
+                ID.FromType<GeckoWebViewNotificationKeys.WebViewSizeChanged>(),
+                (Callback)WebViewSizeChanged
             );
         }
 
         void OnDisable()
         {
-            NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.Loading);
-
-            NotificationHub.Default.Unsubscribe<GeckoWebViewNotificationKeys.WebViewSizeChanged>(this);
+            NotificationHub.Default.Unsubscribe(this);
         }
 
         void Loading(Notification notification)

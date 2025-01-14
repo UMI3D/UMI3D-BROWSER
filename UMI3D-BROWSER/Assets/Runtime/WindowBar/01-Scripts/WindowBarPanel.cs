@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using umi3d.browserRuntime.notificationKeys;
 using UnityEngine;
 
@@ -28,7 +28,11 @@ namespace umi3d.browserRuntime.ui.windowBar
             transform.parent.gameObject.SetActive(false);
             return;
 #endif
-            NotificationHub.Default.Subscribe(this, WindowsManagerNotificationKey.FullScreenModeChanged, OnFullScreenModeChanged);
+            NotificationHub.Default.Subscribe(
+                this, 
+                WindowsManagerNotificationKey.FullScreenModeChanged,
+                (Callback)OnFullScreenModeChanged
+            );
             transform.parent.gameObject.SetActive(WindowsManager.IsWindowInFullScreen);
         }
 

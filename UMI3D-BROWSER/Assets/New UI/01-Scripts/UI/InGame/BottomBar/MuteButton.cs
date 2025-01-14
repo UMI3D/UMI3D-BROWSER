@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using umi3d.cdk.collaboration;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -33,7 +33,11 @@ namespace umi3d.browserRuntime.ui.inGame.bottomBar
         {
             button.onClick.AddListener(Mute);
 
-            NotificationHub.Default.Subscribe(this, InGameNotificationKeys.MuteChanged, UpdateIcon);
+            NotificationHub.Default.Subscribe(
+                this, 
+                InGameNotificationKeys.MuteChanged, 
+                (Callback)UpdateIcon
+            );
         }
 
         private void OnEnable()

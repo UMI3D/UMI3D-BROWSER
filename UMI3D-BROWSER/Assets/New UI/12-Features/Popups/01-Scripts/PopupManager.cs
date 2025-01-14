@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -34,45 +34,49 @@ namespace umi3d.browserRuntime.ui.popup
         void Awake()
         {
             NotificationHub.Default
-                .Subscribe<PopupNotificationKeys.EnqueuePopup>(
+                .Subscribe(
                 this,
-                new FilterByRef(FilterType.AcceptAllExcept, this),
-                NewPopupEnqueued
+                ID.FromType<PopupNotificationKeys.EnqueuePopup>(),
+                (Callback)NewPopupEnqueued,
+                new FilterByRef(FilterType.AcceptAllExcept, this)
             );
 
-            NotificationHub.Default
-                .Subscribe<PopupNotificationKeys.DequeuePopup>(this, DequeuePopup);
+            NotificationHub.Default.Subscribe(
+                this,
+                ID.FromType<PopupNotificationKeys.DequeuePopup>(),
+                (Callback)DequeuePopup
+            );
 
-            NotificationHub.Default
-                .Subscribe<PopupNotificationKeys.PopupClosed>(this, PopupClosed);
+            NotificationHub.Default.Subscribe(
+                this,
+                ID.FromType<PopupNotificationKeys.PopupClosed>(),
+                (Callback)PopupClosed
+            );
 
-            NotificationHub.Default
-                .Subscribe<PopupNotificationKeys.ReplaceCurrentOpenedPopup>(this, ReplaceCurrentOpenedPopup);
+            NotificationHub.Default.Subscribe(
+                this,
+                ID.FromType<PopupNotificationKeys.ReplaceCurrentOpenedPopup>(),
+                (Callback)ReplaceCurrentOpenedPopup
+            );
 
             popup = Instantiate(popupPrefab);
             popup.transform.SetParent(transform, false);
             popup.SetActive(false);
 
-            displayPopupNotifier = NotificationHub.Default
-                .GetNotifier<PopupNotificationKeys.DisplayPopup>(this);
+            displayPopupNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                ID.FromType<PopupNotificationKeys.DisplayPopup>()
+            );
 
-            closeCurrentPopupNotifier = NotificationHub.Default
-                .GetNotifier<PopupNotificationKeys.CloseCurrentOpenedPopup>(this);
+            closeCurrentPopupNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                ID.FromType<PopupNotificationKeys.CloseCurrentOpenedPopup>()
+            );
         }
 
         void OnDestroy()
         {
-            NotificationHub.Default
-             .Unsubscribe<PopupNotificationKeys.EnqueuePopup>(this);
-
-            NotificationHub.Default
-             .Unsubscribe<PopupNotificationKeys.DequeuePopup>(this);
-
-            NotificationHub.Default
-            .Unsubscribe<PopupNotificationKeys.PopupClosed>(this);
-
-            NotificationHub.Default
-             .Unsubscribe<PopupNotificationKeys.ReplaceCurrentOpenedPopup>(this);
+            NotificationHub.Default.Unsubscribe(this);
         }
 
         void NewPopupEnqueued(Notification notification)
@@ -134,7 +138,7 @@ namespace umi3d.browserRuntime.ui.popup
 
             if (currentPopupInfo.HasValue && currentPopupInfo.Value.id.HasValue && currentPopupInfo.Value.id.Value == id)
             {
-                notification.TryGetInfoNullableT(PopupNotificationKeys.DequeuePopup.ActionIndex, out int? index, false);
+                notification.TryGetInfoT(PopupNotificationKeys.DequeuePopup.ActionIndex, out int? index, false);
                 closeCurrentPopupNotifier[PopupNotificationKeys.CloseCurrentOpenedPopup.ActionIndex] = index;
                 closeCurrentPopupNotifier.Notify();
                 return;
@@ -182,7 +186,7 @@ namespace umi3d.browserRuntime.ui.popup
                 return;
             }
 
-            notification.TryGetInfoNullableT(PopupNotificationKeys.ReplaceCurrentOpenedPopup.ActionIndex, out int? index, false);
+            notification.TryGetInfoT(PopupNotificationKeys.ReplaceCurrentOpenedPopup.ActionIndex, out int? index, false);
             if (index.HasValue)
             {
                 currentPopupInfo.Value.buttonActions?.Invoke(index.Value);
@@ -194,7 +198,10 @@ namespace umi3d.browserRuntime.ui.popup
         {
             if (popupsInfo.Count == 0)
             {
-                NotificationHub.Default.Notify<PopupNotificationKeys.AllPopupAreClosed>(this);
+                NotificationHub.Default.Notify(
+                    this,
+                    ID.FromType<PopupNotificationKeys.AllPopupAreClosed>()
+                );
                 return;
             }
 

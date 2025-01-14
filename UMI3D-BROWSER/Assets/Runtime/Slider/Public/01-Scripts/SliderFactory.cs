@@ -45,6 +45,7 @@ namespace umi3d.browserRuntime.ui.slider
             }
 
             sliderModelContainer.gameObject.SetActive(true);
+            sliderModelContainer.transform.SetParent(parent.transform, false);
 
             if (!string.IsNullOrEmpty(label))
                 sliderModelContainer.model.SetLabel(label);

@@ -50,7 +50,7 @@ namespace umi3d.browserRuntime.ui.slider
 
         private void ValueUpdated(Notification notification)
         {
-            if (!notification.TryGetInfoT(SliderNotifiactionKeys.SliderUpdated.Value, out int value))
+            if (!notification.TryGetInfoT(SliderNotifiactionKeys.SliderUpdated.Value, out float value))
                 return;
 
             dto.value = value;

@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -38,8 +38,10 @@ namespace umi3d.browserRuntime.ui.settings
 
             graphicsSettings = GetComponentInParent<GraphicsSettings>();
 
-            notifier = NotificationHub.Default
-                .GetNotifier<SettingsNotificationKeys.QualityChanged>(this);
+            notifier = NotificationHub.Default.GetNotifier(
+                this,
+                ID.FromType<SettingsNotificationKeys.QualityChanged>()
+            );
         }
 
         void Start()

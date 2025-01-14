@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using TMPro;
 using UnityEngine;
 
@@ -32,7 +32,10 @@ namespace umi3d.browserRuntime.ui.inputField
             _text = GetComponent<TMP_Text>();
             _modelContainer = GetComponentInParent<InputFieldModelContainer>();
 
-            NotificationHub.Default.Subscribe<InputFieldNotificationsKeys.InputFieldSet>(this, new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == _modelContainer.model), TitleSet);
+            NotificationHub.Default.Subscribe(this,
+                ID.FromType<InputFieldNotificationsKeys.InputFieldSet>(), 
+                (Callback)TitleSet,
+                new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == _modelContainer.model));
         }
 
         private void OnDestroy()

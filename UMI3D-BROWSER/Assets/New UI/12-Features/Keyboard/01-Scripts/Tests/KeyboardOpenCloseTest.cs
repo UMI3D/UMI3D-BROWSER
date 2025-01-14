@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using TMPro;
 using UnityEngine;
 
@@ -33,9 +33,9 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         void Awake()
         {
-            openOrCloseNotifier = NotificationHub.Default.GetNotifier<KeyboardNotificationKeys.OpenOrClose>(
+            openOrCloseNotifier = NotificationHub.Default.GetNotifier(
                 this,
-                null,
+                ID.FromType<KeyboardNotificationKeys.OpenOrClose>(),
                 new()
                 {
                     { KeyboardNotificationKeys.OpenOrClose.IsOpening, isOpen },
@@ -45,9 +45,10 @@ namespace umi3d.browserRuntime.ui.keyboard
                 }
             );
 
-            NotificationHub.Default.Subscribe<KeyboardNotificationKeys.AnimationSettings>(
+            NotificationHub.Default.Subscribe(
                 this,
-                EnableOrDisableAnimation
+                ID.FromType<KeyboardNotificationKeys.AnimationSettings>(),
+                (Callback)EnableOrDisableAnimation
             );
 
             text.text = isOpen ? "Close" : "Open";

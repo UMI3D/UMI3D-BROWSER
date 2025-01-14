@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using System.Collections;
 using UnityEngine;
 
@@ -47,15 +48,16 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         void OnEnable()
         {
-            NotificationHub.Default.Subscribe<KeyboardNotificationKeys.OpenOrClose>(
+            NotificationHub.Default.Subscribe(
                 this,
-                Animate
+                ID.FromType<KeyboardNotificationKeys.OpenOrClose>(),
+                (Callback)Animate
             );
         }
 
         void OnDisable()
         {
-            NotificationHub.Default.Unsubscribe<KeyboardNotificationKeys.OpenOrClose>(this);
+            NotificationHub.Default.Unsubscribe(this);
         }
 
         void Animate(Notification notification)

@@ -14,9 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using umi3d.baseBrowser.cursor;
 using umi3d.browserRuntime.notificationKeys;
 using umi3d.browserRuntime.ui.inGame.tablet;
@@ -29,10 +28,16 @@ namespace umi3d.browserRuntime.ui.contextualMenu
     {
         private void Awake()
         {
-            NotificationHub.Default.Subscribe<InteractionNotificationKeys.DisplayParameters>(this, Display);
+            NotificationHub.Default.Subscribe(this,
+                ID.FromType<InteractionNotificationKeys.DisplayParameters>(), 
+                (Callback)Display);
 
-            NotificationHub.Default.Subscribe<ContextualMenuNotificationKeys.Close>(this, Hide);
-            NotificationHub.Default.Subscribe(this, TabletNotificationKeys.Open, Hide);
+            NotificationHub.Default.Subscribe(this,
+                ID.FromType<ContextualMenuNotificationKeys.Close>(), 
+                (Callback)Hide);
+            NotificationHub.Default.Subscribe(this, 
+                TabletNotificationKeys.Open, 
+                (Callback)Hide);
         }
 
         private void Start()

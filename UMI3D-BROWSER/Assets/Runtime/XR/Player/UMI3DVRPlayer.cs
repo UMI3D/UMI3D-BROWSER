@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using System.Collections;
 using umi3d.browserRuntime.navigation;
 using umi3d.cdk;

@@ -14,8 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
-using System;
+using inetum.unityUtils.observation;
 using System.Collections.Generic;
 using umi3d.browserRuntime.notificationKeys;
 using umi3d.browserRuntime.ui.inGame.tablet;
@@ -31,12 +30,19 @@ namespace umi3d.browserRuntime.ui.contextualMenu
 
         public ContextualMenuModel()
         {
-            _addParameterNotifier = NotificationHub.Default.GetNotifier<ContextualMenuNotificationKeys.AddParameter>(this);
+            _addParameterNotifier = NotificationHub.Default.GetNotifier(this,
+                ID.FromType<ContextualMenuNotificationKeys.AddParameter>());
 
-            NotificationHub.Default.Subscribe<InteractionNotificationKeys.DisplayParameters>(this, DisplayParameters);
+            NotificationHub.Default.Subscribe(this,
+                ID.FromType<InteractionNotificationKeys.DisplayParameters>(), 
+                (Callback)DisplayParameters);
 
-            NotificationHub.Default.Subscribe<ContextualMenuNotificationKeys.Close>(this, Hide);
-            NotificationHub.Default.Subscribe(this, TabletNotificationKeys.Open, Hide);
+            NotificationHub.Default.Subscribe(this,
+                ID.FromType<ContextualMenuNotificationKeys.Close>(), 
+                (Callback)Hide);
+            NotificationHub.Default.Subscribe(this, 
+                TabletNotificationKeys.Open, 
+                (Callback)Hide);
         }
 
         ~ContextualMenuModel()

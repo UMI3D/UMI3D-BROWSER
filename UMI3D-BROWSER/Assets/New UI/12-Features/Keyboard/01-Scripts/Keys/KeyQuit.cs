@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.keyboard
@@ -34,7 +34,6 @@ namespace umi3d.browserRuntime.ui.keyboard
             quitKeyPressedNotifier = NotificationHub.Default.GetNotifier(
                 this,
                 KeyboardNotificationKeys.SpecialKeyPressed,
-                null,
                 new()
                 {
                     { KeyboardNotificationKeys.Info.SpecialKey, SpecialKey.Quit }

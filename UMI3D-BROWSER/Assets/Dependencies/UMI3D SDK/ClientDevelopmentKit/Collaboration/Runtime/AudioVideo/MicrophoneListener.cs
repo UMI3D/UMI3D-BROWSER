@@ -14,7 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
+using inetum.unityUtils.lifeCycle;
+using inetum.unityUtils.observation;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -34,11 +35,10 @@ namespace umi3d.cdk.collaboration
         {
             base.Start();
 
-            NotificationHub.Default.Subscribe(
+            Quitting.instance.SubscribeFor(
+                Quitting.SubscriptionType.IsQuitting,
                 this,
-                QuittingManagerNotificationKey.ApplicationIsQuitting,
-                null,
-                _OnApplicationQuit
+                (Callback)_OnApplicationQuit
             );
 
             UMI3DUser.OnUserMicrophoneIdentityUpdated.AddListener(IdentityUpdate);

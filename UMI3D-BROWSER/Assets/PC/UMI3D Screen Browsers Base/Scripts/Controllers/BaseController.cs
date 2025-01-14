@@ -14,8 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using System.Collections.Generic;
-using System.ComponentModel;
 using umi3d.baseBrowser.cursor;
 using umi3d.baseBrowser.inputs.interactions;
 using umi3d.browserRuntime.notificationKeys;
@@ -161,11 +161,14 @@ namespace umi3d.baseBrowser.Controller
                     Release(currentTool, new RequestedFromMenu());
             });
 
-            parameterInputFoundNotifier = NotificationHub.Default
-                .GetNotifier<InteractionNotificationKeys.ParameterInputFound>(this);
+            parameterInputFoundNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                ID.FromType<InteractionNotificationKeys.ParameterInputFound>()
+            );
 
-            toolReleasedNotifier = NotificationHub.Default
-                .GetNotifier<InteractionNotificationKeys.ToolReleased>(this);
+            toolReleasedNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                ID.FromType<InteractionNotificationKeys.ToolReleased>());
         }
 
         private void Instance_onNodeGameObjectSet(UMI3DNodeInstance node, GameObject oldGameObject)

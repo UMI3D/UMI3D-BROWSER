@@ -39,9 +39,15 @@ sysinfo.txt
 # Builds
 *.unitypackage
 
+# Exclude the code coverage. Code coverage creates a report each time tests run.
+/UMI3D-BROWSER/CodeCoverage
+# Exclude the code coverage package settings.
+/UMI3D-BROWSER/ProjectSettings/Packages/com.unity.testtools.codecoverage
+
 # Exclude the files that are located in any EXCLUDED folder.
 /UMI3D-BROWSER/Assets/**/EXCLUDED.meta
 /UMI3D-BROWSER/Assets/**/EXCLUDED
+
 /UMI3D-BROWSER/Assets/XR/GlTFSceneExtensions.cs.meta
 /UMI3D-BROWSER/UserSettings/EditorUserSettings.asset
 /UMI3D-BROWSER/Assets/Dependencies/UMI3D SDK/Dependencies/Runtime/GltFast/Documentation/*

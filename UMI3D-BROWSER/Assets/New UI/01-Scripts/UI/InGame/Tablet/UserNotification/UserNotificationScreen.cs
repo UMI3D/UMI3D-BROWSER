@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using System.Collections.Generic;
 using umi3d.common;
 using umi3dBrowsers.displayer;
@@ -33,8 +33,16 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.userNotification
         private void Awake()
         {
             notificationLoader.Notification2DReceived += AddNotification;
-            NotificationHub.Default.Subscribe(this, TabletNotificationKeys.OpenUserNotification, Open);
-            NotificationHub.Default.Subscribe(this, TabletNotificationKeys.CloseScreens, Close);
+            NotificationHub.Default.Subscribe(
+                this, 
+                TabletNotificationKeys.OpenUserNotification,
+                (Callback)Open
+            );
+            NotificationHub.Default.Subscribe(
+                this, 
+                TabletNotificationKeys.CloseScreens, 
+                (Callback)Close
+            );
         }
 
         private void OnDestroy()

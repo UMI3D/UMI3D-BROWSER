@@ -14,9 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
-using System.Reflection.Emit;
-using Unity.VisualScripting.YamlDotNet.Core.Tokens;
+using inetum.unityUtils.observation;
 
 namespace umi3d.browserRuntime.ui.inputField
 {
@@ -36,14 +34,14 @@ namespace umi3d.browserRuntime.ui.inputField
 
         public InputFieldModel()
         {
-            _setNotifier = NotificationHub.Default.GetNotifier<InputFieldNotificationsKeys.InputFieldSet>(this);
+            _setNotifier = NotificationHub.Default.GetNotifier(this, ID.FromType<InputFieldNotificationsKeys.InputFieldSet>());
             _setNotifier[InputFieldNotificationsKeys.InputFieldSet.IsLabelVisible] = isLabelVisible;
             _setNotifier[InputFieldNotificationsKeys.InputFieldSet.Label] = label;
             _setNotifier[InputFieldNotificationsKeys.InputFieldSet.Value] = value;
             _setNotifier[InputFieldNotificationsKeys.InputFieldSet.Placeholder] = placeholder;
             _setNotifier[InputFieldNotificationsKeys.InputFieldSet.NbrLine] = nbrLine;
 
-            _updateNotifier = NotificationHub.Default.GetNotifier<InputFieldNotificationsKeys.InputFieldUpdated>(this);
+            _updateNotifier = NotificationHub.Default.GetNotifier(this, ID.FromType<InputFieldNotificationsKeys.InputFieldUpdated>());
         }
 
         /// <summary>

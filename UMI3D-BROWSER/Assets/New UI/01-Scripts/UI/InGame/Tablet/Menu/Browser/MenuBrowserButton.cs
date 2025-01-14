@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -35,7 +35,11 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.menu.browser
         {
             activeBackground.SetActive(false);
 
-            NotificationHub.Default.Subscribe(this, TabletNotificationKeys.NewScreenSelected, Deactivate);
+            NotificationHub.Default.Subscribe(
+                this, 
+                TabletNotificationKeys.NewScreenSelected, 
+                (Callback)Deactivate
+            );
         }
 
         public void OnPointerClick(PointerEventData eventData)

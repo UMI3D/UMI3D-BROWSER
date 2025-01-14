@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.keyboard
@@ -31,8 +31,10 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         void Start()
         {
-            versionNotifier = NotificationHub.Default
-                .GetNotifier<KeyboardNotificationKeys.ChangeVersion>(this);
+            versionNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                ID.FromType<KeyboardNotificationKeys.ChangeVersion>()
+            );
 
             int index = dropdown != null ? dropdown.value : 0;
 

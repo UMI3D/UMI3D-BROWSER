@@ -14,9 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
-using System.Collections;
-using System.Collections.Generic;
+using inetum.unityUtils.observation;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -53,15 +51,16 @@ namespace com.inetum.unitygeckowebview
         {
             button.onClick.AddListener(Click);
 
-            NotificationHub.Default.Subscribe<GeckoWebViewNotificationKeys.WebViewSizeChanged>(
+            NotificationHub.Default.Subscribe(
                this,
-               WebViewSizeChanged
+               ID.FromType<GeckoWebViewNotificationKeys.WebViewSizeChanged>(),
+               (Callback)WebViewSizeChanged
            );
 
             NotificationHub.Default.Subscribe(
                this,
                GeckoWebViewNotificationKeys.InteractibilityChanged,
-               InteractibilityChanged
+               (Callback)InteractibilityChanged
            );
         }
 
@@ -69,9 +68,7 @@ namespace com.inetum.unitygeckowebview
         {
             button.onClick.RemoveListener(Click);
 
-            NotificationHub.Default.Unsubscribe<GeckoWebViewNotificationKeys.WebViewSizeChanged>(this);
-
-            NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.InteractibilityChanged);
+            NotificationHub.Default.Unsubscribe(this);
         }
 
         void Click()

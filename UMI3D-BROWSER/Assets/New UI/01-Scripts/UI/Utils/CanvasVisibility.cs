@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui
@@ -23,8 +23,16 @@ namespace umi3d.browserRuntime.ui
     {
         private void Awake()
         {
-            NotificationHub.Default.Subscribe(this, UiNotificationKeys.Show, Show);
-            NotificationHub.Default.Subscribe(this, UiNotificationKeys.Hide, Hide);
+            NotificationHub.Default.Subscribe(
+                this, 
+                UiNotificationKeys.Show, 
+                (Callback)Show
+            );
+            NotificationHub.Default.Subscribe(
+                this, 
+                UiNotificationKeys.Hide, 
+                (Callback)Hide
+            );
         }
 
         void OnDestroy()

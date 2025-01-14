@@ -14,9 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
-using System.Collections;
-using System.Collections.Generic;
+using inetum.unityUtils.observation;
 using umi3d.browserRuntime.NotificationKeys;
 using umi3d.browserRuntime.player;
 using UnityEngine;
@@ -50,8 +48,7 @@ namespace umi3d.browserRuntime.navigation
                 NotificationHub.Default.Subscribe(
                     this,
                     LocomotionNotificationKeys.SnapTurn,
-                    null,
-                    SnapTurn
+                    (Callback)SnapTurn
                 );
             }
 
@@ -60,16 +57,14 @@ namespace umi3d.browserRuntime.navigation
                 NotificationHub.Default.Subscribe(
                     this,
                     LocomotionNotificationKeys.Teleportation,
-                    null,
-                    Teleport
+                    (Callback)Teleport
                 );
             }
         }
 
         void OnDisable()
         {
-            NotificationHub.Default.Unsubscribe(this, LocomotionNotificationKeys.SnapTurn);
-            NotificationHub.Default.Unsubscribe(this, LocomotionNotificationKeys.Teleportation);
+            NotificationHub.Default.Unsubscribe(this);
         }
 
         void SnapTurn(Notification notification)

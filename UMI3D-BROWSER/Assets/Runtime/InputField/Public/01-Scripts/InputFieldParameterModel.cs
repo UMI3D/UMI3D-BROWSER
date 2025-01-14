@@ -14,9 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
 using umi3d.common.interaction;
 using umi3d.cdk;
+using inetum.unityUtils.observation;
 
 namespace umi3d.browserRuntime.ui.inputField
 {
@@ -36,7 +36,10 @@ namespace umi3d.browserRuntime.ui.inputField
         {
             model = newModel;
 
-            NotificationHub.Default.Subscribe<InputFieldNotificationsKeys.InputFieldUpdated>(this, new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == model), ValueUpdated);
+            NotificationHub.Default.Subscribe(this, 
+                ID.FromType<InputFieldNotificationsKeys.InputFieldUpdated>(),
+                (Callback)ValueUpdated,
+                new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == model));
         }
 
         ~InputFieldParameterModel() 

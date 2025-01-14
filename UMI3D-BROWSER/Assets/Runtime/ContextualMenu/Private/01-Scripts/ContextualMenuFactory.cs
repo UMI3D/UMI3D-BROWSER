@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using System.Collections.Generic;
 using umi3d.common.interaction;
 using UnityEngine;
@@ -34,8 +34,12 @@ namespace umi3d.browserRuntime.ui.contextualMenu
             _inputFieldFactory = GetComponent<ContextualMenuInputFieldFactory>();
             _inputFields = new List<GameObject>();
 
-            NotificationHub.Default.Subscribe<ContextualMenuNotificationKeys.AddParameter>(this, AddParameter);
-            NotificationHub.Default.Subscribe<ContextualMenuNotificationKeys.Close>(this, Clean);
+            NotificationHub.Default.Subscribe(this,
+                ID.FromType<ContextualMenuNotificationKeys.AddParameter>(), 
+                (Callback)AddParameter);
+            NotificationHub.Default.Subscribe(this,
+                ID.FromType<ContextualMenuNotificationKeys.Close>(), 
+                (Callback)Clean);
         }
 
         private void OnDestroy()

@@ -14,8 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
-using System;
+using inetum.unityUtils.observation;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -39,7 +38,8 @@ namespace umi3d.browserRuntime.ui.contextualMenu
 
         private void OnClick()
         {
-            NotificationHub.Default.Notify<ContextualMenuNotificationKeys.Close>(this);
+            NotificationHub.Default.Notify(this,
+                ID.FromType<ContextualMenuNotificationKeys.Close>());
         }
     }
 }

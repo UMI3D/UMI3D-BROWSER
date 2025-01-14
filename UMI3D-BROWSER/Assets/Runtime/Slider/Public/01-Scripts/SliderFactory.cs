@@ -30,6 +30,24 @@ namespace umi3d.browserRuntime.ui.slider
         public int AvailableIntSlider => _lstIntSlidersAvailable.Count;
         public int AvailableFloatSlider => _lstFloatSlidersAvailable.Count;
 
+        /// <summary>
+        /// This method retrieves or creates a slider GameObject with specified properties.<br/>
+        /// <br/>
+        /// <example>
+        /// Given a parent transform, label, value, minValue, maxValue, and isInteger flag, when calling GetOrCreateSlider, then a slider GameObject is created or retrieved with the specified properties.
+        /// <code>
+        /// Transform parentTransform = new GameObject().transform;
+        /// GameObject slider = GetOrCreateSlider(parentTransform, "Volume", 5, 0, 10, true);
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <param name="parent">The parent transform to which the slider will be attached.</param>
+        /// <param name="label">The label for the slider. Default is an empty string.</param>
+        /// <param name="value">The initial value of the slider. Default is 0.</param>
+        /// <param name="minValue">The minimum value of the slider. Default is 0.</param>
+        /// <param name="maxValue">The maximum value of the slider. Default is 10.</param>
+        /// <param name="isInteger">Indicates whether the slider is for integer values. Default is false.</param>
+        /// <returns>The created or retrieved slider GameObject.</returns>
         public GameObject GetOrCreateSlider(Transform parent, string label = "", float value = 0, float minValue = 0, float maxValue = 10, bool isInteger = false)
         {
             SliderModelContainer sliderModelContainer;
@@ -57,6 +75,18 @@ namespace umi3d.browserRuntime.ui.slider
             return sliderModelContainer.gameObject;
         }
 
+        /// <summary>
+        /// This method returns a slider GameObject to the pool, deactivates it, and reassigns its parent.<br/>
+        /// <br/>
+        /// <example>
+        /// Given a slider GameObject, when calling Return, then the slider is added to the appropriate queue and deactivated.
+        /// <code>
+        /// GameObject slider = GetOrCreateSlider(parentTransform, "Volume", 5, 0, 10, true);
+        /// Return(slider);
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <param name="sliderGameobject">The slider GameObject to be returned to the pool.</param>
         public void Return(GameObject sliderGameobject)
         {
             var sliderModelContainer = sliderGameobject.GetComponent<SliderModelContainer>();

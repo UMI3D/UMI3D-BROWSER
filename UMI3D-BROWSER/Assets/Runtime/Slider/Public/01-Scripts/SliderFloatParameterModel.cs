@@ -38,6 +38,18 @@ namespace umi3d.browserRuntime.ui.slider
             NotificationHub.Default.Unsubscribe(this);
         }
 
+        /// <summary>
+        /// This method sets the DTO for the slider and updates the slider model with the new DTO values.<br/>
+        /// <br/>
+        /// <example>
+        /// Given a FloatRangeParameterDto, when calling SetDto, then the slider model is updated with the DTO values.
+        /// <code>
+        /// FloatRangeParameterDto dto = new FloatRangeParameterDto { name = "Volume", min = 0, max = 10, value = 5.5f };
+        /// SetDto(dto);
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <param name="newDto">The new DTO to set.</param>
         public void SetDto(FloatRangeParameterDto newDto)
         {
             dto = newDto;

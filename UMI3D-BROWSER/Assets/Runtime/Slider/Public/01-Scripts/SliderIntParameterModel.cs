@@ -38,6 +38,18 @@ namespace umi3d.browserRuntime.ui.slider
             NotificationHub.Default.Unsubscribe(this);
         }
 
+        /// <summary>
+        /// This method sets the DTO for the integer slider and updates the slider model with the new DTO values.<br/>
+        /// <br/>
+        /// <example>
+        /// Given an IntegerRangeParameterDto, when calling SetDto, then the slider model is updated with the DTO values.
+        /// <code>
+        /// IntegerRangeParameterDto dto = new IntegerRangeParameterDto { name = "Volume", min = 0, max = 100, value = 50 };
+        /// SetDto(dto);
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <param name="newDto">The new DTO to set.</param>
         public void SetDto(IntegerRangeParameterDto newDto)
         {
             dto = newDto;

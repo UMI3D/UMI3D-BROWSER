@@ -45,14 +45,14 @@ namespace umi3d.browserRuntime.ui.inputField
 
         private void TitleSet(Notification notification)
         {
-            if (!notification.TryGetInfoT(InputFieldNotificationsKeys.InputFieldSet.IsLabelVisible, out bool isActive))
+            if (notification.TryGetInfoT(InputFieldNotificationsKeys.InputFieldSet.IsLabelVisible, out bool isActive))
             {
                 gameObject.SetActive(isActive);
                 if (!isActive)
                     return;
             }
 
-            if (!notification.TryGetInfoT(InputFieldNotificationsKeys.InputFieldSet.Label, out string newTitle))
+            if (notification.TryGetInfoT(InputFieldNotificationsKeys.InputFieldSet.Label, out string newTitle))
             {
                 _text.text = newTitle;
             }

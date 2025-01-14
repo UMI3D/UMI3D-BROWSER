@@ -63,7 +63,7 @@ namespace umi3d.browserRuntime.ui.inputField
                 float padding = textAreaTransform.offsetMin.y + textAreaTransform.offsetMax.y;
 
                 TMP_Text textComponent = _inputField.textComponent;
-                float desiredHeight = textComponent.GetPreferredValues(new string('\n', nbrLine)).y;
+                float desiredHeight = textComponent.GetPreferredValues(new string('\n', nbrLine + 1)).y;
 
                 RectTransform rectTransform = GetComponent<RectTransform>();
                 rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, desiredHeight);

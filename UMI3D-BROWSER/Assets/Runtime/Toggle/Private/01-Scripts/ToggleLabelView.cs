@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using TMPro;
 using UnityEngine;
 
@@ -32,7 +32,10 @@ namespace umi3d.browserRuntime.ui.toggle
             _text = GetComponent<TMP_Text>();
             _modelContainer = GetComponentInParent<ToggleModelContainer>();
 
-            NotificationHub.Default.Subscribe<ToggleNotificationKeys.ToggleSet>(this, new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == _modelContainer.model), TitleSet);
+            NotificationHub.Default.Subscribe(this,
+                ID.FromType<ToggleNotificationKeys.ToggleSet>(), 
+                (Callback)TitleSet,
+                new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == _modelContainer.model));
         }
 
         private void OnDestroy()

@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
+using inetum.unityUtils.observation;
 
 namespace umi3d.browserRuntime.ui.toggle
 {
@@ -33,12 +33,14 @@ namespace umi3d.browserRuntime.ui.toggle
 
         public ToggleModel()
         {
-            _setNotifier = NotificationHub.Default.GetNotifier<ToggleNotificationKeys.ToggleSet>(this);
+            _setNotifier = NotificationHub.Default.GetNotifier(this,
+                ID.FromType<ToggleNotificationKeys.ToggleSet>());
             _setNotifier[ToggleNotificationKeys.ToggleSet.IsLabelVisible] = isLabelVisible;
             _setNotifier[ToggleNotificationKeys.ToggleSet.Label] = label;
             _setNotifier[ToggleNotificationKeys.ToggleSet.Value] = value;
 
-            _updateNotifier = NotificationHub.Default.GetNotifier<ToggleNotificationKeys.ToggleUpdated>(this);
+            _updateNotifier = NotificationHub.Default.GetNotifier(this,
+                ID.FromType<ToggleNotificationKeys.ToggleUpdated>());
         }
 
         /// <summary>

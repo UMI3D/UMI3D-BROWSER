@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -51,9 +51,10 @@ namespace umi3d.browserRuntime.ui.toggle
 
             SetUpSliderComponents();
 
-            NotificationHub.Default.Subscribe<ToggleNotificationKeys.ToggleSet>(this, 
-                new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == _modelContainer.model), 
-                ToggleSet);
+            NotificationHub.Default.Subscribe(this,
+                ID.FromType<ToggleNotificationKeys.ToggleSet>(),
+                (Callback)ToggleSet,
+                new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == _modelContainer.model));
         }
 
         private void SetUpSliderComponents()

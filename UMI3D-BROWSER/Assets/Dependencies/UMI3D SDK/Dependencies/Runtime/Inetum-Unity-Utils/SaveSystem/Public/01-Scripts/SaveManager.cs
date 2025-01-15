@@ -74,6 +74,7 @@ namespace inetum.unityUtils.saveSystem
                     );
 #endif
                     break;
+
                 case SavingSystem.FileSystem:
                     hasSaved = FileManager.WriteToFile(
                         fileContents,
@@ -82,12 +83,14 @@ namespace inetum.unityUtils.saveSystem
                         out path
                     );
                     break;
+
                 case SavingSystem.PlayerPrefs:
                     path = directories + fileName;
                     hasSaved = PlayerPrefsManager.WriteToFile(path, fileContents);
                     break;
+
                 default:
-                    Debug.LogError($"Unknown saving system {savingSystem}");
+                    Debug.LogError($"[SaveManager.WriteToFile] Unhandled case: {savingSystem}");
                     path = null;
                     return false;
             }
@@ -96,16 +99,16 @@ namespace inetum.unityUtils.saveSystem
         }
 
         /// <summary>
-        /// Load the value associated with key <paramref name="fileName"/> into <paramref name="result"/>.
+        /// Load the value associated with key <paramref name="fileName"/> into <paramref name="content"/>.
         /// </summary>
         /// <param name="fileName"></param>
-        /// <param name="result"></param>
+        /// <param name="content"></param>
         /// <returns></returns>
         public static bool LoadFromFile(
             string directories,
             string fileName,
             out string path,
-            out string result, 
+            out string content, 
             SavingSystem savingSystem = SavingSystem.Default
         )
         {
@@ -121,7 +124,7 @@ namespace inetum.unityUtils.saveSystem
                         directories,
                         fileName, 
                         out path,
-                        out result
+                        out content
                     );
 #endif
                     break;
@@ -131,19 +134,19 @@ namespace inetum.unityUtils.saveSystem
                         directories,
                         fileName,
                         out path,
-                        out result
+                        out content
                     );
                     break;
 
                 case SavingSystem.PlayerPrefs:
                     path = directories + fileName;
-                    hasLoaded = PlayerPrefsManager.LoadFromFile(path, out result);
+                    hasLoaded = PlayerPrefsManager.LoadFromFile(path, out content);
                     break;
 
                 default:
-                    Debug.LogError($"Unknown saving system {savingSystem}");
+                    Debug.LogError($"[SaveManager.LoadFromFile] Unhandled case: {savingSystem}");
                     path = null;
-                    result = "";
+                    content = "";
                     return false;
             }
 
@@ -162,16 +165,19 @@ namespace inetum.unityUtils.saveSystem
             {
                 case SavingSystem.Default:
 #if UNITY_ANDROID && !UNITY_EDITOR
-                    return PlayerPrefsManager.MoveFile(fileName, newFileName);
+                    return PlayerPrefsManager.Move(fileName, newFileName);
 #else
-                    //return FileManager.MoveFile(fileName, newFileName);
+                    //return FileManager.Move(fileName, newFileName);
 #endif
+
                 case SavingSystem.FileSystem:
-                    //return FileManager.MoveFile(fileName, newFileName);
+                //return FileManager.Move(fileName, newFileName);
+
                 case SavingSystem.PlayerPrefs:
                     return PlayerPrefsManager.Move(fileName, newFileName);
+
                 default:
-                    Debug.LogError($"Unknown saving system {savingSystem}");
+                    Debug.LogError($"[SaveManager.MoveFile] Unhandled case: {savingSystem}");
                     return false;
             }
         }
@@ -191,12 +197,15 @@ namespace inetum.unityUtils.saveSystem
 #else
                     return FileManager.Exists(fileName);
 #endif
+
                 case SavingSystem.FileSystem:
                     return FileManager.Exists(fileName);
+
                 case SavingSystem.PlayerPrefs:
                     return PlayerPrefsManager.Exists(fileName);
+
                 default:
-                    Debug.LogError($"Unknown saving system {savingSystem}");
+                    Debug.LogError($"[SaveManager.Exists] Unhandled case: {savingSystem}");
                     return false;
             }
         }

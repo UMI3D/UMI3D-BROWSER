@@ -18,22 +18,22 @@ using inetum.unityUtils.observation;
 using TMPro;
 using UnityEngine;
 
-namespace umi3d.browserRuntime.ui.inputField
+namespace umi3d.browserRuntime.ui.toggle
 {
     [RequireComponent(typeof(TMP_Text))]
-    public class InputFieldLabelView : MonoBehaviour
+    public class ToggleLabelView : MonoBehaviour
     {
         TMP_Text _text;
 
-        InputFieldModelContainer _modelContainer;
+        ToggleModelContainer _modelContainer;
 
         private void Awake()
         {
             _text = GetComponent<TMP_Text>();
-            _modelContainer = GetComponentInParent<InputFieldModelContainer>();
+            _modelContainer = GetComponentInParent<ToggleModelContainer>();
 
             NotificationHub.Default.Subscribe(this,
-                ID.FromType<InputFieldNotificationsKeys.InputFieldSet>(), 
+                ID.FromType<ToggleNotificationKeys.ToggleSet>(), 
                 (Callback)TitleSet,
                 new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == _modelContainer.model));
         }
@@ -45,14 +45,14 @@ namespace umi3d.browserRuntime.ui.inputField
 
         private void TitleSet(Notification notification)
         {
-            if (notification.TryGetInfoT(InputFieldNotificationsKeys.InputFieldSet.IsLabelVisible, out bool isActive))
+            if (notification.TryGetInfoT(ToggleNotificationKeys.ToggleSet.IsLabelVisible, out bool isActive))
             {
                 gameObject.SetActive(isActive);
                 if (!isActive)
                     return;
             }
 
-            if (notification.TryGetInfoT(InputFieldNotificationsKeys.InputFieldSet.Label, out string newTitle))
+            if (notification.TryGetInfoT(ToggleNotificationKeys.ToggleSet.Label, out string newTitle))
             {
                 _text.text = newTitle;
             }

@@ -22,17 +22,22 @@ using UnityEngine;
 namespace umi3d.browserRuntime.ui.contextualMenu
 {
     [RequireComponent(typeof(ContextualMenuInputFieldFactory))]
+    [RequireComponent(typeof(ContextualMenuToggleFactory))]
     public class ContextualMenuFactory : MonoBehaviour
     {
         [SerializeField] Transform _content;
 
         ContextualMenuInputFieldFactory _inputFieldFactory;
+        ContextualMenuToggleFactory _toggleFactory;
         List<GameObject> _inputFields;
+        List<GameObject> _toggles;
 
         private void Awake()
         {
             _inputFieldFactory = GetComponent<ContextualMenuInputFieldFactory>();
+            _toggleFactory = GetComponent<ContextualMenuToggleFactory>();
             _inputFields = new List<GameObject>();
+            _toggles = new List<GameObject>();
 
             NotificationHub.Default.Subscribe(this,
                 ID.FromType<ContextualMenuNotificationKeys.AddParameter>(), 
@@ -60,6 +65,11 @@ namespace umi3d.browserRuntime.ui.contextualMenu
                     _inputFields.Add(_inputFieldFactory.GetOrCreate(_content, stringParameter));
                     break;
                 }
+                case BooleanParameterDto booleanParameter:
+                {
+                    _toggles.Add(_toggleFactory.GetOrCreate(_content, booleanParameter));
+                    break;
+                }
             }
         }
 
@@ -67,6 +77,8 @@ namespace umi3d.browserRuntime.ui.contextualMenu
         {
             foreach (var inputField in _inputFields)
                 _inputFieldFactory.Return(inputField);
+            foreach (var toggle in _toggles)
+                _toggleFactory.Return(toggle);
         }
     }
 }

@@ -14,32 +14,28 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace umi3d
+namespace umi3d.browserRuntime.ui.dropdown
 {
+    /// <summary>
+    /// Container of an <see cref="DropdownParameterModel"/>. 
+    /// Used with an <see cref="DropdownModelContainer"/>.
+    /// </summary>
+    [RequireComponent(typeof(DropdownModelContainer))]
+
     public class DropdownParameterModelContainer : MonoBehaviour
     {
-        void Awake()
+        public DropdownParameterModel parameterModel;
+
+        DropdownModelContainer _modelContainer;
+
+        private void Awake()
         {
+            _modelContainer = GetComponent<DropdownModelContainer>();
+
+            parameterModel = new DropdownParameterModel(_modelContainer.model);
         }
 
-        void OnEnable()
-        {
-        }
-
-        void OnDisable()
-        {
-        }
-
-        void OnDestroy()
-        {
-        }
-
-        void Update()
-        {
-        }
     }
 }

@@ -56,7 +56,7 @@ namespace umi3d.browserRuntime.ui.dropdown
 
             if (!string.IsNullOrEmpty(label))
                 dropdownModelContainer.model.SetLabel(label);
-            dropdownModelContainer.model.SetOptions(options);
+            dropdownModelContainer.model.SetOptions(options ?? new List<string>());
             dropdownModelContainer.model.SetValue(value);
 
             return dropdownModelContainer.gameObject;

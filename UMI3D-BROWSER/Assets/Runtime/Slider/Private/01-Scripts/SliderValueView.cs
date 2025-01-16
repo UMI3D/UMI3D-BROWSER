@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using TMPro;
 using umi3d.browserRuntime.ui.slider;
 using UnityEngine;
@@ -33,8 +33,14 @@ namespace umi3d
             _text = GetComponent<TMP_Text>();
             _modelContainer = GetComponentInParent<SliderModelContainer>();
 
-            NotificationHub.Default.Subscribe<SliderNotifiactionKeys.SliderSet>(this, new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == _modelContainer.model), SliderSet);
-            NotificationHub.Default.Subscribe<SliderNotifiactionKeys.SliderUpdated>(this, new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == _modelContainer.model), SliderUpdated);
+            NotificationHub.Default.Subscribe(this,
+                ID.FromType<SliderNotifiactionKeys.SliderSet>(),
+                (Callback)SliderSet,
+                new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == _modelContainer.model));
+            NotificationHub.Default.Subscribe(this,
+                ID.FromType<SliderNotifiactionKeys.SliderUpdated>(),
+                (Callback)SliderUpdated,
+                new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == _modelContainer.model));
         }
 
         private void OnDestroy()

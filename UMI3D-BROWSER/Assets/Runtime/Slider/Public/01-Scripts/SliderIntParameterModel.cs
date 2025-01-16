@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using umi3d.cdk;
 using umi3d.common.interaction;
 
@@ -30,7 +31,10 @@ namespace umi3d.browserRuntime.ui.slider
         {
             model = newModel;
 
-            NotificationHub.Default.Subscribe<SliderNotifiactionKeys.SliderUpdated>(this, new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == model), ValueUpdated);
+            NotificationHub.Default.Subscribe(this,
+                ID.FromType<SliderNotifiactionKeys.SliderUpdated>(), 
+                (Callback)ValueUpdated,
+                new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == model));
         }
 
         ~SliderIntParameterModel()

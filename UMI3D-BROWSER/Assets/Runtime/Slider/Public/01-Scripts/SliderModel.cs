@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.slider
@@ -33,7 +33,8 @@ namespace umi3d.browserRuntime.ui.slider
 
         public SliderModel()
         {
-            _setNotifier = NotificationHub.Default.GetNotifier<SliderNotifiactionKeys.SliderSet>(this);
+            _setNotifier = NotificationHub.Default.GetNotifier(this,
+                ID.FromType<SliderNotifiactionKeys.SliderSet>());
             _setNotifier[SliderNotifiactionKeys.SliderSet.IsLabelVisible] = isLabelVisible;
             _setNotifier[SliderNotifiactionKeys.SliderSet.Label] = label;
             _setNotifier[SliderNotifiactionKeys.SliderSet.Value] = value;
@@ -41,7 +42,8 @@ namespace umi3d.browserRuntime.ui.slider
             _setNotifier[SliderNotifiactionKeys.SliderSet.MinValue] = minValue;
             _setNotifier[SliderNotifiactionKeys.SliderSet.IsInteger] = isInteger;
 
-            _updateNotifier = NotificationHub.Default.GetNotifier<SliderNotifiactionKeys.SliderUpdated>(this);
+            _updateNotifier = NotificationHub.Default.GetNotifier(this,
+                ID.FromType<SliderNotifiactionKeys.SliderUpdated>());
         }
 
         /// <summary>

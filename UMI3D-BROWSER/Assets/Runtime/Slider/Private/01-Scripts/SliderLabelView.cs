@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using TMPro;
 using UnityEngine;
 
@@ -32,7 +32,10 @@ namespace umi3d.browserRuntime.ui.slider
             _text = GetComponent<TMP_Text>();
             _modelContainer = GetComponentInParent<SliderModelContainer>();
 
-            NotificationHub.Default.Subscribe<SliderNotifiactionKeys.SliderSet>(this, new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == _modelContainer.model), TitleSet);
+            NotificationHub.Default.Subscribe(this,
+                ID.FromType<SliderNotifiactionKeys.SliderSet>(),
+                (Callback)TitleSet,
+                new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == _modelContainer.model));
         }
 
         private void OnDestroy()
@@ -42,14 +45,14 @@ namespace umi3d.browserRuntime.ui.slider
 
         private void TitleSet(Notification notification)
         {
-            if (!notification.TryGetInfoT(SliderNotifiactionKeys.SliderSet.IsLabelVisible, out bool isActive))
+            if (notification.TryGetInfoT(SliderNotifiactionKeys.SliderSet.IsLabelVisible, out bool isActive))
             {
                 gameObject.SetActive(isActive);
                 if (!isActive)
                     return;
             }
 
-            if (!notification.TryGetInfoT(SliderNotifiactionKeys.SliderSet.Label, out string newTitle))
+            if (notification.TryGetInfoT(SliderNotifiactionKeys.SliderSet.Label, out string newTitle))
             {
                 _text.text = newTitle;
             }

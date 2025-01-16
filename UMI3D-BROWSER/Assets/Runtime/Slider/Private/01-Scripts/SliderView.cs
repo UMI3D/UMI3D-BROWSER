@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using System;
 using UnityEngine;
 using UnityEngine.UI;
@@ -35,7 +36,10 @@ namespace umi3d.browserRuntime.ui.slider
 
             _slider.onValueChanged.AddListener(OnValueChanged);
 
-            NotificationHub.Default.Subscribe<SliderNotifiactionKeys.SliderSet>(this, new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == _modelContainer.model), SliderSet);
+            NotificationHub.Default.Subscribe(this,
+                ID.FromType<SliderNotifiactionKeys.SliderSet>(),
+                (Callback)SliderSet,
+                new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == _modelContainer.model));
         }
 
         private void OnDestroy()

@@ -1,5 +1,5 @@
 /*
-Copyright 2019 - 2024 Inetum
+Copyright 2019 - 2025 Inetum
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ limitations under the License.
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Runtime.CompilerServices;
 
 namespace inetum.unityUtils.saveSystem
 {
@@ -47,19 +48,9 @@ namespace inetum.unityUtils.saveSystem
             readOnlyData = _data.AsReadOnly();
         }
 
-        public bool hasChanged { get; private set; } = false;
-        public IReadOnlyList<Model> readOnlyData;
-        List<Model> _data = new();
-
-        IContainerDelegate containerDelegate;
-
-        public ContainerScope scope { get; private set; } = ContainerScope.Persistent;
-        public string fileName {  get; private set; } = typeof(Model).Name;
-        public string directories { get; private set; } = null;
-
         public static void Init(
-            ContainerScope scope, 
-            string fileName = null, 
+            ContainerScope scope = ContainerScope.Persistent,
+            string fileName = null,
             string directories = null
         )
         {
@@ -123,6 +114,16 @@ namespace inetum.unityUtils.saveSystem
                 }
             }
         }
+
+        public bool hasChanged { get; private set; } = false;
+        public IReadOnlyList<Model> readOnlyData;
+        List<Model> _data = new();
+
+        IContainerDelegate containerDelegate;
+
+        public ContainerScope scope { get; private set; } = ContainerScope.Persistent;
+        public string fileName {  get; private set; } = typeof(Model).Name;
+        public string directories { get; private set; } = null;
 
         public bool Add(Model item)
         {

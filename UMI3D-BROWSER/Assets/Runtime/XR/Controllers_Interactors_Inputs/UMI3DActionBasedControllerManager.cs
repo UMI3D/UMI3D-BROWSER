@@ -14,9 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
-using System.Collections;
-using System.Collections.Generic;
+using inetum.unityUtils.observation;
 using umi3d.browserRuntime.NotificationKeys;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -107,8 +105,7 @@ namespace umi3d.browserRuntime.xr
             NotificationHub.Default.Subscribe(
                 this,
                 LocomotionNotificationKeys.System,
-                null,
-                EnableOrDisableNavigation
+                (Callback)EnableOrDisableNavigation
             );
 
             if (enableTeleportation)

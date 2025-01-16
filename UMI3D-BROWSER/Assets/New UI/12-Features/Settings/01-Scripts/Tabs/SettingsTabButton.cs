@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -48,19 +48,22 @@ namespace umi3d.browserRuntime.ui.settings
 
             content = transform.parent.GetChild(1).gameObject;
 
-            NotificationHub.Default.Subscribe<SettingsNotificationKeys.NewPanelSelected>(
+            NotificationHub.Default.Subscribe(
                 this,
-                new FilterByRef(FilterType.AcceptAllExcept, this),
-                Deactivate
+                ID.FromType<SettingsNotificationKeys.NewPanelSelected>(),
+                (Callback)Deactivate,
+                new FilterByRef(FilterType.AcceptAllExcept, this)
             );
 
-            notifier = NotificationHub.Default
-                .GetNotifier<SettingsNotificationKeys.NewPanelSelected>(this);
+            notifier = NotificationHub.Default.GetNotifier(
+                this,
+                ID.FromType<SettingsNotificationKeys.NewPanelSelected>()
+            );
         }
 
         void OnDestroy()
         {
-            NotificationHub.Default.Unsubscribe<SettingsNotificationKeys.NewPanelSelected>(this);
+            NotificationHub.Default.Unsubscribe(this);
         }
 
         public void OnPointerEnter(PointerEventData eventData)

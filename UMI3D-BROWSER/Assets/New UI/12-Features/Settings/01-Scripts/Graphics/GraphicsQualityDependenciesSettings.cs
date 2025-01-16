@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.settings
@@ -23,15 +23,16 @@ namespace umi3d.browserRuntime.ui.settings
     {
         void Awake()
         {
-            NotificationHub.Default.Subscribe<SettingsNotificationKeys.QualityChanged>(
+            NotificationHub.Default.Subscribe(
                 this,
-                QualityChanged
+                ID.FromType<SettingsNotificationKeys.QualityChanged>(),
+                (Callback)QualityChanged
             );
         }
 
         void OnDestroy()
         {
-            NotificationHub.Default.Unsubscribe<SettingsNotificationKeys.QualityChanged>(this);
+            NotificationHub.Default.Unsubscribe(this);
         }
 
         void QualityChanged(Notification notification)

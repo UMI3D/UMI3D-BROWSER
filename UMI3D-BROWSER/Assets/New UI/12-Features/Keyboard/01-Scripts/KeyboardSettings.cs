@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.keyboard
@@ -37,11 +37,15 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         void Awake()
         {
-            localisationVersionNotifier = NotificationHub.Default
-                .GetNotifier<KeyboardNotificationKeys.ChangeVersion>(this);
+            localisationVersionNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                ID.FromType<KeyboardNotificationKeys.ChangeVersion>()
+            );
 
-            animationSettingsNotifier = NotificationHub.Default
-                .GetNotifier<KeyboardNotificationKeys.AnimationSettings>(this);
+            animationSettingsNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                ID.FromType<KeyboardNotificationKeys.AnimationSettings>()
+            );
         }
 
         void Start()

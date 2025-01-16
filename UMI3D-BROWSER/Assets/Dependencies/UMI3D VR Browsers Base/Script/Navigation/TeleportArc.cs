@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using System.Collections;
 using System.Collections.Generic;
 using umi3d.browserRuntime.NotificationKeys;
@@ -99,14 +99,13 @@ namespace umi3dVRBrowsersBase.navigation
             NotificationHub.Default.Subscribe(
                 this,
                 LocomotionNotificationKeys.Teleportation,
-                null,
-                Teleport
+                (Callback)Teleport
             );
         }
 
         void OnDisable()
         {
-            NotificationHub.Default.Unsubscribe(LocomotionNotificationKeys.Teleportation);
+            NotificationHub.Default.Unsubscribe(this);
         }
 
         void Teleport(Notification notification)

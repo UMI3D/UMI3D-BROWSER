@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using umi3d.browserRuntime.ui.popup;
 using umi3dBrowsers.linker;
 using UnityEngine;

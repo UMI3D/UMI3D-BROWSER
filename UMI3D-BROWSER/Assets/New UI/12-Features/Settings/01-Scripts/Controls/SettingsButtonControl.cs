@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -37,7 +37,7 @@ namespace umi3d.browserRuntime.ui.settings
             NotificationHub.Default.Subscribe(
                 this,
                 SettingsNotificationKeys.UpdateChildVisibilitySelected + instanceID,
-                SetColor
+                (Callback)SetColor
             );
 
             SetColor();

@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -34,7 +34,11 @@ namespace umi3d.browserRuntime.ui.inGame.tablet.userNotification
             button = GetComponent<Button>();
             button.onClick.AddListener(OpenUserNotification);
 
-            NotificationHub.Default.Subscribe(this, TabletNotificationKeys.UserNotificationReceived, NewNotifReceived);
+            NotificationHub.Default.Subscribe(
+                this, 
+                TabletNotificationKeys.UserNotificationReceived, 
+                (Callback)NewNotifReceived
+            );
         }
 
         private void OnDestroy()

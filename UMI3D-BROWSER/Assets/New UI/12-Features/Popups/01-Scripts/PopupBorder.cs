@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -28,17 +28,16 @@ namespace umi3d.browserRuntime.ui.popup
         {
             image = GetComponent<Image>();
 
-            NotificationHub.Default
-               .Subscribe<PopupNotificationKeys.DisplayPopup>(
+            NotificationHub.Default.Subscribe(
                this,
-               NewPopup
+               ID.FromType<PopupNotificationKeys.DisplayPopup>(),
+               (Callback)NewPopup
            );
         }
 
         void OnDestroy()
         {
-            NotificationHub.Default
-              .Unsubscribe<PopupNotificationKeys.DisplayPopup>(this);
+            NotificationHub.Default.Unsubscribe(this);
         }
 
         void NewPopup(Notification notification)

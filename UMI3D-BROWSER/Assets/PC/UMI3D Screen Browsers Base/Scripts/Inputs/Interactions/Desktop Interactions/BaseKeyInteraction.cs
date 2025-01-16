@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using System.Collections.Generic;
 using System.Linq;
 using umi3d.baseBrowser.cursor;
@@ -21,7 +21,6 @@ using umi3d.browserRuntime.inputs;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
 using static umi3d.baseBrowser.inputs.interactions.BaseKeyInteraction;
-using static umi3d.browserRuntime.inputs.InputNotificationKeys;
 
 namespace umi3d.baseBrowser.inputs.interactions
 {
@@ -51,14 +50,16 @@ namespace umi3d.baseBrowser.inputs.interactions
         {
             base.Awake();
 
-            NotificationHub.Default.Subscribe<InputNotificationKeys.TextEditionStart>(
+            NotificationHub.Default.Subscribe(
                 this,
-                TextEditionStart
+                ID.FromType<InputNotificationKeys.TextEditionStart>(),
+                (Callback)TextEditionStart
             );
 
-            NotificationHub.Default.Subscribe<InputNotificationKeys.TextEditionStop>(
+            NotificationHub.Default.Subscribe(
                 this,
-                TextEditionStop
+                ID.FromType<InputNotificationKeys.TextEditionStop>(),
+                (Callback)TextEditionStop
             );
         }
 

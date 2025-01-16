@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using System;
 using System.Collections;
 using System.Text.RegularExpressions;
@@ -129,7 +129,19 @@ namespace BrowserDesktop
 
             StartCoroutine(SynchronizationCoroutine());
 
+            StartCoroutine(CheckIfCorrectlyStarted());
+
             IsSynchronizing = false;
+        }
+
+        private IEnumerator CheckIfCorrectlyStarted()
+        {
+            var wait = new WaitForSeconds((browser.browserClient.engineStartupTimeout/1000f) + 4f);
+
+            yield return wait;
+
+            if (!browser.browserClient.ReadySignalReceived)
+                NotifyErrorOnStartUp();
         }
 
         /// <summary>
@@ -363,16 +375,20 @@ namespace BrowserDesktop
         {
             IsWebViewFocused = true;
 
-            NotificationHub.Default
-                .Notify<InputNotificationKeys.TextEditionStart>(this);
+            NotificationHub.Default.Notify(
+                this,
+                ID.FromType<InputNotificationKeys.TextEditionStart>()
+            );
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
             IsWebViewFocused = false;
 
-            NotificationHub.Default
-               .Notify<InputNotificationKeys.TextEditionStop>(this);
+            NotificationHub.Default.Notify(
+                this,
+                ID.FromType<InputNotificationKeys.TextEditionStop>()
+            );
         }
 
         public void SetWorldSpace()

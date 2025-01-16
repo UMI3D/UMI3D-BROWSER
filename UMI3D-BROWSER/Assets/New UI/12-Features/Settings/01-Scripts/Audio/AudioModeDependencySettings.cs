@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using umi3d.cdk.collaboration;
 using UnityEngine;
 
@@ -29,15 +29,16 @@ namespace umi3d.browserRuntime.ui.settings
         {
             instanceID = GetComponentInParent<SettingsContent>().GetInstanceID();
 
-            NotificationHub.Default.Subscribe<SettingsNotificationKeys.MicrophoneModeChanged>(
+            NotificationHub.Default.Subscribe(
                 this,
-                ModeChanged
+                ID.FromType<SettingsNotificationKeys.MicrophoneModeChanged>(),
+                (Callback)ModeChanged
             );
         }
 
         void OnDestroy()
         {
-            NotificationHub.Default.Unsubscribe<SettingsNotificationKeys.MicrophoneModeChanged>(this);
+            NotificationHub.Default.Unsubscribe(this);
         }
 
         void ModeChanged(Notification notification)

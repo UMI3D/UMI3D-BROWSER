@@ -14,8 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
-using System;
+using inetum.unityUtils.observation;
 using System.Collections.Generic;
 using umi3d.cdk.collaboration.emotes;
 using UnityEngine;
@@ -60,9 +59,21 @@ namespace umi3d.browserRuntime.ui.inGame.emote
             EmoteManager.Instance.EmotesLoaded += Setup;
             EmoteManager.Instance.EmoteEnded += CloseEmoteMenu;
 
-            NotificationHub.Default.Subscribe(this, EmoteNotificationKeys.Open, Open);
-            NotificationHub.Default.Subscribe(this, EmoteNotificationKeys.Close, Close);
-            NotificationHub.Default.Subscribe<EmoteNotificationKeys.Play>(this, PlayEmote);
+            NotificationHub.Default.Subscribe(
+                this, 
+                EmoteNotificationKeys.Open,
+                (Callback)Open
+            );
+            NotificationHub.Default.Subscribe(
+                this, 
+                EmoteNotificationKeys.Close,
+                (Callback)Close
+            );
+            NotificationHub.Default.Subscribe(
+                this, 
+                ID.FromType<EmoteNotificationKeys.Play>(),
+                (Callback)PlayEmote
+            );
 
             gameObject.SetActive(false);
         }

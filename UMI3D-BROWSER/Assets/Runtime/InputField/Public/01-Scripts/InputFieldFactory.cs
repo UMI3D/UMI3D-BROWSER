@@ -63,6 +63,9 @@ namespace umi3d.browserRuntime.ui.inputField
             if (!_lstInputFieldsAvailable.TryDequeue(out var inputFieldModelContainer))
                 inputFieldModelContainer = GameObject.Instantiate(isMultiline ? _multiLinePrefab : _singleLinePrefab);
 
+            inputFieldModelContainer.gameObject.SetActive(true);
+            inputFieldModelContainer.transform.SetParent(parent, false);
+
             if (label != null || label != string.Empty)
                 inputFieldModelContainer.model.SetLabel(label);
             if (value != null || value != string.Empty)
@@ -71,8 +74,6 @@ namespace umi3d.browserRuntime.ui.inputField
                 inputFieldModelContainer.model.SetPlaceholder(placeholder);
             if (nbLine != 1)
                 inputFieldModelContainer.model.SetNbrLines(isMultiline ? nbLine : 1);
-
-            inputFieldModelContainer.gameObject.SetActive(true);
 
             return inputFieldModelContainer.gameObject;
         }

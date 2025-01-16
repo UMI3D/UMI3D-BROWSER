@@ -14,10 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Profiling;
 using UnityEngine;
@@ -106,20 +105,19 @@ namespace com.inetum.unitygeckowebview
             NotificationHub.Default.Subscribe(
                 this,
                 GeckoWebViewNotificationKeys.Rendering,
-                RenderingProcess
+                (Callback)RenderingProcess
             );
 
-            NotificationHub.Default.Subscribe<GeckoWebViewNotificationKeys.TextureSizeChanged>(
+            NotificationHub.Default.Subscribe(
                 this, 
-                TextureSizeChanged
+                ID.FromType<GeckoWebViewNotificationKeys.TextureSizeChanged>(),
+                (Callback)TextureSizeChanged
             );
         }
 
         void OnDisable()
         {
-            NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.Rendering);
-
-            NotificationHub.Default.Unsubscribe<GeckoWebViewNotificationKeys.TextureSizeChanged>(this);
+            NotificationHub.Default.Unsubscribe(this);
         }
 
         void OnDestroy()

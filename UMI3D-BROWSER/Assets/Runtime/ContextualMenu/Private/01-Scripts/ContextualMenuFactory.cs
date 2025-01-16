@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using System.Collections.Generic;
 using umi3d.common.interaction;
 using UnityEngine;
@@ -22,6 +22,7 @@ using UnityEngine;
 namespace umi3d.browserRuntime.ui.contextualMenu
 {
     [RequireComponent(typeof(ContextualMenuInputFieldFactory))]
+    [RequireComponent(typeof(ContextualMenuToggleFactory))]
     [RequireComponent(typeof(ContextualMenuSliderFactory))]
     public class ContextualMenuFactory : MonoBehaviour
     {
@@ -29,6 +30,8 @@ namespace umi3d.browserRuntime.ui.contextualMenu
 
         ContextualMenuInputFieldFactory _inputFieldFactory;
         List<GameObject> _inputFields;
+        ContextualMenuToggleFactory _toggleFactory;
+        List<GameObject> _toggles;
         ContextualMenuSliderFactory _sliderFactory;
         List<GameObject> _sliders;
 
@@ -36,11 +39,17 @@ namespace umi3d.browserRuntime.ui.contextualMenu
         {
             _inputFieldFactory = GetComponent<ContextualMenuInputFieldFactory>();
             _inputFields = new List<GameObject>();
+            _toggleFactory = GetComponent<ContextualMenuToggleFactory>();
+            _toggles = new List<GameObject>();
             _sliderFactory = GetComponent<ContextualMenuSliderFactory>();
             _sliders = new List<GameObject>();
 
-            NotificationHub.Default.Subscribe<ContextualMenuNotificationKeys.AddParameter>(this, AddParameter);
-            NotificationHub.Default.Subscribe<ContextualMenuNotificationKeys.Close>(this, Clean);
+            NotificationHub.Default.Subscribe(this,
+                ID.FromType<ContextualMenuNotificationKeys.AddParameter>(), 
+                (Callback)AddParameter);
+            NotificationHub.Default.Subscribe(this,
+                ID.FromType<ContextualMenuNotificationKeys.Close>(), 
+                (Callback)Clean);
         }
 
         private void OnDestroy()
@@ -61,6 +70,11 @@ namespace umi3d.browserRuntime.ui.contextualMenu
                     _inputFields.Add(_inputFieldFactory.GetOrCreate(_content, stringParameter));
                     break;
                 }
+                case BooleanParameterDto booleanParameter:
+                {
+                    _toggles.Add(_toggleFactory.GetOrCreate(_content, booleanParameter));
+                    break;
+                }
                 case FloatRangeParameterDto floatRangeParameter:
                 {
                     _sliders.Add(_sliderFactory.GetOrCreate(_content, floatRangeParameter));
@@ -78,6 +92,8 @@ namespace umi3d.browserRuntime.ui.contextualMenu
         {
             foreach (var inputField in _inputFields)
                 _inputFieldFactory.Return(inputField);
+            foreach (var toggle in _toggles)
+                _toggleFactory.Return(toggle);
             foreach (var slider in _sliders)
                 _sliderFactory.Return(slider);
         }

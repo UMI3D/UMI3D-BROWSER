@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
+using inetum.unityUtils.observation;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.keyboard
@@ -25,10 +25,10 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         void Awake()
         {
-            NotificationHub.Default.Subscribe<KeyboardNotificationKeys.ChangeVersion>(
+            NotificationHub.Default.Subscribe(
                 this,
-                null,
-                VersionChanged
+                ID.FromType<KeyboardNotificationKeys.ChangeVersion>(),
+                (Callback)VersionChanged
             );
         }
 
@@ -50,8 +50,9 @@ namespace umi3d.browserRuntime.ui.keyboard
         {
             currentVersion = currentVersion == KeyboardLocalisationVersion.QWERTY ? KeyboardLocalisationVersion.AZERTY : KeyboardLocalisationVersion.QWERTY;
             UnityEngine.Debug.Log($"test switch version to {currentVersion}");
-            NotificationHub.Default.Notify<KeyboardNotificationKeys.ChangeVersion>(
+            NotificationHub.Default.Notify(
                 this,
+                ID.FromType<KeyboardNotificationKeys.ChangeVersion>(),
                 new()
                 {
                     { KeyboardNotificationKeys.ChangeVersion.Version, currentVersion }

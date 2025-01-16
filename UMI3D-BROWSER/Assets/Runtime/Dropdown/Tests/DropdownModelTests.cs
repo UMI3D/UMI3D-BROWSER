@@ -7,7 +7,7 @@ using UnityEngine.TestTools;
 
 public class DropdownModelTests
 {
-    public class SetLabel
+    public class SetLabelTests
     {
         DropdownModel dropdownModel;
 
@@ -51,7 +51,7 @@ public class DropdownModelTests
         }
     }
 
-    public class SetValue
+    public class SetValueTests
     {
         [Test]
         public void GivenDropdownModel_WhenSetValue_ThenValueIsUpdated()
@@ -68,7 +68,7 @@ public class DropdownModelTests
         }
     }
 
-    public class UpdateValue
+    public class UpdateValueTests
     {
         [Test]
         public void GivenDropdownModel_WhenUpdateValue_ThenValueIsUpdated()
@@ -85,7 +85,7 @@ public class DropdownModelTests
         }
     }
 
-    public class SetOptions
+    public class SetOptionsTests
     {
         [Test]
         public void GivenDropdownModel_WhenSetOptions_ThenOptionsIsUpdated()

@@ -9,7 +9,7 @@ using UnityEngine.TestTools;
 
 public class DropdownParameterModelTests
 {
-    public class SetDto
+    public class SetDtoTests
     {
         private DropdownParameterModel dropdownParameterModel;
         private EnumParameterDto<string> testDto;

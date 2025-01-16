@@ -23,21 +23,26 @@ namespace umi3d.browserRuntime.ui.contextualMenu
 {
     [RequireComponent(typeof(ContextualMenuInputFieldFactory))]
     [RequireComponent(typeof(ContextualMenuToggleFactory))]
+    [RequireComponent(typeof(ContextualMenuSliderFactory))]
     public class ContextualMenuFactory : MonoBehaviour
     {
         [SerializeField] Transform _content;
 
         ContextualMenuInputFieldFactory _inputFieldFactory;
-        ContextualMenuToggleFactory _toggleFactory;
         List<GameObject> _inputFields;
+        ContextualMenuToggleFactory _toggleFactory;
         List<GameObject> _toggles;
+        ContextualMenuSliderFactory _sliderFactory;
+        List<GameObject> _sliders;
 
         private void Awake()
         {
             _inputFieldFactory = GetComponent<ContextualMenuInputFieldFactory>();
-            _toggleFactory = GetComponent<ContextualMenuToggleFactory>();
             _inputFields = new List<GameObject>();
+            _toggleFactory = GetComponent<ContextualMenuToggleFactory>();
             _toggles = new List<GameObject>();
+            _sliderFactory = GetComponent<ContextualMenuSliderFactory>();
+            _sliders = new List<GameObject>();
 
             NotificationHub.Default.Subscribe(this,
                 ID.FromType<ContextualMenuNotificationKeys.AddParameter>(), 
@@ -70,6 +75,16 @@ namespace umi3d.browserRuntime.ui.contextualMenu
                     _toggles.Add(_toggleFactory.GetOrCreate(_content, booleanParameter));
                     break;
                 }
+                case FloatRangeParameterDto floatRangeParameter:
+                {
+                    _sliders.Add(_sliderFactory.GetOrCreate(_content, floatRangeParameter));
+                    break;
+                }
+                case IntegerRangeParameterDto intRangeParameter:
+                {
+                    _sliders.Add(_sliderFactory.GetOrCreate(_content, intRangeParameter));
+                    break;
+                }
             }
         }
 
@@ -79,6 +94,8 @@ namespace umi3d.browserRuntime.ui.contextualMenu
                 _inputFieldFactory.Return(inputField);
             foreach (var toggle in _toggles)
                 _toggleFactory.Return(toggle);
+            foreach (var slider in _sliders)
+                _sliderFactory.Return(slider);
         }
     }
 }

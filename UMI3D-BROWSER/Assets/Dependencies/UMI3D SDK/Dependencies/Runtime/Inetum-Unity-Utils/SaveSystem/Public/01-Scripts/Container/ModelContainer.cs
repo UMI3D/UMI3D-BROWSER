@@ -16,11 +16,12 @@ limitations under the License.
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
-using System.Runtime.CompilerServices;
 
 namespace inetum.unityUtils.saveSystem
 {
+
     public class ModelContainer<Model>
         where Model : class, IModel<Model>
     {
@@ -42,7 +43,7 @@ namespace inetum.unityUtils.saveSystem
         /// <summary>
         /// A thread safe lazy initialisation of a model container.
         /// </summary>
-        static readonly Lazy<ModelContainer<Model>> _instance = new(() => new());
+        static Lazy<ModelContainer<Model>> _instance = new(() => new());
         ModelContainer() 
         {
             readOnlyData = _data.AsReadOnly();
@@ -58,7 +59,7 @@ namespace inetum.unityUtils.saveSystem
             {
                 if (hasBeenInitialized)
                 {
-                    UnityEngine.Debug.LogError($"[ModelContainer.Init] Error: container already initialized for type : {typeof(Model).FullName}");
+                    UnityEngine.Debug.LogError($"[ModelContainer.Init] Error: container already initialized for type : {typeof(Model).FullName}.");
                     return;
                 }
                 hasBeenInitialized = true;
@@ -115,14 +116,14 @@ namespace inetum.unityUtils.saveSystem
             }
         }
 
-        public bool hasChanged { get; private set; } = false;
+        public bool hasChanged { get; internal set; } = false;
         public IReadOnlyList<Model> readOnlyData;
         List<Model> _data = new();
 
-        IContainerDelegate containerDelegate;
+        internal IContainerDelegate containerDelegate;
 
         public ContainerScope scope { get; private set; } = ContainerScope.Persistent;
-        public string fileName {  get; private set; } = typeof(Model).Name;
+        public string fileName {  get; private set; } = $"{typeof(Model).Name}.save";
         public string directories { get; private set; } = null;
 
         public bool Add(Model item)
@@ -154,19 +155,16 @@ namespace inetum.unityUtils.saveSystem
             }
         }
 
-        public bool Exists()
-        {
-            return containerDelegate.Exists(directories, fileName);
-        }
-
         public bool LoadFromFile()
         {
+            bool exist = containerDelegate.Exists(directories, fileName);
+            if (!exist) { return false; }
+
             bool hasLoadedJson = containerDelegate.LoadJson(
                 directories, 
                 fileName,
                 out string json
             );
-
             if (!hasLoadedJson) { return false; }
 
             try
@@ -211,6 +209,13 @@ namespace inetum.unityUtils.saveSystem
                 directories, 
                 fileName
             );
+        }
+
+        [Conditional("UNITY_EDITOR")]
+        public static void Rest()
+        {
+            _instance = new(() => new());
+            hasBeenInitialized = false;
         }
     }
 }

@@ -29,12 +29,29 @@ namespace inetum.unityUtils.saveSystem
             return FileManager.Exists(filePath);
         }
 
-        public bool LoadJson(string directories, string fileName, out string content)
+        public bool Delete(
+            string directories, 
+            string fileName
+        )
+        {
+            string filePath = Path.Combine(directories, fileName);
+            return FileManager.Delete(filePath);
+        }
+
+        public bool LoadJson(
+            string directories, 
+            string fileName, 
+            out string content
+        )
         {
             return FileManager.LoadFromFile(directories, fileName, out _, out content);
         }
 
-        public bool WriteToJson(string content, string directories, string fileName)
+        public bool WriteToJson(
+            string content, 
+            string directories, 
+            string fileName
+        )
         {
             return FileManager.WriteToFile(content, directories, fileName, out _);
         }

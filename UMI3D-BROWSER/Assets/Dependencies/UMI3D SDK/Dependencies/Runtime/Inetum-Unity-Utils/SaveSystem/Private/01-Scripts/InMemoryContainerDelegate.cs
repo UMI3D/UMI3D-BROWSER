@@ -27,7 +27,10 @@ namespace inetum.unityUtils.saveSystem
             this.loadPersistentData = loadPersistentData;
         }
 
-        public bool Exists(string directories, string fileName)
+        public bool Exists(
+            string directories, 
+            string fileName
+        )
         {
             if (loadPersistentData)
             {
@@ -37,7 +40,19 @@ namespace inetum.unityUtils.saveSystem
             return true;
         }
 
-        public bool LoadJson(string directories, string fileName, out string content)
+        public bool Delete(
+            string directories,
+            string fileName
+        )
+        {
+            return true;
+        }
+
+        public bool LoadJson(
+            string directories, 
+            string fileName, 
+            out string content
+        )
         {
             if (loadPersistentData)
             {
@@ -48,7 +63,11 @@ namespace inetum.unityUtils.saveSystem
             return true;
         }
 
-        public bool WriteToJson(string content, string directories, string fileName)
+        public bool WriteToJson(
+            string content, 
+            string directories, 
+            string fileName
+        )
         {
             return true;
         }

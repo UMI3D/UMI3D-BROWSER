@@ -26,6 +26,12 @@ namespace inetum.unityUtils.saveSystem
             return PlayerPrefsManager.Exists(filePath);
         }
 
+        public bool Delete(string directories, string fileName)
+        {
+            string filePath = Path.Combine(directories, fileName);
+            return PlayerPrefsManager.Delete(filePath);
+        }
+
         public bool LoadJson(string directories, string fileName, out string content)
         {
             string filePath = Path.Combine(directories, fileName);

@@ -34,5 +34,10 @@ namespace inetum.unityUtils.saveSystem
             string directories,
             string fileName
         );
+
+        bool Delete(
+            string directories,
+            string fileName
+        );
     }
 }

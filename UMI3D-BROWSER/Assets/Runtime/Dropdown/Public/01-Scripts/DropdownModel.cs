@@ -22,7 +22,6 @@ namespace umi3d.browserRuntime.ui.dropdown
     /// <summary>
     /// Model of a dropdown element
     /// </summary>
-
     public class DropdownModel
     {
         public bool isLabelVisible { get; private set; } = false;

@@ -24,6 +24,7 @@ namespace umi3d.browserRuntime.ui.contextualMenu
     [RequireComponent(typeof(ContextualMenuInputFieldFactory))]
     [RequireComponent(typeof(ContextualMenuToggleFactory))]
     [RequireComponent(typeof(ContextualMenuSliderFactory))]
+    [RequireComponent(typeof(ContextualMenuDropdownFactory))]
     public class ContextualMenuFactory : MonoBehaviour
     {
         [SerializeField] Transform _content;
@@ -34,6 +35,8 @@ namespace umi3d.browserRuntime.ui.contextualMenu
         List<GameObject> _toggles;
         ContextualMenuSliderFactory _sliderFactory;
         List<GameObject> _sliders;
+        ContextualMenuDropdownFactory _dropdownFactory;
+        List<GameObject> _dropdowns;
 
         private void Awake()
         {
@@ -43,6 +46,8 @@ namespace umi3d.browserRuntime.ui.contextualMenu
             _toggles = new List<GameObject>();
             _sliderFactory = GetComponent<ContextualMenuSliderFactory>();
             _sliders = new List<GameObject>();
+            _dropdownFactory = GetComponent<ContextualMenuDropdownFactory>();
+            _dropdowns = new List<GameObject>();
 
             NotificationHub.Default.Subscribe(this,
                 ID.FromType<ContextualMenuNotificationKeys.AddParameter>(), 
@@ -56,7 +61,6 @@ namespace umi3d.browserRuntime.ui.contextualMenu
         {
             NotificationHub.Default.Unsubscribe(this);
         }
-
 
         public void AddParameter(Notification notification)
         {
@@ -85,6 +89,11 @@ namespace umi3d.browserRuntime.ui.contextualMenu
                     _sliders.Add(_sliderFactory.GetOrCreate(_content, intRangeParameter));
                     break;
                 }
+                case EnumParameterDto<string> stringEnumParameter:
+                {
+                    _dropdowns.Add(_dropdownFactory.GetOrCreate(_content, stringEnumParameter));
+                    break;
+                }
             }
         }
 
@@ -96,6 +105,8 @@ namespace umi3d.browserRuntime.ui.contextualMenu
                 _toggleFactory.Return(toggle);
             foreach (var slider in _sliders)
                 _sliderFactory.Return(slider);
+            foreach (var dropdown in _dropdowns)
+                _dropdownFactory.Return(dropdown);
         }
     }
 }

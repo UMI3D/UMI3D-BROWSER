@@ -198,8 +198,8 @@ MonoBehaviour:
           m_BoolArgument: 1
         m_CallState: 2
       - m_Target: {fileID: 2255530990686773851}
-        m_TargetAssemblyTypeName: umi3dVRBrowsersBase.ui.watchMenu.WatchMenu, Assembly-CSharp
-        m_MethodName: Open
+        m_TargetAssemblyTypeName: umi3dBrowsers.player.WatchMenu, Assembly-CSharp
+        m_MethodName: ToggleDisplayEmote
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1470,8 +1470,8 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 2255530990686773851}
-        m_TargetAssemblyTypeName: umi3dVRBrowsersBase.ui.watchMenu.WatchMenu, Assembly-CSharp
-        m_MethodName: Close
+        m_TargetAssemblyTypeName: umi3dBrowsers.player.WatchMenu, Assembly-CSharp
+        m_MethodName: ToggleDisplayEmote
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

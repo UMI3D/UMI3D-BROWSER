@@ -102,20 +102,27 @@ namespace umi3dBrowsers.player
 
         #endregion
 
-        #region Methods
 
         #region Monobehavior's callback
 
         private void Awake()
         {
             instances.Add(this);
+            settingsMenuRoot.SetActive(false);
         }
 
         private void Start()
         {
-            settingsMenuRoot.SetActive(false);
 
-            BindSettingButtons();
+            EnvironmentSettings.Instance.micSetting.OnValueChanged.AddListener(MicBtn.Toggle);
+            EnvironmentSettings.Instance.audioSetting.OnValueChanged.AddListener(SoundBtn.Toggle);
+            SetMicStatus(false);
+
+            EmoteMenu.EmoteButtonStatusChanged += value =>
+            {
+                EmoteBtn.Toggle(value);
+                IsOpen = value;
+            };
 
             playerCamera = PlayerMenuManager.Instance.PlayerCameraTransform;
         }
@@ -128,29 +135,7 @@ namespace umi3dBrowsers.player
 
         #endregion
 
-        /// <summary>
-        /// Binds all setting buttons to their actions.
-        /// </summary>
-        private void BindSettingButtons()
-        {
-            EnvironmentSettings.Instance.micSetting.OnValueChanged.AddListener(MicBtn.Toggle);
-            EnvironmentSettings.Instance.audioSetting.OnValueChanged.AddListener(SoundBtn.Toggle);
-
-            EmoteMenu.EmoteButtonStatusChanged += value =>
-            {
-                EmoteBtn.Toggle(value);
-                IsOpen = value;
-            };
-
-            SetMicStatus(false);
-        }
-
-        #region Abstract Menu Manager
-
-        /// <summary>
-        /// Toggles the display of the menu with all pinned items.
-        /// </summary>
-        public void ToggleDisplayPinMenu()
+        public void ToggleDisplayEmote()
         {
             if (IsOpen)
             {
@@ -162,18 +147,20 @@ namespace umi3dBrowsers.player
             }
         }
 
-        #endregion
-
         #region Setting Menu
 
         private bool isSettingsMenuOpened = false;
-
         /// <summary>
-        /// Opens the menu to change environment settings.
+        /// Toggles the display of the menu to change environment settings.
         /// </summary>
-        public void OpenSettingsMenu()
+        public void ToggleSettingsMenuDisplay()
         {
-            if (!isSettingsMenuOpened)
+            if (isSettingsMenuOpened)
+            {
+                isSettingsMenuOpened = false;
+                settingsMenuRoot.SetActive(false);
+            }
+            else
             {
                 isSettingsMenuOpened = true;
                 settingsMenuRoot.SetActive(true);
@@ -181,26 +168,21 @@ namespace umi3dBrowsers.player
         }
 
         /// <summary>
-        /// Closes the menu to change environment settings.
+        /// Asks to change the microphone status.
         /// </summary>
-        public void CloseSettingsMenu()
+        /// <param name="val"></param>
+        public void SetMicStatus(bool val)
         {
-            if (isSettingsMenuOpened)
-            {
-                isSettingsMenuOpened = false;
-                settingsMenuRoot.SetActive(false);
-            }
+            EnvironmentSettings.Instance.micSetting.SetValue(val);
         }
 
         /// <summary>
-        /// Toggles the display of the menu to change environment settings.
+        /// Asks the sound activation/deactivation.
         /// </summary>
-        public void ToggleSettingsMenuDisplay()
+        /// <param name="val"></param>
+        public void SetSoundStatus(bool val)
         {
-            if (isSettingsMenuOpened)
-                CloseSettingsMenu();
-            else
-                OpenSettingsMenu();
+            EnvironmentSettings.Instance.audioSetting.SetValue(val);
         }
 
         /// <summary>
@@ -227,24 +209,6 @@ namespace umi3dBrowsers.player
             dialogBox.Display(title, "Are you sure you want to leave ?", "Yes", leaveCallback);
         }
 
-        /// <summary>
-        /// Asks to change the microphone status.
-        /// </summary>
-        /// <param name="val"></param>
-        public void SetMicStatus(bool val)
-        {
-            EnvironmentSettings.Instance.micSetting.SetValue(val);
-        }
-
-        /// <summary>
-        /// Asks the sound activation/deactivation.
-        /// </summary>
-        /// <param name="val"></param>
-        public void SetSoundStatus(bool val)
-        {
-            EnvironmentSettings.Instance.audioSetting.SetValue(val);
-        }
-
         #endregion
 
         /// <summary>
@@ -263,7 +227,5 @@ namespace umi3dBrowsers.player
             else
                 return false;
         }
-
-        #endregion
     }
 }

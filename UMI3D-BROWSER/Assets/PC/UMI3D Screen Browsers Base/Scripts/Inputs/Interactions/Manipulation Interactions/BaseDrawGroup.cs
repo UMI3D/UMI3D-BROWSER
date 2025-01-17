@@ -62,6 +62,8 @@ namespace umi3d.baseBrowser.inputs.interactions
         public float LastUpdateTime { get => lastUpdateTime; set => lastUpdateTime = value; }
         public float TimeSynchronization { get => timeSynchronization; set => timeSynchronization = value; }
         public float MinDistance { get => minDistance; set => minDistance = value; }
+        public ulong DrawingID { get; set; } = 0;
+        public ulong LastSurfaceId { get; set; } = 0;
 
         private void Start()
         {
@@ -181,7 +183,7 @@ namespace umi3d.baseBrowser.inputs.interactions
 
             lastUpdateTime = Time.time;
 
-            DrawingManager.Instance.StartDrawing(drawing);
+            DrawingManager.Instance.StartDrawing(drawing, this);
             isDrawing = true;
 
             await DrawingManager.Instance.Init(this, drawing);
@@ -197,8 +199,11 @@ namespace umi3d.baseBrowser.inputs.interactions
             var drawingDto = new common.interaction.DrawingDto
             {
                 drawingEnd = true,
+                clientDrawingId = DrawingID,
                 clientLineId = LineId.HasValue ? LineId.Value : 0,
                 positions = Positions.Select(p => p.Dto()).ToList(),
+
+                surfaceId = LastSurfaceId,
 
                 boneType = bone,
                 id = associatedInteraction.id,
@@ -209,7 +214,7 @@ namespace umi3d.baseBrowser.inputs.interactions
             };
             cdk.UMI3DClientServer.SendRequest(drawingDto, true);
 
-            DrawingManager.Instance.StopDrawing(drawing);
+            DrawingManager.Instance.StopDrawing(drawing, this);
 
             if (_particleSystem?.isPlaying ?? false)
                 _particleSystem.Stop();

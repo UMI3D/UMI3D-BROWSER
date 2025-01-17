@@ -387,9 +387,8 @@ namespace umi3dVRBrowsersBase.interactions
         public float offset = 0.01f;
         public float handOffset = 0f;
 
-        public override Vector3? GetDrawingWorldPoint(DrawingInteractionDto drawing, List<UMI3DNodeInstance> nodes, AbstractUMI3DInput input)
+        public override (Vector3,ulong)? GetDrawingWorldPoint(DrawingInteractionDto drawing, List<UMI3DNodeInstance> nodes, AbstractUMI3DInput input)
         {
-
             var cursor = vRControllers
                 .FirstOrDefault(c =>
                         c.Item1.HoldInput == input
@@ -402,11 +401,11 @@ namespace umi3dVRBrowsersBase.interactions
                 var zone = new RaySelectionZone<NodeContainer>(cursor.transform.position, cursor.transform.up);
                 foreach(var nodeAndRay in zone.GetObjectsOnRayWithRayCastHits())
                     if(nodeAndRay.Value.distance <= distance &&  nodes.Contains(nodeAndRay.Key.instance))
-                        return nodeAndRay.Value.point + nodeAndRay.Value.normal * offset;
+                        return (nodeAndRay.Value.point + nodeAndRay.Value.normal * offset, nodeAndRay.Key.instance.Id);
             }
 
             if (drawing.CanDrawInSpace)
-                return cursor.transform.position + cursor.transform.up * handOffset;
+                return (cursor.transform.position + cursor.transform.up * handOffset,0);
             
             return null;
         }

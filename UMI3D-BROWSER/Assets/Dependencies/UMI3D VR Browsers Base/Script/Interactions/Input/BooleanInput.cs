@@ -84,11 +84,14 @@ namespace umi3dVRBrowsersBase.interactions.input
         public ulong HoveredObjectId => this.hoveredObjectId;
 
         public ulong? LineId { get; set; }
+        public ulong DrawingID { get; set; } = 0;
         public List<UMI3DNodeInstance> Meshes { get; set; }
         public List<Vector3> Positions { get; set; }
         public float LastUpdateTime { get => lastUpdateTime; set => lastUpdateTime = value; }
         public float TimeSynchronization { get => timeSynchronization; set => timeSynchronization = value; }
         public float MinDistance { get => minDistance; set => minDistance = value; }
+
+        public ulong LastSurfaceId { get; set; } = 0;
 
         bool isDrawing = false;
 
@@ -174,6 +177,7 @@ namespace umi3dVRBrowsersBase.interactions.input
 
                             if (isDrawing)
                             {
+                                DrawingManager.Instance.StartDrawing(drawing, this);
                                 await DrawingManager.Instance.Init(this, drawing);
                             }
 
@@ -208,12 +212,16 @@ namespace umi3dVRBrowsersBase.interactions.input
                         {
                             if (risingEdgeEventSent)
                             {
-                                if(drawing != null)
+                                if (drawing != null)
+                                {
                                     umi3d.cdk.UMI3DClientServer.SendRequest(new umi3d.common.interaction.DrawingDto
                                     {
                                         drawingEnd = true,
+                                        clientDrawingId = DrawingID,
                                         clientLineId = LineId.HasValue ? LineId.Value : 0,
                                         positions = Positions.Select(p => p.Dto()).ToList(),
+
+                                        surfaceId = LastSurfaceId,
 
                                         boneType = boneType,
                                         id = associatedInteraction.id,
@@ -222,7 +230,8 @@ namespace umi3dVRBrowsersBase.interactions.input
                                         bonePosition = (Vector3Dto)boneTransform.position.Dto(),
                                         boneRotation = (Vector4Dto)boneTransform.rotation.Dto()
                                     }, true);
-
+                                    DrawingManager.Instance.StopDrawing(drawing, this);
+                                }
                                 UMI3DClientServer.SendRequest(new EventStateChangedDto()
                                 {
                                     active = false,
@@ -241,6 +250,7 @@ namespace umi3dVRBrowsersBase.interactions.input
                         isDown = false;
                         isDrawing = false;
                         LineId = null;
+                        DrawingID = 0;
                         Positions.Clear();
                         Meshes.Clear();
                         onInputUp.Invoke();
@@ -346,6 +356,7 @@ namespace umi3dVRBrowsersBase.interactions.input
 
             risingEdgeEventSent = false;
             isDrawing = false;
+            DrawingID = 0;
             LineId = null;
             Positions.Clear();
             Meshes.Clear();

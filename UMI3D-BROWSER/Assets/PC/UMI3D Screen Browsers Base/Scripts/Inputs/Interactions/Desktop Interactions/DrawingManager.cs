@@ -38,7 +38,11 @@ namespace umi3d.baseBrowser.inputs.interactions
         uint BoneType { get; }
         ulong ToolId { get; }
         ulong HoveredObjectId { get; }
+        ulong LastSurfaceId { get; set; }
         ulong? LineId { get; set; }
+
+        ulong DrawingID { get; set; }
+
         List<UMI3DNodeInstance> Meshes { get; set; }
 
         List<Vector3> Positions { get; set; }
@@ -52,6 +56,8 @@ namespace umi3d.baseBrowser.inputs.interactions
     {
         public DrawingInteractionDto current;
         public ulong currentEnvironmentId;
+
+        private static ulong lastDrawingId = 1;
 
         static public bool IsAvailableFor(DrawingInteractionDto drawing)
         {
@@ -84,19 +90,29 @@ namespace umi3d.baseBrowser.inputs.interactions
             return false;
         }
 
+
+        static public ulong GetDrawingID()
+        {
+            return lastDrawingId++;
+        }
+
         protected virtual void StartDrawingMode(DrawingInteractionDto drawing)
         {}
 
         protected virtual void StopDrawingMode(DrawingInteractionDto drawing)
         {}
 
-        public virtual void StartDrawing(DrawingInteractionDto drawing)
-        {}
+        public virtual void StartDrawing(DrawingInteractionDto drawing, IDrawerData drawer)
+        {
+            drawer.DrawingID = GetDrawingID();
+        }
 
-        public virtual void StopDrawing(DrawingInteractionDto drawing)
-        {}
+        public virtual void StopDrawing(DrawingInteractionDto drawing, IDrawerData drawer)
+        {
+            drawer.DrawingID = 0;
+        }
 
-        public virtual Vector3? GetDrawingWorldPoint(DrawingInteractionDto drawing, List<UMI3DNodeInstance> nodes, AbstractUMI3DInput input)
+        public virtual (Vector3, ulong)? GetDrawingWorldPoint(DrawingInteractionDto drawing, List<UMI3DNodeInstance> nodes, AbstractUMI3DInput input)
         {
             return null;
         }
@@ -136,7 +152,7 @@ namespace umi3d.baseBrowser.inputs.interactions
 
         public virtual async void DrawUpdate(DrawingInteractionDto drawing, ParticleSystem particleSystem, IDrawerData drawer)
         {
-            Vector3? positionTMP = DrawingManager.Instance.GetDrawingWorldPoint(drawing, drawer.Meshes, drawer.Input);
+            (Vector3,ulong)? positionTMP = DrawingManager.Instance.GetDrawingWorldPoint(drawing, drawer.Meshes, drawer.Input);
             if (!positionTMP.HasValue)
             {
                 //Cut line here ?
@@ -145,7 +161,8 @@ namespace umi3d.baseBrowser.inputs.interactions
                 return;
             }
 
-            Vector3 position = positionTMP.Value;
+            Vector3 position = positionTMP.Value.Item1;
+            ulong surface = positionTMP.Value.Item2;
 
             if (drawer.Positions.Count > 0 && Vector3.Distance(position, drawer.Positions.Last()) < drawer.MinDistance)
             {
@@ -169,19 +186,28 @@ namespace umi3d.baseBrowser.inputs.interactions
             if (drawer.LineId.HasValue)
             {
                 var line = UMI3DLineRendererLoader.GetLine(drawer.LineId.Value);
-                line.positionCount = drawer.Positions.Count;
-                line.useWorldSpace = true;
-                line.SetPositions(drawer.Positions.ToArray());
+                if (line != null)
+                {
+                    line.positionCount = drawer.Positions.Count;
+                    line.useWorldSpace = true;
+                    line.SetPositions(drawer.Positions.ToArray());
+                }
             }
 
+            if(drawer.LastSurfaceId == 0 && drawer.Positions.Count == 0)
+                drawer.LastSurfaceId = surface;
+            
             if (Time.time >= drawer.TimeSynchronization + drawer.LastUpdateTime || drawer.Positions.Count > 100)
             {
                 //todo add delay
                 var drawingDto = new common.interaction.DrawingDto
                 {
                     drawingEnd = false,
+                    clientDrawingId = drawer.DrawingID,
                     clientLineId = drawer.LineId.HasValue ? drawer.LineId.Value : 0,
                     positions = drawer.Positions.Select(p => p.Dto()).ToList(),
+
+                    surfaceId = drawer.LastSurfaceId,
 
                     boneType = drawer.BoneType,
                     id = drawing.id,
@@ -193,10 +219,11 @@ namespace umi3d.baseBrowser.inputs.interactions
                 cdk.UMI3DClientServer.SendRequest(drawingDto, true);
                 drawer.LastUpdateTime = Time.time;
 
-                if(drawer.Positions.Count > 100)
+                if(drawer.Positions.Count > 100 || drawer.LastSurfaceId != surface)
                 {
                     await CreateLine(drawer, drawing);
                     drawer.Positions.Add(position);
+                    drawer.LastSurfaceId = surface;
                 }
 
             }

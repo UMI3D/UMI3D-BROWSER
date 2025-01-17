@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils.lifeCycle;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,7 +32,7 @@ namespace umi3dBrowsers.player
     /// <summary>
     /// This class manages the display and items of all UMI3DWatches.
     /// </summary>
-    public class WatchMenu : AbstractMenuManager
+    public class WatchMenu : MonoBehaviour
     {
         #region Static Fields and Methods
 
@@ -39,32 +40,6 @@ namespace umi3dBrowsers.player
         /// Stores all instances.
         /// </summary>
         public static HashSet<WatchMenu> instances = new HashSet<WatchMenu>();
-
-        /// <summary>
-        /// Pins a <see cref="Menu"/> to all watch instances.
-        /// </summary>
-        /// <param name="menu"></param>
-        public static void PinMenu(Menu menu)
-        {
-            foreach (WatchMenu watch in instances)
-                watch.Pin(menu);
-        }
-
-        /// <summary>
-        /// Unpins <see cref="Menu"/> from all watch instances.
-        /// </summary>
-        /// <param name="menu"></param>
-        public static void UnPinMenu(Menu menu)
-        {
-            foreach (WatchMenu watch in instances)
-                watch.UnPin(menu);
-        }
-
-        public static void UnPinAllMenus()
-        {
-            foreach (WatchMenu watch in instances)
-                watch.UnPinAll();
-        }
 
         /// <summary>
         /// If exists returns the first <see cref="WatchMenu"/> associated to <paramref name="controller"/>.
@@ -86,36 +61,20 @@ namespace umi3dBrowsers.player
         private ControllerType associatedController;
 
         [Header("Wristband buttons")]
-
         [SerializeField]
         [Tooltip("Button to display all menus pinned by users")]
-        private OnOffButton pinMenuButton;
-
-        [SerializeField]
-        [Tooltip("Button to display the player menu")]
-        private OnOffButton playerMenuButton;
-
-        [SerializeField]
-        [Tooltip("Root of the settings menu")]
-        private GameObject settingsMenuRoot;
+        OnOffButton EmoteBtn;
 
         [Header("Settings menu")]
-
+        [SerializeField]
+        [Tooltip("Root of the settings menu")]
+        GameObject settingsMenuRoot;
         [SerializeField]
         [Tooltip("Button to enable/disable microphone")]
-        private OnOffButton setMicButton;
-
+        OnOffButton MicBtn;
         [SerializeField]
         [Tooltip("Button to enable/disable sound")]
-        private OnOffButton setSoundButton;
-
-        [SerializeField]
-        [Tooltip("Button to send/stop user's avatar movments")]
-        private OnOffButton setAvatarButton;
-
-        [Header("Notification")]
-        [Tooltip("Where all local notifications will be instanciated")]
-        public Transform notificationContainer;
+        OnOffButton SoundBtn;
 
         [Header("Linkers")]
         [SerializeField] private ConnectionToImmersiveLinker linker;
@@ -136,6 +95,11 @@ namespace umi3dBrowsers.player
         /// </summary>
         private float detectionConeDistance = 1f;
 
+        /// <summary>
+        /// Is the menu open ?
+        /// </summary>
+        public bool IsOpen { get; protected set; } = false;
+
         #endregion
 
         #region Methods
@@ -151,14 +115,7 @@ namespace umi3dBrowsers.player
         {
             settingsMenuRoot.SetActive(false);
 
-            var rootContainer = new Menu();
-
-            menuDisplayManager.menuAsset.menu = rootContainer;
-
             BindSettingButtons();
-
-            //PlayerMenuManager.Instance.onMenuOpen.AddListener(() => playerMenuButton.ForceSelectionHighlight());
-            //PlayerMenuManager.Instance.onMenuClose.AddListener(() => playerMenuButton.ForceDeselectionHighlight());
 
             playerCamera = PlayerMenuManager.Instance.PlayerCameraTransform;
         }
@@ -176,15 +133,12 @@ namespace umi3dBrowsers.player
         /// </summary>
         private void BindSettingButtons()
         {
-            EnvironmentSettings.Instance.micSetting.OnValueChanged.AddListener(setMicButton.Toggle);
-            EnvironmentSettings.Instance.audioSetting.OnValueChanged.AddListener(setSoundButton.Toggle);
-            EnvironmentSettings.Instance.avatarSetting.OnValueChanged.AddListener(setAvatarButton.Toggle);
-            PlayerMenuManager.Instance.onMenuClose.AddListener(() => { if (playerMenuButton.IsOn) playerMenuButton.Toggle(false);  });
-            PlayerMenuManager.Instance.onMenuOpen.AddListener(() => { if (!playerMenuButton.IsOn) playerMenuButton.Toggle(true); });
+            EnvironmentSettings.Instance.micSetting.OnValueChanged.AddListener(MicBtn.Toggle);
+            EnvironmentSettings.Instance.audioSetting.OnValueChanged.AddListener(SoundBtn.Toggle);
 
             EmoteMenu.EmoteButtonStatusChanged += value =>
             {
-                pinMenuButton.Toggle(value);
+                EmoteBtn.Toggle(value);
                 IsOpen = value;
             };
 
@@ -194,51 +148,17 @@ namespace umi3dBrowsers.player
         #region Abstract Menu Manager
 
         /// <summary>
-        /// Opens the menu with all pinned items.
-        /// </summary>
-        [ContextMenu("Open watch menu")]
-        public override void Open()
-        {
-            base.Open();
-            //menuDisplayManager.Display(true);
-            EmoteMenu.Instance.Display();
-            UnityEngine.Debug.Log("<color=green>TODO: </color>" + $"open");
-        }
-
-        /// <summary>
-        /// Closes the menu with all pinned items.
-        /// </summary>
-        public override void Close()
-        {
-            base.Close();
-            //menuDisplayManager.Hide();
-            EmoteMenu.Instance.Hide();
-            UnityEngine.Debug.Log("<color=green>TODO: </color>" + $"close");
-        }
-
-        /// <summary>
         /// Toggles the display of the menu with all pinned items.
         /// </summary>
         public void ToggleDisplayPinMenu()
         {
             if (IsOpen)
-                Close();
-            else
-                Open();
-        }
-
-        /// <summary>
-        /// Toggles the display of <see cref="umi3dVRBrowsersBase.ui.playerMenu.PlayerMenuManager"/>
-        /// </summary>
-        public void ToggleDisplayPlayerMenu()
-        {
-            if (PlayerMenuManager.Instance.IsMenuOpen)
             {
-                PlayerMenuManager.Instance.Close();
+                EmoteMenu.Instance.Hide();
             }
             else
             {
-                PlayerMenuManager.Instance.Open();
+                EmoteMenu.Instance.Display();
             }
         }
 
@@ -299,7 +219,7 @@ namespace umi3dBrowsers.player
                         linker.Leave();
                     }
                     else
-                        Application.Quit();
+                        Quitting.instance.Quit(this);
                 }
             };
 
@@ -317,15 +237,6 @@ namespace umi3dBrowsers.player
         }
 
         /// <summary>
-        /// Asks to change the send user's avatar movments status.
-        /// </summary>
-        /// <param name="val"></param>
-        public void SetAvatarStatus(bool val)
-        {
-            EnvironmentSettings.Instance.avatarSetting.SetValue(val);
-        }
-
-        /// <summary>
         /// Asks the sound activation/deactivation.
         /// </summary>
         /// <param name="val"></param>
@@ -335,41 +246,6 @@ namespace umi3dBrowsers.player
         }
 
         #endregion
-
-
-        /// <summary>
-        /// Pins a <see cref="Menu"/> to the watch menu.
-        /// </summary>
-        /// <param name="menu"></param>
-        public void Pin(Menu menu)
-        {
-            menu.OnDestroy.RemoveAllListeners();
-            menuDisplayManager.menu.Add(menu);
-
-            if (menuDisplayManager.isDisplaying)
-                menuDisplayManager.Display(true);
-        }
-
-        /// <summary>
-        /// Unpins a <see cref="Menu"/> to the watch menu.
-        /// </summary>
-        /// <param name="menu"></param>
-        public void UnPin(Menu menu)
-        {
-            menuDisplayManager.menu.Remove(menu);
-        }
-
-        // <summary>
-        /// Unpins all menus.
-        /// </summary>
-        /// <param name="menu"></param>
-        public void UnPinAll()
-        {
-            menuDisplayManager.menu.RemoveAll();
-
-            if (menuDisplayManager.isDisplaying)
-                menuDisplayManager.Display(true);
-        }
 
         /// <summary>
         /// Is this object considered in the player's field of view ? Based on a detection cone defined by <see cref="detectionConeAngle"/> and <see cref="detectionConeDistance"/>.

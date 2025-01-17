@@ -64,7 +64,7 @@ namespace umi3dVRBrowsersBase.tutorial
 
             tool.Add(button);
 
-            WatchMenu.PinMenu(tool);
+            //WatchMenu.PinMenu(tool);
         }
 
         /// <summary>

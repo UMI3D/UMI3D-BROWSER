@@ -27,17 +27,20 @@ namespace umi3d.browserRuntime.ui.inGame.emote
         [SerializeField] private Button button;
         [SerializeField] private GameObject activeBackground;
 
+        ID openID = EmoteNotificationKeys.Open;
+        ID closeID = EmoteNotificationKeys.Close;
+
         private void Awake()
         {
             button.onClick.AddListener(ToggleEmote);
             NotificationHub.Default.Subscribe(
                 this, 
-                EmoteNotificationKeys.Open, 
+                openID, 
                 (Callback)ShowBackground
             );
             NotificationHub.Default.Subscribe(
-                this, 
-                EmoteNotificationKeys.Close, 
+                this,
+                closeID, 
                 (Callback)HideBackground
             );
             activeBackground.SetActive(false);
@@ -56,7 +59,12 @@ namespace umi3d.browserRuntime.ui.inGame.emote
 
         private void ToggleEmote()
         {
-            NotificationHub.Default.Notify(this, activeBackground.activeSelf ? EmoteNotificationKeys.Close : EmoteNotificationKeys.Open);
+            NotificationHub.Default.Notify(
+                this, 
+                activeBackground.activeSelf 
+                ? closeID
+                : openID
+            );
         }
 
         private void ShowBackground()

@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils.lifeCycle;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -35,7 +36,7 @@ namespace umi3d.browserRuntime.ui.windowBar
 
         private void Close()
         {
-            Application.Quit();
+            Quitting.instance.Quit(this);
             EventSystem.current.SetSelectedGameObject(null);
         }
     }

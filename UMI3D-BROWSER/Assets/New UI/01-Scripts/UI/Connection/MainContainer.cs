@@ -31,6 +31,7 @@ using umi3dBrowsers.services.title;
 using UnityEngine;
 using UnityEngine.Localization.Settings;
 using UnityEngine.UI;
+using umi3d.common;
 
 namespace umi3dBrowsers
 {
@@ -337,8 +338,12 @@ namespace umi3dBrowsers
         private void ShowUI()
         {
             parentTransform.gameObject.SetActive(true);
-            mainContainerLinker.Skybox.gameObject.SetActive(true);
-            mainContainerLinker.DirectionalLight.gameObject.SetActive(true);
+
+            if((UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DLoadingParameters).BrowserType != XRBrowserTypes.AR)
+            {
+                mainContainerLinker.Skybox.gameObject.SetActive(true);
+                mainContainerLinker.DirectionalLight.gameObject.SetActive(true);
+            }
         }
     }
 }

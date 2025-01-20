@@ -66,7 +66,13 @@ namespace umi3dVRBrowsersBase.connection
 
             (UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DLoadingParameters).SetMR();
 
-            info[LocomotionNotificationKeys.Info.Controller] = Controller.LeftAndRight;
+            info[LocomotionNotificationKeys.Info.Controller] = Controller.RightHand;
+            info[LocomotionNotificationKeys.Info.SnapTurnActiveState] = ActiveState.Disable;
+            info[LocomotionNotificationKeys.Info.TeleportationActiveState] = ActiveState.Disable;
+            NotificationHub.Default.Notify(this, LocomotionNotificationKeys.System, info);
+
+
+            info[LocomotionNotificationKeys.Info.Controller] = Controller.LeftHand;
             info[LocomotionNotificationKeys.Info.SnapTurnActiveState] = ActiveState.Disable;
             info[LocomotionNotificationKeys.Info.TeleportationActiveState] = ActiveState.Disable;
             NotificationHub.Default.Notify(this, LocomotionNotificationKeys.System, info);

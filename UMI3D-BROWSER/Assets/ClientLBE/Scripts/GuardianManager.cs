@@ -103,12 +103,15 @@ namespace ClientLBE
         void LBEGroupEvent(LBEGroupSyncRequestDTO LbeGroupDtoData)
         {
             lBEGroupDto = LbeGroupDtoData;
-
+            if(lBEGroupDto == null)
+            {
+                Debug.Log("REMY -> lBEGroupDto = null");
+            }
             if (lBEGroupDto.UserAR.Count + lBEGroupDto.UserVR.Count > 0 )
             {
                 CreatGuardianServer(lBEGroupDto.ARAnchors);
+                AddCapsulesToCurrentARUsers();
             }
-            AddCapsulesToCurrentARUsers();
         }
 
         void AddUserLBEGroup(AddUserGroupOperationsDto addUserLBEGroupDTO)
@@ -124,6 +127,7 @@ namespace ClientLBE
             {
                 lBEGroupDto.UserVR.Add(addUserLBEGroupDTO.UserId);
             }
+
         }
 
         void DelUserLBEGroup(DelUserGroupOperationsDto delUserLBEGroupDto)
@@ -161,12 +165,17 @@ namespace ClientLBE
 
         private void AddCapsulesToCurrentARUsers()
         {
+            Debug.Log("REMY -> Add Capsule occlusion");
             foreach (var userId in lBEGroupDto.UserAR)
             {
+                Debug.Log("REMY -> Add Capsule occlusion User ID -> " + userId);
+
                 var skeleton = CollaborationSkeletonsManager.Instance.GetCollaborativeSkeleton((UMI3DGlobalID.EnvironmentId, userId)) as AbstractSkeleton;
 
                 if (skeleton != null)
                 {
+                    Debug.Log("REMY -> Add Capsule occlusion Sketleton not null");
+
                     AddCapsuleToBone(skeleton, BoneType.Hips);
                 }
                 else
@@ -180,6 +189,8 @@ namespace ClientLBE
         {
             if (skeleton.Bones.TryGetValue(boneType, out var boneTransform))
             {
+                Debug.Log("REMY -> AddCapsuleToBone");
+
                 // Créer une capsule
                 GameObject capsule = GameObject.CreatePrimitive(PrimitiveType.Capsule);
 
@@ -197,7 +208,7 @@ namespace ClientLBE
                 }
             }
             else
-                Debug.LogWarning("Bone not found.");
+                Debug.LogWarning("REMY -> Bone not found.");
         }
 
         private void ARPlanesActivation(bool activation)
@@ -471,6 +482,12 @@ namespace ClientLBE
                             guardianAnchors.Add(point);
                             guardianAnchors.Add(point + new Vector3(0f, 2f, 0f));
                         }
+
+                        //Déplacé les repères en xrorigin pour les tests
+                        for (int i = 0; i < Reperes.Count; i++)
+                        {
+                            Reperes[i].transform.SetParent(XROrigin.transform, true);
+                        }
                     }
                     else
                     {
@@ -634,6 +651,7 @@ namespace ClientLBE
                 localVertexRotations.Add(tempVerticesTransform[i].transform.localRotation);
             }
             guardianMesh.transform.SetParent(XROrigin.transform, true);
+
         }
     }
 }

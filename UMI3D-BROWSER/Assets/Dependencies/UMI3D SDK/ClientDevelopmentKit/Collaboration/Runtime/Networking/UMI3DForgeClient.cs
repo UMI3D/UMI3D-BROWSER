@@ -811,7 +811,13 @@ namespace umi3d.cdk.collaboration
                 case UMI3DOperationKeys.SetLBEGroupRequest:
                     MainThreadManager.Run(() =>
                     {
+                        Debug.Log("REMY -> Umi3DForgeClient SetLBEGroupRequest 1");
                         LBEGroupSyncRequestDTO  lBEGroupRequestDTO = UMI3DSerializer.Read<LBEGroupSyncRequestDTO >(container);
+                        Debug.Log("REMY -> SetLBEGroupRequest -> User AR : " + lBEGroupRequestDTO.UserAR.Count
+                                                + " + User VR : " + lBEGroupRequestDTO.UserVR.Count
+                                                + " + AdminUserId : " + lBEGroupRequestDTO.AdminUserId
+                                                + " + LBEGroupID : " + lBEGroupRequestDTO.LBEGroupId
+                                                + " + ARAnchors : " + lBEGroupRequestDTO.ARAnchors[0].position);
 
                         var lBEGroup = new LBEGroupSyncRequestDTO ()
                         {

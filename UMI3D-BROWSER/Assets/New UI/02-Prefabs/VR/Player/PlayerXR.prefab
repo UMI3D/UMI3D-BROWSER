@@ -832,6 +832,16 @@ PrefabInstance:
       objectReference: {fileID: 5301057868471751648}
     - target: {fileID: 1656893087020903303, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
         type: 3}
+      propertyPath: m_TrackedHandModeStarted.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1656893087020903303, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
+        type: 3}
+      propertyPath: m_MotionControllerModeStarted.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1656893087020903303, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
+        type: 3}
       propertyPath: m_TrackedHandModeStarted.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 7510902128493721314}
@@ -839,7 +849,17 @@ PrefabInstance:
         type: 3}
       propertyPath: m_MotionControllerModeStarted.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 7510902128493721314}
+      objectReference: {fileID: 5931037956245445158}
+    - target: {fileID: 1656893087020903303, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
+        type: 3}
+      propertyPath: m_MotionControllerModeStarted.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ResetSkeletonHandScale
+      objectReference: {fileID: 0}
+    - target: {fileID: 1656893087020903303, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
+        type: 3}
+      propertyPath: m_MotionControllerModeStarted.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: umi3d.runtimeBrowser.handTracking.HandsResize, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 1683947900801334135, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
         type: 3}
       propertyPath: m_TrackedTransform
@@ -945,6 +965,11 @@ PrefabInstance:
       propertyPath: m_TrackedTransform
       value: 
       objectReference: {fileID: 8141930279390804461}
+    - target: {fileID: 4806620354039597730, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5051064084671288343, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
         type: 3}
       propertyPath: m_Name
@@ -1466,6 +1491,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2899fdfb51dac134d92ec81632429a04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5931037956245445158 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1361682974486818851, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
+    type: 3}
+  m_PrefabInstance: {fileID: 4659797260771895813}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 242874f20cddf4945b9e89aed3075150, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &6084736983730005660 stripped

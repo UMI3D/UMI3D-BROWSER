@@ -100,6 +100,8 @@ namespace umi3dBrowsers.player
         /// </summary>
         public bool IsOpen { get; protected set; } = false;
 
+        public Transform notificationContainer;
+
         #endregion
 
 

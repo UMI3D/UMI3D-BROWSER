@@ -1327,8 +1327,8 @@ MonoBehaviour:
   - {fileID: 0}
   Joint: {fileID: 6214535397883207152}
   Surface: {fileID: 4230522372026819353}
-  LeftWatch: {fileID: 0}
-  RightWatch: {fileID: 0}
+  LeftWatch: {fileID: 4797686304048318470}
+  RightWatch: {fileID: 8328868961844764652}
   FootTargetBehavior: {fileID: 6942374478926416421}
   Neck: {fileID: 2705249298229989849}
   smoothRotationSpeed: 0.1
@@ -3660,6 +3660,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 6120545149550400982}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &8328868961844764652 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2839129598757276218, guid: a6a4247f7cb4f034bb1feb77edab85a0,
+    type: 3}
+  m_PrefabInstance: {fileID: 6120545149550400982}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7346025295573877308
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3728,6 +3734,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a6a4247f7cb4f034bb1feb77edab85a0, type: 3}
+--- !u!1 &4797686304048318470 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2839129598757276218, guid: a6a4247f7cb4f034bb1feb77edab85a0,
+    type: 3}
+  m_PrefabInstance: {fileID: 7346025295573877308}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6175803240410297464 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3478625294459057732, guid: a6a4247f7cb4f034bb1feb77edab85a0,

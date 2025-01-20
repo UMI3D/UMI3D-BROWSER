@@ -790,6 +790,7 @@ Transform:
   m_Children:
   - {fileID: 5526307321664814923}
   - {fileID: 2996080533066173235}
+  - {fileID: 4633420264731419024}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2255530990686773851
@@ -811,6 +812,7 @@ MonoBehaviour:
   SoundBtn: {fileID: 4666212244968387827}
   linker: {fileID: 11400000, guid: 68ff1a90a5151924e867698a4e1d3a2d, type: 2}
   dialogBox: {fileID: 0}
+  notificationContainer: {fileID: 4633420264731419024}
 --- !u!1 &4628563971993695144
 GameObject:
   m_ObjectHideFlags: 0
@@ -1311,6 +1313,37 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.0146072, y: 0, z: 0.014607439}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &7171673157409948009
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4633420264731419024}
+  m_Layer: 0
+  m_Name: NotificationContainer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4633420264731419024
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7171673157409948009}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.5, y: 0.5, z: -0.5, w: 0.5}
+  m_LocalPosition: {x: -0.0645, y: 0.006558559, z: 0.000000005587935}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3478625294459057732}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: -90}
 --- !u!1 &7530603313949573489
 GameObject:
   m_ObjectHideFlags: 0

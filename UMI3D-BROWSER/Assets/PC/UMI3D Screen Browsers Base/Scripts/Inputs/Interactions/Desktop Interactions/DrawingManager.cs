@@ -189,8 +189,11 @@ namespace umi3d.baseBrowser.inputs.interactions
                 if (line != null)
                 {
                     line.positionCount = drawer.Positions.Count;
-                    line.useWorldSpace = true;
-                    line.SetPositions(drawer.Positions.ToArray());
+                    //line.useWorldSpace = true;
+                    if(line.useWorldSpace)
+                        line.SetPositions(drawer.Positions.ToArray());
+                    else
+                        line.SetPositions(drawer.Positions.Select(p => line.transform.InverseTransformPoint(p)).ToArray());
                 }
             }
 

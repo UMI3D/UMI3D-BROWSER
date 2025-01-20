@@ -198,10 +198,10 @@ namespace umi3dVRBrowsersBase.interactions.input
                         isDown = true;
 
 
-                        if ((interaction as EventDto).TriggerAnimationId != 0)
+                        if ((interaction as EventDto).triggerAnimationId != 0)
                         {
                             BooleanEvent.Invoke(boneType);
-                            StartAnim((interaction as EventDto).TriggerAnimationId);
+                            StartAnim((interaction as EventDto).triggerAnimationId);
                         }
 
                         onInputDown.Invoke();
@@ -256,10 +256,10 @@ namespace umi3dVRBrowsersBase.interactions.input
                         onInputUp.Invoke();
 
 
-                        if ((interaction as EventDto).ReleaseAnimationId != 0)
+                        if ((interaction as EventDto).releaseAnimationId != 0)
                         {
                             BooleanEvent.Invoke(boneType);
-                            StartAnim((interaction as EventDto).ReleaseAnimationId);
+                            StartAnim((interaction as EventDto).releaseAnimationId);
                         }
                     }
                 };

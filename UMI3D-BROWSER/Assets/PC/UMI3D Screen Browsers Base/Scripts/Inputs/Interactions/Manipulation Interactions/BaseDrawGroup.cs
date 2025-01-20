@@ -157,15 +157,15 @@ namespace umi3d.baseBrowser.inputs.interactions
 
             if (isDrawingActive)
             {
-                if (associatedInteraction.TriggerAnimationId != 0)
-                    StartAnim(environmentId, associatedInteraction.TriggerAnimationId);
+                if (associatedInteraction.triggerAnimationId != 0)
+                    StartAnim(environmentId, associatedInteraction.triggerAnimationId);
 
                 drawInteraction.ShowMenuItem();
             }
             else
             {
-                if (associatedInteraction.ReleaseAnimationId != 0)
-                    StartAnim(environmentId, associatedInteraction.ReleaseAnimationId);
+                if (associatedInteraction.releaseAnimationId != 0)
+                    StartAnim(environmentId, associatedInteraction.releaseAnimationId);
 
                 drawInteraction.HideMenuItem();
             }

@@ -45,7 +45,7 @@ namespace umi3d.desktopBrowser.Controller
                 }
             }
 
-            if (drawing.CanDrawInSpace)
+            if (drawing.canDrawInSpace)
             {
                 screenPos.z = distance;
                 return (Camera.main.ScreenToWorldPoint(screenPos),0);

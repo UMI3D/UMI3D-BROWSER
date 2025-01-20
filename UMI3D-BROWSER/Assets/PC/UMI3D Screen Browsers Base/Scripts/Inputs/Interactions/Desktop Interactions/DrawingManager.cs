@@ -123,8 +123,8 @@ namespace umi3d.baseBrowser.inputs.interactions
 
             drawer.Meshes.Clear();
 
-            if (drawing.MeshIds != null)
-                foreach (var meshId in drawing.MeshIds)
+            if (drawing.meshIds != null)
+                foreach (var meshId in drawing.meshIds)
                 {
                     var meshEntity = await UMI3DEnvironmentLoader.Instance.WaitUntilEntityLoaded(drawer.environmentId, meshId, new());
                     if (meshEntity is UMI3DNodeInstance node)
@@ -137,9 +137,9 @@ namespace umi3d.baseBrowser.inputs.interactions
             drawer.Positions.Clear();
             drawer.LineId = null;
 
-            if (drawing.LineId != 0)
+            if (drawing.lineId != 0)
             {
-                var lineEntity = await UMI3DEnvironmentLoader.Instance.WaitUntilEntityLoaded(drawer.environmentId, drawing.LineId, new());
+                var lineEntity = await UMI3DEnvironmentLoader.Instance.WaitUntilEntityLoaded(drawer.environmentId, drawing.lineId, new());
                 if ((lineEntity?.dto as GlTFNodeDto)?.extensions?.umi3d is UMI3DLineDto lineDto && lineEntity is UMI3DNodeInstance node)
                 {
                     var template = UMI3DLineRendererLoader.GetOrCreateLine(node.GameObject, lineDto.clientLineId);

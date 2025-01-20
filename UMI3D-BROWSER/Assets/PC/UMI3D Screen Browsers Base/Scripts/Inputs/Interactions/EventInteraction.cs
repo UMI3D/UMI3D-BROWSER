@@ -96,8 +96,8 @@ namespace umi3d.baseBrowser.inputs.interactions
                 };
                 cdk.UMI3DClientServer.SendData(eventdto, true);
             }
-            if (associatedInteraction.TriggerAnimationId != 0)
-                StartAnim(environmentId, associatedInteraction.TriggerAnimationId);
+            if (associatedInteraction.triggerAnimationId != 0)
+                StartAnim(environmentId, associatedInteraction.triggerAnimationId);
         }
 
         protected override void PressedUp()
@@ -112,7 +112,7 @@ namespace umi3d.baseBrowser.inputs.interactions
 
             if (associatedInteraction == null) return;
 
-            if (associatedInteraction.ReleaseAnimationId != 0) StartAnim(environmentId, associatedInteraction.ReleaseAnimationId);
+            if (associatedInteraction.releaseAnimationId != 0) StartAnim(environmentId, associatedInteraction.releaseAnimationId);
             if (!associatedInteraction.hold || !risingEdgeEventSent)
                 return;
 

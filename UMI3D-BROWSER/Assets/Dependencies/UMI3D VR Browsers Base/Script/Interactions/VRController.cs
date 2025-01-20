@@ -404,7 +404,7 @@ namespace umi3dVRBrowsersBase.interactions
                         return (nodeAndRay.Value.point + nodeAndRay.Value.normal * offset, nodeAndRay.Key.instance.Id);
             }
 
-            if (drawing.CanDrawInSpace)
+            if (drawing.canDrawInSpace)
                 return (cursor.transform.position + cursor.transform.up * handOffset,0);
             
             return null;

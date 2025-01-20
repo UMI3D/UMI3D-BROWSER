@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils.lifeCycle;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -299,7 +300,7 @@ namespace umi3dBrowsers.player
                         linker.Leave();
                     }
                     else
-                        Application.Quit();
+                        Quitting.instance.Quit(this);
                 }
             };
 

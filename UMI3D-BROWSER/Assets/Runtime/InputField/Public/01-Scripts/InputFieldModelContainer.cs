@@ -1,5 +1,5 @@
-﻿/*
-Copyright 2019 - 2021 Inetum
+/*
+Copyright 2019 - 2024 Inetum
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,17 +14,23 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-namespace umi3d.common.interaction
+using UnityEngine;
+
+namespace umi3d.browserRuntime.ui.inputField
 {
     /// <summary>
-    /// String parameter dto.
+    /// The container of an <see cref="InputFieldModel"/>
     /// </summary>
-    [System.Serializable]
-    public class StringParameterDto : AbstractParameterDto<string>
+    public class InputFieldModelContainer : MonoBehaviour
     {
-        public StringParameterDto() : base() { }
+        InputFieldModel _model;
 
-        public bool IsMultiLine = false;
-        public int NbLine = 1;
+        public InputFieldModel model { get 
+            { 
+                if (_model == null)
+                    _model = new InputFieldModel();
+                return _model; 
+            } 
+        }
     }
 }

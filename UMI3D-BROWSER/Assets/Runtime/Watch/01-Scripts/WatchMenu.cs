@@ -18,7 +18,6 @@ using inetum.unityUtils.lifeCycle;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using umi3d.cdk.menu;
 using umi3dBrowsers.linker;
 using umi3dVRBrowsersBase.connection;
 using umi3dVRBrowsersBase.interactions;
@@ -85,25 +84,9 @@ namespace umi3dBrowsers.player
         /// </summary>
         private Transform playerCamera;
 
-        /// <summary>
-        /// Angle to considerer this wath in the field of view of the player
-        /// </summary>
-        private float detectionConeAngle = 20f;
-
-        /// <summary>
-        /// Height of the detection cone to consider this watch inside the player's field of view.
-        /// </summary>
-        private float detectionConeDistance = 1f;
-
-        /// <summary>
-        /// Is the menu open ?
-        /// </summary>
-        public bool IsOpen { get; protected set; } = false;
-
         public Transform notificationContainer;
 
         #endregion
-
 
         #region Monobehavior's callback
 
@@ -120,12 +103,6 @@ namespace umi3dBrowsers.player
             EnvironmentSettings.Instance.audioSetting.OnValueChanged.AddListener(SoundBtn.Toggle);
             SetMicStatus(false);
 
-            EmoteMenu.EmoteButtonStatusChanged += value =>
-            {
-                EmoteBtn.Toggle(value);
-                IsOpen = value;
-            };
-
             playerCamera = PlayerMenuManager.Instance.PlayerCameraTransform;
         }
 
@@ -137,15 +114,19 @@ namespace umi3dBrowsers.player
 
         #endregion
 
+        /// <summary>
+        /// Is the emote menu open ?
+        /// </summary>
+        public bool IsOpen { get; protected set; } = false;
         public void ToggleDisplayEmote()
         {
             if (IsOpen)
             {
-                EmoteMenu.Instance.Hide();
+                // Open Emote menu.
             }
             else
             {
-                EmoteMenu.Instance.Display();
+                // Close Emote menu.
             }
         }
 
@@ -212,6 +193,16 @@ namespace umi3dBrowsers.player
         }
 
         #endregion
+
+        /// <summary>
+        /// Angle to considerer this wath in the field of view of the player
+        /// </summary>
+        private float detectionConeAngle = 20f;
+
+        /// <summary>
+        /// Height of the detection cone to consider this watch inside the player's field of view.
+        /// </summary>
+        private float detectionConeDistance = 1f;
 
         /// <summary>
         /// Is this object considered in the player's field of view ? Based on a detection cone defined by <see cref="detectionConeAngle"/> and <see cref="detectionConeDistance"/>.

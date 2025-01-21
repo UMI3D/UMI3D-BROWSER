@@ -17,19 +17,25 @@ limitations under the License.
 using inetum.unityUtils.observation;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.ui.inputField
 {
     [RequireComponent(typeof(TMP_InputField))]
+    [RequireComponent(typeof(LayoutElement))]
     public class InputFieldView : MonoBehaviour
     {
+        [SerializeField] RectTransform _viewport;
+
         TMP_InputField _inputField;
+        LayoutElement _layoutElement;
 
         InputFieldModelContainer _modelContainer;
 
         void Awake()
         {
             _inputField = GetComponent<TMP_InputField>();
+            _layoutElement = GetComponent<LayoutElement>();
             _modelContainer = GetComponentInParent<InputFieldModelContainer>();
 
             _inputField.onSubmit.AddListener(OnSubmited);
@@ -59,14 +65,19 @@ namespace umi3d.browserRuntime.ui.inputField
 
             if (notification.TryGetInfoT(InputFieldNotificationsKeys.InputFieldSet.NbrLine, out int nbrLine))
             {
+                Debug.Log(nbrLine, this);
                 RectTransform textAreaTransform = _inputField.textViewport.GetComponent<RectTransform>();
                 float padding = textAreaTransform.offsetMin.y + textAreaTransform.offsetMax.y;
 
                 TMP_Text textComponent = _inputField.textComponent;
-                float desiredHeight = textComponent.GetPreferredValues(new string('\n', nbrLine + 1)).y;
+                float desiredHeight = textComponent.GetPreferredValues(new string('\n', nbrLine)).y + padding;
+
+                _layoutElement.minHeight = desiredHeight;
 
                 RectTransform rectTransform = GetComponent<RectTransform>();
                 rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, desiredHeight);
+
+                _viewport.sizeDelta = new Vector2(_viewport.sizeDelta.x, desiredHeight);
             }
         }
     }

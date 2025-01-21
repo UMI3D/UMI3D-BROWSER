@@ -13,14 +13,35 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
-using System;
+using System.Collections;
+using System.Collections.Generic;
+using NUnit.Framework;
 using UnityEngine;
+using UnityEngine.TestTools;
 
-namespace umi3d
+public class #SCRIPTNAME#
 {
-    [CreateAssetMenu(fileName = "#SCRIPTNAME#", menuName = "UMI3D/#SCRIPTNAME#", order = 1)]
-    public class #SCRIPTNAME# : ScriptableObject
+    public class Test
     {
+        [SetUp]
+        public void SetUp()
+        {
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+        }
+
+        [Test]
+        public void TestScriptSimplePasses()
+        {
+        }
+
+        [UnityTest]
+        public IEnumerator TestScriptWithEnumeratorPasses()
+        {
+            yield return null;
+        }
     }
 }

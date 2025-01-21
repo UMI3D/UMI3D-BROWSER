@@ -14,8 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 using UnityEditor;
-using UnityEditor.Compilation;
-using UnityEngine;
 
 namespace umi3d.browserEditor.utils
 {
@@ -93,6 +91,16 @@ namespace umi3d.browserEditor.utils
            (
                $"{partialPath}/Umi3dScriptableTemplate.txt",
                "UMI3DScriptable.cs"
+           );
+        }
+
+        [MenuItem(itemName: "Assets/Create/Custom Script/Test", isValidateFunction: false, priority: 7)]
+        public static void CreateTestTemplate()
+        {
+            ProjectWindowUtil.CreateScriptAssetFromTemplateFile
+           (
+               $"{partialPath}/Umi3dTestTemplate.txt",
+               "UMI3DTest.cs"
            );
         }
     }

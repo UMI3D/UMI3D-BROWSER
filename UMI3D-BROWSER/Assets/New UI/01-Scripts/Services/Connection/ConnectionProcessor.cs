@@ -195,7 +195,6 @@ namespace umi3dBrowsers.services.connection
             UMI3DResourcesManager.Instance.ClearCache();
             UMI3DCollaborationClientServer.Logout();
 
-            WatchMenu.UnPinAllMenus();
             identifier.Reset();
         }
     }

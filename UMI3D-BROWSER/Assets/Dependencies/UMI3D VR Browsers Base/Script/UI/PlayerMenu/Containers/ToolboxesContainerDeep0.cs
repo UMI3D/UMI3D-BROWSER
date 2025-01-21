@@ -165,10 +165,10 @@ namespace umi3dVRBrowsersBase.ui.playerMenu
             IsPin = !m_pinButton.IsOn;
             m_pinButton.Toggle(IsPin);
             m_dropdown.SetActive(IsPin);
-            if (IsPin)
-                WatchMenu.PinMenu((Menu)menu);
-            else
-                WatchMenu.UnPinMenu((Menu)menu);
+            //if (IsPin)
+            //    WatchMenu.PinMenu((Menu)menu);
+            //else
+            //    WatchMenu.UnPinMenu((Menu)menu);
         }
 
         public void AddBoxInContainer(ToolboxesContainerDeep1 container)

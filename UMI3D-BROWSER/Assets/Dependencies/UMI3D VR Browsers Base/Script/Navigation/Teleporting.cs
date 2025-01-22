@@ -60,13 +60,8 @@ namespace umi3dVRBrowsersBase.navigation
         {
             //LoadingScreenDisplayer.OnLoadingScreenDislayed.AddListener(() => isLoadingScreenDisplayed = true);
             //LoadingScreenDisplayer.OnLoadingScreenHidden.AddListener(() => isLoadingScreenDisplayed = false);
-            Debug.Log("REMY : Teleporting script has been initialized.");
         }
 
-        protected virtual void Start()
-        {
-            Debug.Log("REMY : Teleporting script is running.");
-        }
 
         bool IsLeaderInGroup()
         {
@@ -83,22 +78,14 @@ namespace umi3dVRBrowsersBase.navigation
                 if (collaborationServer != null)
                 {
                     ulong userId = collaborationServer.GetUserId();
-                    Debug.Log($"REMY ID utilisateur : {userId}");
 
-                   if (guardianManager.lBEGroupDto.AdminUserId == userId)
-                   {
-                       return true;
-                   }
+                    if (guardianManager.lBEGroupDto.AdminUserId == userId)
+                        return true;             
                     else
-                    {
-                        return false;
-
-                    }
-                }
-                else
-                {
-                    return false;
-                }
+                        return false;                
+                }        
+                return false;
+                
             }
             else
             {
@@ -128,6 +115,8 @@ namespace umi3dVRBrowsersBase.navigation
 
                 if (/*GroupTeleportation.isGroupTeleport*/isLeader == true) // -> controler si le user qui demande la téléportation est un leader ou non
                 {
+                    Debug.Log("REMY -> is leader = true");
+
                     // Capture la position initiale
                     groupTeleportation.OnTeleportStart(teleportingObject.transform);
 
@@ -139,6 +128,8 @@ namespace umi3dVRBrowsersBase.navigation
                 }
                 else
                 {
+                    Debug.Log("REMY -> is leader = false");
+
                     TeleportIndividual(position.Value);
                 }
             }

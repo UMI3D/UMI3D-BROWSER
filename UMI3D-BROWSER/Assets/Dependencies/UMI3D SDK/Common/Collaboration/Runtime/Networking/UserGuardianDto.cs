@@ -17,6 +17,12 @@ namespace umi3d.common.lbe
         public List<ARAnchorDto> ARAnchors { get; set; }
 
         public uint ARiD { get; set; }
+
+        // to delete after demo or 0 for users unassigned
+        public UserGuardianDto()
+        {
+            IDLbeGroup = 1;
+        }
     }
 }
 

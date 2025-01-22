@@ -44,6 +44,19 @@ namespace umi3dVRBrowsersBase.connection
         {
             cameraManager = Camera.main.GetComponent<ARCameraManager>();
 
+            //for LBE Only
+
+            info[LocomotionNotificationKeys.Info.Controller] = Controller.RightHand;
+            info[LocomotionNotificationKeys.Info.SnapTurnActiveState] = ActiveState.Disable;
+            info[LocomotionNotificationKeys.Info.TeleportationActiveState] = ActiveState.Disable;
+            NotificationHub.Default.Notify(this, LocomotionNotificationKeys.System, info);
+
+
+            info[LocomotionNotificationKeys.Info.Controller] = Controller.LeftHand;
+            info[LocomotionNotificationKeys.Info.SnapTurnActiveState] = ActiveState.Disable;
+            info[LocomotionNotificationKeys.Info.TeleportationActiveState] = ActiveState.Disable;
+            NotificationHub.Default.Notify(this, LocomotionNotificationKeys.System, info);
+
             if (mainContainerLinker == null)
                 Debug.LogError("No MainContainerLinker reference.");
         }
@@ -66,17 +79,6 @@ namespace umi3dVRBrowsersBase.connection
 
             (UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DLoadingParameters).SetMR();
 
-            info[LocomotionNotificationKeys.Info.Controller] = Controller.RightHand;
-            info[LocomotionNotificationKeys.Info.SnapTurnActiveState] = ActiveState.Disable;
-            info[LocomotionNotificationKeys.Info.TeleportationActiveState] = ActiveState.Disable;
-            NotificationHub.Default.Notify(this, LocomotionNotificationKeys.System, info);
-
-
-            info[LocomotionNotificationKeys.Info.Controller] = Controller.LeftHand;
-            info[LocomotionNotificationKeys.Info.SnapTurnActiveState] = ActiveState.Disable;
-            info[LocomotionNotificationKeys.Info.TeleportationActiveState] = ActiveState.Disable;
-            NotificationHub.Default.Notify(this, LocomotionNotificationKeys.System, info);
-
             mainContainerLinker.Skybox.gameObject.SetActive(false);
         }
 
@@ -90,10 +92,10 @@ namespace umi3dVRBrowsersBase.connection
 
             (UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DLoadingParameters).SetVR();
 
-            info[LocomotionNotificationKeys.Info.Controller] = Controller.LeftAndRight;
+            /*info[LocomotionNotificationKeys.Info.Controller] = Controller.LeftAndRight;
             info[LocomotionNotificationKeys.Info.SnapTurnActiveState] = ActiveState.Disable; // disable for test teleportation group because spawn player in VR not synchro
             info[LocomotionNotificationKeys.Info.TeleportationActiveState] = ActiveState.Enable;
-            NotificationHub.Default.Notify(this, LocomotionNotificationKeys.System, info);
+            NotificationHub.Default.Notify(this, LocomotionNotificationKeys.System, info);*/
 
             mainContainerLinker.Skybox.gameObject.SetActive(true);
         }

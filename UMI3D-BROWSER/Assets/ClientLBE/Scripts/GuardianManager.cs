@@ -1,6 +1,9 @@
 using inetum.unityUtils;
+using inetum.unityUtils.observation;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using umi3d.browserRuntime.NotificationKeys;
 using umi3d.cdk;
 using umi3d.cdk.collaboration;
 using umi3d.cdk.collaboration.userCapture;
@@ -56,6 +59,9 @@ namespace ClientLBE
 
         private List<ARPlane> planesToCalibrate = new List<ARPlane>();
         public LBEGroupSyncRequestDTO lBEGroupDto = new LBEGroupSyncRequestDTO();
+
+
+        private Dictionary<string, System.Object> info = new();
 
         #endregion
 
@@ -165,17 +171,13 @@ namespace ClientLBE
 
         private void AddCapsulesToCurrentARUsers()
         {
-            Debug.Log("REMY -> Add Capsule occlusion");
             foreach (var userId in lBEGroupDto.UserAR)
             {
-                Debug.Log("REMY -> Add Capsule occlusion User ID -> " + userId);
 
                 var skeleton = CollaborationSkeletonsManager.Instance.GetCollaborativeSkeleton((UMI3DGlobalID.EnvironmentId, userId)) as AbstractSkeleton;
 
                 if (skeleton != null)
                 {
-                    Debug.Log("REMY -> Add Capsule occlusion Sketleton not null");
-
                     AddCapsuleToBone(skeleton, BoneType.Hips);
                 }
                 else
@@ -189,8 +191,6 @@ namespace ClientLBE
         {
             if (skeleton.Bones.TryGetValue(boneType, out var boneTransform))
             {
-                Debug.Log("REMY -> AddCapsuleToBone");
-
                 // Créer une capsule
                 GameObject capsule = GameObject.CreatePrimitive(PrimitiveType.Capsule);
 
@@ -317,15 +317,29 @@ namespace ClientLBE
 
             if (userGuardianDto != null)
             {
+                userGuardianDto.SetAdminUser = AdminUser;
 
-                if (AdminUser == true)
+                if(value)
                 {
-                    userGuardianDto.SetAdminUser = true;
+                    info[LocomotionNotificationKeys.Info.Controller] = Controller.LeftAndRight;
+                    info[LocomotionNotificationKeys.Info.SnapTurnActiveState] = ActiveState.Disable; // disable for test teleportation group because spawn player in VR not synchro
+                    info[LocomotionNotificationKeys.Info.TeleportationActiveState] = ActiveState.Enable;
+                    NotificationHub.Default.Notify(this, LocomotionNotificationKeys.System, info);
                 }
                 else
                 {
-                    userGuardianDto.SetAdminUser = false;
+                    info[LocomotionNotificationKeys.Info.Controller] = Controller.RightHand;
+                    info[LocomotionNotificationKeys.Info.SnapTurnActiveState] = ActiveState.Disable;
+                    info[LocomotionNotificationKeys.Info.TeleportationActiveState] = ActiveState.Disable;
+                    NotificationHub.Default.Notify(this, LocomotionNotificationKeys.System, info);
+
+
+                    info[LocomotionNotificationKeys.Info.Controller] = Controller.LeftHand;
+                    info[LocomotionNotificationKeys.Info.SnapTurnActiveState] = ActiveState.Disable;
+                    info[LocomotionNotificationKeys.Info.TeleportationActiveState] = ActiveState.Disable;
+                    NotificationHub.Default.Notify(this, LocomotionNotificationKeys.System, info);
                 }
+
             }
             else
             {
@@ -531,6 +545,7 @@ namespace ClientLBE
                 }
                 var loadingParameters = UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DLoadingParameters;
                 userGuardianDto.ARiD = loadingParameters.BrowserType;
+
             }
         }
 

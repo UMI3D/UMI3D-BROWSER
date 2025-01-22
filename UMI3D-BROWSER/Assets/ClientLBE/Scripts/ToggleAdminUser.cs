@@ -21,6 +21,8 @@ namespace ClientLBE
         {
             GuardianManager.Instance.ToggleUserAdmin(value);
             CheckToggleUserAdmin.SetActive(value);
+
+
         }
     }
 }

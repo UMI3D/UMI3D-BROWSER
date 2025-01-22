@@ -60,10 +60,6 @@ namespace umi3dBrowsers.player
         private ControllerType associatedController;
 
         [Header("Wristband buttons")]
-        [SerializeField]
-        [Tooltip("Button to display all menus pinned by users")]
-        OnOffButton EmoteBtn;
-
         [Header("Settings menu")]
         [SerializeField]
         [Tooltip("Root of the settings menu")]
@@ -113,22 +109,6 @@ namespace umi3dBrowsers.player
 
 
         #endregion
-
-        /// <summary>
-        /// Is the emote menu open ?
-        /// </summary>
-        public bool IsOpen { get; protected set; } = false;
-        public void ToggleDisplayEmote()
-        {
-            if (IsOpen)
-            {
-                // Open Emote menu.
-            }
-            else
-            {
-                // Close Emote menu.
-            }
-        }
 
         #region Setting Menu
 

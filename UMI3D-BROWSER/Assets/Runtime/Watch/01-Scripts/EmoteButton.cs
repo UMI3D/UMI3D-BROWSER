@@ -70,7 +70,6 @@ namespace umi3d.browserRuntime.ui.watch
 
         void Setup(IReadOnlyList<Emote> list)
         {
-            UnityEngine.Debug.Log($"emote = {list == null}");
             gameObject.SetActive(list != null && list.Count > 0);
         }
 

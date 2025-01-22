@@ -111,8 +111,9 @@ namespace umi3d.browserRuntime.ui.inGame.emote
         {
             if (notification.TryGetInfoT(EmoteNotificationKeys.OpenMenu.Menu, out MonoBehaviour menu, false))
             {
-                if (!menu && menu != this)
+                if (menu && menu != this)
                 {
+                    gameObject.SetActive(false);
                     return;
                 }
             }

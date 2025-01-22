@@ -85,8 +85,8 @@ namespace umi3dVRBrowsersBase.interactions.input
 
         public ulong? LineId { get; set; }
         public ulong DrawingID { get; set; } = 0;
-        public List<UMI3DNodeInstance> Meshes { get; set; }
-        public List<Vector3> Positions { get; set; }
+        public List<UMI3DNodeInstance> Meshes { get; set; } = new();
+        public List<Vector3> Positions { get; set; } = new();
         public float LastUpdateTime { get => lastUpdateTime; set => lastUpdateTime = value; }
         public float TimeSynchronization { get => timeSynchronization; set => timeSynchronization = value; }
         public float MinDistance { get => minDistance; set => minDistance = value; }

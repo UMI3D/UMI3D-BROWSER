@@ -1,5 +1,5 @@
 /*
-Copyright 2019 - 2024 Inetum
+Copyright 2019 - 2025 Inetum
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,70 +15,55 @@ limitations under the License.
 */
 
 using inetum.unityUtils.observation;
+using System.Collections;
 using System.Collections.Generic;
+using umi3d.browserRuntime.ui.inGame.emote;
 using umi3d.cdk.collaboration.emotes;
+using umi3dVRBrowsersBase.ui.playerMenu;
 using UnityEngine;
-using UnityEngine.UI;
 
-namespace umi3d.browserRuntime.ui.inGame.emote
+namespace umi3d.browserRuntime.ui.watch
 {
-    public class OpenEmoteButton : MonoBehaviour
+    public class EmoteButton : MonoBehaviour
     {
-        [SerializeField] Button button;
         [SerializeField] GameObject activeBackground;
+        [SerializeField] MonoBehaviour emotePanel;
 
         ID openID = ID.FromType<EmoteNotificationKeys.OpenMenu>();
         ID closeID = ID.FromType<EmoteNotificationKeys.CloseMenu>();
+        Dictionary<string, object> info = new();
 
         void Awake()
         {
-            button.onClick.AddListener(ToggleEmote);
-            NotificationHub.Default.Subscribe(
-                this, 
-                openID, 
-                (Callback)ShowBackground
-            );
-            NotificationHub.Default.Subscribe(
-                this,
-                closeID, 
-                (Callback)HideBackground
-            );
-            activeBackground.SetActive(false);
-
+            if (EmoteManager.Exists)
+            {
+                Setup(EmoteManager.Instance.Emotes);
+            } else
+            {
+                Setup(null);
+            }
             EmoteManager.Instance.EmotesLoaded += Setup;
-            gameObject.SetActive(false);
         }
 
-        void OnDestroy()
+        public void ToggleEmote()
         {
-            button.onClick.RemoveListener(ToggleEmote);
-            NotificationHub.Default.Unsubscribe(this);
+            info[!activeBackground.activeSelf
+                ? EmoteNotificationKeys.CloseMenu.Menu
+                : EmoteNotificationKeys.OpenMenu.Menu
+            ] = emotePanel;
 
-            EmoteManager.Instance.EmotesLoaded -= Setup;
-        }
-
-        void ToggleEmote()
-        {
             NotificationHub.Default.Notify(
-                this, 
-                activeBackground.activeSelf 
+                this,
+                !activeBackground.activeSelf
                 ? closeID
-                : openID
+                : openID,
+                info
             );
-        }
-
-        void ShowBackground()
-        {
-            activeBackground.SetActive(true);
-        }
-
-        void HideBackground()
-        {
-            activeBackground.SetActive(false);
         }
 
         void Setup(IReadOnlyList<Emote> list)
         {
+            UnityEngine.Debug.Log($"emote = {list == null}");
             gameObject.SetActive(list != null && list.Count > 0);
         }
     }

@@ -60,13 +60,13 @@ namespace umi3d.browserRuntime.ui.inGame.emote
             EmoteManager.Instance.EmoteEnded += CloseEmoteMenu;
 
             NotificationHub.Default.Subscribe(
-                this, 
-                EmoteNotificationKeys.Open,
+                this,
+                ID.FromType<EmoteNotificationKeys.OpenMenu>(),
                 (Callback)Open
             );
             NotificationHub.Default.Subscribe(
-                this, 
-                EmoteNotificationKeys.Close,
+                this,
+                ID.FromType<EmoteNotificationKeys.CloseMenu>(),
                 (Callback)Close
             );
             NotificationHub.Default.Subscribe(
@@ -101,11 +101,22 @@ namespace umi3d.browserRuntime.ui.inGame.emote
 
         private void CloseEmoteMenu(umi3d.cdk.collaboration.emotes.Emote emote)
         {
-            NotificationHub.Default.Notify(this, EmoteNotificationKeys.Close);
+            NotificationHub.Default.Notify(
+                this,
+                ID.FromType<EmoteNotificationKeys.CloseMenu>()
+            );
         }
 
-        private void Open()
+        private void Open(Notification notification)
         {
+            if (notification.TryGetInfoT(EmoteNotificationKeys.OpenMenu.Menu, out MonoBehaviour menu, false))
+            {
+                if (!menu && menu != this)
+                {
+                    return;
+                }
+            }
+
             gameObject.SetActive(true);
         }
 

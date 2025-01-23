@@ -18,8 +18,23 @@ namespace umi3d.browserRuntime.ui.inGame.emote
 {
     public static class EmoteNotificationKeys
     {
-        public static readonly string Open = "emote-open";
-        public static readonly string Close = "emote-close";
+        public class OpenMenu
+        {
+            /// <summary>
+            /// The menu to open.
+            /// </summary>
+            /// <remarks>Value is <see cref="UnityEngine.MonoBehaviour"/></remarks>
+            public const string Menu = "Menu";
+        }
+
+        public class CloseMenu
+        {
+            /// <summary>
+            /// The menu to close.
+            /// </summary>
+            /// <remarks>Value is <see cref="UnityEngine.MonoBehaviour"/></remarks>
+            public const string Menu = "Menu";
+        }
 
         /// <summary>
         /// Play an emote.

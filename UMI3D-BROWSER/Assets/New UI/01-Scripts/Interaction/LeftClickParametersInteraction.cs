@@ -76,6 +76,9 @@ public class LeftClickParametersInteraction : MonoBehaviour
 
     private void OnClick()
     {
+        if (_parameters == null || _parameters.Count == 0)
+            return;
+
         displayParameterNotifier[InteractionNotificationKeys.DisplayParameters.parameters] = _parameters;
         displayParameterNotifier.Notify();
     }

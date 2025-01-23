@@ -29,7 +29,7 @@ namespace umi3d.browserRuntime.ui.contextualMenu
         private void Awake()
         {
             NotificationHub.Default.Subscribe(this,
-                ID.FromType<InteractionNotificationKeys.DisplayParameters>(), 
+                ID.FromType<ContextualMenuNotificationKeys.Open>(), 
                 (Callback)Display);
 
             NotificationHub.Default.Subscribe(this,
@@ -45,23 +45,14 @@ namespace umi3d.browserRuntime.ui.contextualMenu
             gameObject.SetActive(false);
         }
 
-        private void Display(Notification notification)
+        private void Display()
         {
-            if (!notification.TryGetInfoT(InteractionNotificationKeys.DisplayParameters.parameters, out List<AbstractParameterDto> parameters))
-                return;
-
-            if (gameObject.activeSelf || parameters.Count <= 0)
-                return;
-
             gameObject.SetActive(true);
-            BaseCursor.SetMovement(this, BaseCursor.CursorMovement.Free);
         }
 
         private void Hide()
         {
             gameObject.SetActive(false);
-            BaseCursor.UnSetMovement(this);
-            BaseCursor.State = BaseCursor.CursorState.Default;
         }
     }
 }

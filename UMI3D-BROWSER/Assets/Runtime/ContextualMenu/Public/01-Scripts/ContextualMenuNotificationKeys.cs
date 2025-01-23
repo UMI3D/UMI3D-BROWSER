@@ -23,6 +23,10 @@ namespace umi3d.browserRuntime.ui.contextualMenu
             public static readonly string Parameter = "contextualMenu-add-parameter";
         }
 
+        public class Open
+        {
+        }
+
         public class Close
         {
         }

@@ -13,6 +13,8 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+using inetum.unityUtils.observation;
+using umi3d.browserRuntime.ui.contextualMenu;
 using ccs = umi3d.cdk.collaboration.UMI3DCollaborationClientServer;
 
 namespace umi3d.baseBrowser.cursor
@@ -82,6 +84,14 @@ namespace umi3d.baseBrowser.cursor
             s_movementUpdated += UpdateEnvironmentCursor;
             s_drawingModeUpdated += UpdateUnityCursor;
             s_drawingModeUpdated += UpdateEnvironmentCursor;
+
+            NotificationHub.Default.Subscribe(this,
+                ID.FromType<ContextualMenuNotificationKeys.Open>(),
+                (Callback)FreeCursor);
+
+            NotificationHub.Default.Subscribe(this,
+                ID.FromType<ContextualMenuNotificationKeys.Close>(),
+                (Callback)UnSetCursor);
         }
 
         protected virtual void Start()
@@ -104,6 +114,16 @@ namespace umi3d.baseBrowser.cursor
             s_stateUpdated = null;
             s_movementUpdated = null;
             Destroy(gameObject);
+        }
+
+        public void FreeCursor(Notification notification)
+        {
+            SetMovement(notification.Publisher, CursorMovement.Free);
+        }
+
+        public void UnSetCursor(Notification notification)
+        {
+            UnSetMovement(notification.Publisher);
         }
 
         /// <summary>

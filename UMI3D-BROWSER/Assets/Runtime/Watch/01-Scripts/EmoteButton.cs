@@ -28,6 +28,7 @@ namespace umi3d.browserRuntime.ui.watch
     {
         [SerializeField] GameObject activeBackground;
         [SerializeField] MonoBehaviour emotePanel;
+        [SerializeField] OnOffButton onOffButton;
 
         ID openID = ID.FromType<EmoteNotificationKeys.OpenMenu>();
         ID closeID = ID.FromType<EmoteNotificationKeys.CloseMenu>();
@@ -43,6 +44,12 @@ namespace umi3d.browserRuntime.ui.watch
                 Setup(null);
             }
             EmoteManager.Instance.EmotesLoaded += Setup;
+
+            NotificationHub.Default.Subscribe(
+                this,
+                openID,
+                (Callback)Open
+            );
         }
 
         public void ToggleEmote()
@@ -63,8 +70,18 @@ namespace umi3d.browserRuntime.ui.watch
 
         void Setup(IReadOnlyList<Emote> list)
         {
-            UnityEngine.Debug.Log($"emote = {list == null}");
             gameObject.SetActive(list != null && list.Count > 0);
+        }
+
+        void Open(Notification notification)
+        {
+            if (notification.TryGetInfoT(EmoteNotificationKeys.OpenMenu.Menu, out MonoBehaviour menu, false))
+            {
+                if (menu && menu != emotePanel)
+                {
+                    onOffButton.Toggle(false);
+                }
+            }
         }
     }
 }

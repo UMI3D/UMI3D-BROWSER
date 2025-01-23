@@ -42,6 +42,11 @@ namespace umi3d.browserRuntime.ui.slider
                 new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == _modelContainer.model));
         }
 
+        private void OnEnable()
+        {
+            _slider.Select();
+        }
+
         private void OnDestroy()
         {
             NotificationHub.Default.Unsubscribe(this);

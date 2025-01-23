@@ -23,7 +23,7 @@ namespace umi3d.baseBrowser.inputs.interactions
         /// <summary>
         /// Bone transform associated to interaction 
         /// </summary>
-        public Transform boneTransform { get; set; }
+        public Transform BoneTransform { get; set; }
 
         /// <summary>
         /// Bone id associated to interaction 

@@ -64,7 +64,7 @@ namespace umi3d.browserRuntime.ui.inGame.interactionMapping
         {
             cursorImage.sprite = cursorIcon;
         }
-        private void ShowNormal(KeyboardInteraction interaction) => ShowNormal();
+        private void ShowNormal(KeyboardInteraction interaction, string key) => ShowNormal();
 
         private void ShowHover()
         {

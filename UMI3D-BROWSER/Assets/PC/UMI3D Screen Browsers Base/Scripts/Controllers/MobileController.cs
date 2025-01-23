@@ -44,6 +44,7 @@ namespace umi3d.mobileBrowser.Controller
         public List<BaseInteraction<EventDto>> Manipulations => throw new System.NotImplementedException();
 
         public BaseManipulationGroup ManipulationGroup { get; set; }
+        public BaseDrawGroup DrawGroup { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
 
         /// <summary>
         /// <inheritdoc/>
@@ -61,7 +62,7 @@ namespace umi3d.mobileBrowser.Controller
             m_mainAction.Init(Controller);
             m_mainAction.bone = Controller.interactionBoneType;
             m_mainAction.Menu = ObjectMenu.menu;
-            m_mainAction.boneTransform = Controller.hoverBoneTransform;
+            m_mainAction.BoneTransform = Controller.hoverBoneTransform;
         }
         /// <summary>
         /// <inheritdoc/>

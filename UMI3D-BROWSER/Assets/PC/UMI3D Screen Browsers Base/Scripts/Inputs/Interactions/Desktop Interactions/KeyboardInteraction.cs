@@ -21,19 +21,33 @@ namespace umi3d.baseBrowser.inputs.interactions
     public class KeyboardInteraction : BaseKeyInteraction
     {
         public static List<KeyboardInteraction> S_Interactions = new List<KeyboardInteraction>();
+        public string lastMenuName;
 
         protected override void CreateMenuItem()
         {
             base.CreateMenuItem();
 
-            Mapped?.Invoke(this, menuItem.Name, Key);
+            ShowMenuItem();
+        }
+
+        public override void ShowMenuItem()
+        {
+            base.ShowMenuItem();
+            lastMenuName = menuItem.Name;
+            Mapped?.Invoke(this, lastMenuName, Key);
+        }
+
+        public override void HideMenuItem()
+        {
+            base.HideMenuItem();
+
+            Unmapped?.Invoke(this, lastMenuName);
         }
 
         public override void Dissociate()
         {
             base.Dissociate();
-
-            Unmapped?.Invoke(this);
+            HideMenuItem();
         }
 
         /// <summary>
@@ -43,6 +57,6 @@ namespace umi3d.baseBrowser.inputs.interactions
         /// <summary>
         /// Action raised when this interaction has been dissociated.
         /// </summary>
-        public static System.Action<KeyboardInteraction> Unmapped;
+        public static System.Action<KeyboardInteraction, string> Unmapped;
     }
 }

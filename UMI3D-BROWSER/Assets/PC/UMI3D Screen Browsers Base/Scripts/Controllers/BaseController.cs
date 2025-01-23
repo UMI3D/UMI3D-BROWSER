@@ -58,6 +58,7 @@ namespace umi3d.baseBrowser.Controller
         public GameObject EventActions;
         public GameObject ManipulationGroupActions;
         public GameObject ManipulationActions;
+        public GameObject DrawGroupActions;
 
         [Header("Keyboard' parents")]
         public GameObject KeyboardActions;
@@ -122,6 +123,8 @@ namespace umi3d.baseBrowser.Controller
             ManipulationMenu = Resources.Load<MenuAsset>("Scriptables/GamePanel/ManipulationMenu");
 
             ManipulationGroupInputs.AddRange(ManipulationGroupActions.GetComponents<BaseManipulationGroup>());
+            DrawGroupInputs.AddRange(DrawGroupActions.GetComponents<BaseDrawGroup>());
+
             //TODO instantiate concrete controllers.
             m_controllers.Add
             (
@@ -129,7 +132,8 @@ namespace umi3d.baseBrowser.Controller
                 {
                     Controller = this,
                     ObjectMenu = ObjectMenu,
-                    ManipulationGroup = ManipulationGroupInputs.Find(a => a is ManipulationGroupeForDesktop)
+                    ManipulationGroup = ManipulationGroupInputs.Find(a => a is ManipulationGroupeForDesktop),
+                    DrawGroup = DrawGroupInputs.Find(a => a is DrawGroupForDesktop),
                 }
             );
             m_controllers.Add

@@ -41,8 +41,8 @@ namespace umi3d.baseBrowser.parameters
                     parameter = dto,
                     hoveredObjectId = GetCurrentHoveredObjectID(),
                     boneType = bone,
-                    bonePosition = (Vector3Dto)boneTransform.position.Dto(),
-                    boneRotation = (Vector4Dto)boneTransform.rotation.Dto()
+                    bonePosition = (Vector3Dto)BoneTransform.position.Dto(),
+                    boneRotation = (Vector4Dto)BoneTransform.rotation.Dto()
                 };
                 cdk.UMI3DClientServer.SendData(pararmeterDto, true);
             };

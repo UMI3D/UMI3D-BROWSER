@@ -62,6 +62,9 @@ namespace umi3d.baseBrowser.inputs.interactions
         }
 
         protected abstract void CreateMenuItem();
+        public virtual void HideMenuItem() { }
+        public virtual void ShowMenuItem() { }
+
         protected abstract void PressedDown();
         protected abstract void PressedUp();
     }

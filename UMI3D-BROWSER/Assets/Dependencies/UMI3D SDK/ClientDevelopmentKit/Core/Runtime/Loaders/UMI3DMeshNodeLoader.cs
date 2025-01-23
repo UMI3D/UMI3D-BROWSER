@@ -269,7 +269,7 @@ namespace umi3d.cdk
             }
             else
             {
-                root = go;           
+                root = go;
             }
 
             GameObject instance = null;

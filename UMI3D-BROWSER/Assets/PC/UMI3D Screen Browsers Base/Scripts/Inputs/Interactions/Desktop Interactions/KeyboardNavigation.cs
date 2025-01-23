@@ -29,7 +29,8 @@ namespace umi3d.baseBrowser.inputs.interactions
         sprint,
         Jump,
         Crouch,
-        FreeView
+        FreeView,
+        FreeViewInDrawMode
     }
 
     public class KeyboardNavigation : BaseKeyInteraction

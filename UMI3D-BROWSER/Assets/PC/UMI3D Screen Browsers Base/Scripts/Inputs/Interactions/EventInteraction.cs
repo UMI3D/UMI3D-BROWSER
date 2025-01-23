@@ -14,8 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
+using System;
 using umi3d.cdk;
 using umi3d.common;
+using umi3d.common.interaction;
 
 namespace umi3d.baseBrowser.inputs.interactions
 {
@@ -47,9 +50,18 @@ namespace umi3d.baseBrowser.inputs.interactions
             };
         }
 
+        public Action PressedDownOverrider = null;
+        public Action PressedUpOverrider = null;
+
         protected override void PressedDown()
         {
             onInputDown.Invoke();
+
+            if(PressedDownOverrider != null) 
+            {
+                PressedDownOverrider();
+                return;
+            }
 
             if (associatedInteraction == null) return;
 
@@ -62,8 +74,9 @@ namespace umi3d.baseBrowser.inputs.interactions
                     id = associatedInteraction.id,
                     toolId = this.toolId,
                     hoveredObjectId = hoveredObjectId,
-                    bonePosition = (Vector3Dto)boneTransform.position.Dto(),
-                    boneRotation = (Vector4Dto)boneTransform.rotation.Dto()
+                    bonePosition = (Vector3Dto)BoneTransform.position.Dto(),
+                    boneRotation = (Vector4Dto)BoneTransform.rotation.Dto(),
+                    environmentId = this.environmentId
                 };
                 cdk.UMI3DClientServer.SendData(eventdto, true);
                 risingEdgeEventSent = true;
@@ -77,23 +90,31 @@ namespace umi3d.baseBrowser.inputs.interactions
                     id = associatedInteraction.id,
                     toolId = this.toolId,
                     hoveredObjectId = hoveredObjectId,
-                    bonePosition = boneTransform.position.Dto(),
-                    boneRotation = boneTransform.rotation.Dto()
+                    bonePosition = BoneTransform.position.Dto(),
+                    boneRotation = BoneTransform.rotation.Dto(),
+                    environmentId = this.environmentId
                 };
                 cdk.UMI3DClientServer.SendData(eventdto, true);
             }
-            if (associatedInteraction.TriggerAnimationId != 0)
-                StartAnim(environmentId,associatedInteraction.TriggerAnimationId);
+            if (associatedInteraction.triggerAnimationId != 0)
+                StartAnim(environmentId, associatedInteraction.triggerAnimationId);
         }
 
         protected override void PressedUp()
         {
             onInputUp.Invoke();
 
+            if (PressedUpOverrider != null)
+            {
+                PressedUpOverrider();
+                return;
+            }
+
             if (associatedInteraction == null) return;
 
-            if (associatedInteraction.ReleaseAnimationId != 0) StartAnim(environmentId, associatedInteraction.ReleaseAnimationId);
-            if (!associatedInteraction.hold || !risingEdgeEventSent) return;
+            if (associatedInteraction.releaseAnimationId != 0) StartAnim(environmentId, associatedInteraction.releaseAnimationId);
+            if (!associatedInteraction.hold || !risingEdgeEventSent)
+                return;
 
             var eventdto = new common.interaction.EventStateChangedDto
             {
@@ -102,8 +123,9 @@ namespace umi3d.baseBrowser.inputs.interactions
                 id = associatedInteraction.id,
                 toolId = this.toolId,
                 hoveredObjectId = hoveredObjectId,
-                bonePosition = boneTransform.position.Dto(),
-                boneRotation = boneTransform.rotation.Dto()
+                bonePosition = BoneTransform.position.Dto(),
+                boneRotation = BoneTransform.rotation.Dto(),
+                environmentId = this.environmentId
             };
             cdk.UMI3DClientServer.SendData(eventdto, true);
             IsInputHold = false;
@@ -129,5 +151,16 @@ namespace umi3d.baseBrowser.inputs.interactions
                 anim.Start();
             }
         }
+
+        public override bool IsCompatibleWith(common.interaction.AbstractInteractionDto interaction) => base.IsCompatibleWith(interaction) && interaction is not DrawingInteractionDto;
+
+        public override void Dissociate()
+        {
+            base.Dissociate();
+            PressedDownOverrider = null;
+            PressedUpOverrider = null;
+        }
+
     }
+
 }

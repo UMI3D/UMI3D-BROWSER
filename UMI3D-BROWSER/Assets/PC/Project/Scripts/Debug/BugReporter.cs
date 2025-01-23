@@ -23,7 +23,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using umi3d;
-using umi3d.baseBrowser.cursor;
+using umi3d.browserRuntime.cursor;
 using UnityEngine;
 using UnityEngine.UIElements;
 

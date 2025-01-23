@@ -17,7 +17,7 @@ using inetum.unityUtils.observation;
 using umi3d.browserRuntime.ui.contextualMenu;
 using ccs = umi3d.cdk.collaboration.UMI3DCollaborationClientServer;
 
-namespace umi3d.baseBrowser.cursor
+namespace umi3d.browserRuntime.cursor
 {
     public class BaseCursor : inetum.unityUtils.SingleBehaviour<BaseCursor>
     {

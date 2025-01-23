@@ -15,11 +15,7 @@ limitations under the License.
 */
 
 using inetum.unityUtils.observation;
-using System.Collections.Generic;
-using umi3d.baseBrowser.cursor;
-using umi3d.browserRuntime.notificationKeys;
 using umi3d.browserRuntime.ui.inGame.tablet;
-using umi3d.common.interaction;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.contextualMenu
@@ -35,6 +31,7 @@ namespace umi3d.browserRuntime.ui.contextualMenu
             NotificationHub.Default.Subscribe(this,
                 ID.FromType<ContextualMenuNotificationKeys.Close>(), 
                 (Callback)Hide);
+
             NotificationHub.Default.Subscribe(this, 
                 TabletNotificationKeys.Open, 
                 (Callback)Hide);

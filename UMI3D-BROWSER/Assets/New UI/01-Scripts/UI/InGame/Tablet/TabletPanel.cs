@@ -15,9 +15,9 @@ limitations under the License.
 */
 
 using inetum.unityUtils.observation;
-using umi3d.baseBrowser.cursor;
+using umi3d.browserRuntime.cursor;
 using UnityEngine;
-using static umi3d.baseBrowser.cursor.BaseCursor;
+using static umi3d.browserRuntime.cursor.BaseCursor;
 
 namespace umi3d.browserRuntime.ui.inGame.tablet
 {

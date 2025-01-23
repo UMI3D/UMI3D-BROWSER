@@ -41,6 +41,11 @@ namespace umi3d.browserRuntime.ui.dropdown
                 new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == _modelContainer.model));
         }
 
+        private void OnEnable()
+        {
+            _dropdown.Select();
+        }
+
         void DropdownSet(Notification notification)
         {
             if (notification.TryGetInfoT(DropdownNotificationKeys.DropdownSet.Options, out _options))

@@ -46,6 +46,11 @@ namespace umi3d.browserRuntime.ui.inputField
                 new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == _modelContainer.model));
         }
 
+        private void OnEnable()
+        {
+            _inputField.Select();
+        }
+
         private void OnDestroy()
         {
             NotificationHub.Default.Unsubscribe(this);

@@ -57,6 +57,11 @@ namespace umi3d.browserRuntime.ui.toggle
                 new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == _modelContainer.model));
         }
 
+        private void OnEnable()
+        {
+            _slider.Select();
+        }
+
         private void SetUpSliderComponents()
         {
             _slider = GetComponent<Slider>();

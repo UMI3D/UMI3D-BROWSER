@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 using inetum.unityUtils.observation;
-using umi3d.baseBrowser.cursor;
+using umi3d.browserRuntime.cursor;
 using umi3d.baseBrowser.inputs.interactions;
 using umi3d.browserRuntime.ui;
 using UnityEngine;

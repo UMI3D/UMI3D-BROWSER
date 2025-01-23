@@ -16,7 +16,7 @@ limitations under the License.
 using umi3d.cdk.interaction;
 using UnityEngine;
 
-namespace umi3d.baseBrowser.cursor
+namespace umi3d.browserRuntime.cursor
 {
     public enum HoverState
     {

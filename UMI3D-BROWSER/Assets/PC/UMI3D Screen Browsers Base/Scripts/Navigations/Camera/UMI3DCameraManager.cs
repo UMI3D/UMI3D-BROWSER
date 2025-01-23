@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 using inetum.unityUtils.observation;
-using umi3d.baseBrowser.cursor;
+using umi3d.browserRuntime.cursor;
 using umi3d.baseBrowser.Navigation;
 using umi3d.cdk.notification;
 using umi3d.common;

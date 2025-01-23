@@ -24,11 +24,14 @@ namespace umi3d.browserRuntime.ui.contextualMenu
     public class ContextualMenuCloseButton : MonoBehaviour
     {
         Button button;
+        ContextualMenuModelContainer _modelContainer;
 
         private void Awake()
         {
             button = GetComponent<Button>();
             button.onClick.AddListener(OnClick);
+
+            _modelContainer = GetComponentInParent<ContextualMenuModelContainer>();
         }
 
         private void OnDestroy()
@@ -38,7 +41,7 @@ namespace umi3d.browserRuntime.ui.contextualMenu
 
         private void OnClick()
         {
-            NotificationHub.Default.Notify(this,
+            NotificationHub.Default.Notify(_modelContainer.model,
                 ID.FromType<ContextualMenuNotificationKeys.Close>());
         }
     }

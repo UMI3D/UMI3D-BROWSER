@@ -67,6 +67,8 @@ namespace umi3d.browserRuntime.ui.contextualMenu
                 _addParameterNotifier[ContextualMenuNotificationKeys.AddParameter.Parameter] = param;
                 _addParameterNotifier.Notify();
             }
+
+            NotificationHub.Default.Notify(this, ID.FromType<ContextualMenuNotificationKeys.Open>());
         }
 
         private void Hide(Notification notification)

@@ -15,7 +15,7 @@ limitations under the License.
 */
 using System.Collections;
 using System.Collections.Generic;
-using umi3d.baseBrowser.cursor;
+using umi3d.browserRuntime.cursor;
 using umi3d.cdk;
 using umi3d.common;
 using umi3d.common.interaction;

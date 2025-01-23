@@ -15,8 +15,11 @@ limitations under the License.
 */
 
 using inetum.unityUtils.observation;
+using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.ui.inputField
@@ -26,6 +29,7 @@ namespace umi3d.browserRuntime.ui.inputField
     public class InputFieldView : MonoBehaviour
     {
         [SerializeField] RectTransform _viewport;
+        [SerializeField] InputActionReference _actionReference;
 
         TMP_InputField _inputField;
         LayoutElement _layoutElement;
@@ -38,7 +42,7 @@ namespace umi3d.browserRuntime.ui.inputField
             _layoutElement = GetComponent<LayoutElement>();
             _modelContainer = GetComponentInParent<InputFieldModelContainer>();
 
-            _inputField.onSubmit.AddListener(OnSubmited);
+            _actionReference.action.started += OnSubmited;
 
             NotificationHub.Default.Subscribe(this,
                 ID.FromType<InputFieldNotificationsKeys.InputFieldSet>(), 
@@ -54,11 +58,18 @@ namespace umi3d.browserRuntime.ui.inputField
         private void OnDestroy()
         {
             NotificationHub.Default.Unsubscribe(this);
+            _actionReference.action.started -= OnSubmited;
         }
 
-        private void OnSubmited(string newValue)
+        private void OnSubmited(InputAction.CallbackContext context)
         {
-            _modelContainer.model.UpdateValue(newValue);
+            if (!_inputField.isFocused)
+                return;
+            if (Keyboard.current.shiftKey.IsPressed())
+                return;
+
+            _modelContainer.model.UpdateValue(_inputField.text);
+            EventSystem.current.SetSelectedGameObject(null);
         }
 
         private void InputFieldSet(Notification notification)

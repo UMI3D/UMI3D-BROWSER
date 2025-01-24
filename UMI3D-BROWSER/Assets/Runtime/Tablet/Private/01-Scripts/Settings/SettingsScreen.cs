@@ -18,36 +18,35 @@ using inetum.unityUtils.observation;
 using umi3d.browserRuntime.ui.tablet;
 using UnityEngine;
 
-namespace umi3d.browserRuntime.ui.contextualMenu
+namespace umi3d.browserRuntime.ui.settings
 {
-    public class ContextualMenuView : MonoBehaviour
+    public class SettingsScreen : MonoBehaviour
     {
         private void Awake()
         {
-            NotificationHub.Default.Subscribe(this,
-                ID.FromType<ContextualMenuNotificationKeys.Open>(), 
-                (Callback)Display);
-
-            NotificationHub.Default.Subscribe(this,
-                ID.FromType<ContextualMenuNotificationKeys.Close>(), 
-                (Callback)Hide);
-
-            NotificationHub.Default.Subscribe(this, 
-                TabletNotificationKeys.Open, 
-                (Callback)Hide);
+            NotificationHub.Default.Subscribe(
+                this, 
+                TabletNotificationKeys.OpenSettings, 
+                (Callback)Open
+            );
+            NotificationHub.Default.Subscribe(
+                this, 
+                TabletNotificationKeys.CloseScreens, 
+                (Callback)Close
+            );
         }
 
-        private void Start()
+        private void OnDestroy()
         {
-            gameObject.SetActive(false);
+            NotificationHub.Default.Unsubscribe(this);
         }
 
-        private void Display()
+        private void Open()
         {
             gameObject.SetActive(true);
         }
 
-        private void Hide()
+        private void Close()
         {
             gameObject.SetActive(false);
         }

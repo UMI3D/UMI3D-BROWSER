@@ -15,41 +15,45 @@ limitations under the License.
 */
 
 using inetum.unityUtils.observation;
-using umi3d.browserRuntime.ui.tablet;
+using umi3d.browserRuntime.cursor;
 using UnityEngine;
+using static umi3d.browserRuntime.cursor.BaseCursor;
 
-namespace umi3d.browserRuntime.ui.contextualMenu
+namespace umi3d.browserRuntime.ui.tablet
 {
-    public class ContextualMenuView : MonoBehaviour
+    public class TabletPanel : MonoBehaviour
     {
         private void Awake()
         {
-            NotificationHub.Default.Subscribe(this,
-                ID.FromType<ContextualMenuNotificationKeys.Open>(), 
-                (Callback)Display);
-
-            NotificationHub.Default.Subscribe(this,
-                ID.FromType<ContextualMenuNotificationKeys.Close>(), 
-                (Callback)Hide);
-
-            NotificationHub.Default.Subscribe(this, 
-                TabletNotificationKeys.Open, 
-                (Callback)Hide);
-        }
-
-        private void Start()
-        {
+            NotificationHub.Default.Subscribe(
+                this, 
+                TabletNotificationKeys.Open,
+                (Callback)Open
+            );
+            NotificationHub.Default.Subscribe(
+                this, 
+                TabletNotificationKeys.Close, 
+                (Callback)Close
+            );
             gameObject.SetActive(false);
         }
 
-        private void Display()
+        private void OnDestroy()
+        {
+            NotificationHub.Default.Unsubscribe(this);
+        }
+
+        private void Open()
         {
             gameObject.SetActive(true);
+            BaseCursor.SetMovement(this, CursorMovement.Free);
         }
 
-        private void Hide()
+        private void Close()
         {
             gameObject.SetActive(false);
+            BaseCursor.UnSetMovement(this);
         }
     }
 }
+

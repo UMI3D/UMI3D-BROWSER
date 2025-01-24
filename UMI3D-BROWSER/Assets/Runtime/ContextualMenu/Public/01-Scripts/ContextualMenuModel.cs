@@ -17,7 +17,7 @@ limitations under the License.
 using inetum.unityUtils.observation;
 using System.Collections.Generic;
 using umi3d.browserRuntime.notificationKeys;
-using umi3d.browserRuntime.ui.inGame.tablet;
+using umi3d.browserRuntime.ui.tablet;
 using umi3d.common.interaction;
 
 namespace umi3d.browserRuntime.ui.contextualMenu

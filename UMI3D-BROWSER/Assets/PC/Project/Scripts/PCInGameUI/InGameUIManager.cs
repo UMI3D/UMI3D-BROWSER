@@ -18,9 +18,9 @@ using inetum.unityUtils.observation;
 using umi3d.browserRuntime.cursor;
 using umi3d.baseBrowser.inputs.interactions;
 using umi3d.browserRuntime.ui.inGame;
-using umi3d.browserRuntime.ui.inGame.tablet;
 using UnityEngine;
 using static umi3d.browserRuntime.cursor.BaseCursor;
+using umi3d.browserRuntime.ui.tablet;
 
 namespace umi3dBrowsers.ingame_ui
 {

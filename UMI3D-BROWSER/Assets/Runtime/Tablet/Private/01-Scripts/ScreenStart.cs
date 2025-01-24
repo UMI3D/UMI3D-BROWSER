@@ -15,29 +15,28 @@ limitations under the License.
 */
 
 using inetum.unityUtils.observation;
-using umi3d.baseBrowser.inputs.interactions;
-using umi3d.browserRuntime.ui.tablet;
 using UnityEngine;
 
-namespace umi3d.browserRuntime.shortcuts
+namespace umi3d.browserRuntime.ui.tablet
 {
-    public class SocialShortcup : MonoBehaviour
+    /// <summary>
+    /// To permit all screen to call it awake
+    /// </summary>
+    public class ScreenStart : MonoBehaviour
     {
-        private void OnEnable()
+        [SerializeField] private GameObject[] screens;
+
+        private void Awake()
         {
-            KeyboardShortcut.AddDownListener(ShortcutEnum.DisplayHideUsersList, OpenUserList);
+            foreach (var screen in screens)
+                screen.SetActive(true);
         }
 
-        private void OnDisable()
+        private void Start()
         {
-            KeyboardShortcut.RemoveDownListener(ShortcutEnum.DisplayHideUsersList, OpenUserList);
-        }
+            foreach (var screen in screens)
+                screen.SetActive(false);
 
-        private void OpenUserList()
-        {
-            if (KeyboardShortcut.IsEditingTextField)
-                return;
-            NotificationHub.Default.Notify(this, TabletNotificationKeys.Open);
             NotificationHub.Default.Notify(this, TabletNotificationKeys.ClickButtonSocial);
         }
     }

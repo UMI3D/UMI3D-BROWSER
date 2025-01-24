@@ -55,17 +55,6 @@ namespace umi3d.browserRuntime.ui.social
 
         void Awake()
         {
-            NotificationHub.Default.Subscribe(
-                this, 
-                TabletNotificationKeys.OpenSocial, 
-                (Callback)Open
-            );
-            NotificationHub.Default.Subscribe(
-                this, 
-                TabletNotificationKeys.CloseScreens, 
-                (Callback)Close
-            );
-
             // Reset
             _Reset();
             UMI3DEnvironmentClient.EnvironmentLoaded.AddListener(_Reset);
@@ -289,16 +278,6 @@ namespace umi3d.browserRuntime.ui.social
 
             socialElement.ToggleGroup = toggleGroup;
             socialElement.nonPrimaryActionContainer = userActionContainer;
-        }
-
-        public void Open()
-        {
-            gameObject.SetActive(true);
-        }
-
-        public void Close()
-        {
-            gameObject.SetActive(false);
         }
 
 #if UNITY_EDITOR

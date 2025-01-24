@@ -32,9 +32,6 @@ namespace umi3d.browserRuntime.ui.userNotification
         {
             newNotifIndicator.SetActive(false);
 
-            button = GetComponent<Button>();
-            button.onClick.AddListener(OpenUserNotification);
-
             NotificationHub.Default.Subscribe(
                 this, 
                 TabletNotificationKeys.UserNotificationReceived, 
@@ -51,9 +48,6 @@ namespace umi3d.browserRuntime.ui.userNotification
 
         private void OpenUserNotification()
         {
-            NotificationHub.Default.Notify(this, TabletNotificationKeys.CloseScreens);
-            NotificationHub.Default.Notify(this, TabletNotificationKeys.OpenUserNotification);
-
             newNotifIndicator.SetActive(false);
         }
 

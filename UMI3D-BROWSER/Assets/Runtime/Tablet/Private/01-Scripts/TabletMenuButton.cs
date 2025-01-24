@@ -1,5 +1,5 @@
 /*
-Copyright 2019 - 2024 Inetum
+Copyright 2019 - 2025 Inetum
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,34 +14,35 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils.observation;
-using umi3d.browserRuntime.ui.tablet;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace umi3d.browserRuntime.ui.libraries
+namespace umi3d.browserRuntime.ui.tablet
 {
     [RequireComponent(typeof(Button))]
-    public class OpenLibrariesButton : MonoBehaviour
+    public class TabletMenuButton : MonoBehaviour
     {
-        private Button button;
+        [SerializeField] TabletMenu _menu;
+
+        Button _button;
+        TabletModelContainer _modelContainer;
 
         private void Awake()
         {
-            button = GetComponent<Button>();
-            button.onClick.AddListener(OpenUserNotification);
+            _button = GetComponent<Button>();
+            _button.onClick.AddListener(OnClick);
+
+            _modelContainer = GetComponentInParent<TabletModelContainer>();
         }
 
         private void OnDestroy()
         {
-            button.onClick.RemoveListener(OpenUserNotification);
+            _button.onClick.RemoveListener(OnClick);
         }
 
-        private void OpenUserNotification()
+        void OnClick()
         {
-            NotificationHub.Default.Notify(this, TabletNotificationKeys.CloseScreens);
-            NotificationHub.Default.Notify(this, TabletNotificationKeys.OpenLibraries);
-
+            _modelContainer.Model.UpdateMenu(_menu);
         }
     }
 }

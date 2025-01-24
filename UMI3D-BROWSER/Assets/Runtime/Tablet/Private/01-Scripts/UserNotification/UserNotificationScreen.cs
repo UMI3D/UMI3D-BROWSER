@@ -34,22 +34,11 @@ namespace umi3d.browserRuntime.ui.userNotification
         private void Awake()
         {
             notificationLoader.Notification2DReceived += AddNotification;
-            NotificationHub.Default.Subscribe(
-                this, 
-                TabletNotificationKeys.OpenUserNotification,
-                (Callback)Open
-            );
-            NotificationHub.Default.Subscribe(
-                this, 
-                TabletNotificationKeys.CloseScreens, 
-                (Callback)Close
-            );
         }
 
         private void OnDestroy()
         {
             notificationLoader.Notification2DReceived -= AddNotification;
-            NotificationHub.Default.Unsubscribe(this);
         }
 
         public void AddNotification(NotificationDto notificationDto)
@@ -59,16 +48,6 @@ namespace umi3d.browserRuntime.ui.userNotification
             notification.Init(notificationDto);
             _notificationElements.Add(notification);
             NotificationHub.Default.Notify(this, TabletNotificationKeys.UserNotificationReceived);
-        }
-
-        public void Open()
-        {
-            gameObject.SetActive(true);
-        }
-
-        public void Close()
-        {
-            gameObject.SetActive(false);
         }
 
 #if UNITY_EDITOR

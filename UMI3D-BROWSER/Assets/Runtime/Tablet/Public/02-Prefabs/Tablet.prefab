@@ -1358,7 +1358,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 724008304619046024}
-  - component: {fileID: 5839201872975318798}
   - component: {fileID: 7338702984993382066}
   m_Layer: 5
   m_Name: StorageScreen
@@ -1388,18 +1387,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -25}
   m_SizeDelta: {x: 0, y: -50}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &5839201872975318798
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1836199899958919652}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b366cc2ef9af51446bbb53cc0466ac7d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &7338702984993382066
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1425,8 +1412,8 @@ GameObject:
   - component: {fileID: 7736564278054001994}
   - component: {fileID: 1986392866529189669}
   - component: {fileID: 3201701082165541409}
-  - component: {fileID: 3195743034711081794}
   - component: {fileID: 6954764710204932964}
+  - component: {fileID: 5433487047267002710}
   m_Layer: 5
   m_Name: LibrariesButton
   m_TagString: Untagged
@@ -1524,18 +1511,6 @@ MonoBehaviour:
   iconColor: {r: 0.6666667, g: 0.6666667, b: 0.6666667, a: 1}
   iconColorHover: {r: 1, g: 1, b: 1, a: 1}
   iconColorActive: {r: 1, g: 1, b: 1, a: 1}
---- !u!114 &3195743034711081794
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1884476002372894614}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a28c1c15bb48641438fe969c33b4c366, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &6954764710204932964
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1548,6 +1523,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aeb3963fb6845a34697b73b74f2b3ab3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &5433487047267002710
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1884476002372894614}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 182908431c14a7a44a1e50cc2171d298, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _menu: 1
 --- !u!1 &1913029814479759429
 GameObject:
   m_ObjectHideFlags: 0
@@ -2412,7 +2400,7 @@ GameObject:
   - component: {fileID: 6465648960990011179}
   - component: {fileID: 8610454722752919615}
   - component: {fileID: 5564637277438789908}
-  - component: {fileID: 364653243565229807}
+  - component: {fileID: 9037648452245351054}
   m_Layer: 5
   m_Name: SocialButton
   m_TagString: Untagged
@@ -2554,7 +2542,7 @@ MonoBehaviour:
   iconColor: {r: 0.6666667, g: 0.6666667, b: 0.6666667, a: 1}
   iconColorHover: {r: 1, g: 1, b: 1, a: 1}
   iconColorActive: {r: 1, g: 1, b: 1, a: 1}
---- !u!114 &364653243565229807
+--- !u!114 &9037648452245351054
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2563,9 +2551,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 2392906436140181471}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 94a766e566c1f0445a27f5f49f32f59a, type: 3}
+  m_Script: {fileID: 11500000, guid: 182908431c14a7a44a1e50cc2171d298, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _menu: 3
 --- !u!1 &2398800235651387231
 GameObject:
   m_ObjectHideFlags: 0
@@ -2849,7 +2838,7 @@ RectTransform:
   m_Father: {fileID: 1865066975074136070}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -3928,6 +3917,7 @@ GameObject:
   - component: {fileID: 9176504481174249809}
   - component: {fileID: 8092925826828840088}
   - component: {fileID: 8767333940488668361}
+  - component: {fileID: 7086355358183057128}
   m_Layer: 5
   m_Name: NotifsButton
   m_TagString: Untagged
@@ -4083,6 +4073,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   newNotifIndicator: {fileID: 1913029814479759429}
+--- !u!114 &7086355358183057128
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3860309839341392213}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 182908431c14a7a44a1e50cc2171d298, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _menu: 2
 --- !u!1 &3952211651930616815
 GameObject:
   m_ObjectHideFlags: 0
@@ -4336,7 +4339,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 914577229273381727}
-  - component: {fileID: 5383090877500607329}
   - component: {fileID: 8523458838610885596}
   m_Layer: 5
   m_Name: SettingsScreen
@@ -4366,18 +4368,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -25}
   m_SizeDelta: {x: 0, y: -50}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &5383090877500607329
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4071396001328644852}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b3bcb18b23cb874b825e783deb91e32, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &8523458838610885596
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5400,7 +5390,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &456474701674645160
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5541,7 +5531,7 @@ RectTransform:
   m_Father: {fileID: 8814227550405798966}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -9745,7 +9735,7 @@ GameObject:
   - component: {fileID: 7087253951577510606}
   - component: {fileID: 898507188607019172}
   - component: {fileID: 4052763910673313318}
-  - component: {fileID: 3106865253991373811}
+  - component: {fileID: 2031003335397261070}
   - component: {fileID: 2244659846565620320}
   m_Layer: 5
   m_Name: SettingsButton
@@ -9844,7 +9834,7 @@ MonoBehaviour:
   iconColor: {r: 0.6666667, g: 0.6666667, b: 0.6666667, a: 1}
   iconColorHover: {r: 1, g: 1, b: 1, a: 1}
   iconColorActive: {r: 1, g: 1, b: 1, a: 1}
---- !u!114 &3106865253991373811
+--- !u!114 &2031003335397261070
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9853,9 +9843,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 7930296589293019129}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 20ddc016787172546a98c159bcd229a6, type: 3}
+  m_Script: {fileID: 11500000, guid: 182908431c14a7a44a1e50cc2171d298, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _menu: 0
 --- !u!114 &2244659846565620320
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11169,7 +11160,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4064131399765071048
 RectTransform:
   m_ObjectHideFlags: 0
@@ -11712,6 +11703,7 @@ GameObject:
   - component: {fileID: 8699319914205938090}
   - component: {fileID: 7835008559011734862}
   - component: {fileID: 9048802920720312089}
+  - component: {fileID: 2629975063043815641}
   m_Layer: 5
   m_Name: Tablet
   m_TagString: Untagged
@@ -11792,6 +11784,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b23fbf80d6251d749b84227fe5ff0564, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2629975063043815641
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9194080652410181213}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c309b05771432e488742e8b773ca39d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &9221713863677628735

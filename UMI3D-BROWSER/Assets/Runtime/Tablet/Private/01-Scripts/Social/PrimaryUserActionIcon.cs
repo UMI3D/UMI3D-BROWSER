@@ -17,8 +17,6 @@ limitations under the License.
 using System.Threading.Tasks;
 using TMPro;
 using umi3d.cdk;
-using umi3d.common.collaboration.dto.emotes;
-using umi3d.common;
 using UnityEngine;
 using UnityEngine.UI;
 using umi3d.common.collaboration.dto.signaling;

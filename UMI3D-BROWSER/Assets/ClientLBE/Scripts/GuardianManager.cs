@@ -26,7 +26,6 @@ namespace ClientLBE
         public GameObject Player;
         public Transform PersonnalSkeletonContainer;
         public GameObject CameraPlayer;
-        public bool AdminUser = false;
 
         public GameObject Repere;
         public GameObject XROrigin;
@@ -60,12 +59,12 @@ namespace ClientLBE
         private List<ARPlane> planesToCalibrate = new List<ARPlane>();
         public LBEGroupSyncRequestDTO lBEGroupDto = new LBEGroupSyncRequestDTO();
 
-
         private Dictionary<string, System.Object> info = new();
+        static bool IsAdmin = false;
 
         #endregion
 
-        #region Methods
+        #region Method
 
         public void Start()
         {
@@ -106,14 +105,19 @@ namespace ClientLBE
             }
         }
 
+        public static bool isLBEAdmin()
+        {
+            return IsAdmin;
+        }
+
         void LBEGroupEvent(LBEGroupSyncRequestDTO LbeGroupDtoData)
         {
             lBEGroupDto = LbeGroupDtoData;
-            if(lBEGroupDto == null)
+            if (lBEGroupDto == null)
             {
                 Debug.Log("REMY -> lBEGroupDto = null");
             }
-            if (lBEGroupDto.UserAR.Count + lBEGroupDto.UserVR.Count > 0 )
+            if (lBEGroupDto.UserAR.Count + lBEGroupDto.UserVR.Count > 0)
             {
                 CreatGuardianServer(lBEGroupDto.ARAnchors);
                 AddCapsulesToCurrentARUsers();
@@ -171,13 +175,17 @@ namespace ClientLBE
 
         private void AddCapsulesToCurrentARUsers()
         {
+            Debug.Log("REMY -> Add Capsule occlusion");
             foreach (var userId in lBEGroupDto.UserAR)
             {
+                Debug.Log("REMY -> Add Capsule occlusion User ID -> " + userId);
 
                 var skeleton = CollaborationSkeletonsManager.Instance.GetCollaborativeSkeleton((UMI3DGlobalID.EnvironmentId, userId)) as AbstractSkeleton;
 
                 if (skeleton != null)
                 {
+                    Debug.Log("REMY -> Add Capsule occlusion Sketleton not null");
+
                     AddCapsuleToBone(skeleton, BoneType.Hips);
                 }
                 else
@@ -191,6 +199,8 @@ namespace ClientLBE
         {
             if (skeleton.Bones.TryGetValue(boneType, out var boneTransform))
             {
+                Debug.Log("REMY -> AddCapsuleToBone");
+
                 // Créer une capsule
                 GameObject capsule = GameObject.CreatePrimitive(PrimitiveType.Capsule);
 
@@ -313,11 +323,11 @@ namespace ClientLBE
 
         public void ToggleUserAdmin(bool value)
         {
-            AdminUser = value;
+            IsAdmin = value;
 
             if (userGuardianDto != null)
             {
-                userGuardianDto.SetAdminUser = AdminUser;
+                userGuardianDto.SetAdminUser = IsAdmin;
 
                 if(value)
                 {
@@ -372,7 +382,7 @@ namespace ClientLBE
             calibrator = ManualCalibrator.transform;
 
             if (OrientationScenePanel.gameObject.activeSelf == true && OrientationScenePanel.alpha == 1)
-            {             
+            {
                 OrientationScenePanel.GetComponent<SetPlayerOrientationPanel>().ClosePanel();
                 ButtonOrientationScene.onOffOrientationPanel = false;
             }
@@ -430,7 +440,7 @@ namespace ClientLBE
                     //Création du Parent des ancres
                     guardianParent = new GameObject("Guardian");
                     guardianParent.transform.position = new Vector3(calibrator.transform.position.x, 0.0f, calibrator.transform.position.z);
-                    
+
                     GetGuardianArea();
                 }
                 else
@@ -545,7 +555,6 @@ namespace ClientLBE
                 }
                 var loadingParameters = UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DLoadingParameters;
                 userGuardianDto.ARiD = loadingParameters.BrowserType;
-
             }
         }
 
@@ -670,4 +679,4 @@ namespace ClientLBE
         }
     }
 }
-    #endregion
+#endregion

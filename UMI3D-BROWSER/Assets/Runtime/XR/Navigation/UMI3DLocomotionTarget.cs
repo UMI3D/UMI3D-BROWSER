@@ -15,6 +15,8 @@ limitations under the License.
 */
 
 using inetum.unityUtils.observation;
+using System;
+using System.Collections.Generic;
 using umi3d.browserRuntime.NotificationKeys;
 using umi3d.browserRuntime.player;
 using UnityEngine;
@@ -60,7 +62,7 @@ namespace umi3d.browserRuntime.navigation
                     LocomotionNotificationKeys.Teleportation,
                     null,
                     Teleport
-                );
+                    );
             }
         }
 
@@ -117,7 +119,12 @@ namespace umi3d.browserRuntime.navigation
                 return;
             }
 
+            Vector3 positionBeforeSelfTeleportation = transform.position;
+
             PlayerTransformUtils.TranslatePlayerAndCenterCamera(transform, mainCamera.transform, position);
+
+            if (ClientLBE.GuardianManager.isLBEAdmin())
+                GroupTeleportation.OnGroupTeleport(positionBeforeSelfTeleportation, transform.position);
         }
     }
 }

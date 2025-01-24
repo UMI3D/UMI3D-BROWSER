@@ -118,13 +118,13 @@ namespace umi3dVRBrowsersBase.navigation
                     Debug.Log("REMY -> is leader = true");
 
                     // Capture la position initiale
-                    groupTeleportation.OnTeleportStart(teleportingObject.transform);
+                    //groupTeleportation.OnTeleportStart(teleportingObject.transform);
 
                     // Effectue la téléportation
                     TeleportIndividual(position.Value);
 
                     // Capture la position finale
-                    groupTeleportation.OnTeleportEnd(teleportingObject.transform, position.Value.y);
+                    //groupTeleportation.OnTeleportEnd(teleportingObject.transform, position.Value.y);
                 }
                 else
                 {

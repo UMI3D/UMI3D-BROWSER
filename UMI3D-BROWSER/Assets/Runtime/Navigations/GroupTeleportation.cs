@@ -22,14 +22,14 @@ using UnityEngine.UIElements;
 
 namespace umi3d.browserRuntime.navigation
 {
-    public class GroupTeleportation 
+    public class GroupTeleportation
     {
         /// <summary>
         /// Flag for groupTeleportation
         /// </summary>
         public static bool isGroupTeleport = true; //TODO: Remettre à false une fois initialisé au lancement selon si arène en AR et déplacement de groupe activé A RETIRER AVANT MERGE DE LA BRANCHE SINON AR POUR TOUT LE MONDE
 
-        private Vector3 initialPlayerPosition;
+        //private Vector3 initialPlayerPosition;
 
         /*/// <summary>
         /// Flag for using common guardian
@@ -41,27 +41,25 @@ namespace umi3d.browserRuntime.navigation
         /// </summary>
         /// 
 
-        public void OnTeleportStart(Transform transformPlayer)
-        {
-            // Sauvegarde la position initiale
-            initialPlayerPosition = transformPlayer.position;
-            Debug.Log("REMY : Position initiale sauvegardée : " + initialPlayerPosition);
-        }
+        //public void OnTeleportStart(Transform transformPlayer)
+        //{
+        //    // Sauvegarde la position initiale
+        //    initialPlayerPosition = transformPlayer.position;
+        //    Debug.Log("REMY : Position initiale sauvegardée : " + initialPlayerPosition);
+        //}
 
-        public void OnTeleportEnd(Transform transformPlayer, float Yposition)
+        public static void OnGroupTeleport(Vector3 initialPlayerPosition, Vector3 finalPlayerPosition)
         {
             // Récupère la position finale après la téléportation
-            Vector3 finalPlayerPosition = new Vector3(transformPlayer.position.x, Yposition, transformPlayer.position.z);
-            Vector3 teleportationVector = new Vector3(finalPlayerPosition.x - initialPlayerPosition.x, Yposition , finalPlayerPosition.z - initialPlayerPosition.z);
-
-            Debug.Log("REMY : Téléportation terminée. Vecteur de déplacement : " + teleportationVector);
+            //Vector3 finalPlayerPosition = new Vector3(transformPlayer.position.x, Yposition, transformPlayer.position.z);
+            Vector3 teleportationVector = new Vector3(finalPlayerPosition.x - initialPlayerPosition.x, finalPlayerPosition.y, finalPlayerPosition.z - initialPlayerPosition.z);
 
             // Envoie le vecteur de déplacement au serveur
             SendTeleportationVectorToServer(teleportationVector);
         }
 
 
-        private void SendTeleportationVectorToServer(Vector3 teleportationVector)
+        private static void SendTeleportationVectorToServer(Vector3 teleportationVector)
         {
             var tGroupRequest = new TeleportGroupRequestDto()
             {
@@ -74,7 +72,6 @@ namespace umi3d.browserRuntime.navigation
             };
 
             UMI3DClientServer.SendRequest(tGroupRequest, true);
-            Debug.Log("REMY : Vecteur de déplacement envoyé au serveur : " + teleportationVector);
         }
     }
 }

@@ -37,14 +37,14 @@ namespace umi3d.browserRuntime.ui.tablet
 
             NotificationHub.Default.Subscribe(
                 this, 
-                TabletNotificationKeys.NewScreenSelected, 
+                ID.FromType<TabletNotificationKeys.NewScreenSelected>(),
                 (Callback)Deactivate
             );
         }
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            NotificationHub.Default.Notify(this, TabletNotificationKeys.NewScreenSelected);
+            NotificationHub.Default.Notify(this, ID.FromType<TabletNotificationKeys.NewScreenSelected>());
             isActive = true;
             activeBackground.SetActive(true);
             icon.color = iconColorActive;

@@ -15,6 +15,7 @@ limitations under the License.
 */
 using inetum.unityUtils.observation;
 using umi3d.browserRuntime.ui.contextualMenu;
+using umi3d.browserRuntime.ui.tablet;
 using ccs = umi3d.cdk.collaboration.UMI3DCollaborationClientServer;
 
 namespace umi3d.browserRuntime.cursor
@@ -85,10 +86,18 @@ namespace umi3d.browserRuntime.cursor
             s_drawingModeUpdated += UpdateUnityCursor;
             s_drawingModeUpdated += UpdateEnvironmentCursor;
 
+            // ========== Tablet
+            NotificationHub.Default.Subscribe(this,
+                ID.FromType<TabletNotificationKeys.Opened>(),
+                (Callback)FreeCursor);
+            NotificationHub.Default.Subscribe(this,
+                ID.FromType<TabletNotificationKeys.Closed>(),
+                (Callback)UnSetCursor);
+
+            // ========== Contextual Menu
             NotificationHub.Default.Subscribe(this,
                 ID.FromType<ContextualMenuNotificationKeys.Open>(),
                 (Callback)FreeCursor);
-
             NotificationHub.Default.Subscribe(this,
                 ID.FromType<ContextualMenuNotificationKeys.Close>(),
                 (Callback)UnSetCursor);

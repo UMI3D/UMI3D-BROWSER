@@ -15,24 +15,20 @@ limitations under the License.
 */
 
 using inetum.unityUtils.observation;
-using umi3d.browserRuntime.cursor;
 using UnityEngine;
-using static umi3d.browserRuntime.cursor.BaseCursor;
 
 namespace umi3d.browserRuntime.ui.tablet
 {
-    public class TabletPanel : MonoBehaviour
+    public class TabletView : MonoBehaviour
     {
         private void Awake()
         {
-            NotificationHub.Default.Subscribe(
-                this, 
-                TabletNotificationKeys.Open,
+            NotificationHub.Default.Subscribe(this, 
+                ID.FromType<TabletNotificationKeys.Open>(),
                 (Callback)Open
             );
-            NotificationHub.Default.Subscribe(
-                this, 
-                TabletNotificationKeys.Close, 
+            NotificationHub.Default.Subscribe(this,
+                ID.FromType<TabletNotificationKeys.Close>(),
                 (Callback)Close
             );
             gameObject.SetActive(false);
@@ -45,14 +41,18 @@ namespace umi3d.browserRuntime.ui.tablet
 
         private void Open()
         {
+            if (gameObject.activeSelf)
+                return;
             gameObject.SetActive(true);
-            BaseCursor.SetMovement(this, CursorMovement.Free);
+            NotificationHub.Default.Notify(this, ID.FromType<TabletNotificationKeys.Opened>());
         }
 
         private void Close()
         {
+            if (!gameObject.activeSelf)
+                return;
             gameObject.SetActive(false);
-            BaseCursor.UnSetMovement(this);
+            NotificationHub.Default.Notify(this, ID.FromType<TabletNotificationKeys.Closed>());
         }
     }
 }

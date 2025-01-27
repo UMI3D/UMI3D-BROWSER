@@ -23,6 +23,14 @@ namespace umi3d.browserRuntime.shortcuts
 {
     public class SocialShortcup : MonoBehaviour
     {
+        Notifier _openSocialNotifier;
+
+        private void Awake()
+        {
+            _openSocialNotifier = NotificationHub.Default.GetNotifier(this, ID.FromType<TabletNotificationKeys.TabletUpdate>());
+            _openSocialNotifier[TabletNotificationKeys.TabletUpdate.Menu] = TabletMenu.Social;
+        }
+
         private void OnEnable()
         {
             KeyboardShortcut.AddDownListener(ShortcutEnum.DisplayHideUsersList, OpenUserList);
@@ -32,13 +40,17 @@ namespace umi3d.browserRuntime.shortcuts
         {
             KeyboardShortcut.RemoveDownListener(ShortcutEnum.DisplayHideUsersList, OpenUserList);
         }
+        private void OnDestroy()
+        {
+            NotificationHub.Default.Unsubscribe(this);
+        }
 
         private void OpenUserList()
         {
             if (KeyboardShortcut.IsEditingTextField)
                 return;
-            NotificationHub.Default.Notify(this, TabletNotificationKeys.Open);
-            NotificationHub.Default.Notify(this, TabletNotificationKeys.ClickButtonSocial);
+            NotificationHub.Default.Notify(this, ID.FromType<TabletNotificationKeys.Open>());
+            _openSocialNotifier.Notify();
         }
     }
 }

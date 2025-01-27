@@ -33,7 +33,7 @@ namespace umi3d.browserRuntime.ui.contextualMenu
                 (Callback)Hide);
 
             NotificationHub.Default.Subscribe(this, 
-                TabletNotificationKeys.Open, 
+                ID.FromType<TabletNotificationKeys.Opened>(), 
                 (Callback)Hide);
         }
 

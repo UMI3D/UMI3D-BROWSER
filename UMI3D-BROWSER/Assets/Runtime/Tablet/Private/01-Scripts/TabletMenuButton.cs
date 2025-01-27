@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils.observation;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -43,6 +44,7 @@ namespace umi3d.browserRuntime.ui.tablet
         void OnClick()
         {
             _modelContainer.Model.UpdateMenu(_menu);
+            NotificationHub.Default.Notify(this, ID.FromType<TabletNotificationKeys.Open>());
         }
     }
 }

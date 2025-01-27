@@ -14,7 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils.observation;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.tablet
@@ -24,20 +23,24 @@ namespace umi3d.browserRuntime.ui.tablet
     /// </summary>
     public class ScreenStart : MonoBehaviour
     {
-        [SerializeField] private GameObject[] screens;
+        [SerializeField] TabletMenu _startingMenu;
+
+        TabletModelContainer _modelContainer;
 
         private void Awake()
         {
-            foreach (var screen in screens)
-                screen.SetActive(true);
+            _modelContainer = GetComponentInParent<TabletModelContainer>();
+
+            foreach (Transform screen in transform)
+                screen.gameObject.SetActive(true);
         }
 
         private void Start()
         {
-            foreach (var screen in screens)
-                screen.SetActive(false);
+            foreach (Transform screen in transform)
+                screen.gameObject.SetActive(false);
 
-            NotificationHub.Default.Notify(this, TabletNotificationKeys.ClickButtonSocial);
+            _modelContainer.Model.SetMenu(_startingMenu);
         }
     }
 }

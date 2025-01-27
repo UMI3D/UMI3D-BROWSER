@@ -62,7 +62,7 @@ namespace umi3d.browserRuntime.ui.tablet
                     if (index == 1)
                     {
                         connectionToImmersiveLinker.Leave();
-                        NotificationHub.Default.Notify(this, TabletNotificationKeys.Close);
+                        NotificationHub.Default.Notify(this, ID.FromType<TabletNotificationKeys.Close>());
                     }
                 })
                 .Notify();

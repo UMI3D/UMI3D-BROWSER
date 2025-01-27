@@ -35,7 +35,7 @@ namespace umi3d.browserRuntime.ui.tablet
 
         private void CloseTablet()
         {
-            NotificationHub.Default.Notify(this, TabletNotificationKeys.Close);
+            NotificationHub.Default.Notify(this, ID.FromType<TabletNotificationKeys.Close>());
         }
     }
 }

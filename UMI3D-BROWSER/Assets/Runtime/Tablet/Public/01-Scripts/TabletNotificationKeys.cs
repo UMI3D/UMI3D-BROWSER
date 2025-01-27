@@ -14,22 +14,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils.observation;
+
 namespace umi3d.browserRuntime.ui.tablet
 {
     public static class TabletNotificationKeys
     {
-        public static readonly string Open = "tablet-open";
-
-        public static readonly string Close = "tablet-close";
-        public static readonly string CloseScreens = "tablet-close-screens";
-
         public static readonly string PlayHoverSound = "tablet-playSound-hover";
         public static readonly string PlayClickSound = "tablet-playSound-click";
 
-        public static readonly string NewScreenSelected = "tablet-newScreenSelected";
-
         public static readonly string UserNotificationReceived = "tablet-userNotification-received";
-        public static readonly string ClickButtonSocial = "tablet-click-social";
+
 
         public class TabletSet
         {
@@ -40,5 +35,12 @@ namespace umi3d.browserRuntime.ui.tablet
         {
             public static readonly string Menu = "Menu";
         }
+
+        public class Open { }
+        public class Opened { }
+        public class Close { }
+        public class Closed { }
+
+        public class NewScreenSelected { }
     }
 }

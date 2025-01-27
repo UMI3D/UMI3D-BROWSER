@@ -23,18 +23,15 @@ namespace umi3d.browserRuntime.ui.tablet
     [RequireComponent(typeof(Button))]
     public class OpenTabletButton : MonoBehaviour
     {
-
         private void Awake()
         {
             GetComponent<Button>().onClick.AddListener(OpenTablet);
-            NotificationHub.Default.Subscribe(
-                this, 
-                TabletNotificationKeys.Open, 
+            NotificationHub.Default.Subscribe(this, 
+                ID.FromType<TabletNotificationKeys.Open>(), 
                 (Callback)HideButton
             );
-            NotificationHub.Default.Subscribe(
-                this, 
-                TabletNotificationKeys.Close, 
+            NotificationHub.Default.Subscribe(this, 
+                ID.FromType<TabletNotificationKeys.Close>(), 
                 (Callback)ShowButton
             );
         }
@@ -47,7 +44,7 @@ namespace umi3d.browserRuntime.ui.tablet
 
         private void OpenTablet()
         {
-            NotificationHub.Default.Notify(this, TabletNotificationKeys.Open);
+            NotificationHub.Default.Notify(this, ID.FromType<TabletNotificationKeys.Open>());
         }
 
         private void HideButton(Notification notification)

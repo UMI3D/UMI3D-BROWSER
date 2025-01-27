@@ -27,7 +27,7 @@ namespace umi3dBrowsers.ingame_ui
     public class InGameUIManager : MonoBehaviour
     {
         [Header("Dependencies")]
-        [SerializeField] private TabletPanel TabletPanel;
+        [SerializeField] private TabletView TabletPanel;
 
         [Header("Debug")]
         [SerializeField] private bool debugMode;
@@ -82,9 +82,9 @@ namespace umi3dBrowsers.ingame_ui
                 return;
 
             if (TabletPanel.gameObject.activeSelf)
-                NotificationHub.Default.Notify(this, TabletNotificationKeys.Close);
+                NotificationHub.Default.Notify(this, ID.FromType<TabletNotificationKeys.Close>());
             else
-                NotificationHub.Default.Notify(this, TabletNotificationKeys.Open);
+                NotificationHub.Default.Notify(this, ID.FromType<TabletNotificationKeys.Open>());
         }
 
         private void SetActive(Notification notification)

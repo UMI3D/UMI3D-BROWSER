@@ -16,4 +16,4 @@ limitations under the License.
 
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("inetum.unityUtils.saveSystem.tests")]
+[assembly: InternalsVisibleTo("inetum.unityUtilsEditor.saveSystem.tests")]

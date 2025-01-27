@@ -1,5 +1,5 @@
 {
-    "name": "inetum.unityUtils.saveSystem.tests",
+    "name": "inetum.unityUtilsEditor.saveSystem.tests",
     "rootNamespace": "",
     "references": [
         "UnityEngine.TestRunner",
@@ -13,7 +13,8 @@
     "allowUnsafeCode": false,
     "overrideReferences": true,
     "precompiledReferences": [
-        "nunit.framework.dll"
+        "nunit.framework.dll",
+        "Newtonsoft.Json.dll"
     ],
     "autoReferenced": false,
     "defineConstraints": [

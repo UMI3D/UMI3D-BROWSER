@@ -17,6 +17,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using inetum.unityUtils.saveSystem;
+using Newtonsoft.Json;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
@@ -239,6 +240,62 @@ public class ModelContainerTests
         }
     }
 
+    public class FileExistsTest
+    {
+        public class FooClass
+        {
+            public string name;
+        }
+
+        public class Model : IModel<Model>
+        {
+            public int id;
+            public FooClass foo;
+
+            string privateName;
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            bool exists = ModelContainer<Model>.instance.containerDelegate.Exists(
+                ModelContainer<Model>.instance.directories, 
+                ModelContainer<Model>.instance.fileName
+            );
+            if (exists)
+            {
+                ModelContainer<Model>.instance.containerDelegate.Delete(
+                    ModelContainer<Model>.instance.directories,
+                    ModelContainer<Model>.instance.fileName
+                );
+            }
+
+            ModelContainer<Model>.Rest();
+        }
+
+        [Test]
+        public void GivenNoSave_WhenCheckingIfFileExists_ThenFalse()
+        {
+            ModelContainer<Model>.Init();
+
+            bool result = ModelContainer<Model>.instance.FileExists();
+
+            Assert.False(result);
+            Assert.AreEqual(0, ModelContainer<Model>.instance.readOnlyData.Count);
+        }
+
+        [Test]
+        public void GivenSave_WhenCheckingIfFileExists_ThenTrue()
+        {
+            ModelContainer<Model>.Init();
+
+            bool result = ModelContainer<Model>.instance.WriteToFile();
+            Assert.True(result);
+            result = ModelContainer<Model>.instance.FileExists();
+            Assert.True(result);
+        }
+    }
+
     public class LoadFromFileTest
     {
         public class FooClass
@@ -257,6 +314,18 @@ public class ModelContainerTests
         [TearDown]
         public void TearDown()
         {
+            bool exists = ModelContainer<Model>.instance.containerDelegate.Exists(
+               ModelContainer<Model>.instance.directories,
+               ModelContainer<Model>.instance.fileName
+           );
+            if (exists)
+            {
+                ModelContainer<Model>.instance.containerDelegate.Delete(
+                    ModelContainer<Model>.instance.directories,
+                    ModelContainer<Model>.instance.fileName
+                );
+            }
+
             ModelContainer<Model>.Rest();
         }
 
@@ -269,6 +338,27 @@ public class ModelContainerTests
 
             Assert.False(result);
             Assert.AreEqual(0, ModelContainer<Model>.instance.readOnlyData.Count);
+        }
+
+        [Test]
+        public void GivenSave_WhenLoadingFromFile_ThenListUpdated()
+        {
+            ModelContainer<Model>.Init();
+            Model model = new Model()
+            {
+                id = 1,
+            };
+
+            //ModelContainer<Model>.instance.Add()
+            bool result = ModelContainer<Model>.instance.WriteToFile();
+
+            Assert.True(result);
+            Assert.False(ModelContainer<Model>.instance.hasChanged);
+            bool exists = ModelContainer<Model>.instance.containerDelegate.Exists(
+                ModelContainer<Model>.instance.directories,
+                ModelContainer<Model>.instance.fileName
+            );
+            Assert.True(exists);
         }
     }
 
@@ -284,21 +374,31 @@ public class ModelContainerTests
             public int id;
             public FooClass foo;
 
+            [JsonProperty]
             string privateName;
+
+            public string Name => privateName;
+
+            public Model() 
+            {
+                id = 42;
+                foo = new FooClass();
+                privateName = "A private name";
+            }
         }
 
-        [TearDown]
-        public void TearDown()
-        {
-            ModelContainer<Model>.instance.containerDelegate.Delete(
-                ModelContainer<Model>.instance.directories,
-                ModelContainer<Model>.instance.fileName
-            );
-            ModelContainer<Model>.Rest();
-        }
+        //[TearDown]
+        //public void TearDown()
+        //{
+        //    ModelContainer<Model>.instance.containerDelegate.Delete(
+        //        ModelContainer<Model>.instance.directories,
+        //        ModelContainer<Model>.instance.fileName
+        //    );
+        //    ModelContainer<Model>.Rest();
+        //}
 
         [Test]
-        public void GivenNoSave_WhenWritingToFile_ThenSaved()
+        public void GivenNoSaveAndNotData_WhenWritingToFile_ThenSaved()
         {
             ModelContainer<Model>.Init();
 
@@ -306,11 +406,32 @@ public class ModelContainerTests
 
             Assert.True(result);
             Assert.False(ModelContainer<Model>.instance.hasChanged);
-            bool exists = ModelContainer<Model>.instance.containerDelegate.Exists(
-                ModelContainer<Model>.instance.directories, 
-                ModelContainer<Model>.instance.fileName
-            );
-            Assert.True(exists);
+            Assert.True(ModelContainer<Model>.instance.FileExists());
+        }
+
+        [Test]
+        public void GivenNoSaveButData_WhenWritingToFile_ThenSaved()
+        {
+            ModelContainer<Model>.Init();
+            ModelContainer<Model>.instance.Add(new Model());
+
+            bool result = ModelContainer<Model>.instance.WriteToFile();
+
+            Assert.True(result);
+            Assert.False(ModelContainer<Model>.instance.hasChanged);
+            Assert.True(ModelContainer<Model>.instance.FileExists());
+            ModelContainer<Model>.Rest();
+            ModelContainer<Model>.Init();
+            bool hasLoaded = ModelContainer<Model>.instance.LoadFromFile();
+            Assert.True(hasLoaded);
+            IReadOnlyList<Model> list = ModelContainer<Model>.instance.readOnlyData;
+            Assert.AreEqual(1, list.Count);
+            Model item = list[0];
+            Assert.NotNull(item);
+            Assert.AreEqual(42, item.id);
+            Assert.AreEqual("A private name", item.Name);
+            Assert.NotNull(item.foo);
+            Assert.Null(item.foo.name);
         }
     }
 }

@@ -18,15 +18,33 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine;
+using Newtonsoft.Json;
 
 namespace inetum.unityUtils.saveSystem
 {
 
-    public class ModelContainer<Model>
+    public sealed class ModelContainer<Model>
         where Model : class, IModel<Model>
     {
         static readonly object _lockObject = new object();
 
+        /// <summary>
+        /// Indicates whether the ModelContainer has been initialized.<br/>
+        /// This property is set to true when the Init method is called for the first time.<br/>
+        /// <br/>
+        /// <example>
+        /// Given a container scope, file name, and directories when initializing the container then the container is set up accordingly.<br/>
+        /// <code>
+        /// // Example 1: Not initialization
+        /// ModelContainer&lt;Model&gt;.hasBeenInitialized == false.
+        /// 
+        /// // Example 2: Initialization
+        /// ModelContainer&lt;Model&gt;.Init();
+        /// ModelContainer&lt;Model&gt;.hasBeenInitialized == true.
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <value>True if the container has been initialized, otherwise false.</value>
         public static bool hasBeenInitialized {  get; private set; }
         internal static ModelContainer<Model> instance
         {
@@ -49,6 +67,32 @@ namespace inetum.unityUtils.saveSystem
             readOnlyData = _data.AsReadOnly();
         }
 
+        /// <summary>
+        /// Initializes the ModelContainer with the specified scope, file name, and directories.<br/>
+        /// If the container has already been initialized, an error message is logged.<br/>
+        /// <br/>
+        /// <example>
+        /// Given a container scope, file name, and directories when initializing the container then the container is set up accordingly.
+        /// <code>
+        /// // Example 1: Initialize without arguments
+        /// ModelContainer&lt;Model>.Init();
+        /// // ModelContainer&lt;Model>.instance.scope == ContainerScope.Persistent.
+        /// // ModelContainer&lt;Model>.instance.fileName == "Model.save".
+        /// // ModelContainer&lt;Model>.instance.directories == null.
+        /// // ModelContainer&lt;Model>.hasBeenInitialized == true.
+        ///
+        /// // Example 2: Initialize with arguments
+        /// ModelContainer&lt;Model2>.Init(ContainerScope.Memory, "TestName", "Directories/DirectoryName");
+        /// // ModelContainer&lt;Model2>.instance.scope == ContainerScope.Memory.
+        /// // ModelContainer&lt;Model2>.instance.fileName == "TestName".
+        /// // ModelContainer&lt;Model2>.instance.directories == "Directories/DirectoryName".
+        /// // ModelContainer&lt;Model2>.hasBeenInitialized == true.
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <param name="scope">The scope of the container. Default is ContainerScope.Persistent.</param>
+        /// <param name="fileName">The file name to be used by the container. Default is null.</param>
+        /// <param name="directories">The directories to be used by the container. Default is null.</param>
         public static void Init(
             ContainerScope scope = ContainerScope.Persistent,
             string fileName = null,
@@ -116,49 +160,103 @@ namespace inetum.unityUtils.saveSystem
             }
         }
 
-        public bool hasChanged { get; internal set; } = false;
+        internal bool hasChanged { get; set; } = false;
         public IReadOnlyList<Model> readOnlyData;
         List<Model> _data = new();
 
         internal IContainerDelegate containerDelegate;
 
-        public ContainerScope scope { get; private set; } = ContainerScope.Persistent;
-        public string fileName {  get; private set; } = $"{typeof(Model).Name}.save";
-        public string directories { get; private set; } = null;
+        internal ContainerScope scope { get; private set; } = ContainerScope.Persistent;
+        internal string fileName {  get; private set; } = $"{typeof(Model).Name}.save";
+        internal string directories { get; private set; } = null;
 
-        public bool Add(Model item)
+        /// <summary>
+        /// This method adds a model item to the container if it is not already present.<br/>
+        /// It ensures thread safety by locking the operation.<br/>
+        /// If the item was added then <see cref="hasChanged"/> is true.<br/>
+        /// <br/>
+        /// <example>
+        /// Given models when adding them to the container then models are added if not already present.<br/>
+        /// <code>
+        /// ModelContainer&lt;Model&gt;.instance.Add(item1); // Return true.
+        /// ModelContainer&lt;Model&gt;.instance.Add(item1); // Return false.
+        /// ModelContainer&lt;Model&gt;.instance.Add(item2); // Return true.
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <param name="item">The model item to be added.</param>
+        /// <returns>True if the item was added, otherwise false.</returns>
+        internal bool Add(Model item)
         {
             lock (_lockObject)
             {
-                if (instance._data.Contains(item))
+                if (_data.Contains(item))
                 {
                     return false;
                 }
 
-                instance._data.Add(item);
+                _data.Add(item);
                 hasChanged = true;
                 return true;
             }
         }
 
-        public bool Remove(Model item)
+        /// <summary>
+        /// This method removes a model item from the container if it is present.<br/>
+        /// It ensures thread safety by locking the operation.<br/>
+        /// If the item was removed then <see cref="hasChanged"/> is true.<br/>
+        /// <br/>
+        /// <example>
+        /// Given models added to the container when removing them from the container then models are removed.<br/>
+        /// <code>
+        /// ModelContainer&lt;Model&gt;.instance.Remove(item1); // Return false.
+        /// 
+        /// ModelContainer&lt;Model&gt;.instance.Add(item1);
+        /// ModelContainer&lt;Model&gt;.instance.Remove(item1); // Return true.
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <param name="item">The model item to be removed.</param>
+        /// <returns>True if the item was removed, otherwise false.</returns>
+        internal bool Remove(Model item)
         {
             lock (_lockObject)
             {
-                if (instance._data.Remove(item)) 
+                if (!_data.Remove(item)) 
                 {
-                    hasChanged = true;
-                    return true;
+                    return false;
                 }
 
-                return false;
+                hasChanged = true;
+                return true;
             }
         }
 
-        public bool LoadFromFile()
+        /// <summary>
+        /// This method checks if a file '<see cref="fileName"/>' exists in the directory '<see cref="directories"/>'.<br/>
+        /// <br/>
+        /// <example>
+        /// Given no save when checking if file exists then false.<br/>
+        /// <code>
+        /// ModelContainer&lt;Model&gt;.instance.FileExists(); // Return false.
+        /// </code>
+        /// 
+        /// Given save when checking if file exists then true.<br/>
+        /// <code>
+        /// ModelContainer&lt;Model&gt;.instance.WriteToFile();
+        /// ModelContainer&lt;Model&gt;.instance.FileExists(); // Return true.
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <returns>True if the file exists, otherwise false.</returns>
+        internal bool FileExists()
         {
-            bool exist = containerDelegate.Exists(directories, fileName);
-            if (!exist) { return false; }
+            return containerDelegate.Exists(directories, fileName);
+        }
+
+        internal bool LoadFromFile()
+        {
+            if (!FileExists()) { return false; }
 
             bool hasLoadedJson = containerDelegate.LoadJson(
                 directories, 
@@ -167,11 +265,12 @@ namespace inetum.unityUtils.saveSystem
             );
             if (!hasLoadedJson) { return false; }
 
+            List<Model> models;
             try
             {
                 lock (_lockObject)
                 {
-                    JsonUtility.FromJsonOverwrite(json, _data);
+                    models = JsonConvert.DeserializeObject<List<Model>>(json);
                 }
             }
             catch (Exception e)
@@ -181,38 +280,45 @@ namespace inetum.unityUtils.saveSystem
                 return false;
             }
 
+            _data.Clear();
+            _data.AddRange(models);
             hasChanged = false;
             return true;
         }
 
-        public bool WriteToFile()
+        internal bool WriteToFile()
         {
             string json = null;
             try
             {
                 lock ( _lockObject)
                 {
-                    json = JsonUtility.ToJson(_data);
+                    json = JsonConvert.SerializeObject(_data);
                 }
             }
             catch (Exception e)
             {
-                UnityEngine.Debug.LogError($"[PersistentScriptableModel] Cannot convert the data of type '{typeof(Model).FullName}' to its json.");
+                UnityEngine.Debug.LogError($"[ModelContainer.WriteToFile] Cannot convert the data of type '{typeof(Model).FullName}' to its json.");
                 UnityEngine.Debug.LogException(e);
                 return false;
             }
 
-            hasChanged = false;
-
-            return containerDelegate.WriteToJson(
-                json, 
-                directories, 
+            bool hasSucceeded = containerDelegate.WriteToJson(
+                json,
+                directories,
                 fileName
             );
+
+            if (hasSucceeded)
+            {
+                hasChanged = false;
+            }
+
+            return hasSucceeded;
         }
 
         [Conditional("UNITY_EDITOR")]
-        public static void Rest()
+        internal static void Rest()
         {
             _instance = new(() => new());
             hasBeenInitialized = false;

@@ -81,6 +81,9 @@ namespace umi3d.browserRuntime.ui.inputField
 
             if (notification.TryGetInfoT(InputFieldNotificationsKeys.InputFieldSet.NbrLine, out int nbrLine))
             {
+                if (!_viewport)
+                    return;
+
                 RectTransform textAreaTransform = _inputField.textViewport.GetComponent<RectTransform>();
                 float padding = textAreaTransform.offsetMin.y + textAreaTransform.offsetMax.y;
 

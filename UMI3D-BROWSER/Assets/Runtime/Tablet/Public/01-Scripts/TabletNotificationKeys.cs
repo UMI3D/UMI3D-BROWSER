@@ -23,9 +23,6 @@ namespace umi3d.browserRuntime.ui.tablet
         public static readonly string PlayHoverSound = "tablet-playSound-hover";
         public static readonly string PlayClickSound = "tablet-playSound-click";
 
-        public static readonly string UserNotificationReceived = "tablet-userNotification-received";
-
-
         public class TabletSet
         {
             public static readonly string Menu = "Menu";

@@ -164,7 +164,7 @@ GameObject:
   - component: {fileID: 4044699968087321909}
   - component: {fileID: 5424798755437669878}
   - component: {fileID: 1516279408018297783}
-  - component: {fileID: 6957942219898506057}
+  - component: {fileID: 7190142945816669060}
   m_Layer: 5
   m_Name: UserNotificationElement
   m_TagString: Untagged
@@ -288,7 +288,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
---- !u!114 &6957942219898506057
+--- !u!114 &7190142945816669060
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -297,18 +297,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 751161709065877071}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5eaae0b44c51977479feee938660d522, type: 3}
+  m_Script: {fileID: 11500000, guid: 024c1abce5d35c1448e8d26058690c26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  description: {fileID: 8340411198859870703}
-  descriptionComplete: {fileID: 9061988131650342904}
-  badge: {fileID: 3501253467289434896}
-  badgeColorNew: {r: 0, g: 1, b: 1, a: 1}
-  badgeColorRead: {r: 0.4392157, g: 0.4392157, b: 0.4392157, a: 1}
-  buttonsContainer: {fileID: 208381373136744238}
-  buttonPrefab: {fileID: 3473510192864361373, guid: 203c2ca3e93e9694b84b6b9fc0c5998e,
-    type: 3}
-  buttonPadding: 10
 --- !u!1 &1019236425469307831
 GameObject:
   m_ObjectHideFlags: 0
@@ -321,6 +312,7 @@ GameObject:
   - component: {fileID: 6880926688205840150}
   - component: {fileID: 9061988131650342904}
   - component: {fileID: 3082182032436558027}
+  - component: {fileID: 4522812993814102231}
   m_Layer: 5
   m_Name: CompleteNotificationText
   m_TagString: Untagged
@@ -462,6 +454,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 0
   m_VerticalFit: 2
+--- !u!114 &4522812993814102231
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1019236425469307831}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edf0d47ffc1451344bd61c15b1c654b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6012530918330057323
 GameObject:
   m_ObjectHideFlags: 0
@@ -473,6 +477,7 @@ GameObject:
   - component: {fileID: 3681686862556621688}
   - component: {fileID: 2676607897130084582}
   - component: {fileID: 8340411198859870703}
+  - component: {fileID: 4214034224317704310}
   m_Layer: 5
   m_Name: NotificationText
   m_TagString: Untagged
@@ -597,6 +602,18 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &4214034224317704310
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6012530918330057323}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edf0d47ffc1451344bd61c15b1c654b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6812452640630269492
 GameObject:
   m_ObjectHideFlags: 0
@@ -608,6 +625,7 @@ GameObject:
   - component: {fileID: 2357686333034778246}
   - component: {fileID: 9212640254982801289}
   - component: {fileID: 3501253467289434896}
+  - component: {fileID: 3753668655108890686}
   m_Layer: 5
   m_Name: NotifBadge
   m_TagString: Untagged
@@ -655,7 +673,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.5176471, g: 0.5176471, b: 0.5176471, a: 1}
+  m_Color: {r: 0, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -672,6 +690,20 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &3753668655108890686
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6812452640630269492}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d729c3b3ea1fb0f4eb6bca6984b1ddbc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _colorNew: {r: 0, g: 1, b: 1, a: 1}
+  _colorRead: {r: 0.4392157, g: 0.4392157, b: 0.4392157, a: 1}
 --- !u!1 &7070645885327794959
 GameObject:
   m_ObjectHideFlags: 0
@@ -682,6 +714,7 @@ GameObject:
   m_Component:
   - component: {fileID: 208381373136744238}
   - component: {fileID: 3793972781881799528}
+  - component: {fileID: 3197506326845748440}
   m_Layer: 5
   m_Name: Buttons
   m_TagString: Untagged
@@ -734,3 +767,18 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &3197506326845748440
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7070645885327794959}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4849a10ada720c24989054dee8a34a13, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _buttonPrefab: {fileID: 5933779909636612530, guid: b3376bed8a2fab944aaa9caeb9e2f465,
+    type: 3}
+  _buttonPadding: 10

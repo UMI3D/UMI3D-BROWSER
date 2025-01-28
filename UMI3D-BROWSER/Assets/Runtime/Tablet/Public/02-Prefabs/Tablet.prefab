@@ -757,6 +757,7 @@ GameObject:
   - component: {fileID: 6246682946700677083}
   - component: {fileID: 6301450503764355955}
   - component: {fileID: 7899192112664944736}
+  - component: {fileID: 439877015220512367}
   m_Layer: 5
   m_Name: NotifIdicator
   m_TagString: Untagged
@@ -821,6 +822,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &439877015220512367
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1913029814479759429}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8229313a534350440aa18d810ca6acae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2178694363051446720
 GameObject:
   m_ObjectHideFlags: 0
@@ -1684,7 +1697,6 @@ GameObject:
   - component: {fileID: 3112127609999560198}
   - component: {fileID: 9176504481174249809}
   - component: {fileID: 8092925826828840088}
-  - component: {fileID: 8767333940488668361}
   - component: {fileID: 7086355358183057128}
   m_Layer: 5
   m_Name: NotifsButton
@@ -1828,19 +1840,6 @@ MonoBehaviour:
   iconColor: {r: 0.6666667, g: 0.6666667, b: 0.6666667, a: 1}
   iconColorHover: {r: 1, g: 1, b: 1, a: 1}
   iconColorActive: {r: 1, g: 1, b: 1, a: 1}
---- !u!114 &8767333940488668361
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3860309839341392213}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8229313a534350440aa18d810ca6acae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  newNotifIndicator: {fileID: 1913029814479759429}
 --- !u!114 &7086355358183057128
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5121,7 +5120,7 @@ PrefabInstance:
     - target: {fileID: 600419952942010619, guid: adacb6f141276d548873d495fffae694,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 344.13
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 600419952942010619, guid: adacb6f141276d548873d495fffae694,
         type: 3}
@@ -5196,7 +5195,7 @@ PrefabInstance:
     - target: {fileID: 3004445060667486297, guid: adacb6f141276d548873d495fffae694,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 379.16
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3004445060667486297, guid: adacb6f141276d548873d495fffae694,
         type: 3}
@@ -5421,7 +5420,7 @@ PrefabInstance:
     - target: {fileID: 8166695084860908203, guid: adacb6f141276d548873d495fffae694,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 262.1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8166695084860908203, guid: adacb6f141276d548873d495fffae694,
         type: 3}

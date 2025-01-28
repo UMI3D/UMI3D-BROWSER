@@ -347,8 +347,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 738826357406095473}
-  - component: {fileID: 8139209453835786290}
   - component: {fileID: 6015823238100488181}
+  - component: {fileID: 4072557227296247914}
   m_Layer: 5
   m_Name: NotificationsScreen
   m_TagString: Untagged
@@ -377,22 +377,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -20}
   m_SizeDelta: {x: 0, y: -40}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &8139209453835786290
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3424279112984299970}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 925370a90328bcf4191b0cbae2ae2e09, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  content: {fileID: 5595770336045733540}
-  notificationPrefab: {fileID: 751161709065877071, guid: e0057edff2be555478919c4f05a79d73,
-    type: 3}
-  notificationLoader: {fileID: 11400000, guid: 92f856be0732e32429c4aaf4420512fb, type: 2}
 --- !u!114 &6015823238100488181
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -406,6 +390,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _menu: 2
+--- !u!114 &4072557227296247914
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3424279112984299970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc6a639c7cee797479a117d87e1d5fc1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  content: {fileID: 5595770336045733540}
+  notificationPrefab: {fileID: 751161709065877071, guid: e0057edff2be555478919c4f05a79d73,
+    type: 3}
+  notificationLoader: {fileID: 11400000, guid: 92f856be0732e32429c4aaf4420512fb, type: 2}
 --- !u!1 &3554918483101607899
 GameObject:
   m_ObjectHideFlags: 0

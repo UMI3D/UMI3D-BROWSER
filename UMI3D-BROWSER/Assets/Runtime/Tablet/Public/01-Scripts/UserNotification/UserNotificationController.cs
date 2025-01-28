@@ -1,5 +1,5 @@
 /*
-Copyright 2019 - 2024 Inetum
+Copyright 2019 - 2025 Inetum
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,21 +15,18 @@ limitations under the License.
 */
 
 using inetum.unityUtils.observation;
-using System.Collections.Generic;
-using umi3d.browserRuntime.ui.tablet;
+using umi3d.browserRuntime.ui.userNotification;
 using umi3d.common;
 using umi3dBrowsers.displayer;
 using UnityEngine;
 
-namespace umi3d.browserRuntime.ui.userNotification
+namespace umi3d.browserRuntime.ui.tablet.userNotification
 {
-    public class UserNotificationScreen : MonoBehaviour
+    public class UserNotificationController : MonoBehaviour
     {
         [SerializeField] private Transform content;
         [SerializeField] private GameObject notificationPrefab;
         [SerializeField] private UserNotificationLoader notificationLoader;
-
-        private List<UserNotificationElement> _notificationElements = new List<UserNotificationElement>();
 
         private void Awake()
         {
@@ -43,11 +40,9 @@ namespace umi3d.browserRuntime.ui.userNotification
 
         public void AddNotification(NotificationDto notificationDto)
         {
-            var notificationGameObject = Instantiate(notificationPrefab, content);
-            var notification = notificationGameObject.GetComponent<UserNotificationElement>();
-            notification.Init(notificationDto);
-            _notificationElements.Add(notification);
-            NotificationHub.Default.Notify(this, TabletNotificationKeys.UserNotificationReceived);
+            var modelContainer = Instantiate(notificationPrefab, content).GetComponent<UserNotificationModelContainer>();
+            modelContainer.Model.SetDto(notificationDto);
+            NotificationHub.Default.Notify(this, ID.FromType<UserNotificationNotificationKeys.UserNotificationReceived>());
         }
 
 #if UNITY_EDITOR
@@ -56,7 +51,7 @@ namespace umi3d.browserRuntime.ui.userNotification
         {
             NotificationDto notification = new NotificationDto();
             notification.content = "Test content";
-            notification.callback = new [] { "Yes", "No" };
+            notification.callback = new[] { "Yes", "No" };
             AddNotification(notification);
         }
 #endif

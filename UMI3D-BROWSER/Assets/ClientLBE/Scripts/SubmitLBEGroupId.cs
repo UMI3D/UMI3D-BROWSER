@@ -15,6 +15,9 @@ public class SubmitLBEGroupId : MonoBehaviour
         {
             inputField.onValueChanged.AddListener(OnTextChanged);
         }
+        //A enlever aprés la démo
+        inputField.text = "1";
+
     }
 
     private void OnDestroy()

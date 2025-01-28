@@ -39,7 +39,7 @@ namespace ClientLBE
         private List<Quaternion> localVertexRotations = new List<Quaternion>();
 
         [Header("ANCHOR AR")]
-        public ARAnchorManager AnchorManager; // Référence au gestionnaire d'ancres AR
+        public Transform AnchorManager; // Référence au gestionnaire d'ancres AR
 
         private List<Vector3> guardianAnchors = new List<Vector3>(); // Liste pour stocker toutes les ancres du guardian
         private UserGuardianDto userGuardianDto = new UserGuardianDto();
@@ -52,7 +52,7 @@ namespace ClientLBE
 
         public bool automaticCalibration = true;
         private Transform calibrator;
-        private ARPlaneManager arPlaneManager;
+        public ARPlaneManager arPlaneManager;
 
         private float orientationOffset;
 
@@ -73,6 +73,7 @@ namespace ClientLBE
                 ManualCalibrator.gameObject.SetActive(false);
 
             arPlaneManager = this.GetComponent<ARPlaneManager>();
+
             StartCoroutine(GetARPlanes());
 
             UMI3DEnvironmentLoader.Instance.onEnvironmentLoaded.AddListener(() => StartCalibrationScene());
@@ -234,8 +235,6 @@ namespace ClientLBE
             //Délais d'attente pour que arPlaneManager.trackables retourne des ARplanes
             yield return new WaitForSeconds(0.7f);
 
-            List<ARPlane> planesToDestroy = new List<ARPlane>();
-
             if (arPlaneManager != null)
             {
                 var trackables = arPlaneManager.trackables;
@@ -243,17 +242,10 @@ namespace ClientLBE
                 foreach (var plane in trackables)
                 {
 
-                    if (plane.transform.position.y >= -0.5f && plane.transform.position.y <= 0.5f || plane.transform.position.y > 1.2f)
-                        planesToDestroy.Add(plane);
-
-                    else
+                    if (plane.transform.position.y > 0.5f && plane.transform.position.y < 1.6f)
                         planesToCalibrate.Add(plane);
                 }
-
-                foreach (var plane in planesToDestroy)
-                {
-                    Destroy(plane.gameObject);
-                }
+       
             }
             else
                 Debug.LogError("ARPlaneManager not found on this GameObject.");
@@ -454,11 +446,6 @@ namespace ClientLBE
             arPlaneManager.enabled = false;
 
             ARPlanesActivation(false);
-
-            if (AnchorManager.enabled == false)
-            {
-                AnchorManager.enabled = true;
-            }
 
             AddAnchorGuardian();
 

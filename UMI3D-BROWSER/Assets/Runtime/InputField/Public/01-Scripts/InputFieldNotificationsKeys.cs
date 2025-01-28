@@ -73,5 +73,15 @@ namespace umi3d.browserRuntime.ui.inputField
             /// </remarks>
             public const string Value = "Value";
         }
+
+        /// <summary>
+        /// Event raised when an input field is selected
+        /// </summary>
+        public class Selected { }
+
+        /// <summary>
+        /// Event raised when an input field is deselected
+        /// </summary>
+        public class Deselected { }
     }
 }

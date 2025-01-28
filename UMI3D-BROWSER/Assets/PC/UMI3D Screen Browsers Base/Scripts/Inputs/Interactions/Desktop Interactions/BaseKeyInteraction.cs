@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Linq;
 using umi3d.browserRuntime.cursor;
 using umi3d.browserRuntime.inputs;
+using umi3d.browserRuntime.ui.inputField;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
 using static umi3d.baseBrowser.inputs.interactions.BaseKeyInteraction;
@@ -59,6 +60,19 @@ namespace umi3d.baseBrowser.inputs.interactions
             NotificationHub.Default.Subscribe(
                 this,
                 ID.FromType<InputNotificationKeys.TextEditionStop>(),
+                (Callback)TextEditionStop
+            );
+
+            // InputField
+            NotificationHub.Default.Subscribe(
+                this,
+                ID.FromType<InputFieldNotificationsKeys.Selected>(),
+                (Callback)TextEditionStart
+            );
+
+            NotificationHub.Default.Subscribe(
+                this,
+                ID.FromType<InputFieldNotificationsKeys.Deselected>(),
                 (Callback)TextEditionStop
             );
         }

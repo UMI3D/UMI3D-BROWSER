@@ -124,6 +124,7 @@ namespace umi3d.browserRuntime.cursor
         public void UnSetCursor(Notification notification)
         {
             UnSetMovement(notification.Publisher);
+            State = CursorState.Default;
         }
 
         /// <summary>

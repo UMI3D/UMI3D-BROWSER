@@ -69,6 +69,7 @@ namespace umi3d.browserRuntime.ui.inputField
             model.SetLabel(dto.name);
             model.SetValue(dto.value);
             model.SetNbrLines(dto.NbLine);
+            model.SetPrivate(dto.privateParameter);
         }
 
         /// <summary>

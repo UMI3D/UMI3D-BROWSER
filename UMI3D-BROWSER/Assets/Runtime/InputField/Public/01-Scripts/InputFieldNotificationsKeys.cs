@@ -58,6 +58,13 @@ namespace umi3d.browserRuntime.ui.inputField
             /// Value is <see cref="int"/>
             /// </remarks>
             public const string NbrLine = "NbrLine";
+            /// <summary>
+            /// Is the input field private (example: for password)
+            /// </summary>
+            /// <remarks>
+            /// Value is <see cref="bool"/>
+            /// </remarks>
+            public const string IsPrivate = "IsPrivate";
         }
 
         /// <summary>

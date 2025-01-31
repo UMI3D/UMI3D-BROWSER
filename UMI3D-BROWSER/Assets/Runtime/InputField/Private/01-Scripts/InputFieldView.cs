@@ -43,6 +43,8 @@ namespace umi3d.browserRuntime.ui.inputField
             _modelContainer = GetComponentInParent<InputFieldModelContainer>();
 
             _actionReference.action.started += OnSubmited;
+            _inputField.onSelect.AddListener(OnSelect);
+            _inputField.onDeselect.AddListener(OnDeselect);
 
             NotificationHub.Default.Subscribe(this,
                 ID.FromType<InputFieldNotificationsKeys.InputFieldSet>(), 
@@ -59,6 +61,18 @@ namespace umi3d.browserRuntime.ui.inputField
         {
             NotificationHub.Default.Unsubscribe(this);
             _actionReference.action.started -= OnSubmited;
+            _inputField.onSelect.RemoveListener(OnSelect);
+            _inputField.onDeselect.RemoveListener(OnDeselect);
+        }
+
+        void OnSelect(string s)
+        {
+            NotificationHub.Default.Notify(this, ID.FromType<InputFieldNotificationsKeys.Selected>());
+        }
+
+        void OnDeselect(string s)
+        {
+            NotificationHub.Default.Notify(this, ID.FromType<InputFieldNotificationsKeys.Deselected>());
         }
 
         private void OnSubmited(InputAction.CallbackContext context)

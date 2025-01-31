@@ -27,14 +27,16 @@ public class InputFieldParameterModelTests
             StringParameterDto dto = new StringParameterDto() {
                 name = name,
                 value = value,
-                NbLine = nbLine
+                NbLine = nbLine,
+                privateParameter = true
             };
 
             _model.SetDto(dto);
 
-            Assert.AreEqual(dto.name, name);
-            Assert.AreEqual(dto.value, value);
-            Assert.AreEqual(dto.NbLine, nbLine);
+            Assert.AreEqual(_model.model.label, name);
+            Assert.AreEqual(_model.model.value, value);
+            Assert.AreEqual(_model.model.nbrLine, nbLine);
+            Assert.IsTrue(_model.model.isPrivate);
         }
     }
 }

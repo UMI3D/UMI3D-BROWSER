@@ -93,6 +93,11 @@ namespace umi3d.browserRuntime.ui.inputField
                 _inputField.text = value;
             }
 
+            if (notification.TryGetInfoT(InputFieldNotificationsKeys.InputFieldSet.IsPrivate, out bool isPrivate))
+            {
+                _inputField.contentType = isPrivate ? TMP_InputField.ContentType.Password : TMP_InputField.ContentType.Standard;
+            }
+
             if (notification.TryGetInfoT(InputFieldNotificationsKeys.InputFieldSet.NbrLine, out int nbrLine))
             {
                 if (!_viewport)

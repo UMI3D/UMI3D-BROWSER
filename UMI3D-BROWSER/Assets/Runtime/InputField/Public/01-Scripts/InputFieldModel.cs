@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using inetum.unityUtils.observation;
+using System;
 
 namespace umi3d.browserRuntime.ui.inputField
 {
@@ -28,6 +29,7 @@ namespace umi3d.browserRuntime.ui.inputField
         public string value { get; private set; }
         public string placeholder { get; private set; }
         public int nbrLine { get; private set; } = 1;
+        public bool isPrivate { get; private set; } = false;
 
         Notifier _setNotifier;
         Notifier _updateNotifier;
@@ -40,6 +42,7 @@ namespace umi3d.browserRuntime.ui.inputField
             _setNotifier[InputFieldNotificationsKeys.InputFieldSet.Value] = value;
             _setNotifier[InputFieldNotificationsKeys.InputFieldSet.Placeholder] = placeholder;
             _setNotifier[InputFieldNotificationsKeys.InputFieldSet.NbrLine] = nbrLine;
+            _setNotifier[InputFieldNotificationsKeys.InputFieldSet.IsPrivate] = isPrivate;
 
             _updateNotifier = NotificationHub.Default.GetNotifier(this, ID.FromType<InputFieldNotificationsKeys.InputFieldUpdated>());
         }
@@ -141,6 +144,26 @@ namespace umi3d.browserRuntime.ui.inputField
         {
             nbrLine = newNbrLine;
             _setNotifier[InputFieldNotificationsKeys.InputFieldSet.NbrLine] = nbrLine;
+            _setNotifier.Notify();
+        }
+
+
+        /// /// <summary>
+        /// This method sets if the input field need to be shown with "*****" and notifies the change.<br/>
+        /// Send a <see cref="InputFieldNotificationsKeys.InputFieldSet"/> notification.<br/>
+        /// <br/>
+        /// <example>
+        /// Given a new isPrivate when setting the privacy then the isPrivate is updated and notification is sent.
+        /// <code>
+        /// _model.SetPrivate(true);
+        /// </code> 
+        /// </example>
+        /// </summary>
+        /// <param name="newNbrLine">The new number of lines to set.</param>
+        public void SetPrivate(bool newIsPrivate)
+        {
+            isPrivate = newIsPrivate;
+            _setNotifier[InputFieldNotificationsKeys.InputFieldSet.IsPrivate] = isPrivate;
             _setNotifier.Notify();
         }
     }

@@ -48,9 +48,10 @@ public class InputFieldFactoryTests
             string value = "Test Value";
             string placeholder = "Test Placeholder";
             int nbLine = 1;
+            bool isPrivate = true;
 
             // When: Creating the input field
-            GameObject inputField = _inputFieldFactory.GetOrCreateInputField(parent, isMultiline, label, value, placeholder, nbLine);
+            GameObject inputField = _inputFieldFactory.GetOrCreateInputField(parent, isMultiline, label, value, placeholder, nbLine, isPrivate);
             yield return null;
 
             // Then: The input field is created and set up correctly
@@ -61,6 +62,7 @@ public class InputFieldFactoryTests
             Assert.AreEqual(value, inputFieldModelContainer.model.value);
             Assert.AreEqual(placeholder, inputFieldModelContainer.model.placeholder);
             Assert.AreEqual(1, inputFieldModelContainer.model.nbrLine);
+            Assert.AreEqual(isPrivate, inputFieldModelContainer.model.isPrivate);
         }
 
         [UnityTest]

@@ -143,7 +143,12 @@ namespace umi3d.cdk.collaboration
                                 libraryPreloading = dto.libraryPreloading,
                                 isCancel = isCancel,
                             };
-                            return await Connect(_answer);
+
+                            if(!isCancel)
+                                return await Connect(_answer);
+
+                            await EnvironmentHttpClient.Connect(_answer, media.url);
+                            return false;
                         }
                     case PrivateIdentityDto identity:
                         Connected(identity);

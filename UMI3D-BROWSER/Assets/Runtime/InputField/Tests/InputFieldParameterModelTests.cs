@@ -39,4 +39,19 @@ public class InputFieldParameterModelTests
             Assert.IsTrue(_model.model.isPrivate);
         }
     }
+
+    public class ReleaseDtoTests
+    {
+        [Test]
+        public void GivenDto_WhenRelease_ThenDtoNull()
+        {
+            var model = new InputFieldParameterModel(new InputFieldModel());
+            model.SetDto(new StringParameterDto());
+            Assert.NotNull(model.dto);
+
+            model.ReleaseDto();
+
+            Assert.Null(model.dto);
+        }
+    }
 }

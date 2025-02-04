@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils.observation;
 using umi3d.browserRuntime.ui.slider;
 using umi3d.common.interaction;
 using UnityEngine;
@@ -33,7 +34,12 @@ namespace umi3d.browserRuntime.ui.contextualMenu
         public GameObject GetOrCreate(Transform parent, IntegerRangeParameterDto dto)
         {
             var sliderGameobject = _sliderFactory.GetOrCreateSlider(parent, isInteger: true);
-            sliderGameobject.GetComponent<SliderIntParameterModelContainer>().parameterModel.SetDto(dto);
+            var model = sliderGameobject.GetComponent<SliderIntParameterModelContainer>().parameterModel;
+            model.SetDto(dto);
+
+            NotificationHub.Default.Subscribe(sliderGameobject,
+                ID.FromType<ContextualMenuNotificationKeys.Submit>(),
+                (Callback)model.Submit);
 
             return sliderGameobject;
         }
@@ -41,14 +47,27 @@ namespace umi3d.browserRuntime.ui.contextualMenu
         public GameObject GetOrCreate(Transform parent, FloatRangeParameterDto dto)
         {
             var sliderGameobject = _sliderFactory.GetOrCreateSlider(parent, isInteger: false);
-            sliderGameobject.GetComponent<SliderFloatParameterModelContainer>().parameterModel.SetDto(dto);
+            var model = sliderGameobject.GetComponent<SliderFloatParameterModelContainer>().parameterModel;
+            model.SetDto(dto);
+
+            NotificationHub.Default.Subscribe(sliderGameobject,
+                ID.FromType<ContextualMenuNotificationKeys.Submit>(),
+                (Callback)model.Submit);
+
 
             return sliderGameobject;
         }
 
-        public void Return(GameObject inputFieldModelContainer)
+        public void Return(GameObject sliderModelContainer)
         {
-            _sliderFactory.Return(inputFieldModelContainer);
+            NotificationHub.Default.Unsubscribe(sliderModelContainer);
+            var modelFloat = sliderModelContainer.GetComponent<SliderFloatParameterModelContainer>().parameterModel;
+            if (modelFloat != null)
+                modelFloat.ReleaseDto();
+            var modelInt = sliderModelContainer.GetComponent<SliderIntParameterModelContainer>().parameterModel;
+            if (modelInt != null)
+                modelInt.ReleaseDto();
+            _sliderFactory.Return(sliderModelContainer);
         }
     }
 }

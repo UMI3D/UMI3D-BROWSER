@@ -19,7 +19,6 @@ using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.ui.inputField
@@ -29,7 +28,6 @@ namespace umi3d.browserRuntime.ui.inputField
     public class InputFieldView : MonoBehaviour
     {
         [SerializeField] RectTransform _viewport;
-        [SerializeField] InputActionReference _actionReference;
 
         TMP_InputField _inputField;
         LayoutElement _layoutElement;
@@ -41,8 +39,7 @@ namespace umi3d.browserRuntime.ui.inputField
             _inputField = GetComponent<TMP_InputField>();
             _layoutElement = GetComponent<LayoutElement>();
             _modelContainer = GetComponentInParent<InputFieldModelContainer>();
-
-            _actionReference.action.started += OnSubmited;
+			_inputField.onValueChanged.AddListener(OnValueChanged);
             _inputField.onSelect.AddListener(OnSelect);
             _inputField.onDeselect.AddListener(OnDeselect);
 
@@ -60,7 +57,7 @@ namespace umi3d.browserRuntime.ui.inputField
         private void OnDestroy()
         {
             NotificationHub.Default.Unsubscribe(this);
-            _actionReference.action.started -= OnSubmited;
+            _inputField.onValueChanged.RemoveListener(OnValueChanged);
             _inputField.onSelect.RemoveListener(OnSelect);
             _inputField.onDeselect.RemoveListener(OnDeselect);
         }
@@ -75,15 +72,9 @@ namespace umi3d.browserRuntime.ui.inputField
             NotificationHub.Default.Notify(this, ID.FromType<InputFieldNotificationsKeys.Deselected>());
         }
 
-        private void OnSubmited(InputAction.CallbackContext context)
+        private void OnValueChanged(string newValue)
         {
-            if (!_inputField.isFocused)
-                return;
-            if (Keyboard.current.shiftKey.IsPressed())
-                return;
-
-            _modelContainer.model.UpdateValue(_inputField.text);
-            EventSystem.current.SetSelectedGameObject(null);
+            _modelContainer.model.UpdateValue(newValue);
         }
 
         private void InputFieldSet(Notification notification)

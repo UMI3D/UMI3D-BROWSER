@@ -48,4 +48,29 @@ public class DropdownParameterModelTests
             CollectionAssert.AreEqual(testDto.possibleValues, dropdownParameterModel.model.options);
         }
     }
+
+    /// <summary>
+    /// This method releases the DTO by setting it to null.<br/>
+    /// <br/>
+    /// <example>
+    /// Given a model with a non-null DTO, when calling ReleaseDto, then the DTO should be null.
+    /// <code>
+    /// model.ReleaseDto();
+    /// </code>
+    /// </example>
+    /// </summary>
+    public class ReleaseDtoTests
+    {
+        [Test]
+        public void GivenDto_WhenRelease_ThenDtoNull()
+        {
+            var model = new DropdownParameterModel(new DropdownModel());
+            model.SetDto(new EnumParameterDto<string>());
+            Assert.NotNull(model.dto);
+
+            model.ReleaseDto();
+
+            Assert.Null(model.dto);
+        }
+    }
 }

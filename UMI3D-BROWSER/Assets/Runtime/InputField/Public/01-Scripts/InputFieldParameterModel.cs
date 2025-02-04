@@ -88,7 +88,6 @@ namespace umi3d.browserRuntime.ui.inputField
 
         public void Submit() 
         {
-            UnityEngine.Debug.Log($"Submitted : {dto.value}");
             UMI3DClientServer.SendRequest(new ParameterSettingRequestDto()
                 {
                     id = dto.id,

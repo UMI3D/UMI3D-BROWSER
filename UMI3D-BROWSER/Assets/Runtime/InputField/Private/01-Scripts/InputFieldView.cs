@@ -93,7 +93,7 @@ namespace umi3d.browserRuntime.ui.inputField
             {
                 if (!_viewport)
                     return;
-                Debug.Log(nbrLine);
+
                 RectTransform textAreaTransform = _inputField.textViewport.GetComponent<RectTransform>();
                 float padding = textAreaTransform.offsetMin.y + textAreaTransform.offsetMax.y;
 

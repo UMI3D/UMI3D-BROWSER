@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils.observation;
 using umi3d.browserRuntime.ui.inputField;
 using umi3d.common.interaction;
 using UnityEngine;
@@ -33,12 +34,19 @@ namespace umi3d.browserRuntime.ui.contextualMenu
         public GameObject GetOrCreate(Transform parent, StringParameterDto dto)
         {
             var inputFieldGameobject = _inputFieldFactory.GetOrCreateInputField(parent, dto.IsMultiLine);
-            inputFieldGameobject.GetComponent<InputFieldParameterModelContainer>().parameterModel.SetDto(dto);
+            var model = inputFieldGameobject.GetComponent<InputFieldParameterModelContainer>().parameterModel;
+            model.SetDto(dto);
+
+            NotificationHub.Default.Subscribe(inputFieldGameobject,
+                ID.FromType<ContextualMenuNotificationKeys.Submit>(),
+                (Callback)model.Submit);
+
             return inputFieldGameobject;
         }
 
         public void Return(GameObject inputFieldModelContainer)
         {
+            NotificationHub.Default.Unsubscribe(inputFieldModelContainer);
             _inputFieldFactory.Return(inputFieldModelContainer);
         }
     }

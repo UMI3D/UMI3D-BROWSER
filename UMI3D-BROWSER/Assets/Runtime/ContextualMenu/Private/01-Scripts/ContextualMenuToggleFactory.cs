@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils.observation;
 using umi3d.browserRuntime.ui.toggle;
 using umi3d.common.interaction;
 using UnityEngine;
@@ -33,12 +34,19 @@ namespace umi3d.browserRuntime.ui.contextualMenu
         public GameObject GetOrCreate(Transform parent, BooleanParameterDto dto)
         {
             var toggleGameobject = _toggleFactory.GetOrCreateToggle(parent);
-            toggleGameobject.GetComponent<ToggleParameterModelContainer>().parameterModel.SetDto(dto);
+            var model = toggleGameobject.GetComponent<ToggleParameterModelContainer>().parameterModel;
+            model.SetDto(dto);
+
+            NotificationHub.Default.Subscribe(toggleGameobject,
+                ID.FromType<ContextualMenuNotificationKeys.Submit>(),
+                (Callback)model.Submit);
+
             return toggleGameobject;
         }
 
         public void Return(GameObject toggleModelContainer)
         {
+            NotificationHub.Default.Unsubscribe(toggleModelContainer);
             _toggleFactory.Return(toggleModelContainer);
         }
     }

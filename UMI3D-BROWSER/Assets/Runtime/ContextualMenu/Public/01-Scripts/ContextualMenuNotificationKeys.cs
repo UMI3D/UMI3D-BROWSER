@@ -30,6 +30,10 @@ namespace umi3d.browserRuntime.ui.contextualMenu
         public class Close
         {
         }
+
+        public class Submit
+        {
+        }
     }
 }
 

@@ -26,7 +26,7 @@ namespace umi3d.browserRuntime.ui.inputField
     /// <remarks>
     /// Need an <see cref="InputFieldModel"/> to work. (set by <see cref="InputFieldParameterModelContainer"/> placed on the same gameobject of <see cref="InputFieldModelContainer"/>)
     /// </remarks>
-    public class InputFieldParameterModel 
+    public class InputFieldParameterModel
     {
         public StringParameterDto dto;
 
@@ -36,13 +36,13 @@ namespace umi3d.browserRuntime.ui.inputField
         {
             model = newModel;
 
-            NotificationHub.Default.Subscribe(this, 
+            NotificationHub.Default.Subscribe(this,
                 ID.FromType<InputFieldNotificationsKeys.InputFieldUpdated>(),
                 (Callback)ValueUpdated,
                 new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == model));
         }
 
-        ~InputFieldParameterModel() 
+        ~InputFieldParameterModel()
         {
             NotificationHub.Default.Unsubscribe(this);
         }
@@ -83,11 +83,16 @@ namespace umi3d.browserRuntime.ui.inputField
                 return;
 
             dto.value = value;
+        }
 
-            UMI3DClientServer.SendRequest(new ParameterSettingRequestDto() {
-                id = dto.id,
-                parameter = dto,
-            }, true);
+        public void Submit() 
+        {
+            UnityEngine.Debug.Log($"Submitted : {dto.value}");
+            UMI3DClientServer.SendRequest(new ParameterSettingRequestDto()
+                {
+                    id = dto.id,
+                    parameter = dto,
+                }, true);
         }
     }
 }

@@ -69,7 +69,10 @@ namespace umi3d.browserRuntime.ui.slider
                 return;
 
             dto.value = value;
+        }
 
+        public void Submit()
+        {
             UMI3DClientServer.SendRequest(new ParameterSettingRequestDto() {
                 id = dto.id,
                 parameter = dto,

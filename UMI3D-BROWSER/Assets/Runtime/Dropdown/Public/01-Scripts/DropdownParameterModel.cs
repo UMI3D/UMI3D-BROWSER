@@ -78,7 +78,10 @@ namespace umi3d.browserRuntime.ui.dropdown
                 return;
 
             dto.value = value;
+        }
 
+        public void Submit()
+        {
             UMI3DClientServer.SendRequest(new ParameterSettingRequestDto() {
                 id = dto.id,
                 parameter = dto,

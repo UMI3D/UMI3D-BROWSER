@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils.observation;
 using umi3d.browserRuntime.ui.dropdown;
 using umi3d.common.interaction;
 using UnityEngine;
@@ -33,12 +34,19 @@ namespace umi3d.browserRuntime.ui.contextualMenu
         public GameObject GetOrCreate(Transform parent, EnumParameterDto<string> dto)
         {
             var dropdownGameobject = _dropdownFactory.GetOrCreateDropdown(parent);
-            dropdownGameobject.GetComponent<DropdownParameterModelContainer>().parameterModel.SetDto(dto);
+            var model = dropdownGameobject.GetComponent<DropdownParameterModelContainer>().parameterModel;
+            model.SetDto(dto);
+
+            NotificationHub.Default.Subscribe(dropdownGameobject,
+                ID.FromType<ContextualMenuNotificationKeys.Submit>(),
+                (Callback)model.Submit);
+
             return dropdownGameobject;
         }
 
         public void Return(GameObject toggleModelContainer)
         {
+            NotificationHub.Default.Unsubscribe(toggleModelContainer);
             _dropdownFactory.Return(toggleModelContainer);
         }
     }

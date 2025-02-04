@@ -82,7 +82,8 @@ namespace umi3d.browserRuntime.ui.inputField
             if (!notification.TryGetInfoT(InputFieldNotificationsKeys.InputFieldUpdated.Value, out string value))
                 return;
 
-            dto.value = value;
+            if (dto != null)
+                dto.value = value;
         }
 
         public void Submit() 
@@ -93,6 +94,21 @@ namespace umi3d.browserRuntime.ui.inputField
                     id = dto.id,
                     parameter = dto,
                 }, true);
+        }
+
+        /// <summary>
+        /// This method releases the DTO by setting it to null.<br/>
+        /// <br/>
+        /// <example>
+        /// Given a model with a non-null DTO, when calling ReleaseDto, then the DTO should be null.
+        /// <code>
+        /// model.ReleaseDto();
+        /// </code>
+        /// </example>
+        /// </summary>
+        public void ReleaseDto()
+        {
+            dto = null;
         }
     }
 }

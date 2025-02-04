@@ -61,4 +61,19 @@ public class SliderIntParameterModelTests
             Assert.IsTrue(mockSliderModel.isInteger);
         }
     }
+
+    public class ReleaseDtoTests
+    {
+        [Test]
+        public void GivenDto_WhenRelease_ThenDtoNull()
+        {
+            var model = new SliderIntParameterModel(new SliderModel());
+            model.SetDto(new IntegerRangeParameterDto());
+            Assert.NotNull(model.dto);
+
+            model.ReleaseDto();
+
+            Assert.Null(model.dto);
+        }
+    }
 }

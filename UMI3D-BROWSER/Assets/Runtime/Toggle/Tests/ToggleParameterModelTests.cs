@@ -34,4 +34,19 @@ public class ToggleParameterModelTests
             Assert.AreEqual(dto.value, value);
         }
     }
+
+    public class ReleaseDtoTests
+    {
+        [Test]
+        public void GivenDto_WhenRelease_ThenDtoNull()
+        {
+            var model = new ToggleParameterModel(new ToggleModel());
+            model.SetDto(new BooleanParameterDto());
+            Assert.NotNull(model.dto);
+
+            model.ReleaseDto();
+
+            Assert.Null(model.dto);
+        }
+    }
 }

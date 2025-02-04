@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using inetum.unityUtils.observation;
+using System;
 using umi3d.cdk;
 using umi3d.common.interaction;
 
@@ -86,6 +87,11 @@ namespace umi3d.browserRuntime.ui.dropdown
                 id = dto.id,
                 parameter = dto,
             }, true);
+        }
+
+        public void ReleaseDto()
+        {
+            dto = null;
         }
     }
 }

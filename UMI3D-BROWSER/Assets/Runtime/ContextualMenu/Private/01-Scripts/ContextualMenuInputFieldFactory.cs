@@ -47,6 +47,9 @@ namespace umi3d.browserRuntime.ui.contextualMenu
         public void Return(GameObject inputFieldModelContainer)
         {
             NotificationHub.Default.Unsubscribe(inputFieldModelContainer);
+            var model = inputFieldModelContainer.GetComponent<InputFieldParameterModelContainer>().parameterModel;
+            if (model != null)
+                model.ReleaseDto();
             _inputFieldFactory.Return(inputFieldModelContainer);
         }
     }

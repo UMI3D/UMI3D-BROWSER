@@ -47,6 +47,9 @@ namespace umi3d.browserRuntime.ui.contextualMenu
         public void Return(GameObject toggleModelContainer)
         {
             NotificationHub.Default.Unsubscribe(toggleModelContainer);
+            var model = toggleModelContainer.GetComponent<ToggleParameterModelContainer>().parameterModel;
+            if (model != null)
+                model.ReleaseDto();
             _toggleFactory.Return(toggleModelContainer);
         }
     }

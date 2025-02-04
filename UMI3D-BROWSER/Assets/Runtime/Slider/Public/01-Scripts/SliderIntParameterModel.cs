@@ -16,6 +16,7 @@ limitations under the License.
 
 using inetum.unityUtils;
 using inetum.unityUtils.observation;
+using System;
 using umi3d.cdk;
 using umi3d.common.interaction;
 
@@ -78,6 +79,21 @@ namespace umi3d.browserRuntime.ui.slider
                 id = dto.id,
                 parameter = dto,
             }, true);
+        }
+
+        /// <summary>
+        /// This method releases the DTO by setting it to null.<br/>
+        /// <br/>
+        /// <example>
+        /// Given a model with a non-null DTO, when calling ReleaseDto, then the DTO should be null.
+        /// <code>
+        /// model.ReleaseDto();
+        /// </code>
+        /// </example>
+        /// </summary>
+        public void ReleaseDto()
+        {
+            dto = null;
         }
     }
 }

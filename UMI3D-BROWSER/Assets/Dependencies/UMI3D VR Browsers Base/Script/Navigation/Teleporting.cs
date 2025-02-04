@@ -56,13 +56,6 @@ namespace umi3dVRBrowsersBase.navigation
 
         bool isLoadingScreenDisplayed = false;
 
-        protected virtual void Awake()
-        {
-            //LoadingScreenDisplayer.OnLoadingScreenDislayed.AddListener(() => isLoadingScreenDisplayed = true);
-            //LoadingScreenDisplayer.OnLoadingScreenHidden.AddListener(() => isLoadingScreenDisplayed = false);
-        }
-
-
         bool IsLeaderInGroup()
         {
             if (guardianManager == null)

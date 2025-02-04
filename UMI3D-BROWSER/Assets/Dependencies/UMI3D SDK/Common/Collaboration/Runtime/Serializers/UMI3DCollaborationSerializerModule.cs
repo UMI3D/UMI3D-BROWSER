@@ -261,17 +261,15 @@ namespace umi3d.common.collaboration
                     {
                         Debug.Log("tpGroup init");
                         Vector3Dto teleportLeaderPosition = null;
-                        Vector3Dto currentLeaderPosition = null;
 
-                        readable = UMI3DSerializer.TryRead<Vector3Dto>(container, out teleportLeaderPosition)
-                                   && UMI3DSerializer.TryRead<Vector3Dto>(container, out currentLeaderPosition);
+                        readable = UMI3DSerializer.TryRead<Vector3Dto>(container, out teleportLeaderPosition);
+                                 
                         if (readable)
                         {
                             Debug.Log("tpGroup readable");
                             var teleportGroup = new TeleportGroupRequestDto
                             {
                                 teleportationVector = teleportLeaderPosition,
-                                //currentLeaderPosition = currentLeaderPosition
                             };
 
                             result = (T)Convert.ChangeType(teleportGroup, typeof(T));
@@ -529,7 +527,6 @@ namespace umi3d.common.collaboration
                 case TeleportGroupRequestDto tpGroup:
                     bytable = UMI3DSerializer.Write(UMI3DOperationKeys.TeleportGroupRequest)
                         + UMI3DSerializer.Write(tpGroup.teleportationVector);
-                        /*+ UMI3DSerializer.Write(tpGroup.currentLeaderPosition);*/
                     break;
 
                 default:

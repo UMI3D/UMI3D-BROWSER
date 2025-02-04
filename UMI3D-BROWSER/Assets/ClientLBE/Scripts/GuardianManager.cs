@@ -51,7 +51,7 @@ namespace ClientLBE
         public CanvasGroup OrientationScenePanel;
 
         public bool automaticCalibration = true;
-        private Transform calibrator;
+        public Transform calibrator;
         public ARPlaneManager arPlaneManager;
 
         private float orientationOffset;
@@ -61,6 +61,8 @@ namespace ClientLBE
 
         private Dictionary<string, System.Object> info = new();
         static bool IsAdmin = false;
+
+        public event Action<Vector3> OnPositionCalibratorStart;
 
         #endregion
 
@@ -250,9 +252,13 @@ namespace ClientLBE
             else
                 Debug.LogError("ARPlaneManager not found on this GameObject.");
 
+
+            Debug.LogError("REMY : planesToCalibrate.Count -> " + planesToCalibrate.Count);
+
             if (automaticCalibration)
             {
-                if (planesToCalibrate.Count == 1)
+
+                if (planesToCalibrate.Count > 0 )
                 {
                     ARPlane selectedPlane = planesToCalibrate[0];
 
@@ -284,6 +290,9 @@ namespace ClientLBE
             }
             else
                 SetManualCalibrator();
+
+            //Envoi de la position du calibrator qui correspond à la position du spawner pour le recalculé dans la TPGroupé 
+            OnPositionCalibratorStart?.Invoke(calibrator.transform.position);
         }
 
         public void ProcessIDSubmission(string id)
@@ -529,7 +538,7 @@ namespace ClientLBE
         // Envoyer les data de chaque ancres au serveur
         public void SendGuardianInServer()
         {
-            if (guardianAnchors != null || guardianAnchors.Count > 0)
+            if (guardianAnchors.Count > 0)
             {
                 for (int i = 0; i < guardianAnchors.Count; i++)
                 {

@@ -25,9 +25,5 @@ namespace umi3d.common
         /// Target teleportation of the leader user.
         /// </summary>
         public Vector3Dto teleportationVector { get; set; }
-        /// <summary>
-        /// Old position of the leader user to calculate relative position.
-        /// </summary>
-        //public Vector3Dto currentLeaderPosition { get; set; }
     }
 };

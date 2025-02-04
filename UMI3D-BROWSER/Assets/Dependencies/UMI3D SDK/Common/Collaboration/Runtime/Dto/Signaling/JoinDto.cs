@@ -53,4 +53,9 @@ namespace umi3d.common.collaboration.dto.signaling
         public List<uint> bonesWithController { get; set; }
 
     }
+
+    public class JoinLBEDto : JoinDto
+    {
+        public uint lbeGroupId { get; set; }
+    }
 }

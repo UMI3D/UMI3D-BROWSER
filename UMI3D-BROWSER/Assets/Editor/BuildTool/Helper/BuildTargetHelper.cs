@@ -25,27 +25,40 @@ namespace umi3d.browserEditor.BuildTool
         static umi3d.debug.UMI3DLogger logger 
             = new(mainTag: nameof(BuildTargetHelper));
 
+        public static ITargetDelegate @delegate;
+
         /// <summary>
         /// Switch target.<br/>
-        /// Return -1 if an error occurred.<br/>
-        /// Return 0 if the current target is already good.<br/>
-        /// Return 1 if the target has been changed successfully.<br/>
+        /// Update compilation symbols and change build target.<br/>
         /// </summary>
         /// <param name="target"></param>
-        /// <returns></returns>
-        public static int SwitchTarget(E_Target target)
+        public static void SwitchTarget(E_Target target)
         {
             switch (target)
             {
                 case E_Target.Quest:
                 case E_Target.Focus:
                 case E_Target.Pico:
+                    ChangeDeviceConditionalCompilation(
+                        MultiDevice.XR, 
+                        UnityEditor.Build.NamedBuildTarget.Android
+                    );
+                    break;
+
                 case E_Target.SteamVR:
-                    ChangeDeviceConditionalCompilation(MultiDevice.XR);
+                    ChangeDeviceConditionalCompilation(
+                        MultiDevice.XR, 
+                        UnityEditor.Build.NamedBuildTarget.Standalone
+                    );
                     break;
+
                 case E_Target.Windows:
-                    ChangeDeviceConditionalCompilation(MultiDevice.PC);
+                    ChangeDeviceConditionalCompilation(
+                        MultiDevice.PC, 
+                        UnityEditor.Build.NamedBuildTarget.Standalone
+                    );
                     break;
+
                 default:
                     break;
             }
@@ -55,79 +68,86 @@ namespace umi3d.browserEditor.BuildTool
                 case E_Target.Quest:
                 case E_Target.Focus:
                 case E_Target.Pico:
-                    return ChangeBuildTarget(
+                    ChangeBuildTarget(
                         BuildTargetGroup.Android, 
                         BuildTarget.Android
                     );
+                    break;
+
                 case E_Target.SteamVR:
-                    return ChangeBuildTarget(
+                    ChangeBuildTarget(
                         BuildTargetGroup.Standalone,
                         BuildTarget.StandaloneWindows64
                     );
+                    break;
+
                 case E_Target.Windows:
-                    return ChangeBuildTarget(
+                    ChangeBuildTarget(
                         BuildTargetGroup.Standalone,
                         BuildTarget.StandaloneWindows64
                     );
+                    break;
+
                 default:
-                    return -1;
+                    break;
             }
         }
 
-        static void ChangeDeviceConditionalCompilation(MultiDevice device)
+        static void ChangeDeviceConditionalCompilation(
+            MultiDevice device,
+            UnityEditor.Build.NamedBuildTarget target
+        )
         {
-            var deviceSymbols 
-                = MultiDeviceExtensions.GetAllSymbols();
+            string[] currentSymbols = PlayerSettings
+                .GetScriptingDefineSymbols(target)
+                .Split(';');
 
-            List<string> newDef = new();
-            bool shouldUpdate;
-
-            var androidDef = PlayerSettings.GetScriptingDefineSymbols(
-                UnityEditor.Build.NamedBuildTarget.Android
-            ).Split(';');
-            shouldUpdate = device.UpdateSymbols(
-                androidDef,
-                deviceSymbols,
-                ref newDef
-            );
-            if (shouldUpdate) 
+            List<string> newSymbols = new();
+            bool hasDeviceSymbolBeenAdded = false;
+            bool shouldUpdate = false;
+            for (int i = 0; i < currentSymbols.Length; i++)
             {
-                PlayerSettings.SetScriptingDefineSymbols(
-                    UnityEditor.Build.NamedBuildTarget.Android,
-                    newDef.ToArray()
-                );
+                string symbol = currentSymbols[i];
+                if (symbol.TryGetDeviceFromSymbol(out MultiDevice deviceFromSymbol))
+                {
+                    if (deviceFromSymbol == device)
+                    {
+                        newSymbols.Add(symbol);
+                        hasDeviceSymbolBeenAdded = true;
+                    }
+                    else
+                    {
+                        // else the symbol is not added to the list of new symbols
+                        // and will be removed from the current list.
+                        shouldUpdate = true;
+                    }
+                }
+                else
+                {
+                    newSymbols.Add(symbol);
+                }
+            }
+            if (!hasDeviceSymbolBeenAdded)
+            {
+                newSymbols.Add(device.GetSymbol());
+                shouldUpdate = true;
             }
 
-            var standaloneDef = PlayerSettings.GetScriptingDefineSymbols(
-                UnityEditor.Build.NamedBuildTarget.Standalone
-            ).Split(';');
-            shouldUpdate = device.UpdateSymbols(
-                standaloneDef,
-                deviceSymbols,
-                ref newDef
-            );
             if (shouldUpdate)
             {
+                string[] _newSymbols = newSymbols.ToArray();
                 PlayerSettings.SetScriptingDefineSymbols(
-                    UnityEditor.Build.NamedBuildTarget.Standalone,
-                    newDef.ToArray()
+                    target,
+                    _newSymbols
                 );
+                @delegate?.SymbolsHaveChanged(currentSymbols, _newSymbols, target);
             }
         }
 
-        /// <summary>
-        /// Switch target.<br/>
-        /// Return -1 if an error occurred.<br/>
-        /// Return 0 if the current target is already good.<br/>
-        /// Return 1 if the target has been changed successfully.<br/>
-        /// </summary>
-        /// <param name="buildTargetGroup"></param>
-        /// <param name="buildTarget"></param>
-        /// <returns></returns>
-        static int ChangeBuildTarget(BuildTargetGroup buildTargetGroup, BuildTarget buildTarget)
+        static void ChangeBuildTarget(BuildTargetGroup buildTargetGroup, BuildTarget buildTarget)
         {
-            var oldTarget = EditorUserBuildSettings.activeBuildTarget;
-            var oldTargetGroup = EditorUserBuildSettings.selectedBuildTargetGroup;
+            BuildTarget oldTarget = EditorUserBuildSettings.activeBuildTarget;
+            BuildTargetGroup oldTargetGroup = EditorUserBuildSettings.selectedBuildTargetGroup;
 
             if (oldTarget == buildTarget && oldTargetGroup == buildTargetGroup)
             {
@@ -135,10 +155,9 @@ namespace umi3d.browserEditor.BuildTool
                     nameof(ChangeBuildTarget),
                     $"[UMI3D] Current target is {buildTarget}"
                 );
-                return 0;
             }
 
-            var result = EditorUserBuildSettings.SwitchActiveBuildTarget(
+            bool result = EditorUserBuildSettings.SwitchActiveBuildTarget(
                 buildTargetGroup, 
                 buildTarget
             );
@@ -151,7 +170,7 @@ namespace umi3d.browserEditor.BuildTool
                     nameof(ChangeBuildTarget),
                     $"[UMI3D] Switching target failed"
                 );
-                return -1;
+                @delegate?.BuildTargetFailedToChange();
             }
             else
             {
@@ -159,7 +178,7 @@ namespace umi3d.browserEditor.BuildTool
                     nameof(ChangeBuildTarget),
                     $"[UMI3D] Target switch from {oldTarget} to {buildTarget}"
                 );
-                return 1;
+                @delegate?.BuildTargetHasChanged(buildTargetGroup, buildTarget);
             }
         }
     }

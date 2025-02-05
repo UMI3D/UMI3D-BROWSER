@@ -31,6 +31,20 @@ namespace umi3d.browserEditor.BuildTool
 
     public static class TargetExt
     {
+        /// <summary>
+        /// This method maps an E_Target enum value to a corresponding BuildTarget enum value.<br/>
+        /// <br/>
+        /// <example>
+        /// Given an E_Target value when calling GetBuildTarget then it returns the corresponding BuildTarget value.<br/>
+        /// <br/>
+        /// <code>
+        /// BuildTarget result = E_Target.Quest.GetBuildTarget();
+        /// // Return BuildTarget.Android.
+        /// </code> 
+        /// </example>
+        /// </summary>
+        /// <param name="target">The E_Target enum value.</param>
+        /// <returns>The corresponding BuildTarget enum value.</returns>
         public static BuildTarget GetBuildTarget(this E_Target target)
         {
             return target switch

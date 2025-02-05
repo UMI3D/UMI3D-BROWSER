@@ -20,12 +20,13 @@ using umi3d.cdk.collaboration;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.UIElements;
 using DataCreation = umi3d.browserEditor.BuildTool.UMI3DBuildToolDataCreation;
 
 namespace umi3d.browserEditor.BuildTool
 {
-    public class UMI3DBuildTool : EditorWindow
+    public class UMI3DBuildTool : EditorWindow, ITargetDelegate
     {
         [SerializeField] private VisualTreeAsset ui = default;
         [SerializeField] private VisualTreeAsset target_VTA = default;
@@ -38,6 +39,8 @@ namespace umi3d.browserEditor.BuildTool
         UMI3DBuildToolSettings_SO settingModel;
 
         [SerializeField] UMI3DCollabLoadingParameters loadingParameters;
+        //[SerializeField] UniversalRendererData urpData;
+
         UMI3DConfigurator _uMI3DConfigurator = null;
 
         UMI3DBuildToolView buildView;
@@ -144,6 +147,9 @@ namespace umi3d.browserEditor.BuildTool
             subGlobal.Add(keystoreModel);
             subGlobal.Add(settingModel);
 
+            BuildTargetHelper.Init(targetModel.currentTarget);
+            BuildTargetHelper.@default.@delegate = this;
+
             buildView = new(
                 rootVisualElement,
                 ui
@@ -173,9 +179,7 @@ namespace umi3d.browserEditor.BuildTool
 
             // Switch target if needed and toggle options.
             _uMI3DConfigurator.HandleTarget(target);
-            BuildTargetHelper.SwitchTarget(target);
-            PluginHelper.SwitchPlugins(target);
-            FeatureHelper.SwitchFeatures(target);
+            BuildTargetHelper.@default.SwitchTarget(target);
         }
 
         void ApplyScenes()
@@ -287,5 +291,14 @@ namespace umi3d.browserEditor.BuildTool
                     break;
             }
         }
+
+        #region Target Delegate
+
+        void ITargetDelegate.TargetHasChanged(E_Target oldTarget, E_Target newTarget)
+        {
+            targetModel.currentTarget = newTarget;
+        }
+
+        #endregion
     }
 }

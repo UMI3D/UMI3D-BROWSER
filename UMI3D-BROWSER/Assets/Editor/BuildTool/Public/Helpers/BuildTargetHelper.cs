@@ -47,10 +47,11 @@ namespace umi3d.browserEditor.BuildTool
             }
         }
         static readonly Lazy<BuildTargetHelper> _default = new(() => new());
-        static bool hasBeenInitialized = false;
+        internal static bool hasBeenInitialized = false;
 
         public E_Target target { get; private set; }
         public ITargetDelegate @delegate;
+        internal IUnityTargetDelegate unityDelegate;
 
         public static void Init(E_Target target)
         {
@@ -61,6 +62,7 @@ namespace umi3d.browserEditor.BuildTool
             }
 
             _default.Value.target = target;
+            _default.Value.unityDelegate = new UnityTargetDelegate();
             hasBeenInitialized = true;
         }
 
@@ -107,24 +109,12 @@ namespace umi3d.browserEditor.BuildTool
                 case E_Target.Quest:
                 case E_Target.Focus:
                 case E_Target.Pico:
-                    ChangeDeviceConditionalCompilation(
-                        MultiDevice.XR,
-                        UnityEditor.Build.NamedBuildTarget.Android
-                    );
-                    break;
-
                 case E_Target.SteamVR:
-                    ChangeDeviceConditionalCompilation(
-                        MultiDevice.XR,
-                        UnityEditor.Build.NamedBuildTarget.Standalone
-                    );
+                    ChangeDeviceConditionalCompilation(MultiDevice.XR);
                     break;
 
                 case E_Target.Windows:
-                    ChangeDeviceConditionalCompilation(
-                        MultiDevice.PC,
-                        UnityEditor.Build.NamedBuildTarget.Standalone
-                    );
+                    ChangeDeviceConditionalCompilation(MultiDevice.PC);
                     break;
 
                 default:
@@ -176,8 +166,8 @@ namespace umi3d.browserEditor.BuildTool
             BuildTarget buildTarget
         )
         {
-            BuildTarget oldTarget = EditorUserBuildSettings.activeBuildTarget;
-            BuildTargetGroup oldTargetGroup = EditorUserBuildSettings.selectedBuildTargetGroup;
+            BuildTarget oldTarget = unityDelegate.GetActiveTarget();
+            BuildTargetGroup oldTargetGroup = unityDelegate.GetSelectedTargetGroup();
 
             if (oldTarget == buildTarget && oldTargetGroup == buildTargetGroup)
             {
@@ -185,16 +175,9 @@ namespace umi3d.browserEditor.BuildTool
                 return;
             }
 
-            bool result = EditorUserBuildSettings.SwitchActiveBuildTarget(
-                buildTargetGroup, 
-                buildTarget
-            );
-            // buildTargetGroup is not set correctly with EditorUserBuildSettings.SwitchActiveBuildTarget.
-            EditorUserBuildSettings.selectedBuildTargetGroup = buildTargetGroup;
-
-            if (!result)
+            if (!unityDelegate.SwitchTarget(buildTargetGroup, buildTarget))
             {
-                UnityEngine.Debug.Log($"[BuildTargetHelper] Error: Switching target failed.");
+                UnityEngine.Debug.LogError($"[BuildTargetHelper] Error: Switching target failed.");
                 @delegate?.BuildTargetFailedToChange();
             }
             else
@@ -204,14 +187,12 @@ namespace umi3d.browserEditor.BuildTool
             }
         }
 
-        void ChangeDeviceConditionalCompilation(
-            MultiDevice device,
-            UnityEditor.Build.NamedBuildTarget target
-        )
+        void ChangeDeviceConditionalCompilation(MultiDevice device)
         {
-            string[] currentSymbols = PlayerSettings
-                .GetScriptingDefineSymbols(target)
-                .Split(';');
+            BuildTargetGroup targetGroup = unityDelegate.GetSelectedTargetGroup();
+            UnityEditor.Build.NamedBuildTarget target = UnityEditor.Build.NamedBuildTarget.FromBuildTargetGroup(targetGroup);
+
+            string[] currentSymbols = unityDelegate.GetCompilationSymbols(target);
 
             List<string> newSymbols = new();
             bool hasDeviceSymbolBeenAdded = false;
@@ -247,19 +228,16 @@ namespace umi3d.browserEditor.BuildTool
             if (shouldUpdate)
             {
                 string[] _newSymbols = newSymbols.ToArray();
-                PlayerSettings.SetScriptingDefineSymbols(
-                    target,
-                    _newSymbols
-                );
+                unityDelegate.SetCompilationSymbols(target, _newSymbols);
                 @delegate?.SymbolsHaveChanged(currentSymbols, _newSymbols, target);
             }
         }
 
-        #region Plugin
+        #region Plugins
 
         void Plugin(bool enable, E_Plugin plugin)
         {
-            BuildTargetGroup targetGroup = EditorUserBuildSettings.selectedBuildTargetGroup;
+            BuildTargetGroup targetGroup = unityDelegate.GetSelectedTargetGroup();
 
             XRManagerSettings settings = XRGeneralSettingsPerBuildTarget
                 .XRGeneralSettingsForBuildTarget(targetGroup)
@@ -335,7 +313,7 @@ namespace umi3d.browserEditor.BuildTool
 
         void OpenXRFeature(bool enable, string[] featuresId)
         {
-            BuildTargetGroup targetGroup = EditorUserBuildSettings.selectedBuildTargetGroup;
+            BuildTargetGroup targetGroup = unityDelegate.GetSelectedTargetGroup();
 
             FeatureHelpers.RefreshFeatures(targetGroup);
             try

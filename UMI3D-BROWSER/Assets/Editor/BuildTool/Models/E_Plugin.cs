@@ -13,6 +13,8 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+using System;
+
 namespace umi3d.browserEditor.BuildTool
 {
     public enum E_Plugin
@@ -22,6 +24,19 @@ namespace umi3d.browserEditor.BuildTool
         OpenVR,
         PicoXR,
         WaveXR
+    }
+
+    public static class PluginExt
+    {
+        public static string GetLoaderName(this E_Plugin plugin) => plugin switch
+        {
+            E_Plugin.OpenXR => BuildStaticNames.LOADER_OPEN_XR,
+            E_Plugin.Oculus => BuildStaticNames.LOADER_OCULUS,
+            E_Plugin.OpenVR => BuildStaticNames.LOADER_OPEN_VR,
+            E_Plugin.PicoXR => BuildStaticNames.LOADER_PICO,
+            E_Plugin.WaveXR => BuildStaticNames.LOADER_WAVE_XR,
+            _ => throw new NotImplementedException()
+        };
     }
 }
 

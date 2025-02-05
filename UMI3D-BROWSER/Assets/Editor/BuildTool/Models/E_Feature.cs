@@ -13,6 +13,8 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+using System.Collections.Generic;
+
 namespace umi3d.browserEditor.BuildTool
 {
     public enum E_Feature
@@ -28,11 +30,53 @@ namespace umi3d.browserEditor.BuildTool
         {
             return features switch
             {
-                E_Feature.Meta => new[] { BuildStaticNames.FEATURE_META_QUEST, BuildStaticNames.INPUT_METAQUEST_PRO, BuildStaticNames.INPUT_OCULUS_TOUCH },
-                E_Feature.Pico => new[] { BuildStaticNames.FEATURE_PICO_OPENXR, BuildStaticNames.FEATURE_PICO_SUPPORT, BuildStaticNames.INPUT_PICO4_TOUCH, BuildStaticNames.INPUT_PICONeo3_TOUCH},
-                E_Feature.Vive => new[] { BuildStaticNames.FEATURE_VIVE_SUPPORT, BuildStaticNames.INPUT_VIVEFocus3 },
+                E_Feature.Meta => new[] 
+                { 
+                    BuildStaticNames.FEATURE_META_QUEST, 
+                    BuildStaticNames.INPUT_METAQUEST_PRO, 
+                    BuildStaticNames.INPUT_OCULUS_TOUCH 
+                },
+                E_Feature.Pico => new[] 
+                { 
+                    BuildStaticNames.FEATURE_PICO_OPENXR, 
+                    BuildStaticNames.FEATURE_PICO_SUPPORT, 
+                    BuildStaticNames.INPUT_PICO4_TOUCH, 
+                    BuildStaticNames.INPUT_PICONeo3_TOUCH
+                },
+                E_Feature.Vive => new[] 
+                { 
+                    BuildStaticNames.FEATURE_VIVE_SUPPORT, 
+                    BuildStaticNames.INPUT_VIVEFocus3 
+                },
                 _ => null
             };
+        }
+
+        public static string[] GetAllFeaturesExcept(this E_Feature feature)
+        {
+            List<string> features = new();
+            switch (feature)
+            {
+                case E_Feature.Meta:
+                    features.AddRange(E_Feature.Pico.GetFeatures());
+                    features.AddRange(E_Feature.Vive.GetFeatures());
+                    break;
+
+                case E_Feature.Pico:
+                    features.AddRange(E_Feature.Meta.GetFeatures());
+                    features.AddRange(E_Feature.Vive.GetFeatures());
+                    break;
+
+                case E_Feature.Vive:
+                    features.AddRange(E_Feature.Pico.GetFeatures());
+                    features.AddRange(E_Feature.Meta.GetFeatures());
+                    break;
+
+                default:
+                    break;
+            }
+
+            return features.ToArray();
         }
     }
 }

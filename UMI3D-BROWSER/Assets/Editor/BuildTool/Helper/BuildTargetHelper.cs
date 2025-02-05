@@ -14,55 +14,64 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using umi3d.browserRuntime.conditionalCompilation;
 using UnityEditor;
+using UnityEditor.XR.Management.Metadata;
+using UnityEditor.XR.Management;
+using UnityEditor.XR.OpenXR.Features;
+using UnityEngine.XR.Management;
+using UnityEngine.XR.OpenXR.Features;
 
 namespace umi3d.browserEditor.BuildTool
 {
-    public static class BuildTargetHelper 
+    public class BuildTargetHelper 
     {
-        static umi3d.debug.UMI3DLogger logger 
-            = new(mainTag: nameof(BuildTargetHelper));
+        /// <summary>
+        /// The default instance of <see cref="BuildTargetHelper"/>.<br/>
+        /// <b>Warning:</b> You first have to initialized this instance by calling <see cref="Init(E_Target)"/>.
+        /// </summary>
+        public static BuildTargetHelper @default
+        {
+            get
+            {
+                if (!hasBeenInitialized)
+                {
+                    UnityEngine.Debug.LogError($"[BuildTargetHelper] Error: you must call BuildTargetHelper.Init before using this property.");
+                    throw new Exception("Not initialized");
+                }
 
-        public static ITargetDelegate @delegate;
+                return _default.Value;
+            }
+        }
+        static readonly Lazy<BuildTargetHelper> _default = new(() => new());
+        static bool hasBeenInitialized = false;
+
+        public E_Target target { get; private set; }
+        public ITargetDelegate @delegate;
+
+        public static void Init(E_Target target)
+        {
+            if (hasBeenInitialized)
+            {
+                UnityEngine.Debug.LogWarning($"[BuildTargetHelper] Warning: has already been initialized.");
+                return;
+            }
+
+            _default.Value.target = target;
+            hasBeenInitialized = true;
+        }
 
         /// <summary>
         /// Switch target.<br/>
         /// Update compilation symbols and change build target.<br/>
         /// </summary>
         /// <param name="target"></param>
-        public static void SwitchTarget(E_Target target)
+        public void SwitchTarget(E_Target target)
         {
-            switch (target)
-            {
-                case E_Target.Quest:
-                case E_Target.Focus:
-                case E_Target.Pico:
-                    ChangeDeviceConditionalCompilation(
-                        MultiDevice.XR, 
-                        UnityEditor.Build.NamedBuildTarget.Android
-                    );
-                    break;
-
-                case E_Target.SteamVR:
-                    ChangeDeviceConditionalCompilation(
-                        MultiDevice.XR, 
-                        UnityEditor.Build.NamedBuildTarget.Standalone
-                    );
-                    break;
-
-                case E_Target.Windows:
-                    ChangeDeviceConditionalCompilation(
-                        MultiDevice.PC, 
-                        UnityEditor.Build.NamedBuildTarget.Standalone
-                    );
-                    break;
-
-                default:
-                    break;
-            }
-
+            // Build target.
             switch (target)
             {
                 case E_Target.Quest:
@@ -91,9 +100,111 @@ namespace umi3d.browserEditor.BuildTool
                 default:
                     break;
             }
+
+            // Symbols
+            switch (target)
+            {
+                case E_Target.Quest:
+                case E_Target.Focus:
+                case E_Target.Pico:
+                    ChangeDeviceConditionalCompilation(
+                        MultiDevice.XR,
+                        UnityEditor.Build.NamedBuildTarget.Android
+                    );
+                    break;
+
+                case E_Target.SteamVR:
+                    ChangeDeviceConditionalCompilation(
+                        MultiDevice.XR,
+                        UnityEditor.Build.NamedBuildTarget.Standalone
+                    );
+                    break;
+
+                case E_Target.Windows:
+                    ChangeDeviceConditionalCompilation(
+                        MultiDevice.PC,
+                        UnityEditor.Build.NamedBuildTarget.Standalone
+                    );
+                    break;
+
+                default:
+                    break;
+            }
+
+            // Plugins
+            switch (target)
+            {
+                case E_Target.Quest:
+                case E_Target.Focus:
+                case E_Target.Pico:
+                case E_Target.SteamVR:
+                    DisableAllPlugins(E_Plugin.OpenXR);
+                    EnablePlugin(E_Plugin.OpenXR);
+                    break;
+
+                case E_Target.Windows:
+                    DisableAllPlugins();
+                    break;
+            }
+
+            // Features
+            switch (target)
+            {
+                case E_Target.Quest:
+                    DisableAllFeatures(E_Feature.Meta);
+                    EnableFeatures(E_Feature.Meta);
+                    break;
+                case E_Target.SteamVR:
+                    break;
+                case E_Target.Focus:
+                    DisableAllFeatures(E_Feature.Vive);
+                    EnableFeatures(E_Feature.Vive);
+                    break;
+                case E_Target.Pico:
+                    DisableAllFeatures(E_Feature.Pico);
+                    EnableFeatures(E_Feature.Pico);
+                    break;
+            }
+
+            E_Target oldTarget = this.target;
+            this.target = target;
+            @delegate.TargetHasChanged(oldTarget, target);
         }
 
-        static void ChangeDeviceConditionalCompilation(
+        void ChangeBuildTarget(
+            BuildTargetGroup buildTargetGroup, 
+            BuildTarget buildTarget
+        )
+        {
+            BuildTarget oldTarget = EditorUserBuildSettings.activeBuildTarget;
+            BuildTargetGroup oldTargetGroup = EditorUserBuildSettings.selectedBuildTargetGroup;
+
+            if (oldTarget == buildTarget && oldTargetGroup == buildTargetGroup)
+            {
+                UnityEngine.Debug.Log($"[BuildTargetHelper] Notice: Current target is {buildTarget}");
+                return;
+            }
+
+            bool result = EditorUserBuildSettings.SwitchActiveBuildTarget(
+                buildTargetGroup, 
+                buildTarget
+            );
+            // buildTargetGroup is not set correctly with EditorUserBuildSettings.SwitchActiveBuildTarget.
+            EditorUserBuildSettings.selectedBuildTargetGroup = buildTargetGroup;
+
+            if (!result)
+            {
+                UnityEngine.Debug.Log($"[BuildTargetHelper] Error: Switching target failed.");
+                @delegate?.BuildTargetFailedToChange();
+            }
+            else
+            {
+                UnityEngine.Debug.Log($"[BuildTargetHelper] Notice: Target switch from {oldTarget} to {buildTarget}");
+                @delegate?.BuildTargetHasChanged(buildTargetGroup, buildTarget);
+            }
+        }
+
+        void ChangeDeviceConditionalCompilation(
             MultiDevice device,
             UnityEditor.Build.NamedBuildTarget target
         )
@@ -144,42 +255,116 @@ namespace umi3d.browserEditor.BuildTool
             }
         }
 
-        static void ChangeBuildTarget(BuildTargetGroup buildTargetGroup, BuildTarget buildTarget)
+        #region Plugin
+
+        void Plugin(bool enable, E_Plugin plugin)
         {
-            BuildTarget oldTarget = EditorUserBuildSettings.activeBuildTarget;
-            BuildTargetGroup oldTargetGroup = EditorUserBuildSettings.selectedBuildTargetGroup;
+            BuildTargetGroup targetGroup = EditorUserBuildSettings.selectedBuildTargetGroup;
 
-            if (oldTarget == buildTarget && oldTargetGroup == buildTargetGroup)
+            XRManagerSettings settings = XRGeneralSettingsPerBuildTarget
+                .XRGeneralSettingsForBuildTarget(targetGroup)
+                .AssignedSettings;
+
+            string loaderTypeName = plugin.GetLoaderName();
+
+            bool success = false;
+            if (enable)
             {
-                logger.Default(
-                    nameof(ChangeBuildTarget),
-                    $"[UMI3D] Current target is {buildTarget}"
+                bool isLoaded = XRPackageMetadataStore.IsLoaderAssigned(
+                    loaderTypeName,
+                    targetGroup
                 );
-            }
 
-            bool result = EditorUserBuildSettings.SwitchActiveBuildTarget(
-                buildTargetGroup, 
-                buildTarget
-            );
-            // buildTargetGroup is not set correctly with EditorUserBuildSettings.SwitchActiveBuildTarget.
-            EditorUserBuildSettings.selectedBuildTargetGroup = buildTargetGroup;
+                if (isLoaded) { return; }
 
-            if (!result)
-            {
-                logger.Error(
-                    nameof(ChangeBuildTarget),
-                    $"[UMI3D] Switching target failed"
+                success = XRPackageMetadataStore.AssignLoader(
+                    settings,
+                    loaderTypeName,
+                    targetGroup
                 );
-                @delegate?.BuildTargetFailedToChange();
             }
             else
             {
-                logger.Default(
-                    nameof(ChangeBuildTarget),
-                    $"[UMI3D] Target switch from {oldTarget} to {buildTarget}"
+                bool isLoaded = XRPackageMetadataStore.IsLoaderAssigned(
+                    loaderTypeName,
+                    targetGroup
                 );
-                @delegate?.BuildTargetHasChanged(buildTargetGroup, buildTarget);
+
+                if (!isLoaded) { return; }
+
+                success = XRPackageMetadataStore.RemoveLoader(
+                    settings,
+                    loaderTypeName,
+                    targetGroup
+                );
+            }
+
+            if (success)
+            {
+                UnityEngine.Debug.Log($"[BuildTargetHelper] Notice: Plugin [{plugin}] has been {(enable ? "enabled" : "disabled")} for target [{targetGroup}].");
+                // If it looks like the OpenXR plugin is not toggled on or off,
+                // it's because there is a UI issue with OpenXR.
+                // The issue happen when the player settings are open.
+                // So I recommend you to close that window before calling this method.
+            }
+            else
+            {
+                UnityEngine.Debug.LogError($"[BuildTargetHelper] Could not {(enable ? "enabled" : "disabled")} {plugin} plugin on [{targetGroup}].");
             }
         }
+
+        void EnablePlugin(E_Plugin plugin)
+        {
+            Plugin(true, plugin);
+        }
+
+        void DisableAllPlugins(params E_Plugin[] except)
+        {
+            foreach (E_Plugin plugin in Enum.GetValues(typeof(E_Plugin)))
+            {
+                if (!except.Contains(plugin))
+                {
+                    Plugin(false, plugin);
+                }
+            }
+        }
+
+        #endregion
+
+        #region Features
+
+        void OpenXRFeature(bool enable, string[] featuresId)
+        {
+            BuildTargetGroup targetGroup = EditorUserBuildSettings.selectedBuildTargetGroup;
+
+            FeatureHelpers.RefreshFeatures(targetGroup);
+            try
+            {
+                OpenXRFeature[] features = FeatureHelpers.GetFeaturesWithIdsForActiveBuildTarget(featuresId);
+                foreach (OpenXRFeature feature in features)
+                {
+                    if (feature.enabled == enable) { continue; }
+                    feature.enabled = enable;
+                    UnityEngine.Debug.Log($"[BuildTargetHelper] Notice: Feature [{feature.name}] has been {(enable ? "enabled" : "disabled")} for target [{targetGroup}]");
+                }
+            }
+            catch (Exception ex)
+            {
+                UnityEngine.Debug.LogError($"[BuildTargetHelper] Error: A feature is maybe missing.");
+                UnityEngine.Debug.LogException(ex);
+            }
+        }
+
+        void EnableFeatures(E_Feature features)
+        {
+            OpenXRFeature(true, features.GetFeatures());
+        }
+
+        void DisableAllFeatures(E_Feature except)
+        {
+            OpenXRFeature(false, except.GetAllFeaturesExcept());
+        }
+
+        #endregion
     }
 }

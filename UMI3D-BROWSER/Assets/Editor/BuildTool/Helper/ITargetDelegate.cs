@@ -38,5 +38,12 @@ namespace umi3d.browserEditor.BuildTool
         /// This method is called if the process of changing the build target has failed.
         /// </summary>
         void BuildTargetFailedToChange() {}
+
+        /// <summary>
+        /// This method is called when the target has changed.
+        /// </summary>
+        /// <param name="oldTarget"></param>
+        /// <param name="newTarget"></param>
+        void TargetHasChanged(E_Target oldTarget,  E_Target newTarget) {}
     }
 }

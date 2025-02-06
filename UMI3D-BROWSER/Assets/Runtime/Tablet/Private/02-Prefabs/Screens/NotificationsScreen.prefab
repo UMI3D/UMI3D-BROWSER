@@ -348,7 +348,8 @@ GameObject:
   m_Component:
   - component: {fileID: 738826357406095473}
   - component: {fileID: 6015823238100488181}
-  - component: {fileID: 4072557227296247914}
+  - component: {fileID: 3314687273392050787}
+  - component: {fileID: 7839654574938474750}
   m_Layer: 5
   m_Name: NotificationsScreen
   m_TagString: Untagged
@@ -390,7 +391,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _menu: 2
---- !u!114 &4072557227296247914
+--- !u!114 &3314687273392050787
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -399,13 +400,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 3424279112984299970}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc6a639c7cee797479a117d87e1d5fc1, type: 3}
+  m_Script: {fileID: 11500000, guid: d2f712e07b303ed45b10e4386347e6b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  content: {fileID: 5595770336045733540}
-  notificationPrefab: {fileID: 751161709065877071, guid: e0057edff2be555478919c4f05a79d73,
+--- !u!114 &7839654574938474750
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3424279112984299970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3da461122ed7a7846abe05ba1ea2db25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _content: {fileID: 5595770336045733540}
+  _userNotifiactionPrefab: {fileID: 7190142945816669060, guid: e0057edff2be555478919c4f05a79d73,
     type: 3}
-  notificationLoader: {fileID: 11400000, guid: 92f856be0732e32429c4aaf4420512fb, type: 2}
 --- !u!1 &3554918483101607899
 GameObject:
   m_ObjectHideFlags: 0

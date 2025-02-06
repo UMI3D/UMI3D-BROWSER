@@ -56,6 +56,6 @@ namespace umi3d.common.collaboration.dto.signaling
 
     public class JoinLBEDto : JoinDto
     {
-        public uint lbeGroupId { get; set; }
+        public uint lBEGroupId { get; set; } = 0
     }
 }

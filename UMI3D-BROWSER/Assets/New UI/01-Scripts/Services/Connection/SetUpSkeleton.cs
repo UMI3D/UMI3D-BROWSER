@@ -179,20 +179,18 @@ namespace umi3dBrowsers.connection
         {
             try
             {
-                Debug.Log("SWITCH TRACKER 1");
                 handTrackingIKTrackers.ForEach(x => {
                     if (controllerIKTrackers.Contains(x))
                         return;
                     trackedSkeleton.RemoveController(x.Controller.boneType);
                 });
-                Debug.Log("SWITCH TRACKER 2");
+
                 handTrackingFingerTrackers.ForEach(x =>
                 {
                     trackedSkeleton.RemoveController(x.Controller.boneType);
                 });
-                Debug.Log("SWITCH TRACKER 3");
+
                 controllerIKTrackers.ForEach(x => trackedSkeleton.ReplaceController(x.Controller));
-                Debug.Log("SWITCH TRACKER 4");
             }
             catch (Exception e)
             {

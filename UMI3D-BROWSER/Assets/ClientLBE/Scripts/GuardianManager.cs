@@ -3,6 +3,7 @@ using inetum.unityUtils.observation;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
 using umi3d.browserRuntime.NotificationKeys;
 using umi3d.cdk;
 using umi3d.cdk.collaboration;
@@ -396,7 +397,26 @@ namespace ClientLBE
 
         public void StartCalibrationScene()
         {
+            DeviceDescriptionRequestDto deviceDescription = new DeviceDescriptionRequestDto()
+            {
+                macAddress = GetMacAddress(),
+                deviceModel = SystemInfo.deviceModel,
+                batteryLevel = SystemInfo.batteryLevel * 100
+            };
+
+            UMI3DCollaborationClientServer.SendRequest(deviceDescription, true);
+
             StartCoroutine(CalibrationScene());
+        }
+
+        string GetMacAddress()
+        {
+            foreach (NetworkInterface nic in NetworkInterface.GetAllNetworkInterfaces())
+            {
+                if (nic.OperationalStatus == OperationalStatus.Up)
+                    return nic.GetPhysicalAddress().ToString();
+            }
+            return "";
         }
 
         public void OrientationChoice(float orientation)

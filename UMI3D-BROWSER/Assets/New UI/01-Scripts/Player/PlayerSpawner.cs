@@ -1,6 +1,8 @@
 using inetum.unityUtils.math;
+using System.Net.NetworkInformation;
 using umi3d.browserRuntime.player;
 using umi3d.cdk;
+using umi3d.cdk.collaboration;
 using umi3d.common;
 using umi3dBrowsers.linker;
 using UnityEngine;

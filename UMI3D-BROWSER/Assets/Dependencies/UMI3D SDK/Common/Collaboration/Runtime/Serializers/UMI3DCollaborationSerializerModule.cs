@@ -369,7 +369,51 @@ namespace umi3d.common.collaboration
                     result = default(T);
                     readable = false;
                     return true;
-   
+
+                case true when typeof(T) == typeof(DeviceDescriptionRequestDto):
+
+                    float deviceBattery;
+                    string deviceMacAddress = "";
+                    string deviceModel = "";
+
+                    readable = UMI3DSerializer.TryRead(container, out deviceBattery)
+                        && UMI3DSerializer.TryRead(container, out deviceMacAddress)
+                        && UMI3DSerializer.TryRead(container, out deviceModel);
+
+                    if (readable)
+                    {
+                        DeviceDescriptionRequestDto deviceDescription = new DeviceDescriptionRequestDto()
+                        {
+                            batteryLevel = deviceBattery,
+                            macAddress = deviceMacAddress,
+                            deviceModel = deviceModel
+                        };
+                        result = (T)Convert.ChangeType(deviceDescription, typeof(T));
+                        return true;
+                    }
+                    result = default(T);
+                    readable = false;
+                    return false;
+
+                case true when typeof(T) == typeof(DeviceBatteryLevelRequestDto):
+
+                    float batteryLevel;
+
+                    readable = UMI3DSerializer.TryRead<float>(container, out batteryLevel);
+
+                    if (readable)
+                    {
+                        DeviceBatteryLevelRequestDto batteryLeveldto = new DeviceBatteryLevelRequestDto()
+                        {
+                            batteryLevel = batteryLevel
+                        };
+                        result = (T)Convert.ChangeType(batteryLeveldto, typeof(T));
+                        return true;
+                    }
+                    result = default(T);
+                    readable = false;
+                    return false;
+
                 default:
                     result = default(T);
                     readable = false;
@@ -506,6 +550,7 @@ namespace umi3d.common.collaboration
                         + UMI3DSerializer.Write(voice.channelName);
                     break;
 
+
                 case SpeedDto speed:
                     bytable = UMI3DSerializer.Write(speed.forwardSpeed)
                         + UMI3DSerializer.Write(speed.backwardSpeed)
@@ -523,12 +568,21 @@ namespace umi3d.common.collaboration
                     bytable = UMI3DSerializer.Write(UMI3DOperationKeys.UserActionRequest)
                         + UMI3DSerializer.Write(userActionRequest.actionId);
                     return true;
-
                 case TeleportGroupRequestDto tpGroup:
                     bytable = UMI3DSerializer.Write(UMI3DOperationKeys.TeleportGroupRequest)
                         + UMI3DSerializer.Write(tpGroup.teleportationVector);
                     break;
 
+                case DeviceDescriptionRequestDto deviceDescriptionRequestDto:
+                    bytable = UMI3DSerializer.Write(UMI3DOperationKeys.DeviceDescriptionRequest)
+                        + UMI3DSerializer.Write(deviceDescriptionRequestDto.batteryLevel)
+                        + UMI3DSerializer.Write(deviceDescriptionRequestDto.macAddress)
+                        + UMI3DSerializer.Write(deviceDescriptionRequestDto.deviceModel);
+                    return true;
+                case DeviceBatteryLevelRequestDto deviceBatteryLevelRequest:
+                    bytable = UMI3DSerializer.Write(UMI3DOperationKeys.DeviceBatteryLevelRequest)
+                        + UMI3DSerializer.Write(deviceBatteryLevelRequest.batteryLevel);
+                    return true;
                 default:
                     if (typeof(T) == typeof(ResourceDto))
                     {
@@ -566,10 +620,12 @@ namespace umi3d.common.collaboration
                 true when typeof(T) == typeof(GateDto) => true,
                 true when typeof(T) == typeof(VoiceDto) => true,
                 true when typeof(T) == typeof(ResourceDto) => true,
+                true when typeof(T) == typeof(TeleportGroupRequestDto) => true,
                 true when typeof(T) == typeof(SpeedDto) => true,
                 true when typeof(T) == typeof(UserActionDto) => true,
                 true when typeof(T) == typeof(UserActionRequestDto) => true,
-                true when typeof(T) == typeof(TeleportGroupRequestDto) => true,
+                true when typeof(T) == typeof(DeviceBatteryLevelRequestDto) => true,
+                true when typeof(T) == typeof(DeviceDescriptionRequestDto) => true,
                 _ => null
             };
         }

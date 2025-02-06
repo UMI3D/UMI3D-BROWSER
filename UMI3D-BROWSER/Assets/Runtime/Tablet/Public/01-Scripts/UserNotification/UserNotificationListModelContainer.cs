@@ -14,16 +14,19 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using umi3dBrowsers.displayer;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.tablet.userNotification
 {
     public class UserNotificationListModelContainer : MonoBehaviour
     {
+        [SerializeField] private UserNotificationLoader _notificationLoader;
+
         UserNotificationListModel _model;
         public UserNotificationListModel Model { 
             get {
-                _model ??= new UserNotificationListModel();
+                _model ??= new UserNotificationListModel(_notificationLoader);
                 return _model;
             } 
         }

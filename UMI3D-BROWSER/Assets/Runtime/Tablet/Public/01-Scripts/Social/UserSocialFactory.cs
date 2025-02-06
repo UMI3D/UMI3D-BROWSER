@@ -15,7 +15,9 @@ limitations under the License.
 */
 
 using System.Collections.Generic;
+using System.Linq;
 using umi3d.cdk.collaboration;
+using umi3dVRBrowsersBase.interactions.selection.cursor;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.tablet.social
@@ -63,5 +65,25 @@ namespace umi3d.browserRuntime.ui.tablet.social
 
             _listModelContainer.Model.Users.Remove(user);
         }
+
+#if UNITY_EDITOR
+        [ContextMenu("Add Test User")]
+        void AddTestUser()
+        {
+            ulong userID = UMI3DCollaborationClientServer.Instance.GetUserId() + 1 + (ulong)(1 * _listModelContainer.Model.Users.Count);
+            common.collaboration.dto.signaling.UserDto dto = new() { id = userID, login = $"Test User {1 * _listModelContainer.Model.Users.Count}" };
+
+            UMI3DUser testUser = new UMI3DUser(0, dto);
+            CreateUser(testUser);
+        }
+#endif
+
+#if UNITY_EDITOR
+        [ContextMenu("Remove Test User")]
+        void RemoveTestUser()
+        {
+            RemoveUser(_listModelContainer.Model.Users.Keys.Last());
+        }
+#endif
     }
 }

@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using umi3d.cdk.collaboration;
 using umi3d.common;
 using UnityEngine;
 
@@ -39,12 +40,23 @@ namespace umi3d.browserRuntime.ui.tablet.userNotification
             _listModelContainer.Model.AddNotification -= CreateNotification;
         }
 
-        private void CreateNotification(NotificationDto dto)
+        internal void CreateNotification(NotificationDto dto)
         {
             var modelContainer = Instantiate(_userNotifiactionPrefab, _content);
             modelContainer.Model.SetDto(dto);
 
             _listModelContainer.Model.UserNotifications.Add(modelContainer);
         }
+
+#if UNITY_EDITOR
+        [ContextMenu("Add Test User")]
+        void AddTestUser()
+        {
+            CreateNotification(new NotificationDto() {
+                title = "Test",
+                callback = new string[] { "test" }
+            });
+        }
+#endif
     }
 }

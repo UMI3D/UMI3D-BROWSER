@@ -18,20 +18,20 @@ using System;
 using System.Collections.Generic;
 using umi3d.common;
 using umi3dBrowsers.displayer;
-using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.tablet.userNotification
 {
     public class UserNotificationListModel
     {
-        [SerializeField] private UserNotificationLoader _notificationLoader;
-
         public List<UserNotificationModelContainer> UserNotifications { get; private set; } = new();
 
         public Action<NotificationDto> AddNotification;
+        
+        UserNotificationLoader _notificationLoader;
 
-        public UserNotificationListModel()
+        public UserNotificationListModel(UserNotificationLoader notificationLoader)
         {
+            _notificationLoader = notificationLoader;
             _notificationLoader.Notification2DReceived += AddNotification;
         }
 

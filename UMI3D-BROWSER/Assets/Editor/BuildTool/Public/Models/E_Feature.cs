@@ -14,9 +14,49 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 using System.Collections.Generic;
+using Unity.XR.OpenXR.Features.PICOSupport;
+using UnityEngine.XR.OpenXR.Features.Interactions;
+using UnityEngine.XR.OpenXR.Features.Meta;
+using UnityEngine.XR.OpenXR.Features.MetaQuestSupport;
 
 namespace umi3d.browserEditor.BuildTool
 {
+    public struct Feature
+    {
+        public string name;
+
+        public string id;
+
+        public Feature(string name, string id)
+        {
+            this.name = name;
+            this.id = id;
+        }
+
+        public static Feature[] allMetaQuestCases = { MetaQuestSupport, MetaQuestARAnchors, MetaQuestARCamera, MetaQuestARPlaneDetection, MetaQuestARRaycasts, MetaQuestARSession, MetaQuestDisplayUtilities, MetaQuestTouchProController, OculusTouchController };
+
+        // Meta features.
+        public static Feature MetaQuestSupport = new Feature("Meta Quest Support", MetaQuestFeature.featureId);
+        public static Feature MetaQuestARAnchors = new Feature("Meta Quest: AR Anchors", ARAnchorFeature.featureId);
+        public static Feature MetaQuestARCamera = new Feature("Meta Quest: AR Camera (Passthrough)", ARCameraFeature.featureId);
+        public static Feature MetaQuestARPlaneDetection = new Feature("Meta Quest: AR Plane Detection", ARPlaneFeature.featureId);
+        public static Feature MetaQuestARRaycasts = new Feature("Meta Quest: AR Raycasts", ARRaycastFeature.featureId);
+        public static Feature MetaQuestARSession = new Feature("Meta Quest: AR Session", ARSessionFeature.featureId);
+        public static Feature MetaQuestDisplayUtilities = new Feature("Meta Quest: Display Utilities", DisplayUtilitiesFeature.featureId);
+        public static Feature MetaQuestTouchProController = new Feature("Meta Quest Touch Pro Controller Profile", MetaQuestTouchProControllerProfile.featureId);
+        public static Feature OculusTouchController = new Feature("Oculus Touch Controller Profile", OculusTouchControllerProfile.featureId);
+
+        // Pico features.
+        public static Feature PICOSupport = new Feature("PICO Support", PICOFeature.featureId);
+        public static Feature PICOCompositionLayerSecureContent = new Feature("OpenXR Composition Layer Secure Content", LayerSecureContentFeature.featureId);
+        public static Feature PICODisplayRefreshRate = new Feature("OpenXR Display Refresh Rate", DisplayRefreshRateFeature.featureId);
+        public static Feature PICOFoveation = new Feature("OpenXR Foveation", FoveationFeature.featureId);
+        public static Feature PICOPassthrough = new Feature("OpenXR Passthrough", PassthroughFeature.featureId);
+        public static Feature PICOOpenXRFeatures = new Feature("PICO OpenXR Features", OpenXRExtensions.featureId);
+        public static Feature PICOPerformanceSettings = new Feature("OpenXR Performance Settings", PerformanceSettingsFeature.featureId);
+
+    }
+
     public enum E_Feature
     {
         Meta,

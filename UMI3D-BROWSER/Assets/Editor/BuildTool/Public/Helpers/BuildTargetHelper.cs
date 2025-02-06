@@ -27,6 +27,10 @@ using UnityEngine.XR.OpenXR.Features;
 
 namespace umi3d.browserEditor.BuildTool
 {
+    /// <summary>
+    /// Let user switch target.<br/>
+    /// If the target change then a new compilation can be needed.
+    /// </summary>
     public class BuildTargetHelper 
     {
         /// <summary>
@@ -121,40 +125,7 @@ namespace umi3d.browserEditor.BuildTool
                     break;
             }
 
-            // Plugins
-            switch (target)
-            {
-                case E_Target.Quest:
-                case E_Target.Focus:
-                case E_Target.Pico:
-                case E_Target.SteamVR:
-                    DisableAllPlugins(E_Plugin.OpenXR);
-                    EnablePlugin(E_Plugin.OpenXR);
-                    break;
-
-                case E_Target.Windows:
-                    DisableAllPlugins();
-                    break;
-            }
-
-            // Features
-            switch (target)
-            {
-                case E_Target.Quest:
-                    DisableAllFeatures(E_Feature.Meta);
-                    EnableFeatures(E_Feature.Meta);
-                    break;
-                case E_Target.SteamVR:
-                    break;
-                case E_Target.Focus:
-                    DisableAllFeatures(E_Feature.Vive);
-                    EnableFeatures(E_Feature.Vive);
-                    break;
-                case E_Target.Pico:
-                    DisableAllFeatures(E_Feature.Pico);
-                    EnableFeatures(E_Feature.Pico);
-                    break;
-            }
+            PluginFeatureHelper.@default.OpenXRFeature(true, new[] { Feature.PICOSupport.id, Feature.PICODisplayRefreshRate.id, Feature.PICOFoveation.id, Feature.PICOPassthrough.id, Feature.PICOCompositionLayerSecureContent.id });
 
             E_Target oldTarget = this.target;
             this.target = target;
@@ -232,117 +203,5 @@ namespace umi3d.browserEditor.BuildTool
                 @delegate?.SymbolsHaveChanged(currentSymbols, _newSymbols, target);
             }
         }
-
-        #region Plugins
-
-        void Plugin(bool enable, E_Plugin plugin)
-        {
-            BuildTargetGroup targetGroup = unityDelegate.GetSelectedTargetGroup();
-
-            XRManagerSettings settings = XRGeneralSettingsPerBuildTarget
-                .XRGeneralSettingsForBuildTarget(targetGroup)
-                .AssignedSettings;
-
-            string loaderTypeName = plugin.GetLoaderName();
-
-            bool success = false;
-            if (enable)
-            {
-                bool isLoaded = XRPackageMetadataStore.IsLoaderAssigned(
-                    loaderTypeName,
-                    targetGroup
-                );
-
-                if (isLoaded) { return; }
-
-                success = XRPackageMetadataStore.AssignLoader(
-                    settings,
-                    loaderTypeName,
-                    targetGroup
-                );
-            }
-            else
-            {
-                bool isLoaded = XRPackageMetadataStore.IsLoaderAssigned(
-                    loaderTypeName,
-                    targetGroup
-                );
-
-                if (!isLoaded) { return; }
-
-                success = XRPackageMetadataStore.RemoveLoader(
-                    settings,
-                    loaderTypeName,
-                    targetGroup
-                );
-            }
-
-            if (success)
-            {
-                UnityEngine.Debug.Log($"[BuildTargetHelper] Notice: Plugin [{plugin}] has been {(enable ? "enabled" : "disabled")} for target [{targetGroup}].");
-                // If it looks like the OpenXR plugin is not toggled on or off,
-                // it's because there is a UI issue with OpenXR.
-                // The issue happen when the player settings are open.
-                // So I recommend you to close that window before calling this method.
-            }
-            else
-            {
-                UnityEngine.Debug.LogError($"[BuildTargetHelper] Could not {(enable ? "enabled" : "disabled")} {plugin} plugin on [{targetGroup}].");
-            }
-        }
-
-        void EnablePlugin(E_Plugin plugin)
-        {
-            Plugin(true, plugin);
-        }
-
-        void DisableAllPlugins(params E_Plugin[] except)
-        {
-            foreach (E_Plugin plugin in Enum.GetValues(typeof(E_Plugin)))
-            {
-                if (!except.Contains(plugin))
-                {
-                    Plugin(false, plugin);
-                }
-            }
-        }
-
-        #endregion
-
-        #region Features
-
-        void OpenXRFeature(bool enable, string[] featuresId)
-        {
-            BuildTargetGroup targetGroup = unityDelegate.GetSelectedTargetGroup();
-
-            FeatureHelpers.RefreshFeatures(targetGroup);
-            try
-            {
-                OpenXRFeature[] features = FeatureHelpers.GetFeaturesWithIdsForActiveBuildTarget(featuresId);
-                foreach (OpenXRFeature feature in features)
-                {
-                    if (feature.enabled == enable) { continue; }
-                    feature.enabled = enable;
-                    UnityEngine.Debug.Log($"[BuildTargetHelper] Notice: Feature [{feature.name}] has been {(enable ? "enabled" : "disabled")} for target [{targetGroup}]");
-                }
-            }
-            catch (Exception ex)
-            {
-                UnityEngine.Debug.LogError($"[BuildTargetHelper] Error: A feature is maybe missing.");
-                UnityEngine.Debug.LogException(ex);
-            }
-        }
-
-        void EnableFeatures(E_Feature features)
-        {
-            OpenXRFeature(true, features.GetFeatures());
-        }
-
-        void DisableAllFeatures(E_Feature except)
-        {
-            OpenXRFeature(false, except.GetAllFeaturesExcept());
-        }
-
-        #endregion
     }
 }

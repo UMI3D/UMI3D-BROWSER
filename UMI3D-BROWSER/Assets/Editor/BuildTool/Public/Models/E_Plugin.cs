@@ -17,6 +17,36 @@ using System;
 
 namespace umi3d.browserEditor.BuildTool
 {
+    public struct Plugin
+    {
+        public readonly string name;
+
+        public readonly string loader;
+
+        public static Plugin[] allCases = { OpenXR, Oculus, ARCore, ARKit, MockHMDLoader, XRSimulation, PICOLivePreview };
+
+        /// <summary>
+        /// Plugin for Meta, Pico, Focus and most of the XR devices.
+        /// </summary>
+        public static readonly Plugin OpenXR = new Plugin("OpenXR Loader", "UnityEngine.XR.OpenXR.OpenXRLoader");
+        /// <summary>
+        /// Plugin for Oculus Quest device only.<br/>
+        /// <b>This plugin and the <see cref="OpenXR"/> plugin cannot be use together.</b>
+        /// </summary>
+        public static readonly Plugin Oculus = new Plugin("Oculus", "Unity.XR.Oculus.OculusLoader");
+        public static readonly Plugin ARCore = new Plugin("ARCore", "UnityEngine.XR.ARCore.ARCoreLoader");
+        public static readonly Plugin ARKit = new Plugin("ARKit", "UnityEngine.XR.ARKit.ARKitLoader");
+        public static readonly Plugin MockHMDLoader = new Plugin("Mock HMD Loader", "Unity.XR.MockHMD.MockHMDLoader");
+        public static readonly Plugin XRSimulation = new Plugin("XR Simulation", "UnityEngine.XR.Simulation.SimulationLoader");
+        public static readonly Plugin PICOLivePreview = new Plugin("PICO Live Preview", "Unity.XR.PICO.LivePreview.PXR_PTLoader");
+
+        public Plugin(string name, string loader)
+        {
+            this.name = name;
+            this.loader = loader;
+        }
+    }
+
     public enum E_Plugin
     {
         OpenXR,

@@ -23,6 +23,8 @@ namespace umi3d.browserRuntime.ui.tablet.social
 {
     public class UserSocialListModel 
     {
+        public string SearchString { get; private set; }
+
         public Dictionary<UMI3DUser, UserSocialModelContainer> Users { get; private set; } = new ();
 
         public Action<UMI3DUser> AddUser;
@@ -55,6 +57,22 @@ namespace umi3d.browserRuntime.ui.tablet.social
             foreach (var user in users)
                 if (!Users.ContainsKey(user))
                     AddUser?.Invoke(user);
+        }
+
+        public void SetSearch(string search)
+        {
+            SearchString = search;
+            ApplyFilters();
+        }
+
+        internal void ApplyFilters()
+        {
+            foreach (var (user, modelContainer) in Users)
+            {
+                modelContainer.gameObject.SetActive(true);
+                if (!string.IsNullOrEmpty(SearchString) && !user.login.ToLower().Contains(SearchString.ToLower()))
+                    modelContainer.gameObject.SetActive(false);
+            }
         }
     }
 }

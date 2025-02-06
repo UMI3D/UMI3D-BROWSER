@@ -4050,6 +4050,7 @@ GameObject:
   - component: {fileID: 772055450605614930}
   - component: {fileID: 123763654063419399}
   - component: {fileID: 8341068932612557054}
+  - component: {fileID: 3381653745074890842}
   m_Layer: 5
   m_Name: SocialSearch
   m_TagString: Untagged
@@ -4213,6 +4214,18 @@ MonoBehaviour:
   m_isRichTextEditingAllowed: 0
   m_LineLimit: 0
   m_InputValidator: {fileID: 0}
+--- !u!114 &3381653745074890842
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6608259106349287199}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51e6a1ed6bb7a0d41a6123421bee95b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6801427296306027384
 GameObject:
   m_ObjectHideFlags: 0

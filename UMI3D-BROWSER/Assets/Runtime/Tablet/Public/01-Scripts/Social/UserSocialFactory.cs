@@ -17,7 +17,6 @@ limitations under the License.
 using System.Collections.Generic;
 using System.Linq;
 using umi3d.cdk.collaboration;
-using umi3dVRBrowsersBase.interactions.selection.cursor;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.tablet.social

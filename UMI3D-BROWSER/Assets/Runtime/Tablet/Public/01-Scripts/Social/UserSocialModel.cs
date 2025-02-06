@@ -94,6 +94,7 @@ namespace umi3d.browserRuntime.ui.tablet.social
 
             _updateNotifier[UserSocialNotificationKeys.UserSocialUpdate.Volume] = IsMute ? 0 : Volume;
             _updateNotifier[UserSocialNotificationKeys.UserSocialUpdate.IsMute] = IsMute;
+            _updateNotifier.Notify();
         }
 
         public void UpdateMute(bool mute)
@@ -104,6 +105,7 @@ namespace umi3d.browserRuntime.ui.tablet.social
 
             _updateNotifier[UserSocialNotificationKeys.UserSocialUpdate.Volume] = IsMute ? 0 : Volume;
             _updateNotifier[UserSocialNotificationKeys.UserSocialUpdate.IsMute] = IsMute;
+            _updateNotifier.Notify();
         }
 
         static void UpdateAudioManagerFor(UMI3DUser user, float volume)

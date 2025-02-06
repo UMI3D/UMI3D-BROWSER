@@ -34,6 +34,11 @@ namespace umi3d.browserRuntime.ui.tablet.userNotification
             _listModelContainer.Model.AddNotification += CreateNotification;
         }
 
+        private void OnDestroy()
+        {
+            _listModelContainer.Model.AddNotification -= CreateNotification;
+        }
+
         private void CreateNotification(NotificationDto dto)
         {
             var modelContainer = Instantiate(_userNotifiactionPrefab, _content);

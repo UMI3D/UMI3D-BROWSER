@@ -14,32 +14,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace umi3d
+namespace umi3d.browserRuntime.ui.tablet.social
 {
-    public class UserSocialController : MonoBehaviour
+    public class UserSocialListModelContainer : MonoBehaviour
     {
-        void Awake()
-        {
-        }
-
-        void OnEnable()
-        {
-        }
-
-        void OnDisable()
-        {
-        }
-
-        void OnDestroy()
-        {
-        }
-
-        void Update()
-        {
+        public UserSocialListModel _model;
+        public UserSocialListModel Model { 
+            get {
+                _model ??= new UserSocialListModel();
+                return _model;
+            } 
         }
     }
 }

@@ -24,8 +24,12 @@ namespace umi3d.browserRuntime.ui.tablet.social
     public class UserSocialListModel 
     {
         public string SearchString { get; private set; }
+        public bool MuteFilter { get; private set; }
+        public bool UnmuteFilter { get; private set; }
 
         public Dictionary<UMI3DUser, UserSocialModelContainer> Users { get; private set; } = new ();
+
+        bool IsFilterEnabled => MuteFilter || UnmuteFilter;
 
         public Action<UMI3DUser> AddUser;
         public Action<UMI3DUser> RemoveUser;
@@ -65,13 +69,42 @@ namespace umi3d.browserRuntime.ui.tablet.social
             ApplyFilters();
         }
 
+        public void SetMuteFilter(bool muteFilter)
+        {
+            MuteFilter = muteFilter;
+            ApplyFilters();
+        }
+
+        public void SetUnmuteFilter(bool unmuteFilter)
+        {
+            UnmuteFilter = unmuteFilter;
+            ApplyFilters();
+        }
+
         internal void ApplyFilters()
         {
             foreach (var (user, modelContainer) in Users)
             {
-                modelContainer.gameObject.SetActive(true);
+                modelContainer.gameObject.SetActive(false);
+
+                // Search
                 if (!string.IsNullOrEmpty(SearchString) && !user.login.ToLower().Contains(SearchString.ToLower()))
-                    modelContainer.gameObject.SetActive(false);
+                    continue;
+
+                // If no filter
+                if (!IsFilterEnabled)
+                {
+                    modelContainer.gameObject.SetActive(true);
+                    continue;
+                }
+
+                // Mute Filter
+                if (MuteFilter && user.microphoneStatus)
+                    modelContainer.gameObject.SetActive(true);
+
+                // Unmute Filter
+                if (UnmuteFilter && !user.microphoneStatus)
+                    modelContainer.gameObject.SetActive(true);
             }
         }
     }

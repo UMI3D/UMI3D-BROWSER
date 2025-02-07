@@ -21,10 +21,7 @@ using inetum.unityUtils;
 using umi3d.cdk.interaction;
 using System.Linq;
 using umi3d.common;
-using static umi3d.common.volume.GeometryTools;
-using UnityEngine.UIElements;
 using System.Threading.Tasks;
-using GLTFast.Schema;
 
 namespace umi3d.baseBrowser.inputs.interactions
 {
@@ -58,6 +55,16 @@ namespace umi3d.baseBrowser.inputs.interactions
         public ulong currentEnvironmentId;
 
         private static ulong lastDrawingId = 1;
+
+        public DrawingManager()
+        {
+            splitLineIdSet = new();
+            UMI3DLineRendererLoader.OnSplitLineEvent += OnSplitLine;
+        }
+
+        HashSet<ulong> splitLineIdSet;
+
+        void OnSplitLine(ulong id) { splitLineIdSet.Add(id); }
 
         static public bool IsAvailableFor(DrawingInteractionDto drawing)
         {
@@ -134,6 +141,7 @@ namespace umi3d.baseBrowser.inputs.interactions
 
         public virtual async Task CreateLine(IDrawerData drawer, DrawingInteractionDto drawing)
         {
+            splitLineIdSet.Remove(drawing.id);
             drawer.Positions.Clear();
             drawer.LineId = null;
 
@@ -222,7 +230,7 @@ namespace umi3d.baseBrowser.inputs.interactions
                 cdk.UMI3DClientServer.SendRequest(drawingDto, true);
                 drawer.LastUpdateTime = Time.time;
 
-                if(drawer.Positions.Count > 100 || drawer.LastSurfaceId != surface)
+                if(splitLineIdSet.Contains(drawing.id) || drawer.Positions.Count > 100 || drawer.LastSurfaceId != surface)
                 {
                     await CreateLine(drawer, drawing);
                     drawer.Positions.Add(position);

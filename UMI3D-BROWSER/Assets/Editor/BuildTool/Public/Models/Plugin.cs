@@ -23,7 +23,11 @@ namespace umi3d.browserEditor.BuildTool
 
         public readonly string loader;
 
-        public static Plugin[] allCases = { OpenXR, Oculus, ARCore, ARKit, MockHMDLoader, XRSimulation, PICOLivePreview };
+        public static Plugin[] allCases => _allCases.Value;
+        static Lazy<Plugin[]> _allCases = new(() =>
+        {
+            return new[] { OpenXR, Oculus, ARCore, ARKit, MockHMDLoader, XRSimulation, PICOLivePreview };
+        });
 
         /// <summary>
         /// Plugin for Meta, Pico, Focus and most of the XR devices.
@@ -45,49 +49,6 @@ namespace umi3d.browserEditor.BuildTool
             this.name = name;
             this.loader = loader;
         }
-    }
-
-    public enum E_Plugin
-    {
-        OpenXR,
-        Oculus,
-        OpenVR,
-        PicoXR,
-        WaveXR
-    }
-
-    public static class PluginExt
-    {
-        internal const string LOADER_OPEN_XR = "Unity.XR.OpenXR.OpenXRLoader";
-        internal const string LOADER_OCULUS = "Unity.XR.Oculus.OculusLoader";
-        internal const string LOADER_OPEN_VR = "Unity.XR.OpenVR.OpenVRLoader";
-        internal const string LOADER_PICO = "Unity.XR.PXR.PXR_Loader";
-        internal const string LOADER_WAVE_XR = "Wave.XR.Loader.WaveXRLoader";
-
-        /// <summary>
-        /// This method returns the loader name corresponding to the given plugin type.<br/>
-        /// <br/>
-        /// <example>
-        /// Given a valid plugin type when GetLoaderName is called then it returns the corresponding loader name.<br/>
-        /// <br/>
-        /// <code>
-        /// var result = E_Plugin.OpenXR.GetLoaderName();
-        /// // Return <see cref="LOADER_OPEN_XR"/>.
-        /// </code> 
-        /// </example>
-        /// </summary>
-        /// <param name="plugin">The plugin type.</param>
-        /// <returns>The loader name corresponding to the given plugin type.</returns>
-        /// <exception cref="NotImplementedException">Thrown when the plugin type is not implemented.</exception>
-        public static string GetLoaderName(this E_Plugin plugin) => plugin switch
-        {
-            E_Plugin.OpenXR => LOADER_OPEN_XR,
-            E_Plugin.Oculus => LOADER_OCULUS,
-            E_Plugin.OpenVR => LOADER_OPEN_VR,
-            E_Plugin.PicoXR => LOADER_PICO,
-            E_Plugin.WaveXR => LOADER_WAVE_XR,
-            _ => throw new NotImplementedException()
-        };
     }
 }
 

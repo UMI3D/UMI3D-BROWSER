@@ -52,11 +52,25 @@ namespace umi3d.browserEditor.BuildTool
         }
         static readonly Lazy<BuildTargetHelper> _default = new(() => new());
         internal static bool hasBeenInitialized = false;
+        private BuildTargetHelper() { }
 
         public E_Target target { get; private set; }
         public ITargetDelegate @delegate;
-        internal IUnityTargetDelegate unityDelegate;
+        internal IUnityTargetDelegate unityDelegate = new UnityTargetDelegate();
 
+        /// <summary>
+        /// Initializes the default instance of <see cref="BuildTargetHelper"/> with the current target if it has not been initialized yet.<br/>
+        /// If the target has already been initialized, it logs a warning and does not change the target.<br/>
+        /// <br/>
+        /// <example>
+        /// Given the target is not initialized when Init is called then the target is set.<br/>
+        /// <code>
+        /// BuildTargetHelper.Init(E_Target.SteamVR);
+        /// // BuildTargetHelper.@default.target == E_Target.SteamVR
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <param name="target">The target to be set for the build.</param>
         public static void Init(E_Target target)
         {
             if (hasBeenInitialized)
@@ -66,15 +80,20 @@ namespace umi3d.browserEditor.BuildTool
             }
 
             _default.Value.target = target;
-            _default.Value.unityDelegate = new UnityTargetDelegate();
             hasBeenInitialized = true;
         }
 
         /// <summary>
-        /// Switch target.<br/>
-        /// Update compilation symbols and change build target.<br/>
+        /// Switches the build target and updates the compilation symbols accordingly.<br/>
+        /// <br/>
+        /// <example>
+        /// Given a target, when switching the target, then the build target and symbols are updated.<br/>
+        /// <code>
+        /// BuildTargetHelper.@default.SwitchTarget(E_Target.Quest);
+        /// </code>
+        /// </example>
         /// </summary>
-        /// <param name="target"></param>
+        /// <param name="target">The target to switch to.</param>
         public void SwitchTarget(E_Target target)
         {
             // Build target.
@@ -125,8 +144,6 @@ namespace umi3d.browserEditor.BuildTool
                     break;
             }
 
-            PluginFeatureHelper.@default.OpenXRFeature(true, new[] { Feature.PICOSupport.id, Feature.PICODisplayRefreshRate.id, Feature.PICOFoveation.id, Feature.PICOPassthrough.id, Feature.PICOCompositionLayerSecureContent.id });
-
             E_Target oldTarget = this.target;
             this.target = target;
             @delegate.TargetHasChanged(oldTarget, target);
@@ -168,7 +185,7 @@ namespace umi3d.browserEditor.BuildTool
             List<string> newSymbols = new();
             bool hasDeviceSymbolBeenAdded = false;
             bool shouldUpdate = false;
-            for (int i = 0; i < currentSymbols.Length; i++)
+            for (int i = 0; i < (currentSymbols?.Length ?? 0); i++)
             {
                 string symbol = currentSymbols[i];
                 if (symbol.TryGetDeviceFromSymbol(out MultiDevice deviceFromSymbol))

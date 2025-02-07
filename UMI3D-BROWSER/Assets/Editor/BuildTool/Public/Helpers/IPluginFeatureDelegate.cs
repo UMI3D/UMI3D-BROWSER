@@ -21,5 +21,11 @@ namespace umi3d.browserEditor.BuildTool
         void PluginHasBeenEnabled(Plugin plugin) {}
 
         void PluginHasBeenDisabled(Plugin plugin) {}
+
+        void SettingPluginRaisedError(Plugin plugin) {}
+
+        void FeatureHasBeenEnabled(Feature feature) {}
+
+        void FeaturesHasBeenDisabled(Feature feature) {}
     }
 }

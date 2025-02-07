@@ -179,7 +179,7 @@ namespace umi3d.browserEditor.BuildTool
 
             // Switch target if needed and toggle options.
             _uMI3DConfigurator.HandleTarget(target);
-            BuildTargetHelper.@default.SwitchTarget(target);
+            SwitchTarget(target);
         }
 
         void ApplyScenes()
@@ -288,6 +288,46 @@ namespace umi3d.browserEditor.BuildTool
                 case PlayModeStateChange.EnteredEditMode:
                 case PlayModeStateChange.ExitingEditMode:
                 default:
+                    break;
+            }
+        }
+
+        public void SwitchTarget(E_Target target)
+        {
+            BuildTargetHelper.@default.SwitchTarget(target);
+
+            // Plugins
+            switch (target)
+            {
+                case E_Target.Quest:
+                case E_Target.Focus:
+                case E_Target.Pico:
+                case E_Target.SteamVR:
+                    PluginFeatureHelper.@default.DisableAllPlugins(Plugin.OpenXR);
+                    PluginFeatureHelper.@default.EnablePlugins(Plugin.OpenXR);
+                    break;
+
+                case E_Target.Windows:
+                    PluginFeatureHelper.@default.DisableAllPlugins();
+                    break;
+            }
+
+            // Features
+            switch (target)
+            {
+                case E_Target.Quest:
+                    PluginFeatureHelper.@default.DisableAllFeatures(Feature.allMetaQuestCases);
+                    PluginFeatureHelper.@default.EnableFeatures(Feature.allMetaQuestCases);
+                    break;
+                case E_Target.SteamVR:
+                    break;
+                case E_Target.Focus:
+                    PluginFeatureHelper.@default.DisableAllFeatures(Feature.allViveCases);
+                    PluginFeatureHelper.@default.EnableFeatures(Feature.allViveCases);
+                    break;
+                case E_Target.Pico:
+                    PluginFeatureHelper.@default.DisableAllFeatures(Feature.allPicoCases);
+                    PluginFeatureHelper.@default.EnableFeatures(Feature.allPicoCases);
                     break;
             }
         }

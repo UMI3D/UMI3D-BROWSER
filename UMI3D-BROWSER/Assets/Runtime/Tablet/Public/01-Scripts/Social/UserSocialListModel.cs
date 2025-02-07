@@ -23,9 +23,10 @@ namespace umi3d.browserRuntime.ui.tablet.social
 {
     public class UserSocialListModel 
     {
-        public string SearchString { get; private set; }
-        public bool MuteFilter { get; private set; }
-        public bool UnmuteFilter { get; private set; }
+        public string SearchString { get; private set; } = "";
+        public bool MuteFilter { get; private set; } = false;
+        public bool UnmuteFilter { get; private set; } = false;
+        public UserSocialSortingMethode SortMethode { get; private set; } = UserSocialSortingMethode.AToZ;
 
         public Dictionary<UMI3DUser, UserSocialModelContainer> Users { get; private set; } = new ();
 
@@ -61,6 +62,9 @@ namespace umi3d.browserRuntime.ui.tablet.social
             foreach (var user in users)
                 if (!Users.ContainsKey(user))
                     AddUser?.Invoke(user);
+
+            ApplyFilters();
+            ApplySorting();
         }
 
         public void SetSearch(string search)
@@ -106,6 +110,35 @@ namespace umi3d.browserRuntime.ui.tablet.social
                 if (UnmuteFilter && !user.microphoneStatus)
                     modelContainer.gameObject.SetActive(true);
             }
+        }
+
+        public void SetSortingMethode(UserSocialSortingMethode sortMethode)
+        {
+            SortMethode = sortMethode;
+            ApplySorting();
+        }
+
+        internal void ApplySorting()
+        {
+            var users = Users.Keys.ToList();
+
+            // Sorting
+            switch (SortMethode)
+            {
+                case UserSocialSortingMethode.AToZ:
+                    users.Sort((user0, user1) => string.Compare(user0.login.Trim(), user1.login.Trim()));
+                    break;
+                case UserSocialSortingMethode.ZToA:
+                    users.Sort((user0, user1) => string.Compare(user0.login.Trim(), user1.login.Trim()));
+                    users.Reverse();
+                    break;
+                default:
+                    break;
+            }
+
+            // Replacing elements
+            foreach (var user in users)
+                Users[user].gameObject.transform.SetAsLastSibling();
         }
     }
 }

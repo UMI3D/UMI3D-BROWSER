@@ -47,7 +47,7 @@ namespace umi3d.browserRuntime.ui.tablet.userNotification
             Description = notificationDto.title;
             _setNotifier[UserNotificationNotificationKeys.UserNotificationSet.Description] = Description;
 
-            if (notificationDto.callback == null)
+            if (notificationDto.callback != null)
             {
                 for (int i = 0; i < notificationDto.callback.Length; i++)
                 {

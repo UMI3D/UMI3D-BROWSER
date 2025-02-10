@@ -47,7 +47,6 @@ namespace umi3d.browserRuntime.ui.tablet.userNotification
 
         private void OnDisable()
         {
-            Debug.Log("TESSST");
             _modelContainer.Model.Seen();
         }
 

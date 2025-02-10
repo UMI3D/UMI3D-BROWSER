@@ -12,8 +12,9 @@ GameObject:
   - component: {fileID: 1369853951909727459}
   - component: {fileID: 5880974743768041343}
   - component: {fileID: 8633192086884945783}
+  - component: {fileID: 3483005532950688416}
   m_Layer: 5
-  m_Name: ActionIcon
+  m_Name: PrimaryActionPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -121,6 +122,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &3483005532950688416
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5416161752681224390}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85b9bf1b5f43b7344a4c48558c01c11f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7517854250147501410
 GameObject:
   m_ObjectHideFlags: 0
@@ -133,7 +146,7 @@ GameObject:
   - component: {fileID: 7940362820000798735}
   - component: {fileID: 824210951785777971}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Border
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

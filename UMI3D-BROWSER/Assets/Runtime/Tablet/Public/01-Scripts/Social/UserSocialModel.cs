@@ -34,8 +34,8 @@ namespace umi3d.browserRuntime.ui.tablet.social
         public string Place { get; private set; }
         public float Volume { get; private set; }
         public bool IsMute { get; private set; }
-        public List<UserAction> PrimaryActions { get; private set; }
-        public List<UserAction> OtherActions { get; private set; }
+        public List<UserAction> PrimaryActions { get; private set; } = new List<UserAction>();
+        public List<UserAction> OtherActions { get; private set; } = new List<UserAction>();
 
         UMI3DUser _user;
 
@@ -68,7 +68,7 @@ namespace umi3d.browserRuntime.ui.tablet.social
             PrimaryActions = new List<UserAction>();
             OtherActions = new List<UserAction>();
 
-            foreach (var action in PrimaryActions)
+            foreach (var action in user.userActions)
             {
                 if (action.isPrimary && PrimaryActions.Count < k_maxPrimaryAction)
                     PrimaryActions.Add(action);

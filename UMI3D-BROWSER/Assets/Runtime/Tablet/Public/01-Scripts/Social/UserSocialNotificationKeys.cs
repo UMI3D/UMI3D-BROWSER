@@ -33,5 +33,13 @@ namespace umi3d.browserRuntime.ui.tablet.social
             public readonly static string Volume = "Volume";
             public readonly static string IsMute = "IsMute";
         }
+
+        public class UserSocialOtherActionSet
+        {
+            public readonly static string Name = "Name";
+            public readonly static string Description = "Description";
+            public readonly static string Texture = "Texture";
+            public readonly static string Action = "Action";
+        }
     }
 }

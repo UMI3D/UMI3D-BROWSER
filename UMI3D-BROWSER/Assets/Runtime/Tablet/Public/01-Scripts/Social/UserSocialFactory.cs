@@ -17,6 +17,7 @@ limitations under the License.
 using System.Collections.Generic;
 using System.Linq;
 using umi3d.cdk.collaboration;
+using umi3d.common.collaboration.dto.signaling;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.tablet.social
@@ -70,14 +71,37 @@ namespace umi3d.browserRuntime.ui.tablet.social
         void AddTestUser()
         {
             ulong userID = UMI3DCollaborationClientServer.Instance.GetUserId() + 1 + (ulong)(1 * _listModelContainer.Model.Users.Count);
-            common.collaboration.dto.signaling.UserDto dto = new() { id = userID, login = $"Test User {1 * _listModelContainer.Model.Users.Count}" };
+            UserDto dto = new() { id = userID, login = $"Test User {1 * _listModelContainer.Model.Users.Count}" };
 
             UMI3DUser testUser = new UMI3DUser(0, dto);
+            testUser.userActions.Add(new UserAction(0, new UserActionDto() {
+                name = "Primary",
+                description = "Test",
+                isPrimary = true
+            }));
+            testUser.userActions.Add(new UserAction(0, new UserActionDto() {
+                name = "Other",
+                description = "Test",
+                isPrimary = false
+            }));
+            testUser.userActions.Add(new UserAction(0, new UserActionDto() {
+                name = "Primary",
+                description = "Test",
+                isPrimary = true
+            }));
+            testUser.userActions.Add(new UserAction(0, new UserActionDto() {
+                name = "Primary",
+                description = "Test",
+                isPrimary = true
+            }));
+            testUser.userActions.Add(new UserAction(0, new UserActionDto() {
+                name = "Primary",
+                description = "Test",
+                isPrimary = true
+            }));
             CreateUser(testUser);
         }
-#endif
 
-#if UNITY_EDITOR
         [ContextMenu("Remove Test User")]
         void RemoveTestUser()
         {

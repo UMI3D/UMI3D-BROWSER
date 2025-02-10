@@ -111,5 +111,15 @@ namespace umi3dBrowsers.displayer
             }
             return TMP_InputField.CharacterValidation.Name;
         }
+
+        public void SetHoverColor(Color color)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void SetLoading()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

@@ -16,6 +16,7 @@ limitations under the License.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -24,11 +25,13 @@ using UnityEngine.UI;
 
 namespace umi3dBrowsers.displayer
 {
-    public class VignetteDisplayer : MonoBehaviour, ISubDisplayer
+    public class VignetteDisplayer : MonoBehaviour, ISubDisplayer, IDisplayer
     {
         [SerializeField] private Color transprentColor = Color.gray;
         [Header("Vignette main Image")]
         [SerializeField] private Image vignetteImage;
+        [SerializeField] private Image LoadingImage;
+        [SerializeField] private float LoadingImageRotationSpeed = 10;
         [SerializeField] private Color normalImageColor;
         [SerializeField] private Color hoverImageColor;
 
@@ -49,7 +52,7 @@ namespace umi3dBrowsers.displayer
         [SerializeField] VignetteInputField inputFieldBackground;
 
 
-        [Header("Input field backgroung")]
+        [Header("Input field background")]
         [SerializeField] private Image IF_background;
         [SerializeField] private Image pen;
 
@@ -68,6 +71,8 @@ namespace umi3dBrowsers.displayer
         public event Action OnHover;
 
         private TMP_Text inputFieldText;
+
+        private bool m_userLoadingIcon = false;
 
         private bool m_usesFavoriteButton = true;
         private bool m_usesDeleteButton = true;
@@ -106,6 +111,24 @@ namespace umi3dBrowsers.displayer
             if (m_usesDeleteButton)
                 trashButton.OnDisabled += () => DisableSubComponents();
             inputFieldBackground.OnDisabled += () => DisableSubComponents();
+        }
+
+
+        private void LateUpdate()
+        {
+            if (LoadingImage == null)
+                return;
+
+            if (m_userLoadingIcon)
+            {
+                if (!LoadingImage.IsActive())
+                    LoadingImage.gameObject.SetActive(true);
+
+                LoadingImage.transform.Rotate(0, 0, LoadingImageRotationSpeed * Time.deltaTime);
+
+            }
+            else if (LoadingImage.IsActive())
+                LoadingImage.gameObject.SetActive(false);
         }
 
         private void OnDestroy()
@@ -233,6 +256,41 @@ namespace umi3dBrowsers.displayer
         {
             m_usesFavoriteButton = pUsesFavoriteButton;
             likeButton.gameObject.SetActive(pUsesFavoriteButton);
+        }
+
+        public object GetValue(bool trim)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetTitle(string title)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetPlaceHolder(List<string> placeHolder)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetColor(Color color)
+        {
+            normalImageColor = color;
+        }
+
+        public void SetResource(object resource)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetHoverColor(Color color)
+        {
+            hoverImageColor = color;
+        }
+
+        public void SetLoading()
+        {
+            m_userLoadingIcon = true;
         }
     }
 }

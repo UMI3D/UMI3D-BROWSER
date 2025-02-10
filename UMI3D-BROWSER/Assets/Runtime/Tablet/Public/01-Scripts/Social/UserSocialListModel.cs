@@ -14,10 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils.observation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using umi3d.cdk.collaboration;
+using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.tablet.social
 {
@@ -27,6 +29,7 @@ namespace umi3d.browserRuntime.ui.tablet.social
         public bool MuteFilter { get; private set; } = false;
         public bool UnmuteFilter { get; private set; } = false;
         public UserSocialSortingMethode SortMethode { get; private set; } = UserSocialSortingMethode.AToZ;
+        public DateTime StartEnvironmentTime { get; private set; }
 
         public Dictionary<UMI3DUser, UserSocialModelContainer> Users { get; private set; } = new ();
 
@@ -35,16 +38,28 @@ namespace umi3d.browserRuntime.ui.tablet.social
         public Action<UMI3DUser> AddUser;
         public Action<UMI3DUser> RemoveUser;
 
+        Notifier _setNotifier;
+
         public UserSocialListModel()
         {
-            UMI3DEnvironmentClient.EnvironmentLoaded.AddListener(UpdateList);
+            _setNotifier = NotificationHub.Default.GetNotifier(this, ID.FromType<UserSocialNotificationKeys.UserSocialListSet>());
+            _setNotifier[UserSocialNotificationKeys.UserSocialListSet.Time] = StartEnvironmentTime;
+            _setNotifier[UserSocialNotificationKeys.UserSocialListSet.NbrParticipant] = Users.Count + 1;
+
+            UMI3DEnvironmentClient.EnvironmentLoaded.AddListener(EnvironmentLoaded);
             UMI3DCollaborationEnvironmentLoader.Instance.OnUpdateJoinedUserList += UpdateList;
         }
 
         ~UserSocialListModel()
         {
-            UMI3DEnvironmentClient.EnvironmentLoaded.RemoveListener(UpdateList);
+            UMI3DEnvironmentClient.EnvironmentLoaded.RemoveListener(EnvironmentLoaded);
             UMI3DCollaborationEnvironmentLoader.Instance.OnUpdateJoinedUserList -= UpdateList;
+        }
+
+        internal void EnvironmentLoaded()
+        {
+            StartEnvironmentTime = DateTime.Now;
+            UpdateList();
         }
 
         internal void UpdateList()
@@ -65,6 +80,10 @@ namespace umi3d.browserRuntime.ui.tablet.social
 
             ApplyFilters();
             ApplySorting();
+
+            _setNotifier[UserSocialNotificationKeys.UserSocialListSet.Time] = StartEnvironmentTime;
+            _setNotifier[UserSocialNotificationKeys.UserSocialListSet.NbrParticipant] = Users.Count + 1;
+            _setNotifier.Notify();
         }
 
         public void SetSearch(string search)

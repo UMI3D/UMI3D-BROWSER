@@ -41,5 +41,11 @@ namespace umi3d.browserRuntime.ui.tablet.social
             public readonly static string Texture = "Texture";
             public readonly static string Action = "Action";
         }
+
+        public class UserSocialListSet
+        {
+            public readonly static string Time = "Time";
+            public readonly static string NbrParticipant = "NbrParticipant";
+        }
     }
 }

@@ -213,12 +213,14 @@ namespace umi3dBrowsers.container
             return vignette;
         }
 
-        public async Task<VignetteBuffer> CreateVignette(ImageDto pImageDto, VignetteBuffer pBuffer = null, Action onClick = null)
+        public async Task<VignetteBuffer> CreateVignette(ImageDto pImageDto, VignetteBuffer pBuffer = null, Action onClick = null, Action<GameObject, displayer.IDisplayer, List<StyleDto>> styleHandler = null)
         {
             VignetteContainerData data = VignetteContainerData.FindVignetteContainerDataByVignetteScale(vignetteMode, m_vignetteContainerDatas);
             var vignette = Instantiate(data.VignettePrefab, gridLayout.transform).GetComponent<VignetteDisplayer>();
             vignette.SetFavoryActive(false);
             vignette.SetDeleteActive(false);
+
+            (styleHandler ?? pBuffer?.StyleHandler)?.Invoke(vignette.gameObject, vignette, pImageDto.styles);
 
             if (pImageDto.FirstChildren.Count > 0) // should be a label at least
                 foreach(var child in pImageDto.FirstChildren)
@@ -237,8 +239,11 @@ namespace umi3dBrowsers.container
             }
 
             pBuffer.SetImageDto(pImageDto);
-            pBuffer.OnVignetteClicked += onClick;
+            if(onClick is not null)
+                pBuffer.OnVignetteClicked += onClick;
             pBuffer.SetVignetteDisplayer(vignette);
+            if(styleHandler is not null)
+                pBuffer.StyleHandler = styleHandler;
             FillWithEmptyVignettes();
             return pBuffer;
         }
@@ -358,6 +363,7 @@ namespace umi3dBrowsers.container
         public ImageDto ImageDto => m_imageDto;
         public GameObject VignetteGo => m_vignetteDisplayer.gameObject;
 
+        public Action<GameObject, displayer.IDisplayer, List<StyleDto>> StyleHandler;
 
         public event Action OnVignetteClicked;
 

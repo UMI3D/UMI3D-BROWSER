@@ -195,6 +195,16 @@ namespace umi3dBrowsers.displayer
         public void HoverExit(PointerEventData eventData)
         {
         }
+
+        public void SetHoverColor(Color color)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetLoading()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
 

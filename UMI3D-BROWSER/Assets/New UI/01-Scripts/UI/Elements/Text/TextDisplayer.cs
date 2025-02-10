@@ -139,5 +139,15 @@ namespace umi3dBrowsers.displayer
                 }
             }
         }
+
+        public void SetHoverColor(Color color)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void SetLoading()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

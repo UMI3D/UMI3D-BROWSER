@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+using System;
 using System.Collections.Generic;
 using Unity.XR.OpenXR.Features.PICOSupport;
 using UnityEngine.XR.OpenXR.Features.Interactions;
@@ -27,9 +28,9 @@ namespace umi3d.browserEditor.BuildTool
 {
     public struct Feature
     {
-        public string name;
+        public readonly string name;
 
-        public string id;
+        public readonly string id;
 
         public Feature(string name, string id)
         {
@@ -37,24 +38,33 @@ namespace umi3d.browserEditor.BuildTool
             this.id = id;
         }
 
-        static Feature[] _allCases
+        public static Feature[] allCases => _allCases.Value;
+        static Lazy<Feature[]> _allCases = new(() =>
         {
-            get
-            {
-                List<Feature> list = new List<Feature>();
-                list.AddRange(allMetaQuestCases);
-                list.AddRange(allPicoCases);
-                list.AddRange(allViveCases);
-                return list.ToArray();
-            }
-        }
-        public static Feature[] allCases = _allCases;
+            List<Feature> list = new List<Feature>();
+            list.AddRange(allMetaQuestCases);
+            list.AddRange(allPicoCases);
+            list.AddRange(allViveCases);
+            return list.ToArray();
+        });
 
-        public static Feature[] allMetaQuestCases = { MetaQuestSupport, MetaQuestARAnchors, MetaQuestARCamera, MetaQuestARPlaneDetection, MetaQuestARRaycasts, MetaQuestARSession, MetaQuestDisplayUtilities, MetaQuestTouchProController, OculusTouchController };
+        public static Feature[] allMetaQuestCases => _allMetaQuestCases.Value;
+        static Lazy<Feature[]> _allMetaQuestCases = new(() =>
+        {
+            return new[] { MetaQuestSupport, MetaQuestARAnchors, MetaQuestARCamera, MetaQuestARPlaneDetection, MetaQuestARRaycasts, MetaQuestARSession, MetaQuestDisplayUtilities, MetaQuestTouchProController, OculusTouchController };
+        });
 
-        public static Feature[] allPicoCases = { PICOSupport, PICOCompositionLayerSecureContent, PICODisplayRefreshRate, PICOFoveation, PICOPassthrough, PICOOpenXRFeatures, PICOPerformanceSettings, PICO4TouchController, PICONeo3TouchController };
+        public static Feature[] allPicoCases => _allPicoCases.Value;
+        static Lazy<Feature[]> _allPicoCases = new(() =>
+        {
+            return new[] { PICOSupport, PICOCompositionLayerSecureContent, PICODisplayRefreshRate, PICOFoveation, PICOPassthrough, PICOOpenXRFeatures, PICOPerformanceSettings, PICO4TouchController, PICONeo3TouchController };
+        });
 
-        public static Feature[] allViveCases = { VIVEXRCompositionLayer, VIVEXRCompositionLayerColorScaleBias, VIVEXRCompositionLayerCylinder, VIVEXRFacialTracking, VIVEXRFoveation, VIVEXRHandTracking, VIVEXRSupport, VIVEFocus3Controller };
+        public static Feature[] allViveCases => _allViveCases.Value;
+        static Lazy<Feature[]> _allViveCases = new(() =>
+        {
+            return new[] { VIVEXRCompositionLayer, VIVEXRCompositionLayerColorScaleBias, VIVEXRCompositionLayerCylinder, VIVEXRFacialTracking, VIVEXRFoveation, VIVEXRHandTracking, VIVEXRSupport, VIVEFocus3Controller };
+        });
 
         // Meta features.
         public static Feature MetaQuestSupport = new Feature("Meta Quest Support", MetaQuestFeature.featureId);

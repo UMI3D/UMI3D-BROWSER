@@ -14,11 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System;
 using UnityEditor;
 using UnityEditor.XR.Management.Metadata;
-using UnityEngine;
+using UnityEditor.XR.OpenXR.Features;
 using UnityEngine.XR.Management;
+using UnityEngine.XR.OpenXR.Features;
 
 namespace umi3d.browserEditor.BuildTool
 {
@@ -48,6 +48,24 @@ namespace umi3d.browserEditor.BuildTool
                 loaderTypeName,
                 targetGroup
             );
+        }
+
+        void RefreshFeatures(BuildTargetGroup targetGroup)
+        {
+            FeatureHelpers.RefreshFeatures(targetGroup);
+        }
+
+        bool SetFeatureWithIdForActiveBuildTarget(string featureId, bool enable)
+        {
+            OpenXRFeature xrFeature = FeatureHelpers.GetFeatureWithIdForActiveBuildTarget(featureId);
+
+            if (xrFeature == null) { return false; }
+
+            if (xrFeature.enabled != enable)
+            {
+                xrFeature.enabled = enable;
+            }
+            return true;
         }
     }
 

@@ -142,7 +142,7 @@ public class PluginFeatureHelperTests
             unityPluginFeatureTestDelegate.pluginResult = false;
 
             // When
-            LogAssert.Expect(LogType.Error, $"[PluginFeatureHelper] Could not enabled {Plugin.OpenXR.name} plugin on [{BuildTargetGroup.Standalone}].");
+            LogAssert.Expect(LogType.Error, $"[PluginFeatureHelper] Error: Could not enable [{Plugin.OpenXR.name}] plugin on [{BuildTargetGroup.Standalone}].");
             PluginFeatureHelper.@default.EnablePlugins(Plugin.OpenXR);
 
             // Then
@@ -162,6 +162,19 @@ public class PluginFeatureHelperTests
 
             // Then
             Assert.IsTrue(testPluginFeatureDelegate.result);
+        }
+
+        [Test]
+        public void GivenNoDelegate_WhenEnableSamePlugins_ThenNoError()
+        {
+            // Given
+            PluginFeatureHelper.@default.@delegate = null;
+            unityTargetTestDelegate.SelectedTargetGroup = BuildTargetGroup.Standalone;
+            unityPluginFeatureTestDelegate.isPluginEnabled = true;
+            unityPluginFeatureTestDelegate.pluginResult = true;
+
+            // When
+            PluginFeatureHelper.@default.EnablePlugins(Plugin.OpenXR);
         }
     }
 
@@ -316,12 +329,324 @@ public class PluginFeatureHelperTests
             // When
             for (int i = 0; i < Plugin.allCases.Length; i++)
             {
-                LogAssert.Expect(LogType.Error, $"[PluginFeatureHelper] Could not disable [{Plugin.allCases[i].name}] plugin on [{BuildTargetGroup.Standalone}].");
+                LogAssert.Expect(LogType.Error, $"[PluginFeatureHelper] Error: Could not disable [{Plugin.allCases[i].name}] plugin on [{BuildTargetGroup.Standalone}].");
             }
             PluginFeatureHelper.@default.DisableAllPlugins();
 
             // Then
             Assert.False(testPluginFeatureDelegate.result);
+        }
+
+        [Test]
+        public void GivenNoDelegate_WhenDisableAllPlugins_ThenNoError()
+        {
+            // Given
+            PluginFeatureHelper.@default.@delegate = null;
+
+            // When
+            PluginFeatureHelper.@default.DisableAllPlugins();
+        }
+    }
+
+    public class EnableFeaturesTest
+    {
+        class UnityTargetTestDelegate : IUnityTargetDelegate
+        {
+            public BuildTarget ActiveTarget;
+            public BuildTargetGroup SelectedTargetGroup;
+            public bool SwitchTargetResult;
+            public string[] CompilationSymbols;
+
+            public BuildTarget GetActiveTarget()
+            {
+                return ActiveTarget;
+            }
+
+            public BuildTargetGroup GetSelectedTargetGroup()
+            {
+                return SelectedTargetGroup;
+            }
+
+            public bool SwitchTarget(BuildTargetGroup targetGroup, BuildTarget target)
+            {
+                SelectedTargetGroup = targetGroup;
+                ActiveTarget = target;
+                return SwitchTargetResult;
+            }
+
+            public string[] GetCompilationSymbols(UnityEditor.Build.NamedBuildTarget target)
+            {
+                return CompilationSymbols;
+            }
+
+            public void SetCompilationSymbols(UnityEditor.Build.NamedBuildTarget target, string[] symbols)
+            {
+                CompilationSymbols = symbols;
+            }
+        }
+
+        class UnityPluginFeatureTestDelegate : IUnityPluginFeatureDelegate
+        {
+            public bool setFeatureResult = true;
+            public List<string> features = new List<string>();
+
+            public void RefreshFeatures(BuildTargetGroup targetGroup) {}
+
+            public bool SetFeatureWithIdForActiveBuildTarget(string featureId, bool enable)
+            {
+                if (setFeatureResult)
+                {
+                    if (enable && !features.Contains(featureId))
+                    {
+                        features.Add(featureId);
+                    }
+                    else if (!enable && features.Contains(featureId)) 
+                    {
+                        features.Remove(featureId);
+                    }
+                }
+
+                return setFeatureResult;
+            }
+        }
+
+        class TestPluginFeatureDelegate : IPluginFeatureDelegate
+        {
+            public List<Feature> EnabledFeatures { get; } = new List<Feature>();
+            public List<Feature> DisabledFeatures { get; } = new List<Feature>();
+            public List<Feature> FailedFeatures { get; } = new List<Feature>();
+
+            public void FeatureHasBeenEnabled(Feature feature)
+            {
+                EnabledFeatures.Add(feature);
+            }
+
+            public void FeatureHasBeenDisabled(Feature feature)
+            {
+                DisabledFeatures.Add(feature);
+            }
+
+            public void SettingFeatureFailed(Feature feature)
+            {
+                FailedFeatures.Add(feature);
+            }
+        }
+
+        UnityTargetTestDelegate _unityTargetTestDelegate;
+        UnityPluginFeatureTestDelegate _unityPluginFeatureTestDelegate;
+        TestPluginFeatureDelegate _testPluginFeatureDelegate;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _unityTargetTestDelegate = new UnityTargetTestDelegate();
+            _unityPluginFeatureTestDelegate = new UnityPluginFeatureTestDelegate();
+            _testPluginFeatureDelegate = new TestPluginFeatureDelegate();
+
+            PluginFeatureHelper.@default.unityTargetDelegate = _unityTargetTestDelegate;
+            PluginFeatureHelper.@default.unityPluginFeatureDelegate = _unityPluginFeatureTestDelegate;
+            PluginFeatureHelper.@default.@delegate = _testPluginFeatureDelegate;
+        }
+
+        [Test]
+        public void WhenEnableFeaturesWithNoFeatures_ThenError()
+        {
+            // When
+            PluginFeatureHelper.@default.EnableFeatures();
+
+            // Then
+            LogAssert.Expect(LogType.Error, $"[PluginFeatureHelper] Error: No features to enable.");
+        }
+
+        [Test]
+        public void GivenValidFeatures_WhenEnableFeatures_ThenFeaturesAreEnabled()
+        {
+            // Given
+            var feature1 = new Feature("feature1", "Feature 1");
+            var feature2 = new Feature("feature2", "Feature 2");
+
+            // When
+            PluginFeatureHelper.@default.EnableFeatures(feature1, feature2);
+
+            // Then
+            Assert.Contains("Feature 1", _unityPluginFeatureTestDelegate.features);
+            Assert.Contains("Feature 2", _unityPluginFeatureTestDelegate.features);
+            Assert.Contains(feature1, _testPluginFeatureDelegate.EnabledFeatures);
+            Assert.Contains(feature2, _testPluginFeatureDelegate.EnabledFeatures);
+        }
+
+        [Test]
+        public void GivenInvalidFeature_WhenEnableFeatures_ThenLogErrorAndDelegateCalled()
+        {
+            // Given
+            var feature = new Feature("invalidFeature", "Invalid Feature");
+            _unityPluginFeatureTestDelegate.setFeatureResult = false;
+
+            // When
+            LogAssert.Expect(LogType.Error, "[PluginFeatureHelper] Error: Feature [invalidFeature] is maybe missing.");
+            PluginFeatureHelper.@default.EnableFeatures(feature);
+
+            // Then
+            Assert.IsFalse(_unityPluginFeatureTestDelegate.features.Contains("invalidFeature"));
+            Assert.Contains(feature, _testPluginFeatureDelegate.FailedFeatures);
+        }
+
+        [Test]
+        public void GivenNoDelegate_WhenEnableFeatures_ThenFeaturesAreEnabled()
+        {
+            // Given
+            PluginFeatureHelper.@default.@delegate = null;
+            var feature1 = new Feature("feature1", "Feature 1");
+            var feature2 = new Feature("feature2", "Feature 2");
+
+            // When
+            PluginFeatureHelper.@default.EnableFeatures(feature1, feature2);
+
+            // Then
+            Assert.Contains("Feature 1", _unityPluginFeatureTestDelegate.features);
+            Assert.Contains("Feature 2", _unityPluginFeatureTestDelegate.features);
+        }
+    }
+
+    public class DisableAllFeaturesTest
+    {
+        class UnityTargetTestDelegate : IUnityTargetDelegate
+        {
+            public BuildTarget ActiveTarget;
+            public BuildTargetGroup SelectedTargetGroup;
+            public bool SwitchTargetResult;
+            public string[] CompilationSymbols;
+
+            public BuildTarget GetActiveTarget()
+            {
+                return ActiveTarget;
+            }
+
+            public BuildTargetGroup GetSelectedTargetGroup()
+            {
+                return SelectedTargetGroup;
+            }
+
+            public bool SwitchTarget(BuildTargetGroup targetGroup, BuildTarget target)
+            {
+                SelectedTargetGroup = targetGroup;
+                ActiveTarget = target;
+                return SwitchTargetResult;
+            }
+
+            public string[] GetCompilationSymbols(UnityEditor.Build.NamedBuildTarget target)
+            {
+                return CompilationSymbols;
+            }
+
+            public void SetCompilationSymbols(UnityEditor.Build.NamedBuildTarget target, string[] symbols)
+            {
+                CompilationSymbols = symbols;
+            }
+        }
+
+        class UnityPluginFeatureTestDelegate : IUnityPluginFeatureDelegate
+        {
+            public bool setFeatureResult = true;
+            public List<string> features = new List<string>();
+
+            public void RefreshFeatures(BuildTargetGroup targetGroup) { }
+
+            public bool SetFeatureWithIdForActiveBuildTarget(string featureId, bool enable)
+            {
+                if (setFeatureResult)
+                {
+                    if (enable && !features.Contains(featureId))
+                    {
+                        features.Add(featureId);
+                    }
+                    else if (!enable && features.Contains(featureId))
+                    {
+                        features.Remove(featureId);
+                    }
+                }
+
+                return setFeatureResult;
+            }
+        }
+
+        class TestPluginFeatureDelegate : IPluginFeatureDelegate
+        {
+            public List<Feature> EnabledFeatures { get; } = new List<Feature>();
+            public List<Feature> DisabledFeatures { get; } = new List<Feature>();
+            public List<Feature> FailedFeatures { get; } = new List<Feature>();
+
+            public void FeatureHasBeenEnabled(Feature feature)
+            {
+                EnabledFeatures.Add(feature);
+            }
+
+            public void FeatureHasBeenDisabled(Feature feature)
+            {
+                DisabledFeatures.Add(feature);
+            }
+
+            public void SettingFeatureFailed(Feature feature)
+            {
+                FailedFeatures.Add(feature);
+            }
+        }
+
+        UnityTargetTestDelegate _unityTargetTestDelegate;
+        UnityPluginFeatureTestDelegate _unityPluginFeatureTestDelegate;
+        TestPluginFeatureDelegate _testPluginFeatureDelegate;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _unityTargetTestDelegate = new UnityTargetTestDelegate();
+            _unityPluginFeatureTestDelegate = new UnityPluginFeatureTestDelegate();
+            _testPluginFeatureDelegate = new TestPluginFeatureDelegate();
+
+            PluginFeatureHelper.@default.unityTargetDelegate = _unityTargetTestDelegate;
+            PluginFeatureHelper.@default.unityPluginFeatureDelegate = _unityPluginFeatureTestDelegate;
+            PluginFeatureHelper.@default.@delegate = _testPluginFeatureDelegate;
+        }
+
+        [Test]
+        public void WhenDisableAllFeatures_ThenAllFeaturesAreDisabled()
+        {
+            // Given
+            _unityPluginFeatureTestDelegate.features.AddRange(Feature.allCases.Select(feature => feature.id));
+
+            // When
+            PluginFeatureHelper.@default.DisableAllFeatures();
+
+            // Then
+            Assert.AreEqual(0, _unityPluginFeatureTestDelegate.features.Count);
+            Assert.AreEqual(Feature.allCases.Length, _testPluginFeatureDelegate.DisabledFeatures.Count);
+        }
+
+        [Test]
+        public void GivenSomeExceptions_WhenDisableAllFeatures_ThenOnlyNonExceptionFeaturesAreDisabled()
+        {
+            // Given
+            _unityPluginFeatureTestDelegate.features.AddRange(Feature.allCases.Select(feature => feature.id));
+
+            // When
+            PluginFeatureHelper.@default.DisableAllFeatures(Feature.allMetaQuestCases);
+
+            // Then
+            Assert.AreEqual(Feature.allMetaQuestCases.Length, _unityPluginFeatureTestDelegate.features.Count);
+            Assert.AreEqual(Feature.allCases.Length - Feature.allMetaQuestCases.Length, _testPluginFeatureDelegate.DisabledFeatures.Count);
+        }
+
+        [Test]
+        public void GivenNoDelegate_WhenDisableAllFeatures_ThenAllFeaturesAreDisabled()
+        {
+            // Given
+            PluginFeatureHelper.@default.@delegate = null;
+
+            // When
+            PluginFeatureHelper.@default.DisableAllFeatures();
+
+            // Then
+            Assert.AreEqual(0, _unityPluginFeatureTestDelegate.features.Count);
         }
     }
 }

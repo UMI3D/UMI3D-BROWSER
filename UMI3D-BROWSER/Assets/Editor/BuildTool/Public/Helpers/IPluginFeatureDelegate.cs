@@ -26,6 +26,8 @@ namespace umi3d.browserEditor.BuildTool
 
         void FeatureHasBeenEnabled(Feature feature) {}
 
-        void FeaturesHasBeenDisabled(Feature feature) {}
+        void FeatureHasBeenDisabled(Feature feature) {}
+
+        void SettingFeatureFailed(Feature feature) {}
     }
 }

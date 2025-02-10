@@ -36,8 +36,38 @@ namespace umi3d.browserEditor.BuildTool
         static readonly Lazy<PluginFeatureHelper> _default = new(() => new());
 
         public IPluginFeatureDelegate @delegate;
-        internal IUnityTargetDelegate unityTargetDelegate = new UnityTargetDelegate();
-        internal IUnityPluginFeatureDelegate unityPluginFeatureDelegate = new UnityPluginFeatureDelegate();
+        private IUnityTargetDelegate _unityTargetDelegate = new UnityTargetDelegate();
+        internal IUnityTargetDelegate unityTargetDelegate
+        {
+            get => _unityTargetDelegate;
+            set
+            {
+                if (value == null)
+                {
+                    _unityTargetDelegate = new UnityTargetDelegate();
+                }
+                else
+                {
+                    _unityTargetDelegate = value;
+                }
+            }
+        }
+        private IUnityPluginFeatureDelegate _unityPluginFeatureDelegate = new UnityPluginFeatureDelegate();
+        internal IUnityPluginFeatureDelegate unityPluginFeatureDelegate
+        {
+            get => _unityPluginFeatureDelegate;
+            set
+            {
+                if (value == null)
+                {
+                    _unityPluginFeatureDelegate = new UnityPluginFeatureDelegate();
+                }
+                else
+                {
+                    _unityPluginFeatureDelegate = value;
+                }
+            }
+        }
 
         private PluginFeatureHelper() { }
 
@@ -119,11 +149,22 @@ namespace umi3d.browserEditor.BuildTool
             }
             else
             {
-                UnityEngine.Debug.LogError($"[PluginFeatureHelper] Could not {(enable ? "enable" : "disable")} [{plugin.name}] plugin on [{targetGroup}].");
+                UnityEngine.Debug.LogError($"[PluginFeatureHelper] Error: Could not {(enable ? "enable" : "disable")} [{plugin.name}] plugin on [{targetGroup}].");
                 @delegate?.SettingPluginRaisedError(plugin);
             }
         }
 
+        /// <summary>
+        /// Enables the specified plugins by setting their state to enabled.<br/>
+        /// <br/>
+        /// <example>
+        /// Given a list of plugins when enabling the plugins then the plugins are enabled.
+        /// <code>
+        /// PluginFeatureHelper.@default.EnablePlugins(Plugin.OpenXR);
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <param name="plugins">An array of plugins to be enabled.</param>
         public void EnablePlugins(params Plugin[] plugins)
         {
             foreach (Plugin plugin in plugins)
@@ -132,6 +173,17 @@ namespace umi3d.browserEditor.BuildTool
             }
         }
 
+        /// <summary>
+        /// Disables all plugins except the specified ones.<br/>
+        /// <br/>
+        /// <example>
+        /// Given a list of plugins when disabling all plugins except the specified ones then only the specified plugins remain enabled if it was already enabled.
+        /// <code>
+        /// PluginFeatureHelper.@default.DisableAllPlugins(Plugin.OpenXR);
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <param name="except">An array of plugins that should not be disabled.</param>
         public void DisableAllPlugins(params Plugin[] except)
         {
             foreach (Plugin plugin in Plugin.allCases)
@@ -151,31 +203,62 @@ namespace umi3d.browserEditor.BuildTool
         {
             BuildTargetGroup targetGroup = unityTargetDelegate.GetSelectedTargetGroup();
 
-            FeatureHelpers.RefreshFeatures(targetGroup);
-            
-            OpenXRFeature xrFeature = FeatureHelpers.GetFeatureWithIdForActiveBuildTarget(feature.id);
+            unityPluginFeatureDelegate.RefreshFeatures(targetGroup);
 
-            if (xrFeature == null)
+            if (!unityPluginFeatureDelegate.SetFeatureWithIdForActiveBuildTarget(feature.id, enable))
             {
                 UnityEngine.Debug.LogError($"[PluginFeatureHelper] Error: Feature [{feature.name}] is maybe missing.");
+                @delegate?.SettingFeatureFailed(feature);
                 return;
             }
 
-            if (xrFeature.enabled != enable) 
-            {
-                xrFeature.enabled = enable;
-            }
             UnityEngine.Debug.Log($"[PluginFeatureHelper] Notice: Feature [{feature.name}] has been {(enable ? "enabled" : "disabled")} for target [{targetGroup}]");
+            if (enable)
+            {
+                @delegate?.FeatureHasBeenEnabled(feature);
+            } 
+            else
+            {
+                @delegate?.FeatureHasBeenDisabled(feature);
+            }
         }
 
+        /// <summary>
+        /// Enables the specified features by setting their state to enabled.<br/>
+        /// If no features are provided, logs an error message.<br/>
+        /// <br/>
+        /// <example>
+        /// Given a list of features when enabling the features then the features are enabled.
+        /// <code>
+        /// PluginFeatureHelper.@default.EnableFeatures(Feature.allMetaQuestCases);
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <param name="features">An array of features to be enabled.</param>
         public void EnableFeatures(params Feature[] features)
         {
+            if (features == null || features.Length == 0)
+            {
+                UnityEngine.Debug.LogError($"[PluginFeatureHelper] Error: No features to enable.");
+            }
+
             foreach (Feature feature in features)
             {
                 SetXRFeature(true, feature);
             }
         }
 
+        /// <summary>
+        /// Disables all features except the specified ones.<br/>
+        /// <br/>
+        /// <example>
+        /// Given a list of features when disabling all features except the specified ones then only the specified features remain enabled if they were already enabled.
+        /// <code>
+        /// PluginFeatureHelper.@default.DisableAllFeatures(Feature.allMetaQuestCases);
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <param name="except">An array of features that should not be disabled.</param>
         public void DisableAllFeatures(params Feature[] except)
         {
             foreach (Feature feature in Feature.allCases)

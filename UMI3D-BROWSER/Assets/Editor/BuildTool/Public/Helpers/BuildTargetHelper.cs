@@ -52,7 +52,7 @@ namespace umi3d.browserEditor.BuildTool
         }
         static readonly Lazy<BuildTargetHelper> _default = new(() => new());
         internal static bool hasBeenInitialized = false;
-        private BuildTargetHelper() { }
+        BuildTargetHelper() { }
 
         public E_Target target { get; private set; }
         public ITargetDelegate @delegate;

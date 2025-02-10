@@ -39,7 +39,6 @@ namespace umi3d.browserEditor.BuildTool
         UMI3DBuildToolSettings_SO settingModel;
 
         [SerializeField] UMI3DCollabLoadingParameters loadingParameters;
-        //[SerializeField] UniversalRendererData urpData;
 
         UMI3DConfigurator _uMI3DConfigurator = null;
 
@@ -179,7 +178,7 @@ namespace umi3d.browserEditor.BuildTool
 
             // Switch target if needed and toggle options.
             _uMI3DConfigurator.HandleTarget(target);
-            SwitchTarget(target);
+            BuildTargetHelper.@default.SwitchTarget(target);
         }
 
         void ApplyScenes()
@@ -292,12 +291,14 @@ namespace umi3d.browserEditor.BuildTool
             }
         }
 
-        public void SwitchTarget(E_Target target)
+        #region Target Delegate
+
+        void ITargetDelegate.TargetHasChanged(E_Target oldTarget, E_Target newTarget)
         {
-            BuildTargetHelper.@default.SwitchTarget(target);
+            targetModel.currentTarget = newTarget;
 
             // Plugins
-            switch (target)
+            switch (newTarget)
             {
                 case E_Target.Quest:
                 case E_Target.Focus:
@@ -313,7 +314,7 @@ namespace umi3d.browserEditor.BuildTool
             }
 
             // Features
-            switch (target)
+            switch (newTarget)
             {
                 case E_Target.Quest:
                     PluginFeatureHelper.@default.DisableAllFeatures(Feature.allMetaQuestCases);
@@ -330,13 +331,28 @@ namespace umi3d.browserEditor.BuildTool
                     PluginFeatureHelper.@default.EnableFeatures(Feature.allPicoCases);
                     break;
             }
-        }
 
-        #region Target Delegate
+            // URP
+            UniversalRenderPipelineAsset[] renderers = RenderingHelper.@default.GetAllRenderingAssets();
+            switch (newTarget)
+            {
+                case E_Target.Quest:
+                case E_Target.Focus:
+                case E_Target.Pico:
+                    foreach (var renderer in renderers)
+                    {
+                        RenderingHelper.@default.SetDefaultPipelineRendererData(renderer, 1);
+                    }
+                    break;
 
-        void ITargetDelegate.TargetHasChanged(E_Target oldTarget, E_Target newTarget)
-        {
-            targetModel.currentTarget = newTarget;
+                case E_Target.SteamVR:
+                case E_Target.Windows:
+                    foreach (var renderer in renderers)
+                    {
+                        RenderingHelper.@default.SetDefaultPipelineRendererData(renderer, 0);
+                    }
+                    break;
+            }
         }
 
         #endregion

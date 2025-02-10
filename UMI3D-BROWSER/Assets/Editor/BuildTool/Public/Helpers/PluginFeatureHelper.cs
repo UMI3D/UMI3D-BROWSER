@@ -34,9 +34,10 @@ namespace umi3d.browserEditor.BuildTool
         /// </summary>
         public static PluginFeatureHelper @default => _default.Value;
         static readonly Lazy<PluginFeatureHelper> _default = new(() => new());
+        PluginFeatureHelper() { }
 
         public IPluginFeatureDelegate @delegate;
-        private IUnityTargetDelegate _unityTargetDelegate = new UnityTargetDelegate();
+        IUnityTargetDelegate _unityTargetDelegate = new UnityTargetDelegate();
         internal IUnityTargetDelegate unityTargetDelegate
         {
             get => _unityTargetDelegate;
@@ -52,7 +53,7 @@ namespace umi3d.browserEditor.BuildTool
                 }
             }
         }
-        private IUnityPluginFeatureDelegate _unityPluginFeatureDelegate = new UnityPluginFeatureDelegate();
+        IUnityPluginFeatureDelegate _unityPluginFeatureDelegate = new UnityPluginFeatureDelegate();
         internal IUnityPluginFeatureDelegate unityPluginFeatureDelegate
         {
             get => _unityPluginFeatureDelegate;
@@ -68,8 +69,6 @@ namespace umi3d.browserEditor.BuildTool
                 }
             }
         }
-
-        private PluginFeatureHelper() { }
 
         #region Plugins
 

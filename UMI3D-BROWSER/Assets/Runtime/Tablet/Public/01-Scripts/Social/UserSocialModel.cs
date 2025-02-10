@@ -16,7 +16,6 @@ limitations under the License.
 
 using inetum.unityUtils.observation;
 using System.Collections.Generic;
-using umi3d.baseBrowser.extension;
 using umi3d.cdk.collaboration;
 using UnityEngine;
 
@@ -61,7 +60,7 @@ namespace umi3d.browserRuntime.ui.tablet.social
         {
             _user = user;
 
-            Name = _user.login.CapitalizeAllWord();
+            Name = CapitalizeAllWord(_user.login);
             Place = $"({UMI3DCollaborationClientServer.Environement?.name})";
             Volume = 100;
             IsMute = false;
@@ -83,6 +82,21 @@ namespace umi3d.browserRuntime.ui.tablet.social
             _setNotifier[UserSocialNotificationKeys.UserSocialSet.PrimaryActions] = PrimaryActions;
             _setNotifier[UserSocialNotificationKeys.UserSocialSet.OtherActions] = OtherActions;
             _setNotifier.Notify();
+        }
+
+        private static string CapitalizeAllWord(string s)
+        {
+            if (s == null || s == string.Empty)
+                return "";
+            var words = s.Split(" ");
+            var valueFormated = "";
+            foreach (var word in words)
+            {
+                if (word.Length == 0)
+                    continue;
+                valueFormated += char.ToUpper(word[0]) + word.Substring(1) + " ";
+            }
+            return valueFormated.Substring(0, valueFormated.Length - 1);
         }
 
         public void UpdateVolume(float volume)

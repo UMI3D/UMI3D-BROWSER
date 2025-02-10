@@ -15,7 +15,6 @@ limitations under the License.
 */
 
 using umi3d.common;
-using umi3dVRBrowsersBase.interactions;
 
 /// <summary>
 /// Class to display an UMI3D Notification in the <see cref="watchMenu.WatchMenu"/>.
@@ -30,8 +29,7 @@ public class WatchNotification : AbstractUserNotification
     {
         base.Init(dto);
 
-        UnityEngine.Debug.LogError("TODO : Choose correct hand");
-        AbstractControllerInputManager.Instance.VibrateController(ControllerType.LeftHandController, .3f, .2f, .2f);
+        UnityEngine.Debug.LogError("TODO : Add Feedback");
     }
 }
 

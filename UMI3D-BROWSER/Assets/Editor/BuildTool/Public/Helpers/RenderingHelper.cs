@@ -57,26 +57,26 @@ namespace umi3d.browserEditor.BuildTool
             }
 
             FieldInfo renderersField = typeof(UniversalRenderPipelineAsset).GetField(
-                "m_Renderers",
+                "m_RendererDataList",
                 BindingFlags.NonPublic | BindingFlags.Instance
             );
-            ScriptableRenderer[] renderers = renderersField.GetValue(urpAsset) as ScriptableRenderer[];
+            ScriptableRendererData[] renderers = renderersField.GetValue(urpAsset) as ScriptableRendererData[];
 
             if (renderers == null || renderers.Length == 0)
             {
-                UnityEngine.Debug.LogError($"[RenderingHelper] Error: renderers is null or empty.");
+                UnityEngine.Debug.LogError($"[RenderingHelper] Error: renderers is null or empty on asset [{urpAsset.name}].");
                 return;
             }
 
             if (newRendererIndex < 0 || renderers.Length <= newRendererIndex)
             {
-                UnityEngine.Debug.LogError($"[RenderingHelper] Error: new index [{newRendererIndex}] is out of range (count: [{renderers.Length}]).");
+                UnityEngine.Debug.LogError($"[RenderingHelper] Error: new index [{newRendererIndex}] is out of range (count: [{renderers.Length}]) on asset [{urpAsset.name}].");
                 return;
             }
 
             if (renderers[newRendererIndex] == null)
             {
-                UnityEngine.Debug.LogError($"[RenderingHelper] Error: Renderer at index [{newRendererIndex}] is null.");
+                UnityEngine.Debug.LogError($"[RenderingHelper] Error: Renderer at index [{newRendererIndex}] is null on asset [{urpAsset.name}].");
                 return;
             }
 

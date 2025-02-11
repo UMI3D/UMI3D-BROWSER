@@ -20,10 +20,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEditor.XR.Management;
 using UnityEditor.XR.Management.Metadata;
-using UnityEditor.XR.OpenXR.Features;
 using UnityEngine.XR.Management;
-using UnityEngine.XR.OpenXR;
-using UnityEngine.XR.OpenXR.Features;
 
 namespace umi3d.browserEditor.BuildTool
 {

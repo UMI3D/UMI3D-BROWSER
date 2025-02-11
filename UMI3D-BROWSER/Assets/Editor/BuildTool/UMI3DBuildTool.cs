@@ -177,7 +177,6 @@ namespace umi3d.browserEditor.BuildTool
             ApplyScenes();
 
             // Switch target if needed and toggle options.
-            _uMI3DConfigurator.HandleTarget(target);
             BuildTargetHelper.@default.SwitchTarget(target);
         }
 
@@ -353,6 +352,9 @@ namespace umi3d.browserEditor.BuildTool
                     }
                     break;
             }
+
+            // CollabLoading
+            _uMI3DConfigurator.HandleTarget(newTarget);
         }
 
         #endregion

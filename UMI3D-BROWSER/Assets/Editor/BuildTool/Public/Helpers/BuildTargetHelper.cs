@@ -16,14 +16,8 @@ limitations under the License.
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using umi3d.browserRuntime.conditionalCompilation;
 using UnityEditor;
-using UnityEditor.XR.Management.Metadata;
-using UnityEditor.XR.Management;
-using UnityEditor.XR.OpenXR.Features;
-using UnityEngine.XR.Management;
-using UnityEngine.XR.OpenXR.Features;
 
 namespace umi3d.browserEditor.BuildTool
 {

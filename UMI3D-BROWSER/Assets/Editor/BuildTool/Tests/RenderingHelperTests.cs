@@ -104,14 +104,14 @@ public class RenderingHelperTests
         {
             // Given
             var urpAsset = ScriptableObject.CreateInstance<UniversalRenderPipelineAsset>();
-            var renderersField = typeof(UniversalRenderPipelineAsset).GetField("m_Renderers", BindingFlags.NonPublic | BindingFlags.Instance);
+            var renderersField = typeof(UniversalRenderPipelineAsset).GetField("m_RendererDataList", BindingFlags.NonPublic | BindingFlags.Instance);
             renderersField.SetValue(urpAsset, null);
 
             // When
             RenderingHelper.@default.SetDefaultPipelineRendererData(urpAsset, 0);
 
             // Then
-            LogAssert.Expect(LogType.Error, "[RenderingHelper] Error: renderers is null or empty.");
+            LogAssert.Expect(LogType.Error, "[RenderingHelper] Error: renderers is null or empty on asset [].");
         }
 
         [Test]
@@ -119,14 +119,14 @@ public class RenderingHelperTests
         {
             // Given
             var urpAsset = ScriptableObject.CreateInstance<UniversalRenderPipelineAsset>();
-            var renderersField = typeof(UniversalRenderPipelineAsset).GetField("m_Renderers", BindingFlags.NonPublic | BindingFlags.Instance);
-            renderersField.SetValue(urpAsset, new ScriptableRenderer[] { });
+            var renderersField = typeof(UniversalRenderPipelineAsset).GetField("m_RendererDataList", BindingFlags.NonPublic | BindingFlags.Instance);
+            renderersField.SetValue(urpAsset, new ScriptableRendererData[] { });
 
             // When
             RenderingHelper.@default.SetDefaultPipelineRendererData(urpAsset, 1);
 
             // Then
-            LogAssert.Expect(LogType.Error, "[RenderingHelper] Error: renderers is null or empty.");
+            LogAssert.Expect(LogType.Error, "[RenderingHelper] Error: renderers is null or empty on asset [].");
         }
 
         [Test]
@@ -139,7 +139,7 @@ public class RenderingHelperTests
             RenderingHelper.@default.SetDefaultPipelineRendererData(urpAsset, 2);
 
             // Then
-            LogAssert.Expect(LogType.Error, "[RenderingHelper] Error: new index [2] is out of range (count: [2]).");
+            LogAssert.Expect(LogType.Error, $"[RenderingHelper] Error: new index [2] is out of range (count: [2]) on asset [{urpAsset.name}].");
         }
 
         [Test]
@@ -147,14 +147,14 @@ public class RenderingHelperTests
         {
             // Given
             var urpAsset = ScriptableObject.CreateInstance<UniversalRenderPipelineAsset>();
-            var renderersField = typeof(UniversalRenderPipelineAsset).GetField("m_Renderers", BindingFlags.NonPublic | BindingFlags.Instance);
-            renderersField.SetValue(urpAsset, new ScriptableRenderer[] { null });
+            var renderersField = typeof(UniversalRenderPipelineAsset).GetField("m_RendererDataList", BindingFlags.NonPublic | BindingFlags.Instance);
+            renderersField.SetValue(urpAsset, new ScriptableRendererData[] { null });
 
             // When
             RenderingHelper.@default.SetDefaultPipelineRendererData(urpAsset, 0);
 
             // Then
-            LogAssert.Expect(LogType.Error, "[RenderingHelper] Error: Renderer at index [0] is null.");
+            LogAssert.Expect(LogType.Error, "[RenderingHelper] Error: Renderer at index [0] is null on asset [].");
         }
     }
 }

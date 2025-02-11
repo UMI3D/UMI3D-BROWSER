@@ -36,6 +36,8 @@ namespace umi3d.browserRuntime.ui.tablet.social
         public List<UserAction> PrimaryActions { get; private set; } = new List<UserAction>();
         public List<UserAction> OtherActions { get; private set; } = new List<UserAction>();
 
+        public UMI3DUser User => _user;
+
         private float _volume;
 
         UMI3DUser _user;

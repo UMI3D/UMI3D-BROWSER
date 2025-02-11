@@ -32,6 +32,8 @@ namespace umi3d.browserRuntime.ui.tablet.social
 
         UserSocialListModelContainer _listModelContainer;
 
+        public int AvailablePrefabsCount => _availablePrefabs.Count;
+
         private void Awake()
         {
             _listModelContainer = GetComponent<UserSocialListModelContainer>();
@@ -46,8 +48,26 @@ namespace umi3d.browserRuntime.ui.tablet.social
             _listModelContainer.Model.RemoveUser -= RemoveUser;
         }
 
+        /// <summary>
+        /// Creates a user and adds it to the model container.<br/>
+        /// <br/>
+        /// <example>
+        /// Given a user, when creating the user, then the user is added to the model container.
+        /// <code>
+        /// // UMI3DUser user;
+        /// _factory.CreateUser(user);
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <param name="user">The user to be associated.</param>
         internal void CreateUser(UMI3DUser user)
         {
+            if (user == null)
+            {
+                Debug.LogError("User cannot be null");
+                return;
+            }
+
             if (!_availablePrefabs.TryDequeue(out var modelContainer))
                 modelContainer = Instantiate(_userSocialPrefab, _content);
 
@@ -57,8 +77,32 @@ namespace umi3d.browserRuntime.ui.tablet.social
             _listModelContainer.Model.Users.Add(user, modelContainer);
         }
 
+        /// <summary>
+        /// Removes a user from the model container and recycles the model container.<br/>
+        /// <br/>
+        /// <example>
+        /// Given an existing user, when removing the user, then the user is removed and the model container is recycled.
+        /// <code>
+        /// // UMI3DUser user;
+        /// _factory.RemoveUser(user);
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <param name="user">The user to be removed.</param>
         internal void RemoveUser(UMI3DUser user)
         {
+            if (user == null)
+            {
+                Debug.LogError("User cannot be null");
+                return;
+            }
+
+            if (!_listModelContainer.Model.Users.ContainsKey(user))
+            {
+                Debug.LogError("User does not exist in the list");
+                return;
+            }
+
             var modelContainer = _listModelContainer.Model.Users[user];
             modelContainer.gameObject.SetActive(false);
             _availablePrefabs.Enqueue(modelContainer);

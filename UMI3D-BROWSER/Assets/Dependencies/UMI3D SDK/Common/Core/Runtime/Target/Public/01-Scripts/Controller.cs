@@ -20,6 +20,7 @@ using UnityEngine;
 
 namespace umi3d.common.core.target
 {
+    [Serializable]
     public struct Controller 
     {
         public readonly string name;
@@ -40,6 +41,7 @@ namespace umi3d.common.core.target
         public static readonly Controller eye = new("eye", 2, SubController.leftEye, SubController.rightEye);
     }
 
+    [Serializable]
     public struct SubController
     {
         public readonly string name;

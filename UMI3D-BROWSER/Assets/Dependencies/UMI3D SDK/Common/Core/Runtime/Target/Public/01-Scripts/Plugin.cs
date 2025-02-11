@@ -18,6 +18,7 @@ using System.Collections.Generic;
 
 namespace umi3d.common.core.target
 {
+    [Serializable]
     public struct Plugin
     {
         public readonly string name;

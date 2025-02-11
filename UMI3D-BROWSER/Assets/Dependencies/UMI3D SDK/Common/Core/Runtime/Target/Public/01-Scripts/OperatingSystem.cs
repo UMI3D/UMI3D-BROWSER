@@ -18,6 +18,7 @@ using System;
 
 namespace umi3d.common.core.target
 {
+    [Serializable]
     public struct OperatingSystem 
     {
         public readonly string name;

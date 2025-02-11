@@ -1,5 +1,5 @@
-/*
-Copyright 2019 - 2024 Inetum
+﻿/*
+Copyright 2019 - 2021 Inetum
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,26 +14,19 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-namespace umi3d.browserRuntime.ui.contextualMenu
+using System;
+
+namespace umi3d.common
 {
-    public class ContextualMenuNotificationKeys
+    /// <summary>
+    /// Operation DTO to ask a browser to load an entity
+    /// </summary>
+    [Serializable]
+    public class SplitLineDto : AbstractOperationDto
     {
-        public class AddParameter
-        {
-            public static readonly string Parameter = "contextualMenu-add-parameter";
-        }
-
-        public class Open
-        {
-        }
-
-        public class Close
-        {
-        }
-
-        public class Submit
-        {
-        }
+        /// <summary>
+        /// Entities to load.
+        /// </summary>
+        public ulong interactionId { get; set; }
     }
 }
-

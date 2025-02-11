@@ -84,7 +84,7 @@ namespace form_generator
             path = path.TrimDirectorySeparator();
             path = path.ReplaceBackslashsBySlashs();
             path = path.InsertSlashAt(0);
-            return System.Uri.EscapeUriString(Path.Combine(path));
+            return System.Uri.EscapeUriString(System.IO.Path.Combine(path));
         }
 
         internal List<StyleDto> GetStyles()

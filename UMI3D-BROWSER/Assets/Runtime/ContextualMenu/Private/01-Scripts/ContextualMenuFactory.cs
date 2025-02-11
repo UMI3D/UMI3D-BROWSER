@@ -29,6 +29,11 @@ namespace umi3d.browserRuntime.ui.contextualMenu
     {
         [SerializeField] Transform _content;
 
+        public List<GameObject> InputFields => _inputFields;
+        public List<GameObject> Toggles => _toggles;
+        public List<GameObject> Sliders => _sliders;
+        public List<GameObject> Dropdowns => _dropdowns;
+
         ContextualMenuInputFieldFactory _inputFieldFactory;
         List<GameObject> _inputFields;
         ContextualMenuToggleFactory _toggleFactory;

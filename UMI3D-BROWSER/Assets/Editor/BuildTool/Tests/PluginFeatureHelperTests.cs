@@ -17,6 +17,7 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
 using umi3d.browserEditor.BuildTool;
+using umi3d.common.core.target;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.TestTools;
@@ -327,7 +328,7 @@ public class PluginFeatureHelperTests
             unityPluginFeatureTestDelegate.isPluginEnabled = true;
 
             // When
-            for (int i = 0; i < Plugin.allCases.Length; i++)
+            for (int i = 0; i < Plugin.allCases.Count; i++)
             {
                 LogAssert.Expect(LogType.Error, $"[PluginFeatureHelper] Error: Could not disable [{Plugin.allCases[i].name}] plugin on [{BuildTargetGroup.Standalone}].");
             }
@@ -619,7 +620,7 @@ public class PluginFeatureHelperTests
 
             // Then
             Assert.AreEqual(0, _unityPluginFeatureTestDelegate.features.Count);
-            Assert.AreEqual(Feature.allCases.Length, _testPluginFeatureDelegate.DisabledFeatures.Count);
+            Assert.AreEqual(Feature.allCases.Count, _testPluginFeatureDelegate.DisabledFeatures.Count);
         }
 
         [Test]
@@ -629,11 +630,11 @@ public class PluginFeatureHelperTests
             _unityPluginFeatureTestDelegate.features.AddRange(Feature.allCases.Select(feature => feature.id));
 
             // When
-            PluginFeatureHelper.@default.DisableAllFeatures(Feature.allMetaQuestCases);
+            PluginFeatureHelper.@default.DisableAllFeatures(Feature.allMetaQuestCases.ToArray());
 
             // Then
-            Assert.AreEqual(Feature.allMetaQuestCases.Length, _unityPluginFeatureTestDelegate.features.Count);
-            Assert.AreEqual(Feature.allCases.Length - Feature.allMetaQuestCases.Length, _testPluginFeatureDelegate.DisabledFeatures.Count);
+            Assert.AreEqual(Feature.allMetaQuestCases.Count, _unityPluginFeatureTestDelegate.features.Count);
+            Assert.AreEqual(Feature.allCases.Count - Feature.allMetaQuestCases.Count, _testPluginFeatureDelegate.DisabledFeatures.Count);
         }
 
         [Test]

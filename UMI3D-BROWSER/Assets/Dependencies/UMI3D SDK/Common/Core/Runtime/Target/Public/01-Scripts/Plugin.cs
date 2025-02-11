@@ -1,5 +1,5 @@
 /*
-Copyright 2019 - 2024 Inetum
+Copyright 2019 - 2025 Inetum
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,8 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 using System;
+using System.Collections.Generic;
 
-namespace umi3d.browserEditor.BuildTool
+namespace umi3d.common.core.target
 {
     public struct Plugin
     {
@@ -23,7 +24,7 @@ namespace umi3d.browserEditor.BuildTool
 
         public readonly string loader;
 
-        public static Plugin[] allCases => _allCases.Value;
+        public static IReadOnlyList<Plugin> allCases => _allCases.Value;
         static Lazy<Plugin[]> _allCases = new(() =>
         {
             return new[] { OpenXR, Oculus, ARCore, ARKit, MockHMDLoader, XRSimulation, PICOLivePreview };

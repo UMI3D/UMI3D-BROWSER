@@ -17,6 +17,7 @@ limitations under the License.
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using umi3d.common.core.target;
 using UnityEditor;
 using UnityEditor.XR.Management;
 using UnityEditor.XR.Management.Metadata;

@@ -17,6 +17,7 @@ limitations under the License.
 using inetum.unityUtils;
 using System.Linq;
 using umi3d.cdk.collaboration;
+using umi3d.common.core.target;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -316,18 +317,18 @@ namespace umi3d.browserEditor.BuildTool
             switch (newTarget)
             {
                 case E_Target.Quest:
-                    PluginFeatureHelper.@default.DisableAllFeatures(Feature.allMetaQuestCases);
-                    PluginFeatureHelper.@default.EnableFeatures(Feature.allMetaQuestCases);
+                    PluginFeatureHelper.@default.DisableAllFeatures(Feature.allMetaQuestCases.ToArray());
+                    PluginFeatureHelper.@default.EnableFeatures(Feature.allMetaQuestCases.ToArray());
                     break;
                 case E_Target.SteamVR:
                     break;
                 case E_Target.Focus:
-                    PluginFeatureHelper.@default.DisableAllFeatures(Feature.allViveCases);
-                    PluginFeatureHelper.@default.EnableFeatures(Feature.allViveCases);
+                    PluginFeatureHelper.@default.DisableAllFeatures(Feature.allViveCases.ToArray());
+                    PluginFeatureHelper.@default.EnableFeatures(Feature.allViveCases.ToArray());
                     break;
                 case E_Target.Pico:
-                    PluginFeatureHelper.@default.DisableAllFeatures(Feature.allPicoCases);
-                    PluginFeatureHelper.@default.EnableFeatures(Feature.allPicoCases);
+                    PluginFeatureHelper.@default.DisableAllFeatures(Feature.allPicoCases.ToArray());
+                    PluginFeatureHelper.@default.EnableFeatures(Feature.allPicoCases.ToArray());
                     break;
             }
 

@@ -41,12 +41,30 @@ namespace umi3d.browserRuntime.ui.tablet.social
             _setNotifier[UserSocialNotificationKeys.UserSocialOtherActionSet.Action] = Action;
         }
 
+        /// <summary>
+        /// Sets the user action properties.<br/>
+        /// <br/>
+        /// <example>
+        /// Given a valid UserAction object, when SetUserAction is called, then the properties are set correctly.<br/>
+        /// <code>
+        ///  // var userAction;
+        /// _model.SetUserAction(userAction);
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <param name="userAction">The UserAction object containing the action details.</param>
         public async void SetUserAction(UserAction userAction)
         {
+            if (userAction == null)
+            {
+                Debug.LogError("UserAction is null");
+                return;
+            }
+
             Name = userAction.name;
             Description = userAction.description;
             Texture = await userAction.GetTexture();
-            Action += userAction.Call;
+            Action = userAction.Call;
 
             _setNotifier[UserSocialNotificationKeys.UserSocialOtherActionSet.Name] = Name;
             _setNotifier[UserSocialNotificationKeys.UserSocialOtherActionSet.Description] = Description;

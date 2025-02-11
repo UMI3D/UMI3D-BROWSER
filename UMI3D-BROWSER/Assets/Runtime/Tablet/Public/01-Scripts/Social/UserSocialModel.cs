@@ -23,7 +23,7 @@ namespace umi3d.browserRuntime.ui.tablet.social
 {
     public class UserSocialModel
     {
-        const int k_maxPrimaryAction = 3;
+        public const int k_maxPrimaryAction = 3;
 
         const float k_logBase = 1.5f;
         const float k_factor = 5f / 2f;
@@ -31,10 +31,12 @@ namespace umi3d.browserRuntime.ui.tablet.social
 
         public string Name { get; private set; }
         public string Place { get; private set; }
-        public float Volume { get; private set; }
         public bool IsMute { get; private set; }
+        public float Volume => IsMute ? 0 : _volume;
         public List<UserAction> PrimaryActions { get; private set; } = new List<UserAction>();
         public List<UserAction> OtherActions { get; private set; } = new List<UserAction>();
+
+        private float _volume;
 
         UMI3DUser _user;
 
@@ -56,28 +58,53 @@ namespace umi3d.browserRuntime.ui.tablet.social
                 ID.FromType<UserSocialNotificationKeys.UserSocialUpdate>());
         }
 
+        /// <summary>
+        /// Sets the user information and initializes various properties.<br/>
+        /// <br/>
+        /// <example>
+        /// Given a valid user, when setting the user, then user properties are set correctly.
+        /// <code>
+        /// // UMI3DUser user;
+        /// userSocial.SetUser(user);
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <param name="user">The user to set.</param>
         public void SetUser(UMI3DUser user)
         {
+            if (user == null)
+            {
+                Debug.LogError("User cannot be null");
+                return;
+            }
+
+            if (user.login == null)
+            {
+                Debug.LogError("User login cannot be null");
+                return;
+            }
+
             _user = user;
 
             Name = CapitalizeAllWord(_user.login);
             Place = $"({UMI3DCollaborationClientServer.Environement?.name})";
-            Volume = 100;
+            _volume = 100;
             IsMute = false;
             PrimaryActions = new List<UserAction>();
             OtherActions = new List<UserAction>();
 
-            foreach (var action in user.userActions)
-            {
-                if (action.isPrimary && PrimaryActions.Count < k_maxPrimaryAction)
-                    PrimaryActions.Add(action);
-                else
-                    OtherActions.Add(action);
-            }
+            if (user.userActions != null) 
+                foreach (var action in user.userActions)
+                {
+                    if (action.isPrimary && PrimaryActions.Count < k_maxPrimaryAction)
+                        PrimaryActions.Add(action);
+                    else
+                        OtherActions.Add(action);
+                }
 
             _setNotifier[UserSocialNotificationKeys.UserSocialSet.Name] = Name;
             _setNotifier[UserSocialNotificationKeys.UserSocialSet.Place] = Place;
-            _setNotifier[UserSocialNotificationKeys.UserSocialSet.Volume] = Volume;
+            _setNotifier[UserSocialNotificationKeys.UserSocialSet.Volume] = _volume;
             _setNotifier[UserSocialNotificationKeys.UserSocialSet.IsMute] = IsMute;
             _setNotifier[UserSocialNotificationKeys.UserSocialSet.PrimaryActions] = PrimaryActions;
             _setNotifier[UserSocialNotificationKeys.UserSocialSet.OtherActions] = OtherActions;
@@ -99,25 +126,59 @@ namespace umi3d.browserRuntime.ui.tablet.social
             return valueFormated.Substring(0, valueFormated.Length - 1);
         }
 
+        /// <summary>
+        /// Updates the volume for the user and adjusts the mute status accordingly.<br/>
+        /// <br/>
+        /// <example>
+        /// Given a valid volume, when updating the volume, then the volume is updated correctly.
+        /// <code>
+        /// userSocial.UpdateVolume(75f);
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <param name="volume">The new volume to set.</param>
         public void UpdateVolume(float volume)
         {
-            Volume = volume;
+            if (_user == null)
+            {
+                Debug.LogError("User cannot be null when updating volume.");
+                return;
+            }
+
+            _volume = Mathf.Max(0, volume);
             IsMute = volume <= float.Epsilon;
 
-            UpdateAudioManagerFor(_user, IsMute ? 0 : Volume);
+            UpdateAudioManagerFor(_user, Volume);
 
-            _updateNotifier[UserSocialNotificationKeys.UserSocialUpdate.Volume] = IsMute ? 0 : Volume;
+            _updateNotifier[UserSocialNotificationKeys.UserSocialUpdate.Volume] = Volume;
             _updateNotifier[UserSocialNotificationKeys.UserSocialUpdate.IsMute] = IsMute;
             _updateNotifier.Notify();
         }
 
+        /// <summary>
+        /// Updates the mute status for the user.<br/>
+        /// <br/>
+        /// <example>
+        /// Given a mute status, when updating the mute status, then the user's mute status is updated correctly.
+        /// <code>
+        /// userSocial.UpdateMute(true);
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <param name="mute">The new mute status to set.</param>
         public void UpdateMute(bool mute)
         {
+            if (_user == null)
+            {
+                Debug.LogError("User cannot be null when updating mute.");
+                return;
+            }
+
             IsMute = mute;
 
-            UpdateAudioManagerFor(_user, IsMute ? 0 : Volume);
+            UpdateAudioManagerFor(_user, Volume);
 
-            _updateNotifier[UserSocialNotificationKeys.UserSocialUpdate.Volume] = IsMute ? 0 : Volume;
+            _updateNotifier[UserSocialNotificationKeys.UserSocialUpdate.Volume] = Volume;
             _updateNotifier[UserSocialNotificationKeys.UserSocialUpdate.IsMute] = IsMute;
             _updateNotifier.Notify();
         }

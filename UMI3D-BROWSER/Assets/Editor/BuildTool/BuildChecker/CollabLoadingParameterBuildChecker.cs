@@ -24,24 +24,14 @@ namespace umi3d.browserEditor.BuildTool
 {
     public class CollabLoadingParameterBuildChecker : IPreprocessBuildWithReport
     {
-        /// <summary>
-        /// Change this value if you want to by-pass this check.
-        /// </summary>
-        const bool check = true;
-
         public int callbackOrder => 0;
 
         public void OnPreprocessBuild(BuildReport report)
         {
-            if (!check)
-            {
-                return;
-            }
-
             string[] guids = AssetDatabase.FindAssets($"t:{nameof(UMI3DCollabLoadingParameters)}");
             if (guids.Length == 0)
             {
-                UnityEngine.Debug.Log($"Error: no UMI3DCollabLoadingParameters found.");
+                UnityEngine.Debug.LogError($"Error: no UMI3DCollabLoadingParameters found.");
                 return;
             }
 

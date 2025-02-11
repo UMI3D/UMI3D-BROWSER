@@ -113,7 +113,7 @@ namespace umi3d.baseBrowser
 
         private void OnDrawGizmosSelected()
         {
-            colliderDelegate.DrawGizmos();
+            colliderDelegate?.DrawGizmos();
         }
     }
 }

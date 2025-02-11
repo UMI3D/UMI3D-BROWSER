@@ -20,7 +20,7 @@ using umi3d.cdk.collaboration;
 using umi3d.cdk.userCapture;
 using UnityEngine;
 
-namespace umi3d.baseBrowser
+namespace umi3d.browserRuntime.ui.settings
 {
 
     public interface ISetting
@@ -273,7 +273,7 @@ namespace umi3d.baseBrowser
         public MicSetting MicSetting;
         public AllMicSetting AllMicSetting;
 
-        private bool m_environmentLoaded { get; set; } = false;
+        public bool m_environmentLoaded { get; private set; } = false;
         private bool initialized = false;
 
         protected override void Awake()

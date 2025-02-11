@@ -21,10 +21,9 @@ using System.Linq;
 using umi3dBrowsers.linker;
 using umi3dVRBrowsersBase.connection;
 using umi3dVRBrowsersBase.interactions;
-using umi3dVRBrowsersBase.settings;
-using umi3dVRBrowsersBase.ui;
 using umi3dVRBrowsersBase.ui.playerMenu;
 using UnityEngine;
+using umi3d.browserRuntime.ui.settings;
 
 namespace umi3dBrowsers.player
 {
@@ -95,8 +94,8 @@ namespace umi3dBrowsers.player
         private void Start()
         {
 
-            EnvironmentSettings.Instance.micSetting.OnValueChanged.AddListener(MicBtn.Toggle);
-            EnvironmentSettings.Instance.audioSetting.OnValueChanged.AddListener(SoundBtn.Toggle);
+            EnvironmentSettings.Instance.MicSetting.StatusChanged += MicBtn.Toggle;
+            EnvironmentSettings.Instance.AudioSetting.StatusChanged += SoundBtn.Toggle;
             SetMicStatus(false);
 
             playerCamera = PlayerMenuManager.Instance.PlayerCameraTransform;
@@ -136,7 +135,7 @@ namespace umi3dBrowsers.player
         /// <param name="val"></param>
         public void SetMicStatus(bool val)
         {
-            EnvironmentSettings.Instance.micSetting.SetValue(val);
+            EnvironmentSettings.Instance.MicSetting.Set(val);
         }
 
         /// <summary>
@@ -145,7 +144,7 @@ namespace umi3dBrowsers.player
         /// <param name="val"></param>
         public void SetSoundStatus(bool val)
         {
-            EnvironmentSettings.Instance.audioSetting.SetValue(val);
+            EnvironmentSettings.Instance.AudioSetting.SetGeneralVolumeWithoutNotify(val ? 1 : 0);
         }
 
         /// <summary>
@@ -158,7 +157,7 @@ namespace umi3dBrowsers.player
             {
                 if (b)
                 {
-                    if (EnvironmentSettings.Instance.IsEnvironmentLoaded)
+                    if (EnvironmentSettings.Instance.m_environmentLoaded)
                     {
                         //Connecting.Instance.Leave();
                         linker.Leave();
@@ -168,7 +167,7 @@ namespace umi3dBrowsers.player
                 }
             };
 
-            string title = EnvironmentSettings.Instance.IsEnvironmentLoaded ? "Go back to main menu" : "Close application";
+            string title = EnvironmentSettings.Instance.m_environmentLoaded ? "Go back to main menu" : "Close application";
             dialogBox.Display(title, "Are you sure you want to leave ?", "Yes", leaveCallback);
         }
 

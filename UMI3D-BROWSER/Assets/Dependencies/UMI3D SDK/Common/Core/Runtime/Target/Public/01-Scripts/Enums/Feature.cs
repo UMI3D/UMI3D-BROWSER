@@ -58,6 +58,15 @@ namespace umi3d.common.core.target
             return new[] { VIVEXRCompositionLayer, VIVEXRCompositionLayerColorScaleBias, VIVEXRCompositionLayerCylinder, VIVEXRFacialTracking, VIVEXRFoveation, VIVEXRHandTracking, VIVEXRSupport, VIVEFocus3Controller };
         });
 
+        public static IReadOnlyList<Feature> allARCases => _allARCases.Value;
+        static Lazy<Feature[]> _allARCases = new(() =>
+        {
+            return new[] { 
+                MetaQuestARSession, MetaQuestARCamera, MetaQuestARPlaneDetection, MetaQuestARAnchors, MetaQuestARRaycasts,
+                PICOPassthrough
+            };
+        });
+
         // Meta features.
         /// <summary>
         /// <see cref="UnityEngine.XR.OpenXR.Features.MetaQuestSupport.MetaQuestFeature.featureId"/>

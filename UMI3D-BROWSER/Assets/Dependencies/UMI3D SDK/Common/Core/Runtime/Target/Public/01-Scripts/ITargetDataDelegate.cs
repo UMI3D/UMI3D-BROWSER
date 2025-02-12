@@ -21,27 +21,48 @@ namespace umi3d.common.core.target
     public interface ITargetDataDelegate 
     {
         /// <summary>
-        /// Return the current Operating system.
+        /// Return the operating system.
         /// </summary>
         /// <returns></returns>
-        OperatingSystem GetCurrentOperatingSystem();
+        OperatingSystem GetOperatingSystem();
 
         /// <summary>
-        /// Return the list of authorized controllers on the device.
+        /// Return the platform corresponding to this device.
+        /// </summary>
+        /// <returns></returns>
+        Platform GetPlatform();
+
+        /// <summary>
+        /// Return the list of authorized controllers for the device.
         /// </summary>
         /// <returns></returns>
         IReadOnlyList<Controller> GetAuthorizedControllers();
+        /// <summary>
+        /// Return the list of the current active controllers.
+        /// </summary>
+        /// <returns></returns>
+        IReadOnlyList<Controller> GetCurrentControllers();
 
         /// <summary>
         /// Return the active plugins.
         /// </summary>
         /// <returns></returns>
         IReadOnlyList<Plugin> GetActivePlugins();
-
         /// <summary>
         /// Return the active features.
         /// </summary>
         /// <returns></returns>
         IReadOnlyList<Feature> GetActiveFeatures();
+
+        /// <summary>
+        /// Return the list of authorized immersive type for the device.
+        /// </summary>
+        /// <returns></returns>
+        IReadOnlyList<ImmersiveType> GetAuthorizedImmersiveTypes();
+        /// <summary>
+        /// Return the current immersive type.
+        /// </summary>
+        /// <returns></returns>
+        ImmersiveType GetCurrentImmersiveType();
     }
 }

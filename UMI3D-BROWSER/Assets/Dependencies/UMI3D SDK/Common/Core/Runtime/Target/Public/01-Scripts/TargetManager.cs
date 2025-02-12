@@ -28,31 +28,76 @@ namespace umi3d.common.core.target
 
         public ITargetDataDelegate dataDelegate;
 
-        public OperatingSystem GetCurrentOperatingSystem()
+        public OperatingSystem GetOperatingSystem()
         {
-            return dataDelegate.GetCurrentOperatingSystem();
+            return dataDelegate.GetOperatingSystem();
+        }
+
+        public Platform GetPlatform()
+        {
+            return dataDelegate.GetPlatform();
         }
 
         public IReadOnlyList<Controller> GetAuthorizedControllers()
         {
             return dataDelegate.GetAuthorizedControllers();
         }
+        public IReadOnlyList<Controller> GetCurrentControllers()
+        {
+            return dataDelegate.GetCurrentControllers();
+        }
 
         public IReadOnlyList<Plugin> GetActivePlugins()
         {
             return dataDelegate.GetActivePlugins();
         }
-
         public IReadOnlyList<Feature> GetActiveFeatures()
         {
             return dataDelegate.GetActiveFeatures();
         }
 
-        public static bool isWindows => @default.GetCurrentOperatingSystem().Equals(OperatingSystem.windows);
-        public static bool isAndroid => @default.GetCurrentOperatingSystem().Equals(OperatingSystem.android);
+        public IReadOnlyList<ImmersiveType> GetAuthorizedImmersiveTypes()
+        {
+            return dataDelegate.GetAuthorizedImmersiveTypes();
+        }
+        public ImmersiveType GetCurrentImmersiveType()
+        {
+            return dataDelegate.GetCurrentImmersiveType();
+        }
 
-        public static bool isPC => @default.GetAuthorizedControllers().Contains(Controller.keyboardAndMouse);
-        public static bool isVR
+        public static bool isWindows => @default.GetOperatingSystem().Equals(OperatingSystem.windows);
+        public static bool isAndroid => @default.GetOperatingSystem().Equals(OperatingSystem.android);
+
+        /// <summary>
+        /// Whether the target is currently considered as a PC.
+        /// </summary>
+        public static bool isPC => @default.GetCurrentControllers().Contains(Controller.keyboardAndMouse);
+        /// <summary>
+        /// Whether the target is currently considered as an immersive plateforme.
+        /// </summary>
+        public static bool isImmersive
+        {
+            get
+            {
+                IReadOnlyList<Controller> controllers = @default.GetCurrentControllers();
+                if (controllers.Contains(Controller.vrController)) { return true; }
+                else if (controllers.Contains(Controller.hand)) { return true; }
+                else { return false; }
+            }
+        }
+        /// <summary>
+        /// Whether the target is currently considered as a mobile device.
+        /// </summary>
+        public static bool isMobile => @default.GetCurrentControllers().Contains(Controller.screen);
+
+        /// <summary>
+        /// Whether the target can be a PC with the right controllers.
+        /// </summary>
+        public static bool canBePC => @default.GetAuthorizedControllers().Contains(Controller.keyboardAndMouse);
+        /// <summary>
+        /// Whether the target can be an immersive device with the right controllers.
+        /// </summary>
+        public static bool canBeImmersive
         {
             get
             {
@@ -62,6 +107,27 @@ namespace umi3d.common.core.target
                 else { return false; }
             }
         }
-        public static bool isMobile => @default.GetAuthorizedControllers().Contains(Controller.screen);
+        /// <summary>
+        /// Whether the target can be a mobile device with the right controllers.
+        /// </summary>
+        public static bool canBeMobile => @default.GetAuthorizedControllers().Contains(Controller.screen);
+
+        /// <summary>
+        /// Whether the target is currently considered as a VR device.
+        /// </summary>
+        public static bool isVR => @default.GetCurrentImmersiveType() == ImmersiveType.VR;
+        /// <summary>
+        /// Whether the target is currently considered as an AR device.
+        /// </summary>
+        public static bool isAR => @default.GetCurrentImmersiveType() == ImmersiveType.AR;
+
+        /// <summary>
+        /// Whether the target can be a VR device.
+        /// </summary>
+        public static bool canBeVR => @default.GetAuthorizedImmersiveTypes().Contains(ImmersiveType.VR);
+        /// <summary>
+        /// Whether the target can be an AR device.
+        /// </summary>
+        public static bool canBeAR => @default.GetAuthorizedImmersiveTypes().Contains(ImmersiveType.AR);
     }
 }

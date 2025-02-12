@@ -15,7 +15,11 @@ limitations under the License.
 */
 
 using System.Collections.Generic;
+using System.Diagnostics;
 using umi3d.common.core.target;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
@@ -46,30 +50,107 @@ namespace umi3d.browserRuntime.target
         }
 
         [SerializeField, HideInInspector] OperatingSystem operatingSystem;
-        [SerializeField, HideInInspector] List<Controller> controllers;
-        [SerializeField, HideInInspector] List<Plugin> plugins;
-        [SerializeField, HideInInspector] List<Feature> features;
 
-        public IReadOnlyList<Feature> GetActiveFeatures()
+        [SerializeField, HideInInspector] Platform platform;
+
+        [SerializeField, HideInInspector] Controller[] controllers;
+        [SerializeField, HideInInspector] List<Controller> currentControllers;
+
+        [SerializeField, HideInInspector] Plugin[] plugins;
+        [SerializeField, HideInInspector] Feature[] features;
+
+        [SerializeField, HideInInspector] ImmersiveType[] immersiveTypes;
+        [SerializeField, HideInInspector] ImmersiveType currentImmersiveType;
+
+        public OperatingSystem GetOperatingSystem()
         {
-            return features;
+            return operatingSystem;
         }
 
-        public IReadOnlyList<Plugin> GetActivePlugins()
+        public Platform GetPlatform()
         {
-            return plugins;
+            return platform;
         }
 
         public IReadOnlyList<Controller> GetAuthorizedControllers()
         {
             return controllers;
         }
-
-        public OperatingSystem GetCurrentOperatingSystem()
+        public IReadOnlyList<Controller> GetCurrentControllers()
         {
-            return operatingSystem;
+            return currentControllers;
         }
 
+        public IReadOnlyList<Plugin> GetActivePlugins()
+        {
+            return plugins;
+        }
+        public IReadOnlyList<Feature> GetActiveFeatures()
+        {
+            return features;
+        }
 
+        public IReadOnlyList<ImmersiveType> GetAuthorizedImmersiveTypes()
+        {
+            return immersiveTypes;
+        }
+        public ImmersiveType GetCurrentImmersiveType()
+        {
+            return currentImmersiveType;
+        }
+
+        #region Set methods that can only be called in the editor.
+
+        [Conditional("UNITY_EDITOR")]
+        public void UpdateOperatingSystem(OperatingSystem operatingSystem)
+        {
+            this.operatingSystem = operatingSystem;
+            Save();
+        }
+
+        [Conditional("UNITY_EDITOR")]
+        public void UpdatePlatform(Platform platform)
+        {
+            this.platform = platform;
+            Save();
+        }
+
+        [Conditional("UNITY_EDITOR")]
+        public void UpdateControllers(Controller[] controllers)
+        {
+            this.controllers = controllers;
+            Save();
+        }
+
+        [Conditional("UNITY_EDITOR")]
+        public void UpdatePlugins(Plugin[] plugins)
+        {
+            this.plugins = plugins;
+            Save();
+        }
+
+        [Conditional("UNITY_EDITOR")]
+        public void UpdateFeatures(Feature[] features)
+        {
+            this.features = features;
+            Save();
+        }
+
+        [Conditional("UNITY_EDITOR")]
+        public void UpdateImmersiveTypes(ImmersiveType[] immersiveTypes)
+        {
+            this.immersiveTypes = immersiveTypes;
+            Save();
+        }
+
+        [Conditional("UNITY_EDITOR")]
+        void Save()
+        {
+#if UNITY_EDITOR
+            EditorUtility.SetDirty(this);
+#endif
+        }
+
+        #endregion
     }
 }

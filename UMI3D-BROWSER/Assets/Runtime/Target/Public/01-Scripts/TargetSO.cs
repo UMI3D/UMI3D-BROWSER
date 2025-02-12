@@ -16,6 +16,7 @@ limitations under the License.
 
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using umi3d.common.core.target;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -54,7 +55,7 @@ namespace umi3d.browserRuntime.target
         [SerializeField, HideInInspector] Platform platform;
 
         [SerializeField, HideInInspector] Controller[] controllers;
-        [SerializeField, HideInInspector] List<Controller> currentControllers;
+        [SerializeField, HideInInspector] Controller[] currentControllers;
 
         [SerializeField, HideInInspector] Plugin[] plugins;
         [SerializeField, HideInInspector] Feature[] features;
@@ -97,6 +98,39 @@ namespace umi3d.browserRuntime.target
         public ImmersiveType GetCurrentImmersiveType()
         {
             return currentImmersiveType;
+        }
+
+        public bool TrySetCurrentControllers(IEnumerable<Controller> controllers)
+        {
+            List<Controller> unauthorizedControllers = new();
+            foreach (var controller in controllers)
+            {
+                if (!controllers.Contains(controller))
+                {
+                    unauthorizedControllers.Add(controller);
+                }
+            }
+
+            if (unauthorizedControllers.Count > 0)
+            {
+                UnityEngine.Debug.LogError($"[TargetSO] Error: Try to set controllers that are not authorized: [{string.Join(',', unauthorizedControllers)}].");
+                return false;
+            }
+
+            currentControllers = unauthorizedControllers.ToArray();
+            return true;
+        }
+
+        public bool TrySetCurrentImmersiveType(ImmersiveType immersiveType)
+        {
+            if (!immersiveTypes.Contains(immersiveType))
+            {
+                UnityEngine.Debug.LogError($"[TargetSO] Error: Try to set the immersive type that is not authorized: [{immersiveType}].");
+                return false;
+            }
+
+            currentImmersiveType = immersiveType;
+            return true;
         }
 
         #region Set methods that can only be called in the editor.

@@ -65,6 +65,16 @@ namespace umi3d.common.core.target
             return dataDelegate.GetCurrentImmersiveType();
         }
 
+        public bool TrySetCurrentControllers(IEnumerable<Controller> controllers)
+        {
+            return dataDelegate.TrySetCurrentControllers(controllers);
+        }
+
+        public bool TrySetCurrentImmersiveType(ImmersiveType immersiveType)
+        {
+            return dataDelegate.TrySetCurrentImmersiveType(immersiveType);
+        }
+
         public static bool isWindows => @default.GetOperatingSystem().Equals(OperatingSystem.windows);
         public static bool isAndroid => @default.GetOperatingSystem().Equals(OperatingSystem.android);
 

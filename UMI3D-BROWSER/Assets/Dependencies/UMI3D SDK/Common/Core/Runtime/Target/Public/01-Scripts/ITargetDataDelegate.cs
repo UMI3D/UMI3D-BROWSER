@@ -64,5 +64,21 @@ namespace umi3d.common.core.target
         /// </summary>
         /// <returns></returns>
         ImmersiveType GetCurrentImmersiveType();
+
+        /// <summary>
+        /// Try to set the current controllers used by the user on this device.<br/>
+        /// If one of those controllers are not an authorized controller then this method log an error message and return false.
+        /// </summary>
+        /// <param name="controllers"></param>
+        /// <returns></returns>
+        bool TrySetCurrentControllers(IEnumerable<Controller> controllers);
+
+        /// <summary>
+        /// Try to set the current immersive type.<br/>
+        /// If this immersive type is not authorized then this method log an error message and return false.
+        /// </summary>
+        /// <param name="controllers"></param>
+        /// <returns></returns>
+        bool TrySetCurrentImmersiveType(ImmersiveType immersiveType);
     }
 }

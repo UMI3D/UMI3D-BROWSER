@@ -22,7 +22,7 @@ using UnityEngine.UIElements;
 
 namespace umi3d.browserEditor.BuildTool
 {
-    public class InfoView : VisualElement
+    public class InfoView : VisualElement, IBuildToolDataDelegate
     {
         public class ListEntry : Label
         {
@@ -57,6 +57,7 @@ namespace umi3d.browserEditor.BuildTool
         public void Init()
         {
             data = BuildToolData.@default;
+            data.delegates.Add(this);
 
             // Fetching.
             platform = Fetch<DropdownField>(dropdownID + "platform");
@@ -133,6 +134,16 @@ namespace umi3d.browserEditor.BuildTool
         public void SetSDKVersion()
         {
             sdkVersion.text = data.currentSDKVersion.ToString();
+        }
+
+        void IBuildToolDataDelegate.CurrentBrowserVersionHasChanged(Version version)
+        {
+            SetBrowserVersion();
+        }
+
+        void IBuildToolDataDelegate.CurrentSDKVersionHasChanged(Version version)
+        {
+            SetSDKVersion();
         }
     }
 }

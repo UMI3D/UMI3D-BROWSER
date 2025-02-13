@@ -15,6 +15,8 @@ limitations under the License.
 */
 
 using System;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace umi3d.browserEditor.BuildTool
@@ -33,6 +35,8 @@ namespace umi3d.browserEditor.BuildTool
         Button featuresView;
         Button SettingsView;
 
+        Dictionary<View, Button> viewItems = new();
+
         T Fetch<T>(string name = null, string className = null) where T : VisualElement
         {
             return this.Q<T>(name, className);
@@ -49,6 +53,11 @@ namespace umi3d.browserEditor.BuildTool
             featuresView = Fetch<Button>(buttonID + "features-view" + viewID);
             SettingsView = Fetch<Button>(buttonID + "settings-view" + viewID);
 
+            viewItems[View.InfoView] = infoView;
+            viewItems[View.BuildView] = buildView;
+            viewItems[View.ScenesView] = scenesView;
+            viewItems[View.FeaturesView] = featuresView;
+            viewItems[View.SettingsView] = SettingsView;
             infoView.clicked += SelectInfoView;
             buildView.clicked += SelectBuildView;
             scenesView.clicked += SelectScenesView;
@@ -68,29 +77,43 @@ namespace umi3d.browserEditor.BuildTool
             }
         }
 
+        void Select(View view)
+        {
+            foreach (KeyValuePair<View, Button> item in viewItems)
+            {
+                item.Value.style.backgroundColor = item.Key.Equals(view)
+                    ? new StyleColor(Color.cyan) : new StyleColor(StyleKeyword.Null);
+            }
+        }
+
         void SelectInfoView()
         {
             data.currentSelectedView = View.InfoView;
+            Select(data.currentSelectedView);
         }
 
         void SelectBuildView()
         {
             data.currentSelectedView = View.BuildView;
+            Select(data.currentSelectedView);
         }
 
         void SelectScenesView()
         {
             data.currentSelectedView = View.ScenesView;
+            Select(data.currentSelectedView);
         }
 
         void SelectFeaturesView()
         {
             data.currentSelectedView = View.FeaturesView;
+            Select(data.currentSelectedView);
         }
 
         void SelectSettingsView()
         {
             data.currentSelectedView = View.SettingsView;
+            Select(data.currentSelectedView);
         }
     }
 }

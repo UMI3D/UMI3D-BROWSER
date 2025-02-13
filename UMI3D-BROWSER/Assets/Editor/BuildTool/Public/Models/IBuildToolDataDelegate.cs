@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using System;
+using umi3d.common.core.target;
 using UnityEngine;
 
 namespace umi3d.browserEditor.BuildTool
@@ -22,5 +23,13 @@ namespace umi3d.browserEditor.BuildTool
     public interface IBuildToolDataDelegate 
     {
         internal void CurrentSelectedViewHasChanged(View view) { }
+
+        void CurrentPlatformHasChanged(Platform platform) { }
+
+        void CurrentReleaseCycleHasChanged(ReleaseCycle releaseCycle) { }
+
+        void CurrentBrowserVersionHasChanged(Version version) { }
+
+        void CurrentSDKVersionHasChanged(Version version) { }
     }
 }

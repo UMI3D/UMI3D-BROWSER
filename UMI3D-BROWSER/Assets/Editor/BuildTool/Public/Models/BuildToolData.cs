@@ -68,7 +68,10 @@ namespace umi3d.browserEditor.BuildTool
             {
                 _currentPlatform = value;
                 Save();
-                // TODO: UPDATE
+                delegates.ForEach(@delegate =>
+                {
+                    @delegate.CurrentPlatformHasChanged(value);
+                });
             }
         }
 
@@ -80,11 +83,22 @@ namespace umi3d.browserEditor.BuildTool
             {
                 _currentReleaseCycle = value;
                 Save();
-                // TODO: UPDATE
+                delegates.ForEach(@delegate =>
+                {
+                    @delegate.CurrentReleaseCycleHasChanged(value);
+                });
             }
         }
 
         [SerializeField, HideInInspector] List<Scene> _scenes = new();
+        public void AddScene(Scene scene)
+        {
+            throw new System.NotImplementedException();
+        }
+        public void RemoveScene(Scene scene)
+        {
+            throw new System.NotImplementedException();
+        }
         public IReadOnlyList<Scene> GetScenesFor(Platform platform, ReleaseCycle releaseCycle)
         {
             List<Scene> scenes = new();
@@ -112,7 +126,10 @@ namespace umi3d.browserEditor.BuildTool
             {
                 _currentBrowserVersion = value;
                 Save();
-                // TODO: UPDATE.
+                delegates.ForEach(@delegate =>
+                {
+                    @delegate.CurrentBrowserVersionHasChanged(value);
+                });
             }
         }
 
@@ -124,7 +141,10 @@ namespace umi3d.browserEditor.BuildTool
             {
                 _currentSDKVersion = value;
                 Save();
-                // TODO: UPDATE.
+                delegates.ForEach(@delegate =>
+                {
+                    @delegate.CurrentSDKVersionHasChanged(value);
+                });
             }
         }
 

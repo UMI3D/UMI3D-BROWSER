@@ -15,7 +15,6 @@ limitations under the License.
 */
 using System.Collections;
 using System.Collections.Generic;
-using inetum.unityUtils.observation;
 using NUnit.Framework;
 using umi3d.browserRuntime.ui.tablet;
 using UnityEngine;

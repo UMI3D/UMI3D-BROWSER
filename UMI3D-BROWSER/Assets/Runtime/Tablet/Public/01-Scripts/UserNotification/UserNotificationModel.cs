@@ -42,6 +42,17 @@ namespace umi3d.browserRuntime.ui.tablet.userNotification
             _updateNotifier = NotificationHub.Default.GetNotifier(this, ID.FromType<UserNotificationNotificationKeys.UserNotificationUpdate>());
         }
 
+        /// <summary>
+        /// Sets the notification model's description and buttons based on the provided NotificationDto.<br/>
+        /// <br/>
+        /// <example>
+        /// Given a NotificationDto with a title and callback array when SetDto is called then the model's description is set and buttons are created.
+        /// <code>
+        /// userNotificationModel.SetDto(notificationDto);
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <param name="notificationDto">The data transfer object containing notification details.</param>
         public void SetDto(NotificationDto notificationDto)
         {
             Description = notificationDto.title;
@@ -65,6 +76,16 @@ namespace umi3d.browserRuntime.ui.tablet.userNotification
             _setNotifier.Notify();
         }
 
+        /// <summary>
+        /// Marks the notification as seen and notifies observers of the change.<br/>
+        /// <br/>
+        /// <example>
+        /// Given an unseen notification when Seen is called then the notification is marked as seen.
+        /// <code>
+        /// model.Seen();
+        /// </code>
+        /// </example>
+        /// </summary>
         public void Seen()
         {
             IsSeen = true;

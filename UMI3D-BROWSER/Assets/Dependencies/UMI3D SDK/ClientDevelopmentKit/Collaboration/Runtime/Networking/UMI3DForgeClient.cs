@@ -61,7 +61,7 @@ namespace umi3d.cdk.collaboration
 
         #region LBE Events
 
-        public static event Action<LBEGroupSyncRequestDTO> LBEGroupSyncEvent;
+        //public static event Action<LBEGroupSyncRequestDto> LBEGroupSyncEvent;
         public static event Action<LBEAddUserGroupOperationDto> LBEUserAddedEvent;
         public static event Action<LBERemoveUserGroupOperationDto> LBEUserRemovedEvent;
         public static event Action LBEActivationEvent;
@@ -836,13 +836,13 @@ namespace umi3d.cdk.collaboration
                         });
                         break;
                     }
-                case UMI3DOperationKeys.SetLBEGroupRequest:
-                    MainThreadManager.Run(() =>
-                    {
-                        LBEGroupSyncRequestDTO groupSyncDto = UMI3DSerializer.Read<LBEGroupSyncRequestDTO>(container);
-                        LBEGroupSyncEvent?.Invoke(groupSyncDto);
-                    });
-                    break;
+                //case UMI3DOperationKeys.SetLBEGroupRequest:
+                //    MainThreadManager.Run(() =>
+                //    {
+                //        LBEGroupSyncRequestDto groupSyncDto = UMI3DSerializer.Read<LBEGroupSyncRequestDto>(container);
+                //        LBEGroupSyncEvent?.Invoke(groupSyncDto);
+                //    });
+                //    break;
                 case UMI3DOperationKeys.LBEAddUser:
                     MainThreadManager.Run(() =>
                     {

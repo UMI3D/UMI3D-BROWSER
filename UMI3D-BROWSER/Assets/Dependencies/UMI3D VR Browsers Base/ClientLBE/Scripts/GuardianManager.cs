@@ -20,6 +20,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net.NetworkInformation;
+using System.Runtime.InteropServices.WindowsRuntime;
 using umi3d.browserRuntime.NotificationKeys;
 using umi3d.cdk;
 using umi3d.cdk.collaboration;
@@ -59,7 +60,7 @@ namespace umi3d.VRBase.lbe
         public Transform AnchorManager; // Référence au gestionnaire d'ancres AR
 
         private List<Vector3> guardianAnchors = new List<Vector3>(); // Liste pour stocker toutes les ancres du guardian
-        private UserGuardianDto userGuardianDto = new UserGuardianDto();
+        //private UserGuardianDto userGuardianDto = new UserGuardianDto();
         private List<GameObject> tempVerticesTransform = new List<GameObject>();
 
         [Header("CALIBRATOR")]
@@ -74,7 +75,9 @@ namespace umi3d.VRBase.lbe
         private float orientationOffset;
 
         private List<ARPlane> planesToCalibrate = new List<ARPlane>();
-        public LBEGroupSyncRequestDTO lBEGroupDto = new LBEGroupSyncRequestDTO();
+        public LBEGroupSyncRequestDto lBEGroupDto = new LBEGroupSyncRequestDto();
+
+        //List<ulong> colocatedUserIds = new List<ulong>();
 
         private Dictionary<string, System.Object> info = new();
         static bool isLeader = false;
@@ -107,7 +110,7 @@ namespace umi3d.VRBase.lbe
 
         void OnEnable()
         {
-            UMI3DForgeClient.LBEGroupSyncEvent += OnLBEGroupSync;
+            //UMI3DForgeClient.LBEGroupSyncEvent += OnLBEGroupSync;
             UMI3DForgeClient.LBEUserAddedEvent += OnLBEUserAdded;
             UMI3DForgeClient.LBEUserRemovedEvent += OnLBEUserRemoved;
             UMI3DForgeClient.LBEActivationEvent += OnLBEActivation;
@@ -124,7 +127,7 @@ namespace umi3d.VRBase.lbe
 
         void OnDisable()
         {
-            UMI3DForgeClient.LBEGroupSyncEvent -= OnLBEGroupSync;
+            //UMI3DForgeClient.LBEGroupSyncEvent -= OnLBEGroupSync;
             UMI3DForgeClient.LBEUserAddedEvent -= OnLBEUserAdded;
             UMI3DForgeClient.LBEUserRemovedEvent -= OnLBEUserRemoved;
             UMI3DForgeClient.LBEActivationEvent -= OnLBEActivation;
@@ -143,62 +146,29 @@ namespace umi3d.VRBase.lbe
             return isLeader;
         }
 
-        void OnLBEGroupSync(LBEGroupSyncRequestDTO LbeGroupDtoData)
+        //void OnLBEGroupSync(LBEGroupSyncRequestDto dto)
+        //{
+        //    if (lBEGroupDto == null)
+        //    {
+        //        Debug.Log("REMY -> lBEGroupDto = null");
+        //        return;
+        //    }
+        //    if (lBEGroupDto.UserAR.Count + lBEGroupDto.UserVR.Count > 0)
+        //    {
+        //        CreateGuardianServer(lBEGroupDto.ARAnchors);
+        //        AddCapsulesToColocatedUsers();
+        //    }
+        //}
+
+        void OnLBEUserAdded(LBEAddUserGroupOperationDto dto)
         {
-            if (lBEGroupDto == null)
-            {
-                Debug.Log("REMY -> lBEGroupDto = null");
-                return;
-            }
-            if (lBEGroupDto.UserAR.Count + lBEGroupDto.UserVR.Count > 0)
-            {
-                CreateGuardianServer(lBEGroupDto.ARAnchors);
-                AddCapsulesToColocatedUsers();
-            }
+            //colocatedUserIds.Add(dto.userId);
+            OcclusionForColocatedUsers(new List<ulong>() { dto.userId });
         }
 
-        void OnLBEUserAdded(LBEAddUserGroupOperationDto addUserLBEGroupDTO)
+        void OnLBEUserRemoved(LBERemoveUserGroupOperationDto dto)
         {
-            CreateGuardianServer(lBEGroupDto.ARAnchors);
-
-            if (addUserLBEGroupDTO.isImmersive == true)
-            {
-                lBEGroupDto.UserVR.Add(addUserLBEGroupDTO.userId);
-            }
-            else
-            {
-                lBEGroupDto.UserAR.Add(addUserLBEGroupDTO.userId);
-                AddCapsulesToColocatedUsers();
-            }
-
-        }
-
-        void OnLBEUserRemoved(LBERemoveUserGroupOperationDto delUserLBEGroupDto)
-        {
-            foreach (ulong userIdAR in lBEGroupDto.UserAR)
-            {
-                if (userIdAR == delUserLBEGroupDto.userId)
-                {
-                    lBEGroupDto.UserAR.Remove(delUserLBEGroupDto.userId);
-                    return;
-                }
-                else
-                {
-                    Debug.Log("Not AR user");
-                }
-            }
-            foreach (ulong userIdVR in lBEGroupDto.UserVR)
-            {
-                if (userIdVR == delUserLBEGroupDto.userId)
-                {
-                    lBEGroupDto.UserVR.Remove(delUserLBEGroupDto.userId);
-                    return;
-                }
-                else
-                {
-                    Debug.Log("Not VR user");
-                }
-            }
+            //colocatedUserIds.Remove(dto.userId);
         }
 
         void OnLBEActivation()
@@ -214,10 +184,10 @@ namespace umi3d.VRBase.lbe
 
             GetGuardianArea();
             AddAnchorGuardian();
-            SendGuardianInServer();
+            UserGuardianDto guardianDto = CreateGuardianDto();
 
             UMI3DClientServer.SendRequest(deviceDescription, true);
-            UMI3DClientServer.SendRequest(userGuardianDto, reliable: true);
+            UMI3DClientServer.SendRequest(guardianDto, reliable: true);
         }
 
         void OnLBESetGroupReception(LBESetUserGroupDto dto)
@@ -227,11 +197,7 @@ namespace umi3d.VRBase.lbe
 
             // update server if already connected
 
-            if (!(UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DCollabLoadingParameters).HasImmersiveDevice)
-            {
-                lBEGroupDto.UserAR = dto.colocatedUserIds;
-                AddCapsulesToColocatedUsers();
-            }
+            OcclusionForColocatedUsers(dto.colocatedUserIds);
         }
 
         void OnLBEGuardianReception(List<ARAnchorDto> anchors)
@@ -244,19 +210,17 @@ namespace umi3d.VRBase.lbe
             StartCoroutine(GetARPlanes());
         }
 
-        private void AddCapsulesToColocatedUsers()
+        private void OcclusionForColocatedUsers(List<ulong> newColocatedUsers)
         {
-            Debug.Log("REMY -> Add Capsule occlusion");
-            foreach (var userId in lBEGroupDto.UserAR)
-            {
-                Debug.Log("REMY -> Add Capsule occlusion User ID -> " + userId);
+            if ((UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DCollabLoadingParameters).HasImmersiveDevice || !(UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DCollabLoadingParameters).IsColocatedDevice)
+                return;
 
-                var skeleton = CollaborationSkeletonsManager.Instance.GetCollaborativeSkeleton((UMI3DGlobalID.EnvironmentId, userId)) as AbstractSkeleton;
+            foreach (ulong userId in newColocatedUsers)
+            {
+                AbstractSkeleton skeleton = CollaborationSkeletonsManager.Instance.GetCollaborativeSkeleton((UMI3DGlobalID.EnvironmentId, userId)) as AbstractSkeleton;
 
                 if (skeleton != null)
                 {
-                    Debug.Log("REMY -> Add Capsule occlusion Sketleton not null");
-
                     AddCapsuleToBone(skeleton, BoneType.Hips);
                 }
                 else
@@ -270,9 +234,6 @@ namespace umi3d.VRBase.lbe
         {
             if (skeleton.Bones.TryGetValue(boneType, out var boneTransform))
             {
-                Debug.Log("REMY -> AddCapsuleToBone");
-
-                // Créer une capsule
                 GameObject capsule = GameObject.CreatePrimitive(PrimitiveType.Capsule);
 
                 capsule.transform.SetParent(skeleton.HipsAnchor);
@@ -504,11 +465,13 @@ namespace umi3d.VRBase.lbe
         {
             orientationOffset = orientation;
         }
+
         public void CloseOrientationChoice()
         {
             calibrator.transform.Rotate(calibrator.transform.rotation.x, orientationOffset, calibrator.transform.rotation.z, Space.World);
             OrientationScenePanel.gameObject.SetActive(false);
         }
+
         public IEnumerator CalibrationScene()
         {
             yield return null;
@@ -574,9 +537,6 @@ namespace umi3d.VRBase.lbe
 
         public void GetGuardianArea()
         {
-
-            userGuardianDto.ARAnchors = new List<ARAnchorDto>();
-
             List<XRInputSubsystem> inputSubsystems = new List<XRInputSubsystem>();
             SubsystemManager.GetSubsystems<XRInputSubsystem>(inputSubsystems);
 
@@ -642,10 +602,12 @@ namespace umi3d.VRBase.lbe
         }
 
         // Envoyer les data de chaque ancres au serveur
-        public void SendGuardianInServer()
+        public UserGuardianDto CreateGuardianDto()
         {
             if (guardianAnchors.Count > 0)
             {
+                List<ARAnchorDto> anchors = new List<ARAnchorDto>();
+
                 for (int i = 0; i < guardianAnchors.Count; i++)
                 {
                     ARAnchorDto newAnchor = new ARAnchorDto();
@@ -653,18 +615,22 @@ namespace umi3d.VRBase.lbe
                     newAnchor.position = new Vector3Dto { X = localVertexPositions[i].x, Y = localVertexPositions[i].y, Z = localVertexPositions[i].z };
                     newAnchor.rotation = new Vector4Dto { X = localVertexRotations[i].x, Y = localVertexRotations[i].y, Z = localVertexRotations[i].z, W = localVertexRotations[i].w };
 
-                    userGuardianDto.ARAnchors.Add(newAnchor);
+                    anchors.Add(newAnchor);
                 }
                 //UMI3DLoadingParameters loadingParameters = UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DLoadingParameters;
                 //userGuardianDto.isImmersive = loadingParameters.HasImmersiveDevice;
+
+                return new UserGuardianDto() { ARAnchors = anchors };
             }
+
+            return new UserGuardianDto() { ARAnchors = new List<ARAnchorDto>() };
         }
 
-        IEnumerator WaitSendGuardian()
-        {
-            yield return new WaitForSeconds(2f);
-            UMI3DClientServer.SendRequest(userGuardianDto, reliable: true);
-        }
+        //IEnumerator WaitSendGuardian()
+        //{
+        //    yield return new WaitForSeconds(2f);
+        //    UMI3DClientServer.SendRequest(userGuardianDto, reliable: true);
+        //}
 
         public void CreateGuardianServer(List<ARAnchorDto> GuardianDto)
         {

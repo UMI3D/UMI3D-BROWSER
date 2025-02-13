@@ -14,14 +14,36 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System;
-using UnityEngine;
+using System.Collections.Generic;
 using UnityEngine.UIElements;
 
 namespace umi3d.browserEditor.BuildTool
 {
     public class ViewContainer : ScrollView
     {
+        Dictionary<View, VisualElement> views = new();
 
+        public ViewContainer() 
+        {
+            style.marginLeft = 15;
+            style.marginRight = 15;
+        }
+
+        public void AddView(View view, VisualElement visualElement)
+        {
+            views[view] = visualElement;
+            visualElement.style.display = DisplayStyle.None;
+            Add(visualElement);
+        }
+
+        public void Display(View view)
+        {
+            foreach (KeyValuePair<View, VisualElement> item in views)
+            {
+                item.Value.style.display = item.Key.Equals(view) 
+                    ? DisplayStyle.Flex
+                    : DisplayStyle.None;
+            }
+        }
     }
 }

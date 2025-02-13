@@ -15,7 +15,6 @@ limitations under the License.
 */
 
 using System;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace umi3d.browserEditor.BuildTool
@@ -23,6 +22,8 @@ namespace umi3d.browserEditor.BuildTool
     public class TabView : VisualElement
     {
         public new class UxmlFactory : UxmlFactory<TabView, UxmlTraits> { }
+
+        BuildToolData data;
 
         const string buttonID = "button__";
         const string viewID = "__tab-view";
@@ -39,14 +40,57 @@ namespace umi3d.browserEditor.BuildTool
 
         public void Init()
         {
+            data = BuildToolData.@default;
+
             // Fetching
-            infoView = Fetch<Button>(buttonID + "info" + viewID);
-            buildView = Fetch<Button>(buttonID + "build" + viewID);
-            scenesView = Fetch<Button>(buttonID + "scenes" + viewID);
-            featuresView = Fetch<Button>(buttonID + "features" + viewID);
-            SettingsView = Fetch<Button>(buttonID + "settings" + viewID);
+            infoView = Fetch<Button>(buttonID + "info-view" + viewID);
+            buildView = Fetch<Button>(buttonID + "build-view" + viewID);
+            scenesView = Fetch<Button>(buttonID + "scenes-view" + viewID);
+            featuresView = Fetch<Button>(buttonID + "features-view" + viewID);
+            SettingsView = Fetch<Button>(buttonID + "settings-view" + viewID);
 
+            infoView.clicked += SelectInfoView;
+            buildView.clicked += SelectBuildView;
+            scenesView.clicked += SelectScenesView;
+            featuresView.clicked += SelectFeaturesView;
+            SettingsView.clicked += SelectSettingsView;
 
+            View currentView = data.currentSelectedView;
+            if (currentView.Equals(View.InfoView)) { SelectInfoView(); }
+            else if (currentView.Equals(View.BuildView)) { SelectBuildView(); }
+            else if (currentView.Equals(View.ScenesView)) { SelectScenesView(); }
+            else if (currentView.Equals(View.FeaturesView)) { SelectFeaturesView(); }
+            else if (currentView.Equals(View.SettingsView)) { SelectSettingsView(); }
+            else 
+            {
+                UnityEngine.Debug.LogError($"[TabView] Error: Unhandled case [{currentView.name}]");
+                SelectInfoView(); 
+            }
+        }
+
+        void SelectInfoView()
+        {
+            data.currentSelectedView = View.InfoView;
+        }
+
+        void SelectBuildView()
+        {
+            data.currentSelectedView = View.BuildView;
+        }
+
+        void SelectScenesView()
+        {
+            data.currentSelectedView = View.ScenesView;
+        }
+
+        void SelectFeaturesView()
+        {
+            data.currentSelectedView = View.FeaturesView;
+        }
+
+        void SelectSettingsView()
+        {
+            data.currentSelectedView = View.SettingsView;
         }
     }
 }

@@ -58,6 +58,7 @@ namespace umi3d.browserEditor.BuildTool
         [MenuItem("Tools/Build Tool")]
         public static void OpenBuildToolWindow()
         {
+            isNewUI = false;
             UMI3DBuildTool wnd = GetWindow<UMI3DBuildTool>();
             wnd.titleContent = new GUIContent("UMI3D Build Tool");
             wnd.buildView.ChangePanel(E_BuildToolPanel.Main);
@@ -68,9 +69,23 @@ namespace umi3d.browserEditor.BuildTool
         [MenuItem("Tools/Build Tool Configuration")]
         public static void OpenBuildToolConfigurationWindow()
         {
+            isNewUI = false;
             UMI3DBuildTool wnd = GetWindow<UMI3DBuildTool>();
             wnd.titleContent = new GUIContent("UMI3D Build Tool Config");
             wnd.buildView.ChangePanel(E_BuildToolPanel.Configuration);
+            wnd.maxSize = new(1000f, 300f);
+            wnd.minSize = new(1000f, 300f);
+        }
+
+        BuildToolData data;
+        static bool isNewUI = false;
+        [MenuItem("Tools/New UI")]
+        public static void OpenNewUI()
+        {
+            isNewUI = true;
+            UMI3DBuildTool wnd = GetWindow<UMI3DBuildTool>();
+
+            wnd.titleContent = new GUIContent("UMI3D New UI");
             wnd.maxSize = new(1000f, 300f);
             wnd.minSize = new(1000f, 300f);
         }
@@ -86,76 +101,102 @@ namespace umi3d.browserEditor.BuildTool
 
         public void CreateGUI()
         {
-            Assert.IsNotNull(
-                ui,
-                "[UMI3D] BuildTool: ui is null."
-            );
-            Assert.IsNotNull(
-                target_VTA,
-                "[UMI3D] BuildTool: target_VTA is null."
-            );
-            Assert.IsNotNull(
-                scene_VTA,
-                "[UMI3D] BuildTool: scene_VTA is null."
-            );
+            if (isNewUI)
+            {
+                data = BuildToolData.@default;
 
-            DataCreation.GetPath();
-            DataCreation.CreateExcludedFolderIfNecessary();
-            DataCreation.GetFiles();
-            versionModel = DataCreation.GetSO<UMI3DBuildToolVersion_SO>("Version");
-            sceneModel = DataCreation.GetSO<UMI3DBuildToolScene_SO>("Scenes");
-            targetModel = DataCreation.GetSO<UMI3DBuildToolTarget_SO>("Target");
-            keystoreModel = DataCreation.GetSO<UMI3DBuildToolKeystore_SO>("Keystore");
-            settingModel = DataCreation.GetSO<UMI3DBuildToolSettings_SO>("Settings");
-            DataCreation.SaveAndRefresh();
+                string tabViewPath = ViewLoader.GetPath<TabView>();
+                VisualTreeAsset tabViewVTA = ViewLoader.Load<TabView>(tabViewPath);
+                TabView tabView = tabViewVTA.Instantiate()[0] as TabView;
+                tabView.Init();
 
-            Assert.IsNotNull(
-                versionModel,
-                "[UMI3D] BuildTool: versionModel is null."
-            );
-            Assert.IsNotNull(
-                targetModel,
-                "[UMI3D] BuildTool: targetModel is null."
-            );
-            Assert.IsNotNull(
-                sceneModel,
-                "[UMI3D] BuildTool: sceneModel is null."
-            );
-            Assert.IsNotNull(
-                keystoreModel,
-                "[UMI3D] BuildTool: keystoreModel is null.\n" +
-                "Create a [Build Tool Keystore] scriptable object in an EXCLUDED folder that is excluded from git."
-            );
-            Assert.IsNotNull(
-                settingModel,
-                "[UMI3D] BuildTool: settingModel is null."
-            );
-            _uMI3DConfigurator = new UMI3DConfigurator(loadingParameters);
+                ViewContainer viewContainer = new();
 
-            versionModel.UpdateSDKVersion();
+                string infoViewPath = ViewLoader.GetPath<InfoView>();
+                VisualTreeAsset infoViewVTA = ViewLoader.Load<InfoView>(infoViewPath);
+                InfoView infoView = infoViewVTA.Instantiate()[0] as InfoView;
+                infoView.Init();
+                viewContainer.AddView(View.InfoView, infoView);
 
-            targetModel.applyTargetOptionsHandler += ApplyTargetOptions;
-            targetModel.buildSelectedTargetHandler += BuildSelectedTargets;
-            targetModel.target_VTA = target_VTA;
+                rootVisualElement.Add(tabView);
+                rootVisualElement.Add(viewContainer);
+                viewContainer.Display(data.currentSelectedView);
 
-            sceneModel.SelectedScenesChanged += ApplyScenes;
-            sceneModel.scene_VTA = scene_VTA;
+                return;
+            }
 
-            subGlobal.Add(versionModel);
-            subGlobal.Add(targetModel);
-            subGlobal.Add(sceneModel);
-            subGlobal.Add(keystoreModel);
-            subGlobal.Add(settingModel);
 
-            BuildTargetHelper.Init(targetModel.currentTarget);
-            BuildTargetHelper.@default.@delegate = this;
 
-            buildView = new(
-                rootVisualElement,
-                ui
-            );
-            buildView.Bind();
-            buildView.Set();
+            //Assert.IsNotNull(
+            //    ui,
+            //    "[UMI3D] BuildTool: ui is null."
+            //);
+            //Assert.IsNotNull(
+            //    target_VTA,
+            //    "[UMI3D] BuildTool: target_VTA is null."
+            //);
+            //Assert.IsNotNull(
+            //    scene_VTA,
+            //    "[UMI3D] BuildTool: scene_VTA is null."
+            //);
+
+            //DataCreation.GetPath();
+            //DataCreation.CreateExcludedFolderIfNecessary();
+            //DataCreation.GetFiles();
+            //versionModel = DataCreation.GetSO<UMI3DBuildToolVersion_SO>("Version");
+            //sceneModel = DataCreation.GetSO<UMI3DBuildToolScene_SO>("Scenes");
+            //targetModel = DataCreation.GetSO<UMI3DBuildToolTarget_SO>("Target");
+            //keystoreModel = DataCreation.GetSO<UMI3DBuildToolKeystore_SO>("Keystore");
+            //settingModel = DataCreation.GetSO<UMI3DBuildToolSettings_SO>("Settings");
+            //DataCreation.SaveAndRefresh();
+
+            //Assert.IsNotNull(
+            //    versionModel,
+            //    "[UMI3D] BuildTool: versionModel is null."
+            //);
+            //Assert.IsNotNull(
+            //    targetModel,
+            //    "[UMI3D] BuildTool: targetModel is null."
+            //);
+            //Assert.IsNotNull(
+            //    sceneModel,
+            //    "[UMI3D] BuildTool: sceneModel is null."
+            //);
+            //Assert.IsNotNull(
+            //    keystoreModel,
+            //    "[UMI3D] BuildTool: keystoreModel is null.\n" +
+            //    "Create a [Build Tool Keystore] scriptable object in an EXCLUDED folder that is excluded from git."
+            //);
+            //Assert.IsNotNull(
+            //    settingModel,
+            //    "[UMI3D] BuildTool: settingModel is null."
+            //);
+            //_uMI3DConfigurator = new UMI3DConfigurator(loadingParameters);
+
+            //versionModel.UpdateSDKVersion();
+
+            //targetModel.applyTargetOptionsHandler += ApplyTargetOptions;
+            //targetModel.buildSelectedTargetHandler += BuildSelectedTargets;
+            //targetModel.target_VTA = target_VTA;
+
+            //sceneModel.SelectedScenesChanged += ApplyScenes;
+            //sceneModel.scene_VTA = scene_VTA;
+
+            //subGlobal.Add(versionModel);
+            //subGlobal.Add(targetModel);
+            //subGlobal.Add(sceneModel);
+            //subGlobal.Add(keystoreModel);
+            //subGlobal.Add(settingModel);
+
+            //BuildTargetHelper.Init(targetModel.currentTarget);
+            //BuildTargetHelper.@default.@delegate = this;
+
+            //buildView = new(
+            //    rootVisualElement,
+            //    ui
+            //);
+            //buildView.Bind();
+            //buildView.Set();
         }
 
         private void OnEnable()

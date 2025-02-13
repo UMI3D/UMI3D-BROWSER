@@ -42,6 +42,17 @@ namespace umi3d.browserEditor.BuildTool
             }
         }
 
+        [SerializeField, HideInInspector] View _currentSelectedView = View.InfoView;
+        public View currentSelectedView
+        {
+            get => _currentSelectedView;
+            set
+            {
+                _currentSelectedView = value;
+                Save();
+            }
+        }
+
         [SerializeField, HideInInspector] Platform _currentPlatform = Platform.pc;
         public Platform currentPlatform
         {

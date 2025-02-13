@@ -18,7 +18,7 @@ using inetum.unityUtils.observation;
 using System;
 using System.Collections.Generic;
 using umi3d.browserRuntime.notificationKeys;
-using umi3d.browserRuntime.ui.inGame.tablet;
+using umi3d.browserRuntime.ui.tablet;
 using umi3d.common.interaction;
 
 namespace umi3d.browserRuntime.ui.contextualMenu
@@ -41,8 +41,8 @@ namespace umi3d.browserRuntime.ui.contextualMenu
             NotificationHub.Default.Subscribe(this,
                 ID.FromType<ContextualMenuNotificationKeys.Close>(), 
                 (Callback)Hide);
-            NotificationHub.Default.Subscribe(this, 
-                TabletNotificationKeys.Open, 
+            NotificationHub.Default.Subscribe(this,
+                ID.FromType<TabletNotificationKeys.Opened>(),
                 (Callback)Hide);
         }
 

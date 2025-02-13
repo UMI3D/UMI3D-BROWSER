@@ -15,41 +15,45 @@ limitations under the License.
 */
 
 using inetum.unityUtils.observation;
-using umi3d.browserRuntime.ui.tablet;
 using UnityEngine;
 
-namespace umi3d.browserRuntime.ui.contextualMenu
+namespace umi3d.browserRuntime.ui.tablet
 {
-    public class ContextualMenuView : MonoBehaviour
+    public class TabletView : MonoBehaviour
     {
         private void Awake()
         {
-            NotificationHub.Default.Subscribe(this,
-                ID.FromType<ContextualMenuNotificationKeys.Open>(), 
-                (Callback)Display);
-
-            NotificationHub.Default.Subscribe(this,
-                ID.FromType<ContextualMenuNotificationKeys.Close>(), 
-                (Callback)Hide);
-
             NotificationHub.Default.Subscribe(this, 
-                ID.FromType<TabletNotificationKeys.Opened>(), 
-                (Callback)Hide);
-        }
-
-        private void Start()
-        {
+                ID.FromType<TabletNotificationKeys.Open>(),
+                (Callback)Open
+            );
+            NotificationHub.Default.Subscribe(this,
+                ID.FromType<TabletNotificationKeys.Close>(),
+                (Callback)Close
+            );
             gameObject.SetActive(false);
         }
 
-        private void Display()
+        private void OnDestroy()
         {
+            NotificationHub.Default.Unsubscribe(this);
+        }
+
+        private void Open()
+        {
+            if (gameObject.activeSelf)
+                return;
             gameObject.SetActive(true);
+            NotificationHub.Default.Notify(this, ID.FromType<TabletNotificationKeys.Opened>());
         }
 
-        private void Hide()
+        private void Close()
         {
+            if (!gameObject.activeSelf)
+                return;
             gameObject.SetActive(false);
+            NotificationHub.Default.Notify(this, ID.FromType<TabletNotificationKeys.Closed>());
         }
     }
 }
+

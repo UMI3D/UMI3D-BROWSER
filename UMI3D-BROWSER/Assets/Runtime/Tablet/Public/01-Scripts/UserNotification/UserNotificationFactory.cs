@@ -40,6 +40,17 @@ namespace umi3d.browserRuntime.ui.tablet.userNotification
             _listModelContainer.Model.AddNotification -= CreateNotification;
         }
 
+        /// <summary>
+        /// Instantiates a notification model container, sets its data based on the provided NotificationDto, and adds it to the notification list.<br/>
+        /// <br/>
+        /// <example>
+        /// Given a NotificationDto when CreateNotification is called then a notification is instantiated and added to the list.
+        /// <code>
+        /// userNotificationFactory.CreateNotification(dto);
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <param name="dto">The data transfer object containing notification details.</param>
         internal void CreateNotification(NotificationDto dto)
         {
             var modelContainer = Instantiate(_userNotifiactionPrefab, _content);

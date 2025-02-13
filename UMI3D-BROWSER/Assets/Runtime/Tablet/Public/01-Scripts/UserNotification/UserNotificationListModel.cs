@@ -32,12 +32,14 @@ namespace umi3d.browserRuntime.ui.tablet.userNotification
         public UserNotificationListModel(UserNotificationLoader notificationLoader)
         {
             _notificationLoader = notificationLoader;
-            _notificationLoader.Notification2DReceived += AddNotification;
+            if (_notificationLoader)
+                _notificationLoader.Notification2DReceived += AddNotification;
         }
 
         ~UserNotificationListModel()
         {
-            _notificationLoader.Notification2DReceived -= AddNotification;
+            if (_notificationLoader)
+                _notificationLoader.Notification2DReceived -= AddNotification;
         }
     }
 }

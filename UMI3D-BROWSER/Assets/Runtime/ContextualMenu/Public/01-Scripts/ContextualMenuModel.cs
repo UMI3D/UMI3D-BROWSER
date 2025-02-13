@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using inetum.unityUtils.observation;
+using System;
 using System.Collections.Generic;
 using umi3d.browserRuntime.notificationKeys;
 using umi3d.browserRuntime.ui.tablet;
@@ -48,6 +49,11 @@ namespace umi3d.browserRuntime.ui.contextualMenu
         ~ContextualMenuModel()
         {
             NotificationHub.Default.Unsubscribe(this);
+        }
+
+        public void Submit()
+        {
+            NotificationHub.Default.Notify(this, ID.FromType<ContextualMenuNotificationKeys.Submit>());
         }
 
         void DisplayParameters(Notification notification)

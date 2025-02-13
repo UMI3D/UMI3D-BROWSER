@@ -19,7 +19,6 @@ using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.ui.inputField
@@ -29,7 +28,6 @@ namespace umi3d.browserRuntime.ui.inputField
     public class InputFieldView : MonoBehaviour
     {
         [SerializeField] RectTransform _viewport;
-        [SerializeField] InputActionReference _actionReference;
 
         TMP_InputField _inputField;
         LayoutElement _layoutElement;
@@ -41,8 +39,9 @@ namespace umi3d.browserRuntime.ui.inputField
             _inputField = GetComponent<TMP_InputField>();
             _layoutElement = GetComponent<LayoutElement>();
             _modelContainer = GetComponentInParent<InputFieldModelContainer>();
-
-            _actionReference.action.started += OnSubmited;
+			_inputField.onValueChanged.AddListener(OnValueChanged);
+            _inputField.onSelect.AddListener(OnSelect);
+            _inputField.onDeselect.AddListener(OnDeselect);
 
             NotificationHub.Default.Subscribe(this,
                 ID.FromType<InputFieldNotificationsKeys.InputFieldSet>(), 
@@ -58,18 +57,24 @@ namespace umi3d.browserRuntime.ui.inputField
         private void OnDestroy()
         {
             NotificationHub.Default.Unsubscribe(this);
-            _actionReference.action.started -= OnSubmited;
+            _inputField.onValueChanged.RemoveListener(OnValueChanged);
+            _inputField.onSelect.RemoveListener(OnSelect);
+            _inputField.onDeselect.RemoveListener(OnDeselect);
         }
 
-        private void OnSubmited(InputAction.CallbackContext context)
+        void OnSelect(string s)
         {
-            if (!_inputField.isFocused)
-                return;
-            if (Keyboard.current.shiftKey.IsPressed())
-                return;
+            NotificationHub.Default.Notify(this, ID.FromType<InputFieldNotificationsKeys.Selected>());
+        }
 
-            _modelContainer.model.UpdateValue(_inputField.text);
-            EventSystem.current.SetSelectedGameObject(null);
+        void OnDeselect(string s)
+        {
+            NotificationHub.Default.Notify(this, ID.FromType<InputFieldNotificationsKeys.Deselected>());
+        }
+
+        private void OnValueChanged(string newValue)
+        {
+            _modelContainer.model.UpdateValue(newValue);
         }
 
         private void InputFieldSet(Notification notification)
@@ -79,8 +84,16 @@ namespace umi3d.browserRuntime.ui.inputField
                 _inputField.text = value;
             }
 
+            if (notification.TryGetInfoT(InputFieldNotificationsKeys.InputFieldSet.IsPrivate, out bool isPrivate))
+            {
+                _inputField.contentType = isPrivate ? TMP_InputField.ContentType.Password : TMP_InputField.ContentType.Standard;
+            }
+
             if (notification.TryGetInfoT(InputFieldNotificationsKeys.InputFieldSet.NbrLine, out int nbrLine))
             {
+                if (!_viewport)
+                    return;
+
                 RectTransform textAreaTransform = _inputField.textViewport.GetComponent<RectTransform>();
                 float padding = textAreaTransform.offsetMin.y + textAreaTransform.offsetMax.y;
 

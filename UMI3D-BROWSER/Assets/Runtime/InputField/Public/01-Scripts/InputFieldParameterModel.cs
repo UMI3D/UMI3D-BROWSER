@@ -26,7 +26,7 @@ namespace umi3d.browserRuntime.ui.inputField
     /// <remarks>
     /// Need an <see cref="InputFieldModel"/> to work. (set by <see cref="InputFieldParameterModelContainer"/> placed on the same gameobject of <see cref="InputFieldModelContainer"/>)
     /// </remarks>
-    public class InputFieldParameterModel 
+    public class InputFieldParameterModel
     {
         public StringParameterDto dto;
 
@@ -36,13 +36,13 @@ namespace umi3d.browserRuntime.ui.inputField
         {
             model = newModel;
 
-            NotificationHub.Default.Subscribe(this, 
+            NotificationHub.Default.Subscribe(this,
                 ID.FromType<InputFieldNotificationsKeys.InputFieldUpdated>(),
                 (Callback)ValueUpdated,
                 new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == model));
         }
 
-        ~InputFieldParameterModel() 
+        ~InputFieldParameterModel()
         {
             NotificationHub.Default.Unsubscribe(this);
         }
@@ -69,6 +69,7 @@ namespace umi3d.browserRuntime.ui.inputField
             model.SetLabel(dto.name);
             model.SetValue(dto.value);
             model.SetNbrLines(dto.NbLine);
+            model.SetPrivate(dto.privateParameter);
         }
 
         /// <summary>
@@ -81,12 +82,32 @@ namespace umi3d.browserRuntime.ui.inputField
             if (!notification.TryGetInfoT(InputFieldNotificationsKeys.InputFieldUpdated.Value, out string value))
                 return;
 
-            dto.value = value;
+            if (dto != null)
+                dto.value = value;
+        }
 
-            UMI3DClientServer.SendRequest(new ParameterSettingRequestDto() {
-                id = dto.id,
-                parameter = dto,
-            }, true);
+        public void Submit() 
+        {
+            UMI3DClientServer.SendRequest(new ParameterSettingRequestDto()
+                {
+                    id = dto.id,
+                    parameter = dto,
+                }, true);
+        }
+
+        /// <summary>
+        /// This method releases the DTO by setting it to null.<br/>
+        /// <br/>
+        /// <example>
+        /// Given a model with a non-null DTO, when calling ReleaseDto, then the DTO should be null.
+        /// <code>
+        /// model.ReleaseDto();
+        /// </code>
+        /// </example>
+        /// </summary>
+        public void ReleaseDto()
+        {
+            dto = null;
         }
     }
 }

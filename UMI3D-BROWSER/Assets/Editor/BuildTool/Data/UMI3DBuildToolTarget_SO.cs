@@ -234,7 +234,6 @@ namespace umi3d.browserEditor.BuildTool
 
         public void ApplyCurrentTarget(E_Target target)
         {
-            currentTarget = target;
             applyTargetOptionsHandler?.Invoke(target);
             Save(editorOnly: true);
         }

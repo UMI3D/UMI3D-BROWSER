@@ -95,7 +95,10 @@ namespace umi3d.browserRuntime.ui.toggle
             if (_animationSliderCoroutine != null)
                 StopCoroutine(_animationSliderCoroutine);
 
-            _animationSliderCoroutine = StartCoroutine(SliderGoTo(newSliderValue));
+            if (isActiveAndEnabled)
+                _animationSliderCoroutine = StartCoroutine(SliderGoTo(newSliderValue));
+            else
+                _slider.value = newSliderValue;
         }
 
         private IEnumerator SliderGoTo(float newSliderValue)

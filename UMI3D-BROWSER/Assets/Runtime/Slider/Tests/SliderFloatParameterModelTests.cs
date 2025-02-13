@@ -61,4 +61,19 @@ public class SliderFloatParameterModelTests
             Assert.IsFalse(mockSliderModel.isInteger);
         }
     }
+
+    public class ReleaseDtoTests
+    {
+        [Test]
+        public void GivenDto_WhenRelease_ThenDtoNull()
+        {
+            var model = new SliderFloatParameterModel(new SliderModel());
+            model.SetDto(new FloatRangeParameterDto());
+            Assert.NotNull(model.dto);
+
+            model.ReleaseDto();
+
+            Assert.Null(model.dto);
+        }
+    }
 }

@@ -171,4 +171,29 @@ public class InputFieldModelTests
             Assert.AreEqual(_model.nbrLine, nbrLine);
         }
     }
+
+    class SetIsPrivateTests
+    {
+        InputFieldModel _model;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _model = new InputFieldModel();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            _model = null;
+        }
+
+        [Test]
+        public void GivenIsPrivateFalse_WhenSetIsPrivateTrue_ThenIsPrivateTrue()
+        {
+            _model.SetPrivate(true);
+
+            Assert.IsTrue(_model.isPrivate);
+        }
+    }
 }

@@ -58,6 +58,13 @@ namespace umi3d.browserRuntime.ui.inputField
             /// Value is <see cref="int"/>
             /// </remarks>
             public const string NbrLine = "NbrLine";
+            /// <summary>
+            /// Is the input field private (example: for password)
+            /// </summary>
+            /// <remarks>
+            /// Value is <see cref="bool"/>
+            /// </remarks>
+            public const string IsPrivate = "IsPrivate";
         }
 
         /// <summary>
@@ -73,5 +80,15 @@ namespace umi3d.browserRuntime.ui.inputField
             /// </remarks>
             public const string Value = "Value";
         }
+
+        /// <summary>
+        /// Event raised when an input field is selected
+        /// </summary>
+        public class Selected { }
+
+        /// <summary>
+        /// Event raised when an input field is deselected
+        /// </summary>
+        public class Deselected { }
     }
 }

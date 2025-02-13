@@ -45,7 +45,8 @@ namespace umi3d.browserRuntime.ui.inputField
         /// string value = "Test Value";
         /// string placeholder = "Test Placeholder";
         /// int nbLine = 1;
-        /// GameObject inputField = _inputFieldFactory.GetOrCreateInputField(parent, isMultiline, label, value, placeholder, nbLine);
+        /// bool isPrivate = false;
+        /// GameObject inputField = _inputFieldFactory.GetOrCreateInputField(parent, isMultiline, label, value, placeholder, nbLine, isPrivate);
         /// </code>
         /// </example>
         /// </summary>
@@ -55,8 +56,9 @@ namespace umi3d.browserRuntime.ui.inputField
         /// <param name="value">The initial value of the input field.</param>
         /// <param name="placeholder">The placeholder text for the input field.</param>
         /// <param name="nbLine">The number of lines for the input field. Defaults to 1.</param>
+        /// <param name="isPrivate">Indicates whethre the input field should be private.</param>
         /// <returns>The created or retrieved input field GameObject.</returns>
-        public GameObject GetOrCreateInputField(Transform parent, bool isMultiline, string label = "", string value = "", string placeholder = "", int nbLine = 1)
+        public GameObject GetOrCreateInputField(Transform parent, bool isMultiline, string label = "", string value = "", string placeholder = "", int nbLine = 1, bool isPrivate = false)
         {
             if (nbLine < 1) nbLine = 1;
 
@@ -74,6 +76,7 @@ namespace umi3d.browserRuntime.ui.inputField
                 inputFieldModelContainer.model.SetPlaceholder(placeholder);
             if (nbLine != 1)
                 inputFieldModelContainer.model.SetNbrLines(isMultiline ? nbLine : 1);
+            inputFieldModelContainer.model.SetPrivate(isPrivate);
 
             return inputFieldModelContainer.gameObject;
         }

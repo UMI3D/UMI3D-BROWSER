@@ -35,25 +35,19 @@ namespace umi3d.browserEditor.BuildTool
             switch (target)
             {
                 case E_Target.Quest:
-                    loadingParameters.supportedformats.Add(UMI3DAssetFormat.unity_android_urp);
-                    loadingParameters.HasHeadMountedDisplay = true;
-                    loadingParameters.CollaborationUserCaptureActivated = true;
-                    break;
-                case E_Target.SteamVR:
-                    loadingParameters.supportedformats.Add(UMI3DAssetFormat.unity_standalone_urp);
-                    loadingParameters.HasHeadMountedDisplay = true;
-                    loadingParameters.CollaborationUserCaptureActivated = true;
-                    break;
                 case E_Target.Focus:
-                    loadingParameters.supportedformats.Add(UMI3DAssetFormat.unity_android_urp);
-                    loadingParameters.HasHeadMountedDisplay = true;
-                    loadingParameters.CollaborationUserCaptureActivated = true;
-                    break;
                 case E_Target.Pico:
                     loadingParameters.supportedformats.Add(UMI3DAssetFormat.unity_android_urp);
                     loadingParameters.HasHeadMountedDisplay = true;
                     loadingParameters.CollaborationUserCaptureActivated = true;
                     break;
+
+                case E_Target.SteamVR:
+                    loadingParameters.supportedformats.Add(UMI3DAssetFormat.unity_standalone_urp);
+                    loadingParameters.HasHeadMountedDisplay = true;
+                    loadingParameters.CollaborationUserCaptureActivated = true;
+                    break;
+
                 case E_Target.Windows:
                     loadingParameters.supportedformats.Add(UMI3DAssetFormat.unity_standalone_urp);
                     loadingParameters.HasHeadMountedDisplay = false;
@@ -61,6 +55,8 @@ namespace umi3d.browserEditor.BuildTool
                     break;
             }
         }
+
+       
     }
 }
 

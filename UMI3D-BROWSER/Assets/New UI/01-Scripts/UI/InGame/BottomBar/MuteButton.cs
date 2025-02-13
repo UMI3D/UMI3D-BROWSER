@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using inetum.unityUtils.observation;
+using umi3d.browserRuntime.ui.settings;
 using umi3d.cdk.collaboration;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -38,6 +39,13 @@ namespace umi3d.browserRuntime.ui.inGame.bottomBar
                 InGameNotificationKeys.MuteChanged, 
                 (Callback)UpdateIcon
             );
+
+            EnvironmentSettings.Instance.MicSetting.StatusChanged += MicSetting_StatusChanged;
+        }
+
+        private void MicSetting_StatusChanged(bool _)
+        {
+            UpdateIcon();
         }
 
         private void OnEnable()

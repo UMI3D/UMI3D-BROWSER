@@ -28,6 +28,8 @@ namespace umi3d.cdk
     /// </summary>
     public class UMI3DLineRendererLoader : AbstractRenderedNodeLoader
     {
+        public static event Action<ulong> OnSplitLineEvent;
+        public static void TriggerOnSplitLineEvent(ulong id) => OnSplitLineEvent?.Invoke(id);
 
         public UMI3DLineRendererLoader() { }
 
@@ -38,11 +40,12 @@ namespace umi3d.cdk
 
         public static LineRenderer GetOrCreateLine(GameObject node, ulong localId)
         {
-            if(maps == null)
+            if (maps == null)
                 maps = new Dictionary<ulong, LineRenderer>();
 
             if (node == null)
                 return null;
+
             var line = node.GetComponent<LineRenderer>();
             if (line == null)
             {
@@ -127,12 +130,13 @@ namespace umi3d.cdk
             var lineDto = data.dto as UMI3DLineDto;
             if (data.node == null)
             {
-                throw (new Umi3dException("dto should be an  UMI3DAbstractNodeDto"));
+                throw (new umi3d.common.Umi3dException("dto should be an  UMI3DAbstractNodeDto"));
             }
+
+            line = GetOrCreateLine(data.node, lineDto.clientLineId);
 
             await base.ReadUMI3DExtension(data);
 
-            line = GetOrCreateLine(data.node, lineDto.clientLineId);
             line.startColor = lineDto.startColor.Struct();
             line.endColor = lineDto.endColor.Struct();
             line.loop = lineDto.loop;
@@ -322,7 +326,7 @@ namespace umi3d.cdk
 
             if (line.useWorldSpace)
             {
-                UMI3DLogger.LogWarning("Collider is not supported for now with LineRendere.useWorldSpace", DebugScope.CDK);
+                UMI3DLogger.LogWarning("Collider is not supported for now with LineRenderer.useWorldSpace", DebugScope.CDK);
             }
         }
 

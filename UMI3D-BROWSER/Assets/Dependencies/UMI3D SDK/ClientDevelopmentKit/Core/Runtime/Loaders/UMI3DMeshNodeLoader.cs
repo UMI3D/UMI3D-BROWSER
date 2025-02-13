@@ -82,7 +82,7 @@ namespace umi3d.cdk
 
             await base.ReadUMI3DExtension(data);
 
-            if (nodeDto.immersiveOnly && (UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DLoadingParameters).BrowserType == XRBrowserTypes.AR) return;
+            if (nodeDto.immersiveOnly && !UMI3DEnvironmentLoader.Instance.LoadingParameters.HasImmersiveDevice) return;
 
             //MeshRenderer nodeMesh = node.AddComponent<MeshRenderer>();
             FileDto fileToLoad = loadingManager.AbstractLoadingParameters.ChooseVariant(nodeDto.mesh.variants);  // Peut etre ameliore

@@ -44,7 +44,9 @@ namespace umi3dVRBrowsersBase.connection
         {
             cameraManager = Camera.main.GetComponent<ARCameraManager>();
 
-            //for LBE Only
+            SwitchToVR();
+
+            // DISABLE TP FOR LBE ONLY
 
             info[LocomotionNotificationKeys.Info.Controller] = Controller.RightHand;
             info[LocomotionNotificationKeys.Info.SnapTurnActiveState] = ActiveState.Disable;

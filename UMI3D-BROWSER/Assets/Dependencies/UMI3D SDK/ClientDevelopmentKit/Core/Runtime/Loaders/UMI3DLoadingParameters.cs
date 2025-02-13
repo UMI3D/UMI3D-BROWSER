@@ -128,18 +128,14 @@ namespace umi3d.cdk
             set => hasHeadMountedDisplay = value;
         }
 
-        [EditorReadOnly, SerializeField, ConstEnum(typeof(XRBrowserTypes), typeof(uint))]
-        private uint browserType;
-        public uint BrowserType => browserType;
-
         public void SetVR()
         {
-            browserType = (uint)XRBrowserTypes.VR;
+            hasImmersiveDevice = true;
         }
 
         public void SetMR()
         {
-            browserType = (uint)XRBrowserTypes.AR;
+            hasImmersiveDevice = false;
         }
 
         public virtual void Init()

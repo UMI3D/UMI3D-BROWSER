@@ -1,13 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
-using umi3dBrowsers.displayer;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 using TMPro;
 
-
-namespace ClientLBE
+namespace umi3d.VRBase.lbe
 {
     public class LBEDisplayer : MonoBehaviour
     {
@@ -36,9 +31,9 @@ namespace ClientLBE
             }
 
             // Appelle la méthode du GuardianManager
-            GuardianManager.Instance.ProcessIDSubmission(idValue);
+            //GuardianManager.Instance.ProcessIDSubmission(idValue);
 
-            Debug.Log("ID soumis : " + idValue);
+            //Debug.Log("ID soumis : " + idValue);
         }
     }
 }

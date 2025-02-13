@@ -14,10 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using ClientLBE;
 using inetum.unityUtils.observation;
-using System;
-using System.Collections.Generic;
 using umi3d.browserRuntime.NotificationKeys;
 using umi3d.browserRuntime.player;
 using UnityEngine;
@@ -124,7 +121,7 @@ namespace umi3d.browserRuntime.navigation
 
             PlayerTransformUtils.TranslatePlayerAndCenterCamera(transform, mainCamera.transform, position);
 
-            if (ClientLBE.GuardianManager.isLBEAdmin())
+            if (umi3d.VRBase.lbe.GuardianManager.isLBELeader())
             {
                 GroupTeleportation.OnGroupTeleport(positionBeforeSelfTeleportation, transform.position);
             }

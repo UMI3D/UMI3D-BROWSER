@@ -29,7 +29,7 @@ namespace umi3dVRBrowsersBase.navigation
     /// </summary>
     public class Teleporting : MonoBehaviour
     {
-        public ClientLBE.GuardianManager guardianManager; // Assurez-vous de référencer le GuardianManager
+        public umi3d.VRBase.lbe.GuardianManager guardianManager; // Assurez-vous de référencer le GuardianManager
 
 
         /// <summary>

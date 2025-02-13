@@ -6,29 +6,30 @@ using System;
 
 namespace umi3d.common.lbe
 {
-    public class DelUserLBEGroupSerializers : UMI3DSerializerModule
+    public class LBEAddUserGroupSerializerModule : UMI3DSerializerModule
     {
         public bool? IsCountable<T>()
         {
-            return typeof(T) == typeof(DelUserGroupOperationsDto) ? true : null;
+            return typeof(T) == typeof(LBEAddUserGroupOperationDto) ? true : null;
         }
 
         public bool Read<T>(ByteContainer container, out bool readable, out T result)
         {
-            if (typeof(T) == typeof(DelUserGroupOperationsDto))
+            if (typeof(T) == typeof(LBEAddUserGroupOperationDto))
             {
                 ulong userId = UMI3DSerializer.Read<ulong>(container);
+                bool isImmersive = UMI3DSerializer.Read<bool>(container);
                 readable = UMI3DSerializer.TryRead(container, out uint Key);
 
                 if (readable)
                 {
-                    var dellUserLBEGroup = new DelUserGroupOperationsDto()
+                    LBEAddUserGroupOperationDto addUserLBEGroup = new LBEAddUserGroupOperationDto()
                     {
-                        UserId = userId,
+                        userId = userId,
+                        isImmersive = isImmersive,
                     };
                     readable = true;
-                    result = (T)Convert.ChangeType(dellUserLBEGroup, typeof(T));
-
+                    result = (T)Convert.ChangeType(addUserLBEGroup, typeof(T));
                     return true;
                 }
             }
@@ -39,10 +40,11 @@ namespace umi3d.common.lbe
 
         public bool Write<T>(T value, out Bytable bytable, params object[] parameters)
         {
-            if (value is DelUserGroupOperationsDto c)
+            if (value is LBEAddUserGroupOperationDto dto)
             {
-                bytable = UMI3DSerializer.Write(UMI3DOperationKeys.DeleteUserLBE)
-                    + UMI3DSerializer.Write(c.UserId);
+                bytable = UMI3DSerializer.Write(UMI3DOperationKeys.LBEAddUser)
+                    + UMI3DSerializer.Write(dto.userId)
+                    + UMI3DSerializer.Write(dto.isImmersive);
                 return true;
             }
 

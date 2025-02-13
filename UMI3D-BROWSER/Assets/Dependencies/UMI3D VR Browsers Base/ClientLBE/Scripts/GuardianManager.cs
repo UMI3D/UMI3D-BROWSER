@@ -1,3 +1,19 @@
+/*
+Copyright 2019 - 2024 Inetum
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
 using inetum.unityUtils;
 using inetum.unityUtils.observation;
 using System;
@@ -17,7 +33,7 @@ using UnityEngine;
 using UnityEngine.XR;
 using UnityEngine.XR.ARFoundation;
 
-namespace ClientLBE
+namespace umi3d.VRBase.lbe
 {
     public class GuardianManager : SingleBehaviour<GuardianManager>
     {
@@ -61,7 +77,7 @@ namespace ClientLBE
         public LBEGroupSyncRequestDTO lBEGroupDto = new LBEGroupSyncRequestDTO();
 
         private Dictionary<string, System.Object> info = new();
-        static bool IsAdmin = false;
+        static bool isLeader = false;
 
         public event Action<Vector3> OnPositionCalibratorStart;
 
@@ -71,6 +87,10 @@ namespace ClientLBE
 
         public void Start()
         {
+            (UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DCollabLoadingParameters).IsColocatedDevice = false;
+            (UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DCollabLoadingParameters).LBEGroupId = 0;
+            (UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DCollabLoadingParameters).IsLBEGroupLeader = false;
+
             //Desactivation du calibreur manuel au start
             if (automaticCalibration)
                 ManualCalibrator.gameObject.SetActive(false);
@@ -87,9 +107,14 @@ namespace ClientLBE
 
         void OnEnable()
         {
-            UMI3DForgeClient.LBEGroupEventOccurred += LBEGroupEvent;
-            UMI3DForgeClient.AddLBEGroupEvent += AddUserLBEGroup;
-            UMI3DForgeClient.DelLBEGroupEvent += DelUserLBEGroup;
+            UMI3DForgeClient.LBEGroupSyncEvent += OnLBEGroupSync;
+            UMI3DForgeClient.LBEUserAddedEvent += OnLBEUserAdded;
+            UMI3DForgeClient.LBEUserRemovedEvent += OnLBEUserRemoved;
+            UMI3DForgeClient.LBEActivationEvent += OnLBEActivation;
+            UMI3DForgeClient.LBEGroupEvent += OnLBESetGroupReception;
+            UMI3DForgeClient.LBELeaderEvent += OnLBELeaderReception;
+            UMI3DForgeClient.LBEGuardianEvent += OnLBEGuardianReception;
+
 
             if (arPlaneManager != null)
             {
@@ -99,9 +124,13 @@ namespace ClientLBE
 
         void OnDisable()
         {
-            UMI3DForgeClient.LBEGroupEventOccurred -= LBEGroupEvent;
-            UMI3DForgeClient.AddLBEGroupEvent -= AddUserLBEGroup;
-            UMI3DForgeClient.DelLBEGroupEvent -= DelUserLBEGroup;
+            UMI3DForgeClient.LBEGroupSyncEvent -= OnLBEGroupSync;
+            UMI3DForgeClient.LBEUserAddedEvent -= OnLBEUserAdded;
+            UMI3DForgeClient.LBEUserRemovedEvent -= OnLBEUserRemoved;
+            UMI3DForgeClient.LBEActivationEvent -= OnLBEActivation;
+            UMI3DForgeClient.LBEGroupEvent -= OnLBESetGroupReception;
+            UMI3DForgeClient.LBELeaderEvent -= OnLBELeaderReception;
+            UMI3DForgeClient.LBEGuardianEvent -= OnLBEGuardianReception;
 
             if (arPlaneManager != null)
             {
@@ -109,48 +138,48 @@ namespace ClientLBE
             }
         }
 
-        public static bool isLBEAdmin()
+        public static bool isLBELeader()
         {
-            return IsAdmin;
+            return isLeader;
         }
 
-        void LBEGroupEvent(LBEGroupSyncRequestDTO LbeGroupDtoData)
+        void OnLBEGroupSync(LBEGroupSyncRequestDTO LbeGroupDtoData)
         {
-            lBEGroupDto = LbeGroupDtoData;
             if (lBEGroupDto == null)
             {
                 Debug.Log("REMY -> lBEGroupDto = null");
+                return;
             }
             if (lBEGroupDto.UserAR.Count + lBEGroupDto.UserVR.Count > 0)
             {
-                CreatGuardianServer(lBEGroupDto.ARAnchors);
-                AddCapsulesToCurrentARUsers();
+                CreateGuardianServer(lBEGroupDto.ARAnchors);
+                AddCapsulesToColocatedUsers();
             }
         }
 
-        void AddUserLBEGroup(AddUserGroupOperationsDto addUserLBEGroupDTO)
+        void OnLBEUserAdded(LBEAddUserGroupOperationDto addUserLBEGroupDTO)
         {
-            CreatGuardianServer(lBEGroupDto.ARAnchors);
+            CreateGuardianServer(lBEGroupDto.ARAnchors);
 
-            if (addUserLBEGroupDTO.IsUserAR == true)
+            if (addUserLBEGroupDTO.isImmersive == true)
             {
-                lBEGroupDto.UserAR.Add(addUserLBEGroupDTO.UserId);
-                AddCapsulesToCurrentARUsers();
+                lBEGroupDto.UserVR.Add(addUserLBEGroupDTO.userId);
             }
             else
             {
-                lBEGroupDto.UserVR.Add(addUserLBEGroupDTO.UserId);
+                lBEGroupDto.UserAR.Add(addUserLBEGroupDTO.userId);
+                AddCapsulesToColocatedUsers();
             }
 
         }
 
-        void DelUserLBEGroup(DelUserGroupOperationsDto delUserLBEGroupDto)
+        void OnLBEUserRemoved(LBERemoveUserGroupOperationDto delUserLBEGroupDto)
         {
             foreach (ulong userIdAR in lBEGroupDto.UserAR)
             {
-                if (userIdAR == delUserLBEGroupDto.UserId)
+                if (userIdAR == delUserLBEGroupDto.userId)
                 {
-                    lBEGroupDto.UserAR.Remove(delUserLBEGroupDto.UserId);
+                    lBEGroupDto.UserAR.Remove(delUserLBEGroupDto.userId);
                     return;
                 }
                 else
@@ -160,9 +189,9 @@ namespace ClientLBE
             }
             foreach (ulong userIdVR in lBEGroupDto.UserVR)
             {
-                if (userIdVR == delUserLBEGroupDto.UserId)
+                if (userIdVR == delUserLBEGroupDto.userId)
                 {
-                    lBEGroupDto.UserVR.Remove(delUserLBEGroupDto.UserId);
+                    lBEGroupDto.UserVR.Remove(delUserLBEGroupDto.userId);
                     return;
                 }
                 else
@@ -172,12 +201,50 @@ namespace ClientLBE
             }
         }
 
+        void OnLBEActivation()
+        {
+            (UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DCollabLoadingParameters).IsColocatedDevice = true;
+
+            DeviceDescriptionRequestDto deviceDescription = new DeviceDescriptionRequestDto()
+            {
+                macAddress = GetMacAddress(),
+                deviceModel = SystemInfo.deviceModel,
+                batteryLevel = SystemInfo.batteryLevel * 100
+            };
+
+            GetGuardianArea();
+            AddAnchorGuardian();
+            SendGuardianInServer();
+
+            UMI3DClientServer.SendRequest(deviceDescription, true);
+            UMI3DClientServer.SendRequest(userGuardianDto, reliable: true);
+        }
+
+        void OnLBESetGroupReception(LBESetUserGroupDto dto)
+        {
+            if ((UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DCollabLoadingParameters).IsColocatedDevice)
+                (UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DCollabLoadingParameters).LBEGroupId = dto.groupId;
+
+            // update server if already connected
+
+            if (!(UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DCollabLoadingParameters).HasImmersiveDevice)
+            {
+                lBEGroupDto.UserAR = dto.colocatedUserIds;
+                AddCapsulesToColocatedUsers();
+            }
+        }
+
+        void OnLBEGuardianReception(List<ARAnchorDto> anchors)
+        {
+            CreateGuardianServer(anchors);
+        }
+
         void OnPlanesChanged(ARPlanesChangedEventArgs eventArgs)
         {
             StartCoroutine(GetARPlanes());
         }
 
-        private void AddCapsulesToCurrentARUsers()
+        private void AddCapsulesToColocatedUsers()
         {
             Debug.Log("REMY -> Add Capsule occlusion");
             foreach (var userId in lBEGroupDto.UserAR)
@@ -296,21 +363,21 @@ namespace ClientLBE
             OnPositionCalibratorStart?.Invoke(calibrator.transform.position);
         }
 
-        public void ProcessIDSubmission(string id)
-        {
-            uint parsedID;
-            if (userGuardianDto != null)
-            {
-                if (uint.TryParse(id, out parsedID))
-                {
-                    userGuardianDto.IDLbeGroup = parsedID;
-                }
-            }
-            else
-            {
-                Debug.LogWarning("UserguardianDto empty");
-            }
-        }
+        //public void ProcessIDSubmission(string id)
+        //{
+        //    uint parsedID;
+        //    if (userGuardianDto != null)
+        //    {
+        //        if (uint.TryParse(id, out parsedID))
+        //        {
+        //            (UMI3DCollaborationEnvironmentLoader.Instance.LoadingParameters as UMI3DCollabLoadingParameters).LBEGroupId = userGuardianDto.lbeGroupId = parsedID;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        Debug.LogWarning("UserguardianDto empty");
+        //    }
+        //}
 
         public void ToggleCalibrationScene(bool value)
         {
@@ -323,46 +390,69 @@ namespace ClientLBE
 
         }
 
-        public void ToggleUserAdmin(bool value)
+        void OnLBELeaderReception(bool value)
         {
-            IsAdmin = value;
+            isLeader = value;
+            (UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DCollabLoadingParameters).IsLBEGroupLeader = value;
 
-            if (userGuardianDto != null)
+            if (value)
             {
-                userGuardianDto.SetAdminUser = IsAdmin;
+                info[LocomotionNotificationKeys.Info.Controller] = Controller.RightHand;
+                info[LocomotionNotificationKeys.Info.SnapTurnActiveState] = ActiveState.Disable;
+                info[LocomotionNotificationKeys.Info.TeleportationActiveState] = ActiveState.Enable;
+                NotificationHub.Default.Notify(this, LocomotionNotificationKeys.System, info);
 
-                if(value)
-                {
-                    info[LocomotionNotificationKeys.Info.Controller] = Controller.RightHand;
-                    info[LocomotionNotificationKeys.Info.SnapTurnActiveState] = ActiveState.Disable; // disable for test teleportation group because spawn player in VR not synchro
-                    info[LocomotionNotificationKeys.Info.TeleportationActiveState] = ActiveState.Enable;
-                    NotificationHub.Default.Notify(this, LocomotionNotificationKeys.System, info);
-
-                    info[LocomotionNotificationKeys.Info.Controller] = Controller.LeftHand;
-                    info[LocomotionNotificationKeys.Info.SnapTurnActiveState] = ActiveState.Disable; // disable for test teleportation group because spawn player in VR not synchro
-                    info[LocomotionNotificationKeys.Info.TeleportationActiveState] = ActiveState.Disable;
-                    NotificationHub.Default.Notify(this, LocomotionNotificationKeys.System, info);
-                }
-                else
-                {
-                    info[LocomotionNotificationKeys.Info.Controller] = Controller.RightHand;
-                    info[LocomotionNotificationKeys.Info.SnapTurnActiveState] = ActiveState.Disable;
-                    info[LocomotionNotificationKeys.Info.TeleportationActiveState] = ActiveState.Disable;
-                    NotificationHub.Default.Notify(this, LocomotionNotificationKeys.System, info);
-
-
-                    info[LocomotionNotificationKeys.Info.Controller] = Controller.LeftHand;
-                    info[LocomotionNotificationKeys.Info.SnapTurnActiveState] = ActiveState.Disable;
-                    info[LocomotionNotificationKeys.Info.TeleportationActiveState] = ActiveState.Disable;
-                    NotificationHub.Default.Notify(this, LocomotionNotificationKeys.System, info);
-                }
-
+                info[LocomotionNotificationKeys.Info.Controller] = Controller.LeftHand;
+                info[LocomotionNotificationKeys.Info.SnapTurnActiveState] = ActiveState.Disable;
+                info[LocomotionNotificationKeys.Info.TeleportationActiveState] = ActiveState.Enable;
+                NotificationHub.Default.Notify(this, LocomotionNotificationKeys.System, info);
             }
             else
             {
-                Debug.LogWarning("UserguardianDto empty");
+                info[LocomotionNotificationKeys.Info.Controller] = Controller.RightHand;
+                info[LocomotionNotificationKeys.Info.SnapTurnActiveState] = ActiveState.Disable;
+                info[LocomotionNotificationKeys.Info.TeleportationActiveState] = ActiveState.Disable;
+                NotificationHub.Default.Notify(this, LocomotionNotificationKeys.System, info);
+
+
+                info[LocomotionNotificationKeys.Info.Controller] = Controller.LeftHand;
+                info[LocomotionNotificationKeys.Info.SnapTurnActiveState] = ActiveState.Disable;
+                info[LocomotionNotificationKeys.Info.TeleportationActiveState] = ActiveState.Disable;
+                NotificationHub.Default.Notify(this, LocomotionNotificationKeys.System, info);
             }
         }
+
+        //[Obsolete]
+        //public void ToggleUserAdmin(bool value)
+        //{
+        //    isLeader = value;
+
+        //    if(value)
+        //    {
+        //        info[LocomotionNotificationKeys.Info.Controller] = Controller.RightHand;
+        //        info[LocomotionNotificationKeys.Info.SnapTurnActiveState] = ActiveState.Disable;
+        //        info[LocomotionNotificationKeys.Info.TeleportationActiveState] = ActiveState.Enable;
+        //        NotificationHub.Default.Notify(this, LocomotionNotificationKeys.System, info);
+
+        //        info[LocomotionNotificationKeys.Info.Controller] = Controller.LeftHand;
+        //        info[LocomotionNotificationKeys.Info.SnapTurnActiveState] = ActiveState.Disable;
+        //        info[LocomotionNotificationKeys.Info.TeleportationActiveState] = ActiveState.Enable;
+        //        NotificationHub.Default.Notify(this, LocomotionNotificationKeys.System, info);
+        //    }
+        //    else
+        //    {
+        //        info[LocomotionNotificationKeys.Info.Controller] = Controller.RightHand;
+        //        info[LocomotionNotificationKeys.Info.SnapTurnActiveState] = ActiveState.Disable;
+        //        info[LocomotionNotificationKeys.Info.TeleportationActiveState] = ActiveState.Disable;
+        //        NotificationHub.Default.Notify(this, LocomotionNotificationKeys.System, info);
+
+
+        //        info[LocomotionNotificationKeys.Info.Controller] = Controller.LeftHand;
+        //        info[LocomotionNotificationKeys.Info.SnapTurnActiveState] = ActiveState.Disable;
+        //        info[LocomotionNotificationKeys.Info.TeleportationActiveState] = ActiveState.Disable;
+        //        NotificationHub.Default.Notify(this, LocomotionNotificationKeys.System, info);
+        //    }
+        //}
 
         private void SetARPlaneCalibrator()
         {
@@ -397,15 +487,6 @@ namespace ClientLBE
 
         public void StartCalibrationScene()
         {
-            DeviceDescriptionRequestDto deviceDescription = new DeviceDescriptionRequestDto()
-            {
-                macAddress = GetMacAddress(),
-                deviceModel = SystemInfo.deviceModel,
-                batteryLevel = SystemInfo.batteryLevel * 100
-            };
-
-            UMI3DCollaborationClientServer.SendRequest(deviceDescription, true);
-
             StartCoroutine(CalibrationScene());
         }
 
@@ -467,7 +548,7 @@ namespace ClientLBE
                     guardianParent = new GameObject("Guardian");
                     guardianParent.transform.position = new Vector3(calibrator.transform.position.x, 0.0f, calibrator.transform.position.z);
 
-                    GetGuardianArea();
+                    //GetGuardianArea();
                 }
                 else
                     Debug.LogError(Player.name + " has no parents.");
@@ -481,14 +562,14 @@ namespace ClientLBE
 
             ARPlanesActivation(false);
 
-            AddAnchorGuardian();
+            //AddAnchorGuardian();
 
-            SendGuardianInServer();
+            //SendGuardianInServer();
 
-            if (userGuardianDto != null)
-            {
-                StartCoroutine(WaitSendGuardian());
-            }
+            //if (userGuardianDto != null)
+            //{
+            //    StartCoroutine(WaitSendGuardian());
+            //}
         }
 
         public void GetGuardianArea()
@@ -551,7 +632,7 @@ namespace ClientLBE
 
                     /* guardianMesh.transform.position = Vector3.zero;*/
 
-                    CreateGuardianMesh(guardianAnchors);
+                    //CreateGuardianMesh(guardianAnchors);
                 }
             }
             else
@@ -574,8 +655,8 @@ namespace ClientLBE
 
                     userGuardianDto.ARAnchors.Add(newAnchor);
                 }
-                var loadingParameters = UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DLoadingParameters;
-                userGuardianDto.ARiD = loadingParameters.BrowserType;
+                //UMI3DLoadingParameters loadingParameters = UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DLoadingParameters;
+                //userGuardianDto.isImmersive = loadingParameters.HasImmersiveDevice;
             }
         }
 
@@ -585,7 +666,7 @@ namespace ClientLBE
             UMI3DClientServer.SendRequest(userGuardianDto, reliable: true);
         }
 
-        public void CreatGuardianServer(List<ARAnchorDto> GuardianDto)
+        public void CreateGuardianServer(List<ARAnchorDto> GuardianDto)
         {
             // Clear the client's first connection data
             if (guardianMesh != null)
@@ -620,14 +701,21 @@ namespace ClientLBE
 
         public void AddAnchorGuardian()
         {
-            //Define instantiated objects representing the guardian as ARAnchors
-            for (int i = 0; i < guardianAnchors.Count; i++)
+            try
             {
-                Vector3 basePointPosition = guardianAnchors[i];
-                Quaternion basePointRotation = new Quaternion(0f, 0f, 0f, 0f);
-                Pose basePointPose = new Pose(basePointPosition, basePointRotation);
+                //Define instantiated objects representing the guardian as ARAnchors
+                for (int i = 0; i < guardianAnchors.Count; i++)
+                {
+                    Vector3 basePointPosition = guardianAnchors[i];
+                    Quaternion basePointRotation = new Quaternion(0f, 0f, 0f, 0f);
+                    Pose basePointPose = new Pose(basePointPosition, basePointRotation);
+                }
+                guardianMesh.AddComponent<ARAnchor>();
             }
-            guardianMesh.AddComponent<ARAnchor>();
+            catch 
+            {
+                Debug.LogError("AddAnchorGuardian failed");
+            }
         }
 
         private void CreateGuardianMesh(List<Vector3> points)

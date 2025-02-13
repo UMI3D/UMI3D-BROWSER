@@ -339,7 +339,7 @@ namespace umi3dBrowsers
         {
             parentTransform.gameObject.SetActive(true);
 
-            if((UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DLoadingParameters).BrowserType != XRBrowserTypes.AR)
+            if (UMI3DEnvironmentLoader.Instance.LoadingParameters.HasImmersiveDevice)
             {
                 mainContainerLinker.Skybox.gameObject.SetActive(true);
                 mainContainerLinker.DirectionalLight.gameObject.SetActive(true);

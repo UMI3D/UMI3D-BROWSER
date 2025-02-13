@@ -14,6 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System.Collections.Generic;
+
 namespace umi3d.common
 {
     public class DeviceDescriptionRequestDto : DeviceBatteryLevelRequestDto
@@ -21,21 +23,10 @@ namespace umi3d.common
         public string macAddress { get; set; }
 
         public string deviceModel { get; set; }
-
-        //public DeviceDescriptionRequestDto() : base()
-        //{
-        //    macAddress = GetMacAddress();
-        //    deviceModel = SystemInfo.deviceModel;
-        //}
     }
 
     public class DeviceBatteryLevelRequestDto : AbstractBrowserRequestDto
     {
         public float batteryLevel { get; set; }
-
-        //public DeviceBatteryLevelRequestDto()
-        //{
-        //    batteryLevel = SystemInfo.batteryLevel;
-        //}
     }
 };

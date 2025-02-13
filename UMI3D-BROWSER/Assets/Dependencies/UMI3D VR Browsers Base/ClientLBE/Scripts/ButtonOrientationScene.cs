@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace ClientLBE
+namespace umi3d.VRBase.lbe
 {
     [RequireComponent(typeof(Button))]
     public class ButtonOrientationScene : MonoBehaviour

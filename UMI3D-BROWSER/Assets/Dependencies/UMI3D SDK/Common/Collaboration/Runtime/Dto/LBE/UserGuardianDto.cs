@@ -10,19 +10,13 @@ namespace umi3d.common.lbe
 {
     public class UserGuardianDto : AbstractBrowserRequestDto
     {
-        public bool SetAdminUser { get; set; }
+        //public bool isAdmin { get; set; }
 
-        public uint IDLbeGroup { get; set; }
+        //public uint lbeGroupId { get; set; } = 1; // to reset after demo
 
         public List<ARAnchorDto> ARAnchors { get; set; }
 
-        public uint ARiD { get; set; }
-
-        // to delete after demo or 0 for users unassigned
-        public UserGuardianDto()
-        {
-            IDLbeGroup = 1;
-        }
+        //public bool isImmersive { get; set; }
     }
 }
 

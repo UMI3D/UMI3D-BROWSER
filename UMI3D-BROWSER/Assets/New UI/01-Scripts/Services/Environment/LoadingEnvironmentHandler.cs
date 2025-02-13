@@ -65,7 +65,7 @@ namespace umi3dBrowsers.services.environment
         /// </summary>
         public void Display()
         {
-            if ((UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DLoadingParameters).BrowserType != XRBrowserTypes.AR)
+            if (UMI3DEnvironmentLoader.Instance.LoadingParameters.HasImmersiveDevice)
             {
                 Camera.main.cullingMask = loadingCullingMask.value;
                 Camera.main.clearFlags = CameraClearFlags.Skybox;
@@ -78,7 +78,7 @@ namespace umi3dBrowsers.services.environment
         /// </summary>
         public void StopDisplay()
         {
-            if ((UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DLoadingParameters).BrowserType != XRBrowserTypes.AR)
+            if (UMI3DEnvironmentLoader.Instance.LoadingParameters.HasImmersiveDevice)
             {
                 Camera.main.cullingMask = defaultCullingMask;
                 Camera.main.clearFlags = CameraClearFlags.Skybox;

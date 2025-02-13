@@ -14,12 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using ClientLBE;
-using System;
 using umi3d.cdk;
 using umi3d.common;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace umi3d.browserRuntime.navigation
 {

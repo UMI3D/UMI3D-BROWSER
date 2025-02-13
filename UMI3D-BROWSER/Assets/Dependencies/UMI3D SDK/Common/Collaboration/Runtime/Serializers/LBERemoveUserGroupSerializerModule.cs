@@ -6,31 +6,29 @@ using System;
 
 namespace umi3d.common.lbe
 {
-    public class AddUserLBEGroupSerializers : UMI3DSerializerModule
+    public class LBERemoveUserGroupSerializerModule : UMI3DSerializerModule
     {
-
         public bool? IsCountable<T>()
         {
-            return typeof(T) == typeof(AddUserGroupOperationsDto) ? true : null;
+            return typeof(T) == typeof(LBERemoveUserGroupOperationDto) ? true : null;
         }
 
         public bool Read<T>(ByteContainer container, out bool readable, out T result)
         {
-            if (typeof(T) == typeof(AddUserGroupOperationsDto))
+            if (typeof(T) == typeof(LBERemoveUserGroupOperationDto))
             {
                 ulong userId = UMI3DSerializer.Read<ulong>(container);
-                bool isUserAR = UMI3DSerializer.Read<bool>(container);
                 readable = UMI3DSerializer.TryRead(container, out uint Key);
 
                 if (readable)
                 {
-                    var addUserLBEGroup = new AddUserGroupOperationsDto()
+                    var dellUserLBEGroup = new LBERemoveUserGroupOperationDto()
                     {
-                        UserId = userId,
-                        IsUserAR = isUserAR,
+                        userId = userId,
                     };
                     readable = true;
-                    result = (T)Convert.ChangeType(addUserLBEGroup, typeof(T));
+                    result = (T)Convert.ChangeType(dellUserLBEGroup, typeof(T));
+
                     return true;
                 }
             }
@@ -41,11 +39,10 @@ namespace umi3d.common.lbe
 
         public bool Write<T>(T value, out Bytable bytable, params object[] parameters)
         {
-            if (value is AddUserGroupOperationsDto c)
+            if (value is LBERemoveUserGroupOperationDto dto)
             {
-                bytable = UMI3DSerializer.Write(UMI3DOperationKeys.SetNewUserLBE)
-                    + UMI3DSerializer.Write(c.UserId)
-                    + UMI3DSerializer.Write(c.IsUserAR);
+                bytable = UMI3DSerializer.Write(UMI3DOperationKeys.LBERemoveUser)
+                    + UMI3DSerializer.Write(dto.userId);
                 return true;
             }
 

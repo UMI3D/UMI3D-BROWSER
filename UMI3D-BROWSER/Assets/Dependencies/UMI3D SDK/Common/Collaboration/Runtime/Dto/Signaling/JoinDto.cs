@@ -16,8 +16,6 @@ limitations under the License.
 
 using System.Collections.Generic;
 using umi3d.common.userCapture.description;
-using umi3d.common.lbe;
-
 
 namespace umi3d.common.collaboration.dto.signaling
 {
@@ -56,6 +54,8 @@ namespace umi3d.common.collaboration.dto.signaling
 
     public class JoinLBEDto : JoinDto
     {
-        public uint lBEGroupId { get; set; } = 0;
+        public ulong lBEGroupId { get; set; }
+
+        public bool IsLBEGroupLeader { get; set; }
     }
 }

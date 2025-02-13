@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace ClientLBE
+namespace umi3d.VRBase.lbe
 {
     [RequireComponent(typeof(Toggle))]
     public class ToggleAdminUser : MonoBehaviour
@@ -19,10 +19,8 @@ namespace ClientLBE
 
         public void SwitchOrientationPanel(bool value)
         {
-            GuardianManager.Instance.ToggleUserAdmin(value);
+            //GuardianManager.Instance.ToggleUserAdmin(value);
             CheckToggleUserAdmin.SetActive(value);
-
-
         }
     }
 }

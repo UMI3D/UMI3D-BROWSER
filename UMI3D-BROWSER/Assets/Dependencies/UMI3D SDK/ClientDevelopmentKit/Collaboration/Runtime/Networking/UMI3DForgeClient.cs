@@ -58,15 +58,18 @@ namespace umi3d.cdk.collaboration
 
         UMI3DVersion.VersionCompatibility version = new("2.9.240805", "*");
         private bool? IsCompatibleWithVersion = null;
-        
-        public delegate void OnLBEGroupEvent(LBEGroupSyncRequestDTO  lBEGroupData);
-        public static event OnLBEGroupEvent LBEGroupEventOccurred;
 
-        public delegate void OnAddLBEGroupEvent(AddUserGroupOperationsDto addUserLBEGroupDTO);
-        public static event OnAddLBEGroupEvent AddLBEGroupEvent;
+        #region LBE Events
 
-        public delegate void OnDelLBEGroupEvent(DelUserGroupOperationsDto delUserLBEGroupDto);
-        public static event OnDelLBEGroupEvent DelLBEGroupEvent;
+        public static event Action<LBEGroupSyncRequestDTO> LBEGroupSyncEvent;
+        public static event Action<LBEAddUserGroupOperationDto> LBEUserAddedEvent;
+        public static event Action<LBERemoveUserGroupOperationDto> LBEUserRemovedEvent;
+        public static event Action LBEActivationEvent;
+        public static event Action<bool> LBELeaderEvent;
+        public static event Action<LBESetUserGroupDto> LBEGroupEvent;
+        public static event Action<List<ARAnchorDto>> LBEGuardianEvent;
+
+        #endregion
 
         private UMI3DUser GetUserByNetWorkId(uint nid)
         {
@@ -590,23 +593,48 @@ namespace umi3d.cdk.collaboration
                         PoseService.Instance.ChangeEnvironmentPoseCondition(operation.environmentId, validateEnvironmentPoseCondition.Id, validateEnvironmentPoseCondition.ShouldBeValidated);
                     });
                     break;
-                case AddUserGroupOperationsDto addUserLBEGroupDTO:
+                case LBEAddUserGroupOperationDto userAddedDto:
                     MainThreadManager.Run(() =>
                     {
-                        AddUserGroupOperationsDto addlBEGroupDto = addUserLBEGroupDTO;
-                        if (AddLBEGroupEvent != null)
-                            AddLBEGroupEvent(addlBEGroupDto);
+                        LBEUserAddedEvent?.Invoke(userAddedDto);
                     });
                     break;
 
-                case DelUserGroupOperationsDto delUserLBEGroupDTO:
+                case LBERemoveUserGroupOperationDto userRemovedDto:
                     MainThreadManager.Run(() =>
                     {
-                        DelUserGroupOperationsDto dellBEGroupDto = delUserLBEGroupDTO;
-                        if (DelLBEGroupEvent != null)
-                            DelLBEGroupEvent(dellBEGroupDto);
+                        LBEUserRemovedEvent?.Invoke(userRemovedDto);
                     });
                     break;
+
+                case LBELeaderDto leaderDto:
+                    MainThreadManager.Run(() =>
+                    {
+                        LBELeaderEvent?.Invoke(leaderDto.isLeader);
+                    });
+                    break;
+
+                case LBESetUserGroupDto groupDto:
+                    MainThreadManager.Run(() =>
+                    {
+                        LBEGroupEvent?.Invoke(groupDto);
+                    });
+                    break;
+
+                case LBESetGuardianDto guardianDto:
+                    MainThreadManager.Run(() =>
+                    {
+                        LBEGuardianEvent?.Invoke(guardianDto.anchors);
+                    });
+                    break;
+
+                case LBEActivationDto lBEDto:
+                    MainThreadManager.Run(() =>
+                    {
+                        LBEActivationEvent?.Invoke();
+                    });
+                    break;
+
                 default:
                     return false;
             }
@@ -811,55 +839,61 @@ namespace umi3d.cdk.collaboration
                 case UMI3DOperationKeys.SetLBEGroupRequest:
                     MainThreadManager.Run(() =>
                     {
-                        Debug.Log("REMY -> Umi3DForgeClient SetLBEGroupRequest 1");
-                        LBEGroupSyncRequestDTO  lBEGroupRequestDTO = UMI3DSerializer.Read<LBEGroupSyncRequestDTO >(container);
-                        Debug.Log("REMY -> SetLBEGroupRequest -> User AR : " + lBEGroupRequestDTO.UserAR.Count
-                                                + " + User VR : " + lBEGroupRequestDTO.UserVR.Count
-                                                + " + AdminUserId : " + lBEGroupRequestDTO.AdminUserId
-                                                + " + LBEGroupID : " + lBEGroupRequestDTO.LBEGroupId
-                                                + " + ARAnchors : " + lBEGroupRequestDTO.ARAnchors[0].position);
-
-                        var lBEGroup = new LBEGroupSyncRequestDTO ()
-                        {
-                            LBEGroupId = lBEGroupRequestDTO.LBEGroupId,
-                            AdminUserId = lBEGroupRequestDTO.AdminUserId,
-                            UserAR = lBEGroupRequestDTO.UserAR,
-                            UserVR = lBEGroupRequestDTO.UserVR,
-                            ARAnchors = lBEGroupRequestDTO.ARAnchors
-                        };
-
-                        if (LBEGroupEventOccurred != null)
-                            LBEGroupEventOccurred(lBEGroup);
+                        LBEGroupSyncRequestDTO groupSyncDto = UMI3DSerializer.Read<LBEGroupSyncRequestDTO>(container);
+                        LBEGroupSyncEvent?.Invoke(groupSyncDto);
                     });
                     break;
-                case UMI3DOperationKeys.SetNewUserLBE:
+                case UMI3DOperationKeys.LBEAddUser:
                     MainThreadManager.Run(() =>
                     {
-                        AddUserGroupOperationsDto addUserLBEGroupDTO = UMI3DSerializer.Read<AddUserGroupOperationsDto>(container);
-
-                        var addUser = new AddUserGroupOperationsDto()
-                        {
-                            UserId = addUserLBEGroupDTO.UserId,
-                            IsUserAR = addUserLBEGroupDTO.IsUserAR
-                        };
-
-                        if (AddLBEGroupEvent != null)
-                            AddLBEGroupEvent(addUser);
+                        LBEAddUserGroupOperationDto addUserLBEGroupDTO = UMI3DSerializer.Read<LBEAddUserGroupOperationDto>(container);
+                        LBEUserAddedEvent?.Invoke(addUserLBEGroupDTO);
                     });
                     break;
 
-                case UMI3DOperationKeys.DeleteUserLBE:
+                case UMI3DOperationKeys.LBERemoveUser:
                     MainThreadManager.Run(() =>
                     {
-                        DelUserGroupOperationsDto delUserLBEGroupDTO = UMI3DSerializer.Read<DelUserGroupOperationsDto>(container);
+                        LBERemoveUserGroupOperationDto delUserLBEGroupDTO = UMI3DSerializer.Read<LBERemoveUserGroupOperationDto>(container);
+                        LBEUserRemovedEvent?.Invoke(delUserLBEGroupDTO);
+                    });
+                    break;
 
-                        var delUser = new DelUserGroupOperationsDto()
-                        {
-                            UserId = delUserLBEGroupDTO.UserId,
-                        };
+                case UMI3DOperationKeys.LBELeaderOperation:
 
-                        if (DelLBEGroupEvent != null)
-                            DelLBEGroupEvent(delUser);
+                    bool isLeader = UMI3DSerializer.Read<bool>(container);
+
+                    MainThreadManager.Run(() =>
+                    {
+                        LBELeaderEvent?.Invoke(isLeader);
+                    });
+                    break;
+
+                case UMI3DOperationKeys.LBESetGroupOperation:
+
+                    ulong groupId = UMI3DSerializer.Read<ulong>(container);
+                    List<ulong> colocatedUserIds = UMI3DSerializer.ReadList<ulong>(container);
+
+                    MainThreadManager.Run(() =>
+                    {
+                        LBEGroupEvent?.Invoke(new LBESetUserGroupDto() { groupId = groupId, colocatedUserIds = colocatedUserIds});
+                    });
+                    break;
+
+                case UMI3DOperationKeys.LBEGuardianOperation:
+
+                    List<ARAnchorDto> anchors = UMI3DSerializer.ReadList<ARAnchorDto>(container);
+
+                    MainThreadManager.Run(() =>
+                    {
+                        LBEGuardianEvent?.Invoke(anchors);
+                    });
+                    break;
+
+                case UMI3DOperationKeys.LBEActivationOperation:
+                    MainThreadManager.Run(() =>
+                    {
+                        LBEActivationEvent?.Invoke();
                     });
                     break;
 

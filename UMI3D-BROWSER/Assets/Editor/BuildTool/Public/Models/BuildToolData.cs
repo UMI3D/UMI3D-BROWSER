@@ -41,6 +41,9 @@ namespace umi3d.browserEditor.BuildTool
                 return _default;
             }
         }
+        BuildToolData() {}
+
+        public List<IBuildToolDataDelegate> delegates = new();
 
         [SerializeField, HideInInspector] View _currentSelectedView = View.InfoView;
         public View currentSelectedView
@@ -50,6 +53,10 @@ namespace umi3d.browserEditor.BuildTool
             {
                 _currentSelectedView = value;
                 Save();
+                delegates.ForEach(@delegate =>
+                {
+                    @delegate.CurrentSelectedViewHasChanged(value);
+                });
             }
         }
 

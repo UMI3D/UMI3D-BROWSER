@@ -19,12 +19,17 @@ using UnityEngine.UIElements;
 
 namespace umi3d.browserEditor.BuildTool
 {
-    public class ViewContainer : ScrollView
+    public class ViewContainer : ScrollView, IBuildToolDataDelegate
     {
+        BuildToolData data;
+
         Dictionary<View, VisualElement> views = new();
 
         public ViewContainer() 
         {
+            data = BuildToolData.@default;
+            data.delegates.Add(this);
+
             style.marginLeft = 15;
             style.marginRight = 15;
         }
@@ -44,6 +49,11 @@ namespace umi3d.browserEditor.BuildTool
                     ? DisplayStyle.Flex
                     : DisplayStyle.None;
             }
+        }
+
+        void IBuildToolDataDelegate.CurrentSelectedViewHasChanged(View view) 
+        {
+            Display(view);
         }
     }
 }

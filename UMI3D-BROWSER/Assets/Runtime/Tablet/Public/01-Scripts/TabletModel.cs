@@ -35,6 +35,17 @@ namespace umi3d.browserRuntime.ui.tablet
                 ID.FromType<TabletNotificationKeys.TabletUpdate>());
         }
 
+        /// <summary>
+        /// Sets the current menu to the specified menu.<br/>
+        /// <br/>
+        /// <example>
+        /// Given a valid menu when setting the menu then the current menu is updated and notification is sent.
+        /// <code>
+        /// tabletModel.SetMenu(newMenu);
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <param name="menu">The menu to set as the current menu.</param>
         public void SetMenu(TabletMenu menu)
         {
             CurrentMenu = menu;
@@ -42,6 +53,17 @@ namespace umi3d.browserRuntime.ui.tablet
             _setNotifier.Notify();
         }
 
+        /// <summary>
+        /// Updates the current menu to the specified menu.<br/>
+        /// <br/>
+        /// <example>
+        /// Given a valid menu when setting the menu then the current menu is updated and notification is sent.
+        /// <code>
+        /// tabletModel.UpdateMenu(newMenu);
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <param name="menu">The menu to set as the current menu.</param>
         public void UpdateMenu(TabletMenu menu)
         {
             CurrentMenu = menu;

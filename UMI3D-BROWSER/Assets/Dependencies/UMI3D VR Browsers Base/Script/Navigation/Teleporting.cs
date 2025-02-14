@@ -21,6 +21,7 @@ using umi3d.cdk;
 using umi3d.common;
 using umi3d.browserRuntime.navigation;
 using umi3d.cdk.collaboration;
+using umi3d.VRBase.lbe;
 
 namespace umi3dVRBrowsersBase.navigation
 {
@@ -56,37 +57,39 @@ namespace umi3dVRBrowsersBase.navigation
 
         bool isLoadingScreenDisplayed = false;
 
-        bool IsLeaderInGroup()
-        {
-            if (guardianManager == null)
-            {
-                Debug.LogError("REMI GuardianManagerServer non assigné dans UMI3DLBEManager !");
-                return false;
-            }
+        // Je crois que Teleporting est Obsolete
 
-            // Vérifie chaque groupe pour voir si leaderId correspond à AdminUserId
-            if (guardianManager.lBEGroupDto != null)
-            {
-                var collaborationServer = UMI3DCollaborationClientServer.Instance; // Accès à l'instance
-                if (collaborationServer != null)
-                {
-                    ulong userId = collaborationServer.GetUserId();
+        //bool IsLeaderInGroup()
+        //{
+        //    if (guardianManager == null)
+        //    {
+        //        Debug.LogError("REMI GuardianManagerServer non assigné dans UMI3DLBEManager !");
+        //        return false;
+        //    }
 
-                    if (guardianManager.lBEGroupDto.AdminUserId == userId)
-                        return true;             
-                    else
-                        return false;                
-                }        
-                return false;
+        //    // Vérifie chaque groupe pour voir si leaderId correspond à AdminUserId
+        //    if (guardianManager.lBEGroupDto != null)
+        //    {
+        //        UMI3DCollaborationClientServer collaborationServer = UMI3DCollaborationClientServer.Instance; // Accès à l'instance
+        //        if (collaborationServer != null)
+        //        {
+        //            ulong userId = collaborationServer.GetUserId();
+
+        //            if (guardianManager.lBEGroupDto.AdminUserId == userId)
+        //                return true;             
+        //            else
+        //                return false;                
+        //        }        
+        //        return false;
                 
-            }
-            else
-            {
-                // Aucun groupe trouvé où leaderId est AdminUserId
-                Debug.LogWarning($"REMY : Aucun groupe trouvé où leaderId est AdminUserId.");
-                return false;
-            }         
-        }
+        //    }
+        //    else
+        //    {
+        //        // Aucun groupe trouvé où leaderId est AdminUserId
+        //        Debug.LogWarning($"REMY : Aucun groupe trouvé où leaderId est AdminUserId.");
+        //        return false;
+        //    }         
+        //}
 
         // Individual or group teleportation based on the isGroupTeleport flag
         [ContextMenu("Teleport")]
@@ -104,9 +107,7 @@ namespace umi3dVRBrowsersBase.navigation
 
             if (position.HasValue)
             {
-                bool isLeader = IsLeaderInGroup();
-
-                if (/*GroupTeleportation.isGroupTeleport*/isLeader == true) // -> controler si le user qui demande la téléportation est un leader ou non
+                if (GuardianManager.isLBELeader()) // -> controler si le user qui demande la téléportation est un leader ou non
                 {
                     Debug.Log("REMY -> is leader = true");
 

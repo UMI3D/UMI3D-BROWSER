@@ -843,7 +843,7 @@ namespace umi3d.cdk.collaboration
                 //        LBEGroupSyncEvent?.Invoke(groupSyncDto);
                 //    });
                 //    break;
-                case UMI3DOperationKeys.LBEAddUser:
+                case UMI3DOperationKeys.MDMAddUserOperation:
                     MainThreadManager.Run(() =>
                     {
                         LBEAddUserGroupOperationDto addUserLBEGroupDTO = UMI3DSerializer.Read<LBEAddUserGroupOperationDto>(container);
@@ -851,7 +851,7 @@ namespace umi3d.cdk.collaboration
                     });
                     break;
 
-                case UMI3DOperationKeys.LBERemoveUser:
+                case UMI3DOperationKeys.MDMRemoveUserOperation:
                     MainThreadManager.Run(() =>
                     {
                         LBERemoveUserGroupOperationDto delUserLBEGroupDTO = UMI3DSerializer.Read<LBERemoveUserGroupOperationDto>(container);
@@ -859,7 +859,7 @@ namespace umi3d.cdk.collaboration
                     });
                     break;
 
-                case UMI3DOperationKeys.LBELeaderOperation:
+                case UMI3DOperationKeys.MDMLeaderOperation:
 
                     bool isLeader = UMI3DSerializer.Read<bool>(container);
 
@@ -869,7 +869,7 @@ namespace umi3d.cdk.collaboration
                     });
                     break;
 
-                case UMI3DOperationKeys.LBESetGroupOperation:
+                case UMI3DOperationKeys.MDMSetGroupOperation:
 
                     ulong groupId = UMI3DSerializer.Read<ulong>(container);
                     List<ulong> colocatedUserIds = UMI3DSerializer.ReadList<ulong>(container);
@@ -880,7 +880,7 @@ namespace umi3d.cdk.collaboration
                     });
                     break;
 
-                case UMI3DOperationKeys.LBEGuardianOperation:
+                case UMI3DOperationKeys.MDMSetGuardianOperation:
 
                     List<ARAnchorDto> anchors = UMI3DSerializer.ReadList<ARAnchorDto>(container);
 
@@ -890,7 +890,7 @@ namespace umi3d.cdk.collaboration
                     });
                     break;
 
-                case UMI3DOperationKeys.LBEActivationOperation:
+                case UMI3DOperationKeys.MDMActivationOperation:
                     MainThreadManager.Run(() =>
                     {
                         LBEActivationEvent?.Invoke();

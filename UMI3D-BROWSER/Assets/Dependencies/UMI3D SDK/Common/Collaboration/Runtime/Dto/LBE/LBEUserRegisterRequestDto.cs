@@ -1,4 +1,4 @@
-/*
+﻿/*
 Copyright 2019 - 2021 Inetum
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,14 +14,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System.Collections.Generic;
-
-namespace umi3d.common.lbe.description
+namespace umi3d.common.lbe
 {
-    public class LBEGroupSyncRequestDto : AbstractOperationDto
+    public class LBEUserRegisterRequestDto : AbstractBrowserRequestDto
     {
-        public ulong LBEGroupId { get; set; }
+        public ulong groupId { get; set; }
+    }
 
-        public ulong AdminUserId { get; set; }
+    public class LBELeaderRegisterRequestDto : AbstractBrowserRequestDto
+    {
+        public ulong groupId { get; set; }
     }
 }

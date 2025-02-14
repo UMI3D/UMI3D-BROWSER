@@ -103,16 +103,16 @@ namespace umi3d.common
         public const uint DeviceBatteryLevelRequest = 10015;
         public const uint UserTrackingBone = 10016;
         public const uint TeleportGroupRequest = 10017;
-        public const uint GuardianBrowserRequest = 10018;
-        public const uint DeviceDescriptionRequest = 10019;
-        public const uint LBEActivationOperation = 10020;
-        public const uint SetLBEGroupRequest = 10021;
-        public const uint LBEAddUser = 10022;
-        public const uint LBERemoveUser = 10023;
-        public const uint LBELeaderOperation = 10024;
-        public const uint LBESetGroupOperation = 10025;
-        public const uint LBEGuardianOperation = 10026;
-
+        public const uint DeviceDescriptionRequest = 10018;
+        public const uint MDMActivationOperation = 10021;
+        public const uint MDMAddUserOperation = 10022;
+        public const uint MDMRemoveUserOperation = 10023;
+        public const uint MDMLeaderOperation = 10024;
+        public const uint MDMSetGroupOperation = 10025;
+        public const uint MDMSetGuardianOperation = 10026;
+        public const uint MDMGuardianBrowserRequest = 10027;
+        public const uint LBEUserRegisterRequest = 10028;
+        public const uint LBELeaderRegisterRequest = 10029;
 
 
         public const uint EmoteRequest = 10020;

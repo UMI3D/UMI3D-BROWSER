@@ -41,7 +41,7 @@ namespace umi3d.common.lbe
         {
             if (value is LBERemoveUserGroupOperationDto dto)
             {
-                bytable = UMI3DSerializer.Write(UMI3DOperationKeys.LBERemoveUser)
+                bytable = UMI3DSerializer.Write(UMI3DOperationKeys.MDMRemoveUserOperation)
                     + UMI3DSerializer.Write(dto.userId);
                 return true;
             }

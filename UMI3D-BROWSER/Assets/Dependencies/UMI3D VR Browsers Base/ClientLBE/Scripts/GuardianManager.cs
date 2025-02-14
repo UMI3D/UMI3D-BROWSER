@@ -20,13 +20,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net.NetworkInformation;
-using System.Runtime.InteropServices.WindowsRuntime;
 using umi3d.browserRuntime.NotificationKeys;
 using umi3d.cdk;
 using umi3d.cdk.collaboration;
 using umi3d.cdk.collaboration.userCapture;
 using umi3d.cdk.userCapture;
 using umi3d.common;
+using umi3d.common.core;
 using umi3d.common.lbe;
 using umi3d.common.lbe.description;
 using umi3d.common.userCapture;
@@ -75,7 +75,6 @@ namespace umi3d.VRBase.lbe
         private float orientationOffset;
 
         private List<ARPlane> planesToCalibrate = new List<ARPlane>();
-        public LBEGroupSyncRequestDto lBEGroupDto = new LBEGroupSyncRequestDto();
 
         //List<ulong> colocatedUserIds = new List<ulong>();
 
@@ -184,7 +183,7 @@ namespace umi3d.VRBase.lbe
 
             GetGuardianArea();
             AddAnchorGuardian();
-            UserGuardianDto guardianDto = CreateGuardianDto();
+            UserGuardianRequestDto guardianDto = CreateGuardianDto();
 
             UMI3DClientServer.SendRequest(deviceDescription, true);
             UMI3DClientServer.SendRequest(guardianDto, reliable: true);
@@ -193,11 +192,13 @@ namespace umi3d.VRBase.lbe
         void OnLBESetGroupReception(LBESetUserGroupDto dto)
         {
             if ((UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DCollabLoadingParameters).IsColocatedDevice)
+            {
                 (UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DCollabLoadingParameters).LBEGroupId = dto.groupId;
 
-            // update server if already connected
+                UMI3DClientServer.SendRequest(new LBEUserRegisterRequestDto() { groupId = dto.groupId }, true);
 
-            OcclusionForColocatedUsers(dto.colocatedUserIds);
+                OcclusionForColocatedUsers(dto.colocatedUserIds);
+            }
         }
 
         void OnLBEGuardianReception(List<ARAnchorDto> anchors)
@@ -232,7 +233,7 @@ namespace umi3d.VRBase.lbe
 
         private void AddCapsuleToBone(AbstractSkeleton skeleton, uint boneType)
         {
-            if (skeleton.Bones.TryGetValue(boneType, out var boneTransform))
+            if (skeleton.Bones.TryGetValue(boneType, out UnityTransformation boneTransform))
             {
                 GameObject capsule = GameObject.CreatePrimitive(PrimitiveType.Capsule);
 
@@ -268,9 +269,9 @@ namespace umi3d.VRBase.lbe
 
             if (arPlaneManager != null)
             {
-                var trackables = arPlaneManager.trackables;
+                TrackableCollection<ARPlane> trackables = arPlaneManager.trackables;
 
-                foreach (var plane in trackables)
+                foreach (ARPlane plane in trackables)
                 {
 
                     if (plane.transform.position.y > 0.5f && plane.transform.position.y < 1.6f)
@@ -355,6 +356,8 @@ namespace umi3d.VRBase.lbe
         {
             isLeader = value;
             (UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DCollabLoadingParameters).IsLBEGroupLeader = value;
+
+            UMI3DClientServer.SendRequest(new LBELeaderRegisterRequestDto() { groupId = (UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DCollabLoadingParameters).LBEGroupId }, true);
 
             if (value)
             {
@@ -448,7 +451,8 @@ namespace umi3d.VRBase.lbe
 
         public void StartCalibrationScene()
         {
-            StartCoroutine(CalibrationScene());
+            if ((UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DCollabLoadingParameters).IsColocatedDevice)
+                StartCoroutine(CalibrationScene());
         }
 
         string GetMacAddress()
@@ -602,7 +606,7 @@ namespace umi3d.VRBase.lbe
         }
 
         // Envoyer les data de chaque ancres au serveur
-        public UserGuardianDto CreateGuardianDto()
+        public UserGuardianRequestDto CreateGuardianDto()
         {
             if (guardianAnchors.Count > 0)
             {
@@ -620,10 +624,10 @@ namespace umi3d.VRBase.lbe
                 //UMI3DLoadingParameters loadingParameters = UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DLoadingParameters;
                 //userGuardianDto.isImmersive = loadingParameters.HasImmersiveDevice;
 
-                return new UserGuardianDto() { ARAnchors = anchors };
+                return new UserGuardianRequestDto() { aRAnchors = anchors };
             }
 
-            return new UserGuardianDto() { ARAnchors = new List<ARAnchorDto>() };
+            return new UserGuardianRequestDto() { aRAnchors = new List<ARAnchorDto>() };
         }
 
         //IEnumerator WaitSendGuardian()

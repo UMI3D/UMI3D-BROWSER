@@ -42,7 +42,7 @@ namespace umi3d.common.lbe
         {
             if (value is LBEAddUserGroupOperationDto dto)
             {
-                bytable = UMI3DSerializer.Write(UMI3DOperationKeys.LBEAddUser)
+                bytable = UMI3DSerializer.Write(UMI3DOperationKeys.MDMAddUserOperation)
                     + UMI3DSerializer.Write(dto.userId)
                     + UMI3DSerializer.Write(dto.isImmersive);
                 return true;

@@ -65,7 +65,7 @@ namespace umi3d.cdk.collaboration
     public enum MicrophoneInputType
     {
         Unity,
-        NAudio
+        Custom
     }
 
     [RequireComponent(typeof(AudioSource))]
@@ -348,8 +348,8 @@ namespace umi3d.cdk.collaboration
                 case MicrophoneInputType.Unity:
                     mumbleMic = gameObject.AddComponent<MumbleMicrophone>();
                     break;
-                case MicrophoneInputType.NAudio:
-                    mumbleMic = gameObject.AddComponent<NAudioMicrophone>();
+                case MicrophoneInputType.Custom:
+                    mumbleMic = gameObject.AddComponent<CustomMicrophone>();
                     break;
                 default:
                     break;

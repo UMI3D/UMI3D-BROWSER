@@ -1,5 +1,5 @@
 /*
-Copyright 2019 - 2024 Inetum
+Copyright 2019 - 2025 Inetum
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,30 +15,15 @@ limitations under the License.
 */
 
 using inetum.unityUtils.observation;
+using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.tablet
 {
-    public static class TabletNotificationKeys
+    public class TabletOpenToggle : MonoBehaviour
     {
-        public static readonly string PlayHoverSound = "tablet-playSound-hover";
-        public static readonly string PlayClickSound = "tablet-playSound-click";
-
-        public class TabletSet
+        public void ToggleOpenTablet()
         {
-            public static readonly string Menu = "Menu";
+            NotificationHub.Default.Notify(this, ID.FromType<TabletNotificationKeys.Toggle>());
         }
-
-        public class TabletUpdate
-        {
-            public static readonly string Menu = "Menu";
-        }
-
-        public class Open { }
-        public class Opened { }
-        public class Close { }
-        public class Closed { }
-        public class Toggle { }
-
-        public class NewScreenSelected { }
     }
 }

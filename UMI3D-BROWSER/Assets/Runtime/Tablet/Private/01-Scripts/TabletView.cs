@@ -31,6 +31,10 @@ namespace umi3d.browserRuntime.ui.tablet
                 ID.FromType<TabletNotificationKeys.Close>(),
                 (Callback)Close
             );
+            NotificationHub.Default.Subscribe(this,
+                ID.FromType<TabletNotificationKeys.Toggle>(),
+                (Callback)Toggle
+            );
             gameObject.SetActive(false);
         }
 
@@ -53,6 +57,20 @@ namespace umi3d.browserRuntime.ui.tablet
                 return;
             gameObject.SetActive(false);
             NotificationHub.Default.Notify(this, ID.FromType<TabletNotificationKeys.Closed>());
+        }
+
+        private void Toggle()
+        {
+            Debug.Log("Toggle 2");
+            if (gameObject.activeSelf)
+            {
+                gameObject.SetActive(false);
+                NotificationHub.Default.Notify(this, ID.FromType<TabletNotificationKeys.Closed>());
+            } else
+            {
+                gameObject.SetActive(true);
+                NotificationHub.Default.Notify(this, ID.FromType<TabletNotificationKeys.Opened>());
+            }
         }
     }
 }

@@ -20,25 +20,29 @@ using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.ui.tablet
 {
-    [RequireComponent(typeof(Button))]
     public class OpenTabletButton : MonoBehaviour
     {
+        Button _button;
+
         private void Awake()
         {
-            GetComponent<Button>().onClick.AddListener(OpenTablet);
+            _button = GetComponent<Button>();
+            if (_button)
+                _button.onClick.AddListener(OpenTablet);
             NotificationHub.Default.Subscribe(this, 
-                ID.FromType<TabletNotificationKeys.Open>(), 
+                ID.FromType<TabletNotificationKeys.Opened>(), 
                 (Callback)HideButton
             );
             NotificationHub.Default.Subscribe(this, 
-                ID.FromType<TabletNotificationKeys.Close>(), 
+                ID.FromType<TabletNotificationKeys.Closed>(), 
                 (Callback)ShowButton
             );
         }
 
         private void OnDestroy()
         {
-            GetComponent<Button>().onClick.RemoveListener(OpenTablet);
+            if (_button)
+                _button.onClick.RemoveListener(OpenTablet);
             NotificationHub.Default.Unsubscribe(this);
         }
 

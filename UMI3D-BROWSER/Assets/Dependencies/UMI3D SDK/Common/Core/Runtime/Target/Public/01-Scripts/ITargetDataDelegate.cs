@@ -33,17 +33,6 @@ namespace umi3d.common.core.target
         Platform GetPlatform();
 
         /// <summary>
-        /// Return the list of authorized controllers for the device.
-        /// </summary>
-        /// <returns></returns>
-        IReadOnlyList<Controller> GetAuthorizedControllers();
-        /// <summary>
-        /// Return the list of the current active controllers.
-        /// </summary>
-        /// <returns></returns>
-        IReadOnlyList<Controller> GetCurrentControllers();
-
-        /// <summary>
         /// Return the active plugins.
         /// </summary>
         /// <returns></returns>
@@ -64,6 +53,17 @@ namespace umi3d.common.core.target
         /// </summary>
         /// <returns></returns>
         ImmersiveType GetCurrentImmersiveType();
+
+        /// <summary>
+        /// Return the list of authorized controllers for the device.
+        /// </summary>
+        /// <returns></returns>
+        IReadOnlyList<Controller> GetAuthorizedControllers();
+        /// <summary>
+        /// Return the list of the current active controllers.
+        /// </summary>
+        /// <returns></returns>
+        IReadOnlyList<Controller> GetCurrentControllers();
 
         /// <summary>
         /// Try to set the current controllers used by the user on this device.<br/>

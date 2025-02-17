@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils.observation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,11 +23,19 @@ namespace umi3d.common.core.target
 {
     public class TargetManager : ITargetDataDelegate
     {
+        #region Initialization
+
         public static TargetManager @default => _default.Value;
         static readonly Lazy<TargetManager> _default = new(() => new TargetManager());
         TargetManager() {}
 
+        #endregion
+
         public ITargetDataDelegate dataDelegate;
+
+        public Delegates<ITargetDelegate> delegates;
+
+        #region ITargetDataDelegate
 
         public OperatingSystem GetOperatingSystem()
         {
@@ -36,15 +45,6 @@ namespace umi3d.common.core.target
         public Platform GetPlatform()
         {
             return dataDelegate.GetPlatform();
-        }
-
-        public IReadOnlyList<Controller> GetAuthorizedControllers()
-        {
-            return dataDelegate.GetAuthorizedControllers();
-        }
-        public IReadOnlyList<Controller> GetCurrentControllers()
-        {
-            return dataDelegate.GetCurrentControllers();
         }
 
         public IReadOnlyList<Plugin> GetActivePlugins()
@@ -65,6 +65,15 @@ namespace umi3d.common.core.target
             return dataDelegate.GetCurrentImmersiveType();
         }
 
+        public IReadOnlyList<Controller> GetAuthorizedControllers()
+        {
+            return dataDelegate.GetAuthorizedControllers();
+        }
+        public IReadOnlyList<Controller> GetCurrentControllers()
+        {
+            return dataDelegate.GetCurrentControllers();
+        }
+
         public bool TrySetCurrentControllers(IEnumerable<Controller> controllers)
         {
             return dataDelegate.TrySetCurrentControllers(controllers);
@@ -74,6 +83,8 @@ namespace umi3d.common.core.target
         {
             return dataDelegate.TrySetCurrentImmersiveType(immersiveType);
         }
+
+        #endregion
 
         public static bool isWindows => @default.GetOperatingSystem().Equals(OperatingSystem.windows);
         public static bool isAndroid => @default.GetOperatingSystem().Equals(OperatingSystem.android);

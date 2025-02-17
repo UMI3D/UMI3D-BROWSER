@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils.observation;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -37,17 +38,18 @@ namespace umi3d.browserRuntime.target
                 if (_default == null)
                 {
                     var op = Addressables.LoadAssetAsync<TargetSO>(typeof(TargetSO).Name);
-
                     _default = op.WaitForCompletion(); //Forces synchronous load so that we can return immediately
+
+                    TargetManager.@default.dataDelegate = _default;
+                    TargetManager.@default.delegates = _default.delegates;
                 }
                 return _default;
             }
         }
-
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void OnBeforeSceneLoadRuntimeMethod()
         {
-            TargetManager.@default.dataDelegate = @default;
+            _ = @default;
         }
 
         [SerializeField, HideInInspector] OperatingSystem operatingSystem;
@@ -63,6 +65,8 @@ namespace umi3d.browserRuntime.target
         [SerializeField, HideInInspector] ImmersiveType[] immersiveTypes;
         [SerializeField, HideInInspector] ImmersiveType currentImmersiveType;
 
+        #region ITargetDataDelegate
+
         public OperatingSystem GetOperatingSystem()
         {
             return operatingSystem;
@@ -71,15 +75,6 @@ namespace umi3d.browserRuntime.target
         public Platform GetPlatform()
         {
             return platform;
-        }
-
-        public IReadOnlyList<Controller> GetAuthorizedControllers()
-        {
-            return controllers;
-        }
-        public IReadOnlyList<Controller> GetCurrentControllers()
-        {
-            return currentControllers;
         }
 
         public IReadOnlyList<Plugin> GetActivePlugins()
@@ -100,12 +95,27 @@ namespace umi3d.browserRuntime.target
             return currentImmersiveType;
         }
 
+        public IReadOnlyList<Controller> GetAuthorizedControllers()
+        {
+            return controllers;
+        }
+        public IReadOnlyList<Controller> GetCurrentControllers()
+        {
+            return currentControllers;
+        }
+
+        #endregion
+
+        Delegates<ITargetDelegate> delegates = new();
+
+        #region Set methods that can be called in runtime.
+
         public bool TrySetCurrentControllers(IEnumerable<Controller> controllers)
         {
             List<Controller> unauthorizedControllers = new();
             foreach (var controller in controllers)
             {
-                if (!controllers.Contains(controller))
+                if (!this.controllers.Contains(controller))
                 {
                     unauthorizedControllers.Add(controller);
                 }
@@ -117,7 +127,12 @@ namespace umi3d.browserRuntime.target
                 return false;
             }
 
-            currentControllers = unauthorizedControllers.ToArray();
+            currentControllers = controllers.ToArray();
+            delegates.ForEach(@delegate =>
+            {
+                @delegate.CurrentControllersHaveChanged(currentControllers);
+                return Flow.Continue;
+            });
             return true;
         }
 
@@ -130,8 +145,15 @@ namespace umi3d.browserRuntime.target
             }
 
             currentImmersiveType = immersiveType;
+            delegates.ForEach(@delegate =>
+            {
+                @delegate.CurrentImmersiveTypeHasChanged(currentImmersiveType);
+                return Flow.Continue;
+            });
             return true;
         }
+
+        #endregion
 
         #region Set methods that can only be called in the editor.
 
@@ -139,6 +161,11 @@ namespace umi3d.browserRuntime.target
         public void UpdateOperatingSystem(OperatingSystem operatingSystem)
         {
             this.operatingSystem = operatingSystem;
+            delegates.ForEach(@delegate =>
+            {
+                @delegate.OperatingSystemHasChanged(operatingSystem);
+                return Flow.Continue;
+            });
             Save();
         }
 
@@ -146,6 +173,11 @@ namespace umi3d.browserRuntime.target
         public void UpdatePlatform(Platform platform)
         {
             this.platform = platform;
+            delegates.ForEach(@delegate =>
+            {
+                @delegate.PlatformHasChanged(platform);
+                return Flow.Continue;
+            });
             Save();
         }
 
@@ -153,6 +185,11 @@ namespace umi3d.browserRuntime.target
         public void UpdateControllers(Controller[] controllers)
         {
             this.controllers = controllers;
+            delegates.ForEach(@delegate =>
+            {
+                @delegate.AuthorizedControllersHaveChanged(controllers);
+                return Flow.Continue;
+            });
             Save();
         }
 
@@ -160,6 +197,11 @@ namespace umi3d.browserRuntime.target
         public void UpdatePlugins(Plugin[] plugins)
         {
             this.plugins = plugins;
+            delegates.ForEach(@delegate =>
+            {
+                @delegate.ActivePluginsHaveChanged(plugins);
+                return Flow.Continue;
+            });
             Save();
         }
 
@@ -167,6 +209,11 @@ namespace umi3d.browserRuntime.target
         public void UpdateFeatures(Feature[] features)
         {
             this.features = features;
+            delegates.ForEach(@delegate =>
+            {
+                @delegate.ActiveFeaturesHaveChanged(features);
+                return Flow.Continue;
+            });
             Save();
         }
 
@@ -174,6 +221,11 @@ namespace umi3d.browserRuntime.target
         public void UpdateImmersiveTypes(ImmersiveType[] immersiveTypes)
         {
             this.immersiveTypes = immersiveTypes;
+            delegates.ForEach(@delegate =>
+            {
+                @delegate.AuthorizedImmersiveTypesHaveChanged(immersiveTypes);
+                return Flow.Continue;
+            });
             Save();
         }
 

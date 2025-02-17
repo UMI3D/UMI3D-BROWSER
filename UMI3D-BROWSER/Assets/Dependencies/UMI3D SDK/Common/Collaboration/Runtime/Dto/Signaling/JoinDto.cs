@@ -49,7 +49,6 @@ namespace umi3d.common.collaboration.dto.signaling
         /// E.g. BoneType.ViewPoint for Desktop, BoneType.LeftHand and BoneType.RightHand for most VR devices.
         /// </summary>
         public List<uint> bonesWithController { get; set; }
-
     }
 
     public class JoinLBEDto : JoinDto

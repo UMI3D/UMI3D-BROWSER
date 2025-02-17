@@ -45,10 +45,7 @@ namespace umi3d.common.lbe
         public ulong userId { get; set; }
     }
 
-    public class LBEAddUserGroupOperationDto : AbstractLBEManageUserGroupOperationDto
-    {
-        public bool isImmersive { get; set; }
-    }
+    public class LBEAddUserGroupOperationDto : AbstractLBEManageUserGroupOperationDto { }
 
     public class LBERemoveUserGroupOperationDto : AbstractLBEManageUserGroupOperationDto { }
 }

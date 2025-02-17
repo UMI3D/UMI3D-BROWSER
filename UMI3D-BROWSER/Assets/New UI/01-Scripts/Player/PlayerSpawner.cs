@@ -24,6 +24,7 @@ namespace umi3dBrowsers
                 RepositionPlayer();
             };
         }
+
         public void RepositionPlayer()
         {
             PlayerTransformUtils.RotatePlayerAndCenterCamera(playerTransform, Camera.main.transform, transform.rotation);

@@ -241,7 +241,7 @@ namespace umi3d.cdk.collaboration
         #endregion
 
 #if UNITY_STANDALONE
-        public bool UseNoiseReduction
+        public bool UseMicrophoneEnhancement
         {
             get
             {

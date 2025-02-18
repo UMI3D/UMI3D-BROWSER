@@ -90,8 +90,6 @@ namespace umi3d.cdk.collaboration
 
         #endregion
 
-        //public List<float> micWithoutProcess = new(), micWithProcess = new(), speaker = new();
-
         public AECAndNoiseReductionMicrophoneFilter(MicrophoneFilterSettings settings)
         {
             AudioProcessingWebRTCWrapper.Init(settings.sampleRate,
@@ -104,7 +102,6 @@ namespace umi3d.cdk.collaboration
             this.capture = new WasapiLoopbackCapture(100, new(48000, 16, 2));
             this.capture.Initialize();
             this.bytesPerSample = capture.WaveFormat.BitsPerSample / 8;
-            Debug.Assert(bytesPerSample == 2, "Only works if its a 16bits sound");
             capture.DataAvailable += RecordSystemAudio;
         }
 
@@ -114,16 +111,28 @@ namespace umi3d.cdk.collaboration
 
             lock(this.echoSamples)
             {
+                float sample = 0f;
+
                 for (int i = 0; i < sampleCount; i += capture.WaveFormat.Channels)
                 {
-                    short shortSample = BitConverter.ToInt16(e.Data, i * bytesPerSample);
-                    float sample = shortSample / (float)(short.MaxValue);
+                    switch (this.bytesPerSample)
+                    {
+                        case 2:
+                            short shortSample = BitConverter.ToInt16(e.Data, i * bytesPerSample);
+                            sample = shortSample / (float)(short.MaxValue);
+                            break;
+                        case 4:
+                            int intSample = BitConverter.ToInt32(e.Data, i * bytesPerSample);
+                            sample = intSample / (float)(int.MaxValue);
+                            break;
+                        default:
+                            break;
+                    }
 
                     if (this.echoSamples.Count > MAX_ECHO_QUEUE_SIZE)
                         this.echoSamples.Dequeue();
 
                     this.echoSamples.Enqueue(sample);
-                    //this.speaker.Add(sample);
                 }
             }
         }
@@ -158,92 +167,20 @@ namespace umi3d.cdk.collaboration
                 }
             }
 
-            //micWithoutProcess.AddRange(samples);
-
             // 2. Process audio
-            AudioProcessingWebRTCWrapper.ProcessAudio(bufferSize, micShortSamples, echoShortSamples, outShortSamples);
+            AudioProcessingWebRTCWrapper.ProcessAudio(micShortSamples, echoShortSamples, outShortSamples);
 
             // 3. Convert output to float.
             for (int i = 0; i < bufferSize; i++)
             {
                 samples[i] = (outShortSamples[i] / (float)short.MaxValue);
             }
-
-            //micWithProcess.AddRange(samples);
         }
 
         void IDisposable.Dispose()
         {
             capture.Dispose();
-        }
-
-        public void Clear()
-        {
-            //micWithoutProcess.Clear();
-            //micWithProcess.Clear();
-            //speaker.Clear();
-        }
-
-        public void Save()
-        {
-            //string outputFilePath = @"C:\Users\frup77677\Downloads\mic-process.wav";
-            //using (WaveWriter writer = new (outputFilePath, new WaveFormat(48000, 16, 1)))
-            //{
-            //    // Écrire les données audio dans le fichier .wav
-            //    writer.WriteSamples(micWithProcess.ToArray(), 0, micWithProcess.Count);
-            //}
-
-            //Debug.Log("Write file " + outputFilePath);
-
-            //outputFilePath = @"C:\Users\frup77677\Downloads\mic-no-process.wav";
-            //using (WaveWriter writer = new (outputFilePath, new WaveFormat(48000, 16, 1)))
-            //{
-            //    // Écrire les données audio dans le fichier .wav
-            //    writer.WriteSamples(micWithoutProcess.ToArray(), 0, micWithoutProcess.Count);
-            //}
-
-            //Debug.Log("Write file " + outputFilePath);
-
-            //Debug.Log(micWithoutProcess.Count + " vs " + speaker.Count);
-
-            //outputFilePath = @"C:\Users\frup77677\Downloads\mic-speakers.wav";
-            //using (WaveWriter writer = new (outputFilePath, new WaveFormat(48000, 16, 1)))
-            //{
-            //    // Écrire les données audio dans le fichier .wav
-            //    writer.WriteSamples(speaker.ToArray(), 0, speaker.Count);
-            //}
-
-            //int n = micWithoutProcess.Count;
-            //short[] postprocess = new short[n];
-            //float[] postProcessFloat = new float[n];
-            //short[] mic = new short[n];
-            //short[] echo = new short[n];
-
-            //for (int i = 0; i < n; i++)
-            //{
-            //    postprocess[i] = (short)(speaker[i] * short.MaxValue);
-            //    mic[i] = (short)(micWithoutProcess[i] * short.MaxValue);
-            //    echo[i] = (short)(speaker[i] * short.MaxValue);
-            //}
-
-            //AudioProcessingWebRTCWrapper.ProcessAudio(n, mic, echo, postprocess);
-
-            //for (int i = 0; i < n; i++)
-            //{
-            //    postProcessFloat[i] = postprocess[i]/(short)(short.MaxValue);
-
-            //    if (i == 6790)
-            //        postProcessFloat[i] = 1f;
-            //}
-
-            //outputFilePath = @"C:\Users\frup77677\Downloads\mic-post-process.wav";
-            //using (WaveWriter writer = new(outputFilePath, new WaveFormat(48000, 16, 1)))
-            //{
-            //    // Écrire les données audio dans le fichier .wav
-            //    writer.WriteSamples(postProcessFloat, 0, postProcessFloat.Length);
-            //}
-
-            //Debug.Log("Write file " + outputFilePath);
+            AudioProcessingWebRTCWrapper.Destroy();
         }
     }
 }

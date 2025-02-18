@@ -102,6 +102,8 @@ namespace umi3d.cdk.collaboration
 
         static readonly CustomSampler audioProcessingProfilerMarker = CustomSampler.Create("CustomMicrophone.Filters");
 
+        private bool filterInit = false;
+
         private List<IMicrophoneFilter> filters = new();
 
         private bool useAudioEnhancement = true;
@@ -133,6 +135,7 @@ namespace umi3d.cdk.collaboration
         public override int InitializeMic()
         {
             StopRecording();
+
             if (MicNumberToUse == currentMicIndex)
             {
                 Debug.Log("Mic already init " + GetCurrentMicName());
@@ -140,41 +143,46 @@ namespace umi3d.cdk.collaboration
             }
 
             //Make sure there are are microphones connected.
-            if (WaveInDevice.EnumerateDevices().Count() <= 0 || Microphone.devices.Length <= 0)
+            int nbDevices = WaveInDevice.EnumerateDevices().Count();
+
+            if (nbDevices <= 0)
             {
-                Debug.Log("No microphone connected!");
+                UMI3DLogger.LogError($"{nameof(CustomMicrophone)}.{nameof(InitializeMic)} : No microphone connected !", DebugScope.Collaboration);
+                return -1;
+            }
+            else if (MicNumberToUse >= nbDevices)
+            {
+                UMI3DLogger.LogError($"{nameof(CustomMicrophone)}.{nameof(InitializeMic)} : Impossible to use mic nb {MicNumberToUse}, there is only {nbDevices} mics available.", DebugScope.Collaboration);
                 return -1;
             }
 
             currentMicIndex = MicNumberToUse;
             isChannelChoosen = false;
-
-            Microphone.GetDeviceCaps(Microphone.devices[MicNumberToUse], out int minFreq, out int maxFreq);
             NumSamplesPerOutgoingPacket = MumbleConstants.NUM_FRAMES_PER_OUTGOING_PACKET * currentMicSampleRate / 100;
 
-            if (maxFreq != currentMicSampleRate)
+            waveIn?.Dispose();
+            waveIn = new WaveIn(new WaveFormat(this.currentMicSampleRate, 16, numberOfChannel))
             {
-                Debug.Log("Microphone supports only " + maxFreq + " Hz, value forced to 48000 to be able to use noise reduction.");
-            }
+                Device = WaveInDevice.EnumerateDevices().ElementAt(MicNumberToUse),
+                Latency = 100 // Delay, to be sure echo samples are recorded before mic samples
+            };
+            waveIn.Initialize();
+            waveIn.DataAvailable += ProcessAudio;
 
-            if (waveIn == null)
+            if (!this.filterInit)
             {
-                waveIn = new WaveIn(new WaveFormat(this.currentMicSampleRate, 16, numberOfChannel))
-                {
-                    Device = WaveInDevice.EnumerateDevices().ElementAt(MicNumberToUse),
-                    Latency = 100 // Delay to be sure, echo samples are recorded before mic samples
-                };
-                waveIn.Initialize();
-                waveIn.DataAvailable += ProcessAudio;
-            }
-
 #if UNITY_STANDALONE_WIN || UNITY_STANDALONE_OSX
-            this.filters.Add(new AECAndNoiseReductionMicrophoneFilter(new()
-            {
-                channels = numberOfChannel,
-                sampleRate = currentMicSampleRate
-            }));
+                this.filters.Add(new AECAndNoiseReductionMicrophoneFilter(new()
+                {
+                    channels = numberOfChannel,
+                    sampleRate = currentMicSampleRate
+                }));
+
+                this.filterInit = true;
 #endif
+            }
+
+            UMI3DLogger.Log($"{nameof(CustomMicrophone)} : init with {waveIn.Device.Name}", DebugScope.Collaboration);
 
             return currentMicSampleRate;
         }
@@ -386,7 +394,6 @@ namespace umi3d.cdk.collaboration
             {
                 needToRecord = false;
                 waveIn.Stop();
-                Debug.Log("Stop recording");
             }
         }
 
@@ -458,24 +465,6 @@ namespace umi3d.cdk.collaboration
             }
 
             waveIn?.Dispose();
-        }
-
-        [ContextMenu("Record")]
-        public void StartRecording_()
-        {
-            foreach(var filter in filters)
-            {
-                (filter as AECAndNoiseReductionMicrophoneFilter)?.Clear();
-            }
-        }
-
-        [ContextMenu("Save")]
-        public void SaveRecording_()
-        {
-            foreach (var filter in filters)
-            {
-                (filter as AECAndNoiseReductionMicrophoneFilter)?.Save();
-            }
         }
 
         #endregion     

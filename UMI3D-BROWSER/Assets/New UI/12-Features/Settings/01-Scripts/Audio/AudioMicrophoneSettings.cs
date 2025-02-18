@@ -42,6 +42,27 @@ namespace umi3d.browserRuntime.ui.settings
             dropdownControl.valueChanged += ValueChanged;
         }
 
+        void OnEnable()
+        {
+            if (string.IsNullOrEmpty(audioSettings.model.microphone))
+                return;
+
+            RefreshMicOptions();
+
+            string[] micNames = Microphone.devices;
+
+            for (int i = 0; i < micNames.Length; i++)
+            {
+                string micName = micNames[i];
+
+                if (micName == audioSettings.model.microphone)
+                {
+                    ValueChanged(i);
+                    return;
+                }
+            }
+        }
+
         void Update()
         {
             RefreshMicOptions();
@@ -64,7 +85,7 @@ namespace umi3d.browserRuntime.ui.settings
             }
 
             var tmp = MicrophoneListener.GetMicrophonesNames();
-            
+
             if (tmp.Length <= 0)
             {
                 UnityEngine.AudioSettings.Reset(UnityEngine.AudioSettings.GetConfiguration());
@@ -81,7 +102,7 @@ namespace umi3d.browserRuntime.ui.settings
                 return;
             }
 
-            if(!this.NoMicrophoneFound && microphones is not null && tmp.Length == microphones.Count && tmp.Zip(microphones,(a,b) => a == b).All(c => c))
+            if (!this.NoMicrophoneFound && microphones is not null && tmp.Length == microphones.Count && tmp.Zip(microphones, (a, b) => a == b).All(c => c))
                 return;
 
             this.NoMicrophoneFound = false;

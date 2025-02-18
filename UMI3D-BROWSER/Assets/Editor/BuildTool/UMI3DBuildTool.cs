@@ -16,6 +16,7 @@ limitations under the License.
 
 using inetum.unityUtils;
 using System.Linq;
+using umi3d.browserRuntime.target;
 using umi3d.cdk.collaboration;
 using umi3d.common.core.target;
 using UnityEditor;
@@ -103,6 +104,7 @@ namespace umi3d.browserEditor.BuildTool
         {
             if (isNewUI)
             {
+                _ = TargetSO.@default;
                 data = BuildToolData.@default;
 
                 string tabViewPath = ViewLoader.GetPath<TabView>();

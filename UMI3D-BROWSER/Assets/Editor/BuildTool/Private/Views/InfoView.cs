@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System;
+using inetum.unityUtils.versioning;
 using System.Linq;
 using umi3d.common.core.target;
 using UnityEngine;

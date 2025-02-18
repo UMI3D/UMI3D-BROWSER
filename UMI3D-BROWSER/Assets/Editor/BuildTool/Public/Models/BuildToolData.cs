@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils.versioning;
 using System.Collections.Generic;
 using System.Linq;
 using umi3d.common.core.target;
@@ -26,6 +27,8 @@ namespace umi3d.browserEditor.BuildTool
     [CreateAssetMenu(fileName = "BuildToolData", menuName = "UMI3D/browser/BuildToolData", order = 1)]
     public class BuildToolData : ScriptableObject
     {
+        #region Initialization
+
         static BuildToolData _default;
         public static BuildToolData @default
         {
@@ -42,6 +45,7 @@ namespace umi3d.browserEditor.BuildTool
             }
         }
         BuildToolData() {}
+        #endregion
 
         public List<IBuildToolDataDelegate> delegates = new();
 

@@ -68,10 +68,14 @@ namespace umi3d.browserRuntime.ui.tablet.social
                 .JoinedUserList
                 .Where(u => !u.isClient).ToList();
 
-            // Remove Users
+            // Remove Users (usersToRemove is here to avoid modify Users while itering throught it
+            var usersToRemove = new List<UMI3DUser>();
             foreach (var user in Users.Keys)
                 if (!users.Contains(user))
-                    RemoveUser?.Invoke(user);
+                    usersToRemove.Add(user);
+
+            foreach (var user in usersToRemove)
+                RemoveUser?.Invoke(user);
 
             // Add Users
             foreach (var user in users)

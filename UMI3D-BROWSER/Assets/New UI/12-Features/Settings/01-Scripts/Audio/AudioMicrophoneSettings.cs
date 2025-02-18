@@ -18,7 +18,7 @@ using System.Linq;
 using umi3d.cdk.collaboration;
 using UnityEngine;
 using System.Collections.Generic;
-using inetum.unityUtils;
+using umi3d.common;
 
 namespace umi3d.browserRuntime.ui.settings
 {
@@ -30,7 +30,8 @@ namespace umi3d.browserRuntime.ui.settings
         AudioSettings audioSettings;
 
         List<string> microphones;
-        bool NoMicrophoneFound = false;
+
+        bool noMicrophoneFound = false;
 
         void Awake()
         {
@@ -43,6 +44,18 @@ namespace umi3d.browserRuntime.ui.settings
         }
 
         void OnEnable()
+        {
+            try
+            {
+                SetMicrophoneFromPreferences();
+            }
+            catch (System.Exception ex)
+            {
+                UMI3DLogger.LogException(ex, DebugScope.Collaboration);
+            }
+        }
+
+        private void SetMicrophoneFromPreferences()
         {
             if (string.IsNullOrEmpty(audioSettings.model.microphone))
                 return;
@@ -72,10 +85,10 @@ namespace umi3d.browserRuntime.ui.settings
         {
             if (!MicrophoneListener.Exists)
             {
-                if (this.NoMicrophoneFound)
+                if (this.noMicrophoneFound)
                     return;
 
-                this.NoMicrophoneFound = true;
+                this.noMicrophoneFound = true;
                 microphones = new List<string> { "No Microphone Listener" };
 
                 dropdownControl.optionsCount = microphones.Count;
@@ -90,10 +103,10 @@ namespace umi3d.browserRuntime.ui.settings
             {
                 UnityEngine.AudioSettings.Reset(UnityEngine.AudioSettings.GetConfiguration());
 
-                if (this.NoMicrophoneFound)
+                if (this.noMicrophoneFound)
                     return;
 
-                this.NoMicrophoneFound = true;
+                this.noMicrophoneFound = true;
                 microphones = new List<string> { "No Microphone Found" };
 
                 dropdownControl.optionsCount = microphones.Count;
@@ -102,10 +115,10 @@ namespace umi3d.browserRuntime.ui.settings
                 return;
             }
 
-            if (!this.NoMicrophoneFound && microphones is not null && tmp.Length == microphones.Count && tmp.Zip(microphones, (a, b) => a == b).All(c => c))
+            if (!this.noMicrophoneFound && microphones is not null && tmp.Length == microphones.Count && tmp.Zip(microphones, (a, b) => a == b).All(c => c))
                 return;
 
-            this.NoMicrophoneFound = false;
+            this.noMicrophoneFound = false;
 
             microphones = tmp.ToList();
 

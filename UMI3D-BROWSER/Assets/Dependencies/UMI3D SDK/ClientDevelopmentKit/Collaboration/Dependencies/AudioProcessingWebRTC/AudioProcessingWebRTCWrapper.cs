@@ -21,12 +21,31 @@ public static class AudioProcessingWebRTCWrapper
 {
     public enum NoiseReductionLevel { Low, Moderate, High, VeryHigh };
 
+    [StructLayout(LayoutKind.Sequential)]
+    public struct AudioProcessingSettings
+    {
+        public int sampleRate;
+
+        public int nbChannels;
+
+        [MarshalAs(UnmanagedType.I1)]
+        public bool useEchoCanceller;
+
+        [MarshalAs(UnmanagedType.I1)]
+        public bool useNoiseReduction;
+
+        public NoiseReductionLevel noiseReductionLevel;
+    };
+
     #region Private API
 
     private static IntPtr audioProcessor = IntPtr.Zero;
 
     [DllImport("AudioProcessingWebRTC.dll")]
-    private static extern IntPtr InitAudioProcessing(int sampleRate, int nbOfChannel, bool noiseReduction, int noiseReductionLevel, bool echoCancellation);
+    private static extern IntPtr InitAudioProcessing(AudioProcessingSettings settings);
+
+    [DllImport("AudioProcessingWebRTC.dll")]
+    private static extern void SetSettings(IntPtr audioProcessor, AudioProcessingSettings settings);
 
     [DllImport("AudioProcessingWebRTC.dll")]
     private static extern void Destroy(IntPtr audioProcessor);
@@ -41,20 +60,30 @@ public static class AudioProcessingWebRTCWrapper
     /// <summary>
     /// Initializes the AudioProcessor object. Ownership is transferred to whoever calls this method. The <see cref="Destroy()"/> method must be called to free up memory.
     /// </summary>
-    /// <param name="sampleRate">Sample rate of audio to process. Input, echo and output samples must have the same framerate and length.</param>
-    /// <param name="nbOfChannel">Number of channels of audio to process. Input, echo and output samples must have the number of channels.</param>
-    /// <param name="noiseReduction">Enable noise reduction filter.</param>
-    /// <param name="noiseReductionLevel"></param>
-    /// <param name="echoCancellation">Enable acoustic echo cancellation filter.</param>
-    public static void Init(int sampleRate, int nbOfChannel, bool noiseReduction, NoiseReductionLevel noiseReductionLevel, bool echoCancellation)
+    public static void Init(AudioProcessingSettings settings)
     {
         if (audioProcessor != IntPtr.Zero)
             throw new Exception($"{nameof(AudioProcessingWebRTCWrapper)} already init, call Destroy before");
 
-        if (sampleRate < 0)
+        if (settings.sampleRate < 0)
             new Exception($"{nameof(AudioProcessingWebRTCWrapper)}.{nameof(Init)} sample rate can't be negative.");
 
-        audioProcessor = InitAudioProcessing(sampleRate, nbOfChannel, noiseReduction, (int)noiseReductionLevel, echoCancellation);
+        audioProcessor = InitAudioProcessing(settings);
+    }
+
+    /// <summary>
+    /// Sets the audio processing settings of an AudioProcessor created by InitAudioProcessing.
+    /// </summary>
+    /// <param name="settings"></param>
+    public static void SetSettings(AudioProcessingSettings settings)
+    {
+        if (audioProcessor == IntPtr.Zero)
+            throw new Exception($"{nameof(AudioProcessingWebRTCWrapper)} not init");
+
+        if (settings.sampleRate < 0)
+            new Exception($"{nameof(AudioProcessingWebRTCWrapper)}.{nameof(SetSettings)} sample rate can't be negative.");
+
+        SetSettings(audioProcessor, settings);
     }
 
     /// <summary>

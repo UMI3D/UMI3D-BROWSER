@@ -172,14 +172,19 @@ namespace umi3d.cdk.collaboration
             if (!this.filterInit)
             {
 #if UNITY_STANDALONE_WIN || UNITY_STANDALONE_OSX
-                this.filters.Add(new AECAndNoiseReductionMicrophoneFilter(new()
-                {
-                    channels = numberOfChannel,
-                    sampleRate = currentMicSampleRate
-                }));
 
-                this.filterInit = true;
+                var settings = new AudioProcessingWebRTCWrapper.AudioProcessingSettings()
+                {
+                    sampleRate = currentMicSampleRate,
+                    nbChannels = 1,
+                    useNoiseReduction = true,
+                    noiseReductionLevel = AudioProcessingWebRTCWrapper.NoiseReductionLevel.Moderate,
+                    useEchoCanceller = true
+                };
+
+                this.filters.Add(new AECAndNoiseReductionMicrophoneFilter(settings));
 #endif
+                this.filterInit = true;
             }
 
             UMI3DLogger.Log($"{nameof(CustomMicrophone)} : init with {waveIn.Device.Name}", DebugScope.Collaboration);
@@ -456,6 +461,8 @@ namespace umi3d.cdk.collaboration
 
         protected void OnDestroy()
         {
+            StopRecording();
+
             foreach (IMicrophoneFilter filter in filters)
             {
                 if (filter is IDisposable disposable)

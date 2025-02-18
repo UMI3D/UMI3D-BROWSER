@@ -14,22 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-//using CSCore;
-//using CSCore.Codecs.WAV;
 using CSCore.SoundIn;
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace umi3d.cdk.collaboration
 {
-    public struct MicrophoneFilterSettings
-    {
-        public int sampleRate;
-
-        public int channels;
-    }
-
     /// <summary>
     /// A filter which perfoms an acoustic echo cancellation and noise reduction based on WebRTC Voice Engine.
     /// </summary>
@@ -88,15 +78,15 @@ namespace umi3d.cdk.collaboration
         /// </summary>
         private short[] outShortSamples;
 
+        private AudioProcessingWebRTCWrapper.AudioProcessingSettings settings;
+
         #endregion
 
-        public AECAndNoiseReductionMicrophoneFilter(MicrophoneFilterSettings settings)
+        public AECAndNoiseReductionMicrophoneFilter(AudioProcessingWebRTCWrapper.AudioProcessingSettings settings)
         {
-            AudioProcessingWebRTCWrapper.Init(settings.sampleRate,
-                settings.channels,
-                true,
-                AudioProcessingWebRTCWrapper.NoiseReductionLevel.VeryHigh,
-                true);
+            AudioProcessingWebRTCWrapper.Init(settings);
+
+            this.settings = settings;
 
             // we can't change WasapiLoopbackCapture format to mono sound, otherwise it fails
             this.capture = new WasapiLoopbackCapture(100, new(48000, 16, 2));
@@ -139,7 +129,7 @@ namespace umi3d.cdk.collaboration
 
         void IMicrophoneFilter.ProcessAudio(float[] samples)
         {
-            if (!this.Enable)
+            if (!this.Enable || (!this.settings.useEchoCanceller && !this.settings.useNoiseReduction))
                 return;
 
             int bufferSize = samples.Length;

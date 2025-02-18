@@ -15,16 +15,42 @@ limitations under the License.
 */
 
 using inetum.unityUtils.observation;
+using umi3d.browserRuntime.ui.tablet;
+using umi3d.cdk.collaboration;
 using UnityEngine;
 
-namespace umi3d.browserRuntime.ui.tablet
+namespace umi3d.browserRuntime.ui.watch
 {
     public class TabletOpenToggle : MonoBehaviour
     {
+        private void Awake()
+        {
+            UMI3DEnvironmentClient.EnvironmentLoaded.AddListener(Show);
+            UMI3DCollaborationClientServer.Instance.OnLeavingEnvironment.AddListener(Hide);
+
+            Hide();
+        }
+
+        private void OnDestroy()
+        {
+            UMI3DEnvironmentClient.EnvironmentLoaded.RemoveListener(Show);
+            UMI3DCollaborationClientServer.Instance.OnLeavingEnvironment.RemoveListener(Hide);
+        }
+
         [ContextMenu("Toggle")]
         public void ToggleOpenTablet()
         {
             NotificationHub.Default.Notify(this, ID.FromType<TabletNotificationKeys.Toggle>());
+        }
+
+        void Show()
+        {
+            gameObject.SetActive(true);
+        }
+
+        void Hide()
+        {
+            gameObject.SetActive(false);
         }
     }
 }

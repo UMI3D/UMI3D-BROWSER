@@ -16,6 +16,7 @@ limitations under the License.
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using inetum.unityUtils.observation;
 using NUnit.Framework;
 using UnityEngine;
@@ -47,7 +48,8 @@ public class DelegatesTests
 
             // Then
             Assert.AreEqual(1, _delegates.Count);
-            Assert.AreEqual(newDelegate, _delegates[0]);
+            Assert.IsTrue(_delegates[0].TryGetTarget(out ITestInterface target));
+            Assert.AreEqual(newDelegate, target);
         }
 
         [Test]
@@ -62,7 +64,8 @@ public class DelegatesTests
 
             // Then
             Assert.AreEqual(1, _delegates.Count);
-            Assert.AreEqual(existingDelegate, _delegates[0]);
+            Assert.IsTrue(_delegates[0].TryGetTarget(out ITestInterface target));
+            Assert.AreEqual(existingDelegate, target);
         }
 
         [Test]
@@ -78,8 +81,54 @@ public class DelegatesTests
 
             // Then
             Assert.AreEqual(2, _delegates.Count);
-            Assert.AreEqual(existingDelegate, _delegates[0]);
-            Assert.AreEqual(newDelegate, _delegates[1]);
+            Assert.IsTrue(_delegates[0].TryGetTarget(out ITestInterface target1));
+            Assert.AreEqual(existingDelegate, target1);
+            Assert.IsTrue(_delegates[1].TryGetTarget(out ITestInterface target2));
+            Assert.AreEqual(newDelegate, target2);
+        }
+
+        [Test]
+        public void GivenEmptyDelegates_WhenAddNullDelegate_ThenDelegateIsNotAdded()
+        {
+            // Given
+            ITestInterface nullDelegate = null;
+
+            // When
+            _delegates.Add(nullDelegate);
+
+            // Then
+            Assert.AreEqual(0, _delegates.Count);
+        }
+
+        [Test]
+        public void GivenDelegatesWithNullReference_WhenAddNewDelegate_ThenNullReferenceIsReplaced()
+        {
+            // Given
+            void AddDelegate()
+            {
+                ITestInterface existingDelegate = new TestDelegate();
+                _delegates.Add(existingDelegate);
+                existingDelegate = null;
+            }
+
+            AddDelegate();
+
+            // Force garbage collection to simulate weak reference becoming null
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
+            // Verify that the weak reference is null
+            Assert.IsFalse(_delegates[0].TryGetTarget(out _), "If this fail then you have to recompile.");
+
+            ITestInterface newDelegate = new TestDelegate();
+
+            // When
+            _delegates.Add(newDelegate);
+
+            // Then
+            Assert.AreEqual(1, _delegates.Count);
+            Assert.IsTrue(_delegates[0].TryGetTarget(out ITestInterface target));
+            Assert.AreEqual(newDelegate, target);
         }
     }
 
@@ -125,7 +174,8 @@ public class DelegatesTests
             // Then
             Assert.IsFalse(result);
             Assert.AreEqual(1, _delegates.Count);
-            Assert.AreEqual(existingDelegate, _delegates[0]);
+            Assert.IsTrue(_delegates[0].TryGetTarget(out ITestInterface target));
+            Assert.AreEqual(existingDelegate, target);
         }
 
         [Test]
@@ -139,6 +189,53 @@ public class DelegatesTests
 
             // Then
             Assert.IsFalse(result);
+            Assert.AreEqual(0, _delegates.Count);
+        }
+
+        [Test]
+        public void GivenNonEmptyDelegates_WhenRemoveNullDelegate_ThenDelegateIsNotRemoved()
+        {
+            // Given
+            ITestInterface existingDelegate = new TestDelegate();
+            _delegates.Add(existingDelegate);
+
+            // When
+            bool result = _delegates.Remove(null);
+
+            // Then
+            Assert.IsFalse(result);
+            Assert.AreEqual(1, _delegates.Count);
+            Assert.IsTrue(_delegates[0].TryGetTarget(out ITestInterface target));
+            Assert.AreEqual(existingDelegate, target);
+        }
+
+        [Test]
+        public void GivenDelegatesWithNullReference_WhenRemoveExistingDelegate_ThenDelegateIsRemoved()
+        {
+            // Given
+            void AddDelegate()
+            {
+                ITestInterface existingDelegate = new TestDelegate();
+                _delegates.Add(existingDelegate);
+            }
+
+            AddDelegate();
+
+            // Force garbage collection to simulate weak reference becoming null
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
+            // Verify that the weak reference is null
+            Assert.IsFalse(_delegates[0].TryGetTarget(out _), "If this fail then you have to recompile.");
+
+            ITestInterface newDelegate = new TestDelegate();
+            _delegates.Add(newDelegate);
+
+            // When
+            bool result = _delegates.Remove(newDelegate);
+
+            // Then
+            Assert.IsTrue(result);
             Assert.AreEqual(0, _delegates.Count);
         }
     }
@@ -167,7 +264,8 @@ public class DelegatesTests
 
             // Then
             Assert.AreEqual(1, _delegates.Count);
-            Assert.AreEqual(newDelegate, _delegates[0]);
+            Assert.IsTrue(_delegates[0].TryGetTarget(out ITestInterface target));
+            Assert.AreEqual(newDelegate, target);
         }
 
         [Test]
@@ -183,8 +281,10 @@ public class DelegatesTests
 
             // Then
             Assert.AreEqual(2, _delegates.Count);
-            Assert.AreEqual(newDelegate, _delegates[0]);
-            Assert.AreEqual(existingDelegate, _delegates[1]);
+            Assert.IsTrue(_delegates[0].TryGetTarget(out ITestInterface target1));
+            Assert.AreEqual(newDelegate, target1);
+            Assert.IsTrue(_delegates[1].TryGetTarget(out ITestInterface target2));
+            Assert.AreEqual(existingDelegate, target2);
         }
 
         [Test]
@@ -201,8 +301,10 @@ public class DelegatesTests
 
             // Then
             Assert.AreEqual(2, _delegates.Count);
-            Assert.AreEqual(delegate2, _delegates[0]);
-            Assert.AreEqual(delegate1, _delegates[1]);
+            Assert.IsTrue(_delegates[0].TryGetTarget(out ITestInterface target1));
+            Assert.AreEqual(delegate2, target1);
+            Assert.IsTrue(_delegates[1].TryGetTarget(out ITestInterface target2));
+            Assert.AreEqual(delegate1, target2);
         }
 
         [Test]
@@ -219,8 +321,10 @@ public class DelegatesTests
 
             // Then
             Assert.AreEqual(2, _delegates.Count);
-            Assert.AreEqual(delegate1, _delegates[0]);
-            Assert.AreEqual(delegate2, _delegates[1]);
+            Assert.IsTrue(_delegates[0].TryGetTarget(out ITestInterface target1));
+            Assert.AreEqual(delegate1, target1);
+            Assert.IsTrue(_delegates[1].TryGetTarget(out ITestInterface target2));
+            Assert.AreEqual(delegate2, target2);
         }
 
         [Test]
@@ -230,7 +334,7 @@ public class DelegatesTests
             ITestInterface newDelegate = new TestDelegate();
 
             // When & Then
-            var ex = Assert.Throws<System.ArgumentOutOfRangeException>(() => _delegates.Insert(1, newDelegate));
+            var ex = Assert.Throws<ArgumentOutOfRangeException>(() => _delegates.Insert(1, newDelegate));
             Assert.That(ex.Message, Does.Contain("Index must be within the bounds of the List."));
         }
 
@@ -242,8 +346,38 @@ public class DelegatesTests
             _delegates.Add(existingDelegate);
 
             // When & Then
-            var ex = Assert.Throws<System.ArgumentOutOfRangeException>(() => _delegates.Insert(2, existingDelegate));
+            var ex = Assert.Throws<ArgumentOutOfRangeException>(() => _delegates.Insert(2, existingDelegate));
             Assert.That(ex.Message, Does.Contain("Index must be within the bounds of the List."));
+        }
+
+        [Test]
+        public void GivenDelegatesWithNullReference_WhenInsertNewDelegate_ThenNullReferenceIsReplaced()
+        {
+            // Given
+            void AddDelegate()
+            {
+                ITestInterface existingDelegate = new TestDelegate();
+                _delegates.Add(existingDelegate);
+            }
+
+            AddDelegate();
+
+            // Force garbage collection to simulate weak reference becoming null
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
+            // Verify that the weak reference is null
+            Assert.IsFalse(_delegates[0].TryGetTarget(out _), "If this fail then you have to recompile.");
+
+            ITestInterface newDelegate = new TestDelegate();
+
+            // When
+            _delegates.Insert(0, newDelegate);
+
+            // Then
+            Assert.AreEqual(1, _delegates.Count);
+            Assert.IsTrue(_delegates[0].TryGetTarget(out ITestInterface target));
+            Assert.AreEqual(newDelegate, target);
         }
     }
 
@@ -274,7 +408,8 @@ public class DelegatesTests
 
             // Then
             Assert.AreEqual(1, _delegates.Count);
-            Assert.AreEqual(delegate2, _delegates[0]);
+            Assert.True(_delegates[0].TryGetTarget(out ITestInterface _delegate1));
+            Assert.AreEqual(delegate2, _delegate1);
         }
 
         [Test]
@@ -291,7 +426,8 @@ public class DelegatesTests
 
             // Then
             Assert.AreEqual(1, _delegates.Count);
-            Assert.AreEqual(delegate1, _delegates[0]);
+            Assert.True(_delegates[0].TryGetTarget(out ITestInterface _delegate1));
+            Assert.AreEqual(delegate1, _delegate1);
         }
 
         [Test]

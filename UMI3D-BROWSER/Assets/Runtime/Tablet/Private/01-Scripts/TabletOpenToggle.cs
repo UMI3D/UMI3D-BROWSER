@@ -21,6 +21,7 @@ namespace umi3d.browserRuntime.ui.tablet
 {
     public class TabletOpenToggle : MonoBehaviour
     {
+        [ContextMenu("Toggle")]
         public void ToggleOpenTablet()
         {
             NotificationHub.Default.Notify(this, ID.FromType<TabletNotificationKeys.Toggle>());

@@ -43,39 +43,6 @@ namespace umi3d.browserRuntime.ui.settings
             dropdownControl.valueChanged += ValueChanged;
         }
 
-        void OnEnable()
-        {
-            try
-            {
-                SetMicrophoneFromPreferences();
-            }
-            catch (System.Exception ex)
-            {
-                UMI3DLogger.LogException(ex, DebugScope.Collaboration);
-            }
-        }
-
-        private void SetMicrophoneFromPreferences()
-        {
-            if (string.IsNullOrEmpty(audioSettings.model.microphone))
-                return;
-
-            RefreshMicOptions();
-
-            string[] micNames = Microphone.devices;
-
-            for (int i = 0; i < micNames.Length; i++)
-            {
-                string micName = micNames[i];
-
-                if (micName == audioSettings.model.microphone)
-                {
-                    ValueChanged(i);
-                    return;
-                }
-            }
-        }
-
         void Update()
         {
             RefreshMicOptions();

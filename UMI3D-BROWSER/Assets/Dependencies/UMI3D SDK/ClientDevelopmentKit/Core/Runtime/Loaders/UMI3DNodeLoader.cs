@@ -689,8 +689,7 @@ namespace umi3d.cdk
                         {
 
                             MeshCollider mesh = go.AddComponent<MeshCollider>();
-
-                            if (mesh.sharedMesh.isReadable)
+                            if (mesh.sharedMaterial && mesh.sharedMesh.isReadable)
                             {
                                 mesh.convex = false;
                                 SetCustomCollider(id, go, dto.customMeshCollider);

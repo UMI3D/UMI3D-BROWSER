@@ -382,7 +382,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1500729154876806273}
   m_Layer: 5
-  m_Name: NoiseReduction
+  m_Name: AudioEnhancement
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2887,7 +2887,7 @@ PrefabInstance:
     - target: {fileID: 1730432150811495414, guid: 38e2ef1e1d4e181499069c83f73ea69c,
         type: 3}
       propertyPath: m_text
-      value: Noise reduction
+      value: Audio Enhancement
       objectReference: {fileID: 0}
     - target: {fileID: 3535800486413577600, guid: 38e2ef1e1d4e181499069c83f73ea69c,
         type: 3}
@@ -4996,7 +4996,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e0ebb4585cfbad4f9a6ebe78d0937b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  model: {fileID: 0}
 --- !u!224 &7509480468829548987 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1562953614766184190, guid: 67923b8b65973f240a42d264e2d54549,

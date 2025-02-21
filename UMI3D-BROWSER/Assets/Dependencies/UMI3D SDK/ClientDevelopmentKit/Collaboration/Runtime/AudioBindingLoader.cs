@@ -35,7 +35,6 @@ namespace umi3d.cdk
             {
                 this.dto = dto;
                 this.audioplayer = audioplayer;
-                UnityEngine.Debug.Log($"Create Binding {dto.audioLogin}");
             }
 
             public ulong id => dto.id;
@@ -78,13 +77,10 @@ namespace umi3d.cdk
             if (value.dto is not AudioBindingDto audioBindingDto)
                 throw (new common.Umi3dException("dto should be an  UMI3DAbstractNodeDto"));
 
-            UnityEngine.Debug.Log($"Start audio bind {audioBindingDto.audioLogin} {audioBindingDto.audioPlayerId}");
-
             var audioEntity = await UMI3DEnvironmentLoader.WaitForAnEntityToBeLoaded(value.environmentId, audioBindingDto.audioPlayerId, value.tokens);
 
             var user = new AudioUser(audioBindingDto, UMI3DAudioPlayer.Get(value.environmentId, audioBindingDto.audioPlayerId));
 
-            UnityEngine.Debug.Log($"create audio bind {audioBindingDto.audioLogin} {audioBindingDto.audioPlayerId}");
             environmentManager.RegisterEntity(value.environmentId, audioBindingDto.id, audioBindingDto, user, Delete(user)).NotifyLoaded();
             users.Add(user);
             OnNewUser?.Invoke(user);

@@ -165,6 +165,9 @@ namespace umi3d.cdk.collaboration
 
         private void Start()
         {
+            AudioBindingLoader.OnNewUser += OnAudioChanged;
+            AudioBindingLoader.OnRemoveUser += OnUserDisconnected;
+
             UMI3DUser.OnNewUser.AddListener(OnAudioChanged);
             UMI3DUser.OnRemoveUser.AddListener(OnUserDisconnected);
             UMI3DUser.OnUserAudioUpdated.AddListener(OnAudioChanged);
@@ -174,6 +177,10 @@ namespace umi3d.cdk.collaboration
         protected override void OnDestroy()
         {
             base.OnDestroy();
+
+            AudioBindingLoader.OnNewUser -= OnAudioChanged;
+            AudioBindingLoader.OnRemoveUser -= OnUserDisconnected;
+
             UMI3DUser.OnNewUser.RemoveListener(OnAudioChanged);
             UMI3DUser.OnRemoveUser.RemoveListener(OnUserDisconnected);
             UMI3DUser.OnUserAudioUpdated.RemoveListener(OnAudioChanged);
@@ -216,7 +223,9 @@ namespace umi3d.cdk.collaboration
 
         public MumbleAudioPlayer GetMumbleAudioPlayer(string username, uint session)
         {
-            UMI3DUser user = UMI3DCollaborationEnvironmentLoader.Instance.UserList.FirstOrDefault(u => u.audioLogin == username);
+            IAudioUser user = 
+                UMI3DCollaborationEnvironmentLoader.Instance.UserList.FirstOrDefault(u => u.audioLogin == username)
+                ?? (IAudioUser)AudioBindingLoader.users.FirstOrDefault(u => u.audioLogin == username);
             if (user != null)
             {
                 MumbleAudioPlayer newPlayer = GetMumbleAudioPlayer(user);
@@ -288,7 +297,7 @@ namespace umi3d.cdk.collaboration
         /// Manage user update
         /// </summary>
         /// <param name="user"></param>
-        private void OnUserDisconnected(UMI3DUser user)
+        private void OnUserDisconnected(IAudioUser user)
         {
             if (WaitCoroutine.ContainsKey(user.id))
             {

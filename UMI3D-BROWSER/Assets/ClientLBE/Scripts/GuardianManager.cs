@@ -15,6 +15,7 @@ using umi3d.common.userCapture;
 using UnityEngine;
 using UnityEngine.XR;
 using UnityEngine.XR.ARFoundation;
+using UnityEngine.XR.ARSubsystems;
 
 namespace ClientLBE
 {
@@ -54,6 +55,12 @@ namespace ClientLBE
         public Transform calibrator;
         public ARPlaneManager arPlaneManager;
 
+        public ARPlaneType ARPlaneFromType = ARPlaneType.Table;
+        public ARPlaneType ARPlaneToType = ARPlaneType.Window;
+
+        private ARPlane ARPlaneFrom;
+        private ARPlane ARPlaneTo;
+
         private float orientationOffset;
 
         private List<ARPlane> planesToCalibrate = new List<ARPlane>();
@@ -64,6 +71,17 @@ namespace ClientLBE
 
         public event Action<Vector3> OnPositionCalibratorStart;
 
+        public enum ARPlaneType
+        {
+            Table,
+            Seat,
+            Wall,
+            Window,
+            Desk,
+            Floor,
+            Ceiling,
+            Other
+        }
         #endregion
 
         #region Method
@@ -90,10 +108,10 @@ namespace ClientLBE
             UMI3DForgeClient.AddLBEGroupEvent += AddUserLBEGroup;
             UMI3DForgeClient.DelLBEGroupEvent += DelUserLBEGroup;
 
-            if (arPlaneManager != null)
+            /*if (arPlaneManager != null)
             {
                 arPlaneManager.planesChanged += OnPlanesChanged;
-            }
+            }*/
         }
 
         void OnDisable()
@@ -102,10 +120,10 @@ namespace ClientLBE
             UMI3DForgeClient.AddLBEGroupEvent -= AddUserLBEGroup;
             UMI3DForgeClient.DelLBEGroupEvent -= DelUserLBEGroup;
 
-            if (arPlaneManager != null)
+            /*if (arPlaneManager != null)
             {
                 arPlaneManager.planesChanged -= OnPlanesChanged;
-            }
+            }*/
         }
 
         public static bool isLBEAdmin()
@@ -171,10 +189,11 @@ namespace ClientLBE
             }
         }
 
-        void OnPlanesChanged(ARPlanesChangedEventArgs eventArgs)
+        //A retirer plus tard si non nécessaire.
+        /*void OnPlanesChanged(ARPlanesChangedEventArgs eventArgs)
         {
             StartCoroutine(GetARPlanes());
-        }
+        }*/
 
         private void AddCapsulesToCurrentARUsers()
         {
@@ -234,56 +253,61 @@ namespace ClientLBE
 
         public IEnumerator GetARPlanes()
         {
-            //Délais d'attente pour que arPlaneManager.trackables retourne des ARplanes
-            yield return new WaitForSeconds(0.7f);
+            yield return new WaitForSeconds(1.0f);
 
-            if (arPlaneManager != null)
+            if (arPlaneManager == null)
             {
-                var trackables = arPlaneManager.trackables;
-
-                foreach (var plane in trackables)
-                {
-
-                    if (plane.transform.position.y > 0.5f && plane.transform.position.y < 1.6f)
-                        planesToCalibrate.Add(plane);
-                }
-       
+                Debug.LogError("REMY : ARPlaneManager est NULL !");
+                yield break;
             }
-            else
-                Debug.LogError("ARPlaneManager not found on this GameObject.");
 
+            if (arPlaneManager.trackables.count == 0)
+            {
+                Debug.LogWarning("REMY : Aucun plan AR détecté après l'attente.");
+                yield break;
+            }
 
-            Debug.LogError("REMY : planesToCalibrate.Count -> " + planesToCalibrate.Count);
+            ARPlaneFrom = FindARPlaneByType(ARPlaneFromType);
+            ARPlaneTo = FindARPlaneByType(ARPlaneToType);
 
             if (automaticCalibration)
             {
+                Debug.Log("REMY : plane in trackables count next -> " + planesToCalibrate.Count);
 
-                if (planesToCalibrate.Count > 0 )
+                if (ARPlaneFrom != null && ARPlaneTo != null) // On veut au moins 2 plans
                 {
-                    ARPlane selectedPlane = planesToCalibrate[0];
 
-                    Instantiate(Repere, selectedPlane.transform.position, Quaternion.identity);
+                    // Calcul de la direction entre la table et la fenêtre
+                    Vector3 direction = CalculateDirection(ARPlaneFrom, ARPlaneTo);
 
+                    // Création du calibrateur avec la position de la table et l'orientation vers la fenêtre
                     GameObject calibratorARPlane = new GameObject("Calibreur Plane");
-                    calibratorARPlane.transform.position = planesToCalibrate[0].transform.position;
-                    calibratorARPlane.transform.rotation = planesToCalibrate[0].transform.rotation;
+                    calibratorARPlane.transform.position = ARPlaneFrom.transform.position; // Garder la position de la table
+                    calibratorARPlane.transform.rotation = Quaternion.LookRotation(direction, Vector3.up); // Orienté vers la fenêtre
 
+                    // Affecter le calibrateur au joueur
                     calibrator = calibratorARPlane.transform;
                     calibrator.transform.parent = Player.transform;
 
-                    // Ajouter des instances de "Repere" à chaque sommet du mesh de l'ARPlane
-                    Mesh mesh = selectedPlane.GetComponent<MeshFilter>().mesh;
-                    Vector3[] vertices = mesh.vertices;
-
-                    foreach (var vertex in vertices)
+                    // Instancier des repères pour chaque plan détecté
+                    for (int i = 0; i < planesToCalibrate.Count; i++)
                     {
-                        Vector3 worldPosition = selectedPlane.transform.TransformPoint(vertex);
-                        Instantiate(Repere, worldPosition, Quaternion.identity);
+                        Instantiate(Repere, planesToCalibrate[i].transform.position, calibratorARPlane.transform.rotation);
+
+                        // Ajouter des repères aux sommets de chaque ARPlane
+                        Mesh mesh = planesToCalibrate[i].GetComponent<MeshFilter>().mesh;
+                        Vector3[] vertices = mesh.vertices;
+
+                        foreach (var vertex in vertices)
+                        {
+                            Vector3 worldPosition = planesToCalibrate[i].transform.TransformPoint(vertex);
+                            Instantiate(Repere, worldPosition, calibratorARPlane.transform.rotation);
+                        }
                     }
                 }
                 else
                 {
-                    Debug.LogError("REMY : Multiple ARPlane detected. Only one ARPlane should be selected to serve as a calibrator. Change your environment configuration");
+                    Debug.LogError("Multiple ARPlane detected. Only Two ARPlanes should be selected to serve as a calibrator. Change your environment configuration");
                     automaticCalibration = false;
                     SetManualCalibrator();
                 }
@@ -293,6 +317,48 @@ namespace ClientLBE
 
             //Envoi de la position du calibrator qui correspond à la position du spawner pour le recalculé dans la TPGroupé 
             OnPositionCalibratorStart?.Invoke(calibrator.transform.position);
+        }
+
+        private ARPlane FindARPlaneByType(ARPlaneType type)
+        {
+            foreach (var plane in arPlaneManager.trackables)
+            {
+                if (IsMatchingPlaneType(plane, type))
+                {
+                    planesToCalibrate.Add(plane);
+                    return plane;
+                }
+            }
+            return null; 
+        }
+
+        private bool IsMatchingPlaneType(ARPlane plane, ARPlaneType type)
+        {
+            switch (type)
+            {
+                case ARPlaneType.Table:
+                    return plane.classification == PlaneClassification.Table;
+                case ARPlaneType.Window:
+                    return plane.classification == PlaneClassification.Window;
+                case ARPlaneType.Floor:
+                    return plane.classification == PlaneClassification.Floor;
+                case ARPlaneType.Ceiling:
+                    return plane.classification == PlaneClassification.Ceiling;
+                case ARPlaneType.Wall:
+                    return plane.classification == PlaneClassification.Wall;
+                case ARPlaneType.Other:
+                    return plane.classification == PlaneClassification.None;
+                default:
+                    return false;
+            }
+        }
+
+
+        Vector3 CalculateDirection(ARPlane from, ARPlane to)
+        {
+            Vector3 direction = to.transform.position - from.transform.position;
+            direction.y = 0; // On annule la hauteur pour ne garder que la direction horizontale
+            return direction.normalized;
         }
 
         public void ProcessIDSubmission(string id)
@@ -319,7 +385,6 @@ namespace ClientLBE
                 SetARPlaneCalibrator();
             else
                 SetManualCalibrator();
-
         }
 
         public void ToggleUserAdmin(bool value)
@@ -355,7 +420,6 @@ namespace ClientLBE
                     info[LocomotionNotificationKeys.Info.TeleportationActiveState] = ActiveState.Disable;
                     NotificationHub.Default.Notify(this, LocomotionNotificationKeys.System, info);
                 }
-
             }
             else
             {
@@ -370,7 +434,9 @@ namespace ClientLBE
             if (planesToCalibrate.Count > 0)
             {
                 ARPlanesActivation(true);
-                calibrator = planesToCalibrate[0].transform;
+                //calibrator = planesToCalibrate[0].transform;
+                calibrator = ARPlaneFrom.transform;
+
             }
 
             else

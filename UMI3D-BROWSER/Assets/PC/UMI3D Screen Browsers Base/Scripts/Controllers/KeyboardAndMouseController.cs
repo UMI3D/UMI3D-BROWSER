@@ -68,7 +68,8 @@ namespace umi3d.desktopBrowser.Controller
         /// </summary>
         public void Awake()
         {
-            new PcDrawingManager();
+            if(!DrawingManager.Exists)
+                new PcDrawingManager();
 
             KeyboardInteraction.S_Interactions.AddRange(Controller.KeyboardActions.GetComponents<KeyboardInteraction>());
             KeyboardShortcut.S_Shortcuts.AddRange(Controller.KeyboardShortcuts.GetComponents<KeyboardShortcut>());

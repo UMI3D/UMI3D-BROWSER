@@ -37,6 +37,7 @@ namespace umi3d.browserRuntime.ui.tablet
         public class Opened { }
         public class Close { }
         public class Closed { }
+        public class Toggle { }
 
         public class NewScreenSelected { }
     }

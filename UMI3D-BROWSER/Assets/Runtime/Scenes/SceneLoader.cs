@@ -36,16 +36,7 @@ namespace umi3dBrowsers.sceneManagement
         private void Start()
         {
             foreach(var sceneToLoad in scenesToLoad.Reference)
-            {
-                if (sceneToLoad.SetNewSceneAsActive)
-                {
-                    StartCoroutine(LoadScene(sceneToLoad));
-                }
-                else
-                {
-                    SceneManager.LoadScene(sceneToLoad.SceneName, sceneToLoad.LoadSceneMode);            
-                }
-            }
+                StartCoroutine(LoadScene(sceneToLoad));
         }
 
         /// <summary>
@@ -58,7 +49,8 @@ namespace umi3dBrowsers.sceneManagement
 
             yield return new WaitUntil(() => indicator.isDone);
 
-            SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneToLoad.SceneName));         
+            if (sceneToLoad.SetNewSceneAsActive)
+                SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneToLoad.SceneName));         
         }
 
         public void ReloadScene()
@@ -80,7 +72,8 @@ namespace umi3dBrowsers.sceneManagement
 
                     yield return new WaitUntil(() => indicator.isDone);
 
-                    SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneToLoad.SceneName));
+                    if (sceneToLoad.SetNewSceneAsActive)
+                        SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneToLoad.SceneName));
                 }
             }
         }

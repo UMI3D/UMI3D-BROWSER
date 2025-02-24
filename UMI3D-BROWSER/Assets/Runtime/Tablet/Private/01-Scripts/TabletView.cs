@@ -21,8 +21,15 @@ namespace umi3d.browserRuntime.ui.tablet
 {
     public class TabletView : MonoBehaviour
     {
+        GameObject gameObjectToEnable;
+
         private void Awake()
         {
+#if UMI3D_PC
+            gameObjectToEnable = gameObject;
+#elif UMI3D_XR
+            gameObjectToEnable = GetComponentInParent<Canvas>().gameObject;
+#endif
             NotificationHub.Default.Subscribe(this, 
                 ID.FromType<TabletNotificationKeys.Open>(),
                 (Callback)Open
@@ -31,7 +38,11 @@ namespace umi3d.browserRuntime.ui.tablet
                 ID.FromType<TabletNotificationKeys.Close>(),
                 (Callback)Close
             );
-            gameObject.SetActive(false);
+            NotificationHub.Default.Subscribe(this,
+                ID.FromType<TabletNotificationKeys.Toggle>(),
+                (Callback)Toggle
+            );
+            gameObjectToEnable.SetActive(false);
         }
 
         private void OnDestroy()
@@ -41,18 +52,31 @@ namespace umi3d.browserRuntime.ui.tablet
 
         private void Open()
         {
-            if (gameObject.activeSelf)
+            if (gameObjectToEnable.activeSelf)
                 return;
-            gameObject.SetActive(true);
+            gameObjectToEnable.SetActive(true);
             NotificationHub.Default.Notify(this, ID.FromType<TabletNotificationKeys.Opened>());
         }
 
         private void Close()
         {
-            if (!gameObject.activeSelf)
+            if (!gameObjectToEnable.activeSelf)
                 return;
-            gameObject.SetActive(false);
+            gameObjectToEnable.SetActive(false);
             NotificationHub.Default.Notify(this, ID.FromType<TabletNotificationKeys.Closed>());
+        }
+
+        private void Toggle()
+        {
+            if (gameObjectToEnable.activeSelf)
+            {
+                gameObjectToEnable.SetActive(false);
+                NotificationHub.Default.Notify(this, ID.FromType<TabletNotificationKeys.Closed>());
+            } else
+            {
+                gameObjectToEnable.SetActive(true);
+                NotificationHub.Default.Notify(this, ID.FromType<TabletNotificationKeys.Opened>());
+            }
         }
     }
 }

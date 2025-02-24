@@ -59,22 +59,8 @@ namespace umi3dBrowsers.displayer
             }
             else
             {
-#if UMI3D_PC
                 await base.ReadUMI3DExtension(value);
                 loader.Notify(value.dto as NotificationDto);
-#elif UMI3D_XR
-                Debug.Log("TODO : only display notification in one watch");
-                var dto = value.dto as NotificationDto;
-                AbstractUserNotification notification;
-                foreach (WatchMenu watch in WatchMenu.instances)
-                {
-                    notification = GameObject.Instantiate(loader.watchNotificationPrefab);
-                    notification.SetParent(watch.notificationContainer);
-
-                    notification.Init(dto);
-                    UMI3DEnvironmentLoader.RegisterNodeInstance(UMI3DGlobalID.EnvironmentId, dto.id, dto, notification.gameObject);
-                }
-#endif
             }
         }
     }

@@ -91,7 +91,7 @@ namespace umi3dBrowsers.displayer
                 _easeInOutCoroutine = null;
             }
 
-            if (gameObject.activeSelf)
+            if (gameObject && gameObject.activeSelf)
             {
                 _easeInOutCoroutine = StartCoroutine(EaseInOut(false));
             }

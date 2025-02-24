@@ -23,6 +23,7 @@ using System.Threading.Tasks;
 using umi3d.browserRuntime.ui.connection.vignette;
 using umi3d.browserRuntime.ui.popup;
 using umi3d.common.interaction.form;
+using umi3d.common.interaction.form.ugui;
 using umi3dBrowsers.displayer;
 using umi3dBrowsers.linker;
 using umi3dBrowsers.services.connection;
@@ -178,7 +179,8 @@ namespace umi3dBrowsers.container
             GameObject vignetteGO = Instantiate(data.VignettePrefab);
             vignetteGO.transform.SetParent(gridLayout.transform, false);
             var vignette = vignetteGO.GetComponent<VignetteDisplayer>();
-            vignette.SetupDisplay(pWorldData.worldName);
+            vignette.SetupDisplay(pWorldData.worldName, pWorldData.worldUrl);
+            vignette.canEditName = true;
             vignette.SetupFavoriteButton(() => { 
                 pVirtualWorlds.ToggleWorldFavorite(pWorldData);
                 vignetteContainerEvent.OnVignetteReset?.Invoke(); 
@@ -222,10 +224,24 @@ namespace umi3dBrowsers.container
 
             (styleHandler ?? pBuffer?.StyleHandler)?.Invoke(vignette.gameObject, vignette, pImageDto.styles);
 
+            string labelText = null;
+            string headerText = null;
+            Color headerColor = new Color(0, 0, 0, 0);
+
             if (pImageDto.FirstChildren.Count > 0) // should be a label at least
                 foreach(var child in pImageDto.FirstChildren)
                     if (child is LabelDto label)
-                        vignette.SetupDisplay(label.text);
+                    {
+                        if (label.tag == null)
+                            labelText = label.text;
+                        else if (label.tag == "header")
+                        {
+                            headerText = label.text;
+                            headerColor = GetColorFromStyle(label.styles);
+                        }
+                    }
+
+            vignette.SetupDisplay(labelText, headerText, headerColor);
 
             Sprite sprite = await pImageDto.GetSprite();
             vignette.SetSprite(sprite);
@@ -246,6 +262,44 @@ namespace umi3dBrowsers.container
                 pBuffer.StyleHandler = styleHandler;
             FillWithEmptyVignettes();
             return pBuffer;
+        }
+
+
+        private Color GetColorFromStyle(List<StyleDto> styleDtos)
+        {
+            if (styleDtos == null)
+                return new Color(0,0,0,0);
+
+            foreach (StyleDto styleDto in styleDtos)
+            {
+                if (styleDto.variants == null)
+                    continue;
+
+                var variantDto = styleDto.variants.Find(variantDto => variantDto is UGUIStyleVariantDto) as UGUIStyleVariantDto;
+                if (variantDto == null)
+                    continue;
+
+                foreach (var styleItemDto in variantDto.StyleVariantItems)
+                    if (GetColorFromVariant(styleItemDto, out Color color))
+                        return color;
+            }
+
+            return new Color(0, 0, 0, 0);
+        }
+
+        private bool GetColorFromVariant(UGUIStyleItemDto styleItemDto, out Color color)
+        {
+            switch (styleItemDto)
+            {
+                case ColorStyleDto colorStyleVariant:
+                    {
+                        color = (colorStyleVariant.color.Struct());
+                        return true;
+                    }
+            }
+
+            color = new Color(0, 0, 0, 0);
+            return false;
         }
 
         public void ResetVignettes() => ResetVignettes(true);

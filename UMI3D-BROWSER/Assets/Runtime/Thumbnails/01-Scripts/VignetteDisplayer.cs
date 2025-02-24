@@ -35,6 +35,13 @@ namespace umi3dBrowsers.displayer
         [SerializeField] private Color normalImageColor;
         [SerializeField] private Color hoverImageColor;
 
+        [Header("Vignette Header")]
+        [SerializeField] private Image headerImage;
+        [SerializeField] private Image headerIcon;
+        [SerializeField] private TMP_Text headerLabel;
+        [SerializeField] private Color headerNormalImageColor;
+        [SerializeField] private Color headerHoverImageColor;
+
         [Header("buttons")]
         [SerializeField] private ButtonSubDisplayer likeButton;
         [SerializeField] private Image likeImage;
@@ -62,6 +69,8 @@ namespace umi3dBrowsers.displayer
         Coroutine cadeInOutCoroutine;
 
         [SerializeField] private UnityEvent onVignetteClicked;
+
+        public bool canEditName;
 
         enum VignetteState { notHovering, Hovering, HoveringSubElement }
         VignetteState vignetteState;
@@ -95,16 +104,17 @@ namespace umi3dBrowsers.displayer
                 likeButton.OnHover += () => vignetteState = VignetteState.HoveringSubElement;
             if (m_usesDeleteButton)
                 trashButton.OnHover += () => vignetteState = VignetteState.HoveringSubElement;
-            inputFieldBackground.OnHover += () => {
-                vignetteState = VignetteState.HoveringSubElement;
+            //I kept this comment in the hope that someone would have the courage to implement the label hover behavior correctly.
+            //inputFieldBackground.OnHover += () => {
+            //    vignetteState = VignetteState.HoveringSubElement;
 
-                pen.gameObject.SetActive(true);
-                IF_background.enabled = true;
-            };
-            inputFieldBackground.OnHoverExit += () => {
-                pen.gameObject.SetActive(false);
-                IF_background.enabled = false;
-            };
+            //    pen.gameObject.SetActive(true);
+            //    IF_background.enabled = true;
+            //};
+            //inputFieldBackground.OnHoverExit += () => {
+            //    pen.gameObject.SetActive(false);
+            //    IF_background.enabled = false;
+            //};
 
             if (m_usesFavoriteButton)
                 likeButton.OnDisabled += () => DisableSubComponents();
@@ -138,14 +148,34 @@ namespace umi3dBrowsers.displayer
             inputFieldBackground.OnDisabled -= () => DisableSubComponents();
         }
 
-        public void SetupDisplay(string pName, Image pImage = null)
+        public void SetupDisplay(string pName, string header = null, Color? headerColor = null, Image pImage = null)
         {
+            this.canEditName = false;
+
             inputFieldBackground.Text = pName;
             if (pImage != null)
                 vignetteImage = pImage;
 
             vignetteImage.color = normalImageColor;
             InputFieldText.color = normalImageColor;
+            headerImage.color = headerNormalImageColor;
+            headerLabel.gameObject.SetActive(false);
+
+            bool useHeader = header != null;
+            if (this.headerImage.IsActive() != useHeader)
+                this.headerImage.gameObject.SetActive(useHeader);
+
+            if (useHeader)
+            {
+                headerLabel.text = header;
+                if (headerColor != null)
+                {
+                    headerIcon.gameObject.SetActive(true);
+                    headerIcon.color = headerColor.Value;
+                }
+                else
+                    headerIcon.gameObject.SetActive(false);
+            }
         }
 
         internal void SetSprite(Sprite sprite)
@@ -187,11 +217,19 @@ namespace umi3dBrowsers.displayer
 
             vignetteImage.color = hoverImageColor;
             InputFieldText.color = hoverImageColor;
+            headerImage.color = headerHoverImageColor;
+            headerLabel.gameObject.SetActive(true);
 
             if (m_usesFavoriteButton)
                 likeButton.gameObject.SetActive(true);
             if (m_usesDeleteButton)
                 trashButton.gameObject.SetActive(true);
+
+            if (canEditName)
+            {
+                pen.gameObject.SetActive(true);
+                IF_background.enabled = true;
+            }
         }
 
         public void HoverExit(PointerEventData eventData)
@@ -202,6 +240,12 @@ namespace umi3dBrowsers.displayer
 
             vignetteImage.color = normalImageColor;
             InputFieldText.color = normalImageColor;
+            headerImage.color = headerNormalImageColor;
+
+            headerLabel.gameObject.SetActive(false);
+
+            pen.gameObject.SetActive(false);
+            IF_background.enabled = false;
         }
 
         public void Click()

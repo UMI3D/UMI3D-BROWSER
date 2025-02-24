@@ -30,6 +30,8 @@ namespace umi3dBrowsers.displayer
         public void SetTitle(string title);
         public void SetPlaceHolder(List<string> placeHolder);
         public void SetColor(Color color);
+        public void SetHoverColor(Color color);
+        public void SetLoading();
         public void SetResource(object resource);
     }
 }

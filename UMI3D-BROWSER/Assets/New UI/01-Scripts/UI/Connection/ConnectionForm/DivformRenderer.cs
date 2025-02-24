@@ -83,7 +83,7 @@ namespace umi3dBrowsers.container.formrenderer
 
         private void RemoveContainer(FormContainer container)
         {
-            if (container == null) 
+            if (container == null)
                 return;
 
             if (!objectsToNotCleanup.Contains(container?.container))
@@ -104,7 +104,8 @@ namespace umi3dBrowsers.container.formrenderer
 
         private void InitFormAnswer(string id)
         {
-            _answer = new FormAnswerDto() {
+            _answer = new FormAnswerDto()
+            {
                 formId = id,
 
                 inputs = new()
@@ -141,7 +142,8 @@ namespace umi3dBrowsers.container.formrenderer
         /// <param name="parentId"></param>
         private void InstantiateDiv(DivDto divParent, FormContainer parentContainer)
         {
-            var inputAnswer = new InputAnswerDto() {
+            var inputAnswer = new InputAnswerDto()
+            {
                 inputId = divParent.guid
             };
 
@@ -154,7 +156,8 @@ namespace umi3dBrowsers.container.formrenderer
                 case PageDto pageDto:
                     HandlePageDto(pageDto, parentContainer, inputAnswer); break;
                 case LabelDto labelDto:
-                    HandleDivDto(labelDto, labelDisplayerPrefab, parentContainer, (itemDto, container, displayer) => {
+                    HandleDivDto(labelDto, labelDisplayerPrefab, parentContainer, (itemDto, container, displayer) =>
+                    {
                         displayer.SetTitle(labelDto.text);
                     }); break;
                 case ImageDto imageDto:
@@ -167,14 +170,16 @@ namespace umi3dBrowsers.container.formrenderer
             switch (inputDto)
             {
                 case GroupDto groupDto:
-                    HandleDivDto(groupDto, groupContainerPrefab, parentContainer, (itemDto, container, displayer) => {
+                    HandleDivDto(groupDto, groupContainerPrefab, parentContainer, (itemDto, container, displayer) =>
+                    {
                         allContainers.Add(container);
 
                         foreach (var div in groupDto.FirstChildren)
                             InstantiateDiv(div, container);
                     }); break;
                 case ButtonDto buttonDto:
-                    HandleDivDto(buttonDto, buttonDisplayerPrefab, parentContainer, async (itemDto, container, displayer) => {
+                    HandleDivDto(buttonDto, buttonDisplayerPrefab, parentContainer, async (itemDto, container, displayer) =>
+                    {
                         displayer.SetTitle(buttonDto.Text);
                         displayer.SetResource(await buttonDto.GetSprite());
 
@@ -193,19 +198,23 @@ namespace umi3dBrowsers.container.formrenderer
                         }
                     }); break;
                 case InputDto<string> inputStringDto:
-                    HandleDivDto(inputStringDto, inputFieldDisplayerPrefab, parentContainer, (itemDto, container, displayer) => {
+                    HandleDivDto(inputStringDto, inputFieldDisplayerPrefab, parentContainer, (itemDto, container, displayer) =>
+                    {
                         HandleInputStringDto(itemDto, container, displayer as InputFieldDispayer, inputAnswerDto);
                     }); break;
                 case InputDto<int> inputStringDto:
-                    HandleDivDto(inputStringDto, inputFieldDisplayerPrefab, parentContainer, (itemDto, container, displayer) => {
+                    HandleDivDto(inputStringDto, inputFieldDisplayerPrefab, parentContainer, (itemDto, container, displayer) =>
+                    {
                         HandleInputStringDto(itemDto, container, displayer as InputFieldDispayer, inputAnswerDto);
                     }); break;
                 case InputDto<float> inputStringDto:
-                    HandleDivDto(inputStringDto, inputFieldDisplayerPrefab, parentContainer, (itemDto, container, displayer) => {
+                    HandleDivDto(inputStringDto, inputFieldDisplayerPrefab, parentContainer, (itemDto, container, displayer) =>
+                    {
                         HandleInputStringDto(itemDto, container, displayer as InputFieldDispayer, inputAnswerDto);
                     }); break;
                 case RangeDto<int> rangeDto: // Can't merge range int and float because T can't be cast to Slider.value
-                    HandleDivDto(rangeDto, inputFieldDisplayerPrefab, parentContainer, (itemDto, container, displayer) => {
+                    HandleDivDto(rangeDto, inputFieldDisplayerPrefab, parentContainer, (itemDto, container, displayer) =>
+                    {
                         var rangeDisplayer = displayer as SliderDisplayer;
                         rangeDisplayer.SetTitle(rangeDto.label);
                         rangeDisplayer.Slider.wholeNumbers = true;
@@ -214,12 +223,14 @@ namespace umi3dBrowsers.container.formrenderer
                         rangeDisplayer.Slider.maxValue = rangeDto.Max;
 
                         _answer.inputs.Add(inputAnswerDto);
-                        formBinding.Add(() => {
+                        formBinding.Add(() =>
+                        {
                             inputAnswerDto.value = displayer.GetValue(true);
                         });
                     }); break;
                 case RangeDto<float> rangeDto:
-                    HandleDivDto(rangeDto, inputFieldDisplayerPrefab, parentContainer, (itemDto, container, displayer) => {
+                    HandleDivDto(rangeDto, inputFieldDisplayerPrefab, parentContainer, (itemDto, container, displayer) =>
+                    {
                         var rangeDisplayer = displayer as SliderDisplayer;
                         rangeDisplayer.SetTitle(rangeDto.label);
                         rangeDisplayer.Slider.wholeNumbers = false;
@@ -228,7 +239,8 @@ namespace umi3dBrowsers.container.formrenderer
                         rangeDisplayer.Slider.maxValue = rangeDto.Max;
 
                         _answer.inputs.Add(inputAnswerDto);
-                        formBinding.Add(() => {
+                        formBinding.Add(() =>
+                        {
                             inputAnswerDto.value = displayer.GetValue(true);
                         });
                     });
@@ -256,7 +268,8 @@ namespace umi3dBrowsers.container.formrenderer
             displayer.SetType(itemDto.TextType);
 
             _answer.inputs.Add(inputAnswerDto);
-            formBinding.Add(() => {
+            formBinding.Add(() =>
+            {
                 inputAnswerDto.value = displayer.GetValue(true);
             });
         }
@@ -269,7 +282,8 @@ namespace umi3dBrowsers.container.formrenderer
             foreach (var div in pageDto.FirstChildren)
                 InstantiateDiv(div, container);
 
-            formBinding.Add(() => {
+            formBinding.Add(() =>
+            {
                 if (container != null && container.container != null && container.container.activeInHierarchy)
                     _answer.pageId = inputAnswerDto.inputId;
             });
@@ -294,6 +308,8 @@ namespace umi3dBrowsers.container.formrenderer
 
                 displayer = imageGO.GetComponent<displayer.IDisplayer>();
                 displayer.SetResource(await imageDto.GetSprite());
+
+                HandleStyle(imageGO, displayer, imageDto.styles);
             }
             else // Vignette
             {
@@ -310,13 +326,12 @@ namespace umi3dBrowsers.container.formrenderer
                     m_vignetteContainers.Add(vignetteContainer);
                 }
 
-                VignetteBuffer buffer =  await vignetteContainer.CreateVignette(imageDto, null, () => {
+                VignetteBuffer buffer = await vignetteContainer.CreateVignette(imageDto, null, () =>
+                {
                     ValidateForm(imageDto.guid);
-                });
+                }, HandleStyle);
                 vignetteContainer.UpdateNavigation();
             }
-            
-            HandleStyle(imageGO, displayer, imageDto.styles);
         }
 
         private void HandleStyle(GameObject gameObject, displayer.IDisplayer displayer, List<StyleDto> styleDtos)
@@ -339,41 +354,46 @@ namespace umi3dBrowsers.container.formrenderer
 
         private void ApplyStyle(GameObject go, displayer.IDisplayer displayer, UGUIStyleItemDto styleItemDto)
         {
-            switch (styleItemDto) 
-            { 
-                case PositionStyleDto positionStyleVariant :
-                {
-                    go.GetComponent<RectTransform>().anchoredPosition = new Vector2(positionStyleVariant.posX, positionStyleVariant.posY);
-                    break;
-                }
-                case SizeStyleDto sizeStyleVariant :
-                {
-                    go.GetComponent<RectTransform>().sizeDelta = new Vector2(sizeStyleVariant.width, sizeStyleVariant.height);  
-                    break;
-                }
-                case AnchorStyleDto anchorStyleVariant :
-                {
-                    RectTransform rect = go.GetComponent<RectTransform>();
-                    rect.anchorMax = new Vector2(anchorStyleVariant.maxX, anchorStyleVariant.maxY);
-                    rect.anchorMin = new Vector2(anchorStyleVariant.minX, anchorStyleVariant.minY);
-                    rect.pivot = new Vector2(anchorStyleVariant.pivotX, anchorStyleVariant.pivotY);
-                    break;
-                }
-                case ColorStyleDto colorStyleVariant :
-                {
-                    displayer?.SetColor(new Color() {
-                        a = colorStyleVariant.color.A,
-                        b = colorStyleVariant.color.B,
-                        g = colorStyleVariant.color.G,
-                        r = colorStyleVariant.color.R
-                    });
-                    break;
-                }
-                case TextStyleDto textStyleVariant :
-                {
-                    displayer?.SetResource(textStyleVariant);
-                    break;
-                }
+            switch (styleItemDto)
+            {
+                case PositionStyleDto positionStyleVariant:
+                    {
+                        go.GetComponent<RectTransform>().anchoredPosition = new Vector2(positionStyleVariant.posX, positionStyleVariant.posY);
+                        break;
+                    }
+                case SizeStyleDto sizeStyleVariant:
+                    {
+                        go.GetComponent<RectTransform>().sizeDelta = new Vector2(sizeStyleVariant.width, sizeStyleVariant.height);
+                        break;
+                    }
+                case AnchorStyleDto anchorStyleVariant:
+                    {
+                        RectTransform rect = go.GetComponent<RectTransform>();
+                        rect.anchorMax = new Vector2(anchorStyleVariant.maxX, anchorStyleVariant.maxY);
+                        rect.anchorMin = new Vector2(anchorStyleVariant.minX, anchorStyleVariant.minY);
+                        rect.pivot = new Vector2(anchorStyleVariant.pivotX, anchorStyleVariant.pivotY);
+                        break;
+                    }
+                case ColorStyleDto colorStyleVariant:
+                    {
+                        displayer?.SetColor(colorStyleVariant.color.Struct());
+                        break;
+                    }
+                case HoverColorStyleDto hovercolorStyleVariant:
+                    {
+                        displayer?.SetHoverColor(hovercolorStyleVariant.color.Struct());
+                        break;
+                    }
+                case TextStyleDto textStyleVariant:
+                    {
+                        displayer?.SetResource(textStyleVariant);
+                        break;
+                    }
+                case LoadingStyleDto _:
+                    {
+                        displayer?.SetLoading();
+                        break;
+                    }
             }
         }
     }

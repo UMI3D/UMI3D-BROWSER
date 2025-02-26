@@ -118,10 +118,10 @@ namespace umi3d.VRBase.lbe
             UMI3DForgeClient.LBEGuardianEvent += OnLBEGuardianReception;
 
 
-            if (arPlaneManager != null)
-            {
-                arPlaneManager.planesChanged += OnPlanesChanged;
-            }
+            //if (arPlaneManager != null)
+            //{
+            //    arPlaneManager.planesChanged += OnPlanesChanged;
+            //}
         }
 
         void OnDisable()
@@ -134,10 +134,10 @@ namespace umi3d.VRBase.lbe
             UMI3DForgeClient.LBELeaderEvent -= OnLBELeaderReception;
             UMI3DForgeClient.LBEGuardianEvent -= OnLBEGuardianReception;
 
-            if (arPlaneManager != null)
-            {
-                arPlaneManager.planesChanged -= OnPlanesChanged;
-            }
+            //if (arPlaneManager != null)
+            //{
+            //    arPlaneManager.planesChanged -= OnPlanesChanged;
+            //}
         }
 
         public static bool isLBELeader()
@@ -206,10 +206,10 @@ namespace umi3d.VRBase.lbe
             CreateGuardianServer(anchors);
         }
 
-        void OnPlanesChanged(ARPlanesChangedEventArgs eventArgs)
-        {
-            StartCoroutine(GetARPlanes());
-        }
+        //void OnPlanesChanged(ARPlanesChangedEventArgs eventArgs)
+        //{
+        //    StartCoroutine(GetARPlanes());
+        //}
 
         private void OcclusionForColocatedUsers(List<ulong> newColocatedUsers)
         {
@@ -596,7 +596,7 @@ namespace umi3d.VRBase.lbe
 
                     /* guardianMesh.transform.position = Vector3.zero;*/
 
-                    //CreateGuardianMesh(guardianAnchors);
+                    CreateGuardianMesh(guardianAnchors);
                 }
             }
             else

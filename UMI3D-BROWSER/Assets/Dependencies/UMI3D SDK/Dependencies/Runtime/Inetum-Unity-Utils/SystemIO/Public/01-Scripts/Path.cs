@@ -21,8 +21,7 @@ namespace inetum.unityUtils.systemIO
     public static class Path
     {
         static readonly char[] charsToTrim = { 
-            System.IO.Path.DirectorySeparatorChar, 
-            System.IO.Path.AltDirectorySeparatorChar 
+            '/', '\\' 
         };
 
         static readonly char[] invalidPathChars
@@ -75,7 +74,7 @@ namespace inetum.unityUtils.systemIO
             }
             else
             {
-                return path1 + System.IO.Path.AltDirectorySeparatorChar + path2;
+                return path1 + "/" + path2;
             }
         }
 
@@ -111,8 +110,8 @@ namespace inetum.unityUtils.systemIO
         public static string ReplaceSeparatorByAltDirectorySeparatorChar(this string path)
         {
             return path?.Replace(
-                System.IO.Path.DirectorySeparatorChar, 
-                System.IO.Path.AltDirectorySeparatorChar
+                '\\', 
+                '/'
             ) ?? null;
         }
 
@@ -144,37 +143,27 @@ namespace inetum.unityUtils.systemIO
 
             if (string.IsNullOrEmpty(path))
             {
-                return System.IO.Path.AltDirectorySeparatorChar.ToString();
+                return "/";
             }
 
             if (index == 0)
             {
-                if (path[0] != System.IO.Path.AltDirectorySeparatorChar)
-                {
-                    return System.IO.Path.AltDirectorySeparatorChar + path;
-                }
-                else
-                {
-                    return path;
-                }
+                return path[0] == '/'
+                    ? path
+                    : $"/{path}";
             }
 
             if (index == path.Length)
             {
-                if (path[path.Length - 1] != System.IO.Path.AltDirectorySeparatorChar)
-                {
-                    return path + System.IO.Path.AltDirectorySeparatorChar;
-                }
-                else
-                {
-                    return path;
-                }
+                return path[path.Length - 1] == '/'
+                    ? path
+                    : $"{path}/";
             }
 
-            if (path[index - 1] != System.IO.Path.AltDirectorySeparatorChar 
-                && path[index] != System.IO.Path.AltDirectorySeparatorChar)
+            if (path[index - 1] != '/'
+                && path[index] != '/')
             {
-                return path.Insert(index, System.IO.Path.AltDirectorySeparatorChar.ToString());
+                return path.Insert(index, "/");
             }
 
             return path;

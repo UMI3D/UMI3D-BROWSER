@@ -22,6 +22,10 @@ namespace inetum.unityUtils.versioning
     [Serializable]
     public struct ReleaseCycle 
     {
+        public const string ALPHA = "ALPHA";
+        public const string BETA = "BETA";
+        public const string PROD = "PROD";
+
         public readonly string name;
         public readonly string scriptingSymbol;
         public readonly string initial;
@@ -43,19 +47,19 @@ namespace inetum.unityUtils.versioning
 
         public static readonly ReleaseCycle alpha = new ReleaseCycle(
             "alpha", 
-            "ALPHA",
+            ALPHA,
             "a", 
             "Show more logs and active the development build."
         );
         public static readonly ReleaseCycle beta = new ReleaseCycle(
             "beta", 
-            "BETA",
+            BETA,
             "b", 
             "Show more logs."
         );
         public static readonly ReleaseCycle production = new ReleaseCycle(
             "production", 
-            "PROD",
+            PROD,
             "p", 
             "Less logs."
         );

@@ -17,13 +17,13 @@ limitations under the License.
 using inetum.unityUtils.conditionalCompilation;
 using System;
 using System.Diagnostics;
+using static inetum.unityUtils.versioning.InetumVersioningDataDelegate;
+using static inetum.unityUtils.versioning.ReleaseCycle;
 
 namespace inetum.unityUtils.versioning
 {
     public class InetumVersioningManager : IVersioningDataDelegate
     {
-        const string INETUM = "INETUM_";
-
         #region Initialization
 
         public static InetumVersioningManager @default => _default.Value;
@@ -35,7 +35,20 @@ namespace inetum.unityUtils.versioning
 
         #region IVersioningDataDelegate
 
-        public IVersioningDataDelegate dataDelegate;
+        IVersioningDataDelegate _dataDelegate = new InetumVersioningDataDelegate();
+        public IVersioningDataDelegate dataDelegate
+        {
+            get => _dataDelegate;
+            set
+            {
+                if (value == null)
+                {
+                    _dataDelegate = new InetumVersioningDataDelegate();
+                    return;
+                }
+                _dataDelegate = value;
+            }
+        }
 
         public Version GetVersion()
         {
@@ -47,6 +60,9 @@ namespace inetum.unityUtils.versioning
             return dataDelegate.GetReleaseCycle();
         }
 
+        /// <summary>
+        /// Update Scripting Symbols.
+        /// </summary>
         public void UpdateVersioning()
         {
             ScriptingSymbolHelper.@default.UpdateSymbols(
@@ -64,15 +80,6 @@ namespace inetum.unityUtils.versioning
         };
 
         #region Version
-
-        /// <summary>
-        /// Current version.
-        /// </summary>
-        const string Version1_0 = "1_0";
-        /// <summary>
-        /// Next version.
-        /// </summary>
-        const string Version1_1 = "1_1";
 
         [Conditional(INETUM + Version1_0)]
         public static void Version_1_0(Action action)
@@ -95,10 +102,6 @@ namespace inetum.unityUtils.versioning
         #endregion
 
         #region Release cycle
-
-        const string ALPHA = "ALPHA";
-        const string BETA = "BETA";
-        const string PROD = "PROD";
 
         [Conditional(INETUM + ALPHA)]
         public static void Alpha(Action action)

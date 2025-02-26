@@ -92,7 +92,7 @@ namespace umi3d.cdk
             }
         }
 
-        private void BindSkinnedMeshBone(ulong environmentId,ulong skinMeshEntityId, int boneId, Transform node, float maxDelay)
+        private void BindSkinnedMeshBone(ulong environmentId, ulong skinMeshEntityId, int boneId, Transform node, float maxDelay)
         {
             loadingManager.WaitUntilEntityLoaded(environmentId, skinMeshEntityId, e =>
             {

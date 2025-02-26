@@ -23,12 +23,14 @@ namespace inetum.unityUtils.versioning
     public struct ReleaseCycle 
     {
         public readonly string name;
+        public readonly string scriptingSymbol;
         public readonly string initial;
         public readonly string description;
 
-        public ReleaseCycle(string name, string initial, string description)
+        public ReleaseCycle(string name, string scriptingSymbol, string initial, string description)
         {
             this.name = name;
+            this.scriptingSymbol = scriptingSymbol;
             this.initial = initial;
             this.description = description;
         }
@@ -39,8 +41,23 @@ namespace inetum.unityUtils.versioning
             return new[] { alpha, beta, production };
         });
 
-        public static readonly ReleaseCycle alpha = new ReleaseCycle("alpha", "a", "Show more logs and active the development build.");
-        public static readonly ReleaseCycle beta = new ReleaseCycle("beta", "b", "Show more logs.");
-        public static readonly ReleaseCycle production = new ReleaseCycle("production", "p", "Less logs.");
+        public static readonly ReleaseCycle alpha = new ReleaseCycle(
+            "alpha", 
+            "ALPHA",
+            "a", 
+            "Show more logs and active the development build."
+        );
+        public static readonly ReleaseCycle beta = new ReleaseCycle(
+            "beta", 
+            "BETA",
+            "b", 
+            "Show more logs."
+        );
+        public static readonly ReleaseCycle production = new ReleaseCycle(
+            "production", 
+            "PROD",
+            "p", 
+            "Less logs."
+        );
     }
 }

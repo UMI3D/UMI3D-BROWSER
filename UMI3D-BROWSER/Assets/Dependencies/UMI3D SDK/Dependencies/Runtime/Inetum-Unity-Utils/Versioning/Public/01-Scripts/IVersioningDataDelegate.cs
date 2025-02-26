@@ -21,6 +21,24 @@ namespace inetum.unityUtils.versioning
 {
     public interface IVersioningDataDelegate 
     {
+        string currentVersionForScriptingSymbol
+        {
+            get
+            {
+                Version version = GetVersion();
+                return $"{version.majorVersion}_{version.minorVersion}";
+            }
+        }
+
+        string currentReleaseCycleForScriptingSymbol
+        {
+            get
+            {
+                ReleaseCycle releaseCycle = GetReleaseCycle();
+                return releaseCycle.scriptingSymbol;
+            }
+        }
+
         /// <summary>
         /// Get the current version. 
         /// </summary>

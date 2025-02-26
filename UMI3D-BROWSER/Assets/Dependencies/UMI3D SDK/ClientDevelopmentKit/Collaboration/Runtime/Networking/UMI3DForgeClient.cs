@@ -849,8 +849,6 @@ namespace umi3d.cdk.collaboration
             }
         }
 
-
-
         private async void SendGetLocalInfo(string key)
         {
             try

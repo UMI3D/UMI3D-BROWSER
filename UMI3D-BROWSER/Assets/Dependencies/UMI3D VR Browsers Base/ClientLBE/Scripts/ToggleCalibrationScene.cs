@@ -18,7 +18,7 @@ namespace umi3d.VRBase.lbe
 
         public void ToggleManualCalibrator(bool value)
         {
-            GuardianManager.Instance.ToggleCalibrationScene(value);       
+            //GuardianManager.Instance.ToggleCalibrationScene(value);       
         }
     }
 }

@@ -69,7 +69,7 @@ namespace umi3d.VRBase.lbe
         public Material OcclusionMaterial;
         public CanvasGroup OrientationScenePanel;
 
-        public bool automaticCalibration = true;
+        //public bool automaticCalibration = true;
         public Transform calibrator;
         public ARPlaneManager arPlaneManager;
 
@@ -112,17 +112,15 @@ namespace umi3d.VRBase.lbe
             (UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DCollabLoadingParameters).IsLBEGroupLeader = false;
 
             //Desactivation du calibreur manuel au start
-            if (automaticCalibration)
+            //if (automaticCalibration)
                 ManualCalibrator.gameObject.SetActive(false);
 
             arPlaneManager = this.GetComponent<ARPlaneManager>();
 
-            StartCoroutine(GetARPlanes());
 
-            UMI3DEnvironmentLoader.Instance.onEnvironmentLoaded.AddListener(() => StartCalibrationScene());
+            //UMI3DEnvironmentLoader.Instance.onEnvironmentLoaded.AddListener(() => StartCalibrationScene());
 
             Transform scene = Player.transform.parent;
-            Instantiate(Repere, scene.position, scene.rotation);
         }
 
         void OnEnable()
@@ -199,8 +197,11 @@ namespace umi3d.VRBase.lbe
                 batteryLevel = SystemInfo.batteryLevel * 100
             };
 
+
+            GetARPlanes();
             GetGuardianArea();
             AddAnchorGuardian();
+
             UserGuardianRequestDto guardianDto = CreateGuardianDto();
 
             UMI3DClientServer.SendRequest(deviceDescription, true);
@@ -280,27 +281,27 @@ namespace umi3d.VRBase.lbe
             }
         }
 
-        public IEnumerator GetARPlanes()
+        public void GetARPlanes()
         {
-            yield return new WaitForSeconds(1.0f);
 
             if (arPlaneManager == null)
             {
                 Debug.LogError("REMY : ARPlaneManager est NULL !");
-                yield break;
+                return;
+                
             }
 
             if (arPlaneManager.trackables.count == 0)
             {
                 Debug.LogWarning("REMY : Aucun plan AR détecté après l'attente.");
-                yield break;
+                return;
             }
 
             ARPlaneFrom = FindARPlaneByType(ARPlaneFromType);
             ARPlaneTo = FindARPlaneByType(ARPlaneToType);
 
-            if (automaticCalibration)
-            {
+            /*if (automaticCalibration)
+            {*/
                 Debug.Log("REMY : plane in trackables count next -> " + planesToCalibrate.Count);
 
                 if (ARPlaneFrom != null && ARPlaneTo != null) // On veut au moins 2 plans
@@ -337,12 +338,12 @@ namespace umi3d.VRBase.lbe
                 else
                 {
                     Debug.LogError("Multiple ARPlane detected. Only Two ARPlanes should be selected to serve as a calibrator. Change your environment configuration");
-                    automaticCalibration = false;
-                    SetManualCalibrator();
+                    //automaticCalibration = false;
+                    //SetManualCalibrator();
                 }
-            }
+            /*}
             else
-                SetManualCalibrator();
+                SetManualCalibrator();*/
 
             //Envoi de la position du calibrator qui correspond à la position du spawner pour le recalculé dans la TPGroupé 
             OnPositionCalibratorStart?.Invoke(calibrator.transform.position);
@@ -406,15 +407,15 @@ namespace umi3d.VRBase.lbe
         //    }
         //}
 
-        public void ToggleCalibrationScene(bool value)
-        {
-            automaticCalibration = value;
-
-            if (automaticCalibration)
-                SetARPlaneCalibrator();
-            else
-                SetManualCalibrator();
-        }
+        //[Obsolete]
+        //public void ToggleCalibrationScene(bool value)
+        //{
+        //    automaticCalibration = value;
+        //    if (automaticCalibration)
+        //        SetARPlaneCalibrator();
+        //    else
+        //        SetManualCalibrator();
+        //
 
         void OnLBELeaderReception(bool value)
         {
@@ -482,38 +483,40 @@ namespace umi3d.VRBase.lbe
         //    }
         //}
 
-        private void SetARPlaneCalibrator()
-        {
-            ManualCalibrator.gameObject.SetActive(false);
+        //[Obsolete]
+        //private void SetARPlaneCalibrator()
+        //{
+        //    ManualCalibrator.gameObject.SetActive(false);
 
-            if (planesToCalibrate.Count > 0)
-            {
-                ARPlanesActivation(true);
+        //    if (planesToCalibrate.Count > 0)
+        //    {
+        //        ARPlanesActivation(true);
                 //calibrator = planesToCalibrate[0].transform;
-                calibrator = ARPlaneFrom.transform;
+        //        calibrator = ARPlaneFrom.transform;
 
-            }
+        //    }
 
-            else
-            {
-                automaticCalibration = false;
-                SetManualCalibrator();
-            }
-        }
+        //    else
+        //    {
+        //        automaticCalibration = false;
+        //        SetManualCalibrator();
+        //    }
+        //}
 
-        private void SetManualCalibrator()
-        {
-            ARPlanesActivation(false);
+        //[Obsolete]
+        //private void SetManualCalibrator()
+        //{
+        //    ARPlanesActivation(false);
 
-            ManualCalibrator.gameObject.SetActive(true);
-            calibrator = ManualCalibrator.transform;
+        //    ManualCalibrator.gameObject.SetActive(true);
+        //    calibrator = ManualCalibrator.transform;
 
-            if (OrientationScenePanel.gameObject.activeSelf == true && OrientationScenePanel.alpha == 1)
-            {
-                OrientationScenePanel.GetComponent<SetPlayerOrientationPanel>().ClosePanel();
-                ButtonOrientationScene.onOffOrientationPanel = false;
-            }
-        }
+        //    if (OrientationScenePanel.gameObject.activeSelf == true && OrientationScenePanel.alpha == 1)
+        //    {
+        //        OrientationScenePanel.GetComponent<SetPlayerOrientationPanel>().ClosePanel();
+        //        ButtonOrientationScene.onOffOrientationPanel = false;
+        //    }
+        //}
 
         public void StartCalibrationScene()
         {
@@ -531,16 +534,18 @@ namespace umi3d.VRBase.lbe
             return "";
         }
 
-        public void OrientationChoice(float orientation)
-        {
-            orientationOffset = orientation;
-        }
+        //[Obsolete]
+        //public void OrientationChoice(float orientation)
+        //{
+        //    orientationOffset = orientation;
+        //}
 
-        public void CloseOrientationChoice()
-        {
-            calibrator.transform.Rotate(calibrator.transform.rotation.x, orientationOffset, calibrator.transform.rotation.z, Space.World);
-            OrientationScenePanel.gameObject.SetActive(false);
-        }
+        //[Obsolete]
+        //public void CloseOrientationChoice()
+        //{
+        //    calibrator.transform.Rotate(calibrator.transform.rotation.x, orientationOffset, calibrator.transform.rotation.z, Space.World);
+        //    OrientationScenePanel.gameObject.SetActive(false);
+        //}
 
         public IEnumerator CalibrationScene()
         {
@@ -549,10 +554,10 @@ namespace umi3d.VRBase.lbe
 
             // TODO check the reason we have to wait
 
-            if (automaticCalibration)
-            {
-                CloseOrientationChoice();
-            }
+            //if (automaticCalibration)
+            //{
+            //    CloseOrientationChoice();
+            //}
 
             if (Player != null)
             {

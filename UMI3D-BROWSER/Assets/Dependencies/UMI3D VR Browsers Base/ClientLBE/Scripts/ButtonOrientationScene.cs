@@ -18,8 +18,8 @@ namespace umi3d.VRBase.lbe
         [ContextMenu("Turn on/off Orientation panel choice before connection scene.")]
         void SwitchOrientationPanel()
         {
-
-            if(GuardianManager.Instance.automaticCalibration)
+            //AutomaticCalibration Obsolete
+            /*if(GuardianManager.Instance.automaticCalibration)
             {
                 onOffOrientationPanel = !onOffOrientationPanel;
 
@@ -29,7 +29,7 @@ namespace umi3d.VRBase.lbe
 
                 else
                     SetPlayerOrientationPanel.Instance.ClosePanel();
-            }
+            }*/
             
         }
     }

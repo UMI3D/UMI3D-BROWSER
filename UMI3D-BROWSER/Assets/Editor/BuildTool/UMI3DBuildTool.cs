@@ -347,8 +347,8 @@ namespace umi3d.browserEditor.BuildTool
                 case E_Target.Focus:
                 case E_Target.Pico:
                 case E_Target.SteamVR:
-                    PluginFeatureHelper.@default.DisableAllPlugins(Plugin.OpenXR);
-                    PluginFeatureHelper.@default.EnablePlugins(Plugin.OpenXR);
+                    PluginFeatureHelper.@default.DisableAllPlugins(XRPlugins.OpenXR);
+                    PluginFeatureHelper.@default.EnablePlugins(XRPlugins.OpenXR);
                     break;
 
                 case E_Target.Windows:
@@ -360,18 +360,18 @@ namespace umi3d.browserEditor.BuildTool
             switch (newTarget)
             {
                 case E_Target.Quest:
-                    PluginFeatureHelper.@default.DisableAllFeatures(Feature.allMetaQuestCases.ToArray());
-                    PluginFeatureHelper.@default.EnableFeatures(Feature.allMetaQuestCases.ToArray());
+                    PluginFeatureHelper.@default.DisableAllFeatures(OpenXRFeatures.allMetaQuestCases.ToArray());
+                    PluginFeatureHelper.@default.EnableFeatures(OpenXRFeatures.allMetaQuestCases.ToArray());
                     break;
                 case E_Target.SteamVR:
                     break;
                 case E_Target.Focus:
-                    PluginFeatureHelper.@default.DisableAllFeatures(Feature.allViveCases.ToArray());
-                    PluginFeatureHelper.@default.EnableFeatures(Feature.allViveCases.ToArray());
+                    PluginFeatureHelper.@default.DisableAllFeatures(OpenXRFeatures.allViveCases.ToArray());
+                    PluginFeatureHelper.@default.EnableFeatures(OpenXRFeatures.allViveCases.ToArray());
                     break;
                 case E_Target.Pico:
-                    PluginFeatureHelper.@default.DisableAllFeatures(Feature.allPicoCases.ToArray());
-                    PluginFeatureHelper.@default.EnableFeatures(Feature.allPicoCases.ToArray());
+                    PluginFeatureHelper.@default.DisableAllFeatures(OpenXRFeatures.allPicoCases.ToArray());
+                    PluginFeatureHelper.@default.EnableFeatures(OpenXRFeatures.allPicoCases.ToArray());
                     break;
             }
 

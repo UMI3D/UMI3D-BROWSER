@@ -17,6 +17,7 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
 using umi3d.browserEditor.BuildTool;
+using umi3d.browserRuntime.target;
 using umi3d.common.core.target;
 using UnityEditor;
 using UnityEngine;
@@ -128,7 +129,7 @@ public class PluginFeatureHelperTests
             unityPluginFeatureTestDelegate.pluginResult = true;
 
             // When
-            PluginFeatureHelper.@default.EnablePlugins(Plugin.OpenXR, Plugin.Oculus);
+            PluginFeatureHelper.@default.EnablePlugins(XRPlugins.OpenXR);
 
             // Then
             Assert.IsTrue(testPluginFeatureDelegate.result);
@@ -143,8 +144,8 @@ public class PluginFeatureHelperTests
             unityPluginFeatureTestDelegate.pluginResult = false;
 
             // When
-            LogAssert.Expect(LogType.Error, $"[PluginFeatureHelper] Error: Could not enable [{Plugin.OpenXR.name}] plugin on [{BuildTargetGroup.Standalone}].");
-            PluginFeatureHelper.@default.EnablePlugins(Plugin.OpenXR);
+            LogAssert.Expect(LogType.Error, $"[PluginFeatureHelper] Error: Could not enable [{XRPlugins.OpenXR.name}] plugin on [{BuildTargetGroup.Standalone}].");
+            PluginFeatureHelper.@default.EnablePlugins(XRPlugins.OpenXR);
 
             // Then
             Assert.False(testPluginFeatureDelegate.result);
@@ -159,7 +160,7 @@ public class PluginFeatureHelperTests
             unityPluginFeatureTestDelegate.pluginResult = true;
 
             // When
-            PluginFeatureHelper.@default.EnablePlugins(Plugin.OpenXR);
+            PluginFeatureHelper.@default.EnablePlugins(XRPlugins.OpenXR);
 
             // Then
             Assert.IsTrue(testPluginFeatureDelegate.result);
@@ -175,7 +176,7 @@ public class PluginFeatureHelperTests
             unityPluginFeatureTestDelegate.pluginResult = true;
 
             // When
-            PluginFeatureHelper.@default.EnablePlugins(Plugin.OpenXR);
+            PluginFeatureHelper.@default.EnablePlugins(XRPlugins.OpenXR);
         }
     }
 
@@ -281,7 +282,7 @@ public class PluginFeatureHelperTests
         [Test]
         public void WhenDisableAllPlugins_ThenAllPluginsAreDisabled()
         {
-            testPluginFeatureDelegate.plugins.AddRange(Plugin.allCases);
+            testPluginFeatureDelegate.plugins.AddRange(XRPlugins.allCases);
 
             // When
             PluginFeatureHelper.@default.DisableAllPlugins();
@@ -295,15 +296,15 @@ public class PluginFeatureHelperTests
         public void WhenDisableAllPluginsExceptOne_ThenOnlyOnePluginLeft()
         {
             // Given
-            testPluginFeatureDelegate.plugins.AddRange(Plugin.allCases);
+            testPluginFeatureDelegate.plugins.AddRange(XRPlugins.allCases);
 
             // When
-            PluginFeatureHelper.@default.DisableAllPlugins(Plugin.OpenXR);
+            PluginFeatureHelper.@default.DisableAllPlugins(XRPlugins.OpenXR);
 
             // Then
             Assert.IsTrue(testPluginFeatureDelegate.result);
             Assert.AreEqual(1, testPluginFeatureDelegate.plugins.Count);
-            Assert.Contains(Plugin.OpenXR, testPluginFeatureDelegate.plugins);
+            Assert.Contains(XRPlugins.OpenXR, testPluginFeatureDelegate.plugins);
         }
 
         [Test]
@@ -328,9 +329,9 @@ public class PluginFeatureHelperTests
             unityPluginFeatureTestDelegate.isPluginEnabled = true;
 
             // When
-            for (int i = 0; i < Plugin.allCases.Count; i++)
+            for (int i = 0; i < XRPlugins.allCases.Count; i++)
             {
-                LogAssert.Expect(LogType.Error, $"[PluginFeatureHelper] Error: Could not disable [{Plugin.allCases[i].name}] plugin on [{BuildTargetGroup.Standalone}].");
+                LogAssert.Expect(LogType.Error, $"[PluginFeatureHelper] Error: Could not disable [{XRPlugins.allCases[i].name}] plugin on [{BuildTargetGroup.Standalone}].");
             }
             PluginFeatureHelper.@default.DisableAllPlugins();
 
@@ -613,28 +614,28 @@ public class PluginFeatureHelperTests
         public void WhenDisableAllFeatures_ThenAllFeaturesAreDisabled()
         {
             // Given
-            _unityPluginFeatureTestDelegate.features.AddRange(Feature.allCases.Select(feature => feature.id));
+            _unityPluginFeatureTestDelegate.features.AddRange(OpenXRFeatures.allCases.Select(feature => feature.id));
 
             // When
             PluginFeatureHelper.@default.DisableAllFeatures();
 
             // Then
             Assert.AreEqual(0, _unityPluginFeatureTestDelegate.features.Count);
-            Assert.AreEqual(Feature.allCases.Count, _testPluginFeatureDelegate.DisabledFeatures.Count);
+            Assert.AreEqual(OpenXRFeatures.allCases.Count, _testPluginFeatureDelegate.DisabledFeatures.Count);
         }
 
         [Test]
         public void GivenSomeExceptions_WhenDisableAllFeatures_ThenOnlyNonExceptionFeaturesAreDisabled()
         {
             // Given
-            _unityPluginFeatureTestDelegate.features.AddRange(Feature.allCases.Select(feature => feature.id));
+            _unityPluginFeatureTestDelegate.features.AddRange(OpenXRFeatures.allCases.Select(feature => feature.id));
 
             // When
-            PluginFeatureHelper.@default.DisableAllFeatures(Feature.allMetaQuestCases.ToArray());
+            PluginFeatureHelper.@default.DisableAllFeatures(OpenXRFeatures.allMetaQuestCases.ToArray());
 
             // Then
-            Assert.AreEqual(Feature.allMetaQuestCases.Count, _unityPluginFeatureTestDelegate.features.Count);
-            Assert.AreEqual(Feature.allCases.Count - Feature.allMetaQuestCases.Count, _testPluginFeatureDelegate.DisabledFeatures.Count);
+            Assert.AreEqual(OpenXRFeatures.allMetaQuestCases.Count, _unityPluginFeatureTestDelegate.features.Count);
+            Assert.AreEqual(OpenXRFeatures.allCases.Count - OpenXRFeatures.allMetaQuestCases.Count, _testPluginFeatureDelegate.DisabledFeatures.Count);
         }
 
         [Test]

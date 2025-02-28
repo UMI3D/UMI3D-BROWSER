@@ -17,6 +17,7 @@ limitations under the License.
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using umi3d.browserRuntime.target;
 using umi3d.common.core.target;
 using UnityEditor;
 using UnityEditor.XR.Management;
@@ -183,7 +184,7 @@ namespace umi3d.browserEditor.BuildTool
         /// <param name="except">An array of plugins that should not be disabled.</param>
         public void DisableAllPlugins(params Plugin[] except)
         {
-            foreach (Plugin plugin in Plugin.allCases)
+            foreach (Plugin plugin in XRPlugins.allCases)
             {
                 if (!except?.Contains(plugin) ?? true)
                 {
@@ -258,7 +259,7 @@ namespace umi3d.browserEditor.BuildTool
         /// <param name="except">An array of features that should not be disabled.</param>
         public void DisableAllFeatures(params Feature[] except)
         {
-            foreach (Feature feature in Feature.allCases)
+            foreach (Feature feature in OpenXRFeatures.allCases)
             {
                 if (!except.Contains(feature))
                 {

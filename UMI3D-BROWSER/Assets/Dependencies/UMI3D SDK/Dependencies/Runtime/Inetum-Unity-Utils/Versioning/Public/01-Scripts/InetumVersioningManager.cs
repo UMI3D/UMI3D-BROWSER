@@ -60,21 +60,27 @@ namespace inetum.unityUtils.versioning
             return dataDelegate.GetReleaseCycle();
         }
 
+#if UNITY_EDITOR
+        [UnityEditor.MenuItem("Versioning/Update INETUM UnityUtils Version")]
         /// <summary>
         /// Update Scripting Symbols.
         /// </summary>
-        public void UpdateVersioning()
+        public static void UpdateVersioning()
         {
-            ScriptingSymbolHelper.@default.UpdateSymbols(
-                allCases, 
-                dataDelegate.currentVersionForScriptingSymbol,
-                dataDelegate.currentReleaseCycleForScriptingSymbol
-            );
+            InetumVersioningManager manager = @default;
+
+            string version = INETUM + manager.dataDelegate.currentVersionForScriptingSymbol;
+            string releaseCycle = INETUM + manager.dataDelegate.currentReleaseCycleForScriptingSymbol;
+
+            UnityEngine.Debug.Log($"[InetumVersioningManager] Notice: Update version: {version} and release cycle: {releaseCycle}");
+
+            ScriptingSymbolHelper.@default.UpdateSymbols(allCases, version, releaseCycle);
         }
+#endif
 
-        #endregion
+#endregion
 
-        string[] allCases = { 
+        static string[] allCases = { 
             INETUM + ALPHA, INETUM + BETA, INETUM + PROD,
             INETUM + Version1_0, INETUM + Version1_1,
         };
@@ -96,6 +102,12 @@ namespace inetum.unityUtils.versioning
         [Conditional(INETUM + Version1_1)]
         public static void Version_1_1(Action action)
         {
+            action?.Invoke();
+        }
+
+        [Conditional(INETUM + Version1_0)]
+        public static void VersionBelow_1_1(Action action)
+        { 
             action?.Invoke();
         }
 

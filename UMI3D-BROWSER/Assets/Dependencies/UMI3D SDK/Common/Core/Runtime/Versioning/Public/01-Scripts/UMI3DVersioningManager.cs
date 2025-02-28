@@ -61,21 +61,27 @@ namespace umi3d.Common.Core.Versioning
             return dataDelegate.GetReleaseCycle();
         }
 
+#if UNITY_EDITOR
+        [UnityEditor.MenuItem("Versioning/Update UMI3D Version")]
         /// <summary>
         /// Update Scripting Symbols.
         /// </summary>
-        public void UpdateVersioning()
+        public static void UpdateVersioning()
         {
-            ScriptingSymbolHelper.@default.UpdateSymbols(
-                allCases,
-                dataDelegate.currentVersionForScriptingSymbol,
-                dataDelegate.currentReleaseCycleForScriptingSymbol
-            );
+            UMI3DVersioningManager manager = @default;
+
+            string version = UMI3D + manager.dataDelegate.currentVersionForScriptingSymbol;
+            string releaseCycle = UMI3D + manager.dataDelegate.currentReleaseCycleForScriptingSymbol;
+
+            UnityEngine.Debug.Log($"[UMI3DVersioningManager] Notice: Update version: {version} and release cycle: {releaseCycle}");
+
+            ScriptingSymbolHelper.@default.UpdateSymbols(allCases, version, releaseCycle);
         }
+#endif
 
-        #endregion
+#endregion
 
-        string[] allCases = {
+        static string[] allCases = {
             UMI3D + ALPHA, UMI3D + BETA, UMI3D + PROD,
             UMI3D + Version2_9, UMI3D + Version2_10,
         };
@@ -83,19 +89,25 @@ namespace umi3d.Common.Core.Versioning
         #region Version
 
         [Conditional(UMI3D + Version2_9)]
-        public static void Version_1_0(Action action)
+        public static void Version_2_9(Action action)
         {
             action?.Invoke();
         }
 
         [Conditional(UMI3D + Version2_9), Conditional(UMI3D + Version2_10)]
-        public static void Version_1_0_OrAbove(Action action)
+        public static void Version_2_9_OrAbove(Action action)
         {
             action?.Invoke();
         }
 
         [Conditional(UMI3D + Version2_10)]
-        public static void Version_1_1(Action action)
+        public static void Version_2_10(Action action)
+        {
+            action?.Invoke();
+        }
+
+        [Conditional(UMI3D + Version2_9)]
+        public static void VersionBelow_2_10(Action action)
         {
             action?.Invoke();
         }

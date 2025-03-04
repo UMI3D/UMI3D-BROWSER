@@ -41,6 +41,23 @@ namespace umi3d.cdk.interaction
                 containers.Add(this);
         }
 
+        private void Start()
+        {
+            UMI3DEnvironmentLoader.Instance.onEnvironmentLoaded.AddListener(() =>
+            {
+                Renderer[] renderers = GetComponentsInChildren<Renderer>();
+                foreach (Renderer renderer in renderers)
+                {
+                    if (renderer.GetComponent<InteractableVisibilityListener>() == null)
+                    {
+                        InteractableVisibilityListener visibilityListener = renderer.gameObject.AddComponent<InteractableVisibilityListener>();
+                        visibilityListener.renderer = renderer;
+                        visibilityListener.interactableContainer = this;
+                    }
+                }
+            });
+        }
+
         private void OnDestroy()
         {
             containers.Remove(this);

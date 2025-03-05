@@ -107,7 +107,11 @@ namespace umi3dBrowsers
                 Title.SetActive(panel.DisplayTop);
                 title.SetTitle(panel.TitleType, panel.TitlePrefix, panel.TitleSuffix);
                 navBar.SetActive(panel.DisplayNavbar);
-                navBarLBE.SetActive(panel.DisplayNavbarLBE);
+
+#if UMI3D_XR
+                if (navBarLBE != null)
+                    navBarLBE.SetActive(panel.DisplayNavbarLBE);
+#endif
 
                 backButton.gameObject.SetActive(panel.DisplayBack);
 

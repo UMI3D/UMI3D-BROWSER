@@ -928,6 +928,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: OrientationScenePanel
       objectReference: {fileID: 0}
+    - target: {fileID: 1299080551220748938, guid: e7f00e3f273d02b42ac4f1bed8d117ee,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2507290554101273724, guid: e7f00e3f273d02b42ac4f1bed8d117ee,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -1624,6 +1629,11 @@ PrefabInstance:
       propertyPath: Player
       value: 
       objectReference: {fileID: 4883313436918982358}
+    - target: {fileID: 5519844068936865581, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
+        type: 3}
+      propertyPath: calibrator
+      value: 
+      objectReference: {fileID: 482466726570982943}
     - target: {fileID: 5519844068936865581, guid: 3bacf1bc1e19629438bb4b12b4fd005b,
         type: 3}
       propertyPath: AnchorManager
@@ -2389,6 +2399,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Calibrator
+      objectReference: {fileID: 0}
+    - target: {fileID: 8782886671900022695, guid: c9e823ad0482d1e40a09e5b4f1ae85f3,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

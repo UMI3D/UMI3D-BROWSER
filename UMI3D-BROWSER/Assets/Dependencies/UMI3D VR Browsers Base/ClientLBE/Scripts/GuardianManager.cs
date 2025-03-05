@@ -110,19 +110,18 @@ namespace umi3d.VRBase.lbe
             (UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DCollabLoadingParameters).IsColocatedDevice = false;
             (UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DCollabLoadingParameters).LBEGroupId = 0;
             (UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DCollabLoadingParameters).IsLBEGroupLeader = false;
-
+            
             //Desactivation du calibreur manuel au start
             //if (automaticCalibration)
-                ManualCalibrator.gameObject.SetActive(false);
+                //ManualCalibrator.gameObject.SetActive(false);
 
-            arPlaneManager = this.GetComponent<ARPlaneManager>();
-
+            //arPlaneManager = this.GetComponent<ARPlaneManager>();
 
             //UMI3DEnvironmentLoader.Instance.onEnvironmentLoaded.AddListener(() => StartCalibrationScene());
-
-            Transform scene = Player.transform.parent;
         }
 
+
+#if UMI3D_XR
         void OnEnable()
         {
             //UMI3DForgeClient.LBEGroupSyncEvent += OnLBEGroupSync;
@@ -155,6 +154,7 @@ namespace umi3d.VRBase.lbe
             //    arPlaneManager.planesChanged -= OnPlanesChanged;
             //}
         }
+#endif
 
         public static bool isLBELeader()
         {
@@ -197,7 +197,7 @@ namespace umi3d.VRBase.lbe
                 batteryLevel = SystemInfo.batteryLevel * 100
             };
 
-
+            StartCalibrationScene();
             GetARPlanes();
             GetGuardianArea();
             AddAnchorGuardian();
@@ -521,7 +521,9 @@ namespace umi3d.VRBase.lbe
         public void StartCalibrationScene()
         {
             if ((UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DCollabLoadingParameters).IsColocatedDevice)
-                StartCoroutine(CalibrationScene());
+                //StartCoroutine(CalibrationScene());
+                CalibrationScene();
+
         }
 
         string GetMacAddress()
@@ -547,10 +549,10 @@ namespace umi3d.VRBase.lbe
         //    OrientationScenePanel.gameObject.SetActive(false);
         //}
 
-        public IEnumerator CalibrationScene()
+        public void CalibrationScene()
         {
-            yield return null;
-            yield return null;
+           /* yield return null;
+            yield return null;*/
 
             // TODO check the reason we have to wait
 

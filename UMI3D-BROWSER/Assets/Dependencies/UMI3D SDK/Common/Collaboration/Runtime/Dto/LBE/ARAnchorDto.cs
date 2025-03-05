@@ -15,6 +15,5 @@ namespace umi3d.common.lbe.description
         /// Rotation anchor.
         /// </summary>
         public Vector4Dto rotation { get; set; }
-
     }
 }

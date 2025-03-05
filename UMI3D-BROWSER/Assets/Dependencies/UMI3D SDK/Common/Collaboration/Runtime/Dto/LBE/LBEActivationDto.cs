@@ -31,7 +31,7 @@ namespace umi3d.common.lbe
     public class LBESetUserGroupDto : AbstractLBEOperationDto
     {
         public ulong groupId { get; set; }
-
+        
         public List<ulong> colocatedUserIds { get; set; }
     }
 

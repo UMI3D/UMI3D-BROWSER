@@ -109,7 +109,7 @@ namespace umi3d.common.lbe
             switch (value)
             {
                 case UserGuardianRequestDto guardianRequestdto:
-                        
+
                     bytable = UMI3DSerializer.Write(UMI3DOperationKeys.MDMGuardianBrowserRequest)
                         + UMI3DSerializer.WriteCollection(guardianRequestdto.aRAnchors);
                     return true;
@@ -126,14 +126,14 @@ namespace umi3d.common.lbe
                     return true;
 
                 default:
-                        if (typeof(T) == typeof(ResourceDto))
-                        {
-                            // value is null
-                            bytable = UMI3DSerializer.WriteCollection(new System.Collections.Generic.List<FileDto>());
-                            return true;
-                        }
-                        bytable = null;
-                        return false;
+                    if (typeof(T) == typeof(ResourceDto))
+                    {
+                        // value is null
+                        bytable = UMI3DSerializer.WriteCollection(new System.Collections.Generic.List<FileDto>());
+                        return true;
+                    }
+                    bytable = null;
+                    return false;
             }
         }
     }

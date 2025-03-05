@@ -85,6 +85,9 @@ namespace umi3d.common
 
         public const uint ServerMessageRequest = 500;
 
+        public const uint PrivateIdentityOperation = 600;
+
+
         public const uint InteractionRequest = 10001;
         public const uint EventStateChanged = 10002;
         public const uint EventTriggered = 10003;

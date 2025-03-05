@@ -57,9 +57,10 @@ namespace umi3d.browserRuntime.interactions
             _visibilityListeners.Add(visibilityListener);
             InteractableUIVC viewController = visibilityListener.interactableUI.GetComponent<InteractableUIVC>();
             viewController.renderer = renderer;
+            viewController.interactable = interactableContainer.Interactable;
             viewController.enabled = true;
-            viewController.SetInFrontOfInteractable(renderer);
             viewController.DisplayFeedback(true);
+            viewController.SetInteractableName(interactableContainer.Interactable.name);
         }
 
         public void OnBecameInvisible(Renderer renderer, InteractableContainer interactableContainer, InteractableVisibilityListener visibilityListener)

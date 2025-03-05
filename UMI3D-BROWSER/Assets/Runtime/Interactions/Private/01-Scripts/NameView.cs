@@ -14,21 +14,43 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.interactions
 {
-    public class FeedbackView : Image
+    internal class NameView : Image
     {
+        TMPro.TMP_Text textTMP;
+
         protected override void Awake()
         {
+            base.Awake();
+
+            SetTextView();
         }
 
         void Update()
         {
+        }
+
+        public void SetText(string text)
+        {
+            if (!SetTextView()) 
+            {
+                throw new System.Exception("Text view cannot be set."); 
+            }
+
+            textTMP.text = text;
+        }
+
+        bool SetTextView()
+        {
+            if (textTMP == null)
+            {
+                textTMP = transform.GetChild(0).GetComponent<TMPro.TMP_Text>();
+            }
+
+            return textTMP != null;
         }
     }
 }

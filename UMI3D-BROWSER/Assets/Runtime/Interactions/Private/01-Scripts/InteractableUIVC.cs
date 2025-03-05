@@ -14,32 +14,36 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System.Collections;
-using System.Collections.Generic;
+using umi3d.cdk.interaction;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.interactions
 {
-    public class InteractableUIVC : MonoBehaviour
+    internal class InteractableUIVC : MonoBehaviour
     {
         // The scale of the entire interactable UI.
         const float scale = 0.0005f;
 
-        public new Renderer renderer;
+        [HideInInspector] public new Renderer renderer;
+        [HideInInspector] public new Interactable interactable;
 
         [SerializeField] int resetFrameRate = 120;
         int _resetFrameRateCount = 0;
         [SerializeField] float offsetWithRenderer;
 
         [Header("Views")]
+        [SerializeField] NameView nameView;
         [SerializeField] FeedbackView feedbackView;
 
         Camera _camera;
 
+        #region Life cycle
+
         void Awake()
         {
-            DisplayFeedback(false);
             enabled = false;
+            DisplayFeedback(false);
+            DisplayName(false);
         }
 
         void Start()
@@ -67,7 +71,20 @@ namespace umi3d.browserRuntime.interactions
 
             SetInFrontOfInteractable(renderer);
             LookAtTheCamera();
+
+            if (interactable.InteractionDistance > Vector3.Distance(_camera.transform.position, renderer.transform.position))
+            {
+                DisplayName(true);
+            }
+            else
+            {
+                DisplayName(false);
+            }
         }
+
+        #endregion
+
+        #region Position & Scale
 
         void ResetScale()
         {
@@ -85,7 +102,7 @@ namespace umi3d.browserRuntime.interactions
             transform.localScale = new(_scaleX, _scaleY, _scaleZ);
         }
 
-        public void SetInFrontOfInteractable(Renderer renderer)
+        void SetInFrontOfInteractable(Renderer renderer)
         {
             if (_camera == null) { return; }
 
@@ -98,11 +115,25 @@ namespace umi3d.browserRuntime.interactions
         void LookAtTheCamera()
         {
             transform.LookAt(_camera.transform);
+            transform.forward = _camera.transform.forward;
         }
+
+        #endregion
 
         public void DisplayFeedback(bool display)
         {
             feedbackView.gameObject.SetActive(display);
+        }
+
+        public void DisplayName(bool display)
+        {
+            nameView.gameObject.SetActive(display);
+        }
+
+        public void SetInteractableName(string name)
+        {
+            nameView.SetText(name);
+            // TODO: Set name in interaction view.
         }
     }
 }

@@ -48,6 +48,13 @@ namespace umi3d.cdk.interaction
             {
                 OnBecameVisible();
             }
+
+            UMI3DEnvironmentLoader.Instance.onEnvironmentLoaded.AddListener(CallOnBecameVisibleWhenEnvironmentIsLoaded);
+        }
+
+        private void OnDestroy()
+        {
+            UMI3DEnvironmentLoader.Instance.onEnvironmentLoaded.RemoveListener(CallOnBecameVisibleWhenEnvironmentIsLoaded);
         }
 
         void OnBecameVisible()
@@ -68,6 +75,14 @@ namespace umi3d.cdk.interaction
                 @delegate.OnBecameInvisible(renderer, interactableContainer, this);
                 return Flow.Continue;
             });
+        }
+
+        void CallOnBecameVisibleWhenEnvironmentIsLoaded()
+        {
+            if (renderer.isVisible)
+            {
+                OnBecameVisible();
+            }
         }
     }
 

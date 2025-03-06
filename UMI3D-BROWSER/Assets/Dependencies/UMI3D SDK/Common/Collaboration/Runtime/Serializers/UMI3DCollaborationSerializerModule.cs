@@ -261,15 +261,17 @@ namespace umi3d.common.collaboration
                     {
                         Debug.Log("tpGroup init");
                         Vector3Dto teleportLeaderPosition = null;
+                        Vector3Dto currentLeaderPosition = null;
 
-                        readable = UMI3DSerializer.TryRead<Vector3Dto>(container, out teleportLeaderPosition);
-                                 
+                        readable = UMI3DSerializer.TryRead<Vector3Dto>(container, out teleportLeaderPosition)
+                                   && UMI3DSerializer.TryRead<Vector3Dto>(container, out currentLeaderPosition);
                         if (readable)
                         {
                             Debug.Log("tpGroup readable");
                             var teleportGroup = new TeleportGroupRequestDto
                             {
                                 teleportationVector = teleportLeaderPosition,
+                                //currentLeaderPosition = currentLeaderPosition
                             };
 
                             result = (T)Convert.ChangeType(teleportGroup, typeof(T));
@@ -550,6 +552,10 @@ namespace umi3d.common.collaboration
                         + UMI3DSerializer.Write(voice.channelName);
                     break;
 
+                case TeleportGroupRequestDto tpGroup:
+                    bytable = UMI3DSerializer.Write(UMI3DOperationKeys.TeleportGroupRequest)
+                        + UMI3DSerializer.Write(tpGroup.teleportationVector);
+                    break;
 
                 case SpeedDto speed:
                     bytable = UMI3DSerializer.Write(speed.forwardSpeed)
@@ -568,11 +574,6 @@ namespace umi3d.common.collaboration
                     bytable = UMI3DSerializer.Write(UMI3DOperationKeys.UserActionRequest)
                         + UMI3DSerializer.Write(userActionRequest.actionId);
                     return true;
-                case TeleportGroupRequestDto tpGroup:
-                    bytable = UMI3DSerializer.Write(UMI3DOperationKeys.TeleportGroupRequest)
-                        + UMI3DSerializer.Write(tpGroup.teleportationVector);
-                    break;
-
                 case DeviceDescriptionRequestDto deviceDescriptionRequestDto:
                     bytable = UMI3DSerializer.Write(UMI3DOperationKeys.DeviceDescriptionRequest)
                         + UMI3DSerializer.Write(deviceDescriptionRequestDto.batteryLevel)

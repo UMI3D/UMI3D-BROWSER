@@ -68,6 +68,7 @@ namespace umi3d.cdk.collaboration
         public static event Action<bool> LBELeaderEvent;
         public static event Action<LBESetUserGroupDto> LBEGroupEvent;
         public static event Action<List<ARAnchorDto>> LBEGuardianEvent;
+        public static event Action<string, PrivateIdentityDto> PrivateIdentityReceptionEvent;
 
         #endregion
 
@@ -634,6 +635,12 @@ namespace umi3d.cdk.collaboration
                         LBEActivationEvent?.Invoke();
                     });
                     break;
+                case SendPrivateIdentityOperationDto identityDto:
+                    MainThreadManager.Run(() =>
+                    {
+                        PrivateIdentityReceptionEvent?.Invoke(identityDto.WorldControllerUrl, identityDto.PrivateIdentityDto);
+                    });
+                    break;
 
                 default:
                     return false;
@@ -836,13 +843,6 @@ namespace umi3d.cdk.collaboration
                         });
                         break;
                     }
-                //case UMI3DOperationKeys.SetLBEGroupRequest:
-                //    MainThreadManager.Run(() =>
-                //    {
-                //        LBEGroupSyncRequestDto groupSyncDto = UMI3DSerializer.Read<LBEGroupSyncRequestDto>(container);
-                //        LBEGroupSyncEvent?.Invoke(groupSyncDto);
-                //    });
-                //    break;
                 case UMI3DOperationKeys.MDMAddUserOperation:
                     MainThreadManager.Run(() =>
                     {
@@ -894,6 +894,14 @@ namespace umi3d.cdk.collaboration
                     MainThreadManager.Run(() =>
                     {
                         LBEActivationEvent?.Invoke();
+                    });
+                    break;
+                case UMI3DOperationKeys.PrivateIdentityOperation:
+                    MainThreadManager.Run(() =>
+                    {
+                        PrivateIdentityDto dto = UMI3DSerializer.Read<PrivateIdentityDto>(container);
+                        string url = UMI3DSerializer.Read<string>(container);
+                        PrivateIdentityReceptionEvent?.Invoke(url, dto);
                     });
                     break;
 

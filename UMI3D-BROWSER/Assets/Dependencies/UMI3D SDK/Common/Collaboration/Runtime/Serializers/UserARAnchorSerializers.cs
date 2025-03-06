@@ -16,9 +16,9 @@ namespace umi3d.common.lbe.guardian
 
         public bool Read<T>(ByteContainer container, out bool readable, out T result)
         {
-
             if (typeof(T) == typeof(ARAnchorDto))
             {
+
                 if (UMI3DSerializer.TryRead(container, out Vector3Dto position)
                     && UMI3DSerializer.TryRead(container, out Vector4Dto rotation))
                 {
@@ -43,6 +43,7 @@ namespace umi3d.common.lbe.guardian
         {
             if (value is ARAnchorDto c)
             {
+                // Ecriture de la liste anchorAR
                 bytable = UMI3DSerializer.Write(c.position)
                     + UMI3DSerializer.Write(c.rotation);
                 return true;

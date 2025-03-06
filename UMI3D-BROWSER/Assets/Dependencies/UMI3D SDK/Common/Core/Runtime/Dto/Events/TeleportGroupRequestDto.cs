@@ -1,5 +1,5 @@
 ﻿/*
-Copyright 2019 - 2024 Inetum
+Copyright 2019 - 2022 Inetum
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,13 +17,17 @@ limitations under the License.
 namespace umi3d.common
 {
     /// <summary>
-    /// DTO to teleport users in relative position next to the leader user who start a teleportation group.
+    /// DTO to confirm the teleportation for a group of user.
     /// </summary>
     public class TeleportGroupRequestDto : AbstractBrowserRequestDto
     {
         /// <summary>
         /// Target teleportation of the leader user.
         /// </summary>
-        public Vector3Dto teleportationVector { get; set; }
+        public Vector3Dto teleportationVector  { get; set; }
+        /// <summary>
+        /// Old position of the leader user to calculate relative position.
+        /// </summary>
+        //public Vector3Dto currentLeaderPosition { get; set; }
     }
-};
+}

@@ -62,21 +62,21 @@ namespace umi3d.cdk.collaboration
         public Sprite defaultEmoteIcon;
 
         #endregion Emotes
-        [SerializeField]
+
         private bool isColocatedDevice;
         public bool IsColocatedDevice
         {
             get => isColocatedDevice;
             set => isColocatedDevice = value;
         }
-        [SerializeField]
+
         private ulong lBEGroupId = 0;
         public ulong LBEGroupId
         {
             get => lBEGroupId;
             set => lBEGroupId = value;
         }
-        [SerializeField]
+
         private bool isLBEGroupLeader = false;
         public bool IsLBEGroupLeader
         {

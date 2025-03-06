@@ -1,5 +1,5 @@
 ﻿/*
-Copyright 2019 - 2024 Inetum
+Copyright 2019 - 2021 Inetum
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,17 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-namespace umi3d.common
+using umi3d.common;
+using umi3d.common.collaboration.dto.signaling;
+
+namespace umi3d.common.collaboration.dto.signaling
 {
-    public class DeviceDescriptionRequestDto : DeviceBatteryLevelRequestDto
+    public class SendPrivateIdentityOperationDto : AbstractOperationDto
     {
-        public string macAddress { get; set; }
-
-        public string deviceModel { get; set; }
+        public PrivateIdentityDto PrivateIdentityDto { get; set; }
+        public string WorldControllerUrl { get; set; }
     }
-
-    public class DeviceBatteryLevelRequestDto : AbstractBrowserRequestDto
-    {
-        public float batteryLevel { get; set; }
-    }
-};
+}

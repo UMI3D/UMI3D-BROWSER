@@ -33,10 +33,12 @@ namespace umi3d.browserRuntime.cursor
         public Interactable LastProjected, OldHovered, CurrentHovered;
         public ulong LastHoveredId, CurrentHoveredId;
         public Transform CurrentHoveredTransform;
+        public Collider collider;
 
         public Vector3 LastPosition, LastNormal, LastDirection;
         public Vector3 Position, Normal, Direction;
         public Vector3 CenteredWorldPosition, WorldPosition, WorldNormal, WorlDirection;
+        public Collider LastCollider;
 
         public HoverState HoverState;
 
@@ -50,9 +52,11 @@ namespace umi3d.browserRuntime.cursor
                 if (saveDelay < 0) saveDelay = 0;
                 OldHovered = CurrentHovered;
                 LastHoveredId = CurrentHoveredId;
+                LastCollider = collider;
                 CurrentHovered = null;
                 CurrentHoveredTransform = null;
                 CurrentHoveredId = 0;
+                collider = null;
                 LastPosition = Position;
                 LastNormal = Normal;
                 LastDirection = Direction;

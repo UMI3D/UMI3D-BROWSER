@@ -14,9 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils.observation;
 using System.Collections.Generic;
 using System.Linq;
 using umi3d.baseBrowser.inputs.interactions;
+using umi3d.browserRuntime.notificationKeys;
 using umi3d.cdk;
 using umi3d.cdk.interaction;
 using umi3d.cdk.menu;
@@ -67,6 +69,9 @@ namespace umi3dVRBrowsersBase.interactions
         /// </summary>
         private float inputUsageTimeout = 10;
 
+        Notifier parameterInputFoundNotifier;
+        Notifier toolReleasedNotifier;
+
         #endregion Fields
 
         #region Methods
@@ -86,10 +91,20 @@ namespace umi3dVRBrowsersBase.interactions
                 input.Init(this);
             foreach (AbstractUMI3DInput input in booleanInputs)
                 input.Init(this);
+
+            parameterInputFoundNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                ID.FromType<InteractionNotificationKeys.ParameterInputFound>()
+            );
+
+            toolReleasedNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                ID.FromType<InteractionNotificationKeys.ToolReleased>());
         }
 
         private void Start()
         {
+            NotificationHub.Default.Unsubscribe(this);
             (VRDrawingManager.Instance as VRDrawingManager).Declare(this);
         }
 
@@ -292,6 +307,9 @@ namespace umi3dVRBrowsersBase.interactions
         {
             base.Release(tool, reason);
             tool.onReleased(bone.BoneType);
+
+            toolReleasedNotifier[InteractionNotificationKeys.ToolReleased.tool] = tool;
+            toolReleasedNotifier.Notify();
         }
 
         #endregion

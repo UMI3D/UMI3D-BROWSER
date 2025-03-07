@@ -189,8 +189,7 @@ namespace umi3d.browserRuntime.ui.settings
             {
                 if (UMI3DCollaborationClientServer.Exists && u.id == UMI3DCollaborationClientServer.Instance.GetUserId())
                 {
-                    IsOn = u.microphoneStatus;
-                    StatusChanged?.Invoke(IsOn);
+                    Set(u.microphoneStatus);
                 }
             });
             StatusChanged?.Invoke(IsOn);

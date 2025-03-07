@@ -69,7 +69,10 @@ namespace umi3d.browserRuntime.ui.tablet.social
             }
 
             if (!_availablePrefabs.TryDequeue(out var modelContainer))
-                modelContainer = Instantiate(_userSocialPrefab, _content);
+            {
+                modelContainer = Instantiate(_userSocialPrefab);
+                modelContainer.transform.SetParent(_content, false);
+            }
 
             modelContainer.gameObject.SetActive(true);
             modelContainer.Model.SetUser(user);

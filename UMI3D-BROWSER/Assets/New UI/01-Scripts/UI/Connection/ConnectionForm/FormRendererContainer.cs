@@ -68,7 +68,7 @@ namespace umi3dBrowsers.container.formrenderer
 
         public void HandleWait(WaitConnectionDto connectionFormDto)
         {
-            menuNavigationLinker.SetCancelButtonActive(false);
+            menuNavigationLinker.SetCancelButtonActive(true);
             waitRenderer.Init(paramRoot);
             waitRenderer.CleanContent();
             waitRenderer.Handle(connectionFormDto);

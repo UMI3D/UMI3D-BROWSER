@@ -18,12 +18,13 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using umi3d.cdk.interaction;
+using umi3d.common.interaction;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
 namespace umi3d.browserRuntime.interactions
 {
-    public class BrowserInteractableManager : IInteractableVisibilityDelegate, IInteractableVisibilityDataDelegate
+    public class BrowserInteractableManager : IInteractableVisibilityDelegate, IInteractableVisibilityDataDelegate, IInteractableHoverStateDelegate
     {
         #region Initialization
 
@@ -34,6 +35,8 @@ namespace umi3d.browserRuntime.interactions
             visibilityListeners = _visibilityListeners.AsReadOnly();
             InteractableVisibilityListener.delegates.Add(this);
             InteractableVisibilityListener.dataDelegate = this;
+
+            InteractableHoverStateListener.delegates.Add(this);
         }
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void OnBeforeSceneLoadRuntimeMethod()
@@ -46,11 +49,11 @@ namespace umi3d.browserRuntime.interactions
 
         #endregion
 
+        #region IInteractableVisibilityDelegate & IInteractableVisibilityDataDelegate
+
         GameObject interactableUIPrefab;
         List<InteractableVisibilityListener> _visibilityListeners = new();
         public readonly ReadOnlyCollection<InteractableVisibilityListener> visibilityListeners;
-
-        #region IInteractableVisibilityDelegate
 
         public void OnBecameVisible(Renderer renderer, InteractableContainer interactableContainer, InteractableVisibilityListener visibilityListener)
         {
@@ -71,12 +74,31 @@ namespace umi3d.browserRuntime.interactions
             viewController.DisplayFeedback(false);
         }
 
-        #endregion
-
         public GameObject GetInteractableUI()
         {
             GameObject _interactableUI = GameObject.Instantiate(interactableUIPrefab);
             return _interactableUI;
         }
+
+        #endregion
+
+        #region IInteractableHoverStateDelegate
+
+
+
+        public void OnHoverEnter(Collider collider, InteractableContainer interactableContainer, HoveredDto hoveredDto)
+        {
+        }
+
+        public void OnHoverExit(Collider collider, InteractableContainer interactableContainer, HoveredDto hoveredDto)
+        {
+        }
+
+        public void OnHover(Collider collider, InteractableContainer interactableContainer, HoveredDto hoveredDto)
+        {
+            
+        }
+
+        #endregion
     }
 }

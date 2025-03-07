@@ -86,15 +86,15 @@ namespace umi3d.browserRuntime.interactions
 
 
 
-        public void OnHoverEnter(Collider collider, InteractableContainer interactableContainer, HoveredDto hoveredDto)
+        public void OnHoverEnter(Collider collider, InteractableContainer interactableContainer, InteractableHoverStateListener hoverStateListener)
         {
         }
 
-        public void OnHoverExit(Collider collider, InteractableContainer interactableContainer, HoveredDto hoveredDto)
+        public void OnHoverExit(Collider collider, InteractableContainer interactableContainer, InteractableHoverStateListener hoverStateListener)
         {
         }
 
-        public void OnHover(Collider collider, InteractableContainer interactableContainer, HoveredDto hoveredDto)
+        public void OnHover(Collider collider, InteractableContainer interactableContainer, InteractableHoverStateListener hoverStateListener)
         {
             
         }

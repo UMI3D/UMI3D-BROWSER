@@ -33,6 +33,7 @@ namespace umi3d.cdk.interaction
         public InteractableContainer interactableContainer;
 
         public State state { get; private set; }
+        public HoveredDto hoveredDto { get; private set; }
         public static readonly Delegates<IInteractableHoverStateDelegate> delegates = new();
 
         void Awake()
@@ -71,9 +72,10 @@ namespace umi3d.cdk.interaction
             if (!notification.TryGetInfoT(InteractableNotificationKeys.HoverStateChanged.HoveredDto, out HoveredDto hoveredDto)) { return; }
 
             state = State.Enter;
+            this.hoveredDto = hoveredDto;
             delegates.ForEach(@delegate =>
             {
-                @delegate.OnHoverEnter(collider, interactableContainer, hoveredDto);
+                @delegate.OnHoverEnter(collider, interactableContainer, this);
                 return Flow.Continue;
             });
         }
@@ -85,7 +87,7 @@ namespace umi3d.cdk.interaction
             state = State.Enter;
             delegates.ForEach(@delegate =>
             {
-                @delegate.OnHoverExit(collider, interactableContainer, hoveredDto);
+                @delegate.OnHoverExit(collider, interactableContainer, this);
                 return Flow.Continue;
             });
         }
@@ -97,7 +99,7 @@ namespace umi3d.cdk.interaction
             state = State.Enter;
             delegates.ForEach(@delegate =>
             {
-                @delegate.OnHover(collider, interactableContainer, hoveredDto);
+                @delegate.OnHover(collider, interactableContainer, this);
                 return Flow.Continue;
             });
         }
@@ -105,8 +107,8 @@ namespace umi3d.cdk.interaction
 
     public interface IInteractableHoverStateDelegate
     {
-        void OnHoverEnter(Collider collider, InteractableContainer interactableContainer, HoveredDto hoveredDto);
-        void OnHoverExit(Collider collider, InteractableContainer interactableContainer, HoveredDto hoveredDto);
-        void OnHover(Collider collider, InteractableContainer interactableContainer, HoveredDto hoveredDto);
+        void OnHoverEnter(Collider collider, InteractableContainer interactableContainer, InteractableHoverStateListener hoverStateListener);
+        void OnHoverExit(Collider collider, InteractableContainer interactableContainer, InteractableHoverStateListener hoverStateListener);
+        void OnHover(Collider collider, InteractableContainer interactableContainer, InteractableHoverStateListener hoverStateListener);
     }
 }

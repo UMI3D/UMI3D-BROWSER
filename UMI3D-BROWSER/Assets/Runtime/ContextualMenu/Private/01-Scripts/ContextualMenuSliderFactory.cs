@@ -61,12 +61,12 @@ namespace umi3d.browserRuntime.ui.contextualMenu
         public void Return(GameObject sliderModelContainer)
         {
             NotificationHub.Default.Unsubscribe(sliderModelContainer);
-            var modelFloat = sliderModelContainer.GetComponent<SliderFloatParameterModelContainer>().parameterModel;
+            var modelFloat = sliderModelContainer.GetComponent<SliderFloatParameterModelContainer>();
             if (modelFloat != null)
-                modelFloat.ReleaseDto();
-            var modelInt = sliderModelContainer.GetComponent<SliderIntParameterModelContainer>().parameterModel;
+                modelFloat.parameterModel.ReleaseDto();
+            var modelInt = sliderModelContainer.GetComponent<SliderIntParameterModelContainer>();
             if (modelInt != null)
-                modelInt.ReleaseDto();
+                modelInt.parameterModel.ReleaseDto();
             _sliderFactory.Return(sliderModelContainer);
         }
     }

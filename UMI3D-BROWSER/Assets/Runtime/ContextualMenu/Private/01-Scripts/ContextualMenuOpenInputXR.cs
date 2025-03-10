@@ -74,10 +74,8 @@ namespace umi3d
 
         private void OnClick(InputAction.CallbackContext context)
         {
-            Debug.Log("OnClick");
             if (_parameters == null || _parameters.Count == 0)
                 return;
-            Debug.Log("OnClick2");
 
             displayParameterNotifier[InteractionNotificationKeys.DisplayParameters.parameters] = _parameters;
             displayParameterNotifier.Notify();

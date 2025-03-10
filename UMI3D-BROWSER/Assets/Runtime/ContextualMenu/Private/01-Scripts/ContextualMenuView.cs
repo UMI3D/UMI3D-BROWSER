@@ -59,7 +59,6 @@ namespace umi3d.browserRuntime.ui.contextualMenu
         public void OnHoverEnter(Collider collider, InteractableContainer interactableContainer, InteractableHoverStateListener hoverStateListener)
         {
             _interactablePosition = interactableContainer.transform.position;
-            Debug.Log(_interactablePosition, interactableContainer);
         }
 
         public void OnHoverExit(Collider collider, InteractableContainer interactableContainer, InteractableHoverStateListener hoverStateListener) { }

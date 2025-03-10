@@ -47,6 +47,7 @@ namespace umi3dBrowsers.services.connection
         private Action<umi3d.common.interaction.form.FormAnswerDto> _formDivAnswerCallBack;
         private Action _waitDtoCallBack;
         private Action<bool> _shouldDownloadLibrariesCallBack;
+        private Action _cancelConnectionCallBack;
 
         private List<string> _compatibleFormVersion = new List<string>() { "1", "2.0" };
 
@@ -135,9 +136,10 @@ namespace umi3dBrowsers.services.connection
             connectionServiceLinker.DivFormDtoReceived(dto);
         }
 
-        private void HandleWait(WaitConnectionDto dto, Action action)
+        private void HandleWait(WaitConnectionDto dto, Action action, Action cancel)
         {
             _waitDtoCallBack = action;
+            _cancelConnectionCallBack = cancel;
             connectionServiceLinker.WaitReceived(dto);
         }
 
@@ -191,11 +193,13 @@ namespace umi3dBrowsers.services.connection
                 Debug.LogError("MainTheadDispatcher should not be null");
             }
 
+            _cancelConnectionCallBack?.Invoke();
+            _cancelConnectionCallBack = null;
+
             UMI3DEnvironmentLoader.Clear();
             UMI3DResourcesManager.Instance.ClearCache();
             UMI3DCollaborationClientServer.Logout();
 
-            WatchMenu.UnPinAllMenus();
             identifier.Reset();
         }
     }

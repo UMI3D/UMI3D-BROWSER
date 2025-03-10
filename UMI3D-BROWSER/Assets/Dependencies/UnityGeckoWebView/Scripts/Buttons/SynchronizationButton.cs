@@ -90,8 +90,10 @@ namespace com.inetum.unitygeckowebview
 
             localScale = rectTransform.localScale;
 
-            synchronizationNotifier = NotificationHub.Default
-                .GetNotifier<GeckoWebViewNotificationKeys.SynchronizationChanged>(this);
+            synchronizationNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                ID.FromType<GeckoWebViewNotificationKeys.SynchronizationChanged>()
+            );
 
             button.interactable = false;
             IsRecording = false;
@@ -104,25 +106,28 @@ namespace com.inetum.unitygeckowebview
 
         void OnEnable()
         {
-            NotificationHub.Default.Subscribe<GeckoWebViewNotificationKeys.WebViewSizeChanged>(
+            NotificationHub.Default.Subscribe(
                 this, 
-                WebViewSizeChanged
+                ID.FromType<GeckoWebViewNotificationKeys.WebViewSizeChanged>(),
+                (Callback)WebViewSizeChanged
             );
 
             NotificationHub.Default.Subscribe(
                this,
                GeckoWebViewNotificationKeys.InteractibilityChanged,
-               InteractibilityChanged
+               (Callback)InteractibilityChanged
            );
 
-            NotificationHub.Default.Subscribe<GeckoWebViewNotificationKeys.SynchronizationAdministrationChanged>(
+            NotificationHub.Default.Subscribe(
                this,
-               SynchronizationAdministrationChanged
+               ID.FromType<GeckoWebViewNotificationKeys.SynchronizationAdministrationChanged>(),
+               (Callback)SynchronizationAdministrationChanged
            );
 
-            NotificationHub.Default.Subscribe<GeckoWebViewNotificationKeys.Desynchronization>(
+            NotificationHub.Default.Subscribe(
                this,
-               Desynchronization
+               ID.FromType<GeckoWebViewNotificationKeys.Desynchronization>(),
+               (Callback)Desynchronization
            );
 
             button.onClick.AddListener(ToggleSynchronization);
@@ -130,13 +135,7 @@ namespace com.inetum.unitygeckowebview
 
         void OnDisable()
         {
-            NotificationHub.Default.Unsubscribe<GeckoWebViewNotificationKeys.WebViewSizeChanged>(this);
-
-            NotificationHub.Default.Unsubscribe(this, GeckoWebViewNotificationKeys.InteractibilityChanged);
-
-            NotificationHub.Default.Unsubscribe<GeckoWebViewNotificationKeys.SynchronizationAdministrationChanged>(this);
-
-            NotificationHub.Default.Unsubscribe<GeckoWebViewNotificationKeys.Desynchronization>(this);
+            NotificationHub.Default.Unsubscribe(this);
 
             button.onClick.RemoveListener(ToggleSynchronization);
         }

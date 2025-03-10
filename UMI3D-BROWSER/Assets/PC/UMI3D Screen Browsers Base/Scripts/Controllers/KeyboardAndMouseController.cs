@@ -13,13 +13,16 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using umi3d.baseBrowser.Controller;
 using umi3d.baseBrowser.Cursor;
 using umi3d.baseBrowser.inputs.interactions;
 using umi3d.cdk.interaction;
 using umi3d.cdk.menu;
 using umi3d.common.interaction;
+using umi3d.common.interaction.form.ui_toolkit;
 using UnityEngine;
 
 namespace umi3d.desktopBrowser.Controller
@@ -29,8 +32,11 @@ namespace umi3d.desktopBrowser.Controller
         public BaseController Controller;
         public MenuAsset ObjectMenu;
 
-        protected List<KeyboardInteraction> KeyboardInteractions = new List<KeyboardInteraction>();
-        protected List<KeyboardManipulation> KeyboardManipulations = new List<KeyboardManipulation>();
+        protected List<KeyboardInteraction> KeyboardInteractions = new ();
+        protected List<KeyboardManipulation> KeyboardManipulations = new ();
+
+        protected List<KeyboardInteraction> KeyboardToggleInteraction = new ();
+        protected List<KeyboardInteraction> KeyboardDrawInteraction = new ();
 
         public List<AbstractUMI3DInput> Inputs
         {
@@ -53,6 +59,7 @@ namespace umi3d.desktopBrowser.Controller
         }
 
         public BaseManipulationGroup ManipulationGroup { get; set; }
+        public BaseDrawGroup DrawGroup { get; set; }
 
         #region Monobehaviour Life Cycle
 
@@ -61,6 +68,9 @@ namespace umi3d.desktopBrowser.Controller
         /// </summary>
         public void Awake()
         {
+            if(!DrawingManager.Exists)
+                new PcDrawingManager();
+
             KeyboardInteraction.S_Interactions.AddRange(Controller.KeyboardActions.GetComponents<KeyboardInteraction>());
             KeyboardShortcut.S_Shortcuts.AddRange(Controller.KeyboardShortcuts.GetComponents<KeyboardShortcut>());
             KeyboardEmote.S_Emotes.AddRange(Controller.KeyboardEmotes.GetComponents<KeyboardEmote>());
@@ -74,11 +84,13 @@ namespace umi3d.desktopBrowser.Controller
         {
             KeyboardInteraction.S_Interactions?.ForEach(interaction =>
             {
-                KeyboardInteractions.Add(interaction);
+                this.KeyboardInteractions.Add(interaction);
+                this.KeyboardToggleInteraction.Add(interaction);
+                this.KeyboardDrawInteraction.Add(interaction);
                 interaction.Init(Controller);
                 interaction.bone = Controller.interactionBoneType;
                 interaction.Menu = ObjectMenu.menu;
-                interaction.boneTransform = Controller.hoverBoneTransform;
+                interaction.BoneTransform = Controller.hoverBoneTransform;
             });
 
             KeyboardManipulation.S_Manipulations?.ForEach(manipulation =>
@@ -87,22 +99,29 @@ namespace umi3d.desktopBrowser.Controller
                 manipulation.Init(Controller);
                 manipulation.bone = Controller.interactionBoneType;
                 manipulation.Menu = ObjectMenu.menu;
-                manipulation.boneTransform = Controller.hoverBoneTransform;
+                manipulation.BoneTransform = Controller.hoverBoneTransform;
             });
 
             (ManipulationGroup as ManipulationGroupeForDesktop).Bind(Controller, KeyboardManipulations);
             ManipulationGroup.bone = Controller.interactionBoneType;
+            ManipulationGroup.BoneTransform = Controller.hoverBoneTransform;
             ManipulationGroup.Menu = Controller.ManipulationMenu.menu;
             ManipulationGroup.InstanciateManipulation = InstanciateManipulation;
+
+            (DrawGroup as DrawGroupForDesktop).Bind(Controller, KeyboardToggleInteraction, KeyboardDrawInteraction);
+            DrawGroup.bone = Controller.interactionBoneType;
+            DrawGroup.Menu = Controller.ManipulationMenu.menu;
+            DrawGroup.BoneTransform = Controller.hoverBoneTransform;
+            DrawGroup.InstantiateInteraction = InstantiateInteraction;
+            DrawGroup.InstantiateToggle = InstantiateToggle;
         }
+
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
         public void Update()
         {
-            //if (Input.GetKeyDown(InputLayoutManager.GetInputCode(InputLayoutManager.Input.ContextualMenuNavigationDirect)) || Input.mouseScrollDelta.y < 0)
-            //    m_navigationDirect++;
-            //else if (Input.mouseScrollDelta.y > 0) m_navigationDirect--;
+
         }
 
         #endregion
@@ -136,10 +155,31 @@ namespace umi3d.desktopBrowser.Controller
             manip.strength = strength;
             manip.frameIndicator = frameIndicator;
             manip.manipulationCursor = manipulationCursor;
-            manip.boneTransform = Controller.hoverBoneTransform;
+            manip.BoneTransform = Controller.hoverBoneTransform;
 
             return manip;
         }
+
+        private EventInteraction InstantiateToggle()
+        {
+            var toggle = KeyboardToggleInteraction.Find(i => i.IsAvailable());
+
+            toggle.Init(Controller);
+            toggle.BoneTransform = Controller.hoverBoneTransform;
+
+            return toggle;
+        }
+
+        private EventInteraction InstantiateInteraction()
+        {
+            var toggle = KeyboardDrawInteraction.Find(i => i.IsAvailable());
+
+            toggle.Init(Controller);
+            toggle.BoneTransform = Controller.hoverBoneTransform;
+
+            return toggle;
+        }
+
 
         /// <summary>
         /// <inheritdoc/>
@@ -152,6 +192,7 @@ namespace umi3d.desktopBrowser.Controller
             KeyboardEmote.S_Emotes.ForEach(interaction => interaction.ResetTouchInteraction());
             KeyboardNavigation.S_Navigations.ForEach(interaction => interaction.ResetTouchInteraction());
             KeyboardManipulation.S_Manipulations.ForEach(interaction => interaction.ResetTouchInteraction());
+
         }
     }
 }

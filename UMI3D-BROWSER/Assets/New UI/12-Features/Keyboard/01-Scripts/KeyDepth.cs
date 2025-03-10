@@ -51,9 +51,10 @@ namespace umi3d.browserRuntime.ui.keyboard
             upPosition = rectTransform.anchoredPosition3D;
             downPosition = upPosition + new Vector3(0, 0, depth);
 
-            NotificationHub.Default.Subscribe<KeyboardNotificationKeys.AnimationSettings>(
+            NotificationHub.Default.Subscribe(
                 this,
-                EnableOrDisableAnimation
+                ID.FromType<KeyboardNotificationKeys.AnimationSettings>(),
+                (Callback)EnableOrDisableAnimation
             );
         }
 

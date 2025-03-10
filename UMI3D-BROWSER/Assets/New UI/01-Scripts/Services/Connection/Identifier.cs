@@ -29,7 +29,7 @@ namespace umi3dBrowsers.services.connection
         public Action<List<string>, Action<bool>> OnLibrariesAvailable;
         public Action<ConnectionFormDto, Action<FormAnswerDto>> OnParamFormAvailable;
         public Action<umi3d.common.interaction.form.ConnectionFormDto, Action<umi3d.common.interaction.form.FormAnswerDto>> OnDivFormAvailable;
-        public Action<WaitConnectionDto, Action> OnWaitAvailable;
+        public Action<WaitConnectionDto, Action, Action> OnWaitAvailable;
 
         public Action OnAnswerFailed;
 
@@ -72,16 +72,21 @@ namespace umi3dBrowsers.services.connection
             return form;
         }
 
-        public override async Task GetParameterDtos(WaitConnectionDto parameter)
+        public override async Task<bool> GetParameterDtos(WaitConnectionDto parameter)
         {
             bool isWaiting = true;
+            bool isCancel = false;
 
             Action callback = () => { isWaiting = false; };
 
-            OnWaitAvailable.Invoke(parameter, callback);
+            Action cancel = () => { isWaiting = false; isCancel = true; };
+
+            OnWaitAvailable.Invoke(parameter, callback, cancel);
 
             while (isWaiting)
                 await Task.Yield();
+
+            return isCancel;
         }
 
         /// <summary>

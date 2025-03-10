@@ -77,8 +77,8 @@ namespace umi3dBrowsers.container.formrenderer
 
         internal async void Handle(WaitConnectionDto connectionFormDto)
         {
-#if UMI3D_PC
             if (connectionFormDto is WebConnectionDto web && web.connectionUrl != null)
+#if UMI3D_PC
                 Application.OpenURL(web.connectionUrl);
 #else
                 UnityEngine.Debug.LogError("Imposible to open a web page with a WebConnectionDto on a non PC device");

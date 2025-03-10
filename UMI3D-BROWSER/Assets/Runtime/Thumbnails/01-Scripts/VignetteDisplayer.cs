@@ -16,6 +16,7 @@ limitations under the License.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -24,13 +25,22 @@ using UnityEngine.UI;
 
 namespace umi3dBrowsers.displayer
 {
-    public class VignetteDisplayer : MonoBehaviour, ISubDisplayer
+    public class VignetteDisplayer : MonoBehaviour, ISubDisplayer, IDisplayer
     {
         [SerializeField] private Color transprentColor = Color.gray;
         [Header("Vignette main Image")]
         [SerializeField] private Image vignetteImage;
+        [SerializeField] private Image LoadingImage;
+        [SerializeField] private float LoadingImageRotationSpeed = 10;
         [SerializeField] private Color normalImageColor;
         [SerializeField] private Color hoverImageColor;
+
+        [Header("Vignette Header")]
+        [SerializeField] private Image headerImage;
+        [SerializeField] private Image headerIcon;
+        [SerializeField] private TMP_Text headerLabel;
+        [SerializeField] private Color headerNormalImageColor;
+        [SerializeField] private Color headerHoverImageColor;
 
         [Header("buttons")]
         [SerializeField] private ButtonSubDisplayer likeButton;
@@ -49,7 +59,7 @@ namespace umi3dBrowsers.displayer
         [SerializeField] VignetteInputField inputFieldBackground;
 
 
-        [Header("Input field backgroung")]
+        [Header("Input field background")]
         [SerializeField] private Image IF_background;
         [SerializeField] private Image pen;
 
@@ -60,6 +70,8 @@ namespace umi3dBrowsers.displayer
 
         [SerializeField] private UnityEvent onVignetteClicked;
 
+        public bool canEditName;
+
         enum VignetteState { notHovering, Hovering, HoveringSubElement }
         VignetteState vignetteState;
 
@@ -68,6 +80,8 @@ namespace umi3dBrowsers.displayer
         public event Action OnHover;
 
         private TMP_Text inputFieldText;
+
+        private bool m_userLoadingIcon = false;
 
         private bool m_usesFavoriteButton = true;
         private bool m_usesDeleteButton = true;
@@ -90,22 +104,41 @@ namespace umi3dBrowsers.displayer
                 likeButton.OnHover += () => vignetteState = VignetteState.HoveringSubElement;
             if (m_usesDeleteButton)
                 trashButton.OnHover += () => vignetteState = VignetteState.HoveringSubElement;
-            inputFieldBackground.OnHover += () => {
-                vignetteState = VignetteState.HoveringSubElement;
+            //I kept this comment in the hope that someone would have the courage to implement the label hover behavior correctly.
+            //inputFieldBackground.OnHover += () => {
+            //    vignetteState = VignetteState.HoveringSubElement;
 
-                pen.gameObject.SetActive(true);
-                IF_background.enabled = true;
-            };
-            inputFieldBackground.OnHoverExit += () => {
-                pen.gameObject.SetActive(false);
-                IF_background.enabled = false;
-            };
+            //    pen.gameObject.SetActive(true);
+            //    IF_background.enabled = true;
+            //};
+            //inputFieldBackground.OnHoverExit += () => {
+            //    pen.gameObject.SetActive(false);
+            //    IF_background.enabled = false;
+            //};
 
             if (m_usesFavoriteButton)
                 likeButton.OnDisabled += () => DisableSubComponents();
             if (m_usesDeleteButton)
                 trashButton.OnDisabled += () => DisableSubComponents();
             inputFieldBackground.OnDisabled += () => DisableSubComponents();
+        }
+
+
+        private void LateUpdate()
+        {
+            if (LoadingImage == null)
+                return;
+
+            if (m_userLoadingIcon)
+            {
+                if (!LoadingImage.IsActive())
+                    LoadingImage.gameObject.SetActive(true);
+
+                LoadingImage.transform.Rotate(0, 0, LoadingImageRotationSpeed * Time.deltaTime);
+
+            }
+            else if (LoadingImage.IsActive())
+                LoadingImage.gameObject.SetActive(false);
         }
 
         private void OnDestroy()
@@ -115,14 +148,34 @@ namespace umi3dBrowsers.displayer
             inputFieldBackground.OnDisabled -= () => DisableSubComponents();
         }
 
-        public void SetupDisplay(string pName, Image pImage = null)
+        public void SetupDisplay(string pName, string header = null, Color? headerColor = null, Image pImage = null)
         {
+            this.canEditName = false;
+
             inputFieldBackground.Text = pName;
             if (pImage != null)
                 vignetteImage = pImage;
 
             vignetteImage.color = normalImageColor;
             InputFieldText.color = normalImageColor;
+            headerImage.color = headerNormalImageColor;
+            headerLabel.gameObject.SetActive(false);
+
+            bool useHeader = header != null;
+            if (this.headerImage.IsActive() != useHeader)
+                this.headerImage.gameObject.SetActive(useHeader);
+
+            if (useHeader)
+            {
+                headerLabel.text = header;
+                if (headerColor != null)
+                {
+                    headerIcon.gameObject.SetActive(true);
+                    headerIcon.color = headerColor.Value;
+                }
+                else
+                    headerIcon.gameObject.SetActive(false);
+            }
         }
 
         internal void SetSprite(Sprite sprite)
@@ -164,11 +217,19 @@ namespace umi3dBrowsers.displayer
 
             vignetteImage.color = hoverImageColor;
             InputFieldText.color = hoverImageColor;
+            headerImage.color = headerHoverImageColor;
+            headerLabel.gameObject.SetActive(true);
 
             if (m_usesFavoriteButton)
                 likeButton.gameObject.SetActive(true);
             if (m_usesDeleteButton)
                 trashButton.gameObject.SetActive(true);
+
+            if (canEditName)
+            {
+                pen.gameObject.SetActive(true);
+                IF_background.enabled = true;
+            }
         }
 
         public void HoverExit(PointerEventData eventData)
@@ -179,6 +240,12 @@ namespace umi3dBrowsers.displayer
 
             vignetteImage.color = normalImageColor;
             InputFieldText.color = normalImageColor;
+            headerImage.color = headerNormalImageColor;
+
+            headerLabel.gameObject.SetActive(false);
+
+            pen.gameObject.SetActive(false);
+            IF_background.enabled = false;
         }
 
         public void Click()
@@ -233,6 +300,41 @@ namespace umi3dBrowsers.displayer
         {
             m_usesFavoriteButton = pUsesFavoriteButton;
             likeButton.gameObject.SetActive(pUsesFavoriteButton);
+        }
+
+        public object GetValue(bool trim)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetTitle(string title)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetPlaceHolder(List<string> placeHolder)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetColor(Color color)
+        {
+            normalImageColor = color;
+        }
+
+        public void SetResource(object resource)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetHoverColor(Color color)
+        {
+            hoverImageColor = color;
+        }
+
+        public void SetLoading()
+        {
+            m_userLoadingIcon = true;
         }
     }
 }

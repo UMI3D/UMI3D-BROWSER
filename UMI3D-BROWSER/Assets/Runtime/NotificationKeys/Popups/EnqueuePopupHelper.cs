@@ -28,7 +28,10 @@ namespace umi3d.browserRuntime.ui.popup
 
         public EnqueuePopupHelper(System.Object publisher, System.Guid guid)
         {
-            this.notifier = NotificationHub.Default.GetNotifier<PopupNotificationKeys.EnqueuePopup>(publisher);
+            this.notifier = NotificationHub.Default.GetNotifier(
+                publisher, 
+                ID.FromType<PopupNotificationKeys.EnqueuePopup>()
+            );
             popupInfo = new();
             popupInfo.id = guid;
         }

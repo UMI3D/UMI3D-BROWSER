@@ -49,8 +49,8 @@ namespace umi3d.baseBrowser.inputs.interactions
                         boneType = bone,
                         hoveredObjectId = hoveredObjectId,
                         parameter = a.GetValue(),
-                        bonePosition = (Vector3Dto) boneTransform.position.Dto(),
-                        boneRotation = (Vector4Dto)boneTransform.rotation.Dto()
+                        bonePosition = (Vector3Dto) BoneTransform.position.Dto(),
+                        boneRotation = (Vector4Dto)BoneTransform.rotation.Dto()
                     }).ToList(),
                 hoveredObjectId = hoveredObjectId
             };

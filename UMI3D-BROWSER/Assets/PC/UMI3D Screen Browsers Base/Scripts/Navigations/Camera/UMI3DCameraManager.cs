@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 using inetum.unityUtils.observation;
-using umi3d.baseBrowser.cursor;
+using umi3d.browserRuntime.cursor;
 using umi3d.baseBrowser.Navigation;
 using umi3d.cdk.notification;
 using umi3d.common;
@@ -36,25 +36,36 @@ public sealed class UMI3DCameraManager
 
     public UMI3DCameraManager()
     {
-        NotificationHub.Default.Subscribe(this, UMI3DClientNotificatonKeys.CameraPropertiesNotification, null, CameraPropertiesReception);
+        NotificationHub.Default.Subscribe(
+            this, 
+            UMI3DClientNotificatonKeys.CameraPropertiesNotification,
+            (Callback)CameraPropertiesReception
+        );
     }
 
     public void HandleView()
     {
-        if (
-                (BaseCursor.Movement == BaseCursor.CursorMovement.Free
-                || BaseCursor.Movement == BaseCursor.CursorMovement.FreeHidden)
-            )
-        {
+        if ((BaseCursor.Movement == BaseCursor.CursorMovement.Free
+                || BaseCursor.Movement == BaseCursor.CursorMovement.FreeHidden))
             return;
-        }
-
+        
         concreteFPSNavigation.HandleUserCamera();
+
+        if(BaseCursor.Movement == BaseCursor.CursorMovement.Drawing)
+        {
+            if (data.WantToLookAroundInDrawMode)
+                BaseCursor.Mode = BaseCursor.DrawingMode.Center;
+            else
+            {
+                BaseCursor.Mode = BaseCursor.DrawingMode.Free;
+                return;
+            }
+        }
 
         data.cameraMode = E_CameraMode.Navigation; // Debug only.
         if (data.cameraMode != E_CameraMode.Locked)
         {
-            data.cameraMode = data.WantToLookAround
+            data.cameraMode = data.WantToLookAround && BaseCursor.Movement != BaseCursor.CursorMovement.Drawing
                 ? E_CameraMode.NeckMovement
                 : E_CameraMode.Navigation;
         }

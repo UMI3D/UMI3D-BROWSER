@@ -19,8 +19,16 @@ using umi3d.cdk;
 using umi3d.common;
 using umi3d.common.interaction;
 using umi3dVRBrowsersBase.ui.playerMenu;
+using Unity.Burst.Intrinsics;
 using UnityEngine;
 using UnityEngine.Events;
+using static umi3d.common.volume.GeometryTools;
+using UnityEngine.UIElements;
+using System.Collections.Generic;
+using System;
+using umi3d.baseBrowser.inputs.interactions;
+using System.Linq;
+using umi3d.cdk.interaction;
 
 namespace umi3dVRBrowsersBase.interactions.input
 {
@@ -28,7 +36,7 @@ namespace umi3dVRBrowsersBase.interactions.input
     /// Input for UMI3D Event.
     /// </summary>
     [System.Serializable]
-    public class BooleanInput : AbstractVRInput
+    public class BooleanInput : AbstractVRInput, IDrawerData
     {
         #region Fields
 
@@ -64,6 +72,33 @@ namespace umi3dVRBrowsersBase.interactions.input
 
         [HideInInspector]
         public static VRInteractionEvent BooleanEvent = new VRInteractionEvent();
+
+        public ulong environmentId { get; protected set; }
+
+        public AbstractUMI3DInput Input => this;
+        public Transform BoneTransform => this.boneTransform;
+        public uint BoneType => this.boneType;
+
+        public ulong ToolId => this.toolId;
+
+        public ulong HoveredObjectId => this.hoveredObjectId;
+
+        public ulong? LineId { get; set; }
+        public ulong DrawingID { get; set; } = 0;
+        public List<UMI3DNodeInstance> Meshes { get; set; } = new();
+        public List<Vector3> Positions { get; set; } = new();
+        public float LastUpdateTime { get => lastUpdateTime; set => lastUpdateTime = value; }
+        public float TimeSynchronization { get => timeSynchronization; set => timeSynchronization = value; }
+        public float MinDistance { get => minDistance; set => minDistance = value; }
+
+        public ulong LastSurfaceId { get; set; } = 0;
+
+        bool isDrawing = false;
+
+        [SerializeField] private float lastUpdateTime = 0f;
+        [SerializeField] private float timeSynchronization = 0.3f;
+        [SerializeField] private float minDistance = 0.01f;
+
 
         #endregion
 
@@ -112,16 +147,22 @@ namespace umi3dVRBrowsersBase.interactions.input
 
             if (IsCompatibleWith(interaction))
             {
+                this.environmentId = environmentId;
+
                 vrInput.AddOnStateUpListener(VRInput_onStateUp);
                 vrInput.AddOnStateDownListener(VRInput_onStateDown);
 
-                UnityAction<bool> action = (bool pressDown) =>
+                risingEdgeEventSent = false;
+                isDrawing = false;
+
+                UnityAction<bool> action = async (bool pressDown) =>
                 {
+                    DrawingInteractionDto drawing = interaction as DrawingInteractionDto;
                     if (pressDown)
                     {
-                        if ((interaction as EventDto).hold)
+                        if ((interaction as EventDto).hold || drawing != null)
                         {
-                            UMI3DClientServer.SendData(new EventStateChangedDto()
+                            UMI3DClientServer.SendRequest(new EventStateChangedDto()
                             {
                                 active = true,
                                 boneType = boneType,
@@ -132,10 +173,18 @@ namespace umi3dVRBrowsersBase.interactions.input
                                 boneRotation = boneTransform.rotation.Dto(),
                             }, true);
                             risingEdgeEventSent = true;
+                            isDrawing = drawing != null;
+
+                            if (isDrawing)
+                            {
+                                DrawingManager.Instance.StartDrawing(drawing, this);
+                                await DrawingManager.Instance.Init(this, drawing);
+                            }
+
                         }
                         else
                         {
-                            UMI3DClientServer.SendData(new EventTriggeredDto()
+                            UMI3DClientServer.SendRequest(new EventTriggeredDto()
                             {
                                 boneType = boneType,
                                 toolId = toolId,
@@ -149,21 +198,41 @@ namespace umi3dVRBrowsersBase.interactions.input
                         isDown = true;
 
 
-                        if ((interaction as EventDto).TriggerAnimationId != 0)
+                        if ((interaction as EventDto).triggerAnimationId != 0)
                         {
                             BooleanEvent.Invoke(boneType);
-                            StartAnim((interaction as EventDto).TriggerAnimationId);
+                            StartAnim((interaction as EventDto).triggerAnimationId);
                         }
 
                         onInputDown.Invoke();
                     }
                     else
                     {
-                        if ((interaction as EventDto).hold)
+                        if ((interaction as EventDto).hold || drawing != null)
                         {
                             if (risingEdgeEventSent)
                             {
-                                UMI3DClientServer.SendData(new EventStateChangedDto()
+                                if (drawing != null)
+                                {
+                                    umi3d.cdk.UMI3DClientServer.SendRequest(new umi3d.common.interaction.DrawingDto
+                                    {
+                                        drawingEnd = true,
+                                        clientDrawingId = DrawingID,
+                                        clientLineId = LineId.HasValue ? LineId.Value : 0,
+                                        positions = Positions.Select(p => p.Dto()).ToList(),
+
+                                        surfaceId = LastSurfaceId,
+
+                                        boneType = boneType,
+                                        id = associatedInteraction.id,
+                                        toolId = this.toolId,
+                                        hoveredObjectId = hoveredObjectId,
+                                        bonePosition = (Vector3Dto)boneTransform.position.Dto(),
+                                        boneRotation = (Vector4Dto)boneTransform.rotation.Dto()
+                                    }, true);
+                                    DrawingManager.Instance.StopDrawing(drawing, this);
+                                }
+                                UMI3DClientServer.SendRequest(new EventStateChangedDto()
                                 {
                                     active = false,
                                     boneType = boneType,
@@ -173,17 +242,24 @@ namespace umi3dVRBrowsersBase.interactions.input
                                     boneRotation = boneTransform.rotation.Dto(),
                                 }, true);
                                 risingEdgeEventSent = false;
+                               
                             }
+
                         }
                         (controller as VRController).IsInputPressed = false;
                         isDown = false;
+                        isDrawing = false;
+                        LineId = null;
+                        DrawingID = 0;
+                        Positions.Clear();
+                        Meshes.Clear();
                         onInputUp.Invoke();
 
 
-                        if ((interaction as EventDto).ReleaseAnimationId != 0)
+                        if ((interaction as EventDto).releaseAnimationId != 0)
                         {
                             BooleanEvent.Invoke(boneType);
-                            StartAnim((interaction as EventDto).ReleaseAnimationId);
+                            StartAnim((interaction as EventDto).releaseAnimationId);
                         }
                     }
                 };
@@ -195,7 +271,7 @@ namespace umi3dVRBrowsersBase.interactions.input
             }
             else
             {
-                throw new System.Exception("Trying to associate an uncompatible interaction !");
+                throw new System.Exception("Trying to associate an incompatible interaction !");
             }
         }
 
@@ -277,6 +353,13 @@ namespace umi3dVRBrowsersBase.interactions.input
                 (controller as VRController).IsInputPressed = false;
                 isDown = false;
             }
+
+            risingEdgeEventSent = false;
+            isDrawing = false;
+            DrawingID = 0;
+            LineId = null;
+            Positions.Clear();
+            Meshes.Clear();
         }
 
         /// <summary>
@@ -290,5 +373,18 @@ namespace umi3dVRBrowsersBase.interactions.input
         }
 
         #endregion
+
+
+        protected void Update()
+        {
+            if (!isDrawing)
+                return;
+
+            if (associatedInteraction is not DrawingInteractionDto drawing)
+                return;
+
+            DrawingManager.Instance.DrawUpdate(drawing, null, this);
+        }
+        
     }
 }

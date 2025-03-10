@@ -17,7 +17,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
-using umi3d.baseBrowser.cursor;
+using umi3d.browserRuntime.cursor;
 using umi3d.cdk;
 using umi3d.cdk.menu.interaction;
 using umi3d.common.interaction;

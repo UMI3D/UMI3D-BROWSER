@@ -44,6 +44,7 @@ namespace umi3d.baseBrowser.Controller
         }
 
         protected List<BaseManipulationGroup> ManipulationGroupInputs = new List<BaseManipulationGroup>();
+        protected List<BaseDrawGroup> DrawGroupInputs = new List<BaseDrawGroup>();
         protected List<EventInteraction> EventInputs = new List<EventInteraction>();
         protected List<FormInteraction> FormInputs = new List<FormInteraction>();
         protected List<LinkInteraction> LinkInputs = new List<LinkInteraction>();
@@ -110,6 +111,10 @@ namespace umi3d.baseBrowser.Controller
             {
                 if (!input.IsAvailable()) input.Dissociate();
             });
+            ClearInputs(ref DrawGroupInputs, input =>
+            {
+                if (!input.IsAvailable()) input.Dissociate();
+            });
             ClearInputs(ref EventInputs, action);
             ClearParameters(action);
         }
@@ -141,7 +146,7 @@ namespace umi3d.baseBrowser.Controller
             if (input is IInteractionWithBone interactionWithBone)
             {
                 interactionWithBone.bone = interactionBoneType;
-                interactionWithBone.boneTransform = hoverBoneTransform;
+                interactionWithBone.BoneTransform = hoverBoneTransform;
             }
 
             input.Menu = ObjectMenu.menu;
@@ -177,10 +182,16 @@ namespace umi3d.baseBrowser.Controller
         /// <returns></returns>
         public override AbstractUMI3DInput FindInput(EventDto evt, bool unused = true, bool tryToFindInputForHoldableEvent = false)
         {
-            AbstractUMI3DInput input = null;
-            if (CurrentController != null) input = CurrentController?.FindInput(evt, unused, tryToFindInputForHoldableEvent);
-            if (input == null) input = FindInput(EventInputs, i => i.IsAvailable() || !unused, EventActions);
-            return input;
+            if(evt is DrawingInteractionDto drawing)
+            {
+                BaseDrawGroup input = CurrentController.DrawGroup;
+                if (input == null) UnityEngine.Debug.LogError($"Couldn't find a manipulation group.");
+                return input;
+            }
+            AbstractUMI3DInput evtInput = null;
+            if (CurrentController != null) evtInput = CurrentController?.FindInput(evt, unused, tryToFindInputForHoldableEvent);
+            if (evtInput == null) evtInput = FindInput(EventInputs, i => i.IsAvailable() || !unused, EventActions);
+            return evtInput;
         }
 
         #endregion
@@ -244,7 +255,7 @@ namespace umi3d.baseBrowser.Controller
         {
             BaseManipulationGroup input = CurrentController.ManipulationGroup;
 
-            if (input == null) UnityEngine.Debug.LogError($"Couln't find a manipulation group.");
+            if (input == null) UnityEngine.Debug.LogError($"Couldn't find a manipulation group.");
 
             return input;
         }

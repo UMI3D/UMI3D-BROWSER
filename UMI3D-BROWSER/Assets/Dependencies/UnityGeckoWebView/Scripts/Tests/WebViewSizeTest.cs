@@ -30,8 +30,10 @@ namespace com.inetum.unitygeckowebview
 
         void Awake()
         {
-            sizeChangedNotifier = NotificationHub.Default
-                .GetNotifier<GeckoWebViewNotificationKeys.WebViewSizeChanged>(this);
+            sizeChangedNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                ID.FromType<GeckoWebViewNotificationKeys.WebViewSizeChanged>()
+            );
 
             width.text = "1";
             height.text = "1";
@@ -46,10 +48,11 @@ namespace com.inetum.unitygeckowebview
         {
             resize.onClick.AddListener(Resize);
 
-            NotificationHub.Default.Subscribe<GeckoWebViewNotificationKeys.WebViewSizeChanged>(
+            NotificationHub.Default.Subscribe(
                 this,
-                new FilterByRef(FilterType.AcceptAllExcept, this),
-                SizeChanged
+                ID.FromType<GeckoWebViewNotificationKeys.WebViewSizeChanged>(),
+                (Callback)SizeChanged,
+                new FilterByRef(FilterType.AcceptAllExcept, this)
             );
         }
 
@@ -57,7 +60,7 @@ namespace com.inetum.unitygeckowebview
         {
             resize.onClick.RemoveListener(Resize);
 
-            NotificationHub.Default.Unsubscribe<GeckoWebViewNotificationKeys.WebViewSizeChanged>(this);
+            NotificationHub.Default.Unsubscribe(this);
         }
 
         void Notify()

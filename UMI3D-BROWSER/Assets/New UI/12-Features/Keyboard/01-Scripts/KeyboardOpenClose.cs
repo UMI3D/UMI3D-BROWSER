@@ -33,9 +33,9 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         void Awake()
         {
-            openOrCloseNotifier = NotificationHub.Default.GetNotifier<KeyboardNotificationKeys.OpenOrClose>(
+            openOrCloseNotifier = NotificationHub.Default.GetNotifier(
                 this,
-                null,
+                ID.FromType<KeyboardNotificationKeys.OpenOrClose>(),
                 new()
                 {
                     { KeyboardNotificationKeys.OpenOrClose.WithAnimation, withAnimation },
@@ -44,8 +44,10 @@ namespace umi3d.browserRuntime.ui.keyboard
                 }
             );
 
-            deselectionNotifier = NotificationHub.Default
-               .GetNotifier<KeyboardNotificationKeys.TextFieldDeselected>(this);
+            deselectionNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                ID.FromType<KeyboardNotificationKeys.TextFieldDeselected>()
+            );
         }
 
         void Start()
@@ -57,39 +59,36 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         void OnEnable()
         {
-            NotificationHub.Default.Subscribe<KeyboardNotificationKeys.AnimationSettings>(
+            NotificationHub.Default.Subscribe(
                 this,
-                EnableOrDisableAnimation
+                ID.FromType<KeyboardNotificationKeys.AnimationSettings>(),
+                (Callback)EnableOrDisableAnimation
             );
 
             NotificationHub.Default.Subscribe(
                 this,
                 KeyboardNotificationKeys.SpecialKeyPressed,
-                SpecialKeyPressed
+                (Callback)SpecialKeyPressed
             );
 
-            NotificationHub.Default.Subscribe<KeyboardNotificationKeys.TextFieldSelected>(
+            NotificationHub.Default.Subscribe(
                 this,
-                new FilterByRef(FilterType.AcceptAllExcept, this),
-                TextFieldSelected
+                ID.FromType < KeyboardNotificationKeys.TextFieldSelected >(),
+                (Callback)TextFieldSelected,
+                new FilterByRef(FilterType.AcceptAllExcept, this)
             );
 
-            NotificationHub.Default.Subscribe<KeyboardNotificationKeys.TextFieldDeselected>(
+            NotificationHub.Default.Subscribe(
                 this,
-                new FilterByRef(FilterType.AcceptAllExcept, this),
-                TextFieldDeselected
+                ID.FromType<KeyboardNotificationKeys.TextFieldDeselected>(),
+                (Callback)TextFieldDeselected,
+                new FilterByRef(FilterType.AcceptAllExcept, this)
             );
         }
 
         void OnDisable()
         {
-            NotificationHub.Default.Unsubscribe<KeyboardNotificationKeys.AnimationSettings>(this);
-
-            NotificationHub.Default.Unsubscribe(this, KeyboardNotificationKeys.SpecialKeyPressed);
-
-            NotificationHub.Default.Unsubscribe<KeyboardNotificationKeys.TextFieldSelected>(this);
-
-            NotificationHub.Default.Unsubscribe<KeyboardNotificationKeys.TextFieldDeselected>(this);
+            NotificationHub.Default.Unsubscribe(this);
         }
 
         void Close()

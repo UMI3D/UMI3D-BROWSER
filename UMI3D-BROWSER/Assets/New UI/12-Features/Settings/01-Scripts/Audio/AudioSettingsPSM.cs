@@ -48,8 +48,8 @@ namespace umi3d.browserRuntime.ui.settings
         /// </summary>
         public MicrophoneMode mode = MicrophoneMode.AlwaysSend;
         /// <summary>
-        /// Whether the noise reduction is enabled.
+        /// Whether the audio enhancement (noise reduction, acoustic echo cancellation) is enabled.
         /// </summary>
-        public bool isNoiseReductionEnabled = true;
+        public bool isAudioEnhancementEnabled = true;
     }
 }

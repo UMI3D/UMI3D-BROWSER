@@ -43,22 +43,19 @@ namespace umi3d.browserRuntime.ui.keyboard
             NotificationHub.Default.Subscribe(
                 this,
                 KeyboardNotificationKeys.KeyHovered,
-                null,
-                KeyHovered
+                (Callback)KeyHovered
             );
 
             NotificationHub.Default.Subscribe(
                 this,
                 KeyboardNotificationKeys.KeyClicked,
-                null,
-                KeyClicked
+                (Callback)KeyClicked
             );
         }
 
         void OnDisable()
         {
-            NotificationHub.Default.Unsubscribe(this, KeyboardNotificationKeys.KeyHovered);
-            NotificationHub.Default.Unsubscribe(this, KeyboardNotificationKeys.KeyClicked);
+            NotificationHub.Default.Unsubscribe(this);
         }
 
         void KeyHovered(Notification notification)

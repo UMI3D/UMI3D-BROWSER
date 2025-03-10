@@ -116,6 +116,8 @@ namespace umi3d.baseBrowser.Navigation
         public bool IsSprinting;
         [Tooltip("Whether or not the player want to look around.")]
         public bool WantToLookAround;
+        [Tooltip("Whether or not the player want to look around.")]
+        public bool WantToLookAroundInDrawMode;
 
         [Header("Movement")]
         [Tooltip("Navigation mode")]

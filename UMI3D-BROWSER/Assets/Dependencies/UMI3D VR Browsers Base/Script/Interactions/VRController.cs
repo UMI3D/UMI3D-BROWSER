@@ -15,13 +15,18 @@ limitations under the License.
 */
 
 using System.Collections.Generic;
+using System.Linq;
+using umi3d.baseBrowser.inputs.interactions;
+using umi3d.cdk;
 using umi3d.cdk.interaction;
 using umi3d.cdk.menu;
 using umi3d.cdk.menu.interaction;
 using umi3d.cdk.userCapture.tracking;
 using umi3d.common;
 using umi3d.common.interaction;
+using umi3dBrowsers.interaction.selection.zoneselection;
 using umi3dVRBrowsersBase.interactions.input;
+using umi3dVRBrowsersBase.interactions.selection.cursor;
 using umi3dVRBrowsersBase.ui.playerMenu;
 using UnityEngine;
 
@@ -70,6 +75,9 @@ namespace umi3dVRBrowsersBase.interactions
 
         protected virtual void Awake()
         {
+            if (!VRDrawingManager.Exists)
+                new VRDrawingManager();
+
             ObjectMenu = Resources.Load<MenuAsset>("ParametersMenu");
 
             UnityEngine.Physics.queriesHitBackfaces = true;
@@ -78,6 +86,11 @@ namespace umi3dVRBrowsersBase.interactions
                 input.Init(this);
             foreach (AbstractUMI3DInput input in booleanInputs)
                 input.Init(this);
+        }
+
+        private void Start()
+        {
+            (VRDrawingManager.Instance as VRDrawingManager).Declare(this);
         }
 
         protected virtual void Update()
@@ -101,7 +114,7 @@ namespace umi3dVRBrowsersBase.interactions
         {
             base.Project(tool, releasable, reason, hoveredObjectId);
 
-            if (currentTool == tool) // It means projection succedded
+            if (currentTool == tool) // It means projection succeeded
             {
                 tool.onProjected(bone.BoneType);
             }
@@ -356,5 +369,56 @@ namespace umi3dVRBrowsersBase.interactions
         }
 
         #endregion Methods
+    }
+
+
+    public class VRDrawingManager : DrawingManager
+    {
+        List<(VRController,RayCursor)> vRControllers = new();
+
+        public void Declare(VRController controller)
+        {
+           vRControllers.Add((controller, controller.gameObject.GetComponentInChildren<RayCursor>()));
+        }
+
+        public float distance = 1.5f;
+        public float objectDistance = 50f;
+        public float offset = 0.01f;
+        public float handOffset = 0f;
+
+        public override (Vector3,ulong)? GetDrawingWorldPoint(DrawingInteractionDto drawing, List<UMI3DNodeInstance> nodes, AbstractUMI3DInput input)
+        {
+            var cursor = vRControllers
+                .FirstOrDefault(c =>
+                        c.Item1.HoldInput == input
+                        || c.Item1.booleanInputs
+                                .Any(b => b == input)
+                ).Item2;
+
+            if (nodes != null && nodes.Count > 0)
+            {
+                var zone = new RaySelectionZone<NodeContainer>(cursor.transform.position, cursor.transform.up);
+                foreach(var nodeAndRay in zone.GetObjectsOnRayWithRayCastHits())
+                    if(nodeAndRay.Value.distance <= distance &&  nodes.Contains(nodeAndRay.Key.instance))
+                        return (nodeAndRay.Value.point + nodeAndRay.Value.normal * offset, nodeAndRay.Key.instance.Id);
+            }
+
+            if (drawing.canDrawInSpace)
+                return (cursor.transform.position + cursor.transform.up * handOffset,0);
+            
+            return null;
+        }
+
+        //protected override void StartDrawingMode(DrawingInteractionDto drawing)
+        //{
+        //    base.StartDrawingMode(drawing);
+        //    BaseCursor.SetMovement(this, BaseCursor.CursorMovement.Drawing);
+        //}
+
+        //protected override void StopDrawingMode(DrawingInteractionDto drawing)
+        //{
+        //    base.StopDrawingMode(drawing);
+        //    BaseCursor.UnSetMovement(this);
+        //}
     }
 }

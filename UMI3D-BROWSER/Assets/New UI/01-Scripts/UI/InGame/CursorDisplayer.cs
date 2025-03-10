@@ -34,14 +34,16 @@ namespace umi3d.browserRuntime.ui.inGame.interactionMapping
 
         private void Awake()
         {
-            NotificationHub.Default.Subscribe<InteractionNotificationKeys.ParameterInputFound>(
+            NotificationHub.Default.Subscribe(
                 this,
-                ParameterInputFound
+                ID.FromType<InteractionNotificationKeys.ParameterInputFound>(),
+                (Callback)ParameterInputFound
             );
 
-            NotificationHub.Default.Subscribe<InteractionNotificationKeys.ToolReleased>(
+            NotificationHub.Default.Subscribe(
                 this,
-                ToolReleased
+                ID.FromType<InteractionNotificationKeys.ToolReleased>(),
+                (Callback)ToolReleased
             );
 
             cursorImage = GetComponent<Image>();
@@ -62,7 +64,7 @@ namespace umi3d.browserRuntime.ui.inGame.interactionMapping
         {
             cursorImage.sprite = cursorIcon;
         }
-        private void ShowNormal(KeyboardInteraction interaction) => ShowNormal();
+        private void ShowNormal(KeyboardInteraction interaction, string key) => ShowNormal();
 
         private void ShowHover()
         {

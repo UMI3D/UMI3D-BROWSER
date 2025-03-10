@@ -16,7 +16,7 @@ limitations under the License.
 using inetum.unityUtils;
 using inetum.unityUtils.observation;
 using System.Collections.Generic;
-using umi3d.baseBrowser.cursor;
+using umi3d.browserRuntime.cursor;
 using umi3d.baseBrowser.inputs.interactions;
 using umi3d.browserRuntime.notificationKeys;
 using umi3d.cdk;
@@ -58,6 +58,7 @@ namespace umi3d.baseBrowser.Controller
         public GameObject EventActions;
         public GameObject ManipulationGroupActions;
         public GameObject ManipulationActions;
+        public GameObject DrawGroupActions;
 
         [Header("Keyboard' parents")]
         public GameObject KeyboardActions;
@@ -122,6 +123,8 @@ namespace umi3d.baseBrowser.Controller
             ManipulationMenu = Resources.Load<MenuAsset>("Scriptables/GamePanel/ManipulationMenu");
 
             ManipulationGroupInputs.AddRange(ManipulationGroupActions.GetComponents<BaseManipulationGroup>());
+            DrawGroupInputs.AddRange(DrawGroupActions.GetComponents<BaseDrawGroup>());
+
             //TODO instantiate concrete controllers.
             m_controllers.Add
             (
@@ -129,7 +132,8 @@ namespace umi3d.baseBrowser.Controller
                 {
                     Controller = this,
                     ObjectMenu = ObjectMenu,
-                    ManipulationGroup = ManipulationGroupInputs.Find(a => a is ManipulationGroupeForDesktop)
+                    ManipulationGroup = ManipulationGroupInputs.Find(a => a is ManipulationGroupeForDesktop),
+                    DrawGroup = DrawGroupInputs.Find(a => a is DrawGroupForDesktop),
                 }
             );
             m_controllers.Add
@@ -161,11 +165,14 @@ namespace umi3d.baseBrowser.Controller
                     Release(currentTool, new RequestedFromMenu());
             });
 
-            parameterInputFoundNotifier = NotificationHub.Default
-                .GetNotifier<InteractionNotificationKeys.ParameterInputFound>(this);
+            parameterInputFoundNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                ID.FromType<InteractionNotificationKeys.ParameterInputFound>()
+            );
 
-            toolReleasedNotifier = NotificationHub.Default
-                .GetNotifier<InteractionNotificationKeys.ToolReleased>(this);
+            toolReleasedNotifier = NotificationHub.Default.GetNotifier(
+                this,
+                ID.FromType<InteractionNotificationKeys.ToolReleased>());
         }
 
         private void Instance_onNodeGameObjectSet(UMI3DNodeInstance node, GameObject oldGameObject)

@@ -105,8 +105,7 @@ namespace umi3d.browserRuntime.xr
             NotificationHub.Default.Subscribe(
                 this,
                 LocomotionNotificationKeys.System,
-                null,
-                EnableOrDisableNavigation
+                (Callback)EnableOrDisableNavigation
             );
 
             if (enableTeleportation)

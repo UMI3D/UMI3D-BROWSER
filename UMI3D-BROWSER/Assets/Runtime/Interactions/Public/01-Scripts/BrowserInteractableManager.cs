@@ -24,7 +24,7 @@ using UnityEngine.AddressableAssets;
 
 namespace umi3d.browserRuntime.interactions
 {
-    public class BrowserInteractableManager : IInteractableVisibilityDelegate, IInteractableVisibilityDataDelegate, IInteractableHoverStateDelegate
+    public class BrowserInteractableManager : IInteractableVisibilityDelegate, IInteractableUIControllerDataDelegate, IInteractableHoverStateDelegate
     {
         #region Initialization
 
@@ -34,7 +34,7 @@ namespace umi3d.browserRuntime.interactions
         {
             visibilityListeners = _visibilityListeners.AsReadOnly();
             InteractableVisibilityListener.delegates.Add(this);
-            InteractableVisibilityListener.dataDelegate = this;
+            InteractableUIController.dataDelegate = this;
 
             InteractableHoverStateListener.delegates.Add(this);
         }
@@ -49,55 +49,89 @@ namespace umi3d.browserRuntime.interactions
 
         #endregion
 
-        #region IInteractableVisibilityDelegate & IInteractableVisibilityDataDelegate
+        #region IInteractableUIControllerDataDelegate
 
         GameObject interactableUIPrefab;
+
+        public bool TryGetInteractableUI(out GameObject gameObject, out object viewController, InteractableContainer interactableContainer, InteractableUIController uiController)
+        {
+            gameObject = GameObject.Instantiate(interactableUIPrefab);
+            InteractableUIVC vc = gameObject.GetComponent<InteractableUIVC>();
+            viewController = vc;
+            vc.interactable = interactableContainer.Interactable;
+            vc.renderer = uiController.visibilityListener.renderer;
+
+            vc.SetInteractableName(interactableContainer.Interactable.name);
+            return true;
+        }
+
+        #endregion
+
+        #region IInteractableVisibilityDelegate
+
         List<InteractableVisibilityListener> _visibilityListeners = new();
         public readonly ReadOnlyCollection<InteractableVisibilityListener> visibilityListeners;
 
         public void OnBecameVisible(Renderer renderer, InteractableContainer interactableContainer, InteractableVisibilityListener visibilityListener)
         {
             _visibilityListeners.Add(visibilityListener);
-            InteractableUIVC viewController = visibilityListener.interactableUI.GetComponent<InteractableUIVC>();
-            viewController.renderer = renderer;
-            viewController.interactable = interactableContainer.Interactable;
-            viewController.enabled = true;
-            viewController.DisplayFeedback(true);
-            viewController.SetInteractableName(interactableContainer.Interactable.name);
+            InteractableUIController uiController = visibilityListener.uiController;
+
+            if (!uiController.TryCastViewController(out InteractableUIVC viewController))
+            {
+                return;
+            }
+
+            viewController.OnInteractableBecameVisible();
         }
 
         public void OnBecameInvisible(Renderer renderer, InteractableContainer interactableContainer, InteractableVisibilityListener visibilityListener)
         {
             _visibilityListeners.Remove(visibilityListener);
-            InteractableUIVC viewController = visibilityListener.interactableUI.GetComponent<InteractableUIVC>();
-            viewController.enabled = false;
-            viewController.DisplayFeedback(false);
-        }
+            InteractableUIController uiController = visibilityListener.uiController;
 
-        public GameObject GetInteractableUI()
-        {
-            GameObject _interactableUI = GameObject.Instantiate(interactableUIPrefab);
-            return _interactableUI;
+            if (!uiController.TryCastViewController(out InteractableUIVC viewController))
+            {
+                return;
+            }
+
+            viewController.OnInteractableBecameInvisible();
         }
 
         #endregion
 
         #region IInteractableHoverStateDelegate
 
-
+        List<InteractableHoverStateListener> _hoverStateListener = new();
+        public readonly ReadOnlyCollection<InteractableHoverStateListener> hoverStateListener;
 
         public void OnHoverEnter(Collider collider, InteractableContainer interactableContainer, InteractableHoverStateListener hoverStateListener)
         {
+            _hoverStateListener.Add(hoverStateListener);
+            InteractableUIController uiController = hoverStateListener.uiController;
+
+            if (!uiController.TryCastViewController(out InteractableUIVC viewController))
+            {
+                return;
+            }
+
+            viewController.OnInteractableBecameHovered();
         }
 
         public void OnHoverExit(Collider collider, InteractableContainer interactableContainer, InteractableHoverStateListener hoverStateListener)
         {
+            _hoverStateListener.Remove(hoverStateListener);
+            InteractableUIController uiController = hoverStateListener.uiController;
+
+            if (!uiController.TryCastViewController(out InteractableUIVC viewController))
+            {
+                return;
+            }
+
+            viewController.OnInteractableBecameNotHovered();
         }
 
-        public void OnHover(Collider collider, InteractableContainer interactableContainer, InteractableHoverStateListener hoverStateListener)
-        {
-            
-        }
+        public void OnHover(Collider collider, InteractableContainer interactableContainer, InteractableHoverStateListener hoverStateListener) {}
 
         #endregion
     }

@@ -19,17 +19,21 @@ using UnityEngine;
 
 namespace umi3d.browserRuntime.interactions
 {
-    internal class InteractableUIVC : MonoBehaviour
+    internal class InteractableUIVC : MonoBehaviour, IInteractableUIDataDelegate
     {
         // The scale of the entire interactable UI.
         const float scale = 0.0005f;
 
         [HideInInspector] public new Renderer renderer;
-        [HideInInspector] public new Interactable interactable;
+        [HideInInspector] public Interactable interactable;
+        [HideInInspector] public InteractableUIModel model;
 
         [SerializeField] int resetFrameRate = 120;
         int _resetFrameRateCount = 0;
-        [SerializeField] float offsetWithRenderer;
+
+        [Space]
+        [SerializeField, Tooltip("The offset between the renderer and the UI.")] float offsetWithRenderer;
+        [SerializeField, Tooltip("The distance at which the feedback is not visible.")] float farDistanceOffset;
 
         [Header("Views")]
         [SerializeField] NameView nameView;
@@ -37,12 +41,27 @@ namespace umi3d.browserRuntime.interactions
 
         Camera _camera;
 
+        #region IInteractableUIDataDelegate
+
+        public float distanceCameraRenderer => Vector3.Distance(_camera.transform.position, renderer.transform.position);
+        public Vector3 directionRendererCamera => (_camera.transform.position - renderer.transform.position).normalized;
+        public float interactionDistance => interactable?.InteractionDistance ?? 0;
+
+        #endregion
+
         #region Life cycle
 
         void Awake()
         {
             enabled = false;
-            DisplayFeedback(false);
+
+            model = new();
+            model.offsetWithRenderer = offsetWithRenderer;
+            model.farDistanceOffset = farDistanceOffset;
+            model.dataDelegate = this;
+
+            feedbackView.SetModel(model);
+
             DisplayName(false);
         }
 
@@ -72,14 +91,7 @@ namespace umi3d.browserRuntime.interactions
             SetInFrontOfInteractable(renderer);
             LookAtTheCamera();
 
-            if (interactable.InteractionDistance > Vector3.Distance(_camera.transform.position, renderer.transform.position))
-            {
-                DisplayName(true);
-            }
-            else
-            {
-                DisplayName(false);
-            }
+            model.UpdateDistanceState();
         }
 
         #endregion
@@ -95,21 +107,20 @@ namespace umi3d.browserRuntime.interactions
                 return;
             }
 
-            float _scaleX = scale * parent.localScale.x / parent.lossyScale.x;
-            float _scaleY = scale * parent.localScale.y / parent.lossyScale.y;
-            float _scaleZ = scale * parent.localScale.z / parent.lossyScale.z;
-
-            transform.localScale = new(_scaleX, _scaleY, _scaleZ);
+            transform.localScale = model.GetLocalScale(
+                scale, 
+                parent.localScale, 
+                parent.lossyScale
+            );
         }
 
         void SetInFrontOfInteractable(Renderer renderer)
         {
             if (_camera == null) { return; }
 
-            Vector3 size = renderer.bounds.size;
-            float length = Mathf.Max(size.x, Mathf.Max(size.y, size.z));
             Vector3 direction = (_camera.transform.position - renderer.transform.position).normalized;
-            transform.position = renderer.transform.position + direction * (length / 2 + offsetWithRenderer);
+
+            transform.position = renderer.transform.position + model.GetFrontPositionOffset(renderer.bounds.size);
         }
 
         void LookAtTheCamera()
@@ -120,9 +131,28 @@ namespace umi3d.browserRuntime.interactions
 
         #endregion
 
-        public void DisplayFeedback(bool display)
+        public void OnInteractableBecameVisible()
         {
-            feedbackView.gameObject.SetActive(display);
+            model.OnBecameVisible();
+
+            enabled = true;
+        }
+
+        public void OnInteractableBecameInvisible()
+        {
+            enabled = false;
+
+            model.OnBecameInvisible();
+        }
+
+        public void OnInteractableBecameHovered()
+        {
+            model.OnBecameHovered();
+        }
+
+        public void OnInteractableBecameNotHovered()
+        {
+            model.OnBecameNotHovered();
         }
 
         public void DisplayName(bool display)

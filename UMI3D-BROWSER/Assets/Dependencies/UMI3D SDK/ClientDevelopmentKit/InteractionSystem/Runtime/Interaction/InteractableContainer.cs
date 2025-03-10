@@ -43,16 +43,16 @@ namespace umi3d.cdk.interaction
 
         private void Start()
         {
-            UMI3DEnvironmentLoader.Instance.onEnvironmentLoaded.AddListener(AddVisibilityListenerToRendererChildren);
+            UMI3DEnvironmentLoader.Instance.onEnvironmentLoaded.AddListener(AddListenersToRendererChildren);
         }
 
         private void OnDestroy()
         {
             containers.Remove(this);
-            UMI3DEnvironmentLoader.Instance.onEnvironmentLoaded.RemoveListener(AddVisibilityListenerToRendererChildren);
+            UMI3DEnvironmentLoader.Instance.onEnvironmentLoaded.RemoveListener(AddListenersToRendererChildren);
         }
 
-        void AddVisibilityListenerToRendererChildren()
+        void AddListenersToRendererChildren()
         {
             Renderer[] renderers = GetComponentsInChildren<Renderer>();
             foreach (Renderer renderer in renderers)
@@ -62,6 +62,17 @@ namespace umi3d.cdk.interaction
                     InteractableVisibilityListener visibilityListener = renderer.gameObject.AddComponent<InteractableVisibilityListener>();
                     visibilityListener.renderer = renderer;
                     visibilityListener.interactableContainer = this;
+                }
+            }
+
+            Collider[] colliders = GetComponentsInChildren<Collider>();
+            foreach (Collider collider in colliders)
+            {
+                if (collider.GetComponent<InteractableHoverStateListener>() == null)
+                {
+                    InteractableHoverStateListener hoverStateListener = collider.gameObject.AddComponent<InteractableHoverStateListener>();
+                    hoverStateListener.collider = collider;
+                    hoverStateListener.interactableContainer = this;
                 }
             }
         }

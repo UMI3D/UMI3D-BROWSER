@@ -249,7 +249,9 @@ namespace umi3d.baseBrowser.Controller
             mouseData.ForceProjection = false;
             mouseData.CurrentHovered = null;
             mouseData.CurrentHoveredTransform = null;
+            mouseData.collider = null;
             mouseData.OldHovered = null;
+            mouseData.LastCollider = null;
             mouseData.HoverState = HoverState.None;
         }
         private void SetAutoProjection()
@@ -284,6 +286,7 @@ namespace umi3d.baseBrowser.Controller
             {
                 mouseData.CurrentHovered = null;
                 mouseData.CurrentHoveredTransform = null;
+                mouseData.collider = null;
                 mouseData.HoverState = HoverState.None;
                 BaseCursor.State = BaseCursor.CursorState.Default;
             }
@@ -490,6 +493,7 @@ namespace umi3d.baseBrowser.Controller
 
                 mouseData.CurrentHovered = interactable;
                 mouseData.CurrentHoveredTransform = interactableContainer.transform;
+                mouseData.collider = entry.Item1.collider;
 
                 mouseData.Position = interactableContainer.transform.InverseTransformPoint(hit.point);
                 mouseData.WorldPosition = hit.point;
@@ -533,7 +537,7 @@ namespace umi3d.baseBrowser.Controller
                 }
 
                 var v = new Vector4(hoverBoneTransform.rotation.x, hoverBoneTransform.rotation.y, hoverBoneTransform.rotation.z, hoverBoneTransform.rotation.w);
-                mouseData.CurrentHovered.Hovered(hoverBoneType, hoverBoneTransform.position, v, mouseData.CurrentHoveredId, mouseData.Position, mouseData.Normal, mouseData.Direction);
+                mouseData.CurrentHovered.Hovered(hoverBoneType, hoverBoneTransform.position, v, mouseData.CurrentHoveredId, mouseData.Position, mouseData.Normal, mouseData.Direction, mouseData.collider);
             }
         }
         private void OldHoverExitAndCurrentHoverEnter()
@@ -548,7 +552,7 @@ namespace umi3d.baseBrowser.Controller
             ulong lastHoverId = mouseData.LastHoveredId;
             var v = new Vector4(hoverBoneTransform.rotation.x, hoverBoneTransform.rotation.y, hoverBoneTransform.rotation.z, hoverBoneTransform.rotation.w);
             mouseData.OldHovered
-                .HoverExit(hoverBoneType, hoverBoneTransform.position, v, lastHoverId, mouseData.LastPosition, mouseData.LastNormal, mouseData.LastDirection);
+                .HoverExit(hoverBoneType, hoverBoneTransform.position, v, lastHoverId, mouseData.LastPosition, mouseData.LastNormal, mouseData.LastDirection, mouseData.LastCollider);
 
             ulong hoverExitAnimationId = mouseData.OldHovered.dto.HoverExitAnimationId;
             ulong hoverExitAnimationEnvId = mouseData.OldHovered.environmentId;
@@ -573,6 +577,7 @@ namespace umi3d.baseBrowser.Controller
                 if (anim != null) anim.Start();
             }
             mouseData.OldHovered = null;
+            mouseData.LastCollider = null;
         }
         private async void CurrentHoverEnter()
         {
@@ -581,7 +586,7 @@ namespace umi3d.baseBrowser.Controller
             ulong currentHoverId = mouseData.CurrentHoveredId;
             var v = new Vector4(hoverBoneTransform.rotation.x, hoverBoneTransform.rotation.y, hoverBoneTransform.rotation.z, hoverBoneTransform.rotation.w);
             mouseData.CurrentHovered
-                .HoverEnter(hoverBoneType, hoverBoneTransform.position, v, currentHoverId, mouseData.Position, mouseData.Normal, mouseData.Direction);
+                .HoverEnter(hoverBoneType, hoverBoneTransform.position, v, currentHoverId, mouseData.Position, mouseData.Normal, mouseData.Direction, mouseData.collider);
 
             ulong hoverEnterAnimationId = mouseData.CurrentHovered.dto.HoverEnterAnimationId;
             if (hoverEnterAnimationId != 0)

@@ -147,7 +147,9 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
                     trackingInfo.targetContainer.Interactable.id,
                     trackingInfo.targetContainer.transform.InverseTransformPoint(trackingInfo.raycastHit.point),
                     trackingInfo.targetContainer.transform.InverseTransformDirection(trackingInfo.raycastHit.normal),
-                    trackingInfo.directionWorld);             
+                    trackingInfo.directionWorld,
+                    trackingInfo.raycastHit.collider
+                );             
 
                 if (trackingInfo.target.dto.HoverEnterAnimationId != 0)
                 {
@@ -170,7 +172,9 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
                         trackingInfo.targetContainer.Interactable.id,
                         trackingInfo.targetContainer.transform.InverseTransformPoint(trackingInfo.raycastHit.point),
                         trackingInfo.targetContainer.transform.InverseTransformDirection(trackingInfo.raycastHit.normal),
-                        trackingInfo.directionWorld);
+                        trackingInfo.directionWorld,
+                        trackingInfo.raycastHit.collider
+                    );
                 }
                 else // It means the object hovered has been destroyed
                 {
@@ -206,7 +210,9 @@ namespace umi3dVRBrowsersBase.interactions.selection.cursor
                     trackingInfo.targetContainer.Interactable.id,
                     trackingInfo.targetContainer.transform.InverseTransformPoint(trackingInfo.raycastHit.point),
                     trackingInfo.targetContainer.transform.InverseTransformDirection(trackingInfo.raycastHit.normal),
-                    trackingInfo.directionWorld);
+                    trackingInfo.directionWorld,
+                    trackingInfo.raycastHit.collider
+                );
             });
         }
 

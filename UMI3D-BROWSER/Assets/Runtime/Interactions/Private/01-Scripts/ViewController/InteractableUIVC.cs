@@ -60,14 +60,14 @@ namespace umi3d.browserRuntime.interactions
             model.farDistanceOffset = farDistanceOffset;
             model.dataDelegate = this;
 
-            feedbackView.SetModel(model);
-
             DisplayName(false);
         }
 
         void Start()
         {
             _camera = Camera.main;
+
+            feedbackView.SetModel(model);
         }
 
         void OnEnable()
@@ -94,7 +94,18 @@ namespace umi3d.browserRuntime.interactions
             model.UpdateDistanceState();
         }
 
-        #endregion
+#if UNITY_EDITOR
+        void OnValidate()
+        {
+            if (model != null)
+            {
+                model.offsetWithRenderer = offsetWithRenderer;
+                model.farDistanceOffset = farDistanceOffset;
+            }
+        }
+#endif
+
+#endregion
 
         #region Position & Scale
 

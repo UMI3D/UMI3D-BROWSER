@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using inetum.unityUtils.ui.canvas;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -25,14 +26,20 @@ namespace umi3d.browserRuntime.interactions
         public InteractableUIModel model { get; private set; }
 
         RawImage roundImage;
+        RectTransform roundRectTransform;
+
         RawImage circleImage;
+        RectTransform circleRectTransform;
 
         IView view => this;
 
         void Awake()
         {
             view.Set(ref roundImage, 0);
+            roundRectTransform = roundImage.GetComponent<RectTransform>();
+
             view.Set(ref circleImage, 1);
+            circleRectTransform = circleImage.GetComponent<RectTransform>();
         }
 
         public void SetModel(InteractableUIModel model)
@@ -94,17 +101,27 @@ namespace umi3d.browserRuntime.interactions
 
         void DisplayRoundFeedback(bool withAnimation)
         {
-
+            roundImage.enabled = true;
+            circleImage.enabled = false;
         }
 
         void DisplayCircleFeedback(bool withAnimation)
         {
-
+            roundImage.enabled = false;
+            circleImage.enabled = true;
         }
 
         void HideFeedbacks(bool withAnimation)
         {
+            roundImage.enabled = false;
+            circleImage.enabled = false;
+        }
 
+        IEnumerator RoundFeedbackAnimation(bool display)
+        {
+            yield return null;
+
+            //roundRectTransform.localScale
         }
     }
 }

@@ -24,6 +24,8 @@ namespace umi3d.browserRuntime.interactions
         // The scale of the entire interactable UI.
         const float scale = 0.0005f;
 
+        Transform scaleResetTransform;
+
         [HideInInspector] public new Renderer renderer;
         [HideInInspector] public Interactable interactable;
         [HideInInspector] public InteractableUIModel model;
@@ -111,16 +113,26 @@ namespace umi3d.browserRuntime.interactions
 
         void ResetScale()
         {
-            Transform parent = transform.parent;
+            if (scaleResetTransform == null)
+            {
+                scaleResetTransform = new GameObject().GetComponent<Transform>();
+            }
+            if (transform.parent == null || transform.parent != scaleResetTransform)
+            {
+                scaleResetTransform.SetParent(transform.parent, false);
+                transform.SetParent(scaleResetTransform);
+                transform.localScale = Vector3.one * scale;
+            }
+
+            Transform parent = scaleResetTransform.parent;
             if (parent == null)
             {
-                transform.localScale = Vector3.one * scale;
+                scaleResetTransform.localScale = Vector3.one * scale;
                 return;
             }
 
-            transform.localScale = model.GetLocalScale(
-                scale, 
-                parent.localScale, 
+            scaleResetTransform.localScale = model.GetLocalScale(
+                1, 
                 parent.lossyScale
             );
         }

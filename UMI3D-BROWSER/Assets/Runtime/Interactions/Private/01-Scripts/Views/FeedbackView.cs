@@ -66,31 +66,28 @@ namespace umi3d.browserRuntime.interactions
 
         void UpdateFeedback()
         {
-            switch (model.distanceState)
+            switch (model.hoveringState)
             {
-                case InteractableDistanceState.Far:
-                    HideFeedbacks(true);
-                    break;
-
-                case InteractableDistanceState.Middle:
-                    DisplayRoundFeedback(true);
-                    break;
-
-                case InteractableDistanceState.Close:
-                    switch (model.hoveringState)
+                case InteractableHoveringState.NotHover:
+                    switch (model.distanceState)
                     {
-                        case InteractableHoveringState.NotHover:
-                            DisplayRoundFeedback(true);
+                        case InteractableDistanceState.Far:
+                            HideFeedbacks(true);
                             break;
 
-                        case InteractableHoveringState.Hover:
-                            DisplayCircleFeedback(true);
+                        case InteractableDistanceState.Middle:
+                        case InteractableDistanceState.Close:
+                            DisplayRoundFeedback(true);
                             break;
 
                         default:
                             UnityEngine.Debug.Log($"[InteractableUIVC] Error: Unhandled case.");
                             break;
                     }
+                    break;
+
+                case InteractableHoveringState.Hover:
+                    DisplayCircleFeedback(true);
                     break;
 
                 default:

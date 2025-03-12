@@ -144,11 +144,14 @@ namespace umi3d.browserRuntime.interactions
             return dataDelegate?.distanceCameraRenderer > _farDistance;
         }
 
-        public Vector3 GetLocalScale(float WorldScale, Vector3 parentLocalScale, Vector3 parentLossyScale)
+        public Vector3 GetLocalScale(float worldScale, Vector3 parentLossyScale)
         {
-            float _scaleX = WorldScale * parentLocalScale.x / parentLossyScale.x;
-            float _scaleY = WorldScale * parentLocalScale.y / parentLossyScale.y;
-            float _scaleZ = WorldScale * parentLocalScale.z / parentLossyScale.z;
+            // lossyScale = localScale * parent.lossyScale.
+            // localScale = lossyScale / parent.lossyScale = worldScale / parent.lossyScale
+
+            float _scaleX = worldScale / parentLossyScale.x;
+            float _scaleY = worldScale / parentLossyScale.y;
+            float _scaleZ = worldScale / parentLossyScale.z;
 
             return new(_scaleX, _scaleY, _scaleZ);
         }

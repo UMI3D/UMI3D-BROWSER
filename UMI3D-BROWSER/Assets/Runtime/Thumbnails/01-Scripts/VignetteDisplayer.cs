@@ -21,6 +21,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
 namespace umi3dBrowsers.displayer
@@ -79,6 +80,7 @@ namespace umi3dBrowsers.displayer
         public event Action OnDisabled;
         public event Action OnHover;
 
+        private TMP_InputField inputField;
         private TMP_Text inputFieldText;
 
         private bool m_userLoadingIcon = false;
@@ -90,6 +92,14 @@ namespace umi3dBrowsers.displayer
                 if (inputFieldText == null)
                     inputFieldText = inputFieldBackground.GetComponentInChildren<TMP_Text>();
                 return inputFieldText;
+            }
+        }
+        public TMP_InputField InputField
+        {
+            get {
+                if (inputField == null)
+                    inputField = inputFieldBackground.GetComponentInChildren<TMP_InputField>();
+                return inputField;
             }
         }
 
@@ -151,6 +161,7 @@ namespace umi3dBrowsers.displayer
         public void SetupDisplay(string pName, string header = null, Color? headerColor = null, Image pImage = null)
         {
             this.canEditName = false;
+            InputField.interactable = false;
 
             inputFieldBackground.Text = pName;
             if (pImage != null)

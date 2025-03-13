@@ -181,6 +181,7 @@ namespace umi3dBrowsers.container
             var vignette = vignetteGO.GetComponent<VignetteDisplayer>();
             vignette.SetupDisplay(pWorldData.worldName, pWorldData.worldUrl);
             vignette.canEditName = true;
+            vignette.InputField.interactable = true;
             vignette.SetupFavoriteButton(() => { 
                 pVirtualWorlds.ToggleWorldFavorite(pWorldData);
                 vignetteContainerEvent.OnVignetteReset?.Invoke(); 

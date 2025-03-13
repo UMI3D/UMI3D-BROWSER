@@ -22,7 +22,7 @@ using UnityEngine;
 namespace umi3d.browserRuntime.ui.contextualMenu
 {
     [RequireComponent(typeof(SliderFactory))]
-    public class ContextualMenuSliderFactory : MonoBehaviour
+    internal class ContextualMenuSliderFactory : MonoBehaviour
     {
         SliderFactory _sliderFactory;
 

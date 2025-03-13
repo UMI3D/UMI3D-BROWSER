@@ -21,7 +21,7 @@ using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.contextualMenu
 {
-    public class ContextualMenuView : MonoBehaviour, IInteractableHoverStateDelegate
+    internal class ContextualMenuView : MonoBehaviour, IInteractableHoverStateDelegate
     {
         [SerializeField] float _offset = 10.0f;
 

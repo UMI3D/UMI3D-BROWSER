@@ -22,7 +22,7 @@ using UnityEngine;
 namespace umi3d.browserRuntime.ui.contextualMenu
 {
     [RequireComponent(typeof(ToggleFactory))]
-    public class ContextualMenuToggleFactory : MonoBehaviour
+    internal class ContextualMenuToggleFactory : MonoBehaviour
     {
         ToggleFactory _toggleFactory;
 

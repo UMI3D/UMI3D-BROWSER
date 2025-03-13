@@ -25,7 +25,7 @@ using UnityEngine.InputSystem;
 
 namespace umi3d
 {
-    public class ContextualMenuOpenInputXR : MonoBehaviour
+    internal class ContextualMenuOpenInputXR : MonoBehaviour
     {
         [SerializeField] InputActionReference _openInputAction;
 

@@ -22,7 +22,7 @@ using UnityEngine;
 namespace umi3d.browserRuntime.ui.contextualMenu
 {
     [RequireComponent(typeof(InputFieldFactory))]
-    public class ContextualMenuInputFieldFactory : MonoBehaviour
+    internal class ContextualMenuInputFieldFactory : MonoBehaviour
     {
         InputFieldFactory _inputFieldFactory;
 

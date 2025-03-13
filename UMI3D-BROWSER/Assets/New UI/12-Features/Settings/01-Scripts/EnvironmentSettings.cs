@@ -85,12 +85,14 @@ namespace umi3d.browserRuntime.ui.settings
 
         public void Update()
         {
+#if UMI3D_PC
             if (KeyboardShortcut.WasPressedThisFrame(ShortcutEnum.MuteUnmuteGeneralVolume))
                 Toggle();
             if (KeyboardShortcut.WasPressedThisFrame(ShortcutEnum.IncreaseVolume))
                 IncreaseVolume();
             if (KeyboardShortcut.WasPressedThisFrame(ShortcutEnum.DecreaseVolume))
                 DecreaseVolume();
+#endif
         }
 
         /// <summary>
@@ -200,6 +202,7 @@ namespace umi3d.browserRuntime.ui.settings
         /// </summary>
         public void InitShortcut()
         {
+#if UMI3D_PC
             KeyboardShortcut.AddDownListener(ShortcutEnum.PushToTalk, () =>
             {
                 Set(true);
@@ -209,6 +212,7 @@ namespace umi3d.browserRuntime.ui.settings
             {
                 Set(false);
             });
+#endif
         }
 
         /// <summary>
@@ -228,8 +232,10 @@ namespace umi3d.browserRuntime.ui.settings
 
         public void Update()
         {
+#if UMI3D_PC
             if (KeyboardShortcut.WasPressedThisFrame(ShortcutEnum.MuteUnmuteMic))
                 Toggle();
+#endif
         }
     }
 

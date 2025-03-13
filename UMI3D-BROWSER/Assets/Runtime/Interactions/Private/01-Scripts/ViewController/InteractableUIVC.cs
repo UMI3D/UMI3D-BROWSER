@@ -115,7 +115,7 @@ namespace umi3d.browserRuntime.interactions
         {
             if (scaleResetTransform == null)
             {
-                scaleResetTransform = new GameObject().GetComponent<Transform>();
+                scaleResetTransform = new GameObject("Scale Reset").GetComponent<Transform>();
             }
             if (transform.parent == null || transform.parent != scaleResetTransform)
             {

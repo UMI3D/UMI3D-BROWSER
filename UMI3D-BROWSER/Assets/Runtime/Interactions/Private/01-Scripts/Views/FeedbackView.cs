@@ -25,11 +25,17 @@ namespace umi3d.browserRuntime.interactions
     {
         public InteractableUIModel model { get; private set; }
 
+        [SerializeField, Tooltip("Animation duration in second.")] float animationDuration = .5f;
+        [SerializeField, Tooltip("Whether the feedbacks are animated.")] bool isAnimated = true;
+
         RawImage roundImage;
         RectTransform roundRectTransform;
+        Coroutine roundAnimationCoroutine;
+        Color roundImageColor;
 
         RawImage circleImage;
         RectTransform circleRectTransform;
+        Coroutine circleAnimationCoroutine;
 
         IView view => this;
 
@@ -37,6 +43,7 @@ namespace umi3d.browserRuntime.interactions
         {
             view.Set(ref roundImage, 0);
             roundRectTransform = roundImage.GetComponent<RectTransform>();
+            roundImageColor = roundImage.color;
 
             view.Set(ref circleImage, 1);
             circleRectTransform = circleImage.GetComponent<RectTransform>();
@@ -72,12 +79,23 @@ namespace umi3d.browserRuntime.interactions
                     switch (model.distanceState)
                     {
                         case InteractableDistanceState.Far:
-                            HideFeedbacks(true);
+                            // Hide Feedbacks
+                            HideFeedback(roundImage, roundRectTransform, ref roundAnimationCoroutine, withAnimation: isAnimated);
+                            HideFeedback(circleImage, circleRectTransform, ref circleAnimationCoroutine, withAnimation: isAnimated);
                             break;
 
                         case InteractableDistanceState.Middle:
+                            // Display Round Feedback
+                            HideFeedback(circleImage, circleRectTransform, ref circleAnimationCoroutine, withAnimation: isAnimated);
+                            DisplayFeedback(roundImage, roundRectTransform, ref roundAnimationCoroutine, withAnimation: isAnimated);
+                            roundImage.color = new Color(roundImageColor.r, roundImageColor.g, roundImageColor.b, roundImageColor.a / 2f);
+                            break;
+
                         case InteractableDistanceState.Close:
-                            DisplayRoundFeedback(true);
+                            // Display Round Feedback
+                            HideFeedback(circleImage, circleRectTransform, ref circleAnimationCoroutine, withAnimation: isAnimated);
+                            DisplayFeedback(roundImage, roundRectTransform, ref roundAnimationCoroutine, withAnimation: isAnimated);
+                            roundImage.color = roundImageColor;
                             break;
 
                         default:
@@ -87,7 +105,9 @@ namespace umi3d.browserRuntime.interactions
                     break;
 
                 case InteractableHoveringState.Hover:
-                    DisplayCircleFeedback(true);
+                    // Display Circle Feedback
+                    HideFeedback(roundImage, roundRectTransform, ref roundAnimationCoroutine, withAnimation: isAnimated);
+                    DisplayFeedback(circleImage, circleRectTransform, ref circleAnimationCoroutine, withAnimation: isAnimated);
                     break;
 
                 default:
@@ -96,29 +116,73 @@ namespace umi3d.browserRuntime.interactions
             }
         }
 
-        void DisplayRoundFeedback(bool withAnimation)
+        void DisplayFeedback(RawImage rawImage, RectTransform imageTransform, ref Coroutine animationCoroutine, bool withAnimation)
         {
-            roundImage.enabled = true;
-            circleImage.enabled = false;
+            rawImage.enabled = true;
+            if (withAnimation)
+            {
+                if (animationCoroutine != null)
+                {
+                    StopCoroutine(animationCoroutine);
+                }
+
+                animationCoroutine = StartCoroutine(Scale(imageTransform, 1f));
+            }
+            else
+            {
+                imageTransform.localScale = Vector3.one;
+            }
         }
 
-        void DisplayCircleFeedback(bool withAnimation)
+        void HideFeedback(RawImage rawImage, RectTransform imageTransform, ref Coroutine animationCoroutine, bool withAnimation)
         {
-            roundImage.enabled = false;
-            circleImage.enabled = true;
+            if (withAnimation)
+            {
+                if (animationCoroutine != null)
+                {
+                    StopCoroutine(animationCoroutine);
+                }
+
+                animationCoroutine = StartCoroutine(Scale(imageTransform, 0f));
+            }
+            else
+            {
+                imageTransform.localScale = Vector3.zero;
+                rawImage.enabled = false;
+            }
         }
 
-        void HideFeedbacks(bool withAnimation)
+        IEnumerator Scale(RectTransform image, float targetScale)
         {
-            roundImage.enabled = false;
-            circleImage.enabled = false;
-        }
+            UnityEngine.Debug.Log($"start animation");
 
-        IEnumerator RoundFeedbackAnimation(bool display)
-        {
-            yield return null;
+            // Get the initial scale of the canvas
+            float initialScaleX = image.localScale.x;
+            float initialScaleY = image.localScale.y;
 
-            //roundRectTransform.localScale
+            // Track the elapsed time
+            float elapsedTime = 0f;
+
+            // Animate the scale over time
+            while (elapsedTime < animationDuration)
+            {
+                // Calculate the new scale using Lerp
+                float scaleX = Mathf.Lerp(initialScaleX, targetScale, elapsedTime / animationDuration);
+                float scaleY = Mathf.Lerp(initialScaleY, targetScale, elapsedTime / animationDuration);
+                image.localScale = new Vector3(scaleX, scaleY, 1f);
+
+                // Increment the elapsed time
+                elapsedTime += Time.deltaTime;
+
+                // Wait for the next frame
+                yield return null;
+            }
+
+            // Ensure the final scale is set to the target scale
+            image.localScale = new Vector3(targetScale, targetScale, 1f);
+
+            // Continue with the rest of your script here
+            Debug.Log("Animation finished!");
         }
     }
 }

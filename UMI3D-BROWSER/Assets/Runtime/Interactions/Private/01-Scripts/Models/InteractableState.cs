@@ -14,19 +14,24 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using UnityEngine.UI;
-
 namespace umi3d.browserRuntime.interactions
 {
-    internal class FeedbackView : Image
+    public enum InteractableVisibilityState
     {
-        protected override void Awake()
-        {
-            base.Awake();
-        }
+        NotVisible,
+        Visible,
+    }
 
-        void Update()
-        {
-        }
+    public enum InteractableHoveringState
+    {
+        NotHover,
+        Hover
+    }
+
+    public enum InteractableDistanceState
+    {
+        Far,
+        Middle,
+        Close
     }
 }

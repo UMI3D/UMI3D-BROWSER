@@ -31,6 +31,7 @@ namespace umi3d.cdk.interaction
         }
         public new Collider collider;
         public InteractableContainer interactableContainer;
+        public InteractableUIController uiController;
 
         public State state { get; private set; }
         public HoveredDto hoveredDto { get; private set; }

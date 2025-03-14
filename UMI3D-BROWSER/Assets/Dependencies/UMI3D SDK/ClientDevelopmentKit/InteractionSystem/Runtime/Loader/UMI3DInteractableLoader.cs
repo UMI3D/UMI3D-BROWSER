@@ -15,8 +15,6 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
-using System;
-using System.ComponentModel;
 using System.Threading.Tasks;
 using umi3d.common;
 using umi3d.common.interaction;
@@ -83,9 +81,11 @@ namespace umi3d.cdk.interaction
                     break;
                 case UMI3DPropertyKeys.InteractableIndicatorDisplay:
                     dto.indicatorDisplay = (bool)value.property.value;
+                    //TODO:ROMAIN
                     break;
                 case UMI3DPropertyKeys.InteractableIndicatorDelta:
                     dto.indicatorDelta = (Vector3Dto)value.property.value;
+                    //TODO:ROMAIN
                     break;
                 default:
                     return false;
@@ -119,9 +119,11 @@ namespace umi3d.cdk.interaction
                     break;
                 case UMI3DPropertyKeys.InteractableIndicatorDisplay:
                     dto.indicatorDisplay = UMI3DSerializer.Read<bool>(value.container);
+                    //TODO:ROMAIN
                     break;
                 case UMI3DPropertyKeys.InteractableIndicatorDelta:
                     dto.indicatorDelta = UMI3DSerializer.Read<Vector3Dto>(value.container);
+                    //TODO:ROMAIN
                     break;
                 default:
                     return false;

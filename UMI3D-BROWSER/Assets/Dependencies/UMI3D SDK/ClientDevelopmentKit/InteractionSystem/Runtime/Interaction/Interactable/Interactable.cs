@@ -33,7 +33,7 @@ namespace umi3d.cdk.interaction
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public static InteractableDto IdToDto(ulong environmentid, ulong id) { return (UMI3DEnvironmentLoader.GetEntity(environmentid,id)?.Object as Interactable).dto; }
+        public static InteractableDto IdToDto(ulong environmentid, ulong id) { return (UMI3DEnvironmentLoader.GetEntity(environmentid, id)?.Object as Interactable).dto; }
 
         /// <summary>
         /// Interactable dto describing this object.
@@ -60,7 +60,7 @@ namespace umi3d.cdk.interaction
 
         Notifier hoverStateChangedNotifier;
 
-        public Interactable(ulong environmentId ,InteractableDto dto) : base(environmentId, dto)
+        public Interactable(ulong environmentId, InteractableDto dto) : base(environmentId, dto)
         {
             hoverStateChangedNotifier = NotificationHub.Default.GetNotifier(this, ID.FromType<InteractableNotificationKeys.HoverStateChanged>());
         }

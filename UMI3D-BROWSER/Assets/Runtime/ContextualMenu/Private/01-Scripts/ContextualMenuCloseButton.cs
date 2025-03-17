@@ -21,7 +21,7 @@ using UnityEngine.UI;
 namespace umi3d.browserRuntime.ui.contextualMenu
 {
     [RequireComponent(typeof(Button))]
-    public class ContextualMenuCloseButton : MonoBehaviour
+    internal class ContextualMenuCloseButton : MonoBehaviour
     {
         Button button;
         ContextualMenuModelContainer _modelContainer;

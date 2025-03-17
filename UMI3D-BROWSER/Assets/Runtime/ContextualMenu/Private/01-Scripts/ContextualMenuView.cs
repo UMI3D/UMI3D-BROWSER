@@ -16,14 +16,22 @@ limitations under the License.
 
 using inetum.unityUtils.observation;
 using umi3d.browserRuntime.ui.tablet;
+using umi3d.cdk.interaction;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.contextualMenu
 {
-    public class ContextualMenuView : MonoBehaviour
+    internal class ContextualMenuView : MonoBehaviour, IInteractableHoverStateDelegate
     {
+        [SerializeField] float _offset = 10.0f;
+
+        Vector3 _interactablePosition;
+        Canvas _canvas;
+
         private void Awake()
         {
+            _canvas = GetComponentInParent<Canvas>();
+
             NotificationHub.Default.Subscribe(this,
                 ID.FromType<ContextualMenuNotificationKeys.Open>(), 
                 (Callback)Display);
@@ -35,6 +43,8 @@ namespace umi3d.browserRuntime.ui.contextualMenu
             NotificationHub.Default.Subscribe(this, 
                 ID.FromType<TabletNotificationKeys.Opened>(), 
                 (Callback)Hide);
+
+            InteractableHoverStateListener.delegates.Add(this);
         }
 
         private void Start()
@@ -42,8 +52,25 @@ namespace umi3d.browserRuntime.ui.contextualMenu
             gameObject.SetActive(false);
         }
 
+        public void OnHover(Collider collider, InteractableContainer interactableContainer, InteractableHoverStateListener hoverStateListener)
+        {
+        }
+
+        public void OnHoverEnter(Collider collider, InteractableContainer interactableContainer, InteractableHoverStateListener hoverStateListener)
+        {
+            _interactablePosition = interactableContainer.transform.position;
+        }
+
+        public void OnHoverExit(Collider collider, InteractableContainer interactableContainer, InteractableHoverStateListener hoverStateListener) { }
+
         private void Display()
         {
+#if UMI3D_XR
+            var direction = (Camera.main.transform.position - _interactablePosition).normalized;
+            _canvas.transform.position = _interactablePosition + direction * _offset;
+            _canvas.transform.LookAt(_interactablePosition);
+#endif
+
             gameObject.SetActive(true);
         }
 

@@ -162,11 +162,9 @@ public class UMI3DPlayerCapsuleColliderDelegate : IPlayerColliderDelegate
         bool drawGizmo = false
     )
     {
-        CapsuleCollider capsule = worldPositionCapsule.ProjectCollider(offset);
-        var hasCollided = Physics.CapsuleCast(
+        CapsuleCollider capsule = worldPositionCapsule.ProjectCollider(offset + offset.normalized * worldPositionCapsule.radius);
+        var hasCollided = Physics.Raycast(
             capsule.bottomSphereCenter,
-            capsule.topSphereCenter,
-            capsule.radius,
             direction,
             out hit,
             maxDistance,

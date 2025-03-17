@@ -15,11 +15,11 @@ limitations under the License.
 */
 
 using inetum.unityUtils.observation;
-using System;
 using System.Collections.Generic;
 using umi3d.browserRuntime.notificationKeys;
 using umi3d.browserRuntime.ui.tablet;
 using umi3d.common.interaction;
+using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.contextualMenu
 {

@@ -140,7 +140,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: fb0c031dcd9e87141b2deb6823d27c88, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ed4ca7c7ab076ae46810fd806361b5f3, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -215,7 +215,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 461988e40cf75c84a9acc1f050ef0256, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6c98849a8a7448047bf3ad1b9e7e530d, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -1673,7 +1673,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: cba4553654de3da48b32e87baf94f65e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e000c6d53e250d448a69e3719e8cdab7, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -4198,8 +4198,8 @@ MonoBehaviour:
   m_Colors:
     m_NormalColor: {r: 0.3647059, g: 0.3647059, b: 0.3647059, a: 0.7058824}
     m_HighlightedColor: {r: 0.6509804, g: 0.6509804, b: 0.6509804, a: 0.7058824}
-    m_PressedColor: {r: 0.3647059, g: 0.3647059, b: 0.3647059, a: 0.7058824}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.36862746, g: 0.8901961, b: 0.9411765, a: 0.7058824}
+    m_SelectedColor: {r: 0.3647059, g: 0.3647059, b: 0.3647059, a: 0.7058824}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -4246,7 +4246,7 @@ MonoBehaviour:
   image: {fileID: 5619697023324910589}
   normalColor: {r: 0.6666667, g: 0.6666667, b: 0.6666667, a: 1}
   highlightedColor: {r: 1, g: 1, b: 1, a: 1}
-  pressedColor: {r: 0.6666667, g: 0.6666667, b: 0.6666667, a: 1}
+  pressedColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!114 &8845994440403104460
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4825,7 +4825,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: SettingsScreen
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8578874797742404630, guid: a754eba56017b3a41b858acb2f4c37d2, type: 3}
+    - {fileID: 6472381748319319555, guid: a754eba56017b3a41b858acb2f4c37d2, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -5296,6 +5298,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6786928691272599984, guid: adacb6f141276d548873d495fffae694,
+        type: 3}
+      propertyPath: m_text
+      value: Filtre
       objectReference: {fileID: 0}
     - target: {fileID: 7208866938840802800, guid: adacb6f141276d548873d495fffae694,
         type: 3}

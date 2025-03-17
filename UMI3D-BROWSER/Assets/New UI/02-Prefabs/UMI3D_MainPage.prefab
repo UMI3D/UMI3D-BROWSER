@@ -300,7 +300,6 @@ MonoBehaviour:
   title: {fileID: 7477777363417159081}
   versionText: {fileID: 3517630640617138178}
   connectionProcessorService: {fileID: 0}
-  tween: {fileID: 0}
   PageTipDisplayer: {fileID: 5096754268962807536}
   connectionToImmersiveLinker: {fileID: 11400000, guid: 68ff1a90a5151924e867698a4e1d3a2d,
     type: 2}
@@ -887,6 +886,12 @@ PrefabInstance:
       propertyPath: m_PixelsPerUnitMultiplier
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 3101823750117585253, guid: d1dc13346723a324ca0d31cf86ee52e6,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: ed4ca7c7ab076ae46810fd806361b5f3,
+        type: 3}
     - target: {fileID: 3880724582445881068, guid: d1dc13346723a324ca0d31cf86ee52e6,
         type: 3}
       propertyPath: m_enableWordWrapping
@@ -942,6 +947,12 @@ PrefabInstance:
       propertyPath: m_SizeDelta.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4706729570039324580, guid: d1dc13346723a324ca0d31cf86ee52e6,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 6c98849a8a7448047bf3ad1b9e7e530d,
+        type: 3}
     - target: {fileID: 4773177624987838951, guid: d1dc13346723a324ca0d31cf86ee52e6,
         type: 3}
       propertyPath: suffixText

@@ -438,7 +438,7 @@ MonoBehaviour:
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_PressedColor: {r: 1, g: 1, b: 1, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
@@ -484,9 +484,9 @@ MonoBehaviour:
   button: {fileID: 2363781911729510788}
   backGround: {fileID: 90859474856313429}
   iconImage: {fileID: 4617739118905700313}
-  normalIcon: {fileID: 21300000, guid: 8a0a8aa557470c7429e8b8d7d7035e32, type: 3}
-  hoverIcon: {fileID: 21300000, guid: 4653d98d4563c284983c101c39761270, type: 3}
-  clickIcon: {fileID: 21300000, guid: 8a0a8aa557470c7429e8b8d7d7035e32, type: 3}
+  normalIcon: {fileID: 21300000, guid: f1e4d763f5ebd9c4d8532aeab0be96cf, type: 3}
+  hoverIcon: {fileID: 21300000, guid: 61ec9e44ad0c3e9409c00e2586a7b036, type: 3}
+  clickIcon: {fileID: 21300000, guid: 61ec9e44ad0c3e9409c00e2586a7b036, type: 3}
   canvasGroup: {fileID: 3885882739101740867}
   animationDuration: 0.5
   slideEase:
@@ -930,6 +930,7 @@ MonoBehaviour:
   onVignetteClicked:
     m_PersistentCalls:
       m_Calls: []
+  canEditName: 0
 --- !u!114 &3937346979349939348
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1658,8 +1659,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.7, y: 4}
-  m_SizeDelta: {x: 35.8875, y: 43.725}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 28, y: 28}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8173409172137992441
 CanvasRenderer:
@@ -1689,7 +1690,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 8a0a8aa557470c7429e8b8d7d7035e32, type: 3}
+  m_Sprite: {fileID: 21300000, guid: f1e4d763f5ebd9c4d8532aeab0be96cf, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1

@@ -22,7 +22,7 @@ using UnityEngine;
 namespace umi3d.browserRuntime.ui.contextualMenu
 {
     [RequireComponent(typeof(DropdownFactory))]
-    public class ContextualMenuDropdownFactory : MonoBehaviour
+    internal class ContextualMenuDropdownFactory : MonoBehaviour
     {
         DropdownFactory _dropdownFactory;
 

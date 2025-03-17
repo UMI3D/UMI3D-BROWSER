@@ -25,7 +25,7 @@ namespace umi3d.browserRuntime.ui.contextualMenu
     [RequireComponent(typeof(ContextualMenuToggleFactory))]
     [RequireComponent(typeof(ContextualMenuSliderFactory))]
     [RequireComponent(typeof(ContextualMenuDropdownFactory))]
-    public class ContextualMenuFactory : MonoBehaviour
+    internal class ContextualMenuFactory : MonoBehaviour
     {
         [SerializeField] Transform _content;
 

@@ -30,6 +30,7 @@ namespace umi3d.browserRuntime.ui.inputField
         public string placeholder { get; private set; }
         public int nbrLine { get; private set; } = 1;
         public bool isPrivate { get; private set; } = false;
+        public bool isMultiline { get; private set; } = false;
 
         Notifier _setNotifier;
         Notifier _updateNotifier;
@@ -140,9 +141,10 @@ namespace umi3d.browserRuntime.ui.inputField
         /// </example>
         /// </summary>
         /// <param name="newNbrLine">The new number of lines to set.</param>
-        public void SetNbrLines(int newNbrLine)
+        public void SetNbrLines(bool NewIsMultiline, int newNbrLine)
         {
-            nbrLine = newNbrLine;
+            isMultiline = NewIsMultiline;
+            nbrLine = isMultiline ? newNbrLine : 0;
             _setNotifier[InputFieldNotificationsKeys.InputFieldSet.NbrLine] = nbrLine;
             _setNotifier.Notify();
         }

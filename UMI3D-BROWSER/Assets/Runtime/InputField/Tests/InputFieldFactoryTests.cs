@@ -194,7 +194,7 @@ public class InputFieldFactoryTests
 
             // Then: The input field is inactive and in the pool
             Assert.IsFalse(inputField.activeSelf);
-            Assert.AreEqual(1, _inputFieldFactory.AvailableInputFieldCount);
+            Assert.AreEqual(1, _inputFieldFactory.AvailableInputFieldSingleCount);
         }
 
         [UnityTest]
@@ -215,7 +215,7 @@ public class InputFieldFactoryTests
             // Then: The input field is reused from the pool
             Assert.AreEqual(inputField, reusedInputField);
             Assert.IsTrue(reusedInputField.activeSelf);
-            Assert.AreEqual(0, _inputFieldFactory.AvailableInputFieldCount);
+            Assert.AreEqual(0, _inputFieldFactory.AvailableInputFieldSingleCount);
         }
     }
 }

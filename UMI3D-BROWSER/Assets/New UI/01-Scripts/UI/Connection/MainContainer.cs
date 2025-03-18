@@ -168,10 +168,10 @@ namespace umi3dBrowsers
                 .enqueue
                 .SetTitle(POPUP_TABLE, "CloseApplication")
                 .SetDescription(POPUP_TABLE, "CloseApplication_message")
-                .SetButtons((POPUP_TABLE, "CloseApplication_buttonCancel"), (POPUP_TABLE, "CloseApplication_buttonClose"))
+                .SetButtons((POPUP_TABLE, "CloseApplication_buttonClose"), (POPUP_TABLE, "CloseApplication_buttonCancel"))
                 .SetButtonsAction(index =>
                 {
-                    Quitting.instance.Confirm(this, index == 1);
+                    Quitting.instance.Confirm(this, index == 0);
                 })
                 .Notify();
         }

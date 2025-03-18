@@ -16,6 +16,7 @@ limitations under the License.
 
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.ui.inputField
 {
@@ -28,9 +29,11 @@ namespace umi3d.browserRuntime.ui.inputField
         [SerializeField] InputFieldModelContainer _singleLinePrefab;
         [SerializeField] InputFieldModelContainer _multiLinePrefab;
 
-        Queue<InputFieldModelContainer> _lstInputFieldsAvailable = new();
+        Queue<InputFieldModelContainer> _lstInputFieldsSingleAvailable = new();
+        Queue<InputFieldModelContainer> _lstInputFieldsMultiAvailable = new();
 
-        public int AvailableInputFieldCount => _lstInputFieldsAvailable.Count;
+        public int AvailableInputFieldSingleCount => _lstInputFieldsSingleAvailable.Count;
+        public int AvailableInputFieldMultiCount => _lstInputFieldsMultiAvailable.Count;
 
         /// <summary>
         /// This method retrieves an available input field from the pool or creates a new one if none are available.<br/>
@@ -61,9 +64,11 @@ namespace umi3d.browserRuntime.ui.inputField
         public GameObject GetOrCreateInputField(Transform parent, bool isMultiline, string label = "", string value = "", string placeholder = "", int nbLine = 1, bool isPrivate = false)
         {
             if (nbLine < 1) nbLine = 1;
-
-            if (!_lstInputFieldsAvailable.TryDequeue(out var inputFieldModelContainer))
-                inputFieldModelContainer = GameObject.Instantiate(isMultiline ? _multiLinePrefab : _singleLinePrefab);
+            InputFieldModelContainer inputFieldModelContainer = null;
+            if (isMultiline && !_lstInputFieldsMultiAvailable.TryDequeue(out inputFieldModelContainer))
+                inputFieldModelContainer = GameObject.Instantiate(_multiLinePrefab);
+            else if (!isMultiline && !_lstInputFieldsSingleAvailable.TryDequeue(out inputFieldModelContainer))
+                inputFieldModelContainer = GameObject.Instantiate(_singleLinePrefab);
 
             inputFieldModelContainer.gameObject.SetActive(true);
             inputFieldModelContainer.transform.SetParent(parent, false);
@@ -75,7 +80,7 @@ namespace umi3d.browserRuntime.ui.inputField
             if (placeholder != null || placeholder != string.Empty)
                 inputFieldModelContainer.model.SetPlaceholder(placeholder);
             if (nbLine != 1)
-                inputFieldModelContainer.model.SetNbrLines(isMultiline ? nbLine : 1);
+                inputFieldModelContainer.model.SetNbrLines(isMultiline, nbLine);
             inputFieldModelContainer.model.SetPrivate(isPrivate);
 
             return inputFieldModelContainer.gameObject;
@@ -101,7 +106,10 @@ namespace umi3d.browserRuntime.ui.inputField
             if (!inputFieldModelContainer)
                 return;
 
-            _lstInputFieldsAvailable.Enqueue(inputFieldModelContainer);
+            if (inputFieldModelContainer.model.isMultiline)
+                _lstInputFieldsMultiAvailable.Enqueue(inputFieldModelContainer);
+            else
+                _lstInputFieldsSingleAvailable.Enqueue(inputFieldModelContainer);
 
             inputFieldModelContainer.gameObject.SetActive(false);
             inputFieldModelContainer.transform.SetParent(transform, false);

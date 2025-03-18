@@ -166,7 +166,7 @@ public class InputFieldModelTests
             Assert.AreEqual(_model.nbrLine, 1);
 
             int nbrLine = 2;
-            _model.SetNbrLines(nbrLine);
+            _model.SetNbrLines(true, nbrLine);
 
             Assert.AreEqual(_model.nbrLine, nbrLine);
         }

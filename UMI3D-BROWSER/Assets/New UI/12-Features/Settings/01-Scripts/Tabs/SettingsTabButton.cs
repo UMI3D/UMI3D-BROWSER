@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using inetum.unityUtils.observation;
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -25,9 +26,18 @@ namespace umi3d.browserRuntime.ui.settings
     [RequireComponent(typeof(Button))]
     internal class SettingsTabButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
+        [Flags]
+        public enum EPlatform
+        {
+            Nothing,
+            PC,
+            XR
+        }
+
         [SerializeField] Color textColor;
         [SerializeField] Color textColorHover;
         [SerializeField] Color textColorActive;
+        [SerializeField] EPlatform platform;
 
         TMP_Text text;
         Button button;
@@ -40,6 +50,20 @@ namespace umi3d.browserRuntime.ui.settings
 
         void Awake()
         {
+#if UMI3D_PC
+            if (!platform.HasFlag(EPlatform.PC))
+            {
+                gameObject.SetActive(false);
+                return;
+            }
+#elif UMI3D_XR
+            if (!platform.HasFlag(EPlatform.XR))
+            {
+                gameObject.SetActive(false);
+                return;
+            }    
+#endif
+
             button = GetComponent<Button>();
             button.onClick.AddListener(Click);
 

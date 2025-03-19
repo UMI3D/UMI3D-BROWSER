@@ -14,28 +14,29 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils.ui.canvas;
 using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.interactions
 {
-    internal class NameView : Image
+    internal class NameView : Image, IView, IInteractableUIDelegate
     {
         TMPro.TMP_Text textTMP;
+
+        InteractableUIModel model;
+
+        IView view => this;
 
         protected override void Awake()
         {
             base.Awake();
 
-            SetTextView();
+            view.Set(ref textTMP, 0);
         }
 
-        void Update()
+        void SetText(string text)
         {
-        }
-
-        public void SetText(string text)
-        {
-            if (!SetTextView()) 
+            if (!view.Set(ref textTMP, 0)) 
             {
                 throw new System.Exception("Text view cannot be set."); 
             }
@@ -43,14 +44,22 @@ namespace umi3d.browserRuntime.interactions
             textTMP.text = text;
         }
 
-        bool SetTextView()
+        public void SetModel(InteractableUIModel model)
         {
-            if (textTMP == null)
+            if (this.model != null)
             {
-                textTMP = transform.GetChild(0).GetComponent<TMPro.TMP_Text>();
+                this.model.delegates.Remove(this);
             }
 
-            return textTMP != null;
+            this.model = model;
+            this.model.delegates.Add(this);
+
+            SetText(model.dataDelegate?.interactableName);
+        }
+
+        public void OnChangeOfInteractableName(string oldName, string newName)
+        {
+            SetText(newName);
         }
     }
 }

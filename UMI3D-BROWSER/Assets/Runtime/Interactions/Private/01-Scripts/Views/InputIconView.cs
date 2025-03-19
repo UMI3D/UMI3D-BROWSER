@@ -22,14 +22,14 @@ using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.interactions
 {
-    public class InputIconView : MonoBehaviour, IView
+    internal class InputIconView : MonoBehaviour, IView
     {
 
         [SerializeField] Sprite mouseLeftClick;
         [SerializeField] Sprite mouseRightClick;
 
         Image icon;
-        TMPro.TMP_Text text;
+        TMPro.TMP_Text textTMP;
 
         IView view => this;
 
@@ -38,13 +38,13 @@ namespace umi3d.browserRuntime.interactions
             view.Set(ref icon, 0);
             icon.enabled = false;
 
-            view.Set(ref text, 1);
-            text.enabled = false;
+            view.Set(ref textTMP, 1);
+            textTMP.enabled = false;
         }
 
         public void SetIcon()
         {
-            text.enabled = false;
+            textTMP.enabled = false;
 
             // TODO: Set sprite between left and right click.
             icon.sprite = mouseLeftClick;
@@ -55,8 +55,8 @@ namespace umi3d.browserRuntime.interactions
         {
             icon.enabled = false;
 
-            this.text.text = text;
-            this.text.enabled = true;
+            this.textTMP.text = text;
+            this.textTMP.enabled = true;
 
             // TODO: update this.size according to the size of the text.
         }

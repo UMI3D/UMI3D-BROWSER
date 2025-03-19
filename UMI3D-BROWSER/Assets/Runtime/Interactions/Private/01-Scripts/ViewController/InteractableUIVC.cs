@@ -27,8 +27,9 @@ namespace umi3d.browserRuntime.interactions
         Transform scaleResetTransform;
 
         [HideInInspector] public new Renderer renderer;
-        [HideInInspector] public Interactable interactable;
-        [HideInInspector] public InteractableUIModel model;
+        [HideInInspector] public new Collider collider;
+        public Interactable interactable { get; private set; }
+        public InteractableUIModel model { get; private set; }
 
         [SerializeField] int resetFrameRate = 120;
         int _resetFrameRateCount = 0;
@@ -39,6 +40,7 @@ namespace umi3d.browserRuntime.interactions
 
         [Header("Views")]
         [SerializeField] NameView nameView;
+        [SerializeField] InputsView inputsView;
         [SerializeField] FeedbackView feedbackView;
 
         Camera _camera;
@@ -48,6 +50,8 @@ namespace umi3d.browserRuntime.interactions
         public float distanceCameraRenderer => Vector3.Distance(_camera.transform.position, renderer.transform.position);
         public Vector3 directionRendererCamera => (_camera.transform.position - renderer.transform.position).normalized;
         public float interactionDistance => interactable?.InteractionDistance ?? 0;
+
+        public string interactableName => interactable?.name ?? "";
 
         #endregion
 
@@ -61,14 +65,14 @@ namespace umi3d.browserRuntime.interactions
             model.offsetWithRenderer = offsetWithRenderer;
             model.farDistanceOffset = farDistanceOffset;
             model.dataDelegate = this;
-
-            DisplayName(false);
         }
 
         void Start()
         {
             _camera = Camera.main;
 
+            nameView.SetModel(model);
+            inputsView.SetModel(model);
             feedbackView.SetModel(model);
         }
 
@@ -154,6 +158,16 @@ namespace umi3d.browserRuntime.interactions
 
         #endregion
 
+        public void SetInteractable(Interactable interactable)
+        {
+            model.delegates.ForEach(@delegate =>
+            {
+                @delegate.OnChangeOfInteractableName(this.interactable.name, interactable.name);
+                return inetum.unityUtils.observation.Flow.Continue;
+            });
+            this.interactable = interactable;
+        }
+
         public void OnInteractableBecameVisible()
         {
             model.OnBecameVisible();
@@ -176,17 +190,6 @@ namespace umi3d.browserRuntime.interactions
         public void OnInteractableBecameNotHovered()
         {
             model.OnBecameNotHovered();
-        }
-
-        public void DisplayName(bool display)
-        {
-            nameView.gameObject.SetActive(display);
-        }
-
-        public void SetInteractableName(string name)
-        {
-            nameView.SetText(name);
-            // TODO: Set name in interaction view.
         }
     }
 }

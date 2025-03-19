@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7530189454057290123}
   - component: {fileID: 2882985755221655712}
   - component: {fileID: 5053894074103563309}
+  - component: {fileID: 8572160785355994385}
   m_Layer: 5
   m_Name: Inputs
   m_TagString: Untagged
@@ -89,7 +90,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8f97a3c242b5724ebcc73f6c18acfbd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputPrefab: {fileID: 0}
+  inputPrefab: {fileID: 5796806687486223368, guid: 29a62329b76949e49af26695ba643fd4,
+    type: 3}
+--- !u!114 &8572160785355994385
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 195271841950079019}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 1
+  m_Spacing: 0
+  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandHeight: 1
+  m_ChildControlWidth: 0
+  m_ChildControlHeight: 0
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
+  m_ReverseArrangement: 0
 --- !u!1 &1894218241886017270
 GameObject:
   m_ObjectHideFlags: 0
@@ -308,6 +336,7 @@ GameObject:
   - component: {fileID: 7069444442519585258}
   - component: {fileID: 6701214300011982724}
   - component: {fileID: 319050884265200736}
+  - component: {fileID: 1369222273711187395}
   m_Layer: 5
   m_Name: Name
   m_TagString: Untagged
@@ -373,6 +402,26 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &1369222273711187395
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4920587847648139524}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreLayout: 1
+  m_MinWidth: -1
+  m_MinHeight: -1
+  m_PreferredWidth: -1
+  m_PreferredHeight: -1
+  m_FlexibleWidth: -1
+  m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!1 &5004737989214452342
 GameObject:
   m_ObjectHideFlags: 0
@@ -487,10 +536,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   renderer: {fileID: 0}
+  collider: {fileID: 0}
   resetFrameRate: 120
   offsetWithRenderer: 0.1
   farDistanceOffset: 3
   nameView: {fileID: 5131296142574170457}
+  inputsView: {fileID: 5053894074103563309}
   feedbackView: {fileID: 4798948236610416864}
 --- !u!1 &7470418467254553418
 GameObject:

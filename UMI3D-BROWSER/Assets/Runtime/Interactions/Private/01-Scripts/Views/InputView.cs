@@ -14,16 +14,50 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils.ui.canvas;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Pool;
 
 namespace umi3d.browserRuntime.interactions
 {
-    public class InputView : MonoBehaviour
+    internal class InputView : MonoBehaviour, IView
     {
+        InputIconView firstInputIcon;
+        TMPro.TMP_Text textTMP;
+
+        IView view => this;
+
+        ObjectPool<InputIconView> inputIconsPool;
+        //List<InputIconView> inputIconsActive = new(); // Uncomment this if you need to get the active icon.
+
         void Awake()
         {
+            view.Set(ref firstInputIcon, 0);
+            view.Set(ref textTMP, 1);
+
+            inputIconsPool = new(createFunc: () =>
+            {
+                if (inputIconsPool.CountActive == 0)
+                {
+                    return firstInputIcon;
+                }
+                else
+                {
+                    return Instantiate(firstInputIcon);
+                }
+            }, actionOnGet: iconView =>
+            {
+                iconView.transform.SetParent(transform, false);
+                iconView.transform.SetSiblingIndex(transform.childCount - 2);
+                iconView.gameObject.SetActive(true);
+                //inputIconsActive.Add(iconView); // Uncomment this if you need to get the active icon.
+            }, actionOnRelease: iconView =>
+            {
+                iconView.gameObject.SetActive(false);
+                //inputIconsActive.Remove(iconView); // Uncomment this if you need to get the active icon.
+            });
         }
 
         void OnEnable()

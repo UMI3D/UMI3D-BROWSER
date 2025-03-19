@@ -18,22 +18,54 @@ using inetum.unityUtils.ui.canvas;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Pool;
 using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.interactions
 {
-    public class InputsView : MonoBehaviour, IView
+    internal class InputsView : MonoBehaviour, IView, IInteractableUIDelegate
     {
         [SerializeField] GameObject inputPrefab;
+        ObjectPool<InputView> inputViewsPool;
+
+        NameView nameView;
+
+        InteractableUIModel model;
+
+        IView view => this;
 
         void Awake()
         {
-            
+            view.Set(ref nameView, 0);
+
+            gameObject.SetActive(false);
+
+            inputViewsPool = new(() =>
+            {
+                return Instantiate(inputPrefab).GetComponent<InputView>();
+            }, actionOnGet: inputView =>
+            {
+
+            }, actionOnRelease: inputView =>
+            {
+
+            });
         }
 
-        void Update()
+        public void SetModel(InteractableUIModel model)
         {
+            if (this.model != null)
+            {
+                this.model.delegates.Remove(this);
+            }
+            this.model = model;
+            model.delegates.Add(this);
+            nameView.SetModel(model);
+        }
 
+        public void OnChangeOfHoveringState(InteractableHoveringState oldState, InteractableHoveringState newState)
+        {
+            gameObject.SetActive(newState == InteractableHoveringState.Hover);
         }
     }
 }

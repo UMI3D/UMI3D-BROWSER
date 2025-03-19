@@ -30,10 +30,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 9042535154658663166}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 180.86, y: -50}
-  m_SizeDelta: {x: 2, y: 100}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 2, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2712096608869302568
 GameObject:
@@ -295,10 +295,10 @@ RectTransform:
   - {fileID: 1882060086068736475}
   m_Father: {fileID: 9042535154658663166}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 122.43, y: -50}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2089415422389206062
 CanvasRenderer:
@@ -365,6 +365,7 @@ GameObject:
   - component: {fileID: 8065572973726740792}
   - component: {fileID: 3617782595461306166}
   - component: {fileID: 7603082981069362721}
+  - component: {fileID: 2072545923195136766}
   m_Layer: 0
   m_Name: InputView
   m_TagString: Untagged
@@ -465,6 +466,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efc84076b63d3e44e988a0054b546135, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2072545923195136766
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5796806687486223368}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30649d3a9faa99c48a7b1166b86bf2a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 3
+  m_Spacing: 12
+  m_ChildForceExpandWidth: 0
+  m_ChildForceExpandHeight: 1
+  m_ChildControlWidth: 0
+  m_ChildControlHeight: 1
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
+  m_ReverseArrangement: 0
 --- !u!1 &6827307064367881692
 GameObject:
   m_ObjectHideFlags: 0
@@ -498,10 +525,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 9042535154658663166}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 373.185, y: -50}
-  m_SizeDelta: {x: 0, y: 100}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 302.325, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7981650518331564962
 CanvasRenderer:

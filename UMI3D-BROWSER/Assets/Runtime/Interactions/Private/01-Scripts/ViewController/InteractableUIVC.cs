@@ -48,7 +48,7 @@ namespace umi3d.browserRuntime.interactions
         #region IInteractableUIDataDelegate
 
         public float distanceCameraRenderer => Vector3.Distance(_camera.transform.position, renderer.transform.position);
-        public Vector3 directionRendererCamera => (_camera.transform.position - renderer.transform.position).normalized;
+        public Vector3 directionRendererCamera => (_camera.transform.position - renderer.bounds.center).normalized;
         public float interactionDistance => interactable?.InteractionDistance ?? 0;
 
         public string interactableName => interactable?.name ?? "";
@@ -145,9 +145,7 @@ namespace umi3d.browserRuntime.interactions
         {
             if (_camera == null) { return; }
 
-            Vector3 direction = (_camera.transform.position - renderer.transform.position).normalized;
-
-            transform.position = renderer.transform.position + model.GetFrontPositionOffset(renderer.bounds.size);
+            transform.position = renderer.bounds.center + model.GetFrontPositionOffset(renderer.bounds.size);
         }
 
         void LookAtTheCamera()

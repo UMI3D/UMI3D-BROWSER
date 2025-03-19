@@ -154,8 +154,6 @@ namespace umi3d.browserRuntime.interactions
 
         IEnumerator Scale(RectTransform image, float targetScale)
         {
-            UnityEngine.Debug.Log($"start animation");
-
             // Get the initial scale of the canvas
             float initialScaleX = image.localScale.x;
             float initialScaleY = image.localScale.y;
@@ -180,9 +178,6 @@ namespace umi3d.browserRuntime.interactions
 
             // Ensure the final scale is set to the target scale
             image.localScale = new Vector3(targetScale, targetScale, 1f);
-
-            // Continue with the rest of your script here
-            Debug.Log("Animation finished!");
         }
     }
 }

@@ -147,7 +147,8 @@ namespace umi3d.browserRuntime.interactions
         public Vector3 GetLocalScale(float worldScale, Vector3 parentLossyScale)
         {
             // lossyScale = localScale * parent.lossyScale.
-            // localScale = lossyScale / parent.lossyScale = worldScale / parent.lossyScale
+            // => localScale = lossyScale / parent.lossyScale
+            // => localScale = worldScale / parent.lossyScale
 
             float _scaleX = worldScale / parentLossyScale.x;
             float _scaleY = worldScale / parentLossyScale.y;
@@ -174,6 +175,7 @@ namespace umi3d.browserRuntime.interactions
         Vector3 directionRendererCamera { get; }
         float interactionDistance { get; }
 
+        string interactableName { get; }
     }
 
     internal interface IInteractableUIDelegate
@@ -181,5 +183,7 @@ namespace umi3d.browserRuntime.interactions
         void OnChangeOfVisibilityState(InteractableVisibilityState oldState, InteractableVisibilityState newState) { }
         void OnChangeOfHoveringState(InteractableHoveringState oldState, InteractableHoveringState newState) { }
         void OnChangeOfDistanceState(InteractableDistanceState oldState, InteractableDistanceState newState) { }
+
+        void OnChangeOfInteractableName(string oldName, string newName) { }
     }
 }

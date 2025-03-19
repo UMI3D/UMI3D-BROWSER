@@ -58,10 +58,10 @@ namespace umi3d.browserRuntime.interactions
             gameObject = GameObject.Instantiate(interactableUIPrefab);
             InteractableUIVC vc = gameObject.GetComponent<InteractableUIVC>();
             viewController = vc;
-            vc.interactable = interactableContainer.Interactable;
+            vc.SetInteractable(interactableContainer.Interactable);
             vc.renderer = uiController.visibilityListener.renderer;
+            vc.collider = uiController.hoverStateListener.collider;
 
-            vc.SetInteractableName(interactableContainer.Interactable.name);
             return true;
         }
 

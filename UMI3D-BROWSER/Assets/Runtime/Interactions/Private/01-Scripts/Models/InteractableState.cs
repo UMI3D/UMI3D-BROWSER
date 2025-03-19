@@ -16,19 +16,19 @@ limitations under the License.
 
 namespace umi3d.browserRuntime.interactions
 {
-    public enum InteractableVisibilityState
+    internal enum InteractableVisibilityState
     {
         NotVisible,
         Visible,
     }
 
-    public enum InteractableHoveringState
+    internal enum InteractableHoveringState
     {
         NotHover,
         Hover
     }
 
-    public enum InteractableDistanceState
+    internal enum InteractableDistanceState
     {
         Far,
         Middle,

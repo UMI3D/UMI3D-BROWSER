@@ -131,7 +131,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ce7d3ea936e8084a81246424c007dd6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  model: {fileID: 0}
 --- !u!1001 &83162666379455090
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -398,6 +397,16 @@ PrefabInstance:
       propertyPath: m_text
       value: General
       objectReference: {fileID: 0}
+    - target: {fileID: 7847258929937635036, guid: 20d659fa7359a8546a0165564fb6d6ea,
+        type: 3}
+      propertyPath: checkPaddingRequired
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7847258929937635036, guid: 20d659fa7359a8546a0165564fb6d6ea,
+        type: 3}
+      propertyPath: m_enableExtraPadding
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -432,6 +441,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Dropdown
       objectReference: {fileID: 0}
+    - target: {fileID: 4566606442710011378, guid: b4458f4e6d012dc4dafa67a90baad577,
+        type: 3}
+      propertyPath: checkPaddingRequired
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4566606442710011378, guid: b4458f4e6d012dc4dafa67a90baad577,
+        type: 3}
+      propertyPath: m_enableExtraPadding
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5502513689559565747, guid: b4458f4e6d012dc4dafa67a90baad577,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -446,6 +465,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5754903222007945544, guid: b4458f4e6d012dc4dafa67a90baad577,
+        type: 3}
+      propertyPath: checkPaddingRequired
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5754903222007945544, guid: b4458f4e6d012dc4dafa67a90baad577,
+        type: 3}
+      propertyPath: m_enableExtraPadding
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5954783901359546317, guid: b4458f4e6d012dc4dafa67a90baad577,
+        type: 3}
+      propertyPath: checkPaddingRequired
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5954783901359546317, guid: b4458f4e6d012dc4dafa67a90baad577,
+        type: 3}
+      propertyPath: m_enableExtraPadding
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6634030448244601236, guid: b4458f4e6d012dc4dafa67a90baad577,
         type: 3}
@@ -597,6 +636,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_text
       value: Language
+      objectReference: {fileID: 0}
+    - target: {fileID: 1730432150811495414, guid: 38e2ef1e1d4e181499069c83f73ea69c,
+        type: 3}
+      propertyPath: m_margin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1730432150811495414, guid: 38e2ef1e1d4e181499069c83f73ea69c,
+        type: 3}
+      propertyPath: checkPaddingRequired
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1730432150811495414, guid: 38e2ef1e1d4e181499069c83f73ea69c,
+        type: 3}
+      propertyPath: m_enableExtraPadding
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3535800486413577600, guid: 38e2ef1e1d4e181499069c83f73ea69c,
         type: 3}

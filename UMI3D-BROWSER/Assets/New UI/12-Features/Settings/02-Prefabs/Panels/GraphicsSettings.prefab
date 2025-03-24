@@ -144,7 +144,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 875beb3d5fb0e584e95cc5fd6ec25666, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  model: {fileID: 0}
 --- !u!1 &4812020155704636180
 GameObject:
   m_ObjectHideFlags: 0
@@ -456,6 +455,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_text
       value: High
+      objectReference: {fileID: 0}
+    - target: {fileID: 7578333332605826410, guid: 7be266c6a573fc343bc7fc0450904a8b,
+        type: 3}
+      propertyPath: checkPaddingRequired
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7578333332605826410, guid: 7be266c6a573fc343bc7fc0450904a8b,
+        type: 3}
+      propertyPath: m_enableExtraPadding
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -791,6 +800,16 @@ PrefabInstance:
       propertyPath: m_text
       value: Custom
       objectReference: {fileID: 0}
+    - target: {fileID: 7578333332605826410, guid: 7be266c6a573fc343bc7fc0450904a8b,
+        type: 3}
+      propertyPath: checkPaddingRequired
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7578333332605826410, guid: 7be266c6a573fc343bc7fc0450904a8b,
+        type: 3}
+      propertyPath: m_enableExtraPadding
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -981,6 +1000,16 @@ PrefabInstance:
       propertyPath: m_text
       value: Medium
       objectReference: {fileID: 0}
+    - target: {fileID: 7578333332605826410, guid: 7be266c6a573fc343bc7fc0450904a8b,
+        type: 3}
+      propertyPath: checkPaddingRequired
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7578333332605826410, guid: 7be266c6a573fc343bc7fc0450904a8b,
+        type: 3}
+      propertyPath: m_enableExtraPadding
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1045,6 +1074,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Enabled Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 2230866366500992067, guid: bbf27228f39fa454088d0b481c5cea43,
+        type: 3}
+      propertyPath: checkPaddingRequired
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2230866366500992067, guid: bbf27228f39fa454088d0b481c5cea43,
+        type: 3}
+      propertyPath: m_enableExtraPadding
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2707446264322501810, guid: bbf27228f39fa454088d0b481c5cea43,
         type: 3}
@@ -1298,6 +1337,16 @@ PrefabInstance:
       propertyPath: m_text
       value: x2
       objectReference: {fileID: 0}
+    - target: {fileID: 7578333332605826410, guid: 7be266c6a573fc343bc7fc0450904a8b,
+        type: 3}
+      propertyPath: checkPaddingRequired
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7578333332605826410, guid: 7be266c6a573fc343bc7fc0450904a8b,
+        type: 3}
+      propertyPath: m_enableExtraPadding
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8466923653234768552, guid: 7be266c6a573fc343bc7fc0450904a8b,
         type: 3}
       propertyPath: IsActiveEvent
@@ -1521,6 +1570,21 @@ PrefabInstance:
       propertyPath: m_AnchorMin.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1561233607872344039, guid: 8a26da904761b324aa990cd25c357094,
+        type: 3}
+      propertyPath: m_margin.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1561233607872344039, guid: 8a26da904761b324aa990cd25c357094,
+        type: 3}
+      propertyPath: checkPaddingRequired
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1561233607872344039, guid: 8a26da904761b324aa990cd25c357094,
+        type: 3}
+      propertyPath: m_enableExtraPadding
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2099627832277553478, guid: 8a26da904761b324aa990cd25c357094,
         type: 3}
       propertyPath: m_Size.y
@@ -1701,6 +1765,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_text
       value: Graphics quality
+      objectReference: {fileID: 0}
+    - target: {fileID: 1730432150811495414, guid: 38e2ef1e1d4e181499069c83f73ea69c,
+        type: 3}
+      propertyPath: m_margin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1730432150811495414, guid: 38e2ef1e1d4e181499069c83f73ea69c,
+        type: 3}
+      propertyPath: checkPaddingRequired
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1730432150811495414, guid: 38e2ef1e1d4e181499069c83f73ea69c,
+        type: 3}
+      propertyPath: m_enableExtraPadding
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3535800486413577600, guid: 38e2ef1e1d4e181499069c83f73ea69c,
         type: 3}
@@ -1948,6 +2027,16 @@ PrefabInstance:
 
 '
       objectReference: {fileID: 0}
+    - target: {fileID: 7578333332605826410, guid: 7be266c6a573fc343bc7fc0450904a8b,
+        type: 3}
+      propertyPath: checkPaddingRequired
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7578333332605826410, guid: 7be266c6a573fc343bc7fc0450904a8b,
+        type: 3}
+      propertyPath: m_enableExtraPadding
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8466923653234768552, guid: 7be266c6a573fc343bc7fc0450904a8b,
         type: 3}
       propertyPath: IsActiveEvent
@@ -2125,6 +2214,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_text
       value: x4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7578333332605826410, guid: 7be266c6a573fc343bc7fc0450904a8b,
+        type: 3}
+      propertyPath: checkPaddingRequired
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7578333332605826410, guid: 7be266c6a573fc343bc7fc0450904a8b,
+        type: 3}
+      propertyPath: m_enableExtraPadding
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8466923653234768552, guid: 7be266c6a573fc343bc7fc0450904a8b,
         type: 3}
@@ -2324,6 +2423,16 @@ PrefabInstance:
       propertyPath: m_text
       value: Graphics
       objectReference: {fileID: 0}
+    - target: {fileID: 7847258929937635036, guid: 20d659fa7359a8546a0165564fb6d6ea,
+        type: 3}
+      propertyPath: checkPaddingRequired
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7847258929937635036, guid: 20d659fa7359a8546a0165564fb6d6ea,
+        type: 3}
+      propertyPath: m_enableExtraPadding
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2358,6 +2467,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Dropdown
       objectReference: {fileID: 0}
+    - target: {fileID: 4566606442710011378, guid: b4458f4e6d012dc4dafa67a90baad577,
+        type: 3}
+      propertyPath: checkPaddingRequired
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4566606442710011378, guid: b4458f4e6d012dc4dafa67a90baad577,
+        type: 3}
+      propertyPath: m_enableExtraPadding
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5502513689559565747, guid: b4458f4e6d012dc4dafa67a90baad577,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -2372,6 +2491,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.x
       value: -17
+      objectReference: {fileID: 0}
+    - target: {fileID: 5754903222007945544, guid: b4458f4e6d012dc4dafa67a90baad577,
+        type: 3}
+      propertyPath: checkPaddingRequired
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5754903222007945544, guid: b4458f4e6d012dc4dafa67a90baad577,
+        type: 3}
+      propertyPath: m_enableExtraPadding
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5954783901359546317, guid: b4458f4e6d012dc4dafa67a90baad577,
+        type: 3}
+      propertyPath: checkPaddingRequired
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5954783901359546317, guid: b4458f4e6d012dc4dafa67a90baad577,
+        type: 3}
+      propertyPath: m_enableExtraPadding
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6634030448244601236, guid: b4458f4e6d012dc4dafa67a90baad577,
         type: 3}
@@ -2496,6 +2635,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Disabled Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 5700846517827535239, guid: 7210a6eea16df6d49a7df6d7f3c5fd6d,
+        type: 3}
+      propertyPath: checkPaddingRequired
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5700846517827535239, guid: 7210a6eea16df6d49a7df6d7f3c5fd6d,
+        type: 3}
+      propertyPath: m_enableExtraPadding
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8393039102658533750, guid: 7210a6eea16df6d49a7df6d7f3c5fd6d,
         type: 3}
@@ -2643,6 +2792,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_text
       value: HDR
+      objectReference: {fileID: 0}
+    - target: {fileID: 1730432150811495414, guid: 38e2ef1e1d4e181499069c83f73ea69c,
+        type: 3}
+      propertyPath: m_margin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1730432150811495414, guid: 38e2ef1e1d4e181499069c83f73ea69c,
+        type: 3}
+      propertyPath: checkPaddingRequired
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1730432150811495414, guid: 38e2ef1e1d4e181499069c83f73ea69c,
+        type: 3}
+      propertyPath: m_enableExtraPadding
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3535800486413577600, guid: 38e2ef1e1d4e181499069c83f73ea69c,
         type: 3}
@@ -2916,6 +3080,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Disabled Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 5700846517827535239, guid: 7210a6eea16df6d49a7df6d7f3c5fd6d,
+        type: 3}
+      propertyPath: checkPaddingRequired
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5700846517827535239, guid: 7210a6eea16df6d49a7df6d7f3c5fd6d,
+        type: 3}
+      propertyPath: m_enableExtraPadding
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8393039102658533750, guid: 7210a6eea16df6d49a7df6d7f3c5fd6d,
         type: 3}
       propertyPath: m_Pivot.x
@@ -3080,6 +3254,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_text
       value: Resolution
+      objectReference: {fileID: 0}
+    - target: {fileID: 1730432150811495414, guid: 38e2ef1e1d4e181499069c83f73ea69c,
+        type: 3}
+      propertyPath: m_margin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1730432150811495414, guid: 38e2ef1e1d4e181499069c83f73ea69c,
+        type: 3}
+      propertyPath: checkPaddingRequired
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1730432150811495414, guid: 38e2ef1e1d4e181499069c83f73ea69c,
+        type: 3}
+      propertyPath: m_enableExtraPadding
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3535800486413577600, guid: 38e2ef1e1d4e181499069c83f73ea69c,
         type: 3}
@@ -3345,6 +3534,16 @@ PrefabInstance:
       propertyPath: m_text
       value: Low
       objectReference: {fileID: 0}
+    - target: {fileID: 7578333332605826410, guid: 7be266c6a573fc343bc7fc0450904a8b,
+        type: 3}
+      propertyPath: checkPaddingRequired
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7578333332605826410, guid: 7be266c6a573fc343bc7fc0450904a8b,
+        type: 3}
+      propertyPath: m_enableExtraPadding
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3549,6 +3748,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_text
       value: Anti-aliasing
+      objectReference: {fileID: 0}
+    - target: {fileID: 1730432150811495414, guid: 38e2ef1e1d4e181499069c83f73ea69c,
+        type: 3}
+      propertyPath: m_margin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1730432150811495414, guid: 38e2ef1e1d4e181499069c83f73ea69c,
+        type: 3}
+      propertyPath: checkPaddingRequired
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1730432150811495414, guid: 38e2ef1e1d4e181499069c83f73ea69c,
+        type: 3}
+      propertyPath: m_enableExtraPadding
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3535800486413577600, guid: 38e2ef1e1d4e181499069c83f73ea69c,
         type: 3}
@@ -3950,6 +4164,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_text
       value: Render scale
+      objectReference: {fileID: 0}
+    - target: {fileID: 1730432150811495414, guid: 38e2ef1e1d4e181499069c83f73ea69c,
+        type: 3}
+      propertyPath: m_margin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1730432150811495414, guid: 38e2ef1e1d4e181499069c83f73ea69c,
+        type: 3}
+      propertyPath: checkPaddingRequired
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1730432150811495414, guid: 38e2ef1e1d4e181499069c83f73ea69c,
+        type: 3}
+      propertyPath: m_enableExtraPadding
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3535800486413577600, guid: 38e2ef1e1d4e181499069c83f73ea69c,
         type: 3}

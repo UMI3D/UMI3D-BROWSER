@@ -131,7 +131,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3bb233728557dbf44b9881ee71a087db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  model: {fileID: 0}
 --- !u!1001 &1055093653922384957
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -144,6 +143,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Disabled Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 5700846517827535239, guid: 7210a6eea16df6d49a7df6d7f3c5fd6d,
+        type: 3}
+      propertyPath: checkPaddingRequired
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5700846517827535239, guid: 7210a6eea16df6d49a7df6d7f3c5fd6d,
+        type: 3}
+      propertyPath: m_enableExtraPadding
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8393039102658533750, guid: 7210a6eea16df6d49a7df6d7f3c5fd6d,
         type: 3}
@@ -291,6 +300,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_text
       value: UI Animations
+      objectReference: {fileID: 0}
+    - target: {fileID: 1730432150811495414, guid: 38e2ef1e1d4e181499069c83f73ea69c,
+        type: 3}
+      propertyPath: m_margin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1730432150811495414, guid: 38e2ef1e1d4e181499069c83f73ea69c,
+        type: 3}
+      propertyPath: checkPaddingRequired
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1730432150811495414, guid: 38e2ef1e1d4e181499069c83f73ea69c,
+        type: 3}
+      propertyPath: m_enableExtraPadding
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3535800486413577600, guid: 38e2ef1e1d4e181499069c83f73ea69c,
         type: 3}
@@ -555,6 +579,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_text
       value: Confort
+      objectReference: {fileID: 0}
+    - target: {fileID: 7847258929937635036, guid: 20d659fa7359a8546a0165564fb6d6ea,
+        type: 3}
+      propertyPath: checkPaddingRequired
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7847258929937635036, guid: 20d659fa7359a8546a0165564fb6d6ea,
+        type: 3}
+      propertyPath: m_enableExtraPadding
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -839,6 +873,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Enabled Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 2230866366500992067, guid: bbf27228f39fa454088d0b481c5cea43,
+        type: 3}
+      propertyPath: checkPaddingRequired
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2230866366500992067, guid: bbf27228f39fa454088d0b481c5cea43,
+        type: 3}
+      propertyPath: m_enableExtraPadding
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2707446264322501810, guid: bbf27228f39fa454088d0b481c5cea43,
         type: 3}

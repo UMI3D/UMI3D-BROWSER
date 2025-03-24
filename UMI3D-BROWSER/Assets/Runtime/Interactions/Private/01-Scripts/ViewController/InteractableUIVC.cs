@@ -14,7 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System.Collections.ObjectModel;
+using System.Linq;
 using umi3d.cdk.interaction;
+using umi3d.common.interaction;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.interactions
@@ -52,6 +55,8 @@ namespace umi3d.browserRuntime.interactions
         public float interactionDistance => interactable?.InteractionDistance ?? 0;
 
         public string interactableName => interactable?.name ?? "";
+        public ReadOnlyCollection<AbstractInteractionDto> interactions => interactable?.interactions.Select(i => i.Result).ToList().AsReadOnly();
+        public ReadOnlyCollection<EventDto> events => interactable?.interactions.Select(i => i.Result).ToList().FindAll(i => i is EventDto).Select(i => i as EventDto).ToList().AsReadOnly();
 
         #endregion
 

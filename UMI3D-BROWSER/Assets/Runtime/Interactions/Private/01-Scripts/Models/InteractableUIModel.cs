@@ -15,7 +15,8 @@ limitations under the License.
 */
 
 using inetum.unityUtils.observation;
-using System;
+using System.Collections.ObjectModel;
+using umi3d.common.interaction;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.interactions
@@ -176,6 +177,8 @@ namespace umi3d.browserRuntime.interactions
         float interactionDistance { get; }
 
         string interactableName { get; }
+        ReadOnlyCollection<AbstractInteractionDto> interactions { get; }
+        ReadOnlyCollection<EventDto> events { get; }
     }
 
     internal interface IInteractableUIDelegate

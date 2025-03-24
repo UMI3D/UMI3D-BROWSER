@@ -17,6 +17,7 @@ limitations under the License.
 using inetum.unityUtils.ui.canvas;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.Pool;
 using UnityEngine.UI;
@@ -27,6 +28,7 @@ namespace umi3d.browserRuntime.interactions
     {
         [SerializeField] GameObject inputPrefab;
         ObjectPool<InputView> inputViewsPool;
+        List<InputView> inputViews = new();
 
         NameView nameView;
 
@@ -42,13 +44,16 @@ namespace umi3d.browserRuntime.interactions
 
             inputViewsPool = new(() =>
             {
-                return Instantiate(inputPrefab).GetComponent<InputView>();
-            }, actionOnGet: inputView =>
-            {
+                InputView view = Instantiate(inputPrefab).GetComponent<InputView>();
+                view.transform.SetParent(transform, false);
 
-            }, actionOnRelease: inputView =>
+                return view;
+            }, actionOnGet: view =>
             {
-
+                view.gameObject.SetActive(true);
+            }, actionOnRelease: view =>
+            {
+                view.gameObject.SetActive(false);
             });
         }
 
@@ -66,6 +71,25 @@ namespace umi3d.browserRuntime.interactions
         public void OnChangeOfHoveringState(InteractableHoveringState oldState, InteractableHoveringState newState)
         {
             gameObject.SetActive(newState == InteractableHoveringState.Hover);
+
+            if (newState == InteractableHoveringState.Hover)
+            {
+                foreach (var @event in model.dataDelegate.events)
+                {
+                    InputView view = inputViewsPool.Get();
+                    view.SetEvent(@event);
+                    inputViews.Add(view);
+                }
+            }
+            else
+            {
+                for (int i = inputViews.Count - 1; i >= 0; i--) 
+                {
+                    InputView view = inputViews[i];
+                    inputViews.RemoveAt(i);
+                    inputViewsPool.Release(view);
+                }
+            }
         }
     }
 }

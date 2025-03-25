@@ -14,13 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-namespace umi3d.browserRuntime.button
-{
-    internal class ButtonNotificationKeys 
-    {
-        public class ButtonSet
-        {
-            public static readonly string Label = "Label";
-        }
-    }
-}
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("umi3d.browserRuntime.text.tests")]

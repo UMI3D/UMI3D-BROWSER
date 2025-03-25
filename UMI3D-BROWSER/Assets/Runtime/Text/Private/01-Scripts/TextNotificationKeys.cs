@@ -14,13 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-namespace umi3d.browserRuntime.button
+namespace umi3d.browserRuntime.text
 {
-    internal class ButtonNotificationKeys 
+    internal class TextNotificationKeys
     {
-        public class ButtonSet
+        public class TextSet
         {
-            public static readonly string Label = "Label";
+            public static readonly string Text = "Text";
         }
     }
 }

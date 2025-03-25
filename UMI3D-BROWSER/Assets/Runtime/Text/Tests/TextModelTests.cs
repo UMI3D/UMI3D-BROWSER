@@ -13,14 +13,30 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+using NUnit.Framework;
+using umi3d.browserRuntime.text;
 
-namespace umi3d.browserRuntime.button
+public class TextModelTests
 {
-    internal class ButtonNotificationKeys 
+    public class SetTextTests
     {
-        public class ButtonSet
+        [Test]
+        public void GivenString_WhenSettingText_ThenTextSetToString()
         {
-            public static readonly string Label = "Label";
+            var text = "TestText";
+            var model = new TextModel();
+            model.SetText(text);
+
+            Assert.AreEqual(text, model.Text);
+        }
+
+        [Test]
+        public void GivenNull_WhenSettingText_ThenTextSetToStringEmpty()
+        {
+            var model = new TextModel();
+            model.SetText(null);
+
+            Assert.AreEqual(string.Empty, model.Text);
         }
     }
 }

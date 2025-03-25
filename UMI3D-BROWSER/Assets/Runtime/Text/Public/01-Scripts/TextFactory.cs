@@ -14,44 +14,41 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace umi3d.browserRuntime.button
+namespace umi3d.browserRuntime.text
 {
-    public class ButtonFactory : MonoBehaviour
+    public class TextFactory : MonoBehaviour
     {
-        [SerializeField] internal ButtonModelContainer _buttonPrefab;
+        [SerializeField] internal TextModelContainer _textPrefab;
 
-        internal Queue<ButtonModelContainer> _pool = new();
+        internal Queue<TextModelContainer> _pool = new();
 
-        public GameObject GetOrCreateButton(Transform parent, string label = "", Action callback = null)
+        public GameObject GetOrCreateText(Transform parent, string text = "")
         {
-            ButtonModelContainer button;
-            if (!_pool.TryDequeue(out button))
-                button = Instantiate(_buttonPrefab);
+            TextModelContainer modelContainer;
+            if (!_pool.TryDequeue(out modelContainer))
+                modelContainer = Instantiate(_textPrefab);
 
-            button.gameObject.SetActive(true);
-            button.transform.SetParent(parent, false);
+            modelContainer.gameObject.SetActive(true);
+            modelContainer.transform.SetParent(parent, false);
 
-            button.Model.SetLabel(label);
-            button.Model.SetCallback(callback);
+            modelContainer.Model.SetText(text);
 
-            return button.gameObject;
+            return modelContainer.gameObject;
         }
 
-        public void ReturnButton(GameObject gameObject)
+        public void ReturnText(GameObject gameObject)
         {
             if (!gameObject)
                 return;
-            var modelContainer = gameObject.GetComponent<ButtonModelContainer>();
+            var modelContainer = gameObject.GetComponent<TextModelContainer>();
             if (!modelContainer)
                 return;
 
             modelContainer.gameObject.SetActive(false);
             modelContainer.transform.SetParent(transform, false);
-            modelContainer.Model.SetCallback(null);
 
 
             _pool.Enqueue(modelContainer);

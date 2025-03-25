@@ -18,22 +18,22 @@ using inetum.unityUtils.observation;
 using TMPro;
 using UnityEngine;
 
-namespace umi3d.browserRuntime.button
+namespace umi3d.browserRuntime.text
 {
     [RequireComponent(typeof(TMP_Text)), ExecuteInEditMode]
-    internal class ButtonLabelView : MonoBehaviour
+    internal class TextView : MonoBehaviour
     {
-        ButtonModelContainer _modelContainer;
+        TextModelContainer _modelContainer;
         TMP_Text _text;
 
         void Awake()
         {
-            _modelContainer = GetComponentInParent<ButtonModelContainer>();
+            _modelContainer = GetComponentInParent<TextModelContainer>();
             _text = GetComponent<TMP_Text>();
 
             NotificationHub.Default.Subscribe(this,
-                ID.FromType<ButtonNotificationKeys.ButtonSet>(),
-                (Callback)ButtonSet,
+                ID.FromType<TextNotificationKeys.TextSet>(),
+                (Callback)TextSet,
                 new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == _modelContainer.Model));
         }
 
@@ -42,10 +42,10 @@ namespace umi3d.browserRuntime.button
             NotificationHub.Default.Unsubscribe(this);
         }
 
-        void ButtonSet(Notification notification)
+        void TextSet(Notification notification)
         {
-            if (notification.TryGetInfoT(ButtonNotificationKeys.ButtonSet.Label, out string label))
-                _text.text = label;
+            if (notification.TryGetInfoT(TextNotificationKeys.TextSet.Text, out string text))
+                _text.text = text;
         }
     }
 }

@@ -148,9 +148,9 @@ namespace umi3d.cdk
                     });
                     while (n == null)
                         yield return null;
-                    Renderer r = n.GameObject.GetComponentInChildren<Renderer>();
-                    if (r != null)
-                        rend.Add(r);
+                    foreach(Renderer r in n.renderers)
+                        if (r != null)
+                            rend.Add(r);
                 }
                 var l = new LOD(lod.screenSize, rend.ToArray())
                 {

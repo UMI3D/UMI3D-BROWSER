@@ -144,7 +144,7 @@ namespace umi3d.browserRuntime.ui.inputField
         public void SetNbrLines(bool NewIsMultiline, int newNbrLine)
         {
             isMultiline = NewIsMultiline;
-            nbrLine = isMultiline ? newNbrLine : 0;
+            nbrLine = isMultiline ? newNbrLine : 1;
             _setNotifier[InputFieldNotificationsKeys.InputFieldSet.NbrLine] = nbrLine;
             _setNotifier.Notify();
         }

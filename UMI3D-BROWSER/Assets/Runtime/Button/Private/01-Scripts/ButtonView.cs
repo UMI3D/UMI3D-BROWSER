@@ -20,7 +20,7 @@ using UnityEngine.UI;
 namespace umi3d.browserRuntime.button
 {
     [RequireComponent(typeof(Button)), ExecuteInEditMode]
-    public class ButtonView : MonoBehaviour
+    internal class ButtonView : MonoBehaviour
     {
         ButtonModelContainer _modelContainer;
         Button _button;

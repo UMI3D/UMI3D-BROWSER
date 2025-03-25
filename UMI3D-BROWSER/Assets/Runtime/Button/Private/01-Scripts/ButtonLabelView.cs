@@ -21,7 +21,7 @@ using UnityEngine;
 namespace umi3d.browserRuntime.button
 {
     [RequireComponent(typeof(TMP_Text)), ExecuteInEditMode]
-    public class ButtonLabelView : MonoBehaviour
+    internal class ButtonLabelView : MonoBehaviour
     {
         ButtonModelContainer _modelContainer;
         TMP_Text _text;

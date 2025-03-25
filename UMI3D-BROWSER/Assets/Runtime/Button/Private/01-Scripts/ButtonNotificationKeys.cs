@@ -18,7 +18,7 @@ namespace umi3d.browserRuntime.button
 {
     public class ButtonNotificationKeys 
     {
-        public class ButtonSet
+        internal class ButtonSet
         {
             public static readonly string Label = "Label";
         }

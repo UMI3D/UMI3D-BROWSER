@@ -46,7 +46,7 @@ public class ButtonFactoryTests
             var label = "TestLabel";
             var callbackCalled = false;
             GameObject buttonGameObject = _factory.GetOrCreateButton(_container, label, () => callbackCalled = true);
-            
+
             Assert.IsNotNull(buttonGameObject);
             Assert.AreEqual(_container, buttonGameObject.transform.parent);
         }
@@ -76,6 +76,65 @@ public class ButtonFactoryTests
 
             Assert.AreEqual(_factory._pool.Count, 0);
             Assert.IsTrue(buttonGameObject.activeInHierarchy);
+        }
+    }
+
+    public class ReturnButtonTests
+    {
+        ButtonFactory _factory;
+        Transform _container;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _factory = new GameObject().AddComponent<ButtonFactory>();
+            _container = new GameObject().transform;
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            GameObject.DestroyImmediate(_factory.gameObject);
+            GameObject.DestroyImmediate(_container.gameObject);
+        }
+
+        [Test]
+        public void GivenButton_WhenReturning_ThenAddedToPool()
+        {
+            var modelContainer = new GameObject().AddComponent<ButtonModelContainer>();
+            _factory.ReturnButton(modelContainer.gameObject);
+
+            Assert.AreEqual(1, _factory._pool.Count);
+        }
+
+        [Test]
+        public void GivenButton_WhenReturning_ThenDisabled()
+        {
+            var modelContainer = new GameObject().AddComponent<ButtonModelContainer>();
+            _factory.ReturnButton(modelContainer.gameObject);
+
+            Assert.IsFalse(modelContainer.gameObject.activeInHierarchy);
+            Assert.AreEqual(_factory.transform, modelContainer.transform.parent);
+            Assert.IsNull(modelContainer.Model._callback);
+        }
+
+        [Test]
+        public void GivenEmptyGameObject_WhenReturning_ThenNotAddedToPool()
+        {
+            var gameObject = new GameObject();
+            gameObject.transform.SetParent(_container, false);
+
+            _factory.ReturnButton(gameObject);
+
+            Assert.AreEqual(0, _factory._pool.Count);
+        }
+
+        [Test]
+        public void GivenNull_WhenReturning_ThenNotAddedToPool()
+        {
+            _factory.ReturnButton(null);
+
+            Assert.AreEqual(0, _factory._pool.Count);
         }
     }
 }

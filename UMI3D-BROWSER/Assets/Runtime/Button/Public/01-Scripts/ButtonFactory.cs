@@ -40,5 +40,21 @@ namespace umi3d.browserRuntime.button
 
             return button.gameObject;
         }
+
+        internal void ReturnButton(GameObject gameObject)
+        {
+            if (!gameObject)
+                return;
+            var modelContainer = gameObject.GetComponent<ButtonModelContainer>();
+            if (!modelContainer)
+                return;
+
+            modelContainer.gameObject.SetActive(false);
+            modelContainer.transform.SetParent(transform, false);
+            modelContainer.Model.SetCallback(null);
+
+
+            _pool.Enqueue(modelContainer);
+        }
     }
 }

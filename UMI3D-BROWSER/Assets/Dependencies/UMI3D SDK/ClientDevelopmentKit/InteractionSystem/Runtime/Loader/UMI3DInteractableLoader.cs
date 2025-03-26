@@ -79,14 +79,6 @@ namespace umi3d.cdk.interaction
                 case UMI3DPropertyKeys.InteractableHoverExitAnimation:
                     dto.HoverExitAnimationId = (ulong)value.property.value;
                     break;
-                case UMI3DPropertyKeys.InteractableIndicatorDisplay:
-                    dto.indicatorDisplay = (bool)value.property.value;
-                    //TODO:ROMAIN
-                    break;
-                case UMI3DPropertyKeys.InteractableIndicatorDelta:
-                    dto.indicatorDelta = (Vector3Dto)value.property.value;
-                    //TODO:ROMAIN
-                    break;
                 default:
                     return false;
             }
@@ -116,14 +108,6 @@ namespace umi3d.cdk.interaction
                     break;
                 case UMI3DPropertyKeys.InteractableInteractionDistance:
                     dto.interactionDistance = UMI3DSerializer.Read<float>(value.container);
-                    break;
-                case UMI3DPropertyKeys.InteractableIndicatorDisplay:
-                    dto.indicatorDisplay = UMI3DSerializer.Read<bool>(value.container);
-                    //TODO:ROMAIN
-                    break;
-                case UMI3DPropertyKeys.InteractableIndicatorDelta:
-                    dto.indicatorDelta = UMI3DSerializer.Read<Vector3Dto>(value.container);
-                    //TODO:ROMAIN
                     break;
                 default:
                     return false;

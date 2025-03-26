@@ -74,6 +74,9 @@ namespace umi3d.browserRuntime.interactions
                 if (width > maxWidth) { maxWidth = width; }
             }
             rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, maxWidth);
+
+            layoutGroup.CalculateLayoutInputHorizontal();
+            layoutGroup.SetLayoutHorizontal();
         }
 
         #endregion

@@ -80,10 +80,6 @@ namespace umi3d.browserRuntime.interactions
             width += layoutGroup.padding.left + layoutGroup.padding.right;
             width += (activeChildCount - 1) * layoutGroup.spacing;
             rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width);
-
-            VerticalLayoutGroup parentLayoutGroup = transform.parent.GetComponent<VerticalLayoutGroup>();
-            parentLayoutGroup.CalculateLayoutInputHorizontal();
-            parentLayoutGroup.SetLayoutHorizontal();
         }
 
         #endregion

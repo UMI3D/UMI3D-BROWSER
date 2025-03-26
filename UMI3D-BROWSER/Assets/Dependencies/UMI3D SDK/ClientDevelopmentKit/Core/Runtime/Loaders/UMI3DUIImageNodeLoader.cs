@@ -123,7 +123,6 @@ namespace umi3d.cdk
             }
         }
 
-
         public bool SetUMI3DPorperty(UIImageDto dto, UMI3DNodeInstance node, uint operationId, uint propertyKey, ByteContainer container)
         {
             switch (propertyKey)

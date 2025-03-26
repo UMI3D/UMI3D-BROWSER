@@ -149,8 +149,8 @@ namespace umi3d.cdk
                     while (n == null)
                         yield return null;
                     foreach(Renderer r in n.renderers)
-                        if (r != null)
-                            rend.Add(r);
+                    if (r != null)
+                        rend.Add(r);
                 }
                 var l = new LOD(lod.screenSize, rend.ToArray())
                 {

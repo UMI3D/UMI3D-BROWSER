@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils.ui.canvas;
 using System.Collections.ObjectModel;
 using System.Linq;
 using umi3d.cdk.interaction;
@@ -22,7 +23,7 @@ using UnityEngine;
 
 namespace umi3d.browserRuntime.interactions
 {
-    internal class InteractableUIVC : MonoBehaviour, IInteractableUIDataDelegate
+    internal class InteractableUIVC : MonoBehaviour, IView, IInteractableUIDataDelegate
     {
         // The scale of the entire interactable UI.
         const float scale = 0.0005f;
@@ -43,10 +44,12 @@ namespace umi3d.browserRuntime.interactions
 
         [Header("Views")]
         [SerializeField] NameView nameView;
-        [SerializeField] InputsView inputsView;
-        [SerializeField] FeedbackView feedbackView;
+        InputCollectionVC inputCollectionVC;
+        FeedbackView feedbackView;
 
         Camera _camera;
+
+        IView view => this;
 
         #region IInteractableUIDataDelegate
 
@@ -66,6 +69,9 @@ namespace umi3d.browserRuntime.interactions
         {
             enabled = false;
 
+            Debug.Assert(view.Set(ref inputCollectionVC, 1));
+            Debug.Assert(view.Set(ref feedbackView, 2));
+
             model = new();
             model.offsetWithRenderer = offsetWithRenderer;
             model.farDistanceOffset = farDistanceOffset;
@@ -77,7 +83,7 @@ namespace umi3d.browserRuntime.interactions
             _camera = Camera.main;
 
             nameView.SetModel(model);
-            inputsView.SetModel(model);
+            inputCollectionVC.SetModel(model);
             feedbackView.SetModel(model);
         }
 

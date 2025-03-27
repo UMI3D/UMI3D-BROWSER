@@ -24,7 +24,6 @@ namespace umi3d.browserRuntime.image
     {
         public class Settings
         {
-            public Sprite Sprite = null;
             public Color Color = Color.white;
             public class TransformSettings
             {
@@ -45,7 +44,7 @@ namespace umi3d.browserRuntime.image
 
         internal Queue<ImageModelContainer> _pool = new ();
 
-        public GameObject GetOrCreateImage(Transform parent, Settings settings)
+        public GameObject GetOrCreateImage(Transform parent, Sprite sprite = null, Settings settings = default)
         {
             ImageModelContainer modelContainer;
             if (!_pool.TryDequeue(out modelContainer))
@@ -53,7 +52,7 @@ namespace umi3d.browserRuntime.image
 
             modelContainer.gameObject.SetActive(true);
             modelContainer.transform.SetParent(parent, false);
-            modelContainer.Model.SetSprite(settings.Sprite);
+            modelContainer.Model.SetSprite(sprite);
             modelContainer.Model.SetColor(settings.Color);
             if (settings.Transform != null)
             {

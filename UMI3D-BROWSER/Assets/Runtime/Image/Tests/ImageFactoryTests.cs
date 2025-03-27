@@ -43,7 +43,7 @@ public class ImageFactoryTests
         [Test]
         public void Given_WhenCreatingImage_ThenImageCreated()
         {
-            GameObject ImageGameObject = _factory.GetOrCreateImage(_container, new ImageFactory.Settings());
+            GameObject ImageGameObject = _factory.GetOrCreateImage(_container, null, new ImageFactory.Settings());
 
             Assert.IsNotNull(ImageGameObject);
             Assert.AreEqual(_container, ImageGameObject.transform.parent);
@@ -52,8 +52,8 @@ public class ImageFactoryTests
         [Test]
         public void GivenValidArguments_WhenCreatingImage_ThenImageCreatedAndConfigured()
         {
+            var sprite = Sprite.Create(new Texture2D(1, 1), new Rect(0, 0, 1, 1), Vector2.zero);
             var settings = new ImageFactory.Settings() {
-                Sprite = Sprite.Create(new Texture2D(1, 1), new Rect(0, 0, 1, 1), Vector2.zero),
                 Color = Color.blue,
                 Transform = new() {
                     Position = Vector2.one,
@@ -65,7 +65,7 @@ public class ImageFactoryTests
                     Pivot = Vector2.zero
                 }
             };
-            GameObject ImageGameObject = _factory.GetOrCreateImage(_container, settings);
+            GameObject ImageGameObject = _factory.GetOrCreateImage(_container, sprite, settings);
 
             Assert.AreEqual(settings.Transform.Position, ((RectTransform)ImageGameObject.transform).position);
             Assert.AreEqual(settings.Transform.Size, ((RectTransform)ImageGameObject.transform).localScale);
@@ -75,7 +75,7 @@ public class ImageFactoryTests
 
 
             var ImageObject = ImageGameObject.GetComponentInChildren<Image>();
-            Assert.AreEqual(settings.Sprite, ImageObject.sprite);
+            Assert.AreEqual(sprite, ImageObject.sprite);
             Assert.AreEqual(settings.Color, ImageObject.color);
         }
 
@@ -86,7 +86,7 @@ public class ImageFactoryTests
             modelContainer.gameObject.SetActive(false);
             _factory._pool.Enqueue(modelContainer);
 
-            var ImageGameObject = _factory.GetOrCreateImage(_container, new ImageFactory.Settings());
+            var ImageGameObject = _factory.GetOrCreateImage(_container, null, new ImageFactory.Settings());
 
             Assert.AreEqual(_factory._pool.Count, 0);
             Assert.IsTrue(ImageGameObject.activeInHierarchy);

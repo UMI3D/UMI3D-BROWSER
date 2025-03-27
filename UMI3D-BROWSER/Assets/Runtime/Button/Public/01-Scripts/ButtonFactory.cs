@@ -26,9 +26,6 @@ namespace umi3d.browserRuntime.button
     {
         public class Settings
         {
-            public string Label = string.Empty;
-            public Action Callback = null;
-
             public class TransformSettings
             {
                 public Vector3 Position = Vector2.zero;
@@ -65,7 +62,7 @@ namespace umi3d.browserRuntime.button
 
         internal Queue<ButtonModelContainer> _pool = new();
 
-        public GameObject GetOrCreateButton(Transform parent, Settings settings)
+        public GameObject GetOrCreateButton(Transform parent, string label = "", Action callback = null, Settings settings = default)
         {
             ButtonModelContainer button;
             if (!_pool.TryDequeue(out button))
@@ -73,8 +70,8 @@ namespace umi3d.browserRuntime.button
             button.gameObject.SetActive(true);
             button.transform.SetParent(parent, false);
 
-            button.Model.SetLabel(settings.Label);
-            button.Model.SetCallback(settings.Callback);
+            button.Model.SetLabel(label);
+            button.Model.SetCallback(callback);
             if (settings.Transform != null)
             {
                 button.Model.SetPosition(settings.Transform.Position);

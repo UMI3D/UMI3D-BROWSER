@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 using NUnit.Framework;
+using System;
 using TMPro;
 using umi3d.browserRuntime.button;
 using UnityEngine;
@@ -43,7 +44,7 @@ public class ButtonFactoryTests
         [Test]
         public void Given_WhenCreatingButton_ThenButtonCreated()
         {
-            GameObject buttonGameObject = _factory.GetOrCreateButton(_container, new ButtonFactory.Settings());
+            GameObject buttonGameObject = _factory.GetOrCreateButton(_container, "", null, new ButtonFactory.Settings());
 
             Assert.IsNotNull(buttonGameObject);
             Assert.AreEqual(_container, buttonGameObject.transform.parent);
@@ -53,9 +54,9 @@ public class ButtonFactoryTests
         public void GivenValidArguments_WhenCreatingButton_ThenButtonCreatedAndConfigured()
         {
             var callbackCalled = false;
+            var label = "TestLabel";
+            Action callback = () => callbackCalled = true;
             var settings = new ButtonFactory.Settings() {
-                Label = "TestLabel",
-                Callback = () => callbackCalled = true,
                 Image = new() {
                     Sprite = Sprite.Create(new Texture2D(1, 1), new Rect(0, 0, 1, 1), new Vector2(.5f, .5f)),
                     ColorBlock = new ColorBlock() { normalColor = Color.blue, highlightedColor = Color.red },
@@ -77,7 +78,7 @@ public class ButtonFactoryTests
                 } 
             };
 
-            GameObject buttonGameObject = _factory.GetOrCreateButton(_container, settings);
+            GameObject buttonGameObject = _factory.GetOrCreateButton(_container, label, callback, settings);
 
             Assert.AreEqual(settings.Transform.Position, ((RectTransform)buttonGameObject.transform).position);
             Assert.AreEqual(settings.Transform.Size, ((RectTransform)buttonGameObject.transform).localScale);
@@ -86,7 +87,7 @@ public class ButtonFactoryTests
             Assert.AreEqual(settings.Anchor.Pivot, ((RectTransform)buttonGameObject.transform).pivot);
 
             var text = buttonGameObject.GetComponentInChildren<TMP_Text>();
-            Assert.AreEqual(settings.Label, text.text);
+            Assert.AreEqual(label, text.text);
             Assert.AreEqual(settings.TextStyle.FontSize, text.fontSize);
             Assert.AreEqual(settings.TextStyle.Color, text.color);
             Assert.AreEqual(settings.TextStyle.FontStyles, text.fontStyle);
@@ -106,7 +107,7 @@ public class ButtonFactoryTests
             modelContainer.gameObject.SetActive(false);
             _factory._pool.Enqueue(modelContainer);
 
-            var buttonGameObject = _factory.GetOrCreateButton(_container, new ButtonFactory.Settings());
+            var buttonGameObject = _factory.GetOrCreateButton(_container, "", null, new ButtonFactory.Settings());
 
             Assert.AreEqual(_factory._pool.Count, 0);
             Assert.IsTrue(buttonGameObject.activeInHierarchy);

@@ -44,7 +44,7 @@ public class ButtonFactoryTests
         [Test]
         public void Given_WhenCreatingButton_ThenButtonCreated()
         {
-            GameObject buttonGameObject = _factory.GetOrCreateButton(_container, "", null, new ButtonFactory.Settings());
+            GameObject buttonGameObject = _factory.GetOrCreateButton(_container);
 
             Assert.IsNotNull(buttonGameObject);
             Assert.AreEqual(_container, buttonGameObject.transform.parent);
@@ -107,7 +107,7 @@ public class ButtonFactoryTests
             modelContainer.gameObject.SetActive(false);
             _factory._pool.Enqueue(modelContainer);
 
-            var buttonGameObject = _factory.GetOrCreateButton(_container, "", null, new ButtonFactory.Settings());
+            var buttonGameObject = _factory.GetOrCreateButton(_container);
 
             Assert.AreEqual(_factory._pool.Count, 0);
             Assert.IsTrue(buttonGameObject.activeInHierarchy);

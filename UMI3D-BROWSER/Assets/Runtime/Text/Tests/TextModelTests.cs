@@ -14,7 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 using NUnit.Framework;
+using TMPro;
 using umi3d.browserRuntime.text;
+using UnityEngine;
 
 public class TextModelTests
 {
@@ -37,6 +39,67 @@ public class TextModelTests
             model.SetText(null);
 
             Assert.AreEqual(string.Empty, model.Text);
+        }
+    }
+    public class SetPositionTests
+    {
+        [Test]
+        public void GivenPosition_WhenSettingPosition_ThenPosition()
+        {
+            var position = new Vector3(200, 200, 0);
+            TextModel model = new TextModel();
+            model.SetPosition(position);
+
+            Assert.AreEqual(position, model.Position);
+        }
+    }
+
+    public class SetSizeTests
+    {
+        [Test]
+        public void GivenSize_WhenSettingSize_ThenSize()
+        {
+            var size = new Vector3(2, 2, 2);
+            TextModel model = new TextModel();
+            model.SetSize(size);
+
+            Assert.AreEqual(size, model.Size);
+        }
+    }
+
+    public class SetAnchorTests
+    {
+        [Test]
+        public void GivenAnchor_WhenSettingAnchor_ThenAnchor()
+        {
+            var anchorMin = new Vector2(0, 0);
+            var anchorMax = new Vector2(1, 1);
+            var pivot = new Vector2(0, 0);
+            TextModel model = new TextModel();
+            model.SetAnchor(anchorMin, anchorMax, pivot);
+
+            Assert.AreEqual(anchorMin, model.AnchorMin);
+            Assert.AreEqual(anchorMax, model.AnchorMax);
+            Assert.AreEqual(pivot, model.Pivot);
+        }
+    }
+
+    public class SetTextStyleTests
+    {
+        [Test]
+        public void GivenTextStyle_WhenSettingTextStyle_ThenTextStyle()
+        {
+            var textSize = 26;
+            var textColor = Color.red;
+            var textStyles = FontStyles.Bold | FontStyles.Italic;
+            var textAlignements = TextAlignmentOptions.Justified;
+            TextModel model = new TextModel();
+            model.SetTextStyle(textSize, textColor, textStyles, textAlignements);
+
+            Assert.AreEqual(textSize, model.TextFontSize);
+            Assert.AreEqual(textColor, model.TextColor);
+            Assert.AreEqual(textStyles, model.TextStyles);
+            Assert.AreEqual(textAlignements, model.TextAlignementOptions);
         }
     }
 }

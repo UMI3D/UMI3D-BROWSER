@@ -53,10 +53,39 @@ public class TextFactoryTests
         public void GivenValidArguments_WhenCreatingText_ThenTextCreatedAndConfigured()
         {
             var text = "TestText";
-            GameObject textGameObject = _factory.GetOrCreateText(_container, text);
+            var settings = new TextFactory.Settings() {
+                Transform = new() {
+                    Position = Vector3.one,
+                    Size = Vector3.one / 2
+                },
+                Anchor = new() {
+                    AnchorMin = Vector2.zero,
+                    AnchorMax = Vector2.one,
+                    Pivot = Vector2.zero,
+                },
+                TextStyle = new() {
+                    FontSize = 26,
+                    Color = Color.red,
+                    FontStyles = FontStyles.Bold | FontStyles.Italic,
+                    TextAlignementOptions = TextAlignmentOptions.Justified,
+                }
+            };
+
+            GameObject textGameObject = _factory.GetOrCreateText(_container, text, settings);
+
+            Assert.AreEqual(settings.Transform.Position, ((RectTransform)textGameObject.transform).position);
+            Assert.AreEqual(settings.Transform.Size, ((RectTransform)textGameObject.transform).localScale);
+            Assert.AreEqual(settings.Anchor.AnchorMin, ((RectTransform)textGameObject.transform).anchorMin);
+            Assert.AreEqual(settings.Anchor.AnchorMax, ((RectTransform)textGameObject.transform).anchorMax);
+            Assert.AreEqual(settings.Anchor.Pivot, ((RectTransform)textGameObject.transform).pivot);
 
             var textObject = textGameObject.GetComponentInChildren<TMP_Text>();
             Assert.AreEqual(text, textObject.text);
+            Assert.AreEqual(settings.TextStyle.FontSize, textObject.fontSize);
+            Assert.AreEqual(settings.TextStyle.Color, textObject.color);
+            Assert.AreEqual(settings.TextStyle.FontStyles, textObject.fontStyle);
+            Assert.AreEqual(settings.TextStyle.TextAlignementOptions, textObject.alignment);
+
         }
 
         [Test]

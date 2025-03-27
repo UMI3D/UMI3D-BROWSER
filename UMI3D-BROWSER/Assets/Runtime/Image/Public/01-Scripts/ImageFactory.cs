@@ -44,8 +44,11 @@ namespace umi3d.browserRuntime.image
 
         internal Queue<ImageModelContainer> _pool = new ();
 
-        public GameObject GetOrCreateImage(Transform parent, Sprite sprite = null, Settings settings = default)
+        public GameObject GetOrCreateImage(Transform parent, Sprite sprite = null, Settings settings = null)
         {
+            if (settings == null)
+                settings = new();
+
             ImageModelContainer modelContainer;
             if (!_pool.TryDequeue(out modelContainer))
                 modelContainer = Instantiate(_imagePrefab);

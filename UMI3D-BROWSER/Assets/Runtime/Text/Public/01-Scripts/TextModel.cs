@@ -15,6 +15,9 @@ limitations under the License.
 */
 
 using inetum.unityUtils.observation;
+using System;
+using TMPro;
+using UnityEngine;
 
 namespace umi3d.browserRuntime.text
 {
@@ -22,19 +25,68 @@ namespace umi3d.browserRuntime.text
     {
         public string Text { get; private set; } = "";
 
+        public Vector3 Position { get; private set; } = Vector3.zero;
+        public Vector3 Size { get; private set; } = Vector3.one;
+
+        public Vector2 AnchorMin { get; private set; } = new Vector2(.5f, .5f);
+        public Vector2 AnchorMax { get; private set; } = new Vector2(.5f, .5f);
+        public Vector2 Pivot { get; private set; } = new Vector2(.5f, .5f);
+
+        public int TextFontSize { get; private set; } = 12;
+        public Color TextColor { get; private set; } = Color.white;
+        public FontStyles TextStyles { get; private set; } = FontStyles.Normal;
+        public TextAlignmentOptions TextAlignementOptions { get; private set; } = TextAlignmentOptions.MidlineLeft;
+
         Notifier _setNotifier;
 
         public TextModel()
         {
             _setNotifier = NotificationHub.Default.GetNotifier(this,
                 ID.FromType<TextNotificationKeys.TextSet>());
-            _setNotifier[TextNotificationKeys.TextSet.Text] = Text;
         }
 
         public void SetText(string text)
         {
             Text = text ?? "";
             _setNotifier[TextNotificationKeys.TextSet.Text] = Text;
+            _setNotifier.Notify();
+        }
+
+        public void SetPosition(Vector3 position)
+        {
+            Position = position;
+            _setNotifier[TextNotificationKeys.TextSet.Position] = Position;
+            _setNotifier.Notify();
+        }
+
+        public void SetSize(Vector3 size)
+        {
+            Size = size;
+            _setNotifier[TextNotificationKeys.TextSet.Size] = Size;
+            _setNotifier.Notify();
+        }
+
+        public void SetAnchor(Vector2 anchorMin, Vector2 anchorMax, Vector2 pivot)
+        {
+            AnchorMin = anchorMin;
+            AnchorMax = anchorMax;
+            Pivot = pivot;
+            _setNotifier[TextNotificationKeys.TextSet.AnchorMin] = AnchorMin;
+            _setNotifier[TextNotificationKeys.TextSet.AnchorMax] = AnchorMax;
+            _setNotifier[TextNotificationKeys.TextSet.Pivot] = Pivot;
+            _setNotifier.Notify();
+        }
+
+        public void SetTextStyle(int textFontSize, Color textColor, FontStyles textFontStyles, TextAlignmentOptions textAlignmentOptions)
+        {
+            TextFontSize = textFontSize;
+            TextColor = textColor;
+            TextStyles = textFontStyles;
+            TextAlignementOptions = textAlignmentOptions;
+            _setNotifier[TextNotificationKeys.TextSet.TextFontSize] = TextFontSize;
+            _setNotifier[TextNotificationKeys.TextSet.TextColor] = TextColor;
+            _setNotifier[TextNotificationKeys.TextSet.TextStyles] = TextStyles;
+            _setNotifier[TextNotificationKeys.TextSet.TextAlignementOptions] = TextAlignementOptions;
             _setNotifier.Notify();
         }
     }

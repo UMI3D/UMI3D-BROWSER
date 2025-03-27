@@ -15,7 +15,6 @@ limitations under the License.
 */
 using NUnit.Framework;
 using umi3d.browserRuntime.image;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -43,7 +42,7 @@ public class ImageFactoryTests
         [Test]
         public void Given_WhenCreatingImage_ThenImageCreated()
         {
-            GameObject ImageGameObject = _factory.GetOrCreateImage(_container, null, new ImageFactory.Settings());
+            GameObject ImageGameObject = _factory.GetOrCreateImage(_container);
 
             Assert.IsNotNull(ImageGameObject);
             Assert.AreEqual(_container, ImageGameObject.transform.parent);
@@ -86,7 +85,7 @@ public class ImageFactoryTests
             modelContainer.gameObject.SetActive(false);
             _factory._pool.Enqueue(modelContainer);
 
-            var ImageGameObject = _factory.GetOrCreateImage(_container, null, new ImageFactory.Settings());
+            var ImageGameObject = _factory.GetOrCreateImage(_container);
 
             Assert.AreEqual(_factory._pool.Count, 0);
             Assert.IsTrue(ImageGameObject.activeInHierarchy);

@@ -62,8 +62,11 @@ namespace umi3d.browserRuntime.button
 
         internal Queue<ButtonModelContainer> _pool = new();
 
-        public GameObject GetOrCreateButton(Transform parent, string label = "", Action callback = null, Settings settings = default)
+        public GameObject GetOrCreateButton(Transform parent, string label = "", Action callback = null, Settings settings = null)
         {
+            if (settings == null)
+                settings = new();
+
             ButtonModelContainer button;
             if (!_pool.TryDequeue(out button))
                 button = Instantiate(_buttonPrefab);

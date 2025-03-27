@@ -44,10 +44,23 @@ namespace umi3d.browserRuntime.image
 
         void TextSet(Notification notification)
         {
-            if (notification.TryGetInfoT(ImageNotificationKeys.ImageSet.Sprite, out Sprite sprite))
+            if (notification.TryGetInfoT(ImageNotificationKeys.ImageSet.Sprite, out Sprite sprite, false))
                 _image.sprite = sprite;
-            if (notification.TryGetInfoT(ImageNotificationKeys.ImageSet.Color, out Color color))
+            if (notification.TryGetInfoT(ImageNotificationKeys.ImageSet.Color, out Color color, false))
                 _image.color = color;
+
+            if (notification.TryGetInfoT(ImageNotificationKeys.ImageSet.Position, out Vector3 position, false))
+                transform.position = position;
+            if (notification.TryGetInfoT(ImageNotificationKeys.ImageSet.Size, out Vector3 size, false))
+                transform.localScale = size;
+
+            if (notification.TryGetInfoT(ImageNotificationKeys.ImageSet.AnchorMin, out Vector2 anchorMin, false))
+                ((RectTransform)transform).anchorMin = anchorMin;
+            if (notification.TryGetInfoT(ImageNotificationKeys.ImageSet.AnchorMax, out Vector2 anchorMax, false))
+                ((RectTransform)transform).anchorMax = anchorMax;
+            if (notification.TryGetInfoT(ImageNotificationKeys.ImageSet.Pivot, out Vector2 pivot, false))
+                ((RectTransform)transform).pivot = pivot;
         }
+
     }
 }

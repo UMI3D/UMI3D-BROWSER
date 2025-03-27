@@ -61,8 +61,8 @@ public class ButtonFactoryTests
                     ColorBlock = new ColorBlock() { normalColor = Color.blue, highlightedColor = Color.red },
                 },
                 Transform = new() {
-                    Position = Vector2.one,
-                    Size = Vector2.one / 2
+                    Position = Vector3.one,
+                    Size = Vector3.one / 2
                 },
                 Anchor = new () {
                     AnchorMin = Vector2.zero,

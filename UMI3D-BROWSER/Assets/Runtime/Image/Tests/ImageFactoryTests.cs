@@ -15,6 +15,7 @@ limitations under the License.
 */
 using NUnit.Framework;
 using umi3d.browserRuntime.image;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -40,37 +41,42 @@ public class ImageFactoryTests
         }
 
         [Test]
-        public void GivenValidArguments_WhenCreatingImage_ThenImageCreated()
+        public void Given_WhenCreatingImage_ThenImageCreated()
         {
-            var sprite = Sprite.Create(new Texture2D(1, 1), new Rect(0, 0, 1, 1), Vector2.zero);
-            GameObject ImageGameObject = _factory.GetOrCreateImage(_container, sprite);
+            GameObject ImageGameObject = _factory.GetOrCreateImage(_container, new ImageFactory.Settings());
 
             Assert.IsNotNull(ImageGameObject);
             Assert.AreEqual(_container, ImageGameObject.transform.parent);
         }
 
         [Test]
-        public void GivenSprite_WhenCreatingImage_ThenImageCreatedAndConfigured()
+        public void GivenValidArguments_WhenCreatingImage_ThenImageCreatedAndConfigured()
         {
-            var sprite = Sprite.Create(new Texture2D(1, 1), new Rect(0, 0, 1, 1), Vector2.zero);
-            var color = Color.blue;
-            GameObject ImageGameObject = _factory.GetOrCreateImage(_container, color, sprite);
+            var settings = new ImageFactory.Settings() {
+                Sprite = Sprite.Create(new Texture2D(1, 1), new Rect(0, 0, 1, 1), Vector2.zero),
+                Color = Color.blue,
+                Transform = new() {
+                    Position = Vector2.one,
+                    Size = Vector2.one / 2,
+                },
+                Anchor = new() {
+                    AnchorMin = Vector2.zero,
+                    AnchorMax = Vector2.one,
+                    Pivot = Vector2.zero
+                }
+            };
+            GameObject ImageGameObject = _factory.GetOrCreateImage(_container, settings);
+
+            Assert.AreEqual(settings.Transform.Position, ((RectTransform)ImageGameObject.transform).position);
+            Assert.AreEqual(settings.Transform.Size, ((RectTransform)ImageGameObject.transform).localScale);
+            Assert.AreEqual(settings.Anchor.AnchorMin, ((RectTransform)ImageGameObject.transform).anchorMin);
+            Assert.AreEqual(settings.Anchor.AnchorMax, ((RectTransform)ImageGameObject.transform).anchorMax);
+            Assert.AreEqual(settings.Anchor.Pivot, ((RectTransform)ImageGameObject.transform).pivot);
+
 
             var ImageObject = ImageGameObject.GetComponentInChildren<Image>();
-            Assert.AreEqual(sprite, ImageObject.sprite);
-            Assert.AreEqual(color, ImageObject.color);
-        }
-
-        [Test]
-        public void GivenTexture_WhenCreatingImage_ThenImageCreatedAndConfigured()
-        {
-            var texture = new Texture2D(1, 1);
-            var color = Color.blue;
-            GameObject ImageGameObject = _factory.GetOrCreateImage(_container, color, texture);
-
-            var ImageObject = ImageGameObject.GetComponentInChildren<Image>();
-            Assert.AreEqual(texture, ImageObject.sprite.texture);
-            Assert.AreEqual(color, ImageObject.color);
+            Assert.AreEqual(settings.Sprite, ImageObject.sprite);
+            Assert.AreEqual(settings.Color, ImageObject.color);
         }
 
         [Test]
@@ -80,7 +86,7 @@ public class ImageFactoryTests
             modelContainer.gameObject.SetActive(false);
             _factory._pool.Enqueue(modelContainer);
 
-            var ImageGameObject = _factory.GetOrCreateImage(_container, new Texture2D(1, 1));
+            var ImageGameObject = _factory.GetOrCreateImage(_container, new ImageFactory.Settings());
 
             Assert.AreEqual(_factory._pool.Count, 0);
             Assert.IsTrue(ImageGameObject.activeInHierarchy);

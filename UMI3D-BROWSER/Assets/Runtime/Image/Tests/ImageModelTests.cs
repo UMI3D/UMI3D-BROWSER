@@ -53,4 +53,47 @@ public class ImageModelTests
             Assert.AreEqual(color, model.Color);
         }
     }
+
+    public class SetPositionTests
+    {
+        [Test]
+        public void GivenPosition_WhenSettingPosition_ThenPosition()
+        {
+            var model = new ImageModel();
+            var position = new Vector3(200, 200, 0);
+            model.SetPosition(position);
+
+            Assert.AreEqual(position, model.Position);
+        }
+    }
+
+    public class SetSizeTests
+    {
+        [Test]
+        public void GivenSize_WhenSettingSize_ThenSize()
+        {
+            var model = new ImageModel();
+            var size = new Vector3(2, 2, 2);
+            model.SetSize(size);
+
+            Assert.AreEqual(size, model.Size);
+        }
+    }
+
+    public class SetAnchorTests
+    {
+        [Test]
+        public void GivenAnchor_WhenSettinAnchore_ThenAnchor()
+        {
+            var model = new ImageModel();
+            var anchorMin = new Vector2(.5f, .5f);
+            var anchorMax = new Vector2(.5f, .5f);
+            var pivot = new Vector2(.5f, .5f);
+            model.SetAnchor(anchorMin, anchorMax, pivot);
+
+            Assert.AreEqual(anchorMin, model.AnchorMin);
+            Assert.AreEqual(anchorMax, model.AnchorMax);
+            Assert.AreEqual(pivot, model.Pivot);
+        }
+    }
 }

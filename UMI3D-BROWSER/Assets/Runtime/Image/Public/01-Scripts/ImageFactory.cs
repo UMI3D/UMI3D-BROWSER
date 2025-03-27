@@ -16,16 +16,36 @@ limitations under the License.
 
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.image
 {
     public class ImageFactory : MonoBehaviour
     {
+        public class Settings
+        {
+            public Sprite Sprite = null;
+            public Color Color = Color.white;
+            public class TransformSettings
+            {
+                public Vector3 Position = Vector3.zero;
+                public Vector3 Size = Vector3.one;
+            }
+            public TransformSettings Transform = null;
+            public class AnchorSettings
+            {
+                public Vector2 AnchorMin = new Vector2(0.5f, 0.5f);
+                public Vector2 AnchorMax = new Vector2(0.5f, 0.5f);
+                public Vector2 Pivot = new Vector2(0.5f, 0.5f);
+            }
+            public AnchorSettings Anchor = null;
+        }
+
         [SerializeField] ImageModelContainer _imagePrefab;
 
         internal Queue<ImageModelContainer> _pool = new ();
 
-        public GameObject GetOrCreateImage(Transform parent, Color color, Sprite sprite = null)
+        public GameObject GetOrCreateImage(Transform parent, Settings settings)
         {
             ImageModelContainer modelContainer;
             if (!_pool.TryDequeue(out modelContainer))
@@ -33,33 +53,19 @@ namespace umi3d.browserRuntime.image
 
             modelContainer.gameObject.SetActive(true);
             modelContainer.transform.SetParent(parent, false);
-            modelContainer.Model.SetSprite(sprite);
-            modelContainer.Model.SetColor(color);
+            modelContainer.Model.SetSprite(settings.Sprite);
+            modelContainer.Model.SetColor(settings.Color);
+            if (settings.Transform != null)
+            {
+                modelContainer.Model.SetPosition(settings.Transform.Position);
+                modelContainer.Model.SetSize(settings.Transform.Size);
+            }
+            if (settings.Anchor != null)
+            {
+                modelContainer.Model.SetAnchor(settings.Anchor.AnchorMin, settings.Anchor.AnchorMax, settings.Anchor.Pivot);
+            }
 
             return modelContainer.gameObject;
-        }
-
-        public GameObject GetOrCreateImage(Transform parent, Sprite sprite = null)
-        {
-            return GetOrCreateImage(parent, Color.white, sprite);
-        }
-
-        public GameObject GetOrCreateImage(Transform parent, Color color, Texture2D texture)
-        {
-            return GetOrCreateImage(
-                parent,
-                color,
-                Sprite.Create(
-                    texture, 
-                    new Rect(0, 0, texture.width, texture.height), 
-                    new Vector2(.5f, .5f)
-                )
-            );
-        }
-
-        public GameObject GetOrCreateImage(Transform parent, Texture2D texture)
-        {
-            return GetOrCreateImage(parent, Color.white, texture);
         }
 
         public void ReturnImage(GameObject gameObject)

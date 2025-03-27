@@ -14,12 +14,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils.ui.canvas;
+using System.Collections.ObjectModel;
+using System.Linq;
 using umi3d.cdk.interaction;
+using umi3d.common.interaction;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.interactions
 {
-    internal class InteractableUIVC : MonoBehaviour, IInteractableUIDataDelegate
+    internal class InteractableUIVC : MonoBehaviour, IView, IInteractableUIDataDelegate
     {
         // The scale of the entire interactable UI.
         const float scale = 0.0005f;
@@ -40,10 +44,12 @@ namespace umi3d.browserRuntime.interactions
 
         [Header("Views")]
         [SerializeField] NameView nameView;
-        [SerializeField] InputsView inputsView;
-        [SerializeField] FeedbackView feedbackView;
+        InputCollectionVC inputCollectionVC;
+        FeedbackView feedbackView;
 
         Camera _camera;
+
+        IView view => this;
 
         #region IInteractableUIDataDelegate
 
@@ -52,6 +58,8 @@ namespace umi3d.browserRuntime.interactions
         public float interactionDistance => interactable?.InteractionDistance ?? 0;
 
         public string interactableName => interactable?.name ?? "";
+        public ReadOnlyCollection<AbstractInteractionDto> interactions => interactable?.interactions.Select(i => i.Result).ToList().AsReadOnly();
+        public ReadOnlyCollection<EventDto> events => interactable?.interactions.Select(i => i.Result).ToList().FindAll(i => i is EventDto).Select(i => i as EventDto).ToList().AsReadOnly();
 
         #endregion
 
@@ -60,6 +68,9 @@ namespace umi3d.browserRuntime.interactions
         void Awake()
         {
             enabled = false;
+
+            Debug.Assert(view.Set(ref inputCollectionVC, 1));
+            Debug.Assert(view.Set(ref feedbackView, 2));
 
             model = new();
             model.offsetWithRenderer = offsetWithRenderer;
@@ -72,7 +83,7 @@ namespace umi3d.browserRuntime.interactions
             _camera = Camera.main;
 
             nameView.SetModel(model);
-            inputsView.SetModel(model);
+            inputCollectionVC.SetModel(model);
             feedbackView.SetModel(model);
         }
 

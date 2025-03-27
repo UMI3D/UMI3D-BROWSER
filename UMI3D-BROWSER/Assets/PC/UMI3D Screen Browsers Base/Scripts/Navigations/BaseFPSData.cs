@@ -28,7 +28,7 @@ namespace umi3d.baseBrowser.Navigation
         [Tooltip("Max rotation angle for the head around x axis (down to up).")]
         public Vector2 maxXHeadAngle = new Vector2(-60f, 70f);
         [Tooltip("Max rotation angle for the viewpoint(camera) around the x axis (down to up)")]
-        public float maxXCameraAngle = 90f;
+        public Vector2 maxXCameraAngle = new Vector2(-60f, 70f);
         [Tooltip("Max rotation angle for the viewpoint(camera)/head around the y axis (left to right)")]
         public float maxYCameraAngle = 90f;
         [Tooltip("Max rotation angle for the neck.")]

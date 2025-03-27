@@ -14,11 +14,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System;
 using System.Collections.Generic;
 using umi3d.baseBrowser.Navigation;
+using umi3d.browserRuntime.navigation;
 using umi3d.cdk.collaboration.userCapture;
 using umi3d.cdk.navigation;
+using umi3d.common;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.XR.ARFoundation;
 
 namespace umi3d.baseBrowser
 {
@@ -114,6 +119,70 @@ namespace umi3d.baseBrowser
         private void OnDrawGizmosSelected()
         {
             colliderDelegate?.DrawGizmos();
+        }
+
+        [ContextMenu(itemName:"Func Change View")]
+        void TestViewMode()
+        {
+            if(fpsData.navigationMode == E_NavigationMode.Default)
+            {
+                OmniscientViewDto newView = new OmniscientViewDto();
+                fpsData.navigationMode = E_NavigationMode.Omniscient;
+
+                //positions
+                collisionManager.playerTransform.position = new Vector3(collisionManager.playerTransform.position.x, collisionManager.playerTransform.position.y+10, collisionManager.playerTransform.position.z);
+                cameraManager.playerTransform.position = collisionManager.playerTransform.position;
+                colliderDelegate.playerTransform.position = collisionManager.playerTransform.position;
+                movementManager.playerTransform.position = collisionManager.playerTransform.position;
+                navigationDelegate.playerTransform.position = collisionManager.playerTransform.position;
+                Quaternion test = new Quaternion();
+                //Vector3 quaternion = test.ToEulerAngles();
+                //camera
+                fpsData.maxXCameraAngle = new Vector2(0, 90);
+                //cameraManager.viewpointPivot.SetPositionAndRotation(cameraManager.viewpointPivot.transform.position,
+                    //new Quaternion.EulerAngles(cameraManager.viewpointPivot.rotation.x + 45, cameraManager.viewpointPivot.rotation.y, cameraManager.viewpointPivot.rotation.z));
+                //navigationDelegate.cameraTransform = cameraManager.viewpointPivot;
+
+
+                /*PerspectiveCameraPropertiesDto cam = new PerspectiveCameraPropertiesDto();
+                cam.fieldOfView = 50;
+                cameraManager.CameraPropertiesReception(cam);*/
+
+                //physics and collisions
+                fpsData.gravity = 0;
+                fpsData.maxJumpAltitude = 0;
+                fpsData.obstacleLayer = 0;
+                fpsData.navmeshLayer = 0;
+                fpsData.topSphereCenter = new Vector3(0, 0, 0);
+                fpsData.capsuleRadius = 0;
+                fpsData.maxAltitudeToCheckGround = 0;
+                fpsData.maxSlopeAngle = 0;
+                fpsData.maxStepHeight = 0;
+                fpsData.stepEpsilon = 0;
+                fpsData.lateralSpeed.x = 3;
+                fpsData.flyingSpeed = 25;
+            }
+            else
+            {
+                fpsData.navigationMode = E_NavigationMode.Default;
+
+                //camera
+                fpsData.maxXCameraAngle = new Vector2(-90, 90);
+
+                //collisions and physics
+                fpsData.gravity = -9.807f;
+                fpsData.maxJumpAltitude = 1;
+                fpsData.obstacleLayer = LayerMask.GetMask("Navmesh", "Obstacle");
+                fpsData.navmeshLayer = LayerMask.GetMask("Navmesh");
+                fpsData.topSphereCenter = new Vector3(0, 1.4f, 0);
+                fpsData.capsuleRadius = 0.3f;
+                fpsData.maxAltitudeToCheckGround = 25;
+                fpsData.maxSlopeAngle = 45;
+                fpsData.maxStepHeight = 0.3f;
+                fpsData.stepEpsilon = 0.05f;
+                fpsData.lateralSpeed.x = 1;
+                fpsData.flyingSpeed = 5;
+            }
         }
     }
 }

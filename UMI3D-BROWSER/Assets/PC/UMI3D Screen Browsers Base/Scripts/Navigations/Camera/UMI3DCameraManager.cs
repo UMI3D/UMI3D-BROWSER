@@ -104,8 +104,8 @@ public sealed class UMI3DCameraManager
         // Restrict up and down viewpoint movement.
         float viewpointXAxis = Mathf.Clamp(
             (viewpointPivot.localRotation.eulerAngles.NormalizeAngle() + ((Vector3)angularSpeed).NormalizeAngle()).x, 
-            -data.maxXCameraAngle, 
-            data.maxXCameraAngle
+            data.maxXCameraAngle.x, 
+            data.maxXCameraAngle.y
         );
 
         viewpointPivot.localRotation = Quaternion.Euler(viewpointXAxis, viewpointYAxis, 0f);

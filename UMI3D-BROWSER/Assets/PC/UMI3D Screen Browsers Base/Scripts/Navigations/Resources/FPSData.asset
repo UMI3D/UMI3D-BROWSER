@@ -15,32 +15,32 @@ MonoBehaviour:
   cameraMode: 2
   cursorMode: 0
   maxXHeadAngle: {x: -60, y: 70}
-  maxXCameraAngle: 90
+  maxXCameraAngle: {x: 0, y: 90}
   maxYCameraAngle: 90
   maxNeckAngle: 50
   AngularViewSpeed: {x: 5, y: 5}
   cameraRotation: {x: -0, y: 0}
   forwardSpeed: {x: 3, y: 1, z: 10}
-  lateralSpeed: {x: 1, y: 1, z: 7}
+  lateralSpeed: {x: 3, y: 1, z: 7}
   backwardSpeed: {x: 3, y: 1, z: 10}
-  gravity: -9.807
-  maxJumpAltitude: 1
+  gravity: 0
+  maxJumpAltitude: 0
   crouchYAxis: -0.35
   crouchSpeed: 0.2
   obstacleLayer:
     serializedVersion: 2
-    m_Bits: 5120
+    m_Bits: 0
   navmeshLayer:
     serializedVersion: 2
-    m_Bits: 1024
-  topSphereCenter: {x: 0, y: 1.4, z: 0}
-  capsuleRadius: 0.3
-  maxAltitudeToCheckGround: 25
-  maxSlopeAngle: 45
-  maxStepHeight: 0.3
-  stepEpsilon: 0.05
-  groundYAxis: -3.760002
-  previousGroundYAxis: -3.760002
+    m_Bits: 0
+  topSphereCenter: {x: 0, y: 0, z: 0}
+  capsuleRadius: 0
+  maxAltitudeToCheckGround: 0
+  maxSlopeAngle: 0
+  maxStepHeight: 0
+  stepEpsilon: 0
+  groundYAxis: 0.39445236
+  previousGroundYAxis: 0.39445236
   WantToJump: 0
   IsJumping: 0
   WantToCrouch: 0
@@ -48,8 +48,9 @@ MonoBehaviour:
   WantToSprint: 0
   IsSprinting: 0
   WantToLookAround: 0
-  navigationMode: 0
+  WantToLookAroundInDrawMode: 1
+  navigationMode: 4
   verticalVelocity: 0
   playerTranslationSpeed: {x: 0, y: 0, z: 0}
   playerTranslation: {x: 0, y: 0, z: 0}
-  flyingSpeed: 5
+  flyingSpeed: 25

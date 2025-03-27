@@ -14,6 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using UnityEngine;
+
 namespace umi3d.common
 {
     /// <summary>
@@ -37,5 +39,10 @@ namespace umi3d.common
         /// Order of the canvas in the rendering of the layer.
         /// </summary>
         public int orderInLayer { get; set; }
+
+        /// <summary>
+        /// Render mode of the canvas.
+        /// </summary>
+        public RenderMode renderMode { get; set; }
     }
 }

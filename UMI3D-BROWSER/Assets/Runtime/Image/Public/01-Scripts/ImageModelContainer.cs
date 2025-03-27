@@ -14,13 +14,19 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-namespace umi3d.browserRuntime.button
+using UnityEngine;
+
+namespace umi3d.browserRuntime.image
 {
-    internal class ButtonNotificationKeys 
+    public class ImageModelContainer : MonoBehaviour
     {
-        public class ButtonSet
-        {
-            public static readonly string Label = "Label";
+        ImageModel model;
+        public ImageModel Model { 
+            get { 
+                if (model == null)
+                    model = new ImageModel();
+                return model; 
+            } 
         }
     }
 }

@@ -41,11 +41,9 @@ public class ButtonFactoryTests
         }
 
         [Test]
-        public void GivenValidArguments_WhenCreatingButton_ThenButtonCreated()
+        public void Given_WhenCreatingButton_ThenButtonCreated()
         {
-            var label = "TestLabel";
-            var callbackCalled = false;
-            GameObject buttonGameObject = _factory.GetOrCreateButton(_container, label, () => callbackCalled = true);
+            GameObject buttonGameObject = _factory.GetOrCreateButton(_container, new ButtonFactory.Settings());
 
             Assert.IsNotNull(buttonGameObject);
             Assert.AreEqual(_container, buttonGameObject.transform.parent);
@@ -54,14 +52,50 @@ public class ButtonFactoryTests
         [Test]
         public void GivenValidArguments_WhenCreatingButton_ThenButtonCreatedAndConfigured()
         {
-            var label = "TestLabel";
             var callbackCalled = false;
-            GameObject buttonGameObject = _factory.GetOrCreateButton(_container, label, () => callbackCalled = true);
+            var settings = new ButtonFactory.Settings() {
+                Label = "TestLabel",
+                Callback = () => callbackCalled = true,
+                Image = new() {
+                    Sprite = Sprite.Create(new Texture2D(1, 1), new Rect(0, 0, 1, 1), new Vector2(.5f, .5f)),
+                    ColorBlock = new ColorBlock() { normalColor = Color.blue, highlightedColor = Color.red },
+                },
+                Transform = new() {
+                    Position = Vector2.one,
+                    Size = Vector2.one / 2
+                },
+                Anchor = new () {
+                    AnchorMin = Vector2.zero,
+                    AnchorMax = Vector2.one,
+                    Pivot = Vector2.zero,
+                },
+                TextStyle = new () {
+                    FontSize = 26,
+                    Color = Color.red,
+                    FontStyles = FontStyles.Bold | FontStyles.Italic,
+                    TextAlignementOptions = TextAlignmentOptions.Justified,
+                } 
+            };
+
+            GameObject buttonGameObject = _factory.GetOrCreateButton(_container, settings);
+
+            Assert.AreEqual(settings.Transform.Position, ((RectTransform)buttonGameObject.transform).position);
+            Assert.AreEqual(settings.Transform.Size, ((RectTransform)buttonGameObject.transform).localScale);
+            Assert.AreEqual(settings.Anchor.AnchorMin, ((RectTransform)buttonGameObject.transform).anchorMin);
+            Assert.AreEqual(settings.Anchor.AnchorMax, ((RectTransform)buttonGameObject.transform).anchorMax);
+            Assert.AreEqual(settings.Anchor.Pivot, ((RectTransform)buttonGameObject.transform).pivot);
 
             var text = buttonGameObject.GetComponentInChildren<TMP_Text>();
-            Assert.AreEqual(label, text.text);
+            Assert.AreEqual(settings.Label, text.text);
+            Assert.AreEqual(settings.TextStyle.FontSize, text.fontSize);
+            Assert.AreEqual(settings.TextStyle.Color, text.color);
+            Assert.AreEqual(settings.TextStyle.FontStyles, text.fontStyle);
+            Assert.AreEqual(settings.TextStyle.TextAlignementOptions, text.alignment);
 
-            buttonGameObject.GetComponentInChildren<Button>().onClick?.Invoke();
+            var button = buttonGameObject.GetComponent<Button>();
+            Assert.AreEqual(settings.Image.Sprite, button.image.sprite);
+            Assert.AreEqual(settings.Image.ColorBlock, button.colors);
+            button.onClick?.Invoke();
             Assert.IsTrue(callbackCalled);
         }
 
@@ -72,7 +106,7 @@ public class ButtonFactoryTests
             modelContainer.gameObject.SetActive(false);
             _factory._pool.Enqueue(modelContainer);
 
-            var buttonGameObject = _factory.GetOrCreateButton(_container, "", () => { });
+            var buttonGameObject = _factory.GetOrCreateButton(_container, new ButtonFactory.Settings());
 
             Assert.AreEqual(_factory._pool.Count, 0);
             Assert.IsTrue(buttonGameObject.activeInHierarchy);

@@ -14,8 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils.observation;
 using UnityEngine;
 using UnityEngine.UI;
+using static umi3d.browserRuntime.button.ButtonNotificationKeys;
 
 namespace umi3d.browserRuntime.button
 {
@@ -31,11 +33,38 @@ namespace umi3d.browserRuntime.button
             _button = GetComponent<Button>();
 
             _button.onClick.AddListener(_modelContainer.Model.Click);
+
+            NotificationHub.Default.Subscribe(this,
+                ID.FromType<ButtonNotificationKeys.ButtonSet>(),
+                (Callback)ButtonSet,
+                new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == _modelContainer.Model));
         }
 
         void OnDestroy()
         {
+            NotificationHub.Default.Unsubscribe(this);
             _button.onClick.RemoveListener(_modelContainer.Model.Click);
+        }
+
+
+        void ButtonSet(Notification notification)
+        {
+            if (notification.TryGetInfoT(ButtonNotificationKeys.ButtonSet.Sprite, out Sprite sprite, false))
+                _button.image.sprite = sprite;
+            if (notification.TryGetInfoT(ButtonNotificationKeys.ButtonSet.ColorBlock, out ColorBlock colorBlock, false))
+                _button.colors = colorBlock;
+
+            if (notification.TryGetInfoT(ButtonNotificationKeys.ButtonSet.Position, out Vector3 position, false))
+                transform.position = position;
+            if (notification.TryGetInfoT(ButtonNotificationKeys.ButtonSet.Size, out Vector3 size, false))
+                transform.localScale = size;
+
+            if (notification.TryGetInfoT(ButtonNotificationKeys.ButtonSet.AnchorMin, out Vector2 anchorMin, false))
+                ((RectTransform)transform).anchorMin = anchorMin;
+            if (notification.TryGetInfoT(ButtonNotificationKeys.ButtonSet.AnchorMax, out Vector2 anchorMax, false))
+                ((RectTransform)transform).anchorMax = anchorMax;
+            if (notification.TryGetInfoT(ButtonNotificationKeys.ButtonSet.Pivot, out Vector2 pivot, false))
+                ((RectTransform)transform).pivot = pivot;
         }
     }
 }

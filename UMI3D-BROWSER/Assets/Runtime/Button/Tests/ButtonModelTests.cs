@@ -14,7 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 using NUnit.Framework;
+using TMPro;
 using umi3d.browserRuntime.button;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class ButtonModelTests
 {
@@ -52,6 +55,83 @@ public class ButtonModelTests
             model.SetCallback(() => callbackCalled = true);
 
             Assert.IsNotNull(model._callback);
+        }
+    }
+
+    public class SetImageTests
+    {
+        [Test]
+        public void GivenImage_WhenSettingImage_ThenImage()
+        {
+            var sprite = Sprite.Create(new Texture2D(1, 1), new Rect(0, 0, 1, 1), new Vector2(.5f, .5f));
+            var colors = new ColorBlock() { normalColor = Color.blue };
+            ButtonModel model = new ButtonModel();
+            model.SetImage(colors, sprite);
+
+            Assert.AreEqual(sprite, model.Sprite);
+            Assert.AreEqual(colors, model.ColorBlock);
+        }
+    }
+
+    public class SetPositionTests
+    {
+        [Test]
+        public void GivenPosition_WhenSettingPosition_ThenPosition()
+        {
+            var position = new Vector3(200, 200, 0);
+            ButtonModel model = new ButtonModel();
+            model.SetPosition(position);
+
+            Assert.AreEqual(position, model.Position);
+        }
+    }
+
+    public class SetSizeTests
+    {
+        [Test]
+        public void GivenSize_WhenSettingSize_ThenSize()
+        {
+            var size = new Vector3(2, 2, 2);
+            ButtonModel model = new ButtonModel();
+            model.SetSize(size);
+
+            Assert.AreEqual(size, model.Size);
+        }
+    }
+
+    public class SetAnchorTests
+    {
+        [Test]
+        public void GivenAnchor_WhenSettingAnchor_ThenAnchor()
+        {
+            var anchorMin = new Vector2(0, 0);
+            var anchorMax = new Vector2(1, 1);
+            var pivot = new Vector2(0, 0);
+            ButtonModel model = new ButtonModel();
+            model.SetAnchor(anchorMin, anchorMax, pivot);
+
+            Assert.AreEqual(anchorMin, model.AnchorMin);
+            Assert.AreEqual(anchorMax, model.AnchorMax);
+            Assert.AreEqual(pivot, model.Pivot);
+        }
+    }
+
+    public class SetTextStyleTests
+    {
+        [Test]
+        public void GivenTextStyle_WhenSettingTextStyle_ThenTextStyle()
+        {
+            var textSize = 26;
+            var textColor = Color.red;
+            var textStyles = FontStyles.Bold | FontStyles.Italic;
+            var textAlignements = TextAlignmentOptions.Justified;
+            ButtonModel model = new ButtonModel();
+            model.SetTextStyle(textSize, textColor, textStyles, textAlignements);
+
+            Assert.AreEqual(textSize, model.TextFontSize);
+            Assert.AreEqual(textColor, model.TextColor);
+            Assert.AreEqual(textStyles, model.TextStyles);
+            Assert.AreEqual(textAlignements, model.TextAlignementOptions);
         }
     }
 

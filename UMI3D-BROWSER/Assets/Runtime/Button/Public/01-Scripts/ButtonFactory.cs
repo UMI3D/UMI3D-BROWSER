@@ -16,27 +16,88 @@ limitations under the License.
 
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.button
 {
     public class ButtonFactory : MonoBehaviour
     {
+        public class Settings
+        {
+            public string Label = string.Empty;
+            public Action Callback = null;
+
+            public class TransformSettings
+            {
+                public Vector3 Position = Vector2.zero;
+                public Vector3 Size = Vector2.one;
+            }
+            public TransformSettings Transform = null;
+
+            public class ImageSettings
+            {
+                public Sprite Sprite = null;
+                public ColorBlock ColorBlock = ColorBlock.defaultColorBlock;
+            }
+            public ImageSettings Image = null;
+
+            public class AnchorSettings
+            {
+                public Vector2 AnchorMin = new Vector2(.5f, .5f);
+                public Vector2 AnchorMax = new Vector2(.5f, .5f);
+                public Vector2 Pivot = new Vector2(.5f, .5f);
+            }
+            public AnchorSettings Anchor = null;
+
+            public class TextStyleSettings
+            {
+                public int FontSize = 12;
+                public Color Color = Color.white;
+                public FontStyles FontStyles = FontStyles.Normal;
+                public TextAlignmentOptions TextAlignementOptions = TextAlignmentOptions.MidlineLeft;
+            }
+            public TextStyleSettings TextStyle = null;
+        }
+
         [SerializeField] internal ButtonModelContainer _buttonPrefab;
 
         internal Queue<ButtonModelContainer> _pool = new();
 
-        public GameObject GetOrCreateButton(Transform parent, string label = "", Action callback = null)
+        public GameObject GetOrCreateButton(Transform parent, Settings settings)
         {
             ButtonModelContainer button;
             if (!_pool.TryDequeue(out button))
                 button = Instantiate(_buttonPrefab);
-
             button.gameObject.SetActive(true);
             button.transform.SetParent(parent, false);
 
-            button.Model.SetLabel(label);
-            button.Model.SetCallback(callback);
+            button.Model.SetLabel(settings.Label);
+            button.Model.SetCallback(settings.Callback);
+            if (settings.Transform != null)
+            {
+                button.Model.SetPosition(settings.Transform.Position);
+                button.Model.SetSize(settings.Transform.Size);
+            }
+            if (settings.Image != null)
+            {
+                button.Model.SetImage(settings.Image.ColorBlock, 
+                    settings.Image.Sprite);
+            }
+            if (settings.Anchor != null)
+            {
+                button.Model.SetAnchor(settings.Anchor.AnchorMin, 
+                    settings.Anchor.AnchorMax, 
+                    settings.Anchor.Pivot);
+            }
+            if (settings.TextStyle != null)
+            {
+                button.Model.SetTextStyle(settings.TextStyle.FontSize, 
+                    settings.TextStyle.Color, 
+                    settings.TextStyle.FontStyles,
+                    settings.TextStyle.TextAlignementOptions);
+            }
 
             return button.gameObject;
         }

@@ -44,8 +44,17 @@ namespace umi3d.browserRuntime.button
 
         void ButtonSet(Notification notification)
         {
-            if (notification.TryGetInfoT(ButtonNotificationKeys.ButtonSet.Label, out string label))
+            if (notification.TryGetInfoT(ButtonNotificationKeys.ButtonSet.Label, out string label, false))
                 _text.text = label;
+
+            if (notification.TryGetInfoT(ButtonNotificationKeys.ButtonSet.TextFontSize, out int textFontSize, false))
+                _text.fontSize = textFontSize;
+            if (notification.TryGetInfoT(ButtonNotificationKeys.ButtonSet.TextColor, out Color textColor, false))
+                _text.color = textColor;
+            if (notification.TryGetInfoT(ButtonNotificationKeys.ButtonSet.TextStyles, out FontStyles textStyles, false))
+                _text.fontStyle = textStyles;
+            if (notification.TryGetInfoT(ButtonNotificationKeys.ButtonSet.TextAlignementOptions, out TextAlignmentOptions textAlignementOptions, false))
+                _text.alignment = textAlignementOptions;
         }
     }
 }

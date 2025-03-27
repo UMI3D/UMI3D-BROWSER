@@ -25,5 +25,10 @@ namespace umi3d.common
         /// The distance of the camera.
         /// </summary>
         public float distance { get; set; }
+        /// <summary>
+        /// The movement speed of forward, backward and lateral movements.
+        /// </summary>
+        public float flyingSpeed { get; set; }
+
     }
 }

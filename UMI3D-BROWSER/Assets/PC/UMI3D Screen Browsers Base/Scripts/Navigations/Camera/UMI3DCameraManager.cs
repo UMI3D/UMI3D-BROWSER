@@ -125,11 +125,10 @@ public sealed class UMI3DCameraManager
         neckPivot.localRotation = Quaternion.Euler(neckAngle);
     }
 
-    void CameraPropertiesReception(Notification notification)
+    public void CameraPropertiesReception(Notification notification)
     {
         if (!notification.TryGetInfoT(UMI3DClientNotificatonKeys.Info.CameraProperties, out AbstractCameraPropertiesDto dto))
             return;
-
         Camera cam = Camera.main;
 
         if (dto is PerspectiveCameraPropertiesDto)

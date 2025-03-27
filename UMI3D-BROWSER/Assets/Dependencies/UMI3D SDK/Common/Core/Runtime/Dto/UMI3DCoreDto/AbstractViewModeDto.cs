@@ -29,5 +29,20 @@ namespace umi3d.common
         /// The new camera FoV.
         /// </summary>
         public float fieldOfView { get; set; }
+
+        /// <summary>
+        /// Visibility Distance.
+        /// </summary>
+        public float farPlane { get; set; }
+
+        /// <summary>
+        /// Clipping Distance.
+        /// </summary>
+        public float nearPlane { get; set; }
+
+        /// <summary>
+        /// Determine the limit of the vertical vision range .
+        /// </summary>
+        public Vector2Dto cameraXAngle { get; set; }
     }
 }

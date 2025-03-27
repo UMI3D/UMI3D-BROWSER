@@ -178,6 +178,9 @@ public sealed class UMI3DMovementManager
             case E_NavigationMode.Teleportation:
                 Teleport();
                 break;
+            case E_NavigationMode.Omniscient:
+                Fly();
+                break;
             case E_NavigationMode.Debug:
                 Fly();
                 break;
@@ -193,7 +196,7 @@ public sealed class UMI3DMovementManager
             return;
         }
 
-        if (data.navigationMode == E_NavigationMode.Debug)
+        if (data.navigationMode == E_NavigationMode.Debug || data.navigationMode == E_NavigationMode.Omniscient)
         {
             data.playerTranslationSpeed.y = data.flyingSpeed * ((data.WantToCrouch ? -1 : 0) + (data.WantToJump ? 1 : 0));
             return;

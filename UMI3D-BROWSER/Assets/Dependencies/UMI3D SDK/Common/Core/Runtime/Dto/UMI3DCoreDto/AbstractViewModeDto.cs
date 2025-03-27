@@ -1,4 +1,4 @@
-﻿/*
+/*
 Copyright 2019 - 2021 Inetum
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,36 +13,36 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
-using UnityEngine;
-
 namespace umi3d.common
 {
     /// <summary>
-    /// DTO describing a Canvas for UI.
+    /// Abstract operation DTO to describe a view mode operation.
     /// </summary>
-    [System.Serializable]
-    public class UICanvasDto : UIRectDto
+    public class AbstractViewModeDto : AbstractOperationDto
     {
         /// <summary>
-        /// Number of pixels par unit in the UI to use for dynamically created elements.
+        /// The new camera local position.
         /// </summary>
-        /// Such dynamically created elements typically includes bitmaps, such as UI texts.
-        public float dynamicPixelsPerUnit { get; set; }
+        public Vector3Dto localPosition { get; set; }
 
         /// <summary>
-        /// Number of pixels that should correspond to one unit in the UI.
+        /// The new camera FoV.
         /// </summary>
-        public float referencePixelsPerUnit { get; set; }
+        public float fieldOfView { get; set; }
 
         /// <summary>
-        /// Order of the canvas in the rendering of the layer.
+        /// Visibility Distance.
         /// </summary>
-        public int orderInLayer { get; set; }
+        public float farPlane { get; set; }
 
         /// <summary>
-        /// Render mode of the canvas.
+        /// Clipping Distance.
         /// </summary>
-        public RenderMode renderMode { get; set; }
+        public float nearPlane { get; set; }
+
+        /// <summary>
+        /// Determine the limit of the vertical vision range .
+        /// </summary>
+        public Vector2Dto cameraXAngle { get; set; }
     }
 }

@@ -54,37 +54,31 @@ public class TextFactoryTests
         {
             var text = "TestText";
             var settings = new TextFactory.Settings() {
-                Transform = new() {
-                    Position = Vector3.one,
-                    Size = Vector3.one / 2
-                },
-                Anchor = new() {
-                    AnchorMin = Vector2.zero,
-                    AnchorMax = Vector2.one,
-                    Pivot = Vector2.zero,
-                },
-                TextStyle = new() {
-                    FontSize = 26,
-                    Color = Color.red,
-                    FontStyles = FontStyles.Bold | FontStyles.Italic,
-                    TextAlignementOptions = TextAlignmentOptions.Justified,
-                }
+                Position = Vector3.one,
+                Size = Vector3.one / 2,
+                AnchorMin = Vector2.zero,
+                AnchorMax = Vector2.one,
+                Pivot = Vector2.zero,
+                FontSize = 26,
+                TextColor = Color.red,
+                FontStyles = FontStyles.Bold | FontStyles.Italic,
+                TextAlignmentOptions = TextAlignmentOptions.Justified,
             };
 
             GameObject textGameObject = _factory.GetOrCreateText(_container, text, settings);
 
-            Assert.AreEqual(settings.Transform.Position, ((RectTransform)textGameObject.transform).position);
-            Assert.AreEqual(settings.Transform.Size, ((RectTransform)textGameObject.transform).localScale);
-            Assert.AreEqual(settings.Anchor.AnchorMin, ((RectTransform)textGameObject.transform).anchorMin);
-            Assert.AreEqual(settings.Anchor.AnchorMax, ((RectTransform)textGameObject.transform).anchorMax);
-            Assert.AreEqual(settings.Anchor.Pivot, ((RectTransform)textGameObject.transform).pivot);
+            Assert.AreEqual(settings.Position, ((RectTransform)textGameObject.transform).position);
+            Assert.AreEqual(settings.Size, ((RectTransform)textGameObject.transform).sizeDelta);
+            Assert.AreEqual(settings.AnchorMin, ((RectTransform)textGameObject.transform).anchorMin);
+            Assert.AreEqual(settings.AnchorMax, ((RectTransform)textGameObject.transform).anchorMax);
+            Assert.AreEqual(settings.Pivot, ((RectTransform)textGameObject.transform).pivot);
 
             var textObject = textGameObject.GetComponentInChildren<TMP_Text>();
             Assert.AreEqual(text, textObject.text);
-            Assert.AreEqual(settings.TextStyle.FontSize, textObject.fontSize);
-            Assert.AreEqual(settings.TextStyle.Color, textObject.color);
-            Assert.AreEqual(settings.TextStyle.FontStyles, textObject.fontStyle);
-            Assert.AreEqual(settings.TextStyle.TextAlignementOptions, textObject.alignment);
+            Assert.AreEqual(settings.FontSize, textObject.fontSize);
+            Assert.AreEqual(settings.TextColor, textObject.color);
+            Assert.AreEqual(settings.FontStyles, textObject.fontStyle);
+            Assert.AreEqual(settings.TextAlignmentOptions, textObject.alignment);
 
         }
 

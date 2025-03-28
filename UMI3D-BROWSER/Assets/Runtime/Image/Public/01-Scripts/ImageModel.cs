@@ -20,17 +20,17 @@ using static umi3d.browserRuntime.image.ImageFactory.Settings;
 
 namespace umi3d.browserRuntime.image
 {
-    public class ImageModel 
+    public class ImageModel
     {
         public Sprite Sprite { get; private set; } = null;
         public Color Color { get; private set; } = Color.white;
         public Vector3 Position { get; private set; } = Vector3.zero;
-        public Vector3 Size { get; private set; } = Vector3.one;
+        public Vector2 Size { get; private set; } = Vector2.one;
         public Vector2 AnchorMin { get; private set; } = new Vector2(0.5f, 0.5f);
         public Vector2 AnchorMax { get; private set; } = new Vector2(0.5f, 0.5f);
         public Vector2 Pivot { get; private set; } = new Vector2(0.5f, 0.5f);
 
-    Notifier _setNotifier;
+        private Notifier _setNotifier;
 
         public ImageModel()
         {
@@ -45,36 +45,57 @@ namespace umi3d.browserRuntime.image
             _setNotifier.Notify();
         }
 
-        public void SetColor(Color color)
+        public void SetColor(Color? color)
         {
-            Color = color;
+            Color = color ?? Color.white;
             _setNotifier[ImageNotificationKeys.ImageSet.Color] = Color;
             _setNotifier.Notify();
         }
 
-        public void SetPosition(Vector3 position)
+        public void SetPosition(Vector3? position)
         {
-            Position = position;
-            _setNotifier[ImageNotificationKeys.ImageSet.Position] = Position;
-            _setNotifier.Notify();
+            if (position.HasValue)
+            {
+                Position = position.Value;
+                _setNotifier[ImageNotificationKeys.ImageSet.Position] = Position;
+                _setNotifier.Notify();
+            }
         }
 
-        public void SetSize(Vector3 size)
+        public void SetSize(Vector2? size)
         {
-            Size = size;
-            _setNotifier[ImageNotificationKeys.ImageSet.Size] = Size;
-            _setNotifier.Notify();
+            if (size.HasValue)
+            {
+                Size = size.Value;
+                _setNotifier[ImageNotificationKeys.ImageSet.Size] = Size;
+                _setNotifier.Notify();
+            }
         }
 
-        public void SetAnchor(Vector2 anchorMin, Vector2 anchorMax, Vector2 pivot)
+        public void SetAnchor(Vector2? anchorMin, Vector2? anchorMax, Vector2? pivot)
         {
-            AnchorMin = anchorMin;
-            AnchorMax = anchorMax;
-            Pivot = pivot;
-            _setNotifier[ImageNotificationKeys.ImageSet.AnchorMin] = AnchorMin;
-            _setNotifier[ImageNotificationKeys.ImageSet.AnchorMax] = AnchorMax;
-            _setNotifier[ImageNotificationKeys.ImageSet.Pivot] = Pivot;
-            _setNotifier.Notify();
+            bool hasChanged = false;
+            if (anchorMin.HasValue)
+            {
+                AnchorMin = anchorMin.Value;
+                _setNotifier[ImageNotificationKeys.ImageSet.AnchorMin] = AnchorMin;
+                hasChanged = true;
+            }
+            if (anchorMax.HasValue)
+            {
+                AnchorMax = anchorMax.Value;
+                _setNotifier[ImageNotificationKeys.ImageSet.AnchorMax] = AnchorMax;
+                hasChanged = true;
+            }
+            if (pivot.HasValue)
+            {
+                Pivot = pivot.Value;
+                _setNotifier[ImageNotificationKeys.ImageSet.Pivot] = Pivot;
+                hasChanged = true;
+            }
+
+            if (hasChanged)
+                _setNotifier.Notify();
         }
     }
 }

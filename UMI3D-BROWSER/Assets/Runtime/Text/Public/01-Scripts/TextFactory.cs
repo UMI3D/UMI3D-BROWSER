@@ -17,7 +17,6 @@ limitations under the License.
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.text
 {
@@ -25,29 +24,17 @@ namespace umi3d.browserRuntime.text
     {
         public class Settings
         {
-            public class TransformSettings
-            {
-                public Vector3 Position = Vector2.zero;
-                public Vector3 Size = Vector2.one;
-            }
-            public TransformSettings Transform = null;
+            public Vector3? Position;
+            public Vector2? Size;
 
-            public class AnchorSettings
-            {
-                public Vector2 AnchorMin = new Vector2(.5f, .5f);
-                public Vector2 AnchorMax = new Vector2(.5f, .5f);
-                public Vector2 Pivot = new Vector2(.5f, .5f);
-            }
-            public AnchorSettings Anchor = null;
+            public Vector2? AnchorMin;
+            public Vector2? AnchorMax;
+            public Vector2? Pivot;
 
-            public class TextStyleSettings
-            {
-                public int FontSize = 12;
-                public Color Color = Color.white;
-                public FontStyles FontStyles = FontStyles.Normal;
-                public TextAlignmentOptions TextAlignementOptions = TextAlignmentOptions.MidlineLeft;
-            }
-            public TextStyleSettings TextStyle = null;
+            public int? FontSize;
+            public Color? TextColor;
+            public FontStyles? FontStyles;
+            public TextAlignmentOptions? TextAlignmentOptions;
         }
 
         [SerializeField] internal TextModelContainer _textPrefab;
@@ -67,19 +54,10 @@ namespace umi3d.browserRuntime.text
             modelContainer.transform.SetParent(parent, false);
 
             modelContainer.Model.SetText(text);
-            if (settings.Transform != null)
-            {
-                modelContainer.Model.SetPosition(settings.Transform.Position);
-                modelContainer.Model.SetSize(settings.Transform.Size);
-            }
-            if (settings.Anchor != null)
-            {
-                modelContainer.Model.SetAnchor(settings.Anchor.AnchorMin, settings.Anchor.AnchorMax, settings.Anchor.Pivot);
-            }
-            if (settings.TextStyle != null)
-            {
-                modelContainer.Model.SetTextStyle(settings.TextStyle.FontSize, settings.TextStyle.Color, settings.TextStyle.FontStyles, settings.TextStyle.TextAlignementOptions);
-            }
+            modelContainer.Model.SetPosition(settings.Position);
+            modelContainer.Model.SetSize(settings.Size);
+            modelContainer.Model.SetAnchor(settings.AnchorMin, settings.AnchorMax, settings.Pivot);
+            modelContainer.Model.SetTextStyle(settings.FontSize, settings.TextColor, settings.FontStyles, settings.TextAlignmentOptions);
 
             return modelContainer.gameObject;
         }

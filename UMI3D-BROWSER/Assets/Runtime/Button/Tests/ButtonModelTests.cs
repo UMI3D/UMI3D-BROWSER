@@ -71,6 +71,16 @@ public class ButtonModelTests
             Assert.AreEqual(sprite, model.Sprite);
             Assert.AreEqual(colors, model.ColorBlock);
         }
+
+        [Test]
+        public void GivenNull_WhenSettingImage_ThenDefault()
+        {
+            ButtonModel model = new ButtonModel();
+            model.SetImage(null, null);
+
+            Assert.IsNull(model.Sprite);
+            Assert.AreEqual(ColorBlock.defaultColorBlock, model.ColorBlock);
+        }
     }
 
     public class SetPositionTests
@@ -84,6 +94,17 @@ public class ButtonModelTests
 
             Assert.AreEqual(position, model.Position);
         }
+
+        [Test]
+        public void GivenNull_WhenSettingPosition_ThenNothingChange()
+        {
+            var position = new Vector3(200, 200, 0);
+            ButtonModel model = new ButtonModel();
+            model.SetPosition(position);
+            model.SetPosition(null);
+
+            Assert.AreEqual(position, model.Position);
+        }
     }
 
     public class SetSizeTests
@@ -91,9 +112,20 @@ public class ButtonModelTests
         [Test]
         public void GivenSize_WhenSettingSize_ThenSize()
         {
-            var size = new Vector3(2, 2, 2);
+            var size = new Vector2(2, 2);
             ButtonModel model = new ButtonModel();
             model.SetSize(size);
+
+            Assert.AreEqual(size, model.Size);
+        }
+
+        [Test]
+        public void GivenNull_WhenSettingSize_ThenNothingChange()
+        {
+            var size = new Vector2(2, 2);
+            ButtonModel model = new ButtonModel();
+            model.SetSize(size);
+            model.SetSize(null);
 
             Assert.AreEqual(size, model.Size);
         }
@@ -109,6 +141,21 @@ public class ButtonModelTests
             var pivot = new Vector2(0, 0);
             ButtonModel model = new ButtonModel();
             model.SetAnchor(anchorMin, anchorMax, pivot);
+
+            Assert.AreEqual(anchorMin, model.AnchorMin);
+            Assert.AreEqual(anchorMax, model.AnchorMax);
+            Assert.AreEqual(pivot, model.Pivot);
+        }
+
+        [Test]
+        public void GivenNull_WhenSettingAnchor_ThenNothingChange()
+        {
+            var anchorMin = new Vector2(0, 0);
+            var anchorMax = new Vector2(1, 1);
+            var pivot = new Vector2(0, 0);
+            ButtonModel model = new ButtonModel();
+            model.SetAnchor(anchorMin, anchorMax, pivot);
+            model.SetAnchor(null, null, null);
 
             Assert.AreEqual(anchorMin, model.AnchorMin);
             Assert.AreEqual(anchorMax, model.AnchorMax);
@@ -131,7 +178,24 @@ public class ButtonModelTests
             Assert.AreEqual(textSize, model.TextFontSize);
             Assert.AreEqual(textColor, model.TextColor);
             Assert.AreEqual(textStyles, model.TextStyles);
-            Assert.AreEqual(textAlignements, model.TextAlignementOptions);
+            Assert.AreEqual(textAlignements, model.TextAlignmentOptions);
+        }
+
+        [Test]
+        public void GivenNull_WhenSettingTextStyle_ThenNothingChange()
+        {
+            var textSize = 26;
+            var textColor = Color.red;
+            var textStyles = FontStyles.Bold | FontStyles.Italic;
+            var textAlignements = TextAlignmentOptions.Justified;
+            ButtonModel model = new ButtonModel();
+            model.SetTextStyle(textSize, textColor, textStyles, textAlignements);
+            model.SetTextStyle(null, null, null, null);
+
+            Assert.AreEqual(textSize, model.TextFontSize);
+            Assert.AreEqual(textColor, model.TextColor);
+            Assert.AreEqual(textStyles, model.TextStyles);
+            Assert.AreEqual(textAlignements, model.TextAlignmentOptions);
         }
     }
 

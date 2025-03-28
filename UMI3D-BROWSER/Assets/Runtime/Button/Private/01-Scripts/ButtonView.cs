@@ -17,7 +17,6 @@ limitations under the License.
 using inetum.unityUtils.observation;
 using UnityEngine;
 using UnityEngine.UI;
-using static umi3d.browserRuntime.button.ButtonNotificationKeys;
 
 namespace umi3d.browserRuntime.button
 {
@@ -56,8 +55,8 @@ namespace umi3d.browserRuntime.button
 
             if (notification.TryGetInfoT(ButtonNotificationKeys.ButtonSet.Position, out Vector3 position, false))
                 transform.position = position;
-            if (notification.TryGetInfoT(ButtonNotificationKeys.ButtonSet.Size, out Vector3 size, false))
-                transform.localScale = size;
+            if (notification.TryGetInfoT(ButtonNotificationKeys.ButtonSet.Size, out Vector2 size, false))
+                ((RectTransform)transform).sizeDelta = size;
 
             if (notification.TryGetInfoT(ButtonNotificationKeys.ButtonSet.AnchorMin, out Vector2 anchorMin, false))
                 ((RectTransform)transform).anchorMin = anchorMin;

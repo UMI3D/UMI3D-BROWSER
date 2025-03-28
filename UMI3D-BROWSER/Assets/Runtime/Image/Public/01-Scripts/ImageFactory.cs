@@ -24,20 +24,14 @@ namespace umi3d.browserRuntime.image
     {
         public class Settings
         {
-            public Color Color = Color.white;
-            public class TransformSettings
-            {
-                public Vector3 Position = Vector3.zero;
-                public Vector3 Size = Vector3.one;
-            }
-            public TransformSettings Transform = null;
-            public class AnchorSettings
-            {
-                public Vector2 AnchorMin = new Vector2(0.5f, 0.5f);
-                public Vector2 AnchorMax = new Vector2(0.5f, 0.5f);
-                public Vector2 Pivot = new Vector2(0.5f, 0.5f);
-            }
-            public AnchorSettings Anchor = null;
+            public Color? Color;
+
+            public Vector3? Position;
+            public Vector2? Size;
+
+            public Vector2? AnchorMin;
+            public Vector2? AnchorMax;
+            public Vector2? Pivot;
         }
 
         [SerializeField] ImageModelContainer _imagePrefab;
@@ -57,15 +51,9 @@ namespace umi3d.browserRuntime.image
             modelContainer.transform.SetParent(parent, false);
             modelContainer.Model.SetSprite(sprite);
             modelContainer.Model.SetColor(settings.Color);
-            if (settings.Transform != null)
-            {
-                modelContainer.Model.SetPosition(settings.Transform.Position);
-                modelContainer.Model.SetSize(settings.Transform.Size);
-            }
-            if (settings.Anchor != null)
-            {
-                modelContainer.Model.SetAnchor(settings.Anchor.AnchorMin, settings.Anchor.AnchorMax, settings.Anchor.Pivot);
-            }
+            modelContainer.Model.SetPosition(settings.Position);
+            modelContainer.Model.SetSize(settings.Size);
+            modelContainer.Model.SetAnchor(settings.AnchorMin, settings.AnchorMax, settings.Pivot);
 
             return modelContainer.gameObject;
         }

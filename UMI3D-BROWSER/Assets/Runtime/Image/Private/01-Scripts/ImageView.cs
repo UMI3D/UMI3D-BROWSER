@@ -51,8 +51,8 @@ namespace umi3d.browserRuntime.image
 
             if (notification.TryGetInfoT(ImageNotificationKeys.ImageSet.Position, out Vector3 position, false))
                 transform.position = position;
-            if (notification.TryGetInfoT(ImageNotificationKeys.ImageSet.Size, out Vector3 size, false))
-                transform.localScale = size;
+            if (notification.TryGetInfoT(ImageNotificationKeys.ImageSet.Size, out Vector2 size, false))
+                ((RectTransform)transform).sizeDelta = size;
 
             if (notification.TryGetInfoT(ImageNotificationKeys.ImageSet.AnchorMin, out Vector2 anchorMin, false))
                 ((RectTransform)transform).anchorMin = anchorMin;

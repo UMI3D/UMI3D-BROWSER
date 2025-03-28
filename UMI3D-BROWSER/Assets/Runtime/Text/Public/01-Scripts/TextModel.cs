@@ -26,7 +26,7 @@ namespace umi3d.browserRuntime.text
         public string Text { get; private set; } = "";
 
         public Vector3 Position { get; private set; } = Vector3.zero;
-        public Vector3 Size { get; private set; } = Vector3.one;
+        public Vector2 Size { get; private set; } = Vector2.one;
 
         public Vector2 AnchorMin { get; private set; } = new Vector2(.5f, .5f);
         public Vector2 AnchorMax { get; private set; } = new Vector2(.5f, .5f);
@@ -35,7 +35,7 @@ namespace umi3d.browserRuntime.text
         public int TextFontSize { get; private set; } = 12;
         public Color TextColor { get; private set; } = Color.white;
         public FontStyles TextStyles { get; private set; } = FontStyles.Normal;
-        public TextAlignmentOptions TextAlignementOptions { get; private set; } = TextAlignmentOptions.MidlineLeft;
+        public TextAlignmentOptions TextAlignmentOptions { get; private set; } = TextAlignmentOptions.MidlineLeft;
 
         Notifier _setNotifier;
 
@@ -52,42 +52,82 @@ namespace umi3d.browserRuntime.text
             _setNotifier.Notify();
         }
 
-        public void SetPosition(Vector3 position)
+        public void SetPosition(Vector3? position)
         {
-            Position = position;
-            _setNotifier[TextNotificationKeys.TextSet.Position] = Position;
-            _setNotifier.Notify();
+            if (position.HasValue)
+            {
+                Position = position.Value;
+                _setNotifier[TextNotificationKeys.TextSet.Position] = Position;
+                _setNotifier.Notify();
+            }
         }
 
-        public void SetSize(Vector3 size)
+        public void SetSize(Vector2? size)
         {
-            Size = size;
-            _setNotifier[TextNotificationKeys.TextSet.Size] = Size;
-            _setNotifier.Notify();
+            if (size.HasValue)
+            {
+                Size = size.Value;
+                _setNotifier[TextNotificationKeys.TextSet.Size] = Size;
+                _setNotifier.Notify();
+            }
         }
 
-        public void SetAnchor(Vector2 anchorMin, Vector2 anchorMax, Vector2 pivot)
+        public void SetAnchor(Vector2? anchorMin, Vector2? anchorMax, Vector2? pivot)
         {
-            AnchorMin = anchorMin;
-            AnchorMax = anchorMax;
-            Pivot = pivot;
-            _setNotifier[TextNotificationKeys.TextSet.AnchorMin] = AnchorMin;
-            _setNotifier[TextNotificationKeys.TextSet.AnchorMax] = AnchorMax;
-            _setNotifier[TextNotificationKeys.TextSet.Pivot] = Pivot;
-            _setNotifier.Notify();
+            bool hasChanged = false;
+            if (anchorMin.HasValue)
+            {
+                AnchorMin = anchorMin.Value;
+                _setNotifier[TextNotificationKeys.TextSet.AnchorMin] = AnchorMin;
+                hasChanged = true;
+            }
+            if (anchorMax.HasValue)
+            {
+                AnchorMax = anchorMax.Value;
+                _setNotifier[TextNotificationKeys.TextSet.AnchorMax] = AnchorMax;
+                hasChanged = true;
+            }
+            if (pivot.HasValue)
+            {
+                Pivot = pivot.Value;
+                _setNotifier[TextNotificationKeys.TextSet.Pivot] = Pivot;
+                hasChanged = true;
+            }
+
+            if (hasChanged)
+                _setNotifier.Notify();
         }
 
-        public void SetTextStyle(int textFontSize, Color textColor, FontStyles textFontStyles, TextAlignmentOptions textAlignmentOptions)
+        public void SetTextStyle(int? textFontSize, Color? textColor, FontStyles? textFontStyles, TextAlignmentOptions? textAlignmentOptions)
         {
-            TextFontSize = textFontSize;
-            TextColor = textColor;
-            TextStyles = textFontStyles;
-            TextAlignementOptions = textAlignmentOptions;
-            _setNotifier[TextNotificationKeys.TextSet.TextFontSize] = TextFontSize;
-            _setNotifier[TextNotificationKeys.TextSet.TextColor] = TextColor;
-            _setNotifier[TextNotificationKeys.TextSet.TextStyles] = TextStyles;
-            _setNotifier[TextNotificationKeys.TextSet.TextAlignementOptions] = TextAlignementOptions;
-            _setNotifier.Notify();
+            bool hasChanged = false;
+            if (textFontSize.HasValue)
+            {
+                TextFontSize = textFontSize.Value;
+                _setNotifier[TextNotificationKeys.TextSet.TextFontSize] = TextFontSize;
+                hasChanged = true;
+            }
+            if (textColor.HasValue)
+            {
+                TextColor = textColor.Value;
+                _setNotifier[TextNotificationKeys.TextSet.TextColor] = TextColor;
+                hasChanged = true;
+            }
+            if (textFontStyles.HasValue)
+            {
+                TextStyles = textFontStyles.Value;
+                _setNotifier[TextNotificationKeys.TextSet.TextStyles] = TextStyles;
+                hasChanged = true;
+            }
+            if (textAlignmentOptions.HasValue)
+            {
+                TextAlignmentOptions = textAlignmentOptions.Value;
+                _setNotifier[TextNotificationKeys.TextSet.TextAlignementOptions] = TextAlignmentOptions;
+                hasChanged = true;
+            }
+
+            if (hasChanged)
+                _setNotifier.Notify();
         }
     }
 }

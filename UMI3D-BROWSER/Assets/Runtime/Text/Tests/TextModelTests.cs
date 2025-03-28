@@ -52,6 +52,17 @@ public class TextModelTests
 
             Assert.AreEqual(position, model.Position);
         }
+
+        [Test]
+        public void GivenNull_WhenSettingPosition_ThenChangeNothing()
+        {
+            var position = new Vector3(200, 200, 0);
+            TextModel model = new TextModel();
+            model.SetPosition(position);
+            model.SetPosition(null);
+
+            Assert.AreEqual(position, model.Position);
+        }
     }
 
     public class SetSizeTests
@@ -59,9 +70,20 @@ public class TextModelTests
         [Test]
         public void GivenSize_WhenSettingSize_ThenSize()
         {
-            var size = new Vector3(2, 2, 2);
+            var size = new Vector2(2, 2);
             TextModel model = new TextModel();
             model.SetSize(size);
+
+            Assert.AreEqual(size, model.Size);
+        }
+
+        [Test]
+        public void GivenNull_WhenSettingSize_ThenChangeNothing()
+        {
+            var size = new Vector2(2, 2);
+            TextModel model = new TextModel();
+            model.SetSize(size);
+            model.SetSize(null);
 
             Assert.AreEqual(size, model.Size);
         }
@@ -77,6 +99,21 @@ public class TextModelTests
             var pivot = new Vector2(0, 0);
             TextModel model = new TextModel();
             model.SetAnchor(anchorMin, anchorMax, pivot);
+
+            Assert.AreEqual(anchorMin, model.AnchorMin);
+            Assert.AreEqual(anchorMax, model.AnchorMax);
+            Assert.AreEqual(pivot, model.Pivot);
+        }
+
+        [Test]
+        public void GivenNull_WhenSettingAnchor_ThenChangeNothing()
+        {
+            var anchorMin = new Vector2(0, 0);
+            var anchorMax = new Vector2(1, 1);
+            var pivot = new Vector2(0, 0);
+            TextModel model = new TextModel();
+            model.SetAnchor(anchorMin, anchorMax, pivot);
+            model.SetAnchor(null, null, null);
 
             Assert.AreEqual(anchorMin, model.AnchorMin);
             Assert.AreEqual(anchorMax, model.AnchorMax);
@@ -99,7 +136,24 @@ public class TextModelTests
             Assert.AreEqual(textSize, model.TextFontSize);
             Assert.AreEqual(textColor, model.TextColor);
             Assert.AreEqual(textStyles, model.TextStyles);
-            Assert.AreEqual(textAlignements, model.TextAlignementOptions);
+            Assert.AreEqual(textAlignements, model.TextAlignmentOptions);
+        }
+
+        [Test]
+        public void GivenNull_WhenSettingTextStyle_ThenChangeNothing()
+        {
+            var textSize = 26;
+            var textColor = Color.red;
+            var textStyles = FontStyles.Bold | FontStyles.Italic;
+            var textAlignements = TextAlignmentOptions.Justified;
+            TextModel model = new TextModel();
+            model.SetTextStyle(textSize, textColor, textStyles, textAlignements);
+            model.SetTextStyle(null, null, null, null);
+
+            Assert.AreEqual(textSize, model.TextFontSize);
+            Assert.AreEqual(textColor, model.TextColor);
+            Assert.AreEqual(textStyles, model.TextStyles);
+            Assert.AreEqual(textAlignements, model.TextAlignmentOptions);
         }
     }
 }

@@ -57,45 +57,37 @@ public class ButtonFactoryTests
             var label = "TestLabel";
             Action callback = () => callbackCalled = true;
             var settings = new ButtonFactory.Settings() {
-                Image = new() {
                     Sprite = Sprite.Create(new Texture2D(1, 1), new Rect(0, 0, 1, 1), new Vector2(.5f, .5f)),
                     ColorBlock = new ColorBlock() { normalColor = Color.blue, highlightedColor = Color.red },
-                },
-                Transform = new() {
                     Position = Vector3.one,
-                    Size = Vector3.one / 2
-                },
-                Anchor = new () {
+                    Size = Vector3.one / 2,
                     AnchorMin = Vector2.zero,
                     AnchorMax = Vector2.one,
                     Pivot = Vector2.zero,
-                },
-                TextStyle = new () {
                     FontSize = 26,
-                    Color = Color.red,
+                    TextColor = Color.red,
                     FontStyles = FontStyles.Bold | FontStyles.Italic,
-                    TextAlignementOptions = TextAlignmentOptions.Justified,
-                } 
+                    TextAlignmentOptions = TextAlignmentOptions.Justified,
             };
 
             GameObject buttonGameObject = _factory.GetOrCreateButton(_container, label, callback, settings);
 
-            Assert.AreEqual(settings.Transform.Position, ((RectTransform)buttonGameObject.transform).position);
-            Assert.AreEqual(settings.Transform.Size, ((RectTransform)buttonGameObject.transform).localScale);
-            Assert.AreEqual(settings.Anchor.AnchorMin, ((RectTransform)buttonGameObject.transform).anchorMin);
-            Assert.AreEqual(settings.Anchor.AnchorMax, ((RectTransform)buttonGameObject.transform).anchorMax);
-            Assert.AreEqual(settings.Anchor.Pivot, ((RectTransform)buttonGameObject.transform).pivot);
+            Assert.AreEqual(settings.Position, ((RectTransform)buttonGameObject.transform).position);
+            Assert.AreEqual(settings.Size, ((RectTransform)buttonGameObject.transform).sizeDelta);
+            Assert.AreEqual(settings.AnchorMin, ((RectTransform)buttonGameObject.transform).anchorMin);
+            Assert.AreEqual(settings.AnchorMax, ((RectTransform)buttonGameObject.transform).anchorMax);
+            Assert.AreEqual(settings.Pivot, ((RectTransform)buttonGameObject.transform).pivot);
 
             var text = buttonGameObject.GetComponentInChildren<TMP_Text>();
             Assert.AreEqual(label, text.text);
-            Assert.AreEqual(settings.TextStyle.FontSize, text.fontSize);
-            Assert.AreEqual(settings.TextStyle.Color, text.color);
-            Assert.AreEqual(settings.TextStyle.FontStyles, text.fontStyle);
-            Assert.AreEqual(settings.TextStyle.TextAlignementOptions, text.alignment);
+            Assert.AreEqual(settings.FontSize, text.fontSize);
+            Assert.AreEqual(settings.TextColor, text.color);
+            Assert.AreEqual(settings.FontStyles, text.fontStyle);
+            Assert.AreEqual(settings.TextAlignmentOptions, text.alignment);
 
             var button = buttonGameObject.GetComponent<Button>();
-            Assert.AreEqual(settings.Image.Sprite, button.image.sprite);
-            Assert.AreEqual(settings.Image.ColorBlock, button.colors);
+            Assert.AreEqual(settings.Sprite, button.image.sprite);
+            Assert.AreEqual(settings.ColorBlock, button.colors);
             button.onClick?.Invoke();
             Assert.IsTrue(callbackCalled);
         }

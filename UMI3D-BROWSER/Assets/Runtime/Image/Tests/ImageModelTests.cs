@@ -52,6 +52,17 @@ public class ImageModelTests
 
             Assert.AreEqual(color, model.Color);
         }
+
+        [Test]
+        public void GivenNull_WhenSettingColor_ThenWhite()
+        {
+            var model = new ImageModel();
+            var color = Color.blue;
+            model.SetColor(color);
+            model.SetColor(null);
+
+            Assert.AreEqual(Color.white, model.Color);
+        }
     }
 
     public class SetPositionTests
@@ -65,6 +76,17 @@ public class ImageModelTests
 
             Assert.AreEqual(position, model.Position);
         }
+
+        [Test]
+        public void GivenNull_WhenSettingPosition_ThenChangeNothing()
+        {
+            var model = new ImageModel();
+            var position = new Vector3(200, 200, 0);
+            model.SetPosition(position);
+            model.SetPosition(null);
+
+            Assert.AreEqual(position, model.Position);
+        }
     }
 
     public class SetSizeTests
@@ -73,8 +95,19 @@ public class ImageModelTests
         public void GivenSize_WhenSettingSize_ThenSize()
         {
             var model = new ImageModel();
-            var size = new Vector3(2, 2, 2);
+            var size = new Vector2(2, 2);
             model.SetSize(size);
+
+            Assert.AreEqual(size, model.Size);
+        }
+
+        [Test]
+        public void GivenNull_WhenSettingSize_ThenChangeNothing()
+        {
+            var model = new ImageModel();
+            var size = new Vector2(2, 2);
+            model.SetSize(size);
+            model.SetSize(null);
 
             Assert.AreEqual(size, model.Size);
         }
@@ -83,13 +116,28 @@ public class ImageModelTests
     public class SetAnchorTests
     {
         [Test]
-        public void GivenAnchor_WhenSettinAnchore_ThenAnchor()
+        public void GivenAnchor_WhenSettingAnchor_ThenAnchor()
         {
             var model = new ImageModel();
             var anchorMin = new Vector2(.5f, .5f);
             var anchorMax = new Vector2(.5f, .5f);
             var pivot = new Vector2(.5f, .5f);
             model.SetAnchor(anchorMin, anchorMax, pivot);
+
+            Assert.AreEqual(anchorMin, model.AnchorMin);
+            Assert.AreEqual(anchorMax, model.AnchorMax);
+            Assert.AreEqual(pivot, model.Pivot);
+        }
+
+        [Test]
+        public void GivenNull_WhenSettingAnchor_ThenChangeNothing()
+        {
+            var model = new ImageModel();
+            var anchorMin = new Vector2(.5f, .5f);
+            var anchorMax = new Vector2(.5f, .5f);
+            var pivot = new Vector2(.5f, .5f);
+            model.SetAnchor(anchorMin, anchorMax, pivot);
+            model.SetAnchor(null, null, null);
 
             Assert.AreEqual(anchorMin, model.AnchorMin);
             Assert.AreEqual(anchorMax, model.AnchorMax);

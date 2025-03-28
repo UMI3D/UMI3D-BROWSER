@@ -54,23 +54,19 @@ public class ImageFactoryTests
             var sprite = Sprite.Create(new Texture2D(1, 1), new Rect(0, 0, 1, 1), Vector2.zero);
             var settings = new ImageFactory.Settings() {
                 Color = Color.blue,
-                Transform = new() {
-                    Position = Vector2.one,
-                    Size = Vector2.one / 2,
-                },
-                Anchor = new() {
-                    AnchorMin = Vector2.zero,
-                    AnchorMax = Vector2.one,
-                    Pivot = Vector2.zero
-                }
+                Position = Vector2.one,
+                Size = Vector2.one / 2,
+                AnchorMin = Vector2.zero,
+                AnchorMax = Vector2.one,
+                Pivot = Vector2.zero
             };
             GameObject ImageGameObject = _factory.GetOrCreateImage(_container, sprite, settings);
 
-            Assert.AreEqual(settings.Transform.Position, ((RectTransform)ImageGameObject.transform).position);
-            Assert.AreEqual(settings.Transform.Size, ((RectTransform)ImageGameObject.transform).localScale);
-            Assert.AreEqual(settings.Anchor.AnchorMin, ((RectTransform)ImageGameObject.transform).anchorMin);
-            Assert.AreEqual(settings.Anchor.AnchorMax, ((RectTransform)ImageGameObject.transform).anchorMax);
-            Assert.AreEqual(settings.Anchor.Pivot, ((RectTransform)ImageGameObject.transform).pivot);
+            Assert.AreEqual(settings.Position, ((RectTransform)ImageGameObject.transform).position);
+            Assert.AreEqual(settings.Size, ((RectTransform)ImageGameObject.transform).sizeDelta);
+            Assert.AreEqual(settings.AnchorMin, ((RectTransform)ImageGameObject.transform).anchorMin);
+            Assert.AreEqual(settings.AnchorMax, ((RectTransform)ImageGameObject.transform).anchorMax);
+            Assert.AreEqual(settings.Pivot, ((RectTransform)ImageGameObject.transform).pivot);
 
 
             var ImageObject = ImageGameObject.GetComponentInChildren<Image>();

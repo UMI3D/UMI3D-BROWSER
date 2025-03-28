@@ -26,36 +26,20 @@ namespace umi3d.browserRuntime.button
     {
         public class Settings
         {
-            public class TransformSettings
-            {
-                public Vector3 Position = Vector2.zero;
-                public Vector3 Size = Vector2.one;
-            }
-            public TransformSettings Transform = null;
+            public Vector3? Position;
+            public Vector2? Size;
 
-            public class ImageSettings
-            {
-                public Sprite Sprite = null;
-                public ColorBlock ColorBlock = ColorBlock.defaultColorBlock;
-            }
-            public ImageSettings Image = null;
+            public Sprite Sprite;
+            public ColorBlock? ColorBlock;
 
-            public class AnchorSettings
-            {
-                public Vector2 AnchorMin = new Vector2(.5f, .5f);
-                public Vector2 AnchorMax = new Vector2(.5f, .5f);
-                public Vector2 Pivot = new Vector2(.5f, .5f);
-            }
-            public AnchorSettings Anchor = null;
+            public Vector2? AnchorMin;
+            public Vector2? AnchorMax;
+            public Vector2? Pivot;
 
-            public class TextStyleSettings
-            {
-                public int FontSize = 12;
-                public Color Color = Color.white;
-                public FontStyles FontStyles = FontStyles.Normal;
-                public TextAlignmentOptions TextAlignementOptions = TextAlignmentOptions.MidlineLeft;
-            }
-            public TextStyleSettings TextStyle = null;
+            public int? FontSize;
+            public Color? TextColor;
+            public FontStyles? FontStyles;
+            public TextAlignmentOptions? TextAlignmentOptions;
         }
 
         [SerializeField] internal ButtonModelContainer _buttonPrefab;
@@ -70,34 +54,17 @@ namespace umi3d.browserRuntime.button
             ButtonModelContainer button;
             if (!_pool.TryDequeue(out button))
                 button = Instantiate(_buttonPrefab);
+
             button.gameObject.SetActive(true);
             button.transform.SetParent(parent, false);
 
             button.Model.SetLabel(label);
             button.Model.SetCallback(callback);
-            if (settings.Transform != null)
-            {
-                button.Model.SetPosition(settings.Transform.Position);
-                button.Model.SetSize(settings.Transform.Size);
-            }
-            if (settings.Image != null)
-            {
-                button.Model.SetImage(settings.Image.ColorBlock, 
-                    settings.Image.Sprite);
-            }
-            if (settings.Anchor != null)
-            {
-                button.Model.SetAnchor(settings.Anchor.AnchorMin, 
-                    settings.Anchor.AnchorMax, 
-                    settings.Anchor.Pivot);
-            }
-            if (settings.TextStyle != null)
-            {
-                button.Model.SetTextStyle(settings.TextStyle.FontSize, 
-                    settings.TextStyle.Color, 
-                    settings.TextStyle.FontStyles,
-                    settings.TextStyle.TextAlignementOptions);
-            }
+            button.Model.SetPosition(settings.Position);
+            button.Model.SetSize(settings.Size);
+            button.Model.SetImage(settings.ColorBlock, settings.Sprite);
+            button.Model.SetAnchor(settings.AnchorMin, settings.AnchorMax, settings.Pivot);
+            button.Model.SetTextStyle(settings.FontSize, settings.TextColor, settings.FontStyles, settings.TextAlignmentOptions);
 
             return button.gameObject;
         }
@@ -113,7 +80,6 @@ namespace umi3d.browserRuntime.button
             modelContainer.gameObject.SetActive(false);
             modelContainer.transform.SetParent(transform, false);
             modelContainer.Model.SetCallback(null);
-
 
             _pool.Enqueue(modelContainer);
         }

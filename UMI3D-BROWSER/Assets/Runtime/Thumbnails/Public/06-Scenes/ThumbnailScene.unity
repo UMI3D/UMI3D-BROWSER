@@ -218,6 +218,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1928221108}
+  - {fileID: 2124038472}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -560,6 +561,12 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 3334515556002999238}
   m_PrefabAsset: {fileID: 0}
+--- !u!224 &2124038472 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 931285329925189080, guid: 1cc6eb2e3cbc40b4780c88cfb92bdafc,
+    type: 3}
+  m_PrefabInstance: {fileID: 5909299161220567167}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3334515556002999238
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -699,7 +706,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 19835602}
     m_Modifications:
     - target: {fileID: 931285329925189080, guid: 1cc6eb2e3cbc40b4780c88cfb92bdafc,
         type: 3}
@@ -779,12 +786,12 @@ PrefabInstance:
     - target: {fileID: 931285329925189080, guid: 1cc6eb2e3cbc40b4780c88cfb92bdafc,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 623.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 931285329925189080, guid: 1cc6eb2e3cbc40b4780c88cfb92bdafc,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 350.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 931285329925189080, guid: 1cc6eb2e3cbc40b4780c88cfb92bdafc,
         type: 3}
@@ -824,4 +831,3 @@ SceneRoots:
   - {fileID: 1851342828}
   - {fileID: 788696278}
   - {fileID: 19835602}
-  - {fileID: 5909299161220567167}

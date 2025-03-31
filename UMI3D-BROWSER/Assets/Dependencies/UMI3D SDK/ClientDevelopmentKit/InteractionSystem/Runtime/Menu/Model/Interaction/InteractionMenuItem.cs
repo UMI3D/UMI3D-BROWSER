@@ -42,10 +42,10 @@ namespace umi3d.cdk.menu.interaction
             if ((interaction == null) || (interaction.id == 0))
                 return false;
 
-            if (!AbstractInteractionMapper.Instance.IsToolSelected(environmentId, toolId))
+            if (!InteractionMapper.Instance.IsToolSelected(environmentId, toolId))
                 return false;
 
-            AbstractController controller = AbstractInteractionMapper.Instance.GetController(environmentId, toolId);
+            AbstractController controller = InteractionMapper.Instance.GetController(environmentId, toolId);
             if (controller != null)
             {
                 return controller.inputs.Exists(input => (input.CurrentInteraction() != null) && input.CurrentInteraction().id.Equals(interaction.id));

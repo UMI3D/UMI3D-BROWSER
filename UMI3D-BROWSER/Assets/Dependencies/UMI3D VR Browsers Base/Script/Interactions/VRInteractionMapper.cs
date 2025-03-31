@@ -56,11 +56,6 @@ namespace umi3dVRBrowsersBase.interactions
 
         #region Methods
 
-        private void Start()
-        {
-            toolboxMenu = new Menu { Name = "Toolbox" };
-        }
-
         /// <summary>
         /// <inheritdoc/>
         /// </summary>

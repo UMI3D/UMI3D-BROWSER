@@ -239,7 +239,7 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
                 }
             }
 
-            if (AbstractInteractionMapper.Instance == null) return;
+            if (InteractionMapper.Instance == null) return;
             if 
             (
                 selectionInfo == null 
@@ -247,7 +247,7 @@ namespace umi3dVRBrowsersBase.interactions.selection.selector
                 || selectionInfo.selectedObject.Interactable == null 
                 || selectionInfo.selectedObject.Interactable.dto == null
             ) return;
-            var interactionTool = AbstractInteractionMapper.Instance.GetTool(UMI3DGlobalID.EnvironmentId, selectionInfo.selectedObject.Interactable.dto.id);
+            var interactionTool = InteractionMapper.Instance.GetTool(UMI3DGlobalID.EnvironmentId, selectionInfo.selectedObject.Interactable.dto.id);
             if (selectionInfo is InteractableSelectionData)
                 (selectionInfo as InteractableSelectionData).tool = interactionTool;
 

@@ -20,6 +20,7 @@ using umi3d.cdk.menu;
 using umi3d.cdk.menu.interaction;
 using umi3d.common;
 using umi3d.common.interaction;
+using UnityEditor.UIElements;
 using UnityEngine;
 
 namespace umi3d.cdk.interaction
@@ -51,78 +52,11 @@ namespace umi3d.cdk.interaction
         /// <param name="tool"></param>
         private void OnToolCreation(ulong environmentId,GlobalTool tool)
         {
-            if (tool is Toolbox)
-            {
-                var tbmenu = new ToolboxMenu();
-                tbmenu.Setup(environmentId,tool as Toolbox);
-
-                var dto = tool.dto as ToolboxDto;
-
-                if (tool.isInsideToolbox)
-                {
-                    if (toolboxIdToMenu.ContainsKey((tool.parent.environmentId,tool.parent.id)))
-                    {
-                        var parentMenu = toolboxIdToMenu[(tool.parent.environmentId, tool.parent.id)] as ToolboxMenu;
-                        parentMenu.Add(tbmenu);
-                        tbmenu.parent = parentMenu;
-                        toolboxIdToMenu.Add((environmentId,dto.id), tbmenu);
-                    }
-                    else
-                    {
-                        menuToStoreInMenuAsset.Add(tbmenu);
-                        toolboxIdToMenu.Add((environmentId, dto.id), tbmenu);
-                    }
-                }
-                else
-                {
-                    menuAsset.menu.Add(tbmenu);
-                    tbmenu.parent = menuAsset.menu;
-                    toolboxIdToMenu.Add((environmentId, dto.id), tbmenu);
-                }
-
-                foreach (AbstractMenuItem menu in menuToStoreInMenuAsset.ToList())
-                {
-                    var gtm = menu as GlobalToolMenu;
-                    if ((gtm != null) && (tool.parent.id == dto.id))
-                    {
-                        tbmenu.Add(gtm);
-                        gtm.parent = tbmenu;
-                        menuToStoreInMenuAsset.Remove(menu);
-                    }
-
-                    var tbm = menu as ToolboxMenu;
-                    if ((tbm != null) && (tool.parent.id == dto.id))
-                    {
-                        tbmenu.Add(tbm);
-                        tbm.parent = tbmenu;
-                        menuToStoreInMenuAsset.Remove(menu);
-                    }
-                }
-            }
-            else
-            {
-                var menu = new GlobalToolMenu();
-                menu.Setup(environmentId, tool);
-                var dto = tool.dto as GlobalToolDto;
-                if (tool.isInsideToolbox)
-                {
-                    if (toolboxIdToMenu.ContainsKey((tool.parent.environmentId, tool.parent.id)))
-                    {
-                        var parentMenu = toolboxIdToMenu[(tool.parent.environmentId, tool.parent.id)] as ToolboxMenu;
-                        parentMenu.Add(menu);
-                        menu.parent = parentMenu;
-                    }
-                    else
-                    {
-                        menuToStoreInMenuAsset.Add(menu);
-                    }
-                }
-                else
-                {
-                    menuAsset.menu.Add(menu);
-                    menu.parent = menuAsset.menu;
-                }
-            }
+            var menu = new GlobalToolMenu();
+            menu.Setup(environmentId, tool);
+            var dto = tool.dto as GlobalToolDto;
+            menuAsset.menu.Add(menu);
+            menu.parent = menuAsset.menu;
         }
 
         /// <summary>
@@ -131,16 +65,8 @@ namespace umi3d.cdk.interaction
         /// <param name="tool"></param>
         private void OnToolUpdate(ulong environmentId, GlobalTool tool)
         {
-            if (tool is Toolbox)
-            {
-                var tbmenu = toolboxIdToMenu[(environmentId, tool.id)] as ToolboxMenu;
-                tbmenu.Setup(environmentId, tool as Toolbox);
-            }
-            else
-            {
-                var gtmenu = toolboxIdToMenu[(environmentId, tool.id)] as GlobalToolMenu;
-                gtmenu.Setup(environmentId, tool);
-            }
+            var gtmenu = toolboxIdToMenu[(environmentId, tool.id)] as GlobalToolMenu;
+            gtmenu.Setup(environmentId, tool);
         }
 
         /// <summary>
@@ -149,16 +75,8 @@ namespace umi3d.cdk.interaction
         /// <param name="tool"></param>
         private void OnToolDelete(ulong environmentId, GlobalTool tool)
         {
-            if (tool is Toolbox)
-            {
-                var tbmenu = toolboxIdToMenu[(environmentId, tool.id)] as ToolboxMenu;
-                tbmenu.parent.Remove(tbmenu);
-            }
-            else
-            {
-                var gtmenu = toolboxIdToMenu[(environmentId, tool.id)] as GlobalToolMenu;
-                gtmenu.parent.Remove(gtmenu);
-            }
+            var gtmenu = toolboxIdToMenu[(environmentId, tool.id)] as GlobalToolMenu;
+            gtmenu.parent.Remove(gtmenu);
         }
 
 

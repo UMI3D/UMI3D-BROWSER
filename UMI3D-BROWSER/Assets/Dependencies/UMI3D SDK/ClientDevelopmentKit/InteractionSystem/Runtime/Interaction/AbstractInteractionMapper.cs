@@ -68,28 +68,6 @@ namespace umi3d.cdk.interaction
 
 
         /// <summary>
-        /// Check if a toolbox with the given id exists.
-        /// </summary>
-        public abstract bool ToolboxExists(ulong environmentId, ulong id);
-
-        /// <summary>
-        /// Get the toolbox with the given id (if any).
-        /// </summary>
-        public abstract Toolbox GetToolbox(ulong environmentId, ulong id);
-
-        /// <summary>
-        /// Return the toolboxes matching a given condition.
-        /// </summary>
-        public abstract IEnumerable<Toolbox> GetToolboxes( Predicate<Toolbox> condition);
-
-        /// <summary>
-        /// Return all known toolboxes.
-        /// </summary>
-        /// <returns></returns>
-        public virtual IEnumerable<Toolbox> GetToolboxes() { return GetToolboxes(t => true); }
-
-
-        /// <summary>
         /// Check if a tool with the given id exists.
         /// </summary>
         public abstract bool ToolExists(ulong environmentId, ulong id);

@@ -61,19 +61,8 @@ namespace umi3d.cdk.interaction
         /// </summary>
         public AbstractToolDto dto { get; protected set; }
 
-        /// <summary>
-        /// Toolbox the global tool belongs to if there is one.
-        /// </summary>
-        public Toolbox parent;
-
-        /// <summary>
-        /// Is the global tool in a toolbox ?
-        /// </summary>
-        public bool isInsideToolbox => parent != null;
-
-        public GlobalTool(ulong environmentId, AbstractToolDto abstractDto, Toolbox parent) : base(environmentId, abstractDto)
+        public GlobalTool(ulong environmentId, AbstractToolDto abstractDto) : base(environmentId, abstractDto)
         {
-            this.parent = parent;
             instances.Add(id, this);
         }
 

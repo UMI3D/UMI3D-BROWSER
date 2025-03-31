@@ -285,20 +285,6 @@ namespace umi3d.cdk.interaction
         #region CRUD
 
         /// <inheritdoc/>
-        public override Toolbox GetToolbox(ulong environmentId, ulong id)
-        {
-            if (!ToolboxExists(environmentId, id))
-                throw new KeyNotFoundException();
-            return UMI3DEnvironmentLoader.GetEntity(environmentId, id)?.Object as Toolbox;
-        }
-
-        /// <inheritdoc/>
-        public override IEnumerable<Toolbox> GetToolboxes(Predicate<Toolbox> condition)
-        {
-            return Toolbox.GetToolboxes().FindAll(condition);
-        }
-
-        /// <inheritdoc/>
         public override AbstractTool GetTool(ulong environmentId, ulong id)
         {
             if (!ToolExists(environmentId, id))
@@ -325,12 +311,6 @@ namespace umi3d.cdk.interaction
         public override IEnumerable<AbstractInteractionDto> GetInteractions(Predicate<AbstractInteractionDto> condition)
         {
             return interactionsIdToDto.Values.ToList().FindAll(condition);
-        }
-
-        /// <inheritdoc/>
-        public override bool ToolboxExists(ulong environmentId, ulong id)
-        {
-            return (UMI3DEnvironmentLoader.GetEntity(environmentId,id)?.Object as Toolbox) != null;
         }
 
         /// <inheritdoc/>

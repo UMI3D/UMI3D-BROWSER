@@ -98,7 +98,7 @@ namespace umi3dBrowsers.player
             EnvironmentSettings.Instance.AudioSetting.StatusChanged += SoundBtn.Toggle;
             SetMicStatus(false);
 
-            playerCamera = PlayerMenuManager.Instance.PlayerCameraTransform;
+            playerCamera = Camera.main.transform;
         }
 
         private void OnDestroy()

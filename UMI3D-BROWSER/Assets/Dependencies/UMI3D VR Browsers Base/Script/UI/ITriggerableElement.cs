@@ -14,12 +14,26 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System;
+using umi3dVRBrowsersBase.interactions;
+
 namespace umi3dVRBrowsersBase.ui
 {
     /// <summary>
-    /// Base tagging interface for client elements
+    /// Makes any entity triggerable/clickable by <see cref="selection.VRClickableElementSelector"/>.
     /// </summary>
-    public interface IClientElement
+    public interface ITriggerableElement
     {
+        /// <summary>
+        /// Event raised when <see cref="Trigger"/> is called.
+        /// </summary>
+        event Action triggerHandler;
+
+        /// <summary>
+        /// Raises <see cref="triggerHandler"/> when this element is triggered/clicked.
+        /// </summary>
+        /// <param name="controller">Controller used to click</param>
+        void Trigger(ControllerType controller);
     }
+
 }

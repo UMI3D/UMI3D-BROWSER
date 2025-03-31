@@ -231,7 +231,6 @@ namespace umi3dVRBrowsersBase.interactions
                     {
                         if (SelectTool(environmentId, select, releasable, hoveredObjectId, new RequestedUsingSelector { controller = c }))
                         {
-                            PlayerMenuManager.Instance.Close();
                             lastReason = new RequestedFromMenu();
                             return true;
                         }

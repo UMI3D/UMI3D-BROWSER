@@ -19,35 +19,34 @@ using UnityEngine.Events;
 
 namespace umi3dVRBrowsersBase.ui
 {
-    /// <summary>
-    /// <see cref="IClientElement"/> that reacts to hover enter/exit
-    /// </summary>
-    internal interface IHoverableElement : IClientElement
+    internal interface ISelectableElement
     {
         /// <summary>
-        /// Event raised when <see cref="Click"/> is called.
+        /// Event raised when selection is detected.
         /// </summary>
-        UnityEvent OnHoverEnter { get; }
+        UnityEvent OnSelected { get; }
 
         /// <summary>
-        /// Event raised when <see cref="Click"/> is called.
+        /// Event raised when selection is no longer detected.
         /// </summary>
-        UnityEvent OnHoverExit { get; }
+        UnityEvent OnDeselected { get; }
 
         /// <summary>
-        /// Called when the object is hovered / a raycast target
+        /// Selects the object
         /// </summary>
-        /// <param name="controller"></param>
-        void HoverEnter(ControllerType controller);
+        /// <param name="controller">Controller used for selection</param>
+        void Select(VRController controller);
+
         /// <summary>
-        /// Called when the object is no longer hovered / a raycast target
+        /// Deselects the object
         /// </summary>
-        /// <param name="controller"></param>
-        void HoverExit(ControllerType controller);
+        /// <param name="controller">Controller that was used for selection</param>
+        void Deselect(VRController controller);
+
         /// <summary>
-        /// True when the object is hovered / a raycast target
+        /// Returns true i the object is currenlty selected
         /// </summary>
-        /// <param name="controller"></param>
-        bool IsHovered(ControllerType controller);
+        /// <returns></returns>
+        bool IsSelected();
     }
 }

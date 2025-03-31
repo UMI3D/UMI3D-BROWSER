@@ -25,7 +25,7 @@ namespace umi3dVRBrowsersBase.ui
     /// <summary>
     /// Makes a gameobject clickable by a user ray.
     /// </summary>
-    public class DefaultClickableButtonElement : AbstractClientInteractableElement, ITriggerableElement, IHoverableElement
+    public class DefaultClickableButtonElement : AbstractClientInteractableElement, ITriggerableElement
     {
         #region Fields
 

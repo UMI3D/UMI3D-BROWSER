@@ -207,10 +207,6 @@ namespace umi3dVRBrowsersBase.ui
                 keyboardLinker.TextFieldSelected(stringParameter.value);
                 this.controllerType = controllerType;
             }
-            else if (interactions.Count > 0)
-            {
-                PlayerMenuManager.Instance.OpenParameterMenu(controllerType, menuAsync: true);
-            }
         }
 
         /// <summary>
@@ -265,7 +261,6 @@ namespace umi3dVRBrowsersBase.ui
                 {
                     collider.enabled = true;
                     label.text = $"Edit text";
-                    PlayerMenuManager.Instance.CtrlToolMenu.RememberParameters();
                 }
                 else
                 {
@@ -276,7 +271,6 @@ namespace umi3dVRBrowsersBase.ui
             else
             {
                 label.text = interactable.name;
-                PlayerMenuManager.Instance.CtrlToolMenu.RememberParameters();
             }
 
             if (string.IsNullOrEmpty(label.text))

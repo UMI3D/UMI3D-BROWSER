@@ -25,29 +25,26 @@ public class ThumbnailFactoryTests
     public class GetOrCreateThumbnailTests
     {
         ThumbnailFactory _factory;
-        Transform _container;
 
         [SetUp]
         public void SetUp()
         {
             _factory = new GameObject().AddComponent<ThumbnailFactory>();
-            _container = new GameObject().transform;
         }
 
         [TearDown]
         public void TearDown()
         {
             GameObject.DestroyImmediate(_factory.gameObject);
-            GameObject.DestroyImmediate(_container.gameObject);
         }
 
         [Test]
         public void Given_WhenCreatingThumbnail_ThenThumbnailCreated()
         {
-            GameObject ThumbnailGameObject = _factory.GetOrCreateThumbnail();
+            var thumbnailModelContainer = _factory.GetOrCreateThumbnail();
 
-            Assert.IsNotNull(ThumbnailGameObject);
-            Assert.AreEqual(_container, ThumbnailGameObject.transform.parent);
+            Assert.IsNotNull(thumbnailModelContainer);
+            Assert.AreEqual(_factory._content, thumbnailModelContainer.transform.parent);
         }
 
         [Test]
@@ -62,16 +59,16 @@ public class ThumbnailFactoryTests
                 HoverColor = Color.green,
             };
 
-            GameObject thumbnailGameObject = _factory.GetOrCreateThumbnail( name, image, callback, settings);
+            var thumbnailModelContainer = _factory.GetOrCreateThumbnail( name, image, callback, settings);
 
-            var text = thumbnailGameObject.GetComponentInChildren<TMP_Text>();
+            var text = thumbnailModelContainer.GetComponentInChildren<TMP_Text>();
             Assert.AreEqual(name, text.text);
 
-            var imageObject = thumbnailGameObject.GetComponentInChildren<ThumbnailImageView>().GetComponent<Image>();
+            var imageObject = thumbnailModelContainer.GetComponentInChildren<ThumbnailImageView>().GetComponent<Image>();
             Assert.AreEqual(image, imageObject.sprite);
             Assert.AreEqual(settings.NormalColor, imageObject.color);
 
-            var button = thumbnailGameObject.GetComponent<Button>();
+            var button = thumbnailModelContainer.GetComponent<Button>();
             button.onClick?.Invoke();
             Assert.IsTrue(callbackCalled);
         }
@@ -83,37 +80,34 @@ public class ThumbnailFactoryTests
             modelContainer.gameObject.SetActive(false);
             _factory._pool.Enqueue(modelContainer);
 
-            var ThumbnailGameObject = _factory.GetOrCreateThumbnail();
+            var thumbnailModelContainer = _factory.GetOrCreateThumbnail();
 
-            Assert.AreEqual(_factory._pool.Count, 0);
-            Assert.IsTrue(ThumbnailGameObject.activeInHierarchy);
+            Assert.AreEqual(0, _factory._pool.Count);
+            Assert.IsTrue(thumbnailModelContainer.gameObject.activeInHierarchy);
         }
     }
 
     public class ReturnThumbnailTests
     {
         ThumbnailFactory _factory;
-        Transform _container;
 
         [SetUp]
         public void SetUp()
         {
             _factory = new GameObject().AddComponent<ThumbnailFactory>();
-            _container = new GameObject().transform;
         }
 
         [TearDown]
         public void TearDown()
         {
             GameObject.DestroyImmediate(_factory.gameObject);
-            GameObject.DestroyImmediate(_container.gameObject);
         }
 
         [Test]
         public void GivenThumbnail_WhenReturning_ThenAddedToPool()
         {
             var modelContainer = new GameObject().AddComponent<ThumbnailModelContainer>();
-            _factory.ReturnThumbnail(modelContainer.gameObject);
+            _factory.ReturnThumbnail(modelContainer);
 
             Assert.AreEqual(1, _factory._pool.Count);
         }
@@ -122,22 +116,11 @@ public class ThumbnailFactoryTests
         public void GivenThumbnail_WhenReturning_ThenDisabled()
         {
             var modelContainer = new GameObject().AddComponent<ThumbnailModelContainer>();
-            _factory.ReturnThumbnail(modelContainer.gameObject);
+            _factory.ReturnThumbnail(modelContainer);
 
             Assert.IsFalse(modelContainer.gameObject.activeInHierarchy);
             Assert.AreEqual(_factory.transform, modelContainer.transform.parent);
             Assert.IsNull(modelContainer.Model._callback);
-        }
-
-        [Test]
-        public void GivenEmptyGameObject_WhenReturning_ThenNotAddedToPool()
-        {
-            var gameObject = new GameObject();
-            gameObject.transform.SetParent(_container, false);
-
-            _factory.ReturnThumbnail(gameObject);
-
-            Assert.AreEqual(0, _factory._pool.Count);
         }
 
         [Test]

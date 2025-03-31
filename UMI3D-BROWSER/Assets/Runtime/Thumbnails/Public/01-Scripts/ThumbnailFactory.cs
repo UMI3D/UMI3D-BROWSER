@@ -20,6 +20,7 @@ using UnityEngine;
 
 namespace umi3d.browserRuntime.thumbnails
 {
+    [ExecuteInEditMode]
     public class ThumbnailFactory : MonoBehaviour
     {
         public class Settings
@@ -28,12 +29,36 @@ namespace umi3d.browserRuntime.thumbnails
             public Color? HoverColor;
         }
 
-        [SerializeField] private Transform _content;
+        [SerializeField] internal Transform _content;
         [SerializeField] private ThumbnailModelContainer _thumbnailPrefab;
+
+        private ThumbnailListModelContainer _thumbnailListModelContainer;
 
         internal Queue<ThumbnailModelContainer> _pool = new();
 
-        public GameObject GetOrCreateThumbnail(string name = "", Sprite image = null, Action callback = null, Settings settings = null)
+        private void Awake()
+        {
+            _thumbnailListModelContainer = GetComponent<ThumbnailListModelContainer>();
+
+            if (_thumbnailListModelContainer)
+            {
+                _thumbnailListModelContainer.Model.CreateThumbnail += GetOrCreateThumbnailForList;
+                _thumbnailListModelContainer.Model.CreateThumbnailTemp += GetOrCreateThumbnailTempForList;
+                _thumbnailListModelContainer.Model.RemoveThumbnail += ReturnThumbnailForList;
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (_thumbnailListModelContainer)
+            {
+                _thumbnailListModelContainer.Model.CreateThumbnail -= GetOrCreateThumbnailForList;
+                _thumbnailListModelContainer.Model.CreateThumbnailTemp -= GetOrCreateThumbnailTempForList;
+                _thumbnailListModelContainer.Model.RemoveThumbnail -= ReturnThumbnailForList;
+            }
+        }
+
+        public ThumbnailModelContainer GetOrCreateThumbnail(string name = "", Sprite image = null, Action callback = null, Settings settings = null)
         {
             if (!_content)
                 _content = transform;
@@ -50,17 +75,14 @@ namespace umi3d.browserRuntime.thumbnails
                 thumbnail.Model.SetName(name);
                 thumbnail.Model.SetImage(image);
                 thumbnail.Model.SetCallback(callback);
+                thumbnail.Model.SetColors(settings.NormalColor, settings.HoverColor);
             }
 
-            return thumbnail.gameObject;
-
+            return thumbnail;
         }
 
-        public void ReturnThumbnail(GameObject gameObject)
+        public void ReturnThumbnail(ThumbnailModelContainer modelContainer)
         {
-            if (!gameObject)
-                return;
-            var modelContainer = gameObject.GetComponent<ThumbnailModelContainer>();
             if (!modelContainer)
                 return;
 
@@ -69,6 +91,27 @@ namespace umi3d.browserRuntime.thumbnails
             modelContainer.Model.SetCallback(null);
 
             _pool.Enqueue(modelContainer);
+        }
+
+        private void GetOrCreateThumbnailForList(string name, Sprite image, Action callback, Settings settings)
+        {
+            var modelContainer = GetOrCreateThumbnail(name, image, callback, settings);
+            if (!_thumbnailListModelContainer.Model.Thumbnails.Contains(modelContainer.Model))
+                _thumbnailListModelContainer.Model.Thumbnails.Add(modelContainer.Model);
+            _thumbnailListModelContainer.Model._thumbnailContainers.Add(modelContainer);
+        }
+
+        private void GetOrCreateThumbnailTempForList()
+        {
+            var modelContainer = GetOrCreateThumbnail(null, null, null, null);
+            _thumbnailListModelContainer.Model._thumbnailContainersTemp.Add(modelContainer);
+        }
+
+        private void ReturnThumbnailForList(ThumbnailModelContainer container)
+        {
+            _thumbnailListModelContainer.Model._thumbnailContainers.Remove(container);
+            _thumbnailListModelContainer.Model._thumbnailContainersTemp.Remove(container);
+            ReturnThumbnail(container);
         }
 
 #if UNITY_EDITOR
@@ -86,7 +129,23 @@ namespace umi3d.browserRuntime.thumbnails
         public void ReturnThumbnailTest()
         {
             if (transform.childCount > 0)
-                ReturnThumbnail(transform.GetChild(0).gameObject);
+                ReturnThumbnail(transform.GetChild(0).GetComponent<ThumbnailModelContainer>());
+        }
+
+        [ContextMenu("[List] Get or create thumbnail test")]
+        public void GetOrCreateThumbnailForListTest()
+        {
+            var settings = new Settings() {
+                NormalColor = Color.gray,
+                HoverColor = Color.white,
+            };
+            _thumbnailListModelContainer.Model.AddThumbnail("Test", null, () => Debug.Log("Thumbnail clicked!"), settings);
+        }
+
+        [ContextMenu("[List] Clear thumbnail test")]
+        public void ClearThumbnailForListTest()
+        {
+            _thumbnailListModelContainer.Model.ClearThumbnails();
         }
 #endif
     }

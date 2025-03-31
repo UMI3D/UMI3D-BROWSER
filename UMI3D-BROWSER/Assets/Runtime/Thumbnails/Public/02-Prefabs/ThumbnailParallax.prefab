@@ -86,6 +86,8 @@ GameObject:
   - component: {fileID: 1664947844071510144}
   - component: {fileID: 3020177666625525849}
   - component: {fileID: 7789444126793018723}
+  - component: {fileID: 8457574247069989904}
+  - component: {fileID: 8087643552050036378}
   m_Layer: 5
   m_Name: ThumbnailParallax
   m_TagString: Untagged
@@ -152,6 +154,33 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &8457574247069989904
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2122161334952308725}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ffec4e8c3ebab144a0f2aed2642c64b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _content: {fileID: 6451187670078257329}
+  _thumbnailPrefab: {fileID: 2435440025198452029, guid: f210cd82123039943a6c1fda64b50e96,
+    type: 3}
+--- !u!114 &8087643552050036378
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2122161334952308725}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3d130d89b1af7b45af4925186c8375c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2127949530318922658
 GameObject:
   m_ObjectHideFlags: 0

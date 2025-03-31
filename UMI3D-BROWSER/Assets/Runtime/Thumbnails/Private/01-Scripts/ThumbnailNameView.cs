@@ -41,6 +41,11 @@ namespace umi3d.browserRuntime.thumbnails
                 new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == _modelContainer.Model));
         }
 
+        private void OnDisable()
+        {
+            _text.text = string.Empty;
+        }
+
         private void OnDestroy()
         {
             NotificationHub.Default.Unsubscribe(this);

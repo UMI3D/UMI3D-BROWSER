@@ -15,12 +15,13 @@ limitations under the License.
 */
 
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.thumbnails
 {
     [RequireComponent(typeof(Button))]
-    internal class ParallaxNavigationButton : MonoBehaviour
+    internal class ParallaxNavigationButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         enum Direction
         {
@@ -29,6 +30,12 @@ namespace umi3d.browserRuntime.thumbnails
         }
 
         [SerializeField] Direction _direction;
+        [SerializeField] Image _border;
+        [SerializeField] Color _borderActiveColor;
+        private Color _borderBaseColor;
+        [SerializeField] Image _arrow;
+        [SerializeField] Color _arrowActiveColor;
+        private Color _arrowBaseColor;
 
         Button _button;
         Scrollbar _scrollbar;
@@ -37,6 +44,9 @@ namespace umi3d.browserRuntime.thumbnails
         {
             _button = GetComponent<Button>();
             _scrollbar = GetComponentInParent<Scrollbar>();
+
+            _borderBaseColor = _border.color;
+            _arrowBaseColor = _arrow.color;
 
             _button.onClick.AddListener(Click);
         }
@@ -52,6 +62,20 @@ namespace umi3d.browserRuntime.thumbnails
                 _scrollbar.value -= 0.1f;
             if (_direction == Direction.Plus)
                 _scrollbar.value += 0.1f;
+
+            EventSystem.current.SetSelectedGameObject(null);
+        }
+
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            _border.color = _borderActiveColor;
+            _arrow.color = _arrowActiveColor;
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            _border.color = _borderBaseColor;
+            _arrow.color = _arrowBaseColor;
         }
     }
 }

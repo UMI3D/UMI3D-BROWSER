@@ -26,10 +26,16 @@ namespace umi3d.browserRuntime.thumbnails
         private ThumbnailModelContainer _modelContainer;
         private Image _image;
 
+        private Sprite _defaultSprite;
+        private Color _defaultColor;
+
         private void Awake()
         {
             _modelContainer = GetComponentInParent<ThumbnailModelContainer>();
             _image = GetComponent<Image>();
+
+            _defaultSprite = _image.sprite;
+            _defaultColor = _image.color;
 
             NotificationHub.Default.Subscribe(this,
                 ID.FromType<ThumbnailNotificationKeys.ThumbnailSet>(),
@@ -39,6 +45,12 @@ namespace umi3d.browserRuntime.thumbnails
                 ID.FromType<ThumbnailNotificationKeys.ThumbnailUpdated>(),
                 (Callback)ThumbnailUpdated,
                 new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == _modelContainer.Model));
+        }
+
+        private void OnDisable()
+        {
+            _image.sprite = _defaultSprite;
+            _image.color = _defaultColor;
         }
 
         private void OnDestroy()
@@ -56,7 +68,7 @@ namespace umi3d.browserRuntime.thumbnails
 
         private void ThumbnailUpdated(Notification notification)
         {
-            if (notification.TryGetInfoT(ThumbnailNotificationKeys.ThumbnailUpdated.Color, out Color color, false))
+            if (notification.TryGetInfoT(ThumbnailNotificationKeys.ThumbnailUpdated.Color, out Color color, false) && color != new Color(0, 0, 0, 0))
                 _image.color = color;
         }
     }

@@ -25,8 +25,8 @@ namespace umi3d.browserRuntime.thumbnails
         public string Name { get; private set; } = string.Empty;
         public Sprite Image { get; private set; } = null;
 
-        public Color NormalColor { get; private set; } = Color.white;
-        public Color HoverColor { get; private set; } = Color.white;
+        public Color NormalColor { get; private set; }
+        public Color HoverColor { get; private set; }
 
         public bool Hover { get; private set; } = false;
 
@@ -83,7 +83,8 @@ namespace umi3d.browserRuntime.thumbnails
         internal void UpdateHover(bool isHover)
         {
             Hover = isHover;
-            _setNotifier[ThumbnailNotificationKeys.ThumbnailUpdated.Color] = Hover ? HoverColor : NormalColor;
+            _updateNotifier[ThumbnailNotificationKeys.ThumbnailUpdated.Color] = Hover ? HoverColor : NormalColor;
+            _updateNotifier.Notify();
         }
     }
 }

@@ -40,10 +40,14 @@ namespace umi3d.browserRuntime.thumbnails
         Button _button;
         Scrollbar _scrollbar;
 
+        ThumbnailListModelContainer _modelContainer;
+
         private void Awake()
         {
             _button = GetComponent<Button>();
             _scrollbar = GetComponentInParent<Scrollbar>();
+
+            _modelContainer = GetComponentInParent<ThumbnailListModelContainer>();
 
             _borderBaseColor = _border.color;
             _arrowBaseColor = _arrow.color;
@@ -59,9 +63,10 @@ namespace umi3d.browserRuntime.thumbnails
         private void Click()
         {
             if (_direction == Direction.Minus)
-                _scrollbar.value -= 0.1f;
+                _scrollbar.value -= 1.0f / (_modelContainer.Model.Thumbnails.Count -  (_modelContainer.Model.Mode.NbrColumn * _modelContainer.Model.Mode.NbrRow));
             if (_direction == Direction.Plus)
-                _scrollbar.value += 0.1f;
+                _scrollbar.value += 1.0f / (_modelContainer.Model.Thumbnails.Count - (_modelContainer.Model.Mode.NbrColumn * _modelContainer.Model.Mode.NbrRow));
+            _scrollbar.value = Mathf.Clamp(_scrollbar.value, 0, 1);
 
             EventSystem.current.SetSelectedGameObject(null);
         }

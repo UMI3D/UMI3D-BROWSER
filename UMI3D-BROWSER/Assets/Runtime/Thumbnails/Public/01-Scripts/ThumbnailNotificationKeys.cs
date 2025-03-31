@@ -14,8 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using UnityEngine;
-
 namespace umi3d.browserRuntime.thumbnails
 {
     public class ThumbnailNotificationKeys 
@@ -26,13 +24,6 @@ namespace umi3d.browserRuntime.thumbnails
             public static readonly string Image = "Image";
 
             public static readonly string Color = "Color";
-
-            public static readonly string Position = "Position";
-            public static readonly string Size = "Size";
-
-            public static readonly string AnchorMin = "AnchorMin";
-            public static readonly string AnchorMax = "AnchorMax";
-            public static readonly string Pivot = "Pivot";
         }
 
         public class ThumbnailUpdated

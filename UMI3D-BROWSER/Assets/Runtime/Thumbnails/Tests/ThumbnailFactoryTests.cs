@@ -44,7 +44,7 @@ public class ThumbnailFactoryTests
         [Test]
         public void Given_WhenCreatingThumbnail_ThenThumbnailCreated()
         {
-            GameObject ThumbnailGameObject = _factory.GetOrCreateThumbnail(_container);
+            GameObject ThumbnailGameObject = _factory.GetOrCreateThumbnail();
 
             Assert.IsNotNull(ThumbnailGameObject);
             Assert.AreEqual(_container, ThumbnailGameObject.transform.parent);
@@ -60,20 +60,9 @@ public class ThumbnailFactoryTests
             var settings = new ThumbnailFactory.Settings() {
                 NormalColor = Color.red,
                 HoverColor = Color.green,
-                Position = Vector3.one,
-                Size = Vector3.one / 2,
-                AnchorMin = Vector2.zero,
-                AnchorMax = Vector2.one,
-                Pivot = Vector2.zero,
             };
 
-            GameObject thumbnailGameObject = _factory.GetOrCreateThumbnail(_container, name, image, callback, settings);
-
-            Assert.AreEqual(settings.Position, ((RectTransform)thumbnailGameObject.transform).position);
-            Assert.AreEqual(settings.Size, ((RectTransform)thumbnailGameObject.transform).sizeDelta);
-            Assert.AreEqual(settings.AnchorMin, ((RectTransform)thumbnailGameObject.transform).anchorMin);
-            Assert.AreEqual(settings.AnchorMax, ((RectTransform)thumbnailGameObject.transform).anchorMax);
-            Assert.AreEqual(settings.Pivot, ((RectTransform)thumbnailGameObject.transform).pivot);
+            GameObject thumbnailGameObject = _factory.GetOrCreateThumbnail( name, image, callback, settings);
 
             var text = thumbnailGameObject.GetComponentInChildren<TMP_Text>();
             Assert.AreEqual(name, text.text);
@@ -94,7 +83,7 @@ public class ThumbnailFactoryTests
             modelContainer.gameObject.SetActive(false);
             _factory._pool.Enqueue(modelContainer);
 
-            var ThumbnailGameObject = _factory.GetOrCreateThumbnail(_container);
+            var ThumbnailGameObject = _factory.GetOrCreateThumbnail();
 
             Assert.AreEqual(_factory._pool.Count, 0);
             Assert.IsTrue(ThumbnailGameObject.activeInHierarchy);

@@ -26,37 +26,30 @@ namespace umi3d.browserRuntime.thumbnails
         {
             public Color? NormalColor;
             public Color? HoverColor;
-
-            public Vector3? Position;
-            public Vector2? Size;
-
-            public Vector2? AnchorMin;
-            public Vector2? AnchorMax;
-            public Vector2? Pivot;
         }
 
+        [SerializeField] private Transform _content;
         [SerializeField] private ThumbnailModelContainer _thumbnailPrefab;
 
         internal Queue<ThumbnailModelContainer> _pool = new();
 
-        public GameObject GetOrCreateThumbnail(Transform parent, string name = "", Sprite image = null, Action callback = null, Settings settings = null)
+        public GameObject GetOrCreateThumbnail(string name = "", Sprite image = null, Action callback = null, Settings settings = null)
         {
+            if (!_content)
+                _content = transform;
+
             ThumbnailModelContainer thumbnail;
             if (!_pool.TryDequeue(out thumbnail))
                 thumbnail = Instantiate(_thumbnailPrefab);
 
             thumbnail.gameObject.SetActive(true);
-            thumbnail.transform.SetParent(parent, false);
+            thumbnail.transform.SetParent(_content, false);
 
             if (settings != null)
             {
                 thumbnail.Model.SetName(name);
                 thumbnail.Model.SetImage(image);
                 thumbnail.Model.SetCallback(callback);
-                thumbnail.Model.SetPosition(settings.Position);
-                thumbnail.Model.SetSize(settings.Size);
-                thumbnail.Model.SetColors(settings.NormalColor, settings.HoverColor);
-                thumbnail.Model.SetAnchor(settings.AnchorMin, settings.AnchorMax, settings.Pivot);
             }
 
             return thumbnail.gameObject;
@@ -82,7 +75,11 @@ namespace umi3d.browserRuntime.thumbnails
         [ContextMenu("Get or create thumbnail test")]
         public void GetOrCreateThumbnailTest()
         {
-            GetOrCreateThumbnail(transform, "Test", null, () => Debug.Log("Thumbnail clicked!"));
+            var settings = new Settings() {
+                NormalColor = Color.gray,
+                HoverColor = Color.white,
+            };
+            GetOrCreateThumbnail("Test", null, () => Debug.Log("Thumbnail clicked!"), settings);
         }
 
         [ContextMenu("Return thumbnail test")]

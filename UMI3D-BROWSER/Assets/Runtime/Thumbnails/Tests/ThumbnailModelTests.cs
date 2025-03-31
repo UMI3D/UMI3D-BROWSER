@@ -114,54 +114,6 @@ public class ThumbnailModelTests
         }
     }
 
-    public class SetPositionTests
-    {
-        [Test]
-        public void GivenPosition_WhenSettingPosition_ThenPosition()
-        {
-            var position = new Vector3(200, 200, 0);
-            var model = new ThumbnailModel();
-            model.SetPosition(position);
-
-            Assert.AreEqual(position, model.Position);
-        }
-
-        [Test]
-        public void GivenNull_WhenSettingPosition_ThenNothingChange()
-        {
-            var position = new Vector3(200, 200, 0);
-            var model = new ThumbnailModel();
-            model.SetPosition(position);
-            model.SetPosition(null);
-
-            Assert.AreEqual(position, model.Position);
-        }
-    }
-
-    public class SetSizeTests
-    {
-        [Test]
-        public void GivenSize_WhenSettingSize_ThenSize()
-        {
-            var size = new Vector2(2, 2);
-            var model = new ThumbnailModel();
-            model.SetSize(size);
-
-            Assert.AreEqual(size, model.Size);
-        }
-
-        [Test]
-        public void GivenNull_WhenSettingSize_ThenNothingChange()
-        {
-            var size = new Vector2(2, 2);
-            var model = new ThumbnailModel();
-            model.SetSize(size);
-            model.SetSize(null);
-
-            Assert.AreEqual(size, model.Size);
-        }
-    }
-
     public class UpdateHoverTests
     {
         [Test]
@@ -171,38 +123,6 @@ public class ThumbnailModelTests
             model.UpdateHover(true);
 
             Assert.IsTrue(model.Hover);
-        }
-    }
-
-    public class SetAnchorTests
-    {
-        [Test]
-        public void GivenAnchor_WhenSettingAnchor_ThenAnchor()
-        {
-            var anchorMin = new Vector2(0, 0);
-            var anchorMax = new Vector2(1, 1);
-            var pivot = new Vector2(0, 0);
-            var model = new ThumbnailModel();
-            model.SetAnchor(anchorMin, anchorMax, pivot);
-
-            Assert.AreEqual(anchorMin, model.AnchorMin);
-            Assert.AreEqual(anchorMax, model.AnchorMax);
-            Assert.AreEqual(pivot, model.Pivot);
-        }
-
-        [Test]
-        public void GivenNull_WhenSettingAnchor_ThenNothingChange()
-        {
-            var anchorMin = new Vector2(0, 0);
-            var anchorMax = new Vector2(1, 1);
-            var pivot = new Vector2(0, 0);
-            var model = new ThumbnailModel();
-            model.SetAnchor(anchorMin, anchorMax, pivot);
-            model.SetAnchor(null, null, null);
-
-            Assert.AreEqual(anchorMin, model.AnchorMin);
-            Assert.AreEqual(anchorMax, model.AnchorMax);
-            Assert.AreEqual(pivot, model.Pivot);
         }
     }
 

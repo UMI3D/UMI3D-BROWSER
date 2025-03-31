@@ -33,16 +33,10 @@ namespace umi3d.browserRuntime.thumbnails
             _button = GetComponent<Button>();
 
             _button.onClick.AddListener(_modelContainer.Model.Click);
-
-            NotificationHub.Default.Subscribe(this,
-                ID.FromType<ThumbnailNotificationKeys.ThumbnailSet>(),
-                (Callback)ThumbnailSet,
-                new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == _modelContainer.Model));
         }
 
         private void OnDestroy()
         {
-            NotificationHub.Default.Unsubscribe(this);
             _button.onClick.RemoveListener(_modelContainer.Model.Click);
         }
 
@@ -54,21 +48,6 @@ namespace umi3d.browserRuntime.thumbnails
         public void OnPointerExit(PointerEventData eventData)
         {
             _modelContainer.Model.UpdateHover(false);
-        }
-
-        private void ThumbnailSet(Notification notification)
-        {
-            if (notification.TryGetInfoT(ThumbnailNotificationKeys.ThumbnailSet.Position, out Vector3 position, false))
-                transform.position = position;
-            if (notification.TryGetInfoT(ThumbnailNotificationKeys.ThumbnailSet.Size, out Vector2 size, false))
-                ((RectTransform)transform).sizeDelta = size;
-
-            if (notification.TryGetInfoT(ThumbnailNotificationKeys.ThumbnailSet.AnchorMin, out Vector2 anchorMin, false))
-                ((RectTransform)transform).anchorMin = anchorMin;
-            if (notification.TryGetInfoT(ThumbnailNotificationKeys.ThumbnailSet.AnchorMax, out Vector2 anchorMax, false))
-                ((RectTransform)transform).anchorMax = anchorMax;
-            if (notification.TryGetInfoT(ThumbnailNotificationKeys.ThumbnailSet.Pivot, out Vector2 pivot, false))
-                ((RectTransform)transform).pivot = pivot;
         }
     }
 }

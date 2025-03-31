@@ -76,7 +76,6 @@ namespace umi3d.cdk.collaboration
             .SetNext(new UMI3DAnimationLoader())
             .SetNext(new PreloadedSceneLoader())
             .SetNext(new UMI3DInteractableLoader())
-            .SetNext(new UMI3DGlobalToolLoader())
             .SetNext(new CollaborationSkeletonAnimationNodeLoader())
             .SetNext(new UMI3DMeshNodeLoader())
             .SetNext(new UMI3DSubMeshNodeLoader())

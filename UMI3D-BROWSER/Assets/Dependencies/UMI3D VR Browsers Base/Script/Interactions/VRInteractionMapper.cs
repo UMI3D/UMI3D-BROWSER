@@ -42,11 +42,6 @@ namespace umi3dVRBrowsersBase.interactions
 
         #region Data
 
-        /// <summary>
-        /// Get the tool associated to an interaction.
-        /// </summary>
-        private Dictionary<ulong, GlobalTool> interactionsIdToTool = new Dictionary<ulong, GlobalTool>();
-
         public AbstractController lastControllerUsedInMenu;
 
         /// <summary>

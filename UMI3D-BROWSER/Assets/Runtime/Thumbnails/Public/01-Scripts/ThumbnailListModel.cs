@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils.observation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +22,7 @@ using UnityEngine;
 
 namespace umi3d.browserRuntime.thumbnails
 {
-    public class ThumbnailListModel 
+    public class ThumbnailListModel
     {
         public List<ThumbnailModel> Thumbnails { get; private set; } = new();
         public ThumbnailMode Mode { get; private set; } = new ThumbnailMode();
@@ -33,8 +34,12 @@ namespace umi3d.browserRuntime.thumbnails
         internal Action CreateThumbnailTemp;
         internal Action<ThumbnailModelContainer> RemoveThumbnail;
 
+        private readonly Notifier _changeModeNotifier;
+
         public ThumbnailListModel()
         {
+            _changeModeNotifier = NotificationHub.Default.GetNotifier(this, ID.FromType<ThumbnailNotificationKeys.ChangeMode>());
+
             FillWithTempThumbnails();
         }
 
@@ -63,12 +68,17 @@ namespace umi3d.browserRuntime.thumbnails
         {
             Mode = mode;
 
+            _changeModeNotifier[ThumbnailNotificationKeys.ChangeMode.Mode] = Mode;
+            _changeModeNotifier.Notify();
+
             for (int i = _thumbnailContainersTemp.Count - 1; i >= 0; i--)
                 RemoveThumbnail?.Invoke(_thumbnailContainersTemp[i]);
             for (int i = _thumbnailContainers.Count - 1; i >= 0; i--)
                 RemoveThumbnail?.Invoke(_thumbnailContainers[i]);
 
-            foreach (var thumbnail in Thumbnails)
+            var tempList = Thumbnails.ToList();
+            Thumbnails.Clear();
+            foreach (var thumbnail in tempList)
                 CreateThumbnail?.Invoke(thumbnail.Name, thumbnail.Image, thumbnail._callback, new ThumbnailFactory.Settings() { NormalColor = thumbnail.NormalColor, HoverColor = thumbnail.HoverColor });
             FillWithTempThumbnails();
         }

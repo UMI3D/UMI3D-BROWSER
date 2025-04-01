@@ -96,8 +96,7 @@ namespace umi3d.browserRuntime.thumbnails
         private void GetOrCreateThumbnailForList(string name, Sprite image, Action callback, Settings settings)
         {
             var modelContainer = GetOrCreateThumbnail(name, image, callback, settings);
-            if (!_thumbnailListModelContainer.Model.Thumbnails.Contains(modelContainer.Model))
-                _thumbnailListModelContainer.Model.Thumbnails.Add(modelContainer.Model);
+            _thumbnailListModelContainer.Model.Thumbnails.Add(modelContainer.Model);
             _thumbnailListModelContainer.Model._thumbnailContainers.Add(modelContainer);
         }
 

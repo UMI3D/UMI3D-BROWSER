@@ -31,5 +31,10 @@ namespace umi3d.browserRuntime.thumbnails
             public static readonly string Name = "Name";
             public static readonly string Color = "Color";
         }
+
+        public class ChangeMode
+        {
+            public static readonly string Mode = "Mode";
+        }
     }
 }

@@ -14,14 +14,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.thumbnails
 {
+    [Serializable]
     public class ThumbnailMode 
     {
-        public Vector2 Size { get; set; } = new Vector2(347, 295);
-        public int NbrRow { get; set; } = 1;
-        public int NbrColumn { get; set; } = 2;
+        public int NbrRow = 1;
+        public int NbrColumn = 2;
+        public int Spacing = 24;
     }
 }

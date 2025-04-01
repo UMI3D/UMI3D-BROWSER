@@ -140,9 +140,9 @@ public class ThumbnailListModelTests
             model.AddThumbnail();
 
             model.ChangeModeTo(new ThumbnailMode() {
-                Size = Vector2.one,
                 NbrRow = 2,
-                NbrColumn = 4
+                NbrColumn = 4,
+                Spacing = 11
             });
 
             Assert.AreEqual(2, model.Thumbnails.Count);

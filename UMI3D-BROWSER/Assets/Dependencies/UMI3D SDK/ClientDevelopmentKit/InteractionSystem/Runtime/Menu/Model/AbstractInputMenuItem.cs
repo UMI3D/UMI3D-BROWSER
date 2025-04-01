@@ -23,7 +23,7 @@ namespace umi3d.cdk.menu
     /// <summary>
     /// Base class for input menu items.
     /// </summary>
-    public abstract class AbstractInputMenuItem<T> : AbstractInputMenuItem, common.IObservable<T>
+    public abstract class AbstractInputMenuItem<T> : AbstractMenuItem, common.IObservable<T>
     {
         /// <summary>
         /// Parameter DTO the menu is for.
@@ -45,8 +45,11 @@ namespace umi3d.cdk.menu
 
         public System.Func<T, ParameterSettingRequestDto> GetParameterFunc;
 
-        /// <inheritdoc/>
-        public override ParameterSettingRequestDto GetParameter()
+        /// <summary>
+        /// Get the associated <see cref="ParameterSettingRequestDto"/>
+        /// </summary>
+        /// <returns></returns>
+        public virtual ParameterSettingRequestDto GetParameter()
         {
             return GetParameterFunc?.Invoke(GetValue());
         }
@@ -64,17 +67,5 @@ namespace umi3d.cdk.menu
         /// <param name="callback">Callback to unsubscribe</param>
         /// <see cref="Subscribe(Action{T})"/>
         public abstract bool UnSubscribe(Action<T> callback);
-    }
-
-    /// <summary>
-    /// Base class for input menu items.
-    /// </summary>
-    public abstract class AbstractInputMenuItem : MenuItem
-    {
-        /// <summary>
-        /// Get the associated <see cref="ParameterSettingRequestDto"/>
-        /// </summary>
-        /// <returns></returns>
-        public abstract ParameterSettingRequestDto GetParameter();
     }
 }

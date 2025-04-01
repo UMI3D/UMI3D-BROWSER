@@ -38,9 +38,6 @@ namespace umi3dVRBrowsersBase.interactions
     {
         #region Fields
 
-        [HideInInspector]
-        public MenuAsset ObjectMenu;
-
         /// <summary>
         /// Type of this controller
         /// </summary>
@@ -82,8 +79,6 @@ namespace umi3dVRBrowsersBase.interactions
         {
             if (!VRDrawingManager.Exists)
                 new VRDrawingManager();
-
-            ObjectMenu = Resources.Load<MenuAsset>("ParametersMenu");
 
             UnityEngine.Physics.queriesHitBackfaces = true;
 

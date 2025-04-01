@@ -133,7 +133,6 @@ namespace umi3dVRBrowsersBase.interactions.input
                 menuItem.Subscribe(callback);
 
                 currentInteraction = interaction;
-                Menu?.Add(menuItem);
             }
             else
             {
@@ -144,7 +143,6 @@ namespace umi3dVRBrowsersBase.interactions.input
         public void DesynchronizeMenuItem()
         {
             menuItem.UnSubscribe(callback);
-            Menu?.Remove(menuItem);
         }
 
         /// <summary>
@@ -174,7 +172,6 @@ namespace umi3dVRBrowsersBase.interactions.input
         public override void Dissociate()
         {
             currentInteraction = null;
-            Menu?.Remove(menuItem);
         }
 
         /// <summary>

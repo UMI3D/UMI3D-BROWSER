@@ -89,7 +89,6 @@ namespace umi3d.baseBrowser.inputs.interactions
             this.environmentId = environmentId;
 
             BaseManipulation input = InstanciateManipulation(dofs, strength, frameIndicator, manipulationCursor);
-            input.Menu = Menu;
             input.bone = bone;
             input.Associate(environmentId, manipulation, dofs, toolId, hoveredObjectId);
             input.Deactivate();

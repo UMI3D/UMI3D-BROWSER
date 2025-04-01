@@ -20,7 +20,7 @@ using UnityEngine.Events;
 namespace umi3d.cdk.menu
 {
     /// <summary>
-    /// <see cref="MenuItem"/> for <see cref="float"/>
+    /// <see cref="AbstractMenuItem"/> for <see cref="float"/>
     /// </summary>
     public class FloatInputMenuItem : AbstractInputMenuItem<float>
     {
@@ -79,15 +79,6 @@ namespace umi3d.cdk.menu
         public override bool UnSubscribe(Action<float> callback)
         {
             return subscribers.Remove(callback);
-        }
-
-        /// <summary>
-        /// Get the name of the MenuItem.
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return Name;
         }
     }
 }

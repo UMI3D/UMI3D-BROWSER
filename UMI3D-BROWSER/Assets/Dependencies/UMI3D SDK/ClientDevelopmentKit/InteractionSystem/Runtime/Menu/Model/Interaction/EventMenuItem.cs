@@ -21,7 +21,7 @@ using UnityEngine.Events;
 namespace umi3d.cdk.menu.interaction
 {
     /// <summary>
-    /// <see cref="MenuItem"/> for events of interactions
+    /// <see cref="AbstractMenuItem"/> for events of interactions
     /// </summary>
     public class EventMenuItem : InteractionMenuItem
     {
@@ -61,11 +61,6 @@ namespace umi3d.cdk.menu.interaction
         public virtual void UnSubscribe(Action<bool> callback)
         {
             subscribers.Remove(callback);
-        }
-
-        public override string ToString()
-        {
-            return Name;
         }
 
         /// <summary>

@@ -21,7 +21,7 @@ using UnityEngine.Events;
 namespace umi3d.cdk.menu
 {
     /// <summary>
-    /// <see cref="MenuItem"/> for text input.
+    /// <see cref="AbstractMenuItem"/> for text input.
     /// </summary>
     public class ColorInputMenuItem : AbstractInputMenuItem<Color>
     {
@@ -76,12 +76,6 @@ namespace umi3d.cdk.menu
         public override bool UnSubscribe(Action<Color> callback)
         {
            return subscribers.Remove(callback);
-        }
-
-        /// <inheritdoc/>
-        public override string ToString()
-        {
-            return Name;
         }
     }
 }

@@ -22,7 +22,7 @@ using UnityEngine.Events;
 namespace umi3d.cdk.menu.interaction
 {
     /// <summary>
-    /// <see cref="MenuItem"/> for <see cref="FormDto"/>
+    /// <see cref="AbstractMenuItem"/> for <see cref="FormDto"/>
     /// </summary>
     public class FormMenuItem : InteractionMenuItem
     {

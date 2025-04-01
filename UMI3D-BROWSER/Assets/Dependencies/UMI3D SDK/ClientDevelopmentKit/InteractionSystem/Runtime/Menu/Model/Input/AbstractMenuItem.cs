@@ -52,7 +52,7 @@ namespace umi3d.cdk.menu
         /// <summary>
         /// Menu name.
         /// </summary>
-        public abstract override string ToString();
+        public override string ToString() => Name;
 
         /// <summary>
         /// Event raised when menu content has been changed.

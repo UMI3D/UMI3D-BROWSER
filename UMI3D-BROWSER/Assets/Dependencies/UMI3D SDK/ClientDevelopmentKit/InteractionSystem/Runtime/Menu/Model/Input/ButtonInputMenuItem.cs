@@ -21,7 +21,7 @@ using UnityEngine.Events;
 namespace umi3d.cdk.menu
 {
     /// <summary>
-    /// <see cref="MenuItem"/> for Button input.
+    /// <see cref="AbstractMenuItem"/> for Button input.
     /// </summary>
     /// <see cref="BooleanInputMenuItem"/>
     public class ButtonInputMenuItem : AbstractInputMenuItem<bool>
@@ -69,15 +69,6 @@ namespace umi3d.cdk.menu
         public override bool UnSubscribe(Action<bool> callback)
         {
             return subscribers.Remove(callback);
-        }
-
-        /// <summary>
-        /// Get the name of the MenuItem
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return Name;
         }
 
         /// <summary>

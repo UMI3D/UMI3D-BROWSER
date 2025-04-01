@@ -21,7 +21,7 @@ using UnityEngine.Events;
 namespace umi3d.cdk.menu
 {
     /// <summary>
-    /// Boolean input <see cref="MenuItem"/>.
+    /// Boolean input <see cref="AbstractMenuItem"/>.
     /// </summary>
     public class LocalInfoRequestInputMenuItem : AbstractInputMenuItem<LocalInfoRequestParameterValue> // (read,write)
     {
@@ -96,12 +96,6 @@ namespace umi3d.cdk.menu
                 return true;
             }
             return false;
-        }
-
-        /// <inheritdoc/>
-        public override string ToString()
-        {
-            return Name;
         }
 
         /// <summary>

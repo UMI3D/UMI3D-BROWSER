@@ -20,7 +20,7 @@ using UnityEngine.Events;
 namespace umi3d.cdk.menu
 {
     /// <summary>
-    /// <see cref="MenuItem"/> for Boolean input.
+    /// <see cref="AbstractMenuItem"/> for Boolean input.
     /// </summary>
     public class BooleanInputMenuItem : AbstractInputMenuItem<bool>
     {
@@ -70,12 +70,6 @@ namespace umi3d.cdk.menu
                 return true;
             }
             return false;
-        }
-
-        /// <inheritdoc/>
-        public override string ToString()
-        {
-            return Name;
         }
 
         /// <summary>

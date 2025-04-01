@@ -70,10 +70,7 @@ namespace umi3d.baseBrowser.Controller
         [Header("Mobile' parents")]
         public GameObject MobileAction;
 
-        [HideInInspector]
-        public MenuAsset ObjectMenu;
         [Space(15)]
-        public MenuAsset ManipulationMenu;
         public CursorData mouseData;
 
         public IConcreteController CurrentController;
@@ -119,8 +116,6 @@ namespace umi3d.baseBrowser.Controller
             mouseData.ForceProjectionReleasableButton.Subscribe(ReleaseForceProjection);
 
             mouseData.saveDelay = 0;
-            ObjectMenu = Resources.Load<MenuAsset>("Scriptables/GamePanel/ObjectMenu");
-            ManipulationMenu = Resources.Load<MenuAsset>("Scriptables/GamePanel/ManipulationMenu");
 
             ManipulationGroupInputs.AddRange(ManipulationGroupActions.GetComponents<BaseManipulationGroup>());
             DrawGroupInputs.AddRange(DrawGroupActions.GetComponents<BaseDrawGroup>());
@@ -131,7 +126,6 @@ namespace umi3d.baseBrowser.Controller
                 new KeyboardAndMouseController()
                 {
                     Controller = this,
-                    ObjectMenu = ObjectMenu,
                     ManipulationGroup = ManipulationGroupInputs.Find(a => a is ManipulationGroupeForDesktop),
                     DrawGroup = DrawGroupInputs.Find(a => a is DrawGroupForDesktop),
                 }
@@ -140,8 +134,7 @@ namespace umi3d.baseBrowser.Controller
             (
                 new MobileController()
                 {
-                    Controller = this,
-                    ObjectMenu = ObjectMenu,
+                    Controller = this
                 }
             );
 
@@ -235,13 +228,10 @@ namespace umi3d.baseBrowser.Controller
         {
             if (mouseData.ForceProjectionReleasableButton == null || !mouseData.ForceProjectionReleasable)
                 return;
-            if (!ObjectMenu.menu.Contains(mouseData.ForceProjectionReleasableButton))
-                ObjectMenu.menu.Add(mouseData.ForceProjectionReleasableButton);
         }
         protected void RemoveForceProjectionReleaseButton()
         {
             if (mouseData.ForceProjectionReleasableButton == null) return;
-            ObjectMenu.menu.Remove(mouseData.ForceProjectionReleasableButton);
         }
         protected void UnequipeForceProjection()
         {

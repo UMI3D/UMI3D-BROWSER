@@ -19,9 +19,9 @@ using umi3d.common.interaction;
 namespace umi3d.cdk.menu.interaction
 {
     /// <summary>
-    /// <see cref="MenuItem"/> for <see cref="AbstractInteractionDto"/>
+    /// <see cref="AbstractMenuItem"/> for <see cref="AbstractInteractionDto"/>
     /// </summary>
-    public class InteractionMenuItem : MenuItem
+    public class InteractionMenuItem : AbstractMenuItem
     {
         /// <summary>
         /// Interaction that belongs to the menu item.

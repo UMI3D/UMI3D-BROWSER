@@ -56,7 +56,6 @@ namespace umi3d.baseBrowser.parameters
 
             menuItem.NotifyValueChange(stringEnum.value);
             menuItem.Subscribe(callback);
-            Menu?.Add(menuItem);
             currentInteraction = interaction;
         }
     }

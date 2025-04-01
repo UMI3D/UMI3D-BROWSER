@@ -20,7 +20,7 @@ using UnityEngine.Events;
 namespace umi3d.cdk.menu
 {
     /// <summary>
-    /// Abstract base class for all <see cref="MenuItem"/> related to enum inputs.
+    /// Abstract base class for all <see cref="AbstractMenuItem"/> related to enum inputs.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public abstract class AbstractEnumInputMenuItem<T> : AbstractInputMenuItem<T>

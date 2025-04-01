@@ -17,7 +17,7 @@ limitations under the License.
 namespace umi3d.cdk.menu
 {
     /// <summary>
-    ///  <see cref="MenuItem"/> for DropDown input.
+    ///  <see cref="AbstractMenuItem"/> for DropDown input.
     /// </summary>
     public class DropDownInputMenuItem : AbstractEnumInputMenuItem<string>
     {

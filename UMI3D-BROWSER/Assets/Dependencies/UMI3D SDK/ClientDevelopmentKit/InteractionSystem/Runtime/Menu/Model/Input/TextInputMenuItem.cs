@@ -20,7 +20,7 @@ using UnityEngine.Events;
 namespace umi3d.cdk.menu
 {
     /// <summary>
-    /// <see cref="MenuItem"/> for text input.
+    /// <see cref="AbstractMenuItem"/> for text input.
     /// </summary>
     public class TextInputMenuItem : AbstractInputMenuItem<string>
     {
@@ -75,12 +75,6 @@ namespace umi3d.cdk.menu
         public override bool UnSubscribe(Action<string> callback)
         {
            return subscribers.Remove(callback);
-        }
-
-        /// <inheritdoc/>
-        public override string ToString()
-        {
-            return Name;
         }
     }
 }

@@ -19,7 +19,7 @@ using umi3d.common.interaction;
 namespace umi3d.cdk.menu
 {
     /// <summary>
-    /// <see cref="MenuItem"/> to specify details on the upload input
+    /// <see cref="AbstractMenuItem"/> to specify details on the upload input
     /// </summary>
     public class UploadInputMenuItem : TextInputMenuItem
     {

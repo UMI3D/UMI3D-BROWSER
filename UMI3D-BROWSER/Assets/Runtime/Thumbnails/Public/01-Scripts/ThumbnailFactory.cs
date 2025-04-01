@@ -70,11 +70,11 @@ namespace umi3d.browserRuntime.thumbnails
             thumbnail.gameObject.SetActive(true);
             thumbnail.transform.SetParent(_content, false);
 
+            thumbnail.Model.SetName(name);
+            thumbnail.Model.SetImage(image);
+            thumbnail.Model.SetCallback(callback);
             if (settings != null)
             {
-                thumbnail.Model.SetName(name);
-                thumbnail.Model.SetImage(image);
-                thumbnail.Model.SetCallback(callback);
                 thumbnail.Model.SetColors(settings.NormalColor, settings.HoverColor);
             }
 

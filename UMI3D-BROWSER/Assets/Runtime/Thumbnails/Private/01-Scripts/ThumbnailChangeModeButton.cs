@@ -16,6 +16,7 @@ limitations under the License.
 
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.thumbnails
@@ -48,6 +49,7 @@ namespace umi3d.browserRuntime.thumbnails
 
         private void CycleMode()
         {
+            EventSystem.current.SetSelectedGameObject(null);
             if (_modes.Count == 0)
                 return;
 

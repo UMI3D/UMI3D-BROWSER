@@ -60,9 +60,20 @@ namespace umi3d.browserRuntime.thumbnails
 
         private void ThumbnailSet(Notification notification)
         {
+            _image.sprite = _defaultSprite;
+            _image.type = Image.Type.Sliced;
+            _image.pixelsPerUnitMultiplier = 2;
+
             if (notification.TryGetInfoT(ThumbnailNotificationKeys.ThumbnailSet.Image, out Sprite sprite, false))
-                _image.sprite = sprite;
-            if (notification.TryGetInfoT(ThumbnailNotificationKeys.ThumbnailSet.Color, out Color color, false))
+            {
+                if (sprite != null)
+                {
+                    _image.sprite = sprite;
+                    _image.type = Image.Type.Simple;
+                    _image.preserveAspect = true;
+                } 
+            }
+            if (notification.TryGetInfoT(ThumbnailNotificationKeys.ThumbnailSet.Color, out Color color, false) && color != new Color(0, 0, 0, 0))
                 _image.color = color;
         }
 

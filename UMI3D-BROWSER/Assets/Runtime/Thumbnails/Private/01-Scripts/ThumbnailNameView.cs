@@ -30,7 +30,7 @@ namespace umi3d.browserRuntime.thumbnails
         {
             _modelContainer = GetComponentInParent<ThumbnailModelContainer>();
             _text = GetComponent<TMP_Text>();
-
+            
             NotificationHub.Default.Subscribe(this,
                 ID.FromType<ThumbnailNotificationKeys.ThumbnailSet>(),
                 (Callback)ThumbnailSet,
@@ -55,7 +55,7 @@ namespace umi3d.browserRuntime.thumbnails
         {
             if (notification.TryGetInfoT(ThumbnailNotificationKeys.ThumbnailSet.Name, out string name, false))
                 _text.text = name;
-            if (notification.TryGetInfoT(ThumbnailNotificationKeys.ThumbnailSet.Color, out Color color, false))
+            if (notification.TryGetInfoT(ThumbnailNotificationKeys.ThumbnailSet.Color, out Color color, false) && color != new Color(0, 0, 0, 0))
                 _text.color = color;
         }
 
@@ -63,7 +63,7 @@ namespace umi3d.browserRuntime.thumbnails
         {
             if (notification.TryGetInfoT(ThumbnailNotificationKeys.ThumbnailUpdated.Name, out string name, false))
                 _text.text = name;
-            if (notification.TryGetInfoT(ThumbnailNotificationKeys.ThumbnailUpdated.Color, out Color color, false))
+            if (notification.TryGetInfoT(ThumbnailNotificationKeys.ThumbnailUpdated.Color, out Color color, false) && color != new Color(0, 0, 0, 0))
                 _text.color = color;
         }
     }

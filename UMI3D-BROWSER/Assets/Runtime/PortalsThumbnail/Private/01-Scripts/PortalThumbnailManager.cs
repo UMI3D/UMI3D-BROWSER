@@ -38,9 +38,22 @@ namespace umi3d.browserRuntime.portalsThumbnails
 
             _tryToConnectNotifier = NotificationHub.Default.GetNotifier(this,
                 ID.FromType<PortalThumbnailNotificationKeys.TryToConnect>());
+            NotificationHub.Default.Subscribe(this,
+                ID.FromType<PortalThumbnailNotificationKeys.Reset>(),
+                (Callback)ResetThumbnails);
+        }
+
+        private void OnDestroy()
+        {
+            NotificationHub.Default.Unsubscribe(this);
         }
 
         private void OnEnable()
+        {
+            ResetThumbnails();
+        }
+
+        private void ResetThumbnails()
         {
             _modelContainer.Model.ClearThumbnails();
             var portals = PortalThumbnailPlayerPref.GetVirtualWorlds();
@@ -49,15 +62,20 @@ namespace umi3d.browserRuntime.portalsThumbnails
             portalsDatas = portalsDatas.OrderBy(portalData => new DateTime(portalData.dateLastConnection)).Reverse().ToList();
             foreach (var portalData in portalsDatas)
             {
-                _modelContainer.Model.AddThumbnail(portalData.worldName, _defaultSprite, () => {
-                    _tryToConnectNotifier[PortalThumbnailNotificationKeys.TryToConnect.Url] = portalData.worldUrl;
-                    _tryToConnectNotifier.Notify();
-                    portalData.dateLastConnection = DateTime.UtcNow.ToFileTime();
-                    portals.UpdateWorld(portalData);
-                }, new () {
-                    NormalColor = new Color(0.44f, 0.44f, 0.44f, 1),
-                    HoverColor = Color.white,
-                });
+                _modelContainer.Model.AddThumbnail(
+                    portalData.worldName, 
+                    _defaultSprite, 
+                    () => {
+                        _tryToConnectNotifier[PortalThumbnailNotificationKeys.TryToConnect.Url] = portalData.worldUrl;
+                        _tryToConnectNotifier.Notify();
+                        portalData.dateLastConnection = DateTime.UtcNow.ToFileTime();
+                        portals.UpdateWorld(portalData);
+                    }, new() {
+                        NormalColor = new Color(0.44f, 0.44f, 0.44f, 1),
+                        HoverColor = Color.white,
+                    });
+                var portalModelContainer = _modelContainer.gameObject.GetComponentsInChildren<PortalThumbnailModelContainer>().Last();
+                portalModelContainer.Model.SetPortal(portalData, portals);
             }
         }
     }

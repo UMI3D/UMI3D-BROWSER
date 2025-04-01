@@ -84,6 +84,7 @@ namespace umi3d.browserRuntime.thumbnails
         {
             Hover = isHover;
             _updateNotifier[ThumbnailNotificationKeys.ThumbnailUpdated.Color] = Hover ? HoverColor : NormalColor;
+            _updateNotifier[ThumbnailNotificationKeys.ThumbnailUpdated.Hover] = Hover;
             _updateNotifier.Notify();
         }
     }

@@ -73,13 +73,6 @@ namespace umi3d.browserRuntime.thumbnails
 
             for (int i = _thumbnailContainersTemp.Count - 1; i >= 0; i--)
                 RemoveThumbnail?.Invoke(_thumbnailContainersTemp[i]);
-            for (int i = _thumbnailContainers.Count - 1; i >= 0; i--)
-                RemoveThumbnail?.Invoke(_thumbnailContainers[i]);
-
-            var tempList = Thumbnails.ToList();
-            Thumbnails.Clear();
-            foreach (var thumbnail in tempList)
-                CreateThumbnail?.Invoke(thumbnail.Name, thumbnail.Image, thumbnail._callback, new ThumbnailFactory.Settings() { NormalColor = thumbnail.NormalColor, HoverColor = thumbnail.HoverColor });
             FillWithTempThumbnails();
         }
 

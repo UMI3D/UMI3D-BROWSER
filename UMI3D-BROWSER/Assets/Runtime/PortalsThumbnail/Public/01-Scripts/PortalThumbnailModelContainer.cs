@@ -14,24 +14,21 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using UnityEngine;
+
 namespace umi3d.browserRuntime.portalsThumbnails
 {
-    public static class PortalThumbnailNotificationKeys 
+    public class PortalThumbnailModelContainer : MonoBehaviour
     {
-        public class PortalThumbnailSet
-        {
-            public readonly static string IsFavorite = "IsFavorite";
-        }
-        public class PortalThumbnailUpdated
-        {
-            public readonly static string IsFavorite = "IsFavorite";
-        }
+        private PortalThumbnailModel _model;
 
-        public class TryToConnect
+        public PortalThumbnailModel Model
         {
-            public readonly static string Url = "Url";
+            get {
+                if (_model == null)
+                    _model = new PortalThumbnailModel();
+                return _model;
+            }
         }
-
-        public class Reset { }
     }
 }

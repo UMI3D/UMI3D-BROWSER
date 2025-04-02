@@ -44,21 +44,6 @@ namespace umi3d.cdk.interaction
         public string name => abstractDto.name;
 
         /// <summary>
-        /// Toolbox description.
-        /// </summary>
-        public string description => abstractDto.description;
-
-        /// <summary>
-        /// 2D icon.
-        /// </summary>
-        public ResourceDto icon2D => abstractDto.icon2D;
-
-        /// <summary>
-        /// 3D icon.
-        /// </summary>
-        public ResourceDto icon3D => abstractDto.icon3D;
-
-        /// <summary>
         /// Is the tool active ?
         /// </summary>
         public bool Active => abstractDto?.active ?? false;

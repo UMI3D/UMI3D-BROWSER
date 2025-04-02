@@ -328,20 +328,7 @@ namespace umi3d.baseBrowser.Controller
             }
             return true;
         }
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
-        /// <param name="tool"></param>
-        /// <returns></returns>
-        public override bool RequiresMenu(AbstractTool tool)
-        {
-            //List<AbstractInteractionDto> interactions = tool.interactions;
-            //List<AbstractInteractionDto> manips = interactions.FindAll(x => x is ManipulationDto);
-            //List<AbstractInteractionDto> events = interactions.FindAll(x => x is EventDto);
-            //List<AbstractInteractionDto> parameters = tool.Interactions.FindAll(x => x is AbstractParameterDto);
-            // return ((events.Count > 7 || manips.Count > 0) && (events.Count > 6 || manips.Count > 1));
-            return false; // (/*(parameters.Count > 0) ||*/ (events.Count > 7) || (manips.Count > 1) || ((manips.Count > 0) && (events.Count > 6)));
-        }
+
         protected override ulong GetCurrentHoveredId()
             => mouseData.CurrentHoveredId;
         protected override bool isInteracting()
@@ -352,29 +339,7 @@ namespace umi3d.baseBrowser.Controller
         {
             throw new System.NotImplementedException();
         }
-        /// <summary>
-        /// Create a menu to access each interactions of a tool separately.
-        /// </summary>
-        /// <param name="interactions"></param>
-        public override void CreateInteractionsMenuFor(AbstractTool tool)
-        {
-            Debug.Log("oups");
-        }
-        //bool ShouldAutoProject(InteractableDto tool)
-        //{
-        //    List<AbstractInteractionDto> manips = tool.interactions.FindAll(x => x is ManipulationDto);
-        //    List<AbstractInteractionDto> events = tool.interactions.FindAll(x => x is EventDto);
-        //    List<AbstractInteractionDto> parameters = tool.interactions.FindAll(x => x is AbstractParameterDto);
-        //    return (((parameters.Count == 0) && (events.Count <= 7) && (manips.Count == 0)));
-        //}
 
-        //public bool RequiresParametersMenu(AbstractTool tool)
-        //{
-        //    List<AbstractInteractionDto> interactions = tool.interactions;
-        //    List<AbstractInteractionDto> parameters = interactions.FindAll(x => x is AbstractParameterDto);
-        //    // return ((events.Count > 7 || manips.Count > 0) && (events.Count > 6 || manips.Count > 1));
-        //    return (parameters.Count > 0);
-        //}
         protected void UpdateTool()
         {
             if (mouseData.ForceProjection && mouseData.ForceProjectionReleasable)

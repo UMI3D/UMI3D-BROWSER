@@ -24,11 +24,6 @@ namespace umi3dVRBrowsersBase.interactions.input
     /// </summary>
     public class FormMenuInput : AbstractVRInput
     {
-        /// <summary>
-        /// Associated menu item.
-        /// </summary>
-        public FormMenuItem menuItem;
-
         #region Methods
 
         /// <summary>
@@ -64,16 +59,6 @@ namespace umi3dVRBrowsersBase.interactions.input
         public override void Associate(ulong environmentId, ManipulationDto manipulation, DofGroupEnum dofs, ulong toolId, ulong hoveredObjectId)
         {
             throw new System.Exception("This input is can not be associated with a manipulation");
-        }
-
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
-        public override void Dissociate()
-        {
-            base.Dissociate();
-
-            menuItem = null;
         }
 
         /// <summary>

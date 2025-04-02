@@ -23,7 +23,7 @@ namespace umi3d.cdk.menu
     /// <summary>
     /// Base class for input menu items.
     /// </summary>
-    public abstract class AbstractInputMenuItem<T> : AbstractMenuItem, common.IObservable<T>
+    public abstract class AbstractInputMenuItem<T> : AbstractMenuItem
     {
         /// <summary>
         /// Parameter DTO the menu is for.

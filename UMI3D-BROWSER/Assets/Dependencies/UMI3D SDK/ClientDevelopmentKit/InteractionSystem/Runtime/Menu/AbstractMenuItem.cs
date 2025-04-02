@@ -27,7 +27,7 @@ namespace umi3d.cdk.menu
     /// Abstract menu model for tools that require one.
     /// </summary>
     [System.Serializable]
-    public abstract class AbstractMenuItem : ISelectable
+    public abstract class AbstractMenuItem
     {
         /// <summary>
         /// Menu name.
@@ -35,29 +35,9 @@ namespace umi3d.cdk.menu
         public string Name = "menu";
 
         /// <summary>
-        /// Icon associated with the menu.
-        /// </summary>
-        public Texture2D icon2D;
-        /// <summary>
-        /// 3D icon associated with the menu.
-        /// </summary>
-        public GameObject icon3D;
-
-        /// <summary>
-        /// State if a parameter is a displayer.
-        /// If set to true the value will not be editable.
-        /// </summary>
-        public bool isDisplayer;
-
-        /// <summary>
         /// Menu name.
         /// </summary>
         public override string ToString() => Name;
-
-        /// <summary>
-        /// Event raised when menu content has been changed.
-        /// </summary>
-        public UnityEvent OnDestroy = new UnityEvent();
 
 
         /// <summary>

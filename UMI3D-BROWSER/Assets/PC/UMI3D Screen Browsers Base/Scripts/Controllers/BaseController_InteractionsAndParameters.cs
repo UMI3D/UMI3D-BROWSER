@@ -149,7 +149,6 @@ namespace umi3d.baseBrowser.Controller
                 interactionWithBone.BoneTransform = hoverBoneTransform;
             }
 
-            input.Menu = ObjectMenu.menu;
             inputs.Add(input);
         }
 

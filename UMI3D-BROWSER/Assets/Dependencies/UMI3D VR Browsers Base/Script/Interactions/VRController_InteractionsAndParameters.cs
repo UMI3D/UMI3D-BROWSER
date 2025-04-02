@@ -164,7 +164,6 @@ namespace umi3dVRBrowsersBase.interactions
             //else if (input is FormMenuInput formInput) formInput.bone = interactionBoneType;
             //else if (input is LinkInteraction linkInput) linkInput.bone = interactionBoneType;
             input.Init(this);
-            input.Menu = ObjectMenu.menu;
             inputs.Add(input);
         }
 

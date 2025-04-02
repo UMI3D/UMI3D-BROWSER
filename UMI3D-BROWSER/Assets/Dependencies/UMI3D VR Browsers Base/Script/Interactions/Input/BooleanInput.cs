@@ -112,9 +112,6 @@ namespace umi3dVRBrowsersBase.interactions.input
         /// <see cref="Associate(AbstractInteractionDto)"/>
         private void VRInput_onStateUp()
         {
-            if (PlayerMenuManager.Instance.IsMenuHovered)
-                return;
-
             onActionUp.Invoke();
         }
 
@@ -126,9 +123,6 @@ namespace umi3dVRBrowsersBase.interactions.input
         /// <see cref="Associate(AbstractInteractionDto)"/>
         private void VRInput_onStateDown()
         {
-            if (PlayerMenuManager.Instance.IsMenuHovered)
-                return;
-
             onActionDown.Invoke();
         }
 

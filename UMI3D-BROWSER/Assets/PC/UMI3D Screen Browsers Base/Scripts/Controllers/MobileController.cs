@@ -26,7 +26,6 @@ namespace umi3d.mobileBrowser.Controller
     public class MobileController : IConcreteController
     {
         public BaseController Controller;
-        public MenuAsset ObjectMenu;
 
         protected interactions.MainMobileAction m_mainAction;
 
@@ -61,7 +60,6 @@ namespace umi3d.mobileBrowser.Controller
             Inputs.Add(m_mainAction);
             m_mainAction.Init(Controller);
             m_mainAction.bone = Controller.interactionBoneType;
-            m_mainAction.Menu = ObjectMenu.menu;
             m_mainAction.BoneTransform = Controller.hoverBoneTransform;
         }
         /// <summary>

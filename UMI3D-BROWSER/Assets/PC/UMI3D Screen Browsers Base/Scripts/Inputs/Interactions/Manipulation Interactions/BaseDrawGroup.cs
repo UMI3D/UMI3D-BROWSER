@@ -103,7 +103,6 @@ namespace umi3d.baseBrowser.inputs.interactions
 
             drawInteraction = InstantiateInteraction();
 
-            drawInteraction.Menu = Menu;
             drawInteraction.bone = bone;
             drawInteraction.Associate(environmentId, drawEvent, toolId, hoveredObjectId);
             AddInput(drawInteraction);
@@ -115,7 +114,6 @@ namespace umi3d.baseBrowser.inputs.interactions
 
             toggleInteraction = InstantiateToggle();
 
-            toggleInteraction.Menu = Menu;
             toggleInteraction.bone = bone;
             toggleInteraction.Associate(environmentId, toggleEvent, toolId, hoveredObjectId);
             AddInput(toggleInteraction);

@@ -29,7 +29,6 @@ namespace umi3d.baseBrowser.inputs.interactions
             if (m_isDown) Pressed(false);
             associatedInteraction = null;
             environmentId = 0;
-            Menu?.Remove(menuItem);
             menuItem?.UnSubscribe(Pressed);
             menuItem = null;
         }
@@ -46,7 +45,6 @@ namespace umi3d.baseBrowser.inputs.interactions
             this.environmentId = environmentId;
             CreateMenuItem();
             menuItem.Subscribe(Pressed);
-            Menu?.Add(menuItem);
         }
 
         /// <summary>

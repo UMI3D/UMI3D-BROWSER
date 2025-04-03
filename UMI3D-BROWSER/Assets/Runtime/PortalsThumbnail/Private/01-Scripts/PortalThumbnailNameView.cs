@@ -23,23 +23,24 @@ using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.portalsThumbnails
 {
-    [RequireComponent(typeof(TMP_InputField))]
-    internal class PortalThumbnailNameView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+    internal class PortalThumbnailNameView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
     {
+        [SerializeField] private TMP_InputField _inputField;
         [SerializeField] private Image _icon;
+        [SerializeField] private Image _background;
 
         private ThumbnailModelContainer _modelContainer;
         private PortalThumbnailModelContainer _portalModelContainer;
-        private TMP_InputField _inputField;
-        private TMP_Text _text;
+
+        bool _isHovering = false;
+        Color _tempColor = Color.white;
 
         private void Awake()
         {
             _modelContainer = GetComponentInParent<ThumbnailModelContainer>();
             _portalModelContainer = GetComponentInParent<PortalThumbnailModelContainer>();
-            _inputField = GetComponent<TMP_InputField>();
 
-            _inputField.onSubmit.AddListener(_modelContainer.Model.UpdateName);
+            _inputField.onEndEdit.AddListener(Submit);
 
             NotificationHub.Default.Subscribe(this,
                 ID.FromType<ThumbnailNotificationKeys.ThumbnailSet>(),
@@ -55,6 +56,7 @@ namespace umi3d.browserRuntime.portalsThumbnails
                 new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == _portalModelContainer.Model));
 
             _icon.gameObject.SetActive(false);
+            _background.color = new Color(0, 0, 0, 0);
             gameObject.SetActive(false);
         }
 
@@ -67,7 +69,7 @@ namespace umi3d.browserRuntime.portalsThumbnails
         private void OnDestroy()
         {
             NotificationHub.Default.Unsubscribe(this);
-            _inputField.onSubmit.RemoveListener(_modelContainer.Model.UpdateName);
+            _inputField.onSubmit.RemoveListener(Submit);
         }
 
         void ThumbnailSet(Notification notification)
@@ -75,7 +77,11 @@ namespace umi3d.browserRuntime.portalsThumbnails
             if (notification.TryGetInfoT(ThumbnailNotificationKeys.ThumbnailSet.Name, out string name, false))
                 _inputField.text = name;
             if (notification.TryGetInfoT(ThumbnailNotificationKeys.ThumbnailSet.Color, out Color color, false) && color != new Color(0, 0, 0, 0))
-                _inputField.textComponent.color = color;
+            {
+                _tempColor = color;
+                if (!_inputField.isFocused)
+                    _inputField.textComponent.color = color;
+            }
         }
 
         void ThumbnailUpdated(Notification notification)
@@ -83,7 +89,11 @@ namespace umi3d.browserRuntime.portalsThumbnails
             if (notification.TryGetInfoT(ThumbnailNotificationKeys.ThumbnailUpdated.Name, out string name, false))
                 _inputField.text = name;
             if (notification.TryGetInfoT(ThumbnailNotificationKeys.ThumbnailUpdated.Color, out Color color, false) && color != new Color(0, 0, 0, 0))
-                _inputField.textComponent.color = color;
+            {
+                _tempColor = color;
+                if (!_inputField.isFocused)
+                    _inputField.textComponent.color = color;
+            }
         }
 
         private void PortalThumbnailSet()
@@ -93,12 +103,36 @@ namespace umi3d.browserRuntime.portalsThumbnails
 
         public void OnPointerEnter(PointerEventData eventData)
         {
+            _isHovering = true;
+
             _icon.gameObject.SetActive(true);
+            _background.color = new Color(1, 1, 1, 1);
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
+            _isHovering = false;
+            if (_inputField.isFocused)
+                return;
+
             _icon.gameObject.SetActive(false);
+            _background.color = new Color(0, 0, 0, 0);
+        }
+
+        public void OnPointerDown(PointerEventData eventData)
+        {
+            _inputField.Select();
+        }
+
+        private void Submit(string newName)
+        {
+            _modelContainer.Model.UpdateName(newName);
+            _inputField.textComponent.color = _tempColor;
+            if (!_isHovering)
+            {
+                _icon.gameObject.SetActive(false);
+                _background.color = new Color(0, 0, 0, 0);
+            }
         }
     }
 }

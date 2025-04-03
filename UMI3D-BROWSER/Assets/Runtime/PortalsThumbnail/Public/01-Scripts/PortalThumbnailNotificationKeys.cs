@@ -20,6 +20,7 @@ namespace umi3d.browserRuntime.portalsThumbnails
     {
         public class PortalThumbnailSet
         {
+            public readonly static string Url = "Url";
             public readonly static string IsFavorite = "IsFavorite";
         }
         public class PortalThumbnailUpdated

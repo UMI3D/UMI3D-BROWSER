@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using inetum.unityUtils.observation;
+using umi3d.browserRuntime.thumbnails;
 using umi3d.browserRuntime.ui.popup;
 
 namespace umi3d.browserRuntime.portalsThumbnails
@@ -30,19 +31,25 @@ namespace umi3d.browserRuntime.portalsThumbnails
         private readonly Notifier _setNotifier;
         private readonly Notifier _updateNotifier;
 
-        public PortalThumbnailModel()
+        public PortalThumbnailModel(ThumbnailModelContainer modelContainer)
         {
             _popupNotifier = new(this);
             _setNotifier = NotificationHub.Default.GetNotifier(this,
                 ID.FromType<PortalThumbnailNotificationKeys.PortalThumbnailSet>());
             _updateNotifier = NotificationHub.Default.GetNotifier(this,
                 ID.FromType<PortalThumbnailNotificationKeys.PortalThumbnailUpdated>());
+
+            NotificationHub.Default.Subscribe(this,
+                ID.FromType<ThumbnailNotificationKeys.ThumbnailUpdated>(),
+                (Callback)ThumbnailUpdated,
+                new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == modelContainer.Model));
         }
 
         public void SetPortal(VirtualWorldData portal, VirtualWorlds portals)
         {
             Portal = portal;
             Portals = portals;
+            _setNotifier[PortalThumbnailNotificationKeys.PortalThumbnailSet.Url] = Portal.worldUrl;
             _setNotifier[PortalThumbnailNotificationKeys.PortalThumbnailSet.IsFavorite] = Portal.isFavorite;
             _setNotifier.Notify();
         }
@@ -93,6 +100,15 @@ namespace umi3d.browserRuntime.portalsThumbnails
             Portal = null;
             NotificationHub.Default.Notify(this,
                 ID.FromType<PortalThumbnailNotificationKeys.Reset>());
+        }
+
+        private void ThumbnailUpdated(Notification notification)
+        {
+            if (notification.TryGetInfoT(ThumbnailNotificationKeys.ThumbnailUpdated.Name, out string name, false) && Portal.worldName != name)
+            {
+                Portal.worldName = name;
+                Portals.UpdateWorld(Portal);
+            }
         }
     }
 }

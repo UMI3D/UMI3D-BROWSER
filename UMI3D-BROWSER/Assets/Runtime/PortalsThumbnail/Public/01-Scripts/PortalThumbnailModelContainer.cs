@@ -14,10 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using umi3d.browserRuntime.thumbnails;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.portalsThumbnails
 {
+    [RequireComponent(typeof(ThumbnailModelContainer))]
     public class PortalThumbnailModelContainer : MonoBehaviour
     {
         private PortalThumbnailModel _model;
@@ -26,7 +28,7 @@ namespace umi3d.browserRuntime.portalsThumbnails
         {
             get {
                 if (_model == null)
-                    _model = new PortalThumbnailModel();
+                    _model = new PortalThumbnailModel(GetComponent<ThumbnailModelContainer>());
                 return _model;
             }
         }

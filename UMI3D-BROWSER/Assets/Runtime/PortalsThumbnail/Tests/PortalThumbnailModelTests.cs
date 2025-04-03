@@ -15,17 +15,32 @@ limitations under the License.
 */
 using NUnit.Framework;
 using umi3d.browserRuntime.portalsThumbnails;
+using UnityEngine;
 
 public class PortalThumbnailModelTests
 {
     public class SetPortalTests
     {
+        PortalThumbnailModelContainer _modelContainer;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _modelContainer = new GameObject().AddComponent<PortalThumbnailModelContainer>();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            GameObject.DestroyImmediate(_modelContainer);
+        }
+
         [Test]
         public void GivenPortal_WhenSettingPortal_ThenPortal()
         {
             var portals = new VirtualWorlds();
             var portal = new VirtualWorldData();
-            var model = new PortalThumbnailModel();
+            var model = _modelContainer.Model;
             model.SetPortal(portal, portals);
 
             Assert.AreEqual(portal, model.Portal);
@@ -35,12 +50,26 @@ public class PortalThumbnailModelTests
 
     public class ToggleFavoriteTests
     {
+        PortalThumbnailModelContainer _modelContainer;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _modelContainer = new GameObject().AddComponent<PortalThumbnailModelContainer>();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            GameObject.DestroyImmediate(_modelContainer);
+        }
+
         [Test]
         public void GivenFalse_WhenToggleFavorite_ThenTrue()
         {
             var portals = new VirtualWorlds();
             var portal = new VirtualWorldData();
-            var model = new PortalThumbnailModel();
+            var model = _modelContainer.Model;
             model.SetPortal(portal, portals);
 
             Assert.IsFalse(portal.isFavorite);
@@ -51,12 +80,26 @@ public class PortalThumbnailModelTests
 
     public class DeleteTests
     {
+        PortalThumbnailModelContainer _modelContainer;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _modelContainer = new GameObject().AddComponent<PortalThumbnailModelContainer>();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            GameObject.DestroyImmediate(_modelContainer);
+        }
+
         [Test]
         public void Given_WhenDeletingPortal_ThenPortalDeleted()
         {
             var portals = new VirtualWorlds();
             var portal = new VirtualWorldData();
-            var model = new PortalThumbnailModel();
+            var model = _modelContainer.Model;
             model.SetPortal(portal, portals);
 
             model.Delete(false);

@@ -74,7 +74,7 @@ namespace umi3d.browserRuntime.portalsThumbnails
                         NormalColor = new Color(0.44f, 0.44f, 0.44f, 1),
                         HoverColor = Color.white,
                     });
-                var portalModelContainer = _modelContainer.gameObject.GetComponentsInChildren<PortalThumbnailModelContainer>().Last();
+                var portalModelContainer = _modelContainer.Model.ThumbnailContainers.Last().GetComponent<PortalThumbnailModelContainer>();
                 portalModelContainer.Model.SetPortal(portalData, portals);
             }
         }

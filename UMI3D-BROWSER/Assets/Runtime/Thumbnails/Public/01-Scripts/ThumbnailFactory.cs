@@ -97,7 +97,7 @@ namespace umi3d.browserRuntime.thumbnails
         {
             var modelContainer = GetOrCreateThumbnail(name, image, callback, settings);
             _thumbnailListModelContainer.Model.Thumbnails.Add(modelContainer.Model);
-            _thumbnailListModelContainer.Model._thumbnailContainers.Add(modelContainer);
+            _thumbnailListModelContainer.Model.ThumbnailContainers.Add(modelContainer);
         }
 
         private void GetOrCreateThumbnailTempForList()
@@ -108,7 +108,7 @@ namespace umi3d.browserRuntime.thumbnails
 
         private void ReturnThumbnailForList(ThumbnailModelContainer container)
         {
-            _thumbnailListModelContainer.Model._thumbnailContainers.Remove(container);
+            _thumbnailListModelContainer.Model.ThumbnailContainers.Remove(container);
             _thumbnailListModelContainer.Model._thumbnailContainersTemp.Remove(container);
             ReturnThumbnail(container);
         }

@@ -27,7 +27,7 @@ namespace umi3d.browserRuntime.thumbnails
         public List<ThumbnailModel> Thumbnails { get; private set; } = new();
         public ThumbnailMode Mode { get; private set; } = new ThumbnailMode();
 
-        internal List<ThumbnailModelContainer> _thumbnailContainers = new();
+        public List<ThumbnailModelContainer> ThumbnailContainers { get; private set; } = new();
         internal List<ThumbnailModelContainer> _thumbnailContainersTemp = new List<ThumbnailModelContainer>();
 
         internal Action<string, Sprite, Action, ThumbnailFactory.Settings> CreateThumbnail;
@@ -56,8 +56,8 @@ namespace umi3d.browserRuntime.thumbnails
         {
             for (int i = _thumbnailContainersTemp.Count - 1; i >= 0; i--)
                 RemoveThumbnail?.Invoke(_thumbnailContainersTemp[i]);
-            for (int i = _thumbnailContainers.Count - 1; i >= 0; i--)
-                RemoveThumbnail?.Invoke(_thumbnailContainers[i]);
+            for (int i = ThumbnailContainers.Count - 1; i >= 0; i--)
+                RemoveThumbnail?.Invoke(ThumbnailContainers[i]);
 
             Thumbnails.Clear();
 

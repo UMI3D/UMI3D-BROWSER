@@ -45,7 +45,7 @@ public class ThumbnailListModelTests
             model.AddThumbnail();
 
             Assert.AreEqual(1, model.Thumbnails.Count);
-            Assert.AreEqual(1, model._thumbnailContainers.Count);
+            Assert.AreEqual(1, model.ThumbnailContainers.Count);
         }
         [Test]
         public void Given2Thumbnail_WhenAddingThumbnail_ThenThumbnailTempsCreated()
@@ -111,7 +111,7 @@ public class ThumbnailListModelTests
 
             model.ClearThumbnails();
             Assert.AreEqual(0, model.Thumbnails.Count);
-            Assert.AreEqual(0, model._thumbnailContainers.Count);
+            Assert.AreEqual(0, model.ThumbnailContainers.Count);
         }
     }
 
@@ -146,7 +146,7 @@ public class ThumbnailListModelTests
             });
 
             Assert.AreEqual(2, model.Thumbnails.Count);
-            Assert.AreEqual(2, model._thumbnailContainers.Count);
+            Assert.AreEqual(2, model.ThumbnailContainers.Count);
             Assert.AreEqual(Mathf.Max(model.Mode.NbrColumn * model.Mode.NbrRow - model.Thumbnails.Count, 0), model._thumbnailContainersTemp.Count);
         }
     }

@@ -1,5 +1,5 @@
 /*
-Copyright 2019 - 2024 Inetum
+Copyright 2019 - 2025 Inetum
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,21 +14,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using umi3d.debug;
 using UnityEngine;
-using UnityEngine.Localization.Settings;
 
-namespace umi3dBrowsers.services.connection
+namespace umi3d.browserRuntime.portalsThumbnails
 {
-    /// <summary>
-    /// Class which all users' preferences.
-    /// </summary>
-    public static class PlayerPrefsManager
+    public static class PortalThumbnailPlayerPref
     {
-        #region Virtual Worlds
-
         public static readonly string Umi3dVirtualWorlds = "umi3d-virtual-worlds";
 
         /// <summary>
@@ -61,24 +55,6 @@ namespace umi3dBrowsers.services.connection
             PlayerPrefs.SetString(Umi3dVirtualWorlds, JsonUtility.ToJson(worlds));
             PlayerPrefs.Save();
         }
-
-        #endregion
-
-        #region Localisation
-
-        public static readonly string LocalisationSet = "umi3d-localisation-set";
-
-        public static UnityEngine.Localization.Locale GetLocalisationLocal()
-        {
-            return LocalizationSettings.AvailableLocales.Locales.Find(l => l.Identifier.Code == PlayerPrefs.GetString(LocalisationSet));
-        }
-
-        public static void SaveLocalisationSet(UnityEngine.Localization.Locale pLocal)
-        {
-            PlayerPrefs.SetString(LocalisationSet, pLocal.Identifier.Code);
-        }
-
-        #endregion
     }
 
     /// <summary>
@@ -128,13 +104,13 @@ namespace umi3dBrowsers.services.connection
                 if (w.worldUrl == world.worldUrl)
                     return;
             worlds.Add(world);
-            PlayerPrefsManager.SaveVirtualWorld(this);
+            PortalThumbnailPlayerPref.SaveVirtualWorld(this);
         }
 
         public void RemoveWorld(VirtualWorldData world)
         {
             worlds.Remove(world);
-            PlayerPrefsManager.SaveVirtualWorld(this);
+            PortalThumbnailPlayerPref.SaveVirtualWorld(this);
         }
 
         public void UpdateWorld(VirtualWorldData world)
@@ -148,19 +124,19 @@ namespace umi3dBrowsers.services.connection
             SetWorldFavorite(world, world.isFavorite);
 
             storedWorld.dateLastConnection = world.dateLastConnection;
-            PlayerPrefsManager.SaveVirtualWorld(this);
+            PortalThumbnailPlayerPref.SaveVirtualWorld(this);
         }
 
         public void SetWorldFavorite(VirtualWorldData world, bool isFavorite)
         {
             world.isFavorite = isFavorite;
-            PlayerPrefsManager.SaveVirtualWorld(this);
+            PortalThumbnailPlayerPref.SaveVirtualWorld(this);
         }
 
         public void ToggleWorldFavorite(VirtualWorldData world)
         {
             world.isFavorite = !world.isFavorite;
-            PlayerPrefsManager.SaveVirtualWorld(this);
+            PortalThumbnailPlayerPref.SaveVirtualWorld(this);
         }
 
         public void SetWorldFavoriteWorlds(string url)

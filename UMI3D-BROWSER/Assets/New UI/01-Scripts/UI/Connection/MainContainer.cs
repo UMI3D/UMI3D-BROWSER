@@ -19,6 +19,7 @@ using inetum.unityUtils.observation;
 using System;
 using System.Threading.Tasks;
 using TMPro;
+using umi3d.browserRuntime.portalsThumbnails;
 using umi3d.browserRuntime.ui.inGame;
 using umi3d.browserRuntime.ui.popup;
 using umi3d.cdk;
@@ -183,7 +184,7 @@ namespace umi3dBrowsers
                 this
             );
 
-            connectionServiceLinker.OnTryToConnect -= OnTryToConnect;
+            NotificationHub.Default.Unsubscribe(this);
             connectionServiceLinker.OnConnectionFailure -= OnConnectionFailure;
             UMI3DClientServer.Instance.OnConnectionLost.RemoveListener(OnConnectionLost);
             UMI3DCollaborationClientServer.Instance.OnForceLogoutMessage.RemoveListener(OnForceLogoutMessage);
@@ -201,7 +202,9 @@ namespace umi3dBrowsers
                 ShowUI();
             };
 
-            connectionServiceLinker.OnTryToConnect += OnTryToConnect;
+            NotificationHub.Default.Subscribe(this,
+                ID.FromType<PortalThumbnailNotificationKeys.TryToConnect>(),
+                (Callback)OnTryToConnect);
             connectionServiceLinker.OnConnectionFailure += OnConnectionFailure;
             UMI3DClientServer.Instance.OnConnectionLost.AddListener(OnConnectionLost);
             UMI3DCollaborationClientServer.Instance.OnForceLogoutMessage.AddListener(OnForceLogoutMessage);
@@ -218,10 +221,10 @@ namespace umi3dBrowsers
             m_enableInGameUiNotifier.Notify();
         }
 
-        void OnTryToConnect(string url)
+        void OnTryToConnect(Notification notification)
         {
-            popupNotifier
-                .enqueue
+            if (notification.TryGetInfoT(PortalThumbnailNotificationKeys.TryToConnect.Url, out string url))
+                popupNotifier.enqueue
                  .SetArguments(("url", url))
                  .SetTitle(POPUP_TABLE, "ConnectionToAPortal")
                  .SetDescription(POPUP_TABLE, "ConnectionToAPortal_message")

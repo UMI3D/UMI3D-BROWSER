@@ -14,11 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils.observation;
 using System;
 using System.Collections.Generic;
 using System.Security.Policy;
 using System.Threading.Tasks;
 using umi3d;
+using umi3d.browserRuntime.portalsThumbnails;
 using umi3d.cdk;
 using umi3d.cdk.collaboration;
 using umi3d.common;
@@ -62,10 +64,23 @@ namespace umi3dBrowsers.services.connection
             identifier.OnWaitAvailable += HandleWait;
             UMI3DCollaborationEnvironmentLoader.Instance.onEnvironmentLoaded.AddListener(() => connectionServiceLinker.ConnectionSuccess());
 
-            connectionServiceLinker.OnTryToConnect += TryConnectToMediaServer;
+            NotificationHub.Default.Subscribe(this,
+                ID.FromType<PortalThumbnailNotificationKeys.TryToConnect>(),
+                (Callback)TryConnectToMediaServer);
             connectionServiceLinker.OnSendFormAnswer += SendFormAnswer;
             connectionServiceLinker.OnSendDivFormAnswer += SendDivFormAnswer;
             connectionServiceLinker.OnSendWaitAnswer += SendWaitAnswer;
+        }
+
+        private void OnDestroy()
+        {
+            NotificationHub.Default.Unsubscribe(this);
+        }
+
+        private void TryConnectToMediaServer(Notification notification)
+        {
+            if (notification.TryGetInfoT(PortalThumbnailNotificationKeys.TryToConnect.Url, out string url))
+                TryConnectToMediaServer(url);
         }
 
         public async void TryConnectToMediaServer(string url)

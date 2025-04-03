@@ -205,6 +205,7 @@ namespace umi3dBrowsers
             NotificationHub.Default.Subscribe(this,
                 ID.FromType<PortalThumbnailNotificationKeys.TryToConnect>(),
                 (Callback)OnTryToConnect);
+            connectionServiceLinker.OnTryToConnect += OnTryToConnect;
             connectionServiceLinker.OnConnectionFailure += OnConnectionFailure;
             UMI3DClientServer.Instance.OnConnectionLost.AddListener(OnConnectionLost);
             UMI3DCollaborationClientServer.Instance.OnForceLogoutMessage.AddListener(OnForceLogoutMessage);
@@ -224,11 +225,16 @@ namespace umi3dBrowsers
         void OnTryToConnect(Notification notification)
         {
             if (notification.TryGetInfoT(PortalThumbnailNotificationKeys.TryToConnect.Url, out string url))
-                popupNotifier.enqueue
-                 .SetArguments(("url", url))
-                 .SetTitle(POPUP_TABLE, "ConnectionToAPortal")
-                 .SetDescription(POPUP_TABLE, "ConnectionToAPortal_message")
-                 .Notify();
+                OnTryToConnect(url);
+        }
+
+        void OnTryToConnect(string url)
+        {
+            popupNotifier.enqueue
+                .SetArguments(("url", url))
+                .SetTitle(POPUP_TABLE, "ConnectionToAPortal")
+                .SetDescription(POPUP_TABLE, "ConnectionToAPortal_message")
+                .Notify();
         }
 
         void OnConnectionFailure(string message)

@@ -25,31 +25,38 @@ namespace umi3d.browserRuntime.portalsThumbnails
     [RequireComponent(typeof(TMP_Text))]
     public class PortalThumbnailUrlView : MonoBehaviour
     {
-        private PortalThumbnailModelContainer _modelContainer;
+        private PortalThumbnailModelContainer _portalModelContainer;
+        private ThumbnailModelContainer _modelContainer;
         private TMP_Text _text;
+
+        private bool _canShow => _portalModelContainer.Model.Portal != null;
 
         private void Awake()
         {
-            _modelContainer = GetComponentInParent<PortalThumbnailModelContainer>();
+            _portalModelContainer = GetComponentInParent<PortalThumbnailModelContainer>();
+            _modelContainer = GetComponentInParent<ThumbnailModelContainer>();
             _text = GetComponent<TMP_Text>();
 
             NotificationHub.Default.Subscribe(this,
-                ID.FromType<PortalThumbnailNotificationKeys.PortalThumbnailSet>(),
-                (Callback)ThumbnailSet,
+                ID.FromType<ThumbnailNotificationKeys.ThumbnailUpdated>(),
+                (Callback)ThumbnailUpdated,
                 new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == _modelContainer.Model));
+            NotificationHub.Default.Subscribe(this,
+                ID.FromType<PortalThumbnailNotificationKeys.PortalThumbnailSet>(),
+                (Callback)PortalThumbnailSet,
+                new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == _portalModelContainer.Model));
 
             transform.parent.gameObject.SetActive(false);
         }
 
-        private void OnDisable()
+        private void ThumbnailUpdated(Notification notification)
         {
-            _text.text = string.Empty;
-            transform.parent.gameObject.SetActive(false);
+            if (notification.TryGetInfoT(ThumbnailNotificationKeys.ThumbnailUpdated.Hover, out bool hover, false))
+                transform.parent.gameObject.SetActive(hover && _canShow);
         }
 
-        private void ThumbnailSet(Notification notification)
+        private void PortalThumbnailSet(Notification notification)
         {
-            transform.parent.gameObject.SetActive(_modelContainer.Model.Portal != null);
             if (notification.TryGetInfoT(PortalThumbnailNotificationKeys.PortalThumbnailSet.Url, out string url, false))
                 _text.text = url;
         }

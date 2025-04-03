@@ -80,9 +80,9 @@ namespace umi3d.browserRuntime.portalsThumbnails
 
         void ThumbnailUpdated(Notification notification)
         {
-            if (notification.TryGetInfoT(ThumbnailNotificationKeys.ThumbnailSet.Name, out string name, false))
+            if (notification.TryGetInfoT(ThumbnailNotificationKeys.ThumbnailUpdated.Name, out string name, false))
                 _inputField.text = name;
-            if (notification.TryGetInfoT(ThumbnailNotificationKeys.ThumbnailSet.Color, out Color color, false) && color != new Color(0, 0, 0, 0))
+            if (notification.TryGetInfoT(ThumbnailNotificationKeys.ThumbnailUpdated.Color, out Color color, false) && color != new Color(0, 0, 0, 0))
                 _inputField.textComponent.color = color;
         }
 

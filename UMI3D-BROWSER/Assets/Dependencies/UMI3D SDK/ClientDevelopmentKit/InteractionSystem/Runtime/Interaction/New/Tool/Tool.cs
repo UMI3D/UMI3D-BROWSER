@@ -66,5 +66,19 @@ namespace umi3d.cdk.interaction
                 _interactions.Add(interaction);
             }
         }
+
+        List<Selector> _hoveredBySelectors = new();
+        public ReadOnlyCollection<Selector> hoveredBySelectors => _hoveredBySelectors.AsReadOnly();
+        public bool isHovered => _hoveredBySelectors.Count > 0;
+        internal void OnSelectorHoverEnter(Selector selector)
+        {
+            if (_hoveredBySelectors.Contains(selector)) { return; }
+
+            _hoveredBySelectors.Add(selector);
+        }
+        internal void OnSelectorHoverExit(Selector selector)
+        {
+            _hoveredBySelectors.Remove(selector);
+        }
     }
 }

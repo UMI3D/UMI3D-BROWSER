@@ -24,6 +24,8 @@ namespace umi3d.cdk.interaction
 {
     public class SelectorManager 
     {
+        const string SERVER_ID = "Server";
+
         #region Initialize
 
         static Lazy<SelectorManager> _default = new(() => new());
@@ -31,7 +33,7 @@ namespace umi3d.cdk.interaction
 
         SelectorManager()
         {
-
+            TryToInstantiateSelector(out serverSelector, SERVER_ID);
         }
 
         #endregion
@@ -42,12 +44,20 @@ namespace umi3d.cdk.interaction
         List<Selector> _selectors = new List<Selector>();
         ReadOnlyCollection<Selector> selectors => _selectors.AsReadOnly();
 
-        public Selector InstantiateSelector()
-        {
-            Selector selector = new();
-            _selectors.Add(selector);
+        public readonly Selector serverSelector;
 
-            return selector;
+        public bool TryToInstantiateSelector(out Selector selector, string id)
+        {
+            selector = _selectors.Find(selector => selector.id == id);
+            if (selector != null)
+            {
+                UnityEngine.Debug.LogWarning($"[SelectorManager] Warning: Cannot instantiate selector for '{id}' because this selector already exist.");
+                return false;
+            }
+
+            selector = new(id);
+            _selectors.Add(selector);
+            return true;
         }
     }
 }

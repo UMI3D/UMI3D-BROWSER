@@ -14,23 +14,24 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils.observation;
 using System;
 using UnityEngine;
 
 namespace umi3d.cdk.interaction
 {
-    public class Selector 
+    public interface IControllerDataDelegate 
     {
-        internal Selector() 
-        {
-        }
+        /// <summary>
+        /// How many tools can be projected at the same time on this controller.
+        /// </summary>
+        int ToolCountLimitation { get; }
 
         /// <summary>
-        /// The unique identifier of this controller.<br/>
-        /// <br/>
-        /// You can set the name of the controller here but it has to be unique.
+        /// Whether a tool can be projected on this controller if it has been selected by a selector.
         /// </summary>
-        public string id;
+        /// <param name="tool"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
+        bool CanProjectToolWhenSelected(Tool tool, Selector selector);
     }
 }

@@ -19,11 +19,10 @@ using UnityEngine;
 
 namespace umi3d.cdk.interaction
 {
-    public sealed class Input 
+    public interface IControllerDelegate 
     {
-        internal Input()
-        {
+        void OnChangeOfIsActive(bool active, Controller controller) { }
 
-        }
+        void ToolProjected(Tool tool, Selector selector, Controller controller) { }
     }
 }

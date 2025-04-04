@@ -31,25 +31,25 @@ namespace umi3d.cdk.interaction
         /// </summary>
         public readonly ulong environmentId;
 
-        public AbstractToolDto toolDto { get; private set; }
+        public AbstractToolDto dto { get; private set; }
 
         internal Tool(ulong environmentId, AbstractToolDto toolDto)
         {
             this.environmentId = environmentId;
-            this.toolDto = toolDto;
+            this.dto = toolDto;
 
             GetInteractions();
         }
 
         public bool TryCast<ToolDto>(out ToolDto dto) where ToolDto : AbstractToolDto
         {
-            if (toolDto == null || toolDto is not ToolDto)
+            if (this.dto == null || this.dto is not ToolDto)
             {
                 dto = null;
                 return false;
             }
 
-            dto = toolDto as ToolDto;
+            dto = this.dto as ToolDto;
             return true;
         }
 
@@ -57,7 +57,7 @@ namespace umi3d.cdk.interaction
         public ReadOnlyCollection<AbstractInteractionDto> interactions;
         async void GetInteractions()
         {
-            IEnumerable<Task<UMI3DEntityInstance>> entities = toolDto.interactions
+            IEnumerable<Task<UMI3DEntityInstance>> entities = dto.interactions
                 .Select(id => UMI3DEnvironmentLoader.WaitForAnEntityToBeLoaded(environmentId, id, null));
 
             foreach (Task<UMI3DEntityInstance> entity in entities)

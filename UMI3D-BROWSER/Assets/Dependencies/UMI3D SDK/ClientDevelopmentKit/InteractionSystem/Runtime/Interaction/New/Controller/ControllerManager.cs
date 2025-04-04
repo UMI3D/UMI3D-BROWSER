@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils.observation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -35,15 +36,24 @@ namespace umi3d.cdk.interaction
 
         #endregion
 
+        Delegates<IControllerDelegate> _delegates = new();
+        public Delegates<IControllerDelegate> delegates => _delegates;
+
         List<Controller> _controllers = new List<Controller>();
         ReadOnlyCollection<Controller> controllers => _controllers.AsReadOnly();
 
-        public Controller InstantiateController()
+        public bool TryToInstantiateController(out Controller controller, string id)
         {
-            Controller controller = new();
-            _controllers.Add(controller);
+            controller = _controllers.Find(x => x.id == id);
+            if (controller != null)
+            {
+                UnityEngine.Debug.LogWarning($"[ControllerManager] Warning: Cannot instantiate controller for '{id}' because this controller already exist.");
+                return false;
+            }
 
-            return controller;
+            controller = new(id);
+            _controllers.Add(controller);
+            return true;
         }
     }
 }

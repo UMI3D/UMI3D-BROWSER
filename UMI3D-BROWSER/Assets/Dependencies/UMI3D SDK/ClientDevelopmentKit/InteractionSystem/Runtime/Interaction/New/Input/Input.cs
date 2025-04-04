@@ -19,21 +19,35 @@ using UnityEngine;
 
 namespace umi3d.cdk.interaction
 {
-    public sealed class Controller 
+    public sealed class Input 
     {
-        internal Controller()
+        internal Input()
         {
 
         }
 
-        /// <summary>
-        /// The unique identifier of this controller.<br/>
-        /// <br/>
-        /// You can set the name of the controller here but it has to be unique.
-        /// </summary>
-        public string id;
+        public bool isAvailable { get; private set; }
 
-        public bool TryToProject(Tool tool, Selector selector) 
+        public Controller controller { get; private set; }
+        internal bool Associate(Controller controller)
+        {
+            if (this.controller != null) { return false; }
+
+            this.controller = controller;
+            return true;
+        }
+        internal void DissociateFromController()
+        {
+            this.controller = null;
+        }
+
+        internal void Associate(Tool tool, Selector selector)
+        {
+            if (!isAvailable) { return; }
+
+            throw new System.NotImplementedException();
+        }
+        internal void DissociateFromTool()
         {
             throw new System.NotImplementedException();
         }

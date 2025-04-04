@@ -20,7 +20,7 @@ using UnityEngine;
 
 namespace umi3d.browserRuntime.interactions
 {
-    public class MouseAndKeyboardController : ISelectorDelegate, IControllerDelegate
+    public class BrowserControllerManager : ISelectorDelegate, IControllerDelegate
     {
         public const string CONTEXTUAL_MENU_ID = "ContextualMenu";
         public const string MOUSE_ID = "Mouse";
@@ -32,10 +32,10 @@ namespace umi3d.browserRuntime.interactions
 
         #region Initialize
 
-        static Lazy<MouseAndKeyboardController> _default = new(() => new());
-        public static MouseAndKeyboardController @default => _default.Value;
+        static Lazy<BrowserControllerManager> _default = new(() => new());
+        public static BrowserControllerManager @default => _default.Value;
 
-        MouseAndKeyboardController()
+        BrowserControllerManager()
         {
             /*
              * SELECTORS
@@ -141,7 +141,7 @@ namespace umi3d.browserRuntime.interactions
 
         public bool CanProjectToolWhenSelected(Tool tool, Selector selector)
         {
-            return selector.id == MouseAndKeyboardController.MOUSE_ID;
+            return selector.id == BrowserControllerManager.MOUSE_ID;
         }
     }
 
@@ -151,7 +151,7 @@ namespace umi3d.browserRuntime.interactions
 
         public bool CanProjectToolWhenSelected(Tool tool, Selector selector)
         {
-            return selector.id == MouseAndKeyboardController.MOUSE_ID;
+            return selector.id == BrowserControllerManager.MOUSE_ID;
         }
     }
 }

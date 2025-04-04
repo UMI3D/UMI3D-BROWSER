@@ -27,58 +27,6 @@ namespace umi3dBrowsers.services.connection
     /// </summary>
     public static class PlayerPrefsManager
     {
-        #region Ip
-
-        public static readonly string Umi3dIp = "umi3d-ip";
-
-        /// <summary>
-        /// If an ip VirtualWorld is stored, returns it otherwise returns an empty string.
-        /// </summary>
-        /// <returns></returns>
-        public static string GetUmi3dIp()
-        {
-            return PlayerPrefs.HasKey(Umi3dIp)
-                ? PlayerPrefs.GetString(Umi3dIp)
-                : string.Empty;
-        }
-
-        /// <summary>
-        /// Stores last environment ip used.
-        /// </summary>
-        /// <param name="ip"></param>
-        public static void SaveUmi3dIp(string ip)
-        {
-            PlayerPrefs.SetString(Umi3dIp, ip);
-        }
-
-        #endregion
-
-        #region Port
-
-        public static readonly string Umi3dPort = "umi3d-port";
-
-        /// <summary>
-        /// If a port VirtualWorld is stored, returns it otherwise returns an empty string.
-        /// </summary>
-        /// <returns></returns>
-        public static string GetUmi3DPort()
-        {
-            return PlayerPrefs.HasKey(Umi3dPort)
-                ? PlayerPrefs.GetString(Umi3dPort)
-                : string.Empty;
-        }
-
-        /// <summary>
-        /// Stored last environment port used.
-        /// </summary>
-        /// <param name="port"></param>
-        public static void SaveUmi3dPort(string port)
-        {
-            PlayerPrefs.SetString(Umi3dPort, port);
-        }
-
-        #endregion
-
         #region Virtual Worlds
 
         public static readonly string Umi3dVirtualWorlds = "umi3d-virtual-worlds";
@@ -131,19 +79,6 @@ namespace umi3dBrowsers.services.connection
         }
 
         #endregion
-
-        /// <summary>
-        /// Contains : environment name, ip and port.
-        /// </summary>
-        [System.Serializable]
-        public class Data
-        {
-            public string environmentName;
-            public string ip;
-            public string port;
-
-            public override string ToString() => $"name = {environmentName}, ip = {ip}, port = {port}";
-        }
     }
 
     /// <summary>

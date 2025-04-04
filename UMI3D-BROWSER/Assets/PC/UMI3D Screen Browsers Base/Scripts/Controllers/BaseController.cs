@@ -70,10 +70,7 @@ namespace umi3d.baseBrowser.Controller
         [Header("Mobile' parents")]
         public GameObject MobileAction;
 
-        [HideInInspector]
-        public MenuAsset ObjectMenu;
         [Space(15)]
-        public MenuAsset ManipulationMenu;
         public CursorData mouseData;
 
         public IConcreteController CurrentController;
@@ -119,8 +116,6 @@ namespace umi3d.baseBrowser.Controller
             mouseData.ForceProjectionReleasableButton.Subscribe(ReleaseForceProjection);
 
             mouseData.saveDelay = 0;
-            ObjectMenu = Resources.Load<MenuAsset>("Scriptables/GamePanel/ObjectMenu");
-            ManipulationMenu = Resources.Load<MenuAsset>("Scriptables/GamePanel/ManipulationMenu");
 
             ManipulationGroupInputs.AddRange(ManipulationGroupActions.GetComponents<BaseManipulationGroup>());
             DrawGroupInputs.AddRange(DrawGroupActions.GetComponents<BaseDrawGroup>());
@@ -131,7 +126,6 @@ namespace umi3d.baseBrowser.Controller
                 new KeyboardAndMouseController()
                 {
                     Controller = this,
-                    ObjectMenu = ObjectMenu,
                     ManipulationGroup = ManipulationGroupInputs.Find(a => a is ManipulationGroupeForDesktop),
                     DrawGroup = DrawGroupInputs.Find(a => a is DrawGroupForDesktop),
                 }
@@ -140,8 +134,7 @@ namespace umi3d.baseBrowser.Controller
             (
                 new MobileController()
                 {
-                    Controller = this,
-                    ObjectMenu = ObjectMenu,
+                    Controller = this
                 }
             );
 
@@ -235,13 +228,10 @@ namespace umi3d.baseBrowser.Controller
         {
             if (mouseData.ForceProjectionReleasableButton == null || !mouseData.ForceProjectionReleasable)
                 return;
-            if (!ObjectMenu.menu.Contains(mouseData.ForceProjectionReleasableButton))
-                ObjectMenu.menu.Add(mouseData.ForceProjectionReleasableButton);
         }
         protected void RemoveForceProjectionReleaseButton()
         {
             if (mouseData.ForceProjectionReleasableButton == null) return;
-            ObjectMenu.menu.Remove(mouseData.ForceProjectionReleasableButton);
         }
         protected void UnequipeForceProjection()
         {
@@ -338,20 +328,7 @@ namespace umi3d.baseBrowser.Controller
             }
             return true;
         }
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
-        /// <param name="tool"></param>
-        /// <returns></returns>
-        public override bool RequiresMenu(AbstractTool tool)
-        {
-            //List<AbstractInteractionDto> interactions = tool.interactions;
-            //List<AbstractInteractionDto> manips = interactions.FindAll(x => x is ManipulationDto);
-            //List<AbstractInteractionDto> events = interactions.FindAll(x => x is EventDto);
-            //List<AbstractInteractionDto> parameters = tool.Interactions.FindAll(x => x is AbstractParameterDto);
-            // return ((events.Count > 7 || manips.Count > 0) && (events.Count > 6 || manips.Count > 1));
-            return false; // (/*(parameters.Count > 0) ||*/ (events.Count > 7) || (manips.Count > 1) || ((manips.Count > 0) && (events.Count > 6)));
-        }
+
         protected override ulong GetCurrentHoveredId()
             => mouseData.CurrentHoveredId;
         protected override bool isInteracting()
@@ -362,29 +339,7 @@ namespace umi3d.baseBrowser.Controller
         {
             throw new System.NotImplementedException();
         }
-        /// <summary>
-        /// Create a menu to access each interactions of a tool separately.
-        /// </summary>
-        /// <param name="interactions"></param>
-        public override void CreateInteractionsMenuFor(AbstractTool tool)
-        {
-            Debug.Log("oups");
-        }
-        //bool ShouldAutoProject(InteractableDto tool)
-        //{
-        //    List<AbstractInteractionDto> manips = tool.interactions.FindAll(x => x is ManipulationDto);
-        //    List<AbstractInteractionDto> events = tool.interactions.FindAll(x => x is EventDto);
-        //    List<AbstractInteractionDto> parameters = tool.interactions.FindAll(x => x is AbstractParameterDto);
-        //    return (((parameters.Count == 0) && (events.Count <= 7) && (manips.Count == 0)));
-        //}
 
-        //public bool RequiresParametersMenu(AbstractTool tool)
-        //{
-        //    List<AbstractInteractionDto> interactions = tool.interactions;
-        //    List<AbstractInteractionDto> parameters = interactions.FindAll(x => x is AbstractParameterDto);
-        //    // return ((events.Count > 7 || manips.Count > 0) && (events.Count > 6 || manips.Count > 1));
-        //    return (parameters.Count > 0);
-        //}
         protected void UpdateTool()
         {
             if (mouseData.ForceProjection && mouseData.ForceProjectionReleasable)

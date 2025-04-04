@@ -163,7 +163,6 @@ namespace umi3d.baseBrowser.inputs.interactions
                 }
             };
             menuItem.Subscribe(Select);
-            Menu?.Add(menuItem);
 
             StartCoroutine(SetFrameOFReference());
             messageSenderCoroutine = StartCoroutine(NetworkMessageSender());
@@ -179,7 +178,6 @@ namespace umi3d.baseBrowser.inputs.interactions
             }
 
             associatedInteraction = null;
-            Menu?.Remove(menuItem);
             menuItem?.UnSubscribe(Select);
             menuItem = null;
         }

@@ -30,7 +30,6 @@ namespace umi3d.desktopBrowser.Controller
     public class KeyboardAndMouseController : IConcreteController
     {
         public BaseController Controller;
-        public MenuAsset ObjectMenu;
 
         protected List<KeyboardInteraction> KeyboardInteractions = new ();
         protected List<KeyboardManipulation> KeyboardManipulations = new ();
@@ -89,7 +88,6 @@ namespace umi3d.desktopBrowser.Controller
                 this.KeyboardDrawInteraction.Add(interaction);
                 interaction.Init(Controller);
                 interaction.bone = Controller.interactionBoneType;
-                interaction.Menu = ObjectMenu.menu;
                 interaction.BoneTransform = Controller.hoverBoneTransform;
             });
 
@@ -98,19 +96,16 @@ namespace umi3d.desktopBrowser.Controller
                 KeyboardManipulations.Add(manipulation);
                 manipulation.Init(Controller);
                 manipulation.bone = Controller.interactionBoneType;
-                manipulation.Menu = ObjectMenu.menu;
                 manipulation.BoneTransform = Controller.hoverBoneTransform;
             });
 
             (ManipulationGroup as ManipulationGroupeForDesktop).Bind(Controller, KeyboardManipulations);
             ManipulationGroup.bone = Controller.interactionBoneType;
             ManipulationGroup.BoneTransform = Controller.hoverBoneTransform;
-            ManipulationGroup.Menu = Controller.ManipulationMenu.menu;
             ManipulationGroup.InstanciateManipulation = InstanciateManipulation;
 
             (DrawGroup as DrawGroupForDesktop).Bind(Controller, KeyboardToggleInteraction, KeyboardDrawInteraction);
             DrawGroup.bone = Controller.interactionBoneType;
-            DrawGroup.Menu = Controller.ManipulationMenu.menu;
             DrawGroup.BoneTransform = Controller.hoverBoneTransform;
             DrawGroup.InstantiateInteraction = InstantiateInteraction;
             DrawGroup.InstantiateToggle = InstantiateToggle;

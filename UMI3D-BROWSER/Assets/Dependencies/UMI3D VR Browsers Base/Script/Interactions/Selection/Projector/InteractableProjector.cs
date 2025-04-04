@@ -45,7 +45,7 @@ namespace umi3dBrowsers.interaction.selection.projector
         /// <param name="controller"></param>
         public void Project(InteractableContainer interactable, AbstractController controller)
         {
-            var interactionTool = AbstractInteractionMapper.Instance.GetTool(UMI3DGlobalID.EnvironmentId, interactable.Interactable.dto.id);
+            var interactionTool = InteractionMapper.Instance.GetTool(UMI3DGlobalID.EnvironmentId, interactable.Interactable.dto.id);
             Project(interactionTool, interactable.Interactable.dto.nodeId, controller);
 
             sim.Display(interactable);
@@ -83,7 +83,7 @@ namespace umi3dBrowsers.interaction.selection.projector
         /// <inheritdoc/>
         public void Release(InteractableContainer interactable, AbstractController controller)
         {
-            AbstractTool tool = AbstractInteractionMapper.Instance.GetTool(UMI3DGlobalID.EnvironmentId, interactable.Interactable.dto.id);
+            AbstractTool tool = InteractionMapper.Instance.GetTool(UMI3DGlobalID.EnvironmentId, interactable.Interactable.dto.id);
             UnregisterToToolUpdate(tool);
 
             controller.Release(tool, new RequestedUsingSelector<AbstractSelector>() { controller = controller });

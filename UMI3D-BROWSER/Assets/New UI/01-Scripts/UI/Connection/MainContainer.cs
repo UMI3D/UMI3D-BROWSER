@@ -19,6 +19,7 @@ using inetum.unityUtils.observation;
 using System;
 using System.Threading.Tasks;
 using TMPro;
+using umi3d.browserRuntime.forms;
 using umi3d.browserRuntime.portalsThumbnails;
 using umi3d.browserRuntime.ui.inGame;
 using umi3d.browserRuntime.ui.popup;
@@ -317,7 +318,7 @@ namespace umi3dBrowsers
         {
             void Show()
             {
-                if (parentTransform.gameObject.activeSelf == false)
+                if (!parentTransform.gameObject.activeSelf)
                 {
                     ShowUI();
                     mainContainerLinker.Spawner.RepositionPlayer();
@@ -326,8 +327,10 @@ namespace umi3dBrowsers
                 m_menuNavigationLinker.ShowPanel(m_formPanel);
             };
 
+            NotificationHub.Default.Subscribe(this,
+                ID.FromType<FormNotificationKeys.CreateForm>(),
+                (Callback)Show);
             connectionServiceLinker.OnParamFormDtoReceived += (connectionFormDto) => Show();
-            connectionServiceLinker.OnDivFormDtoReceived += (connectionFormDto) => Show();
             connectionServiceLinker.OnWaitReceived += (connectionFormDto) => Show();
 
             connectionServiceLinker.OnConnectionSuccess += () => {

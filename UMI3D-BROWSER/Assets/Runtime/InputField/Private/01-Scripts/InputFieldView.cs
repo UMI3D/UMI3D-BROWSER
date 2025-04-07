@@ -15,14 +15,13 @@ limitations under the License.
 */
 
 using inetum.unityUtils.observation;
-using System;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.ui.inputField
 {
+    [ExecuteInEditMode]
     [RequireComponent(typeof(TMP_InputField))]
     [RequireComponent(typeof(LayoutElement))]
     public class InputFieldView : MonoBehaviour
@@ -84,9 +83,9 @@ namespace umi3d.browserRuntime.ui.inputField
                 _inputField.text = value;
             }
 
-            if (notification.TryGetInfoT(InputFieldNotificationsKeys.InputFieldSet.IsPrivate, out bool isPrivate))
+            if (notification.TryGetInfoT(InputFieldNotificationsKeys.InputFieldSet.ContentType, out TMP_InputField.ContentType contentType))
             {
-                _inputField.contentType = isPrivate ? TMP_InputField.ContentType.Password : TMP_InputField.ContentType.Standard;
+                _inputField.contentType = contentType;
             }
 
             if (notification.TryGetInfoT(InputFieldNotificationsKeys.InputFieldSet.NbrLine, out int nbrLine))

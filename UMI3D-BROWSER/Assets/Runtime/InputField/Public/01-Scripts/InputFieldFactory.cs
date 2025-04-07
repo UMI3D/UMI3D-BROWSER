@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -61,7 +62,7 @@ namespace umi3d.browserRuntime.ui.inputField
         /// <param name="nbLine">The number of lines for the input field. Defaults to 1.</param>
         /// <param name="isPrivate">Indicates whethre the input field should be private.</param>
         /// <returns>The created or retrieved input field GameObject.</returns>
-        public GameObject GetOrCreateInputField(Transform parent, bool isMultiline, string label = "", string value = "", string placeholder = "", int nbLine = 1, bool isPrivate = false)
+        public GameObject GetOrCreateInputField(Transform parent, bool isMultiline, string label = "", string value = "", string placeholder = "", int nbLine = 1, TMP_InputField.ContentType contentType = TMP_InputField.ContentType.Standard)
         {
             if (nbLine < 1) nbLine = 1;
             InputFieldModelContainer inputFieldModelContainer = null;
@@ -81,7 +82,7 @@ namespace umi3d.browserRuntime.ui.inputField
                 inputFieldModelContainer.model.SetPlaceholder(placeholder);
             if (nbLine != 1)
                 inputFieldModelContainer.model.SetNbrLines(isMultiline, nbLine);
-            inputFieldModelContainer.model.SetPrivate(isPrivate);
+            inputFieldModelContainer.model.SetContentType(contentType);
 
             return inputFieldModelContainer.gameObject;
         }

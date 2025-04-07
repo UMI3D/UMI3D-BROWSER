@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Security.Policy;
 using System.Threading.Tasks;
 using umi3d;
+using umi3d.browserRuntime.forms;
 using umi3d.browserRuntime.portalsThumbnails;
 using umi3d.cdk;
 using umi3d.cdk.collaboration;
@@ -148,7 +149,10 @@ namespace umi3dBrowsers.services.connection
         private void HandleDivs(umi3d.common.interaction.form.ConnectionFormDto dto, Action<umi3d.common.interaction.form.FormAnswerDto> action)
         {
             _formDivAnswerCallBack = action;
-            connectionServiceLinker.DivFormDtoReceived(dto);
+            //connectionServiceLinker.DivFormDtoReceived(dto);
+            var formDivNotifier = NotificationHub.Default.GetNotifier(this, ID.FromType<FormNotificationKeys.CreateForm>());
+            formDivNotifier[FormNotificationKeys.CreateForm.FormDto] = dto;
+            formDivNotifier.Notify();
         }
 
         private void HandleWait(WaitConnectionDto dto, Action action, Action cancel)

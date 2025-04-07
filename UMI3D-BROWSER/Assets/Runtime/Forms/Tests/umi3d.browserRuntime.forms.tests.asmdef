@@ -1,12 +1,20 @@
 {
-    "name": "umi3d.browserRuntime.inputField.tests",
+    "name": "umi3d.browserRuntime.forms.tests",
     "rootNamespace": "",
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
-        "umi3d.browserRuntime.inputField",
+        "umi3d.browserRuntime.forms",
+        "Unity.TextMeshPro",
+        "UMI3D.Common.Core",
         "UMI3D.Common.InteractionSystem",
-        "Unity.TextMeshPro"
+        "umi3d.browserRuntime.text",
+        "umi3d.browserRuntime.inputField",
+        "umi3d.browserRuntime.image",
+        "umi3d.browserRuntime.thumbnails",
+        "umi3d.browserRuntime.button",
+        "umi3d.browserRuntime.slider",
+        "umi3d.browserRuntime.tab"
     ],
     "includePlatforms": [
         "Editor"

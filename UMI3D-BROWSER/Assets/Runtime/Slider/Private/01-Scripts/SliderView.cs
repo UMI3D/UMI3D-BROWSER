@@ -22,7 +22,7 @@ using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.ui.slider
 {
-    [RequireComponent(typeof(Slider))]
+    [RequireComponent(typeof(Slider)), ExecuteInEditMode]
     public class SliderView : MonoBehaviour
     {
         Slider _slider;
@@ -72,6 +72,11 @@ namespace umi3d.browserRuntime.ui.slider
             if (notification.TryGetInfoT(SliderNotifiactionKeys.SliderSet.Value, out float value))
             {
                 _slider.value = value;
+            }
+
+            if (notification.TryGetInfoT(SliderNotifiactionKeys.SliderSet.IsInteger, out bool isInterger))
+            {
+                _slider.wholeNumbers = isInterger;
             }
         }
     }

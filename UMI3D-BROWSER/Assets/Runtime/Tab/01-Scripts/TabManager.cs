@@ -88,7 +88,7 @@ namespace umi3dBrowsers.container
         }
 
         /// <summary>
-        /// Add A new tabs to the tab manager and its coresponding container
+        /// Add A new tabs to the tab manager and its corresponding container
         /// </summary>
         /// <param name="label">The name of the new tab</param>
         /// <param name="container">the container you wish to associate with the new tab</param>
@@ -98,7 +98,8 @@ namespace umi3dBrowsers.container
         {
             TabToContainerBinder tabBinder = new TabToContainerBinder();
 
-            Tab tabButton = Instantiate(tabButtonPrefab, navigationRoot).GetComponent<Tab>();
+            Tab tabButton = Instantiate(tabButtonPrefab).GetComponent<Tab>();
+            tabButton.transform.SetParent(navigationRoot, false);
             tabButton.SetLabel(label, useLocalization);
             GameObject tab = container;
 

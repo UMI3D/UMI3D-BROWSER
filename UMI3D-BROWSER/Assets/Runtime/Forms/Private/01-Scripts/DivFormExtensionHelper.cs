@@ -27,7 +27,7 @@ public static class DivFormExtensionHelper
             catch (Exception ex)
             {
                 Debug.LogException(new Exception("Make sure you are in play mode to load resource in the form," +
-                    " or that every networking UMI3D behaviours are ready"));
+                    " or that every networking UMI3D behaviors are ready"));
             }
 
         return sprite;
@@ -51,7 +51,7 @@ public static class DivFormExtensionHelper
             catch (Exception ex)
             {
                 Debug.LogException(new Exception("Make sure you are in play mode to load resource in the form," +
-                    " or that every networking UMI3D behaviours are ready"));
+                    " or that every networking UMI3D behaviors are ready"));
             }
 
         return sprite;

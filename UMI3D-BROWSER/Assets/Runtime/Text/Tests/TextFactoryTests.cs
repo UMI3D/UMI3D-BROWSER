@@ -53,33 +53,11 @@ public class TextFactoryTests
         public void GivenValidArguments_WhenCreatingText_ThenTextCreatedAndConfigured()
         {
             var text = "TestText";
-            var settings = new TextFactory.Settings() {
-                Position = Vector3.one,
-                Size = Vector3.one / 2,
-                AnchorMin = Vector2.zero,
-                AnchorMax = Vector2.one,
-                Pivot = Vector2.zero,
-                FontSize = 26,
-                TextColor = Color.red,
-                FontStyles = FontStyles.Bold | FontStyles.Italic,
-                TextAlignmentOptions = TextAlignmentOptions.Justified,
-            };
 
-            GameObject textGameObject = _factory.GetOrCreateText(_container, text, settings);
-
-            Assert.AreEqual(settings.Position, ((RectTransform)textGameObject.transform).position);
-            Assert.AreEqual(settings.Size, ((RectTransform)textGameObject.transform).sizeDelta);
-            Assert.AreEqual(settings.AnchorMin, ((RectTransform)textGameObject.transform).anchorMin);
-            Assert.AreEqual(settings.AnchorMax, ((RectTransform)textGameObject.transform).anchorMax);
-            Assert.AreEqual(settings.Pivot, ((RectTransform)textGameObject.transform).pivot);
+            GameObject textGameObject = _factory.GetOrCreateText(_container, text);
 
             var textObject = textGameObject.GetComponentInChildren<TMP_Text>();
             Assert.AreEqual(text, textObject.text);
-            Assert.AreEqual(settings.FontSize, textObject.fontSize);
-            Assert.AreEqual(settings.TextColor, textObject.color);
-            Assert.AreEqual(settings.FontStyles, textObject.fontStyle);
-            Assert.AreEqual(settings.TextAlignmentOptions, textObject.alignment);
-
         }
 
         [Test]
@@ -91,7 +69,7 @@ public class TextFactoryTests
 
             var textGameObject = _factory.GetOrCreateText(_container, "");
 
-            Assert.AreEqual(_factory._pool.Count, 0);
+            Assert.AreEqual(0, _factory._pool.Count);
             Assert.IsTrue(textGameObject.activeInHierarchy);
         }
     }

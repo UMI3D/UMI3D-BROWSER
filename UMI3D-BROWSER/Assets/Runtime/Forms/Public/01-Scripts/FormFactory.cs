@@ -15,12 +15,7 @@ limitations under the License.
 */
 
 using inetum.unityUtils.observation;
-using System;
-using TMPro;
-using umi3d.browserRuntime.image;
-using umi3d.browserRuntime.text;
 using umi3d.browserRuntime.thumbnails;
-using umi3d.browserRuntime.ui.inputField;
 using umi3d.browserRuntime.ui.slider;
 using umi3d.common.interaction.form;
 using umi3dBrowsers.container;
@@ -35,8 +30,8 @@ namespace umi3d.browserRuntime.forms
         [SerializeField] internal FormInputFieldFactory _inputFieldFactory;
         [SerializeField] internal SliderFactory _sliderFactory;
         [SerializeField] internal FormButtonFactory _buttonFactory;
-        [SerializeField] internal ImageFactory _imageFactory;
-        [SerializeField] internal TextFactory _textFactory;
+        [SerializeField] internal FormImageFactory _imageFactory;
+        [SerializeField] internal FormTextFactory _textFactory;
         [SerializeField] internal TabManager _tabManager;
         [SerializeField] internal ThumbnailListModelContainer _thumbnailListModelContainerPrefab;
 
@@ -121,25 +116,19 @@ namespace umi3d.browserRuntime.forms
                 }
                 case ButtonDto buttonDto:
                 {
-                    _ = await _buttonFactory.CreateButton(buttonDto, container.Transform);
+                    await _buttonFactory.CreateButton(buttonDto, container.Transform);
                     break;
                 }
                 case LabelDto labelDto:
                 {
-                    _textFactory.GetOrCreateText(
-                        container.Transform,
-                        labelDto.text);
+                    _textFactory.CreateText(labelDto, container.Transform);
                     break;
                 }
                 case ImageDto imageDto:
                 {
                     // Normal Image
                     if (imageDto.FirstChildren == null || imageDto.FirstChildren.Count == 0)
-                    {
-                        _imageFactory.GetOrCreateImage(
-                            container.Transform,
-                            await imageDto.GetSprite());
-                    } 
+                        await _imageFactory.CreateImage(imageDto, container.Transform);
                     // Thumbnail
                     else
                     {

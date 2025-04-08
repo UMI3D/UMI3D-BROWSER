@@ -22,11 +22,6 @@ namespace umi3d.browserRuntime.image
         {
             public static readonly string Sprite = "Sprite";
             public static readonly string Color = "Color";
-            public static readonly string Position = "Position";
-            public static readonly string Size = "Size";
-            public static readonly string AnchorMin = "AnchorMin";
-            public static readonly string AnchorMax = "AnchorMax";
-            public static readonly string Pivot = "Pivot";
         }
     }
 }

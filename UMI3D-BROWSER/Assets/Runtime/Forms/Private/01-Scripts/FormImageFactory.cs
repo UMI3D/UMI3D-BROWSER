@@ -13,30 +13,33 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-using NUnit.Framework;
-using umi3d.browserRuntime.text;
 
-public class TextModelTests
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace umi3d
 {
-    public class SetTextTests
+    public class FormImageFactory : MonoBehaviour
     {
-        [Test]
-        public void GivenString_WhenSettingText_ThenTextSetToString()
+        void Awake()
         {
-            var text = "TestText";
-            var model = new TextModel();
-            model.SetText(text);
-
-            Assert.AreEqual(text, model.Text);
         }
 
-        [Test]
-        public void GivenNull_WhenSettingText_ThenTextSetToStringEmpty()
+        void OnEnable()
         {
-            var model = new TextModel();
-            model.SetText(null);
+        }
 
-            Assert.AreEqual(string.Empty, model.Text);
+        void OnDisable()
+        {
+        }
+
+        void OnDestroy()
+        {
+        }
+
+        void Update()
+        {
         }
     }
 }

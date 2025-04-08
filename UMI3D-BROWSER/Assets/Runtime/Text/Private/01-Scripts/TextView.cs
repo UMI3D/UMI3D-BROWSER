@@ -46,27 +46,6 @@ namespace umi3d.browserRuntime.text
         {
             if (notification.TryGetInfoT(TextNotificationKeys.TextSet.Text, out string text, false))
                 _text.text = text;
-
-            if (notification.TryGetInfoT(TextNotificationKeys.TextSet.Position, out Vector3 position, false))
-                transform.position = position;
-            if (notification.TryGetInfoT(TextNotificationKeys.TextSet.Size, out Vector2 size, false))
-                ((RectTransform)transform).sizeDelta = size;
-
-            if (notification.TryGetInfoT(TextNotificationKeys.TextSet.AnchorMin, out Vector2 anchorMin, false))
-                ((RectTransform)transform).anchorMin = anchorMin;
-            if (notification.TryGetInfoT(TextNotificationKeys.TextSet.AnchorMax, out Vector2 anchorMax, false))
-                ((RectTransform)transform).anchorMax = anchorMax;
-            if (notification.TryGetInfoT(TextNotificationKeys.TextSet.Pivot, out Vector2 pivot, false))
-                ((RectTransform)transform).pivot = pivot;
-
-            if (notification.TryGetInfoT(TextNotificationKeys.TextSet.TextFontSize, out int textFontSize, false))
-                _text.fontSize = textFontSize;
-            if (notification.TryGetInfoT(TextNotificationKeys.TextSet.TextColor, out Color textColor, false))
-                _text.color = textColor;
-            if (notification.TryGetInfoT(TextNotificationKeys.TextSet.TextStyles, out FontStyles textStyles, false))
-                _text.fontStyle = textStyles;
-            if (notification.TryGetInfoT(TextNotificationKeys.TextSet.TextAlignementOptions, out TextAlignmentOptions textAlignementOptions, false))
-                _text.alignment = textAlignementOptions;
         }
     }
 }

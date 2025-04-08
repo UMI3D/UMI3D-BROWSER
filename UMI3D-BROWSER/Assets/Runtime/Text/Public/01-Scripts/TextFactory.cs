@@ -22,30 +22,12 @@ namespace umi3d.browserRuntime.text
 {
     public class TextFactory : MonoBehaviour
     {
-        public class Settings
-        {
-            public Vector3? Position;
-            public Vector2? Size;
-
-            public Vector2? AnchorMin;
-            public Vector2? AnchorMax;
-            public Vector2? Pivot;
-
-            public int? FontSize;
-            public Color? TextColor;
-            public FontStyles? FontStyles;
-            public TextAlignmentOptions? TextAlignmentOptions;
-        }
-
         [SerializeField] internal TextModelContainer _textPrefab;
 
         internal Queue<TextModelContainer> _pool = new();
 
-        public GameObject GetOrCreateText(Transform parent, string text = "", Settings settings = null)
+        public GameObject GetOrCreateText(Transform parent, string text = "")
         {
-            if (settings == null)
-                settings = new();
-
             TextModelContainer modelContainer;
             if (!_pool.TryDequeue(out modelContainer))
                 modelContainer = Instantiate(_textPrefab);
@@ -54,10 +36,6 @@ namespace umi3d.browserRuntime.text
             modelContainer.transform.SetParent(parent, false);
 
             modelContainer.Model.SetText(text);
-            modelContainer.Model.SetPosition(settings.Position);
-            modelContainer.Model.SetSize(settings.Size);
-            modelContainer.Model.SetAnchor(settings.AnchorMin, settings.AnchorMax, settings.Pivot);
-            modelContainer.Model.SetTextStyle(settings.FontSize, settings.TextColor, settings.FontStyles, settings.TextAlignmentOptions);
 
             return modelContainer.gameObject;
         }

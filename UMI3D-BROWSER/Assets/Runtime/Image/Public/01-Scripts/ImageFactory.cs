@@ -22,27 +22,12 @@ namespace umi3d.browserRuntime.image
 {
     public class ImageFactory : MonoBehaviour
     {
-        public class Settings
-        {
-            public Color? Color;
-
-            public Vector3? Position;
-            public Vector2? Size;
-
-            public Vector2? AnchorMin;
-            public Vector2? AnchorMax;
-            public Vector2? Pivot;
-        }
-
         [SerializeField] ImageModelContainer _imagePrefab;
 
         internal Queue<ImageModelContainer> _pool = new ();
 
-        public GameObject GetOrCreateImage(Transform parent, Sprite sprite = null, Settings settings = null)
+        public GameObject GetOrCreateImage(Transform parent, Sprite sprite = null, Color? color = null)
         {
-            if (settings == null)
-                settings = new();
-
             ImageModelContainer modelContainer;
             if (!_pool.TryDequeue(out modelContainer))
                 modelContainer = Instantiate(_imagePrefab);
@@ -50,10 +35,7 @@ namespace umi3d.browserRuntime.image
             modelContainer.gameObject.SetActive(true);
             modelContainer.transform.SetParent(parent, false);
             modelContainer.Model.SetSprite(sprite);
-            modelContainer.Model.SetColor(settings.Color);
-            modelContainer.Model.SetPosition(settings.Position);
-            modelContainer.Model.SetSize(settings.Size);
-            modelContainer.Model.SetAnchor(settings.AnchorMin, settings.AnchorMax, settings.Pivot);
+            modelContainer.Model.SetColor(color);
 
             return modelContainer.gameObject;
         }

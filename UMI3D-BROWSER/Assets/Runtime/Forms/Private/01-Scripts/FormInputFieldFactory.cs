@@ -22,8 +22,7 @@ using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.forms
 {
-    [RequireComponent(typeof(InputFieldFactory)), ExecuteAlways]
-    public class FormInputFieldFactory : MonoBehaviour
+    internal class FormInputFieldFactory : MonoBehaviour
     {
         private InputFieldFactory _inputFieldFactory;
 

@@ -52,26 +52,11 @@ public class ImageFactoryTests
         public void GivenValidArguments_WhenCreatingImage_ThenImageCreatedAndConfigured()
         {
             var sprite = Sprite.Create(new Texture2D(1, 1), new Rect(0, 0, 1, 1), Vector2.zero);
-            var settings = new ImageFactory.Settings() {
-                Color = Color.blue,
-                Position = Vector2.one,
-                Size = Vector2.one / 2,
-                AnchorMin = Vector2.zero,
-                AnchorMax = Vector2.one,
-                Pivot = Vector2.zero
-            };
-            GameObject ImageGameObject = _factory.GetOrCreateImage(_container, sprite, settings);
-
-            Assert.AreEqual(settings.Position, ((RectTransform)ImageGameObject.transform).position);
-            Assert.AreEqual(settings.Size, ((RectTransform)ImageGameObject.transform).sizeDelta);
-            Assert.AreEqual(settings.AnchorMin, ((RectTransform)ImageGameObject.transform).anchorMin);
-            Assert.AreEqual(settings.AnchorMax, ((RectTransform)ImageGameObject.transform).anchorMax);
-            Assert.AreEqual(settings.Pivot, ((RectTransform)ImageGameObject.transform).pivot);
-
+            GameObject ImageGameObject = _factory.GetOrCreateImage(_container, sprite, Color.blue);
 
             var ImageObject = ImageGameObject.GetComponentInChildren<Image>();
             Assert.AreEqual(sprite, ImageObject.sprite);
-            Assert.AreEqual(settings.Color, ImageObject.color);
+            Assert.AreEqual(Color.blue, ImageObject.color);
         }
 
         [Test]

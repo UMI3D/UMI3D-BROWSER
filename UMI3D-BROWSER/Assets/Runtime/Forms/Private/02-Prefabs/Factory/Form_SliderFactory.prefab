@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 351424978934321413}
   - component: {fileID: 6151043469031307141}
   - component: {fileID: 676046121601443853}
+  - component: {fileID: 7922538551620285471}
   m_Layer: 5
   m_Name: Form_SliderFactory
   m_TagString: Untagged
@@ -57,7 +58,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d3922a836f32d54f92724bccc8f9438, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _intPrefab: {fileID: 9105697600813164458, guid: 410b889ebf662dd4ab7d4725e16e8e3d,
+  _intPrefab: {fileID: 5284968289959765827, guid: e5dd15f1761b8c247a903b97548b4a9d,
     type: 3}
-  _floatPrefab: {fileID: 9105697600813164458, guid: 410b889ebf662dd4ab7d4725e16e8e3d,
+  _floatPrefab: {fileID: 5284968289959765827, guid: e5dd15f1761b8c247a903b97548b4a9d,
     type: 3}
+--- !u!114 &7922538551620285471
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7441945529566519516}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9dd8b13d20387904584d35a0a34e7187, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

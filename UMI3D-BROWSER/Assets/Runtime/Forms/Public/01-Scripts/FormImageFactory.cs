@@ -22,7 +22,7 @@ using UnityEngine;
 namespace umi3d.browserRuntime.forms
 {
     [RequireComponent(typeof(ImageFactory)), ExecuteAlways]
-    public class FormImageFactory : MonoBehaviour
+    internal class FormImageFactory : MonoBehaviour
     {
         private ImageFactory _imageFactory;
 

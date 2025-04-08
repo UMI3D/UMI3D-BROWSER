@@ -28,7 +28,7 @@ namespace umi3d.browserRuntime.forms
         [SerializeField] internal Transform _content;
         [SerializeField] internal Transform _groupPrefab;
         [SerializeField] internal FormInputFieldFactory _inputFieldFactory;
-        [SerializeField] internal SliderFactory _sliderFactory;
+        [SerializeField] internal FormSliderFactory _sliderFactory;
         [SerializeField] internal FormButtonFactory _buttonFactory;
         [SerializeField] internal FormImageFactory _imageFactory;
         [SerializeField] internal FormTextFactory _textFactory;
@@ -94,24 +94,12 @@ namespace umi3d.browserRuntime.forms
                 }
                 case RangeDto<int> rangeIntDto:
                 {
-                    _sliderFactory.GetOrCreateSlider(
-                        container.Transform,
-                        rangeIntDto.label,
-                        rangeIntDto.Value,
-                        rangeIntDto.Min,
-                        rangeIntDto.Max,
-                        true);
+                    _sliderFactory.CreateSlider(rangeIntDto, container.Transform);
                     break;
                 }
                 case RangeDto<float> rangeFloatDto:
                 {
-                    _sliderFactory.GetOrCreateSlider(
-                        container.Transform,
-                        rangeFloatDto.label,
-                        rangeFloatDto.Value,
-                        rangeFloatDto.Min,
-                        rangeFloatDto.Max,
-                        false);
+                    _sliderFactory.CreateSlider(rangeFloatDto, container.Transform);
                     break;
                 }
                 case ButtonDto buttonDto:

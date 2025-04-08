@@ -21,7 +21,7 @@ using UnityEngine;
 namespace umi3d.browserRuntime.forms
 {
     [RequireComponent(typeof(TextFactory)), ExecuteAlways]
-    public class FormTextFactory : MonoBehaviour
+    internal class FormTextFactory : MonoBehaviour
     {
         private TextFactory _textFactory;
 

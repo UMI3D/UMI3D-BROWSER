@@ -13,21 +13,20 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 using UnityEngine;
 
 namespace umi3d.browserRuntime.forms
 {
-    public class FormModelContainer : MonoBehaviour
+    public class FormItemModelContainer : MonoBehaviour
     {
-        FormModel _model;
-        public FormModel Model { 
-            get 
-                {
+        FormItemModel _model;
+        public FormItemModel Model
+        {
+            get {
                 if (_model == null)
-                    _model = new FormModel();
+                    _model = new FormItemModel();
                 return _model;
-            } 
+            }
         }
     }
 }

@@ -15,7 +15,6 @@ limitations under the License.
 */
 using NUnit.Framework;
 using System;
-using TMPro;
 using umi3d.browserRuntime.button;
 using UnityEngine;
 using UnityEngine.UI;
@@ -56,38 +55,14 @@ public class ButtonFactoryTests
             var callbackCalled = false;
             var label = "TestLabel";
             Action callback = () => callbackCalled = true;
-            var settings = new ButtonFactory.Settings() {
-                    Sprite = Sprite.Create(new Texture2D(1, 1), new Rect(0, 0, 1, 1), new Vector2(.5f, .5f)),
-                    ColorBlock = new ColorBlock() { normalColor = Color.blue, highlightedColor = Color.red },
-                    Position = Vector3.one,
-                    Size = Vector3.one / 2,
-                    AnchorMin = Vector2.zero,
-                    AnchorMax = Vector2.one,
-                    Pivot = Vector2.zero,
-                    FontSize = 26,
-                    TextColor = Color.red,
-                    FontStyles = FontStyles.Bold | FontStyles.Italic,
-                    TextAlignmentOptions = TextAlignmentOptions.Justified,
-            };
-
-            GameObject buttonGameObject = _factory.GetOrCreateButton(_container, label, callback, settings);
-
-            Assert.AreEqual(settings.Position, ((RectTransform)buttonGameObject.transform).position);
-            Assert.AreEqual(settings.Size, ((RectTransform)buttonGameObject.transform).sizeDelta);
-            Assert.AreEqual(settings.AnchorMin, ((RectTransform)buttonGameObject.transform).anchorMin);
-            Assert.AreEqual(settings.AnchorMax, ((RectTransform)buttonGameObject.transform).anchorMax);
-            Assert.AreEqual(settings.Pivot, ((RectTransform)buttonGameObject.transform).pivot);
-
-            var text = buttonGameObject.GetComponentInChildren<TMP_Text>();
-            Assert.AreEqual(label, text.text);
-            Assert.AreEqual(settings.FontSize, text.fontSize);
-            Assert.AreEqual(settings.TextColor, text.color);
-            Assert.AreEqual(settings.FontStyles, text.fontStyle);
-            Assert.AreEqual(settings.TextAlignmentOptions, text.alignment);
+            var image = Sprite.Create(new Texture2D(1, 1), new Rect(0, 0, 1, 1), new Vector2(.5f, .5f));
+            var colors = new ColorBlock() { normalColor = Color.blue, highlightedColor = Color.red };
+            
+            GameObject buttonGameObject = _factory.GetOrCreateButton(_container, label, image, colors, callback);
 
             var button = buttonGameObject.GetComponent<Button>();
-            Assert.AreEqual(settings.Sprite, button.image.sprite);
-            Assert.AreEqual(settings.ColorBlock, button.colors);
+            Assert.AreEqual(image, button.image.sprite);
+            Assert.AreEqual(colors, button.colors);
             button.onClick?.Invoke();
             Assert.IsTrue(callbackCalled);
         }

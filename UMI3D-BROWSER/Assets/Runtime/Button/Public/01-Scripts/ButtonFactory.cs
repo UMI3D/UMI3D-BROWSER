@@ -24,33 +24,12 @@ namespace umi3d.browserRuntime.button
 {
     public class ButtonFactory : MonoBehaviour
     {
-        public class Settings
-        {
-            public Vector3? Position;
-            public Vector2? Size;
-
-            public Sprite Sprite;
-            public ColorBlock? ColorBlock;
-
-            public Vector2? AnchorMin;
-            public Vector2? AnchorMax;
-            public Vector2? Pivot;
-
-            public int? FontSize;
-            public Color? TextColor;
-            public FontStyles? FontStyles;
-            public TextAlignmentOptions? TextAlignmentOptions;
-        }
-
         [SerializeField] internal ButtonModelContainer _buttonPrefab;
 
         internal Queue<ButtonModelContainer> _pool = new();
 
-        public GameObject GetOrCreateButton(Transform parent, string label = "", Action callback = null, Settings settings = null)
+        public GameObject GetOrCreateButton(Transform parent, string label = "", Sprite image = null, ColorBlock? colors = null, Action callback = null)
         {
-            if (settings == null)
-                settings = new();
-
             ButtonModelContainer button;
             if (!_pool.TryDequeue(out button))
                 button = Instantiate(_buttonPrefab);
@@ -60,11 +39,7 @@ namespace umi3d.browserRuntime.button
 
             button.Model.SetLabel(label);
             button.Model.SetCallback(callback);
-            button.Model.SetPosition(settings.Position);
-            button.Model.SetSize(settings.Size);
-            button.Model.SetImage(settings.ColorBlock, settings.Sprite);
-            button.Model.SetAnchor(settings.AnchorMin, settings.AnchorMax, settings.Pivot);
-            button.Model.SetTextStyle(settings.FontSize, settings.TextColor, settings.FontStyles, settings.TextAlignmentOptions);
+            button.Model.SetImage(colors, image);
 
             return button.gameObject;
         }

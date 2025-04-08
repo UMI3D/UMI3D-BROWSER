@@ -68,6 +68,7 @@ namespace umi3dBrowsers.services.connection
             NotificationHub.Default.Subscribe(this,
                 ID.FromType<PortalThumbnailNotificationKeys.TryToConnect>(),
                 (Callback)TryConnectToMediaServer);
+            connectionServiceLinker.OnTryToConnect += TryConnectToMediaServer;
             connectionServiceLinker.OnSendFormAnswer += SendFormAnswer;
             connectionServiceLinker.OnSendDivFormAnswer += SendDivFormAnswer;
             connectionServiceLinker.OnSendWaitAnswer += SendWaitAnswer;

@@ -26,5 +26,20 @@ namespace umi3d.browserRuntime.forms
         {
             public readonly static string FormDto = "FormDto";
         }
+
+        public class ItemSet
+        {
+            public static readonly string Position = "Position";
+            public static readonly string Size = "Size";
+
+            public static readonly string AnchorMin = "AnchorMin";
+            public static readonly string AnchorMax = "AnchorMax";
+            public static readonly string Pivot = "Pivot";
+
+            public static readonly string TextFontSize = "TextFontSize";
+            public static readonly string TextColor = "TextColor";
+            public static readonly string TextStyles = "TextStyles";
+            public static readonly string TextAlignmentOptions = "TextAlignmentOptions";
+        }
     }
 }

@@ -15,8 +15,8 @@ limitations under the License.
 */
 
 using inetum.unityUtils.observation;
+using System;
 using TMPro;
-using umi3d.browserRuntime.button;
 using umi3d.browserRuntime.image;
 using umi3d.browserRuntime.text;
 using umi3d.browserRuntime.thumbnails;
@@ -28,13 +28,13 @@ using UnityEngine;
 
 namespace umi3d.browserRuntime.forms
 {
-    internal class FormFactory : MonoBehaviour
+    public class FormFactory : MonoBehaviour
     {
         [SerializeField] internal Transform _content;
         [SerializeField] internal Transform _groupPrefab;
-        [SerializeField] internal InputFieldFactory _inputFieldFactory;
+        [SerializeField] internal FormInputFieldFactory _inputFieldFactory;
         [SerializeField] internal SliderFactory _sliderFactory;
-        [SerializeField] internal ButtonFactory _buttonFactory;
+        [SerializeField] internal FormButtonFactory _buttonFactory;
         [SerializeField] internal ImageFactory _imageFactory;
         [SerializeField] internal TextFactory _textFactory;
         [SerializeField] internal TabManager _tabManager;
@@ -89,26 +89,12 @@ namespace umi3d.browserRuntime.forms
                 }
                 case InputDto<string> inputStringDto:
                 {
-                    _inputFieldFactory.GetOrCreateInputField(
-                        container.Transform, 
-                        false,
-                        inputStringDto.label,
-                        inputStringDto.Value,
-                        inputStringDto.PlaceHolder,
-                        1,
-                        TmpContentTypeFrom(inputStringDto.TextType));
+                    _inputFieldFactory.CreateInputField(inputStringDto, container.Transform);
                     break;
                 }
                 case InputDto<int> inputIntDto:
                 {
-                    _inputFieldFactory.GetOrCreateInputField(
-                        container.Transform,
-                        false,
-                        inputIntDto.label,
-                        inputIntDto.Value.ToString(),
-                        inputIntDto.PlaceHolder.ToString(),
-                        1,
-                        TmpContentTypeFrom(inputIntDto.TextType));
+                    _inputFieldFactory.CreateInputField(inputIntDto, container.Transform);
                     break;
                 }
                 case RangeDto<int> rangeIntDto:
@@ -135,10 +121,7 @@ namespace umi3d.browserRuntime.forms
                 }
                 case ButtonDto buttonDto:
                 {
-                    _buttonFactory.GetOrCreateButton(
-                        container.Transform,
-                        buttonDto.label,
-                        null); // TODO answer dto
+                    _ = await _buttonFactory.CreateButton(buttonDto, container.Transform);
                     break;
                 }
                 case LabelDto labelDto:
@@ -190,6 +173,7 @@ namespace umi3d.browserRuntime.forms
                     if (pageDto.FirstChildren != null)
                         foreach (var child in pageDto.FirstChildren)
                             AddDiv(child, new (content.transform));
+                    _tabManager.InitSelectedButtonById();
                     break;
                 }
                 default:
@@ -228,26 +212,6 @@ namespace umi3d.browserRuntime.forms
             for (int i = _content.childCount - 1; i >= 0; i--)
                 Destroy(_content.GetChild(i).gameObject);
 #endif
-        }
-
-        private TMP_InputField.ContentType TmpContentTypeFrom(TextType type)
-        {
-            switch (type)
-            {
-                case TextType.Text:
-                    return TMP_InputField.ContentType.Standard;
-                case TextType.Mail:
-                    return TMP_InputField.ContentType.EmailAddress;
-                case TextType.Password:
-                    return TMP_InputField.ContentType.Password;
-                case TextType.Phone:
-                    return TMP_InputField.ContentType.IntegerNumber;
-                case TextType.URL:
-                    return TMP_InputField.ContentType.Standard;
-                case TextType.Number:
-                    return TMP_InputField.ContentType.IntegerNumber;
-            }
-            return TMP_InputField.ContentType.Standard;
         }
 
         internal class Container

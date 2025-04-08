@@ -239,13 +239,13 @@ public class FormFactoryTests
         public void GivenButtonDto_WhenAddingDiv_ThenButtonCreated()
         {
             ButtonDto buttonDto = new ButtonDto() {
-                label = "TestLabel"
+                Text = "TestLabel"
             };
             _formFactory.AddDiv(buttonDto, new(_baseContainer));
 
             var model = _baseContainer.GetComponentInChildren<ButtonModelContainer>().Model;
             Assert.IsNotNull(model);
-            Assert.AreEqual(buttonDto.label, model.Label);
+            Assert.AreEqual("TestLabel", model.Label);
         }
         #endregion
 

@@ -18,21 +18,21 @@ using inetum.unityUtils.observation;
 using TMPro;
 using UnityEngine;
 
-namespace umi3d.browserRuntime.button
+namespace umi3d.browserRuntime.forms
 {
-    [RequireComponent(typeof(TMP_Text)), ExecuteInEditMode]
-    internal class ButtonLabelView : MonoBehaviour
+    [RequireComponent(typeof(TMP_Text)), ExecuteAlways]
+    internal class FormItemLabelView : MonoBehaviour
     {
-        ButtonModelContainer _modelContainer;
+        FormItemModelContainer _modelContainer;
         TMP_Text _text;
 
         void Awake()
         {
-            _modelContainer = GetComponentInParent<ButtonModelContainer>();
+            _modelContainer = GetComponentInParent<FormItemModelContainer>();
             _text = GetComponent<TMP_Text>();
 
             NotificationHub.Default.Subscribe(this,
-                ID.FromType<ButtonNotificationKeys.ButtonSet>(),
+                ID.FromType<FormNotificationKeys.ItemSet>(),
                 (Callback)ButtonSet,
                 new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == _modelContainer.Model));
         }
@@ -44,8 +44,14 @@ namespace umi3d.browserRuntime.button
 
         void ButtonSet(Notification notification)
         {
-            if (notification.TryGetInfoT(ButtonNotificationKeys.ButtonSet.Label, out string label, false))
-                _text.text = label;
+            if (notification.TryGetInfoT(FormNotificationKeys.ItemSet.TextFontSize, out int textFontSize, false))
+                _text.fontSize = textFontSize;
+            if (notification.TryGetInfoT(FormNotificationKeys.ItemSet.TextColor, out Color textColor, false))
+                _text.color = textColor;
+            if (notification.TryGetInfoT(FormNotificationKeys.ItemSet.TextStyles, out FontStyles textStyles, false))
+                _text.fontStyle = textStyles;
+            if (notification.TryGetInfoT(FormNotificationKeys.ItemSet.TextAlignmentOptions, out TextAlignmentOptions textAlignementOptions, false))
+                _text.alignment = textAlignementOptions;
         }
     }
 }

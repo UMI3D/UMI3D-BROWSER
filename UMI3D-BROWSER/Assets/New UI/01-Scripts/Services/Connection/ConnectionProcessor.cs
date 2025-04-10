@@ -70,6 +70,9 @@ namespace umi3dBrowsers.services.connection
                 (Callback)TryConnectToMediaServer);
             connectionServiceLinker.OnTryToConnect += TryConnectToMediaServer;
             connectionServiceLinker.OnSendFormAnswer += SendFormAnswer;
+            NotificationHub.Default.Subscribe(this,
+                ID.FromType<FormNotificationKeys.SendAnswer>(),
+                (Callback)SendDivFormAnswer);
             connectionServiceLinker.OnSendDivFormAnswer += SendDivFormAnswer;
             connectionServiceLinker.OnSendWaitAnswer += SendWaitAnswer;
         }
@@ -185,6 +188,12 @@ namespace umi3dBrowsers.services.connection
         public void SendFormAnswer(FormAnswerDto formAnswer)
         {
             _formParamAnswerCallBack?.Invoke(formAnswer);
+        }
+
+        public void SendDivFormAnswer(Notification notification)
+        {
+            if (notification.TryGetInfoT(FormNotificationKeys.SendAnswer.FormAnswerDto, out umi3d.common.interaction.form.FormAnswerDto formAnswer))
+                SendDivFormAnswer(formAnswer);
         }
 
         public void SendDivFormAnswer(umi3d.common.interaction.form.FormAnswerDto formAnswer)

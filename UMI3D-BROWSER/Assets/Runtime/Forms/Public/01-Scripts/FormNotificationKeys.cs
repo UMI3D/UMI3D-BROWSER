@@ -14,10 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 namespace umi3d.browserRuntime.forms
 {
     public static class FormNotificationKeys
@@ -25,6 +21,15 @@ namespace umi3d.browserRuntime.forms
         public class CreateForm
         {
             public readonly static string FormDto = "FormDto";
+        }
+
+        public class SendAnswer
+        {
+            public readonly static string FormAnswerDto = "FormAnswerDto";
+        }
+
+        public class Cancel
+        {
         }
 
         public class ItemSet

@@ -14,6 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils.observation;
+using System;
 using System.Threading.Tasks;
 using umi3d.browserRuntime.button;
 using umi3d.common.interaction.form;
@@ -32,7 +34,7 @@ namespace umi3d.browserRuntime.forms
             _buttonFactory = GetComponent<ButtonFactory>();
         }
 
-        public async Task<GameObject> CreateButton(ButtonDto buttonDto, Transform parent)
+        public async Task<GameObject> CreateButton(ButtonDto buttonDto, Transform parent, Action<string, bool> sendForm)
         {
             var style = buttonDto.GetStyle();
 
@@ -45,7 +47,24 @@ namespace umi3d.browserRuntime.forms
                 colors.pressedColor = style.HoverColor.Value;
             }
 
-            var buttonGameObject = _buttonFactory.GetOrCreateButton(parent, buttonDto.Text, await buttonDto.GetSprite(), colors, null);
+            var buttonGameObject = _buttonFactory.GetOrCreateButton(parent, 
+                buttonDto.Text, 
+                await buttonDto.GetSprite(), 
+                colors, 
+                () => {
+                    switch (buttonDto.buttonType)
+                    {
+                        case ButtonType.Submit:
+                            sendForm(buttonDto.guid, false);
+                            break;
+                        case ButtonType.Back:
+                            sendForm(buttonDto.guid, true);
+                            break;
+                        case ButtonType.Cancel:
+                            NotificationHub.Default.Notify(this, ID.FromType<FormNotificationKeys.Cancel>());
+                            break;
+                    }
+                });
 
             var formItemModelContainer = buttonGameObject.GetComponent<FormItemModelContainer>();
 

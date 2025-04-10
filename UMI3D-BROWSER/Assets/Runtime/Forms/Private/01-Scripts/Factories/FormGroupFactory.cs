@@ -14,37 +14,31 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System.Threading.Tasks;
-using umi3d.browserRuntime.image;
 using umi3d.common.interaction.form;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.forms
 {
-    [RequireComponent(typeof(ImageFactory)), ExecuteAlways]
-    internal class FormImageFactory : MonoBehaviour
+    [ExecuteAlways]
+    public class FormGroupFactory : MonoBehaviour
     {
-        private ImageFactory _imageFactory;
+        [SerializeField] private GameObject _groupPrefab;
 
-        private void Awake()
+        public GameObject CreateGroup(GroupDto groupDto, Transform parent)
         {
-            _imageFactory = GetComponent<ImageFactory>();
-        }
+            var style = groupDto.GetStyle();
 
-        public async Task<GameObject> CreateImage(ImageDto imageDto, Transform parent)
-        {
-            var style = imageDto.GetStyle();
+            var groupeGameObject = Instantiate(_groupPrefab);
+            groupeGameObject.transform.SetParent(parent, false);
 
-            var imageGameObject = _imageFactory.GetOrCreateImage(parent, await imageDto.GetSprite(), style.Color);
-
-            var formItemModelContainer = imageGameObject.GetComponent<FormItemModelContainer>();
+            var formItemModelContainer = groupeGameObject.GetComponent<FormItemModelContainer>();
 
             formItemModelContainer.Model.SetPosition(style.Position);
             formItemModelContainer.Model.SetSize(style.Size);
             formItemModelContainer.Model.SetAnchor(style.AnchorMin, style.AnchorMax, style.Pivot);
             formItemModelContainer.Model.SetTextStyle(style.FontSize, style.FontColor, style.FontStyles, style.FontAlignmentOptions);
 
-            return imageGameObject;
+            return groupeGameObject;
         }
     }
 }

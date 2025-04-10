@@ -16,7 +16,6 @@ limitations under the License.
 
 using inetum.unityUtils.observation;
 using umi3d.browserRuntime.thumbnails;
-using umi3d.browserRuntime.ui.slider;
 using umi3d.common.interaction.form;
 using umi3dBrowsers.container;
 using UnityEngine;
@@ -26,7 +25,7 @@ namespace umi3d.browserRuntime.forms
     public class FormFactory : MonoBehaviour
     {
         [SerializeField] internal Transform _content;
-        [SerializeField] internal Transform _groupPrefab;
+        [SerializeField] internal FormGroupFactory _groupFactory;
         [SerializeField] internal FormInputFieldFactory _inputFieldFactory;
         [SerializeField] internal FormSliderFactory _sliderFactory;
         [SerializeField] internal FormButtonFactory _buttonFactory;
@@ -35,8 +34,14 @@ namespace umi3d.browserRuntime.forms
         [SerializeField] internal TabManager _tabManager;
         [SerializeField] internal ThumbnailListModelContainer _thumbnailListModelContainerPrefab;
 
+        internal FormAnswerDto _answerDto;
+        private Notifier _sendAnswerNotifier;
+
         private void Awake()
         {
+            _sendAnswerNotifier = NotificationHub.Default.GetNotifier(this,
+                ID.FromType<FormNotificationKeys.SendAnswer>());
+
             NotificationHub.Default.Subscribe(this,
                 ID.FromType<FormNotificationKeys.CreateForm>(),
                 (Callback)CreateForm);
@@ -71,15 +76,15 @@ namespace umi3d.browserRuntime.forms
             if (divDto == null || container == null)
                 return;
 
+            // TODO: Dropdown
             switch (divDto)
             {
                 case GroupDto groupDto:
                 {
-                    var group = Instantiate(_groupPrefab);
-                    group.transform.SetParent(container.Transform, false);
+                    var group = _groupFactory.CreateGroup(groupDto, container.Transform);
                     if (groupDto.FirstChildren != null)
                         foreach (var child in groupDto.FirstChildren)
-                            AddDiv(child, new (group));
+                            AddDiv(child, new (group.transform));
                     break;
                 }
                 case InputDto<string> inputStringDto:
@@ -104,7 +109,7 @@ namespace umi3d.browserRuntime.forms
                 }
                 case ButtonDto buttonDto:
                 {
-                    await _buttonFactory.CreateButton(buttonDto, container.Transform);
+                    await _buttonFactory.CreateButton(buttonDto, container.Transform, SendAnswer);
                     break;
                 }
                 case LabelDto labelDto:
@@ -137,10 +142,7 @@ namespace umi3d.browserRuntime.forms
                             }
                         }
 
-                        thumbnailListModelContainer.Model.AddThumbnail(
-                            labelText,
-                            await imageDto.GetSprite()
-                            );
+                        thumbnailListModelContainer.Model.AddThumbnail(labelText, await imageDto.GetSprite());
                     }
                     break;
                 }
@@ -159,6 +161,19 @@ namespace umi3d.browserRuntime.forms
                     break;
                 }
             }
+        }
+
+        internal void SendAnswer(string submitId, bool isBack = false)
+        {
+            _answerDto = new() {
+                submitId = submitId,
+                isBack = isBack
+            };
+
+            _sendAnswerNotifier[FormNotificationKeys.SendAnswer.FormAnswerDto] = _answerDto;
+            _sendAnswerNotifier.Notify();
+
+            Clear();
         }
 
         internal static T ReplaceContainerWithPrefab<T>(Container conatiner, T prefab) where T : MonoBehaviour
@@ -185,9 +200,11 @@ namespace umi3d.browserRuntime.forms
 #if UNITY_EDITOR
             for (int i = _content.childCount - 1; i >= 0; i--)
                 DestroyImmediate(_content.GetChild(i).gameObject);
+            _tabManager.Clear();
 #else
             for (int i = _content.childCount - 1; i >= 0; i--)
                 Destroy(_content.GetChild(i).gameObject);
+            _tabManager.Clear();
 #endif
         }
 

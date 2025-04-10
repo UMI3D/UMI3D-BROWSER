@@ -38,6 +38,8 @@ public class FormFactoryTests
             _formFactory = new GameObject("AddDivTest_FormFactory").AddComponent<FormFactory>();
             _formFactory._content = new GameObject().transform;
             _formFactory._content.SetParent(_formFactory.transform);
+            _formFactory._groupFactory = GameObject.Instantiate(_formFactory._groupFactory);
+            _formFactory._groupFactory.transform.SetParent(_formFactory.transform, false);
             _formFactory._inputFieldFactory = GameObject.Instantiate(_formFactory._inputFieldFactory);
             _formFactory._inputFieldFactory.transform.SetParent(_formFactory.transform, false);
             _formFactory._sliderFactory = GameObject.Instantiate(_formFactory._sliderFactory);
@@ -83,6 +85,8 @@ public class FormFactoryTests
         public void Setup()
         {
             _formFactory = new GameObject("AddDivTest_FormFactory").AddComponent<FormFactory>();
+            _formFactory._groupFactory = GameObject.Instantiate(_formFactory._groupFactory);
+            _formFactory._groupFactory.transform.SetParent(_formFactory.transform, false);
             _formFactory._inputFieldFactory = GameObject.Instantiate(_formFactory._inputFieldFactory);
             _formFactory._inputFieldFactory.transform.SetParent(_formFactory.transform, false);
             _formFactory._sliderFactory = GameObject.Instantiate(_formFactory._sliderFactory);

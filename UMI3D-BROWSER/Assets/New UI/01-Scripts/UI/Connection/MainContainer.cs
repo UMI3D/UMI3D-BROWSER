@@ -125,28 +125,11 @@ namespace umi3dBrowsers
                 }
             };
 
-            connectionToImmersiveLinker.OnLeave += () =>
-            {
-                // Reset the set up skeleton to compute the size of the player.
-                connectionToImmersiveLinker.SetSetUpSkeleton(null);
-                new Task(async () =>
-                {
-                    while (connectionToImmersiveLinker.SetUpSkeleton == null)
-                    {
-                        await Task.Yield();
-                    }
-                    connectionToImmersiveLinker.StandUp();
-                }).Start(TaskScheduler.FromCurrentSynchronizationContext());
+            NotificationHub.Default.Subscribe(this,
+                ID.FromType<FormNotificationKeys.Cancel>(),
+                (Callback)OnLeave);
 
-                ShowUI();
-                m_menuNavigationLinker.ShowPanel(m_mainMenuPanel);
-
-                m_enableInGameUiNotifier[InGameNotificationKeys.IsInGameUiActive] = false;
-                m_enableInGameUiNotifier.Notify();
-
-                connectionProcessorService.Disconnect();
-                mainContainerLinker.Loader.ReloadScene();
-            };
+            connectionToImmersiveLinker.OnLeave += OnLeave;
 
             UMI3DEnvironmentLoader.Instance.onEnvironmentLoaded?.AddListener(() => {
                 m_enableInGameUiNotifier[InGameNotificationKeys.IsInGameUiActive] = true;
@@ -162,6 +145,28 @@ namespace umi3dBrowsers
                 m_enableInGameUiNotifier[InGameNotificationKeys.IsInGameUiActive] = true;
                 m_enableInGameUiNotifier.Notify();
             });
+        }
+
+        private void OnLeave()
+        {
+            // Reset the set up skeleton to compute the size of the player.
+            connectionToImmersiveLinker.SetSetUpSkeleton(null);
+            new Task(async () => {
+                while (connectionToImmersiveLinker.SetUpSkeleton == null)
+                {
+                    await Task.Yield();
+                }
+                connectionToImmersiveLinker.StandUp();
+            }).Start(TaskScheduler.FromCurrentSynchronizationContext());
+
+            ShowUI();
+            m_menuNavigationLinker.ShowPanel(m_mainMenuPanel);
+
+            m_enableInGameUiNotifier[InGameNotificationKeys.IsInGameUiActive] = false;
+            m_enableInGameUiNotifier.Notify();
+
+            connectionProcessorService.Disconnect();
+            mainContainerLinker.Loader.ReloadScene();
         }
 
         void TryToQuit()

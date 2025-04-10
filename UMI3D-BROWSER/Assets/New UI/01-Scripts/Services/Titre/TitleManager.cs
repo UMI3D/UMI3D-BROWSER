@@ -1,13 +1,8 @@
 using inetum.unityUtils.observation;
-using System.Collections;
-using System.Collections.Generic;
 using umi3d.browserRuntime.forms;
 using umi3d.common.interaction;
 using umi3dBrowsers.linker;
-using umi3dBrowsers.services.connection;
 using UnityEngine;
-using static umi3d.browserRuntime.forms.FormNotificationKeys;
-using static umi3dBrowsers.MainContainer;
 
 namespace umi3dBrowsers.services.title
 {
@@ -54,7 +49,7 @@ namespace umi3dBrowsers.services.title
 
         public void OnCreateForm(Notification notification)
         {
-            if (!notification.TryGetInfoT(FormNotificationKeys.CreateForm.FormDto, out FormDto connectionFormDto))
+            if (!notification.TryGetInfoT(FormNotificationKeys.CreateForm.FormDto, out FormDto connectionFormDto, false))
                 return;
 
             if (connectionFormDto?.name == "login")

@@ -14,32 +14,37 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System.Collections;
-using System.Collections.Generic;
+using System.Threading.Tasks;
+using umi3d.browserRuntime.image;
+using umi3d.common.interaction.form;
 using UnityEngine;
 
-namespace umi3d
+namespace umi3d.browserRuntime.forms
 {
-    public class FormImageFactory : MonoBehaviour
+    [RequireComponent(typeof(ImageFactory)), ExecuteAlways]
+    internal class FormImageFactory : MonoBehaviour
     {
-        void Awake()
+        private ImageFactory _imageFactory;
+
+        private void Awake()
         {
+            _imageFactory = GetComponent<ImageFactory>();
         }
 
-        void OnEnable()
+        public async Task<GameObject> CreateImage(ImageDto imageDto, Transform parent)
         {
-        }
+            var style = imageDto.GetStyle();
 
-        void OnDisable()
-        {
-        }
+            var imageGameObject = _imageFactory.GetOrCreateImage(parent, await imageDto.GetSprite(), style.Color);
 
-        void OnDestroy()
-        {
-        }
+            var formItemModelContainer = imageGameObject.GetComponent<FormItemModelContainer>();
 
-        void Update()
-        {
+            formItemModelContainer.Model.SetPosition(style.Position);
+            formItemModelContainer.Model.SetSize(style.Size);
+            formItemModelContainer.Model.SetAnchor(style.AnchorMin, style.AnchorMax, style.Pivot);
+            formItemModelContainer.Model.SetTextStyle(style.FontSize, style.FontColor, style.FontStyles, style.FontAlignmentOptions);
+
+            return imageGameObject;
         }
     }
 }

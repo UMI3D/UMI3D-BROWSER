@@ -14,7 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils.observation;
 using System;
+using umi3d.browserRuntime.forms;
 using umi3d.cdk.collaboration;
 using umi3d.common;
 using umi3dBrowsers.data.ui;
@@ -42,10 +44,10 @@ namespace umi3dBrowsers.displayer
 
         private void Awake()
         {
-            m_linker.OnLeave += () => {
-                _loadingInProgress = false;
-                m_menuNavigationLinker.ReplacePlayerAndShowPanel();
-            };
+            NotificationHub.Default.Subscribe(this,
+                ID.FromType<FormNotificationKeys.Cancel>(),
+                (Callback)OnLeave);
+            m_linker.OnLeave += OnLeave;
             OnLoadingInProgress += () => {
                 m_menuNavigationLinker.ShowPanel(m_loadingPanel);
                 m_menuNavigationLinker.ReplacePlayerAndShowPanel();
@@ -58,6 +60,12 @@ namespace umi3dBrowsers.displayer
                 _loadingInProgress = false;
             });
             UMI3DCollaborationClientServer.onProgress.AddListener(NewProgressReceived);
+        }
+
+        private void OnLeave()
+        {
+            _loadingInProgress = false;
+            m_menuNavigationLinker.ReplacePlayerAndShowPanel();
         }
 
         void NewProgressReceived(Progress progress)

@@ -94,7 +94,7 @@ namespace umi3d.browserRuntime.thumbnails
 
         private void GetOrCreateThumbnailTempForList()
         {
-            var modelContainer = GetOrCreateThumbnail(null, null, null, null);
+            var modelContainer = GetOrCreateThumbnail(null, null, null, new Color(0.447f, 0.447f, 0.447f, 1), new Color(0.447f, 0.447f, 0.447f, 1));
             _thumbnailListModelContainer.Model._thumbnailContainersTemp.Add(modelContainer);
         }
 

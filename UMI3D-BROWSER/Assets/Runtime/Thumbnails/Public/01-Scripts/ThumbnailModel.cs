@@ -64,7 +64,7 @@ namespace umi3d.browserRuntime.thumbnails
 
         public void SetColors(Color? normalColor, Color? hoverColor)
         {
-            NormalColor = normalColor.HasValue ? normalColor.Value : Color.white;
+            NormalColor = normalColor.HasValue ? normalColor.Value : Color.gray;
             HoverColor = hoverColor.HasValue ? hoverColor.Value : Color.white;
             _setNotifier[ThumbnailNotificationKeys.ThumbnailSet.Color] = NormalColor;
             _setNotifier.Notify();

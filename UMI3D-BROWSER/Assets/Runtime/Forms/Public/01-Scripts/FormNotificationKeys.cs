@@ -46,5 +46,12 @@ namespace umi3d.browserRuntime.forms
             public static readonly string TextStyles = "TextStyles";
             public static readonly string TextAlignmentOptions = "TextAlignmentOptions";
         }
+
+        public class ThumbnailSet
+        {
+            public static readonly string HeaderText = "HeaderText";
+            public static readonly string IndicatorColor = "IndicatorColor";
+            public static readonly string IsLoading = "IsLoading";
+        }
     }
 }

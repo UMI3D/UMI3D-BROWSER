@@ -87,17 +87,18 @@ public static class DivFormExtensionHelper
 
     public class Style
     {
-        public Vector2? Position { get; set; }
-        public Vector2? Size { get; set; }
-        public Vector2? AnchorMax { get; set; }
-        public Vector2? AnchorMin { get; set; }
-        public Vector2? Pivot { get; set; }
-        public Color? Color { get; set; }
-        public Color? HoverColor { get; set; }
-        public int? FontSize { get; set; }
-        public Color? FontColor { get; set; }
-        public FontStyles? FontStyles { get; set; }
-        public TextAlignmentOptions? FontAlignmentOptions { get; set; }
+        public Vector2? Position { get; private set; }
+        public Vector2? Size { get; private set; }
+        public Vector2? AnchorMax { get; private set; }
+        public Vector2? AnchorMin { get; private set; }
+        public Vector2? Pivot { get; private set; }
+        public Color? Color { get; private set; }
+        public Color? HoverColor { get; private set; }
+        public int? FontSize { get; private set; }
+        public Color? FontColor { get; private set; }
+        public FontStyles? FontStyles { get; private set; }
+        public TextAlignmentOptions? FontAlignmentOptions { get; private set; }
+        public bool IsLoading { get; private set; } = false;
 
         internal void Apply(UGUIStyleItemDto styleItemDto)
         {
@@ -136,6 +137,11 @@ public static class DivFormExtensionHelper
                     FontColor = textStyleVariant.color?.color?.Struct();
                     FontStyles = GetFontStyle(textStyleVariant.fontStyles);
                     FontAlignmentOptions = GetAlignement(textStyleVariant.fontAlignments);
+                    break;
+                }
+                case LoadingStyleDto loadingStyleVariant:
+                {
+                    IsLoading = true;
                     break;
                 }
             }

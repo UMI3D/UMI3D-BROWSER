@@ -32,8 +32,8 @@ namespace umi3d.browserRuntime.forms
         [SerializeField] internal FormButtonFactory _buttonFactory;
         [SerializeField] internal FormImageFactory _imageFactory;
         [SerializeField] internal FormTextFactory _textFactory;
+        [SerializeField] internal FormThumbnailFactory _thumbnailFactory;
         [SerializeField] internal TabManager _tabManager;
-        [SerializeField] internal ThumbnailListModelContainer _thumbnailListModelContainerPrefab;
 
         internal FormAnswerDto _formAnswerDto;
         private Notifier _sendAnswerNotifier;
@@ -123,36 +123,10 @@ namespace umi3d.browserRuntime.forms
                 }
                 case ImageDto imageDto:
                 {
-                    // Normal Image
-                    if (imageDto.FirstChildren == null || imageDto.FirstChildren.Count == 0)
+                    if (imageDto.FirstChildren == null || imageDto.FirstChildren.Count == 0) // Normal Image
                         await _imageFactory.CreateImage(imageDto, container.Transform);
-                    // Thumbnail
-                    else
-                    {
-                        var style = imageDto.GetStyle();
-                        ThumbnailListModelContainer thumbnailListModelContainer = container.Transform.GetComponent<ThumbnailListModelContainer>();
-                        if (!thumbnailListModelContainer)
-                            thumbnailListModelContainer = ReplaceContainerWithPrefab(container, _thumbnailListModelContainerPrefab);
-                        string labelText = null;
-                        string headerText = null;
-
-                        foreach (var child in imageDto.FirstChildren)
-                        {
-                            if (child is LabelDto labelDto)
-                            {
-                                if (labelDto.tag == null)
-                                    labelText = labelDto.text;
-                                else
-                                    headerText = labelDto.text;
-                            }
-                        }
-
-                        thumbnailListModelContainer.Model.AddThumbnail(labelText,
-                            await imageDto.GetSprite(),
-                            () => SendAnswer(imageDto.guid),
-                            style.Color,
-                            style.HoverColor);
-                    }
+                    else // Thumbnail
+                        await _thumbnailFactory.CreateThumbnail(imageDto, container, SendAnswer);
                     break;
                 }
                 case PageDto pageDto:
@@ -177,6 +151,7 @@ namespace umi3d.browserRuntime.forms
         internal void SendAnswer(string submitId)
         {
             _formAnswerDto.submitId = submitId;
+            Debug.Log(_formAnswerDto.ToJson());
             _sendAnswerNotifier[FormNotificationKeys.SendAnswer.FormAnswerDto] = _formAnswerDto;
             _sendAnswerNotifier.Notify();
 

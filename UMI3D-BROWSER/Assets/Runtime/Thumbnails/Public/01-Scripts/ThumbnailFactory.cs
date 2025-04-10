@@ -17,18 +17,13 @@ limitations under the License.
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.thumbnails
 {
     [ExecuteInEditMode]
     public class ThumbnailFactory : MonoBehaviour
     {
-        public class Settings
-        {
-            public Color? NormalColor;
-            public Color? HoverColor;
-        }
-
         [SerializeField] internal Transform _content;
         [SerializeField] private ThumbnailModelContainer _thumbnailPrefab;
 
@@ -58,7 +53,7 @@ namespace umi3d.browserRuntime.thumbnails
             }
         }
 
-        public ThumbnailModelContainer GetOrCreateThumbnail(string name = "", Sprite image = null, Action callback = null, Settings settings = null)
+        public ThumbnailModelContainer GetOrCreateThumbnail(string name = "", Sprite image = null, Action callback = null, Color? normalColor = null, Color? hoverColor = null)
         {
             if (!_content)
                 _content = transform;
@@ -73,10 +68,7 @@ namespace umi3d.browserRuntime.thumbnails
             thumbnail.Model.SetName(name);
             thumbnail.Model.SetImage(image);
             thumbnail.Model.SetCallback(callback);
-            if (settings != null)
-            {
-                thumbnail.Model.SetColors(settings.NormalColor, settings.HoverColor);
-            }
+            thumbnail.Model.SetColors(normalColor, hoverColor);
 
             return thumbnail;
         }
@@ -93,9 +85,9 @@ namespace umi3d.browserRuntime.thumbnails
             _pool.Enqueue(modelContainer);
         }
 
-        private void GetOrCreateThumbnailForList(string name, Sprite image, Action callback, Settings settings)
+        private void GetOrCreateThumbnailForList(string name, Sprite image, Action callback, Color? normalColor = null, Color? hoverColor = null)
         {
-            var modelContainer = GetOrCreateThumbnail(name, image, callback, settings);
+            var modelContainer = GetOrCreateThumbnail(name, image, callback, normalColor, hoverColor);
             _thumbnailListModelContainer.Model.Thumbnails.Add(modelContainer.Model);
             _thumbnailListModelContainer.Model.ThumbnailContainers.Add(modelContainer);
         }
@@ -117,11 +109,7 @@ namespace umi3d.browserRuntime.thumbnails
         [ContextMenu("Get or create thumbnail test")]
         public void GetOrCreateThumbnailTest()
         {
-            var settings = new Settings() {
-                NormalColor = Color.gray,
-                HoverColor = Color.white,
-            };
-            GetOrCreateThumbnail("Test", null, () => Debug.Log("Thumbnail clicked!"), settings);
+            GetOrCreateThumbnail("Test", null, () => Debug.Log("Thumbnail clicked!"), Color.gray, Color.white);
         }
 
         [ContextMenu("Return thumbnail test")]
@@ -134,11 +122,7 @@ namespace umi3d.browserRuntime.thumbnails
         [ContextMenu("[List] Get or create thumbnail test")]
         public void GetOrCreateThumbnailForListTest()
         {
-            var settings = new Settings() {
-                NormalColor = Color.gray,
-                HoverColor = Color.white,
-            };
-            _thumbnailListModelContainer.Model.AddThumbnail("Test", null, () => Debug.Log("Thumbnail clicked!"), settings);
+            _thumbnailListModelContainer.Model.AddThumbnail("Test", null, () => Debug.Log("Thumbnail clicked!"), Color.gray, Color.white);
         }
 
         [ContextMenu("[List] Clear thumbnail test")]

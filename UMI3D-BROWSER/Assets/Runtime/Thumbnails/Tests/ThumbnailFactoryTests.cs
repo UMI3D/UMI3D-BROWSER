@@ -54,19 +54,17 @@ public class ThumbnailFactoryTests
             var name = "TestName";
             var image = Sprite.Create(new Texture2D(1, 1), new Rect(0, 0, 1, 1), new Vector2(.5f, .5f));
             Action callback = () => callbackCalled = true;
-            var settings = new ThumbnailFactory.Settings() {
-                NormalColor = Color.red,
-                HoverColor = Color.green,
-            };
+            var NormalColor = Color.red;
+            var HoverColor = Color.green;
 
-            var thumbnailModelContainer = _factory.GetOrCreateThumbnail( name, image, callback, settings);
+            var thumbnailModelContainer = _factory.GetOrCreateThumbnail( name, image, callback, NormalColor, HoverColor);
 
             var text = thumbnailModelContainer.GetComponentInChildren<TMP_Text>();
             Assert.AreEqual(name, text.text);
 
             var imageObject = thumbnailModelContainer.GetComponentInChildren<ThumbnailImageView>().GetComponent<Image>();
             Assert.AreEqual(image, imageObject.sprite);
-            Assert.AreEqual(settings.NormalColor, imageObject.color);
+            Assert.AreEqual(NormalColor, imageObject.color);
 
             var button = thumbnailModelContainer.GetComponent<Button>();
             button.onClick?.Invoke();

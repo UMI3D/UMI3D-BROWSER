@@ -211,8 +211,10 @@ namespace umi3dBrowsers.container
                     tabButton.hoverBar.color = new Color(tabButton.hoverBar.color.r, tabButton.hoverBar.color.g, tabButton.hoverBar.color.b, 0);
                 }
 
-                tab.SetActive(isActive);
-                tabButton.isSelected = isActive;
+                if (tab)
+                    tab.SetActive(isActive);
+                if (tabButton)
+                    tabButton.isSelected = isActive;
             }
 
             internal void Clear()

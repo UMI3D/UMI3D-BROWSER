@@ -129,6 +129,7 @@ namespace umi3d.browserRuntime.forms
                     // Thumbnail
                     else
                     {
+                        var style = imageDto.GetStyle();
                         ThumbnailListModelContainer thumbnailListModelContainer = container.Transform.GetComponent<ThumbnailListModelContainer>();
                         if (!thumbnailListModelContainer)
                             thumbnailListModelContainer = ReplaceContainerWithPrefab(container, _thumbnailListModelContainerPrefab);
@@ -146,7 +147,11 @@ namespace umi3d.browserRuntime.forms
                             }
                         }
 
-                        thumbnailListModelContainer.Model.AddThumbnail(labelText, await imageDto.GetSprite());
+                        thumbnailListModelContainer.Model.AddThumbnail(labelText,
+                            await imageDto.GetSprite(),
+                            () => SendAnswer(imageDto.guid),
+                            style.Color,
+                            style.HoverColor);
                     }
                     break;
                 }
@@ -172,7 +177,6 @@ namespace umi3d.browserRuntime.forms
         internal void SendAnswer(string submitId)
         {
             _formAnswerDto.submitId = submitId;
-            Debug.Log(_formAnswerDto.ToJson());
             _sendAnswerNotifier[FormNotificationKeys.SendAnswer.FormAnswerDto] = _formAnswerDto;
             _sendAnswerNotifier.Notify();
 

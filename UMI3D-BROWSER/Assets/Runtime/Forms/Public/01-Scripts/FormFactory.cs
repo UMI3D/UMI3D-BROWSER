@@ -16,6 +16,7 @@ limitations under the License.
 
 using inetum.unityUtils.observation;
 using umi3d.browserRuntime.thumbnails;
+using umi3d.common;
 using umi3d.common.interaction.form;
 using umi3dBrowsers.container;
 using UnityEngine;
@@ -34,11 +35,12 @@ namespace umi3d.browserRuntime.forms
         [SerializeField] internal TabManager _tabManager;
         [SerializeField] internal ThumbnailListModelContainer _thumbnailListModelContainerPrefab;
 
-        internal FormAnswerDto _answerDto;
+        internal FormAnswerDto _formAnswerDto;
         private Notifier _sendAnswerNotifier;
 
         private void Awake()
         {
+            _formAnswerDto = new();
             _sendAnswerNotifier = NotificationHub.Default.GetNotifier(this,
                 ID.FromType<FormNotificationKeys.SendAnswer>());
 
@@ -66,6 +68,8 @@ namespace umi3d.browserRuntime.forms
             if (_content.childCount > 0)
                 Clear();
 
+            _formAnswerDto.formId = formDto.guid;
+
             if (formDto.FirstChildren != null)
                 foreach (var child in formDto.FirstChildren)
                     AddDiv(child, new Container(_content));
@@ -89,12 +93,12 @@ namespace umi3d.browserRuntime.forms
                 }
                 case InputDto<string> inputStringDto:
                 {
-                    _inputFieldFactory.CreateInputField(inputStringDto, container.Transform);
+                    _inputFieldFactory.CreateInputField(inputStringDto, container.Transform, _formAnswerDto);
                     break;
                 }
                 case InputDto<int> inputIntDto:
                 {
-                    _inputFieldFactory.CreateInputField(inputIntDto, container.Transform);
+                    _inputFieldFactory.CreateInputField(inputIntDto, container.Transform, _formAnswerDto);
                     break;
                 }
                 case RangeDto<int> rangeIntDto:
@@ -109,7 +113,7 @@ namespace umi3d.browserRuntime.forms
                 }
                 case ButtonDto buttonDto:
                 {
-                    await _buttonFactory.CreateButton(buttonDto, container.Transform, SendAnswer);
+                    await _buttonFactory.CreateButton(buttonDto, container.Transform, _formAnswerDto, SendAnswer);
                     break;
                 }
                 case LabelDto labelDto:
@@ -148,10 +152,12 @@ namespace umi3d.browserRuntime.forms
                 }
                 case PageDto pageDto:
                 {
-                    var content = _tabManager.AddNewTab(pageDto.name, false);
+                    var content = _tabManager.AddNewTab(pageDto.name, false, () => _formAnswerDto.pageId = pageDto.guid);
+                    Container pageContainer = new(content.transform);
                     if (pageDto.FirstChildren != null)
                         foreach (var child in pageDto.FirstChildren)
-                            AddDiv(child, new (content.transform));
+                            if (child != null)
+                                AddDiv(child, pageContainer);
                     _tabManager.InitSelectedButtonById();
                     break;
                 }
@@ -163,14 +169,11 @@ namespace umi3d.browserRuntime.forms
             }
         }
 
-        internal void SendAnswer(string submitId, bool isBack = false)
+        internal void SendAnswer(string submitId)
         {
-            _answerDto = new() {
-                submitId = submitId,
-                isBack = isBack
-            };
-
-            _sendAnswerNotifier[FormNotificationKeys.SendAnswer.FormAnswerDto] = _answerDto;
+            _formAnswerDto.submitId = submitId;
+            Debug.Log(_formAnswerDto.ToJson());
+            _sendAnswerNotifier[FormNotificationKeys.SendAnswer.FormAnswerDto] = _formAnswerDto;
             _sendAnswerNotifier.Notify();
 
             Clear();
@@ -201,10 +204,12 @@ namespace umi3d.browserRuntime.forms
             for (int i = _content.childCount - 1; i >= 0; i--)
                 DestroyImmediate(_content.GetChild(i).gameObject);
             _tabManager.Clear();
+            _formAnswerDto = new();
 #else
             for (int i = _content.childCount - 1; i >= 0; i--)
                 Destroy(_content.GetChild(i).gameObject);
             _tabManager.Clear();
+            _answerDto = new();
 #endif
         }
 

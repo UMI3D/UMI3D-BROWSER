@@ -34,7 +34,7 @@ namespace umi3d.browserRuntime.forms
             _buttonFactory = GetComponent<ButtonFactory>();
         }
 
-        public async Task<GameObject> CreateButton(ButtonDto buttonDto, Transform parent, Action<string, bool> sendForm)
+        public async Task<GameObject> CreateButton(ButtonDto buttonDto, Transform parent, FormAnswerDto formAnswerDto, Action<string> sendForm)
         {
             var style = buttonDto.GetStyle();
 
@@ -55,10 +55,11 @@ namespace umi3d.browserRuntime.forms
                     switch (buttonDto.buttonType)
                     {
                         case ButtonType.Submit:
-                            sendForm(buttonDto.guid, false);
+                            sendForm(buttonDto.guid);
                             break;
                         case ButtonType.Back:
-                            sendForm(buttonDto.guid, true);
+                            formAnswerDto.isBack = true;
+                            sendForm(buttonDto.guid);
                             break;
                         case ButtonType.Cancel:
                             NotificationHub.Default.Notify(this, ID.FromType<FormNotificationKeys.Cancel>());

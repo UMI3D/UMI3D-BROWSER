@@ -14,11 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils.observation;
+using System.Collections.Generic;
 using TMPro;
 using umi3d.browserRuntime.ui.inputField;
 using umi3d.common.interaction.form;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.forms
 {
@@ -31,7 +32,7 @@ namespace umi3d.browserRuntime.forms
             _inputFieldFactory = GetComponent<InputFieldFactory>();
         }
 
-        public GameObject CreateInputField<T>(InputDto<T> inputDto, Transform parent)
+        public GameObject CreateInputField<T>(InputDto<T> inputDto, Transform parent, FormAnswerDto formAnswerDto)
         {
             var style = inputDto.GetStyle();
 
@@ -44,7 +45,25 @@ namespace umi3d.browserRuntime.forms
             formItemModelContainer.Model.SetAnchor(style.AnchorMin, style.AnchorMax, style.Pivot);
             formItemModelContainer.Model.SetTextStyle(style.FontSize, style.FontColor, style.FontStyles, style.FontAlignmentOptions);
 
+            InputAnswerDto inputAnswerDto = new InputAnswerDto() {
+                inputId = inputDto.guid
+            };
+            var inputFieldModelContainer = inputFieldGameObject.GetComponent<InputFieldModelContainer>();
+            NotificationHub.Default.Subscribe(this,
+                ID.FromType<InputFieldNotificationsKeys.InputFieldUpdated>(),
+                (Callback)UpdateAnswer,
+                new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == inputFieldModelContainer.model));
+            if (formAnswerDto.inputs == null)
+                formAnswerDto.inputs = new List<InputAnswerDto>();
+            formAnswerDto.inputs.Add(inputAnswerDto);
+
             return inputFieldGameObject;
+
+            void UpdateAnswer(inetum.unityUtils.observation.Notification notification)
+            {
+                if (notification.TryGetInfoT(InputFieldNotificationsKeys.InputFieldUpdated.Value, out string value))
+                    inputAnswerDto.value = value;
+            } 
         }
 
         private static TMP_InputField.ContentType TmpContentTypeFrom(TextType type)

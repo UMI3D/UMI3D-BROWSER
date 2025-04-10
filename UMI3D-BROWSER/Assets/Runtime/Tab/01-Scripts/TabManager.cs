@@ -57,13 +57,12 @@ namespace umi3dBrowsers.container
 
         public void InitSelectedButtonById(int id = 0)
         {
-            if (tabs == null || tabs.Count == 0) return;
-            foreach (var tab in tabs)
-            {
-                tab.SetActive(false);
-            }
+            if (tabs == null || tabs.Count == 0) 
+                return;
+            if (tabs[id].Tab == null)
+                return;
 
-            tabs[id].SetActive(true);
+            tabs[id].Tab.OnClick?.Invoke();
             currentActiveButton = tabs[id];
         }
 
@@ -85,6 +84,11 @@ namespace umi3dBrowsers.container
                 tab.Clear();
             }
             tabs = null;
+
+            foreach (Transform child in contentRoot)
+                DestroyImmediate(child.gameObject);
+            foreach (Transform child in navigationRoot)
+                DestroyImmediate(child.gameObject);
         }
 
         /// <summary>
@@ -94,11 +98,12 @@ namespace umi3dBrowsers.container
         /// <param name="container">the container you wish to associate with the new tab</param>
         /// <param name="useLocalization">Should the name of the that depend on the localization</param>
         /// <returns>The container of the tab</returns>
-        public GameObject AddNewTab(string label, bool useLocalization = false, GameObject container = null)
+        public GameObject AddNewTab(string label, bool useLocalization = false, Action onTabClicked = null, GameObject container = null)
         {
             TabToContainerBinder tabBinder = new TabToContainerBinder();
 
             Tab tabButton = Instantiate(tabButtonPrefab).GetComponent<Tab>();
+            tabButton.OnClick.AddListener(() => onTabClicked?.Invoke());
             tabButton.transform.SetParent(navigationRoot, false);
             tabButton.SetLabel(label, useLocalization);
             GameObject tab = container;
@@ -158,7 +163,7 @@ namespace umi3dBrowsers.container
         public GameObject AddNewTabForParamForm(string label, bool useLocalization = true)
         {
             GameObject tabContainer = Instantiate(paramFormContainerPrefab, contentRoot);
-            return AddNewTab(label, useLocalization, tabContainer);
+            return AddNewTab(label, useLocalization, container: tabContainer);
         }
 
         public Transform GetTabContainerById(int id)
@@ -171,6 +176,7 @@ namespace umi3dBrowsers.container
         {
             [SerializeField] private Tab tabButton;
             [SerializeField] private GameObject tab;
+            public Tab Tab => tabButton;
             public Transform TabTransform => tab.transform;
             public void SetTabContainer(GameObject tab)
             {

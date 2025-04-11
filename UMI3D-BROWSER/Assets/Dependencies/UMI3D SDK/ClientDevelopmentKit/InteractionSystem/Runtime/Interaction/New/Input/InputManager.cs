@@ -17,7 +17,9 @@ limitations under the License.
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace umi3d.cdk.interaction
 {
@@ -38,12 +40,35 @@ namespace umi3d.cdk.interaction
         List<Input> _inputs = new List<Input>();
         ReadOnlyCollection<Input> inputs => _inputs.AsReadOnly();
 
-        public Input InstantiateInput()
+        public Input InstantiateInput(InputControl control, InputActionType actionType)
         {
-            Input input = new();
+            Input input = new(control, actionType);
             _inputs.Add(input);
 
             return input;
+        }
+
+        /// <summary>
+        /// Try to get the input corresponding to this control for this controller.<br/>
+        /// <br/>
+        /// If no input corresponding to this control is found then create one with this actionType.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="controller"></param>
+        /// <param name="control"></param>
+        /// <param name="actionType"></param>
+        /// <returns></returns>
+        public bool TryGetInput(out Input input, Controller controller, InputControl control, InputActionType actionType)
+        {
+            input = controller.inputs.First(input => input.control == control);
+            if (input == null)
+            {
+                input = InstantiateInput(control, actionType);
+                controller.Add(input);
+                return true;
+            }
+
+            return input.isAvailable;
         }
     }
 }

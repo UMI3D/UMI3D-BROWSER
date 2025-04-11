@@ -54,7 +54,7 @@ namespace umi3d.cdk.interaction
         }
 
         List<AbstractInteractionDto> _interactions = new();
-        public ReadOnlyCollection<AbstractInteractionDto> interactions;
+        public ReadOnlyCollection<AbstractInteractionDto> interactions => _interactions.AsReadOnly();
         async void GetInteractions()
         {
             IEnumerable<Task<UMI3DEntityInstance>> entities = dto.interactions

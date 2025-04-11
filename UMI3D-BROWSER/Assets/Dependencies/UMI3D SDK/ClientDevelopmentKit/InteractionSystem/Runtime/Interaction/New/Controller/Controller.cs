@@ -17,6 +17,7 @@ limitations under the License.
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using umi3d.common.interaction;
 using UnityEngine;
 
 namespace umi3d.cdk.interaction
@@ -89,12 +90,32 @@ namespace umi3d.cdk.interaction
             return true;
         }
 
-        List<Tool> _projectedTools = new List<Tool>();
+        List<Tool> _projectedTools = new();
         public ReadOnlyCollection<Tool> projectedTools => _projectedTools.AsReadOnly();
 
-        internal bool TryToProject(Tool tool, Selector selector) 
+        List<AbstractInteractionDto> _projectedInteraction = new();
+        public ReadOnlyCollection<AbstractInteractionDto> projectedInteraction => _projectedInteraction.AsReadOnly();
+
+        internal bool TryToProject(Tool tool, AbstractInteractionDto interaction, Input input, Selector selector) 
         {
-            throw new System.NotImplementedException();
+            bool contains = _projectedTools.Contains(tool);
+            if (_projectedTools.Count >= @delegate.ToolCountLimitation && !contains)
+            {
+                return false;
+            }
+            else if (!contains)
+            {
+                _projectedTools.Add(tool);
+            }
+
+            if (!_projectedInteraction.Contains(interaction))
+            {
+                _projectedInteraction.Add(interaction);
+            }
+
+            input.Associate(tool, interaction, selector);
+
+            return true;
         }
     }
 }

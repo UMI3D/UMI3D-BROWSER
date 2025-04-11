@@ -38,6 +38,21 @@ namespace umi3d.cdk.interaction
         /// </summary>
         public readonly string id;
 
+        ISelectorDataDelegate _delegate;
+        public ISelectorDataDelegate @delegate
+        {
+            get => _delegate;
+            set
+            {
+                if (value == null)
+                {
+                    UnityEngine.Debug.LogError($"[Selector] Error: you are trying to set a null delegate.");
+                    return;
+                }
+                _delegate = value;
+            }
+        }
+
         List<Controller> _controllers = new List<Controller>();
         ReadOnlyCollection<Controller> controllers => _controllers.AsReadOnly();
         public void Add(Controller controller)
@@ -54,16 +69,107 @@ namespace umi3d.cdk.interaction
             _controllers.Remove(controller);
         }
 
+        /// <summary>
+        /// Try to project a tool on controllers.<br/>
+        /// <br/>
+        /// <list type="number">
+        /// <item>Sort interactions.</item>
+        /// <item>Loop through each interactions.</item>
+        /// <item>For each interaction find the first available <see cref="Controller"/>, and <see cref="Input"/>.</item>
+        /// <item>Project each interaction on its corresponding input and controller.</item>
+        /// <item>Project each tool on its corresponding controllers.</item>
+        /// </list>
+        /// </summary>
+        /// <param name="tool"></param>
         public void Select(Tool tool)
         {
-            foreach (Controller controller in _controllers)
+            // TODO: Sort the interactions
+            // Events should be put at the end, so that if there are ui input
+            // the mouse button can be reserve to open the menu.
+
+            foreach (AbstractInteractionDto interaction in tool.interactions)
             {
-                //if (controller.@delegate.CanProjectTool(tool))
-                //{
-                //    controller.TryToProject(tool, selector);
-                //}
-                throw new System.NotImplementedException();
+                if (interaction is DrawingInteractionDto drawingInteractionDto)
+                {
+                } 
+                else if (interaction is EventDto eventDto)
+                {
+                    bool found = @delegate.TryGetInputForEventDto(
+                        out Input input, 
+                        out Controller controller, 
+                        this, 
+                        controllers
+                    );
+
+                    if (!found)
+                    {
+                        UnityEngine.Debug.LogWarning($"[Selector-{id}] Warning: no controller or input available.");
+                        return;
+                    }
+
+                    // Project this interaction from this tool on this input from this controller.
+                    controller.TryToProject(tool, eventDto, input, this);
+                }
+                else if (interaction is BooleanParameterDto booleanParameterDto)
+                {
+
+                }
+
+                else if (interaction is StringParameterDto stringParameterDto)
+                {
+
+                }
+
+                else if (interaction is FloatParameterDto floatParameterDto)
+                {
+
+                }
+                else if (interaction is IntegerParameterDto integerParameterDto)
+                {
+
+                }
+
+                else if (interaction is ColorParameterDto colorParameterDto)
+                {
+
+                }
+
+                else if (interaction is Vector2ParameterDto vector2ParameterDto)
+                {
+
+                }
+                else if (interaction is Vector3ParameterDto vector3ParameterDto)
+                {
+
+                }
+                else if (interaction is Vector4ParameterDto vector4ParameterDto)
+                {
+
+                }
+
+                else if (interaction is EnumParameterDto<string> enumParameterDto)
+                {
+
+                }
+                else if (interaction is FloatRangeParameterDto floatRangeParameterDto)
+                {
+
+                }
+                else if (interaction is IntegerRangeParameterDto integerRangeParameterDto)
+                {
+
+                }
+
+                else if (interaction is UploadFileParameterDto uploadFileParameterDto)
+                {
+
+                }
+                else if (interaction is LocalInfoRequestParameterDto localInfoRequestParameterDto)
+                {
+
+                }
             }
+
 
             SelectorManager.@default.delegates.ForEach(@delegate =>
             {

@@ -18,7 +18,10 @@ using inetum.unityUtils.observation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.Windows;
 
 namespace umi3d.cdk.interaction
 {
@@ -54,6 +57,38 @@ namespace umi3d.cdk.interaction
             controller = new(id);
             _controllers.Add(controller);
             return true;
+        }
+
+        public bool TryGetInputForEventDto(
+            out Input input, 
+            out Controller controller, 
+            string controllerId, 
+            ReadOnlyCollection<Controller> controllers
+        )
+        {
+            controller = controllers.First(controller =>
+            {
+                return controller.id == controllerId && controller.isActive;
+            });
+
+            input = null;
+            return controller?.@delegate.TryGetInputForEventDto(out input, controller) ?? false;
+        }
+
+        public bool TryGetInputForBooleanParameterDto(
+            out Input input,
+            out Controller controller,
+            string controllerId,
+            ReadOnlyCollection<Controller> controllers
+        )
+        {
+            controller = controllers.First(controller =>
+            {
+                return controller.id == controllerId && controller.isActive;
+            });
+
+            input = null;
+            return controller?.@delegate.TryGetInputForBooleanParameterDto(out input, controller) ?? false;
         }
     }
 }

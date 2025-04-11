@@ -15,18 +15,26 @@ limitations under the License.
 */
 
 using System;
+using umi3d.common.interaction;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace umi3d.cdk.interaction
 {
     public sealed class Input 
     {
-        internal Input()
+        internal Input(InputControl control, InputActionType actionType)
         {
+            this.control = control;
 
+            action = new InputAction(control.name, actionType);
+            action.AddBinding(control.path);
         }
 
         public bool isAvailable { get; private set; }
+
+        public InputAction action { get; private set; }
+        public InputControl control { get; private set; }
 
         public Controller controller { get; private set; }
         internal bool Associate(Controller controller)
@@ -41,15 +49,25 @@ namespace umi3d.cdk.interaction
             this.controller = null;
         }
 
-        internal void Associate(Tool tool, Selector selector)
+        public Tool projectedTool { get; private set; }
+        public AbstractInteractionDto projectedInteraction { get; private set; }
+        public Selector selector { get; private set; }
+        internal void Associate(Tool tool, AbstractInteractionDto interaction, Selector selector)
         {
             if (!isAvailable) { return; }
+            isAvailable = false;
 
-            throw new System.NotImplementedException();
+            projectedTool = tool;
+            projectedInteraction = interaction;
+            this.selector = selector;
         }
-        internal void DissociateFromTool()
+        internal void DissociateFromInteraction()
         {
-            throw new System.NotImplementedException();
+            projectedTool = null;
+            projectedInteraction = null;
+            this.selector = null;
+
+            isAvailable = false;
         }
     }
 }

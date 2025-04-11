@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using umi3d.browserRuntime.text;
+using umi3d.common.interaction;
 using umi3d.common.interaction.form;
 using UnityEngine;
 
@@ -44,6 +45,11 @@ namespace umi3d.browserRuntime.forms
             formItemModelContainer.Model.SetTextStyle(style.FontSize, style.FontColor, style.FontStyles, style.FontAlignmentOptions);
 
             return textGameObject;
+        }
+
+        public GameObject CreateText(StringParameterDto stringDto, Transform parent)
+        {
+            return _textFactory.GetOrCreateText(parent, stringDto.name);
         }
     }
 }

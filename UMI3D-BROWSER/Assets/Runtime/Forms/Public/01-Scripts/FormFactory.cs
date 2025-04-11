@@ -55,7 +55,7 @@ namespace umi3d.browserRuntime.forms
 
         private void CreateForm(Notification notification)
         {
-            if (notification.TryGetInfoT(FormNotificationKeys.CreateForm.FormDto, out FormDto formDto))
+            if (notification.TryGetInfoT(FormNotificationKeys.CreateForm.FormDto, out FormDto formDto, false))
                 CreateForm(formDto);
         }
 
@@ -175,8 +175,6 @@ namespace umi3d.browserRuntime.forms
 
         internal void Clear()
         {
-            if (!_content)
-                return;
 #if UNITY_EDITOR
             for (int i = _content.childCount - 1; i >= 0; i--)
                 DestroyImmediate(_content.GetChild(i).gameObject);

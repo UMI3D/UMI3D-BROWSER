@@ -18,6 +18,7 @@ using inetum.unityUtils.observation;
 using System.Collections.Generic;
 using TMPro;
 using umi3d.browserRuntime.ui.inputField;
+using umi3d.common.interaction;
 using umi3d.common.interaction.form;
 using UnityEngine;
 
@@ -33,7 +34,7 @@ namespace umi3d.browserRuntime.forms
             _inputFieldFactory = GetComponent<InputFieldFactory>();
         }
 
-        public GameObject CreateInputField<T>(InputDto<T> inputDto, Transform parent, FormAnswerDto formAnswerDto)
+        public GameObject CreateInputField<T>(InputDto<T> inputDto, Transform parent, common.interaction.form.FormAnswerDto formAnswerDto)
         {
             var style = inputDto.GetStyle();
             var inputFieldGameObject = _inputFieldFactory.GetOrCreateInputField(parent, false, inputDto.Name, inputDto.Value?.ToString(), inputDto.PlaceHolder?.ToString(), 1, TmpContentTypeFrom(inputDto.TextType));
@@ -62,7 +63,31 @@ namespace umi3d.browserRuntime.forms
             {
                 if (notification.TryGetInfoT(InputFieldNotificationsKeys.InputFieldUpdated.Value, out string value))
                     inputAnswerDto.value = value;
-            } 
+            }
+        }
+
+        public GameObject CreateInputField(StringParameterDto inputDto, Transform parent, common.interaction.FormAnswerDto formAnswerDto)
+        {
+            var inputFieldGameObject = _inputFieldFactory.GetOrCreateInputField(parent, false, inputDto.name, inputDto.value, null, 1, inputDto.privateParameter ? TMP_InputField.ContentType.Password : TMP_InputField.ContentType.Standard);
+
+            ParameterSettingRequestDto paramRequestDto = new ParameterSettingRequestDto() { id = inputDto.id };
+            if (formAnswerDto.answers == null)
+                formAnswerDto.answers = new ();
+            formAnswerDto.answers.Add(paramRequestDto);
+
+            var inputFieldModelContainer = inputFieldGameObject.GetComponent<InputFieldModelContainer>();
+            NotificationHub.Default.Subscribe(this,
+                ID.FromType<InputFieldNotificationsKeys.InputFieldUpdated>(),
+                (Callback)UpdateAnswer,
+                new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == inputFieldModelContainer.model));
+
+            return inputFieldGameObject;
+
+            void UpdateAnswer(Notification notification)
+            {
+                if (notification.TryGetInfoT(InputFieldNotificationsKeys.InputFieldUpdated.Value, out string value))
+                    paramRequestDto.parameter = value;
+            }
         }
 
         private static TMP_InputField.ContentType TmpContentTypeFrom(TextType type)

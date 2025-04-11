@@ -72,7 +72,7 @@ namespace umi3dBrowsers.services.connection
             connectionServiceLinker.OnSendFormAnswer += SendFormAnswer;
             NotificationHub.Default.Subscribe(this,
                 ID.FromType<FormNotificationKeys.SendAnswer>(),
-                (Callback)SendDivFormAnswer);
+                (Callback)SendFormAnswer);
             connectionServiceLinker.OnSendDivFormAnswer += SendDivFormAnswer;
             connectionServiceLinker.OnSendWaitAnswer += SendWaitAnswer;
         }
@@ -147,16 +147,17 @@ namespace umi3dBrowsers.services.connection
         private void HandleParameters(ConnectionFormDto dto, Action<FormAnswerDto> action)
         {
             _formParamAnswerCallBack = action;
-            connectionServiceLinker.ParamFormDtoReceived(dto);
+            var formNotifier = NotificationHub.Default.GetNotifier(this, ID.FromType<FormNotificationKeys.CreateForm>());
+            formNotifier[FormNotificationKeys.CreateForm.FormDto] = dto;
+            formNotifier.Notify();
         }
 
         private void HandleDivs(umi3d.common.interaction.form.ConnectionFormDto dto, Action<umi3d.common.interaction.form.FormAnswerDto> action)
         {
             _formDivAnswerCallBack = action;
-            //connectionServiceLinker.DivFormDtoReceived(dto);
-            var formDivNotifier = NotificationHub.Default.GetNotifier(this, ID.FromType<FormNotificationKeys.CreateForm>());
-            formDivNotifier[FormNotificationKeys.CreateForm.FormDto] = dto;
-            formDivNotifier.Notify();
+            var formNotifier = NotificationHub.Default.GetNotifier(this, ID.FromType<FormNotificationKeys.CreateForm>());
+            formNotifier[FormNotificationKeys.CreateForm.FormDto] = dto;
+            formNotifier.Notify();
         }
 
         private void HandleWait(WaitConnectionDto dto, Action action, Action cancel)
@@ -185,15 +186,17 @@ namespace umi3dBrowsers.services.connection
             return url;
         }
 
+        public void SendFormAnswer(Notification notification)
+        {
+            if (notification.TryGetInfoT(FormNotificationKeys.SendAnswer.FormAnswerDto, out umi3d.common.interaction.form.FormAnswerDto formAnswer, false))
+                SendDivFormAnswer(formAnswer);
+            if (notification.TryGetInfoT(FormNotificationKeys.SendAnswer.FormAnswerDto, out FormAnswerDto formParamAnswer, false))
+                SendFormAnswer(formParamAnswer);
+        }
+
         public void SendFormAnswer(FormAnswerDto formAnswer)
         {
             _formParamAnswerCallBack?.Invoke(formAnswer);
-        }
-
-        public void SendDivFormAnswer(Notification notification)
-        {
-            if (notification.TryGetInfoT(FormNotificationKeys.SendAnswer.FormAnswerDto, out umi3d.common.interaction.form.FormAnswerDto formAnswer))
-                SendDivFormAnswer(formAnswer);
         }
 
         public void SendDivFormAnswer(umi3d.common.interaction.form.FormAnswerDto formAnswer)

@@ -29,6 +29,7 @@ namespace umi3d.browserRuntime.forms
         
         [SerializeField] internal Transform _content;
         [SerializeField] internal Button _submitButton;
+        [SerializeField] internal FormDropdownFactory _dropdownFactory;
         [SerializeField] internal FormInputFieldFactory _inputFieldFactory;
         [SerializeField] internal FormTextFactory _textFactory;
         [SerializeField] internal TabManager _tabManager;
@@ -70,12 +71,12 @@ namespace umi3d.browserRuntime.forms
             _formAnswerDto.id = connectionFormDto.id;
 
             if (connectionFormDto.fields != null)
-                AddField(connectionFormDto.fields);
+                AddFields(connectionFormDto.fields);
 
             _submitButton.gameObject.SetActive(true);
         }
 
-        internal void AddField(List<AbstractParameterDto> parameterDtos)
+        internal void AddFields(List<AbstractParameterDto> parameterDtos)
         {
             var container = _tabManager.AddNewTabForParamForm(parameterDtos[0].name, false).transform;
 
@@ -85,8 +86,7 @@ namespace umi3d.browserRuntime.forms
                 switch (parameterDto)
                 {
                     case EnumParameterDto<string> enumDto:
-                        break;
-                    case BooleanParameterDto booleanDto:
+                        _dropdownFactory.CreateDropdown(enumDto, container, _formAnswerDto);
                         break;
                     case StringParameterDto stringDto:
                         if (parameterDto.name == "OR" && parameterDto.tag == null)

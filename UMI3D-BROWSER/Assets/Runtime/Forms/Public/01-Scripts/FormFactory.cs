@@ -35,12 +35,11 @@ namespace umi3d.browserRuntime.forms
         [SerializeField] internal FormThumbnailFactory _thumbnailFactory;
         [SerializeField] internal TabManager _tabManager;
 
-        internal FormAnswerDto _formAnswerDto;
+        internal FormAnswerDto _formAnswerDto = new FormAnswerDto();
         private Notifier _sendAnswerNotifier;
 
         private void Awake()
         {
-            _formAnswerDto = new();
             _sendAnswerNotifier = NotificationHub.Default.GetNotifier(this,
                 ID.FromType<FormNotificationKeys.SendAnswer>());
 

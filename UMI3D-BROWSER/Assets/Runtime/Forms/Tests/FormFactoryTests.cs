@@ -50,6 +50,8 @@ public class FormFactoryTests
             _formFactory._imageFactory.transform.SetParent(_formFactory.transform, false);
             _formFactory._textFactory = GameObject.Instantiate(_formFactory._textFactory);
             _formFactory._textFactory.transform.SetParent(_formFactory.transform, false);
+            _formFactory._thumbnailFactory = GameObject.Instantiate(_formFactory._thumbnailFactory);
+            _formFactory._thumbnailFactory.transform.SetParent(_formFactory.transform, false);
             _formFactory._tabManager = GameObject.Instantiate(_formFactory._tabManager);
             _formFactory._tabManager.transform.SetParent(_formFactory.transform, false);
         }
@@ -97,6 +99,8 @@ public class FormFactoryTests
             _formFactory._imageFactory.transform.SetParent(_formFactory.transform, false);
             _formFactory._textFactory = GameObject.Instantiate(_formFactory._textFactory);
             _formFactory._textFactory.transform.SetParent(_formFactory.transform, false);
+            _formFactory._thumbnailFactory = GameObject.Instantiate(_formFactory._thumbnailFactory);
+            _formFactory._thumbnailFactory.transform.SetParent(_formFactory.transform, false);
             _formFactory._tabManager = GameObject.Instantiate(_formFactory._tabManager);
             _formFactory._tabManager.transform.SetParent(_formFactory.transform, false);
             _baseContainer = new GameObject("AddDivTest_BaseContainer").transform;
@@ -135,63 +139,75 @@ public class FormFactoryTests
         [Test]
         public void GivenInputDtoString_WhenAddingDiv_ThenInputFieldCreatedAndConfigured()
         {
+            var Name = "TestName";
+            var Value = "TestValue";
+            var PlaceHolder = "TestPlaceHolder";
             InputDto<string> inputDto = new InputDto<string>() {
-                label = "TestName",
-                Value = "TestValue",
-                PlaceHolder = "TestPlaceHolder",
+                Name = Name,
+                Value = Value,
+                PlaceHolder = PlaceHolder,
                 TextType = TextType.Text,
             };
             _formFactory.AddDiv(inputDto, new(_baseContainer));
 
-            var model = _baseContainer.GetComponentInChildren<InputFieldModelContainer>().model;
+            var modelContainer = _baseContainer.GetComponentInChildren<InputFieldModelContainer>();
+            Assert.IsNotNull(modelContainer);
             var inputField = _baseContainer.GetComponentInChildren<TMP_InputField>();
-            Assert.IsNotNull(model);
+            Assert.IsNotNull(modelContainer.model);
             Assert.IsNotNull(inputField);
-            Assert.AreEqual(model.label, inputDto.label);
-            Assert.AreEqual(model.value, inputDto.Value);
-            Assert.AreEqual(model.placeholder, inputDto.PlaceHolder);
+            Assert.AreEqual(modelContainer.model.label, Name);
+            Assert.AreEqual(modelContainer.model.value, Value);
+            Assert.AreEqual(modelContainer.model.placeholder, PlaceHolder);
             Assert.AreEqual(TMP_InputField.ContentType.Standard, inputField.contentType);
         }
 
         [Test]
         public void GivenInputDtoStringPassword_WhenAddingDiv_ThenInputFieldCreatedAndConfigured()
         {
+            var Name = "TestName";
+            var Value = "TestValue";
+            var PlaceHolder = "TestPlaceHolder";
             var inputDto = new InputDto<string>() {
-                label = "TestName",
-                Value = "TestValue",
-                PlaceHolder = "TestPlaceHolder",
+                Name = Name,
+                Value = Value,
+                PlaceHolder = PlaceHolder,
                 TextType = TextType.Password,
             };
             _formFactory.AddDiv(inputDto, new(_baseContainer));
 
-            var model = _baseContainer.GetComponentInChildren<InputFieldModelContainer>().model;
+            var modelContainer = _baseContainer.GetComponentInChildren<InputFieldModelContainer>();
+            Assert.IsNotNull(modelContainer);
             var inputField = _baseContainer.GetComponentInChildren<TMP_InputField>();
-            Assert.IsNotNull(model);
+            Assert.IsNotNull(modelContainer.model);
             Assert.IsNotNull(inputField);
-            Assert.AreEqual(model.label, inputDto.label);
-            Assert.AreEqual(model.value, inputDto.Value);
-            Assert.AreEqual(model.placeholder, inputDto.PlaceHolder);
+            Assert.AreEqual(modelContainer.model.label, Name);
+            Assert.AreEqual(modelContainer.model.value, Value);
+            Assert.AreEqual(modelContainer.model.placeholder, PlaceHolder);
             Assert.AreEqual(TMP_InputField.ContentType.Password, inputField.contentType);
         }
 
         [Test]
         public void GivenInputDtoInt_WhenAddingDiv_ThenInputFieldCreatedAndConfigured()
         {
+            var Name = "TestName";
+            var Value = 0;
+            var PlaceHolder = 0;
             var inputDto = new InputDto<int>() {
-                label = "TestName",
-                Value = 0,
-                PlaceHolder = 000000,
+                Name = Name,
+                Value = Value,
+                PlaceHolder = PlaceHolder,
                 TextType = TextType.Number,
             };
             _formFactory.AddDiv(inputDto, new(_baseContainer));
 
-            var model = _baseContainer.GetComponentInChildren<InputFieldModelContainer>().model;
+            var modelContainer = _baseContainer.GetComponentInChildren<InputFieldModelContainer>();
+            Assert.IsNotNull(modelContainer);
             var inputField = _baseContainer.GetComponentInChildren<TMP_InputField>();
-            Assert.IsNotNull(model);
+            Assert.IsNotNull(modelContainer.model);
             Assert.IsNotNull(inputField);
-            Assert.AreEqual(model.label, inputDto.label);
-            Assert.AreEqual(int.Parse(model.value), inputDto.Value);
-            Assert.AreEqual(int.Parse(model.placeholder), inputDto.PlaceHolder);
+            Assert.AreEqual(modelContainer.model.label, Name);
+            Assert.AreEqual(int.Parse(modelContainer.model.value), Value);
+            Assert.AreEqual(int.Parse(modelContainer.model.placeholder), PlaceHolder);
             Assert.AreEqual(TMP_InputField.ContentType.IntegerNumber, inputField.contentType);
         }
 

@@ -23,6 +23,7 @@ using UnityEngine;
 
 namespace umi3d.browserRuntime.forms
 {
+    [RequireComponent(typeof(InputFieldFactory)), ExecuteAlways]
     internal class FormInputFieldFactory : MonoBehaviour
     {
         private InputFieldFactory _inputFieldFactory;
@@ -35,7 +36,6 @@ namespace umi3d.browserRuntime.forms
         public GameObject CreateInputField<T>(InputDto<T> inputDto, Transform parent, FormAnswerDto formAnswerDto)
         {
             var style = inputDto.GetStyle();
-
             var inputFieldGameObject = _inputFieldFactory.GetOrCreateInputField(parent, false, inputDto.Name, inputDto.Value?.ToString(), inputDto.PlaceHolder?.ToString(), 1, TmpContentTypeFrom(inputDto.TextType));
 
             var formItemModelContainer = inputFieldGameObject.GetComponent<FormItemModelContainer>();

@@ -34,7 +34,7 @@ namespace umi3d.browserRuntime.forms
         public int TextFontSize { get; private set; } = 12;
         public Color TextColor { get; private set; } = Color.white;
         public FontStyles TextStyles { get; private set; } = FontStyles.Normal;
-        public TextAlignmentOptions TextAlignmentOptions { get; private set; } = TextAlignmentOptions.MidlineLeft;
+        public TextAlignmentOptions TextAlignmentOptions { get; private set; } = TextAlignmentOptions.Left;
 
         private readonly Notifier _setNotifier;
 

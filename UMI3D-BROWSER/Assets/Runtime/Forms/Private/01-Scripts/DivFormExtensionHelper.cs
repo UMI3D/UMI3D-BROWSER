@@ -149,11 +149,11 @@ public static class DivFormExtensionHelper
 
 
 
-        private static TextAlignmentOptions GetAlignement(List<E_FontAlignment> alignments)
+        private static TextAlignmentOptions? GetAlignement(List<E_FontAlignment> alignments)
         {
             var options = new TextAlignmentOptions();
             if (alignments == null)
-                return options;
+                return null;
 
             foreach (E_FontAlignment alignment in alignments)
             {
@@ -200,11 +200,11 @@ public static class DivFormExtensionHelper
             return options;
         }
 
-        private static FontStyles GetFontStyle(List<E_FontStyle> fontStyles)
+        private static FontStyles? GetFontStyle(List<E_FontStyle> fontStyles)
         {
             var style = new FontStyles();
             if (fontStyles == null)
-                return style;
+                return null;
 
             foreach (E_FontStyle fontStyle in fontStyles)
             {

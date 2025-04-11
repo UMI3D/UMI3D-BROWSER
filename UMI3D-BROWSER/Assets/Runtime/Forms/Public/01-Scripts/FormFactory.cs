@@ -151,7 +151,6 @@ namespace umi3d.browserRuntime.forms
         internal void SendAnswer(string submitId)
         {
             _formAnswerDto.submitId = submitId;
-            Debug.Log(_formAnswerDto.ToJson());
             _sendAnswerNotifier[FormNotificationKeys.SendAnswer.FormAnswerDto] = _formAnswerDto;
             _sendAnswerNotifier.Notify();
 

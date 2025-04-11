@@ -14,6 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils.observation;
+using System.Collections.Generic;
+using umi3d.browserRuntime.ui.inputField;
 using umi3d.browserRuntime.ui.slider;
 using umi3d.common.interaction.form;
 using UnityEngine;
@@ -30,7 +33,7 @@ namespace umi3d.browserRuntime.forms
             _sliderFactory = GetComponent<SliderFactory>();
         }
 
-        public GameObject CreateSlider(RangeDto<int> rangeDto, Transform parent)
+        public GameObject CreateSlider(RangeDto<int> rangeDto, Transform parent, FormAnswerDto formAnswerDto)
         {
             var style = rangeDto.GetStyle();
 
@@ -43,7 +46,24 @@ namespace umi3d.browserRuntime.forms
             formItemModelContainer.Model.SetAnchor(style.AnchorMin, style.AnchorMax, style.Pivot);
             formItemModelContainer.Model.SetTextStyle(style.FontSize, style.FontColor, style.FontStyles, style.FontAlignmentOptions);
 
+            InputAnswerDto inputAnswerDto = new InputAnswerDto() { inputId = rangeDto.guid };
+            if (formAnswerDto.inputs == null)
+                formAnswerDto.inputs = new List<InputAnswerDto>();
+            formAnswerDto.inputs.Add(inputAnswerDto);
+
+            var sliderModelContainer = sliderGameObject.GetComponent<SliderModelContainer>();
+            NotificationHub.Default.Subscribe(this,
+                ID.FromType<InputFieldNotificationsKeys.InputFieldUpdated>(),
+                (Callback)UpdateAnswer,
+                new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == sliderModelContainer.model));
+
             return sliderGameObject;
+
+            void UpdateAnswer(Notification notification) 
+            {
+                if (notification.TryGetInfoT(SliderNotifiactionKeys.SliderUpdated.Value, out string value))
+                    inputAnswerDto.value = value;
+            }
         }
 
         public GameObject CreateSlider(RangeDto<float> rangeDto, Transform parent)

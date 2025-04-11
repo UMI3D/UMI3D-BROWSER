@@ -103,12 +103,12 @@ namespace umi3d.browserRuntime.forms
                 }
                 case RangeDto<int> rangeIntDto:
                 {
-                    _sliderFactory.CreateSlider(rangeIntDto, container.Transform);
+                    _sliderFactory.CreateSlider(rangeIntDto, container.Transform, _formAnswerDto);
                     break;
                 }
                 case RangeDto<float> rangeFloatDto:
                 {
-                    _sliderFactory.CreateSlider(rangeFloatDto, container.Transform);
+                    _sliderFactory.CreateSlider(rangeFloatDto, container.Transform, _formAnswerDto);
                     break;
                 }
                 case ButtonDto buttonDto:

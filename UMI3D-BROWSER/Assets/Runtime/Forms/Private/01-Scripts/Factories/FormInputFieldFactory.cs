@@ -45,21 +45,20 @@ namespace umi3d.browserRuntime.forms
             formItemModelContainer.Model.SetAnchor(style.AnchorMin, style.AnchorMax, style.Pivot);
             formItemModelContainer.Model.SetTextStyle(style.FontSize, style.FontColor, style.FontStyles, style.FontAlignmentOptions);
 
-            InputAnswerDto inputAnswerDto = new InputAnswerDto() {
-                inputId = inputDto.guid
-            };
+            InputAnswerDto inputAnswerDto = new InputAnswerDto() { inputId = inputDto.guid };
+            if (formAnswerDto.inputs == null)
+                formAnswerDto.inputs = new List<InputAnswerDto>();
+            formAnswerDto.inputs.Add(inputAnswerDto);
+
             var inputFieldModelContainer = inputFieldGameObject.GetComponent<InputFieldModelContainer>();
             NotificationHub.Default.Subscribe(this,
                 ID.FromType<InputFieldNotificationsKeys.InputFieldUpdated>(),
                 (Callback)UpdateAnswer,
                 new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == inputFieldModelContainer.model));
-            if (formAnswerDto.inputs == null)
-                formAnswerDto.inputs = new List<InputAnswerDto>();
-            formAnswerDto.inputs.Add(inputAnswerDto);
 
             return inputFieldGameObject;
 
-            void UpdateAnswer(inetum.unityUtils.observation.Notification notification)
+            void UpdateAnswer(Notification notification)
             {
                 if (notification.TryGetInfoT(InputFieldNotificationsKeys.InputFieldUpdated.Value, out string value))
                     inputAnswerDto.value = value;

@@ -335,7 +335,6 @@ namespace umi3dBrowsers
             NotificationHub.Default.Subscribe(this,
                 ID.FromType<FormNotificationKeys.CreateForm>(),
                 (Callback)Show);
-            connectionServiceLinker.OnParamFormDtoReceived += (connectionFormDto) => Show();
             connectionServiceLinker.OnWaitReceived += (connectionFormDto) => Show();
 
             connectionServiceLinker.OnConnectionSuccess += () => {

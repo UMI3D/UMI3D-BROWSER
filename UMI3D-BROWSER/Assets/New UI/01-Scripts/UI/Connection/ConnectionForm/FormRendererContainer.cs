@@ -32,11 +32,8 @@ namespace umi3dBrowsers.container.formrenderer
     public class FormRendererContainer : MonoBehaviour
     {
         [Header("params")]
-        [SerializeField] private GameObject contentRoot;
         [SerializeField] private GameObject paramRoot;
 
-        [SerializeField] private ParamFormRenderer formParamRenderer;
-        [SerializeField] private DivformRenderer formDivRenderer;
         [SerializeField] private WaitRenderer waitRenderer;
 
         [Header("Linkers")]
@@ -45,25 +42,7 @@ namespace umi3dBrowsers.container.formrenderer
 
         private void Awake()
         {
-            connectionServiceLinker.OnParamFormDtoReceived += HandleParamForm;
-            connectionServiceLinker.OnDivFormDtoReceived += HandleDivForm;
             connectionServiceLinker.OnWaitReceived += HandleWait;
-        }
-
-        public void HandleParamForm(ConnectionFormDto connectionFormDto)
-        {
-            menuNavigationLinker.SetCancelButtonActive(true);
-            formParamRenderer.Init(paramRoot);
-            formParamRenderer.CleanContent();
-            formParamRenderer.Handle(connectionFormDto);
-        }
-
-        public void HandleDivForm(umi3d.common.interaction.form.ConnectionFormDto connectionFormDto)
-        {
-            menuNavigationLinker.SetCancelButtonActive(false);
-            formDivRenderer.Init(paramRoot);
-            formDivRenderer.CleanContent();
-            formDivRenderer.Handle(connectionFormDto);
         }
 
         public void HandleWait(WaitConnectionDto connectionFormDto)

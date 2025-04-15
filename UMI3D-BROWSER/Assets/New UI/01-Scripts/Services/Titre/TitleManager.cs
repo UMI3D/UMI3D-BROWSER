@@ -24,15 +24,6 @@ namespace umi3dBrowsers.services.title
                 worldName = virtualWorldData.worldName;
             };
 
-            connectionServiceLinker.OnParamFormDtoReceived += (connectionFormDto) => {
-                if (connectionFormDto?.name == "login")
-                {
-                    SetTitle(TitleType.connectionTitle, "connect_to", worldName);
-                    return;
-                }
-                SetTitle(TitleType.connectionTitle, "connect_to_a", connectionFormDto?.name ?? "");
-            };
-
             NotificationHub.Default.Subscribe(this,
                 ID.FromType<FormNotificationKeys.CreateForm>(),
                 (Callback)OnCreateForm);
@@ -49,15 +40,24 @@ namespace umi3dBrowsers.services.title
 
         public void OnCreateForm(Notification notification)
         {
-            if (!notification.TryGetInfoT(FormNotificationKeys.CreateForm.FormDto, out FormDto connectionFormDto, false))
-                return;
-
-            if (connectionFormDto?.name == "login")
+            if (notification.TryGetInfoT(FormNotificationKeys.CreateForm.FormDto, out FormDto connectionFormDto, false))
             {
-                SetTitle(TitleType.connectionTitle, "connect_to", worldName);
-                return;
+                if (connectionFormDto?.name == "login")
+                {
+                    SetTitle(TitleType.connectionTitle, "connect_to", worldName);
+                    return;
+                }
+                SetTitle(TitleType.connectionTitle, "connect_to_a", connectionFormDto?.name ?? "");
             }
-            SetTitle(TitleType.connectionTitle, "connect_to_a", connectionFormDto?.name ?? "");
+            if (notification.TryGetInfoT(FormNotificationKeys.CreateForm.FormDto, out umi3d.common.interaction.form.FormDto connectionFormParamDto, false))
+            {
+                if (connectionFormParamDto?.name == "login")
+                {
+                    SetTitle(TitleType.connectionTitle, "connect_to", worldName);
+                    return;
+                }
+                SetTitle(TitleType.connectionTitle, "connect_to_a", connectionFormParamDto?.name ?? "");
+            }
         }
 
         public void SetTitle(TitleType titleType,string prefix, string suffix, bool prefixOverride = false, bool suffixOverride = false)

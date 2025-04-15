@@ -184,7 +184,7 @@ namespace umi3d.browserRuntime.forms
             for (int i = _content.childCount - 1; i >= 0; i--)
                 Destroy(_content.GetChild(i).gameObject);
             _tabManager.Clear();
-            _answerDto = new();
+            _formAnswerDto = new();
 #endif
         }
 

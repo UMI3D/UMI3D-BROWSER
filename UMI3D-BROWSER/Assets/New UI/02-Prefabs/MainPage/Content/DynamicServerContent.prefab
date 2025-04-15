@@ -344,7 +344,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   WaitPrefab: {fileID: 6974842994351736208, guid: 1cdadf4cb2b03674da9f679ed650c014,
     type: 3}
-  tabManager: {fileID: 0}
+  tabManager: {fileID: 14408332605357792}
   validationButton: {fileID: 0}
   connectionServiceLinker: {fileID: 11400000, guid: 24604fe66de00534e9fe94635a6279cf,
     type: 2}
@@ -492,6 +492,18 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f3e20be1abdade648b542fff45478ec9, type: 3}
+--- !u!114 &14408332605357792 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1565650241654778401, guid: f3e20be1abdade648b542fff45478ec9,
+    type: 3}
+  m_PrefabInstance: {fileID: 1551910999276721345}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f3257c0b3f26284684701f13efdd42e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &940751907718862545 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1767458571872862736, guid: f3e20be1abdade648b542fff45478ec9,

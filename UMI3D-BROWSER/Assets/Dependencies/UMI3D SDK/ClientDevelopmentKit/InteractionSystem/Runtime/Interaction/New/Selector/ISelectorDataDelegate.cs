@@ -15,22 +15,25 @@ limitations under the License.
 */
 
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using umi3d.common.interaction;
 using UnityEngine;
 
 namespace umi3d.cdk.interaction
 {
     public interface ISelectorDataDelegate 
     {
+        bool TryToAssociateInteractionAndInput(List<(AbstractInteractionDto interaction, Input input)> associations, ReadOnlyDictionary<AbstractInteractionDto, ReadOnlyCollection<Input>> inputsByInteractions);
+
         /// <summary>
-        /// Try to find the first available input on this controller from the collection of controllers of this selector.
+        /// Try to find all the available inputs on this controller from the collection of controllers of this selector that match this interaction.
         /// </summary>
-        /// <param name="input"></param>
-        /// <param name="controller"></param>
+        /// <param name="inputs"></param>
         /// <param name="selector"></param>
         /// <param name="controllers"></param>
         /// <returns></returns>
-        bool TryGetInputForEventDto(out Input input, out Controller controller, Selector selector, ReadOnlyCollection<Controller> controllers);
+        bool TryGetInputsForEventDto(out ReadOnlyCollection<Input> inputs, Selector selector, ReadOnlyCollection<Controller> controllers);
 
         //bool TryGetInputForDrawingInteractionDto(out ButtonControl control);
         bool TryGetInputForBooleanParameterDto(out Input input, out Controller controller, Selector selector, ReadOnlyCollection<Controller> controllers);

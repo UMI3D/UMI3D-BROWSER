@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
@@ -29,12 +30,12 @@ namespace umi3d.cdk.interaction
         int ToolCountLimitation { get; }
 
         /// <summary>
-        /// Try to find the first available input on this controller that match this interactionDto.
+        /// Try to find the available inputs on this controller that match this interactionDto.
         /// </summary>
-        /// <param name="input"></param>
+        /// <param name="inputs"></param>
         /// <param name="controller"></param>
         /// <returns></returns>
-        bool TryGetInputForEventDto(out Input input, Controller controller);
+        bool TryGetInputsForEventDto(List<Input> inputs, Controller controller);
         //bool TryGetInputForDrawingInteractionDto(out ButtonControl control, Controller controller);
         bool TryGetInputForBooleanParameterDto(out Input input, Controller controller);
 

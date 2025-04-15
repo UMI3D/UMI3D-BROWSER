@@ -31,7 +31,7 @@ namespace umi3d.cdk.interaction
             action.AddBinding(control.path);
         }
 
-        public bool isAvailable { get; private set; }
+        public bool isAvailable { get; private set; } = true;
 
         public InputAction action { get; private set; }
         public InputControl control { get; private set; }
@@ -68,6 +68,21 @@ namespace umi3d.cdk.interaction
             this.selector = null;
 
             isAvailable = false;
+        }
+
+        public string debugDescription
+        {
+            get
+            {
+                string description = "";
+
+                description += $"---- Input ----\n";
+                description += $"{controller?.id ?? "No controller"}, {isAvailable}, {control.path}\n";
+                description += $"{projectedTool?.dto?.name ?? "No tool"}, {projectedInteraction?.name ?? "No interaction"}, {selector?.id ?? "No selector"}\n";
+                description += "\n";
+
+                return description;
+            }
         }
     }
 }

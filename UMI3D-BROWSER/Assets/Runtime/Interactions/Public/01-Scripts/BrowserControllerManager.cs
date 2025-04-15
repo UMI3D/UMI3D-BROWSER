@@ -15,9 +15,11 @@ limitations under the License.
 */
 
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using umi3d.cdk.interaction;
+using umi3d.common.interaction;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Input = umi3d.cdk.interaction.Input;
@@ -155,6 +157,11 @@ namespace umi3d.browserRuntime.interactions
 
     class ServerSelectorDataDelegate : ISelectorDataDelegate
     {
+        public bool TryToAssociateInteractionAndInput(List<(AbstractInteractionDto interaction, Input input)> associations, ReadOnlyDictionary<AbstractInteractionDto, ReadOnlyCollection<Input>> inputsByInteractions)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public bool TryGetInputForBooleanParameterDto(out Input input, out Controller controller, Selector selector, ReadOnlyCollection<Controller> controllers)
         {
             return false
@@ -214,68 +221,215 @@ namespace umi3d.browserRuntime.interactions
             ;
         }
 
-        public bool TryGetInputForEventDto(out Input input, out Controller controller, Selector selector, ReadOnlyCollection<Controller> controllers)
+        public bool TryGetInputsForEventDto(out ReadOnlyCollection<Input> inputs, Selector selector, ReadOnlyCollection<Controller> controllers)
         {
-            return false
-#if UMI3D_PC    
+            //            return false
+            //#if UMI3D_PC    
 
-            || ControllerManager.@default.TryGetInputForEventDto(
-                out input,
-                out controller,
-                BrowserControllerManager.MOUSE_ID,
-                controllers
-            ) // First try to find input from mouse.
+            //            || ControllerManager.@default.TryGetInputForEventDto(
+            //                out input,
+            //                out controller,
+            //                BrowserControllerManager.MOUSE_ID,
+            //                controllers
+            //            ) // First try to find input from mouse.
 
-            || ControllerManager.@default.TryGetInputForEventDto(
-                out input,
-                out controller,
-                BrowserControllerManager.KEYBOARD_ID,
-                controllers
-            ) // then try to find input from keyboard.
+            //            || ControllerManager.@default.TryGetInputForEventDto(
+            //                out input,
+            //                out controller,
+            //                BrowserControllerManager.KEYBOARD_ID,
+            //                controllers
+            //            ) // then try to find input from keyboard.
 
-#elif UMI3D_VR
+            //#elif UMI3D_VR
 
-            || ControllerManager.@default.TryGetInputForEventDto(
-                out input,
-                out controller,
-                BrowserControllerManager.LEFT_ID + BrowserControllerManager.VR_ID,
-                controllers
-            ) // First try to find input from left VR controller.
+            //            || ControllerManager.@default.TryGetInputForEventDto(
+            //                out input,
+            //                out controller,
+            //                BrowserControllerManager.LEFT_ID + BrowserControllerManager.VR_ID,
+            //                controllers
+            //            ) // First try to find input from left VR controller.
 
-            || ControllerManager.@default.TryGetInputForEventDto(
-                out input,
-                out controller,
-                BrowserControllerManager.RIGHT_ID + BrowserControllerManager.VR_ID,
-                controllers
-            ) // then try to find input from right VR controller.
+            //            || ControllerManager.@default.TryGetInputForEventDto(
+            //                out input,
+            //                out controller,
+            //                BrowserControllerManager.RIGHT_ID + BrowserControllerManager.VR_ID,
+            //                controllers
+            //            ) // then try to find input from right VR controller.
 
-            || ControllerManager.@default.TryGetInputForEventDto(
-                out input,
-                out controller,
-                BrowserControllerManager.LEFT_ID + BrowserControllerManager.HAND_ID,
-                controllers
-            ) // First try to find input from left Hand controller.
+            //            || ControllerManager.@default.TryGetInputForEventDto(
+            //                out input,
+            //                out controller,
+            //                BrowserControllerManager.LEFT_ID + BrowserControllerManager.HAND_ID,
+            //                controllers
+            //            ) // First try to find input from left Hand controller.
 
-            || ControllerManager.@default.TryGetInputForEventDto(
-                out input,
-                out controller,
-                BrowserControllerManager.RIGHT_ID + BrowserControllerManager.HAND_ID,
-                controllers
-            ) // then try to find input from right Hand controller.
+            //            || ControllerManager.@default.TryGetInputForEventDto(
+            //                out input,
+            //                out controller,
+            //                BrowserControllerManager.RIGHT_ID + BrowserControllerManager.HAND_ID,
+            //                controllers
+            //            ) // then try to find input from right Hand controller.
 
-#endif
-            || ControllerManager.@default.TryGetInputForEventDto(
-                out input,
-                out controller,
-                BrowserControllerManager.UI_ID,
-                controllers
-            ) // finally try to find input from ui.
-            ;
+            //#endif
+            //            || ControllerManager.@default.TryGetInputForEventDto(
+            //                out input,
+            //                out controller,
+            //                BrowserControllerManager.UI_ID,
+            //                controllers
+            //            ) // finally try to find input from ui.
+            //            ;
+
+            throw new System.NotImplementedException();
         }
     }
 
     class MouseSelectorDataDelegate : ISelectorDataDelegate
     {
+        /// <summary>
+        /// For each interactions find the best possible input.<br/> 
+        /// <paramref name="inputsByInteractions"/> is a dictionary of interactions where values are the possible inputs. <br/>
+        /// <paramref name="associations"/> is a collection of associations that should be fill with the new associations at the end of the method.<br/>
+        /// <br/>
+        /// 
+        /// The associations between interactions and inputs must follow these rules:
+        /// <list type="number">
+        /// <item>
+        /// EventDto Association Order.<br/>
+        /// The eventDto must be associated in the following order: Left mouse click, then Keyboard keys: Q, E, R, F, G.
+        /// </item>
+        /// <item>
+        /// Priority for EventDto with the hold Property.<br/>
+        /// If one or more eventDto have the hold property set to true, these interactions must be prioritized when assigning inputs.
+        /// </item>
+        /// <item>
+        /// Handling Already Assigned Inputs.<br/>
+        /// If the left mouse click and all keyboard keys (Q, E, R, F, G) are already associated with eventDto, the next eventDto must be assigned to UI inputs.
+        /// </item>
+        /// <item>
+        /// Other type of interactions.<br/>
+        /// Interactions that are not <see cref="EventDto"/> must be assigned to UI Input.
+        /// </item>
+        /// <item>
+        /// Special Association for UI Inputs.<br/>
+        /// If UI inputs are associated with interactions, the left mouse click must be reserved for a special interaction that allows opening or closing the UI menu. <br/>
+        /// In this case, if among interactions there are <see cref="EventDto"/> those have to be reassigned without including the left mouse click in the association process.
+        /// </item>
+        /// </list>
+        /// </summary>
+        /// <param name="associations"></param>
+        /// <param name="inputsByInteractions"></param>
+        /// <returns></returns>
+        /// <exception cref="System.NotImplementedException"></exception>
+        /// <remarks>
+        /// <see cref="EventDto"/> is a subclass of <see cref="AbstractInteractionDto"/>. To check if an eventDto is hold: <see cref="EventDto.hold"/>. To check if an input is a UI input: <see cref="Input.controller"/>.id == <see cref="BrowserControllerManager.UI_ID"/>. Interactions are subclasses of <see cref="AbstractInteractionDto"/>, among them <see cref="EventDto"/> and a lot of other classes.
+        /// </remarks>
+        public bool TryToAssociateInteractionAndInput(
+            List<(AbstractInteractionDto interaction, Input input)> associations, 
+            ReadOnlyDictionary<AbstractInteractionDto, ReadOnlyCollection<Input>> inputsByInteractions
+        )
+        {
+            // Separate interactions into EventDto and others
+            List<EventDto> eventDtos = new();
+            List<AbstractInteractionDto> otherInteractions = new();
+            foreach (var interaction in inputsByInteractions.Keys)
+            {
+                if (interaction is EventDto eventDto) { eventDtos.Add(eventDto); }
+                else { otherInteractions.Add(interaction); }
+            }
+            // Sort EventDtos by hold property and input order
+            eventDtos = eventDtos.OrderByDescending(e => e.hold).ToList();
+
+            bool hasUIInput = false;
+            // Assign UI inputs to other interactions
+            foreach (var interaction in otherInteractions)
+            {
+                Input placeholder = inputsByInteractions[interaction].First();
+                if (placeholder == null)
+                {
+                    UnityEngine.Debug.LogError($"[MouseSelectorDataDelegate] Error: no ui input for {interaction.GetType()}, {interaction.name}");
+                    continue;
+                }
+
+                Input input = UIDevice.GetInputFrom(placeholder.control);
+                if (input == null)
+                {
+                    UnityEngine.Debug.LogError($"[MouseSelectorDataDelegate] Error: no ui input from placeholder for {interaction.GetType()}, {interaction.name}");
+                    continue;
+                }
+                associations.Add((interaction, input));
+                hasUIInput = true;
+            }
+
+            // Track assigned inputs
+            HashSet<Input> assignedInputs = new();
+
+            // Assign inputs to EventDtos
+            void AssignEventDtos(bool lockLeftClick)
+            {
+                foreach (var eventDto in eventDtos)
+                {
+                    bool hasBeenAssigned = false;
+                    foreach (var input in inputsByInteractions[eventDto])
+                    {
+                        if (assignedInputs.Contains(input))
+                        {
+                            continue;
+                        }
+
+                        if (hasUIInput && input.control == Mouse.current.leftButton)
+                        {
+                            continue;
+                        }
+
+                        associations.Add((eventDto, input));
+                        assignedInputs.Add(input);
+                        hasBeenAssigned = true;
+                        break;
+                    }
+
+                    if (!hasBeenAssigned)
+                    {
+                        // TODO: assigned a ui input.
+                        Input input = UIDevice.GetInputFrom(UIDevice.GetButtonPlaceholder());
+                        associations.Add((eventDto, input));
+                        assignedInputs.Add(input);
+                        hasUIInput = true;
+                    }
+                }
+            }
+
+            if (hasUIInput)
+            {
+                AssignEventDtos(lockLeftClick: true);
+
+                // TODO assign input to open or close menu.
+            }
+            else
+            {
+                AssignEventDtos(lockLeftClick: false);
+
+                if (hasUIInput)
+                {
+                    associations.RemoveAll(association => assignedInputs.Contains(association.input));
+
+                    foreach (var input in assignedInputs)
+                    {
+                        if (input.controller.id == BrowserControllerManager.UI_ID)
+                        {
+                            //UIDevice.ReleaseButton(input);
+                        }
+                    }
+                    assignedInputs.Clear();
+
+                    AssignEventDtos(lockLeftClick: true);
+
+                    // TODO assign input to open or close menu.
+                }
+            }
+
+            return true;
+        }
+
         public bool TryGetInputForBooleanParameterDto(out Input input, out Controller controller, Selector selector, ReadOnlyCollection<Controller> controllers)
         {
             return ControllerManager.@default.TryGetInputForBooleanParameterDto(
@@ -301,81 +455,97 @@ namespace umi3d.browserRuntime.interactions
            ;
         }
 
-        public bool TryGetInputForEventDto(out Input input, out Controller controller, Selector selector, ReadOnlyCollection<Controller> controllers)
+        public bool TryGetInputsForEventDto(out ReadOnlyCollection<Input> inputs, Selector selector, ReadOnlyCollection<Controller> controllers)
         {
-            return ControllerManager.@default.TryGetInputForEventDto(
-                out input,
-                out controller,
+            List<Input> _inputs = new();
+
+            ControllerManager.@default.TryGetInputsForEventDto(
+                _inputs,
                BrowserControllerManager.MOUSE_ID,
                controllers
-            ) // First try to find input from mouse.
-                
-            || ControllerManager.@default.TryGetInputForEventDto(
-                out input,
-                out controller,
+            );
+
+            ControllerManager.@default.TryGetInputsForEventDto(
+                _inputs,
                BrowserControllerManager.KEYBOARD_ID,
                controllers
-            ) // then try to find input from keyboard.
+            );
 
-            || ControllerManager.@default.TryGetInputForEventDto(
-                out input,
-                out controller,
+            ControllerManager.@default.TryGetInputsForEventDto(
+                _inputs,
                BrowserControllerManager.UI_ID,
                controllers
-            ) // finally try to find input from ui.
-            ;
+            );
+
+            inputs = _inputs.AsReadOnly();
+
+            return inputs.Count > 0;
         }
     }
 
     class LeftVRSelectorDataDelegate : ISelectorDataDelegate
     {
+        public bool TryToAssociateInteractionAndInput(List<(AbstractInteractionDto interaction, Input input)> associations, ReadOnlyDictionary<AbstractInteractionDto, ReadOnlyCollection<Input>> inputsByInteractions)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public bool TryGetInputForBooleanParameterDto(out Input input, out Controller controller, Selector selector, ReadOnlyCollection<Controller> controllers)
         {
             throw new NotImplementedException();
         }
 
-        public bool TryGetInputForEventDto(out Input input, out Controller controller, Selector selector, ReadOnlyCollection<Controller> controllers)
+        public bool TryGetInputsForEventDto(out ReadOnlyCollection<Input> inputs, Selector selector, ReadOnlyCollection<Controller> controllers)
         {
-            return ControllerManager.@default.TryGetInputForEventDto(
-                out input,
-                out controller,
-               BrowserControllerManager.LEFT_ID + BrowserControllerManager.VR_ID,
-               controllers
-            ) // First try to find input from left VR controller.
+            //return ControllerManager.@default.TryGetInputForEventDto(
+            //    out input,
+            //    out controller,
+            //   BrowserControllerManager.LEFT_ID + BrowserControllerManager.VR_ID,
+            //   controllers
+            //) // First try to find input from left VR controller.
 
-            || ControllerManager.@default.TryGetInputForEventDto(
-                out input,
-                out controller,
-               BrowserControllerManager.UI_ID,
-               controllers
-            ) // finally try to find input from ui.
-            ;
+            //|| ControllerManager.@default.TryGetInputForEventDto(
+            //    out input,
+            //    out controller,
+            //   BrowserControllerManager.UI_ID,
+            //   controllers
+            //) // finally try to find input from ui.
+            //;
+
+            throw new System.NotImplementedException();
         }
     }
 
     class RightVRSelectorDataDelegate : ISelectorDataDelegate
     {
+        public bool TryToAssociateInteractionAndInput(List<(AbstractInteractionDto interaction, Input input)> associations, ReadOnlyDictionary<AbstractInteractionDto, ReadOnlyCollection<Input>> inputsByInteractions)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public bool TryGetInputForBooleanParameterDto(out Input input, out Controller controller, Selector selector, ReadOnlyCollection<Controller> controllers)
         {
             throw new NotImplementedException();
         }
 
-        public bool TryGetInputForEventDto(out Input input, out Controller controller, Selector selector, ReadOnlyCollection<Controller> controllers)
+        public bool TryGetInputsForEventDto(out ReadOnlyCollection<Input> inputs, Selector selector, ReadOnlyCollection<Controller> controllers)
         {
-            return ControllerManager.@default.TryGetInputForEventDto(
-                out input,
-                out controller,
-               BrowserControllerManager.RIGHT_ID + BrowserControllerManager.VR_ID,
-               controllers
-            ) // First try to find input from right VR controller.
+            //return ControllerManager.@default.TryGetInputForEventDto(
+            //    out input,
+            //    out controller,
+            //   BrowserControllerManager.RIGHT_ID + BrowserControllerManager.VR_ID,
+            //   controllers
+            //) // First try to find input from right VR controller.
 
-            || ControllerManager.@default.TryGetInputForEventDto(
-                out input,
-                out controller,
-               BrowserControllerManager.UI_ID,
-               controllers
-            ) // finally try to find input from ui.
-            ;
+            //|| ControllerManager.@default.TryGetInputForEventDto(
+            //    out input,
+            //    out controller,
+            //   BrowserControllerManager.UI_ID,
+            //   controllers
+            //) // finally try to find input from ui.
+            //;
+
+            throw new System.NotImplementedException();
         }
     }
 
@@ -392,51 +562,18 @@ namespace umi3d.browserRuntime.interactions
             throw new NotImplementedException();
         }
 
-        public bool TryGetInputForEventDto(out Input input, Controller controller)
+        public bool TryGetInputsForEventDto(List<Input> inputs, Controller controller)
         {
-            UIDevice uIDevice = UIDevice.current;
-            if (uIDevice == null)
-            {
-                input = null;
-                return false;
-            }
+            Input input;
+            InputManager.@default.TryGetInput(
+                out input,
+                controller,
+                UIDevice.GetButtonPlaceholder(),
+                InputActionType.Button
+            );
 
-            // TODO: Refacto for even more buttons.
-            return InputManager.@default.TryGetInput(
-                out input,
-                controller,
-                uIDevice.button1,
-                InputActionType.Button
-            ) 
-                
-            || InputManager.@default.TryGetInput(
-                out input,
-                controller,
-                uIDevice.button2,
-                InputActionType.Button
-            ) 
-            
-            || InputManager.@default.TryGetInput(
-                out input,
-                controller,
-                uIDevice.button3,
-                InputActionType.Button
-            ) 
-           
-           || InputManager.@default.TryGetInput(
-               out input,
-               controller,
-               uIDevice.button4,
-               InputActionType.Button
-           ) 
-           
-           || InputManager.@default.TryGetInput(
-               out input,
-               controller,
-               uIDevice.button5,
-               InputActionType.Button
-           )
-           ;
+            inputs.Add(input);
+            return true;
         }
     }
 
@@ -449,21 +586,21 @@ namespace umi3d.browserRuntime.interactions
             throw new NotImplementedException();
         }
 
-        public bool TryGetInputForEventDto(out Input input, Controller controller)
+        public bool TryGetInputsForEventDto(List<Input> inputs, Controller controller)
         {
             Mouse mouse = Mouse.current;
-            if (mouse == null)
-            {
-                input = null;
-                return false;
-            }
+            if (mouse == null) { return false; }
 
-            return InputManager.@default.TryGetInput(
+            Input input;
+            InputManager.@default.TryGetInput(
                 out input, 
                 controller, 
                 mouse.leftButton, 
                 InputActionType.Button
             );
+
+            inputs.Add(input);
+            return true;
         }
     }
 
@@ -476,50 +613,53 @@ namespace umi3d.browserRuntime.interactions
             throw new NotImplementedException();
         }
 
-        public bool TryGetInputForEventDto(out Input input, Controller controller)
+        public bool TryGetInputsForEventDto(List<Input> inputs, Controller controller)
         {
             Keyboard keyboard = Keyboard.current;
-            if (keyboard == null)
-            {
-                input = null;
-                return false;
-            }
+            if (keyboard == null) { return false; }
 
-            return InputManager.@default.TryGetInput(
+            Input input;
+            InputManager.@default.TryGetInput(
                 out input,
                 controller,
                 keyboard.qKey,
                 InputActionType.Button
-            ) // First try to find input for the Q key (on QWERTY)
-                
-            || InputManager.@default.TryGetInput(
+            );
+            inputs.Add(input);
+
+            InputManager.@default.TryGetInput(
                 out input,
                 controller,
                 keyboard.eKey,
                 InputActionType.Button
-            ) // The try to find input for the E key (on QWERTY)
+            );
+            inputs.Add(input);
 
-            || InputManager.@default.TryGetInput(
+            InputManager.@default.TryGetInput(
                 out input,
                 controller,
                 keyboard.rKey,
                 InputActionType.Button
-            ) // Then try to find input for the R key (on QWERTY)
+            );
+            inputs.Add(input);
 
-            || InputManager.@default.TryGetInput(
+            InputManager.@default.TryGetInput(
                 out input,
                 controller,
                 keyboard.fKey,
                 InputActionType.Button
-            ) // Then try to find input for the F key (on QWERTY)
+            );
+            inputs.Add(input);
 
-            || InputManager.@default.TryGetInput(
+            InputManager.@default.TryGetInput(
                 out input,
                 controller,
                 keyboard.gKey,
                 InputActionType.Button
-            ) // Then try to find input for the G key (on QWERTY)
-            ;
+            );
+            inputs.Add(input);
+
+            return true;
         }
     }
 

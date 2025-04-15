@@ -60,7 +60,7 @@ namespace umi3d.cdk.interaction
         /// <returns></returns>
         public bool TryGetInput(out Input input, Controller controller, InputControl control, InputActionType actionType)
         {
-            input = controller.inputs.First(input => input.control == control);
+            input = controller.inputs.FirstOrDefault(input => input.control == control);
             if (input == null)
             {
                 input = InstantiateInput(control, actionType);

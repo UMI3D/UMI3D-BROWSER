@@ -21,6 +21,7 @@ using System.Collections.ObjectModel;
 using umi3d.common;
 using umi3d.common.interaction;
 using UnityEngine;
+using UnityEngine.Windows;
 
 namespace umi3d.cdk.interaction
 {
@@ -69,6 +70,8 @@ namespace umi3d.cdk.interaction
             _controllers.Remove(controller);
         }
 
+        Dictionary<AbstractInteractionDto, ReadOnlyCollection<Input>> inputsByInteractions = new();
+        List<(AbstractInteractionDto interaction, Input input)> associations = new();
         /// <summary>
         /// Try to project a tool on controllers.<br/>
         /// <br/>
@@ -83,10 +86,7 @@ namespace umi3d.cdk.interaction
         /// <param name="tool"></param>
         public void Select(Tool tool)
         {
-            // TODO: Sort the interactions
-            // Events should be put at the end, so that if there are ui input
-            // the mouse button can be reserve to open the menu.
-
+            ReadOnlyCollection<Input> inputs;
             foreach (AbstractInteractionDto interaction in tool.interactions)
             {
                 if (interaction is DrawingInteractionDto drawingInteractionDto)
@@ -94,21 +94,19 @@ namespace umi3d.cdk.interaction
                 } 
                 else if (interaction is EventDto eventDto)
                 {
-                    bool found = @delegate.TryGetInputForEventDto(
-                        out Input input, 
-                        out Controller controller, 
+                    bool found = @delegate.TryGetInputsForEventDto(
+                        out inputs,
                         this, 
                         controllers
                     );
 
                     if (!found)
                     {
-                        UnityEngine.Debug.LogWarning($"[Selector-{id}] Warning: no controller or input available.");
-                        return;
+                        UnityEngine.Debug.LogWarning($"[Selector-{id}] Warning: no controller or input available for {eventDto.GetType()}, {eventDto.name}.");
+                        continue;
                     }
 
-                    // Project this interaction from this tool on this input from this controller.
-                    controller.TryToProject(tool, eventDto, input, this);
+                    inputsByInteractions.Add(interaction, inputs);
                 }
                 else if (interaction is BooleanParameterDto booleanParameterDto)
                 {
@@ -170,6 +168,24 @@ namespace umi3d.cdk.interaction
                 }
             }
 
+
+            @delegate.TryToAssociateInteractionAndInput(
+                associations, 
+                new ReadOnlyDictionary<AbstractInteractionDto, ReadOnlyCollection<Input>>(inputsByInteractions)
+            );
+            inputsByInteractions.Clear();
+
+            foreach (var association in associations)
+            {
+                // Project this interaction from this tool on this input from this controller.
+                association.input.controller.TryToProject(
+                    tool, 
+                    association.interaction, 
+                    association.input, 
+                    this
+                );
+            }
+            
 
             SelectorManager.@default.delegates.ForEach(@delegate =>
             {

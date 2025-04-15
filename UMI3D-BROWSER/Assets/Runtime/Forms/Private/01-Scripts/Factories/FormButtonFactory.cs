@@ -40,7 +40,12 @@ namespace umi3d.browserRuntime.forms
 
             var colors = new ColorBlock();
             if (style.Color.HasValue)
+            {
                 colors.normalColor = style.Color.Value;
+                colors.highlightedColor = style.Color.Value;
+                colors.pressedColor = style.Color.Value;
+                colors.selectedColor = style.Color.Value;
+            }
             if (style.HoverColor.HasValue)
             {
                 colors.highlightedColor = style.HoverColor.Value;

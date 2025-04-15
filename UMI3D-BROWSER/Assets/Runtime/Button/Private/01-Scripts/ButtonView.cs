@@ -50,7 +50,11 @@ namespace umi3d.browserRuntime.button
             if (notification.TryGetInfoT(ButtonNotificationKeys.ButtonSet.Sprite, out Sprite sprite, false))
                 _button.image.sprite = sprite;
             if (notification.TryGetInfoT(ButtonNotificationKeys.ButtonSet.ColorBlock, out ColorBlock colorBlock, false))
+            {
+                colorBlock.colorMultiplier = _button.colors.colorMultiplier;
+                colorBlock.fadeDuration = _button.colors.fadeDuration;
                 _button.colors = colorBlock;
+            }
         }
     }
 }

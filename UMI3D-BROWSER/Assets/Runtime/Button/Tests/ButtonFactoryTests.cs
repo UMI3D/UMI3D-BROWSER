@@ -62,7 +62,10 @@ public class ButtonFactoryTests
 
             var button = buttonGameObject.GetComponent<Button>();
             Assert.AreEqual(image, button.image.sprite);
-            Assert.AreEqual(colors, button.colors);
+            Assert.AreEqual(colors.normalColor, button.colors.normalColor);
+            Assert.AreEqual(colors.highlightedColor, button.colors.highlightedColor);
+            Assert.AreEqual(colors.pressedColor, button.colors.pressedColor);
+            Assert.AreEqual(colors.selectedColor, button.colors.selectedColor);
             button.onClick?.Invoke();
             Assert.IsTrue(callbackCalled);
         }

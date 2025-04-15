@@ -65,21 +65,19 @@ public class ThumbnailListModelTests
             var image = Sprite.Create(new Texture2D(1, 1), new Rect(0, 0, 1, 1), new Vector2(.5f, .5f));
             var callbackCalled = false;
             Action callback = () => callbackCalled = true;
-            var settings = new ThumbnailFactory.Settings() {
-                NormalColor = Color.red,
-                HoverColor = Color.green,
-            };
+            var normalColor = Color.red;
+            var hoverColor = Color.green;
 
             var model = modelContainer.Model;
-            model.AddThumbnail(name, image, callback, settings);
+            model.AddThumbnail(name, image, callback, normalColor, hoverColor);
 
             var thumbnailModel = model.Thumbnails.FirstOrDefault();
             Assert.IsNotNull(thumbnailModel);
 
             Assert.AreEqual(name, thumbnailModel.Name);
             Assert.AreEqual(image, thumbnailModel.Image);
-            Assert.AreEqual(settings.NormalColor, thumbnailModel.NormalColor);
-            Assert.AreEqual(settings.HoverColor, thumbnailModel.HoverColor);
+            Assert.AreEqual(normalColor, thumbnailModel.NormalColor);
+            Assert.AreEqual(hoverColor, thumbnailModel.HoverColor);
             thumbnailModel.Click();
             Assert.IsTrue(callbackCalled);
         }

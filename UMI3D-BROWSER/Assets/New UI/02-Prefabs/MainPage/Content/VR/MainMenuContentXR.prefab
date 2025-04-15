@@ -569,6 +569,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6508612258018874725, guid: 79c73ca261d9c5047bc7bb5feedd5ca8,
         type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 192bb37f5aca38a4ca907cf80a83cd18,
+        type: 3}
+    - target: {fileID: 6508612258018874725, guid: 79c73ca261d9c5047bc7bb5feedd5ca8,
+        type: 3}
       propertyPath: m_PixelsPerUnitMultiplier
       value: 16
       objectReference: {fileID: 0}
@@ -723,6 +729,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: PanelTutoLast
       objectReference: {fileID: 0}
+    - target: {fileID: 6508612258018874725, guid: 79c73ca261d9c5047bc7bb5feedd5ca8,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 192bb37f5aca38a4ca907cf80a83cd18,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -888,7 +900,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 46151578c4364ab4e8a128e0d1fbd11e,
+      objectReference: {fileID: 21300000, guid: 192bb37f5aca38a4ca907cf80a83cd18,
         type: 3}
     - target: {fileID: 6508612258018874725, guid: 79c73ca261d9c5047bc7bb5feedd5ca8,
         type: 3}
@@ -1065,7 +1077,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 46151578c4364ab4e8a128e0d1fbd11e,
+      objectReference: {fileID: 21300000, guid: 192bb37f5aca38a4ca907cf80a83cd18,
         type: 3}
     - target: {fileID: 6508612258018874725, guid: 79c73ca261d9c5047bc7bb5feedd5ca8,
         type: 3}
@@ -1558,11 +1570,7 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 8528483286053936628}
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5256747629347637188, guid: ac1a4f9916a51eb41aab1192e338712c,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 3355243872256613655}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ac1a4f9916a51eb41aab1192e338712c, type: 3}
 --- !u!114 &117165847877274550 stripped
 MonoBehaviour:
@@ -1570,50 +1578,12 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 6327878432615712634}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2243527047342112958}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4a12a429d8095fe4db0014e3a15a2080, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &2243527047342112958 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5256747629347637188, guid: ac1a4f9916a51eb41aab1192e338712c,
-    type: 3}
-  m_PrefabInstance: {fileID: 6327878432615712634}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &3355243872256613655
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2243527047342112958}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 17004af513d8dc945819f067205b64e8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  vignetteContainerEvent: {fileID: 11400000, guid: 2511ab057e48ce441aa8fad3ed6a0e69,
-    type: 2}
-  onReset:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 117165847877274550}
-        m_TargetAssemblyTypeName: umi3dBrowsers.displayer.Tab, Assembly-CSharp
-        m_MethodName: OnVignetteReset
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  onVignetteChangeMode:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!224 &7366683781376271616 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3596850212133020282, guid: ac1a4f9916a51eb41aab1192e338712c,
@@ -2056,6 +2026,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: PanelTutoFavorite
       objectReference: {fileID: 0}
+    - target: {fileID: 6508612258018874725, guid: 79c73ca261d9c5047bc7bb5feedd5ca8,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 192bb37f5aca38a4ca907cf80a83cd18,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2207,6 +2183,12 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6508612258018874725, guid: 79c73ca261d9c5047bc7bb5feedd5ca8,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 192bb37f5aca38a4ca907cf80a83cd18,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2362,7 +2344,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: bf193534a8ee631428d49e27d48c2db8,
+      objectReference: {fileID: 21300000, guid: 192bb37f5aca38a4ca907cf80a83cd18,
         type: 3}
     - target: {fileID: 6508612258018874725, guid: 79c73ca261d9c5047bc7bb5feedd5ca8,
         type: 3}

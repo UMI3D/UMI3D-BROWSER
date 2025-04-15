@@ -64,7 +64,7 @@ namespace umi3d.browserRuntime.ui.inputField
             /// <remarks>
             /// Value is <see cref="bool"/>
             /// </remarks>
-            public const string IsPrivate = "IsPrivate";
+            public const string ContentType = "ContentType";
         }
 
         /// <summary>

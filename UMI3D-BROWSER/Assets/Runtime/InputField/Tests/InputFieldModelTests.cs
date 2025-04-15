@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
+using TMPro;
 using umi3d.browserRuntime.ui.inputField;
 using UnityEngine;
 using UnityEngine.TestTools;
@@ -189,11 +190,11 @@ public class InputFieldModelTests
         }
 
         [Test]
-        public void GivenIsPrivateFalse_WhenSetIsPrivateTrue_ThenIsPrivateTrue()
+        public void GivenIsPassword_WhenSetContent_ThenIsPassword()
         {
-            _model.SetPrivate(true);
+            _model.SetContentType(TMP_InputField.ContentType.Password);
 
-            Assert.IsTrue(_model.isPrivate);
+            Assert.AreEqual(TMP_InputField.ContentType.Password, _model.ContentType);
         }
     }
 }

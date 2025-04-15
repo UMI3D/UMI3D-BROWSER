@@ -16,6 +16,7 @@ limitations under the License.
 
 using inetum.unityUtils.observation;
 using System;
+using TMPro;
 
 namespace umi3d.browserRuntime.ui.inputField
 {
@@ -29,7 +30,7 @@ namespace umi3d.browserRuntime.ui.inputField
         public string value { get; private set; }
         public string placeholder { get; private set; }
         public int nbrLine { get; private set; } = 1;
-        public bool isPrivate { get; private set; } = false;
+        public TMP_InputField.ContentType ContentType { get; private set; } = TMP_InputField.ContentType.Standard;
         public bool isMultiline { get; private set; } = false;
 
         Notifier _setNotifier;
@@ -43,7 +44,7 @@ namespace umi3d.browserRuntime.ui.inputField
             _setNotifier[InputFieldNotificationsKeys.InputFieldSet.Value] = value;
             _setNotifier[InputFieldNotificationsKeys.InputFieldSet.Placeholder] = placeholder;
             _setNotifier[InputFieldNotificationsKeys.InputFieldSet.NbrLine] = nbrLine;
-            _setNotifier[InputFieldNotificationsKeys.InputFieldSet.IsPrivate] = isPrivate;
+            _setNotifier[InputFieldNotificationsKeys.InputFieldSet.ContentType] = ContentType;
 
             _updateNotifier = NotificationHub.Default.GetNotifier(this, ID.FromType<InputFieldNotificationsKeys.InputFieldUpdated>());
         }
@@ -157,15 +158,15 @@ namespace umi3d.browserRuntime.ui.inputField
         /// <example>
         /// Given a new isPrivate when setting the privacy then the isPrivate is updated and notification is sent.
         /// <code>
-        /// _model.SetPrivate(true);
+        /// _model.SetContentType(true);
         /// </code> 
         /// </example>
         /// </summary>
         /// <param name="newNbrLine">The new number of lines to set.</param>
-        public void SetPrivate(bool newIsPrivate)
+        public void SetContentType(TMP_InputField.ContentType contentType)
         {
-            isPrivate = newIsPrivate;
-            _setNotifier[InputFieldNotificationsKeys.InputFieldSet.IsPrivate] = isPrivate;
+            ContentType = contentType;
+            _setNotifier[InputFieldNotificationsKeys.InputFieldSet.ContentType] = ContentType;
             _setNotifier.Notify();
         }
     }

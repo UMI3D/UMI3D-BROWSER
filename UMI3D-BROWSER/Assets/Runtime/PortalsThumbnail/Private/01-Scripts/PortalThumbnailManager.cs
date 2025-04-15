@@ -70,10 +70,9 @@ namespace umi3d.browserRuntime.portalsThumbnails
                         _tryToConnectNotifier.Notify();
                         portalData.dateLastConnection = DateTime.UtcNow.ToFileTime();
                         portals.UpdateWorld(portalData);
-                    }, new() {
-                        NormalColor = new Color(0.44f, 0.44f, 0.44f, 1),
-                        HoverColor = Color.white,
-                    });
+                    }, 
+                    new Color(0.44f, 0.44f, 0.44f, 1),
+                    Color.white);
                 var portalModelContainer = _modelContainer.Model.ThumbnailContainers.Last().GetComponent<PortalThumbnailModelContainer>();
                 portalModelContainer.Model.SetPortal(portalData, portals);
             }

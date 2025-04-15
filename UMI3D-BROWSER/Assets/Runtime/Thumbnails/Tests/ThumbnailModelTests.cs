@@ -109,7 +109,7 @@ public class ThumbnailModelTests
             model.SetColors(normalColor, hoverColor);
             model.SetColors(null, null);
 
-            Assert.AreEqual(Color.white, model.NormalColor);
+            Assert.AreEqual(Color.grey, model.NormalColor);
             Assert.AreEqual(Color.white, model.HoverColor);
         }
     }

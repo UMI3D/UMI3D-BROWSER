@@ -30,7 +30,7 @@ namespace umi3d.browserRuntime.thumbnails
         public List<ThumbnailModelContainer> ThumbnailContainers { get; private set; } = new();
         internal List<ThumbnailModelContainer> _thumbnailContainersTemp = new List<ThumbnailModelContainer>();
 
-        internal Action<string, Sprite, Action, ThumbnailFactory.Settings> CreateThumbnail;
+        internal Action<string, Sprite, Action, Color?, Color?> CreateThumbnail;
         internal Action CreateThumbnailTemp;
         internal Action<ThumbnailModelContainer> RemoveThumbnail;
 
@@ -43,11 +43,11 @@ namespace umi3d.browserRuntime.thumbnails
             FillWithTempThumbnails();
         }
 
-        public void AddThumbnail(string name = "", Sprite image = null, Action callback = null, ThumbnailFactory.Settings settings = null)
+        public void AddThumbnail(string name = "", Sprite image = null, Action callback = null, Color? normalColor = null, Color? hoverColor = null)
         {
             for (int i = _thumbnailContainersTemp.Count - 1; i >= 0; i--)
                 RemoveThumbnail?.Invoke(_thumbnailContainersTemp[i]);
-            CreateThumbnail?.Invoke(name, image, callback, settings);
+            CreateThumbnail?.Invoke(name, image, callback, normalColor, hoverColor);
 
             FillWithTempThumbnails();
         }

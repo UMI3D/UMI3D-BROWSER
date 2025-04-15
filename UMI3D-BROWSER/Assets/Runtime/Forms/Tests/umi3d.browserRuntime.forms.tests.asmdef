@@ -1,0 +1,34 @@
+{
+    "name": "umi3d.browserRuntime.forms.tests",
+    "rootNamespace": "",
+    "references": [
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner",
+        "umi3d.browserRuntime.forms",
+        "Unity.TextMeshPro",
+        "UMI3D.Common.Core",
+        "UMI3D.Common.InteractionSystem",
+        "umi3d.browserRuntime.text",
+        "umi3d.browserRuntime.inputField",
+        "umi3d.browserRuntime.image",
+        "umi3d.browserRuntime.thumbnails",
+        "umi3d.browserRuntime.button",
+        "umi3d.browserRuntime.slider",
+        "umi3d.browserRuntime.tab"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

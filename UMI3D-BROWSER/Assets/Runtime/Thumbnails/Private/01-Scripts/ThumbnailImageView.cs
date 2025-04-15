@@ -23,19 +23,15 @@ namespace umi3d.browserRuntime.thumbnails
     [RequireComponent(typeof(Image)), ExecuteInEditMode]
     internal class ThumbnailImageView : MonoBehaviour
     {
+        [SerializeField] private Image _border;
+
         private ThumbnailModelContainer _modelContainer;
         private Image _image;
-
-        private Sprite _defaultSprite;
-        private Color _defaultColor;
 
         private void Awake()
         {
             _modelContainer = GetComponentInParent<ThumbnailModelContainer>();
             _image = GetComponent<Image>();
-
-            _defaultSprite = _image.sprite;
-            _defaultColor = _image.color;
 
             NotificationHub.Default.Subscribe(this,
                 ID.FromType<ThumbnailNotificationKeys.ThumbnailSet>(),
@@ -47,12 +43,6 @@ namespace umi3d.browserRuntime.thumbnails
                 new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == _modelContainer.Model));
         }
 
-        private void OnDisable()
-        {
-            _image.sprite = _defaultSprite;
-            _image.color = _defaultColor;
-        }
-
         private void OnDestroy()
         {
             NotificationHub.Default.Unsubscribe(this);
@@ -60,18 +50,12 @@ namespace umi3d.browserRuntime.thumbnails
 
         private void ThumbnailSet(Notification notification)
         {
-            _image.sprite = _defaultSprite;
-            _image.type = Image.Type.Sliced;
-            _image.pixelsPerUnitMultiplier = 2;
-
             if (notification.TryGetInfoT(ThumbnailNotificationKeys.ThumbnailSet.Image, out Sprite sprite, false))
             {
-                if (sprite != null)
-                {
-                    _image.sprite = sprite;
-                    _image.type = Image.Type.Simple;
-                    _image.preserveAspect = true;
-                } 
+                _image.sprite = sprite;
+                _image.enabled = sprite != null;
+                if (_border)
+                    _border.enabled = !_image.enabled;
             }
             if (notification.TryGetInfoT(ThumbnailNotificationKeys.ThumbnailSet.Color, out Color color, false) && color != new Color(0, 0, 0, 0))
                 _image.color = color;

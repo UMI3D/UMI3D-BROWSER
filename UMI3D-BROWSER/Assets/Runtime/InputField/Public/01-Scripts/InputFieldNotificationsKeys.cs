@@ -79,6 +79,8 @@ namespace umi3d.browserRuntime.ui.inputField
             /// Value is <see cref="string"/>
             /// </remarks>
             public const string Value = "Value";
+
+            public const string ContentType = "ContentType";
         }
 
         /// <summary>

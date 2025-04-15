@@ -17,6 +17,7 @@ limitations under the License.
 using inetum.unityUtils.observation;
 using System;
 using TMPro;
+using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.ui.inputField
 {
@@ -32,6 +33,7 @@ namespace umi3d.browserRuntime.ui.inputField
         public int nbrLine { get; private set; } = 1;
         public TMP_InputField.ContentType ContentType { get; private set; } = TMP_InputField.ContentType.Standard;
         public bool isMultiline { get; private set; } = false;
+        public bool passwordVisibility { get; private set; } = false;
 
         Notifier _setNotifier;
         Notifier _updateNotifier;
@@ -168,6 +170,14 @@ namespace umi3d.browserRuntime.ui.inputField
             ContentType = contentType;
             _setNotifier[InputFieldNotificationsKeys.InputFieldSet.ContentType] = ContentType;
             _setNotifier.Notify();
+        }
+
+        public void SetPasswordVisibility(bool visibility)
+        {
+            passwordVisibility = visibility;
+            ContentType = passwordVisibility ? TMP_InputField.ContentType.Standard : TMP_InputField.ContentType.Password;
+            _updateNotifier[InputFieldNotificationsKeys.InputFieldUpdated.ContentType] = ContentType;
+            _updateNotifier.Notify();
         }
     }
 }

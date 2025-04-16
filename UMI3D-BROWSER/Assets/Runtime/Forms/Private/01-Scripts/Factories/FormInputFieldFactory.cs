@@ -61,7 +61,7 @@ namespace umi3d.browserRuntime.forms
 
             void UpdateAnswer(Notification notification)
             {
-                if (notification.TryGetInfoT(InputFieldNotificationsKeys.InputFieldUpdated.Value, out string value))
+                if (notification.TryGetInfoT(InputFieldNotificationsKeys.InputFieldUpdated.Value, out string value, false))
                     inputAnswerDto.value = value;
             }
         }
@@ -85,7 +85,7 @@ namespace umi3d.browserRuntime.forms
 
             void UpdateAnswer(Notification notification)
             {
-                if (notification.TryGetInfoT(InputFieldNotificationsKeys.InputFieldUpdated.Value, out string value))
+                if (notification.TryGetInfoT(InputFieldNotificationsKeys.InputFieldUpdated.Value, out string value, false))
                     paramRequestDto.parameter = value;
             }
         }

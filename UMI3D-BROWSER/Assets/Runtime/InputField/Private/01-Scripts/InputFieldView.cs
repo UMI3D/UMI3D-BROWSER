@@ -17,6 +17,7 @@ limitations under the License.
 using inetum.unityUtils.observation;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.ui.inputField
@@ -45,6 +46,10 @@ namespace umi3d.browserRuntime.ui.inputField
             NotificationHub.Default.Subscribe(this,
                 ID.FromType<InputFieldNotificationsKeys.InputFieldSet>(), 
                 (Callback)InputFieldSet,
+                new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == _modelContainer.model));
+            NotificationHub.Default.Subscribe(this,
+                ID.FromType<InputFieldNotificationsKeys.InputFieldUpdated>(),
+                (Callback)InputFieldUpdated,
                 new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == _modelContainer.model));
         }
 
@@ -105,6 +110,15 @@ namespace umi3d.browserRuntime.ui.inputField
                 rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, desiredHeight);
 
                 _viewport.sizeDelta = new Vector2(_viewport.sizeDelta.x, desiredHeight);
+            }
+        }
+
+        private void InputFieldUpdated(Notification notification)
+        {
+            if (notification.TryGetInfoT(InputFieldNotificationsKeys.InputFieldUpdated.ContentType, out TMP_InputField.ContentType contentType, false))
+            {
+                _inputField.contentType = contentType;
+                _inputField.ForceLabelUpdate();
             }
         }
     }

@@ -333,7 +333,7 @@ namespace umi3d.VRBase.lbe
                     calibrator.transform.parent = Player.transform;
 
                     // Instancier des repères pour chaque plan détecté
-                    for (int i = 0; i < planesToCalibrate.Count; i++)
+                    /*for (int i = 0; i < planesToCalibrate.Count; i++)
                     {
                         Instantiate(Repere, planesToCalibrate[i].transform.position, calibratorARPlane.transform.rotation);
 
@@ -346,7 +346,7 @@ namespace umi3d.VRBase.lbe
                             Vector3 worldPosition = planesToCalibrate[i].transform.TransformPoint(vertex);
                             Instantiate(Repere, worldPosition, calibratorARPlane.transform.rotation);
                         }
-                    }
+                    }*/
                 }
                 else
                 {
@@ -577,7 +577,7 @@ namespace umi3d.VRBase.lbe
             if (Player != null)
             {
                 Transform scene = Player.transform.parent;
-                Instantiate(Repere, scene.position, scene.rotation);
+                //Instantiate(Repere, scene.position, scene.rotation);
 
                 if (scene != null)
                 {
@@ -646,24 +646,24 @@ namespace umi3d.VRBase.lbe
                 {
                     List<Vector3> MeshAnchor = new List<Vector3>();
 
-                    List<GameObject> Reperes = new List<GameObject>();
+                    //List<GameObject> Reperes = new List<GameObject>();
 
                     if (AnchorManager != null)
                     {
                         foreach (Vector3 point in boundaryPoints)
                         {
-                            Reperes.Add(Instantiate(Repere, point, Quaternion.identity));
-                            Reperes.Add(Instantiate(Repere, point + new Vector3(0f, 2f, 0f), Quaternion.identity));
+                            //Reperes.Add(Instantiate(Repere, point, Quaternion.identity));
+                            //Reperes.Add(Instantiate(Repere, point + new Vector3(0f, 2f, 0f), Quaternion.identity));
 
                             guardianAnchors.Add(point);
                             guardianAnchors.Add(point + new Vector3(0f, 2f, 0f));
                         }
 
                         //Déplacé les repères en xrorigin pour les tests
-                        for (int i = 0; i < Reperes.Count; i++)
+                        /*for (int i = 0; i < Reperes.Count; i++)
                         {
                             Reperes[i].transform.SetParent(XROrigin.transform, true);
-                        }
+                        }*/
                     }
                     else
                     {
@@ -672,10 +672,10 @@ namespace umi3d.VRBase.lbe
 
                     guardianMesh = new GameObject("GuardianMesh");
 
-                    for (int i = 0; i < guardianAnchors.Count; i++)
+                    /*for (int i = 0; i < guardianAnchors.Count; i++)
                     {
                         Reperes[i].transform.SetParent(guardianMesh.transform, true);
-                    }
+                    }*/
 
                     guardianMesh.transform.position = Player.transform.position;
                     guardianMesh.transform.SetParent(Player.transform, true);

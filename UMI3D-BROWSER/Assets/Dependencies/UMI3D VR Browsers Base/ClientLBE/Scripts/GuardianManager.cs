@@ -132,6 +132,13 @@ namespace umi3d.VRBase.lbe
             UMI3DForgeClient.LBELeaderEvent += OnLBELeaderReception;
             UMI3DForgeClient.LBEGuardianEvent += OnLBEGuardianReception;
 
+            UMI3DEnvironmentLoader.Instance.onEnvironmentLoaded.AddListener(() =>
+            {
+                if ((UMI3DEnvironmentLoader.Instance.LoadingParameters as UMI3DCollabLoadingParameters).IsColocatedDevice)
+                {
+                    StartCoroutine(StartSynchro());
+                }
+            });
 
             //if (arPlaneManager != null)
             //{
@@ -139,6 +146,12 @@ namespace umi3d.VRBase.lbe
             //}
         }
 
+        IEnumerator StartSynchro()
+        {
+            yield return new WaitForSeconds(0.1f);
+            GetARPlanes();
+            StartCalibrationScene();
+        }
         void OnDisable()
         {
             //UMI3DForgeClient.LBEGroupSyncEvent -= OnLBEGroupSync;
@@ -197,8 +210,8 @@ namespace umi3d.VRBase.lbe
                 batteryLevel = SystemInfo.batteryLevel * 100
             };
 
-            StartCalibrationScene();
             GetARPlanes();
+            StartCalibrationScene();
             GetGuardianArea();
             AddAnchorGuardian();
 
@@ -598,9 +611,9 @@ namespace umi3d.VRBase.lbe
                 Debug.LogWarning("No GameObject to check is assigned!");
             }
 
-            arPlaneManager.enabled = false;
+            //arPlaneManager.enabled = false;
 
-            ARPlanesActivation(false);
+            //ARPlanesActivation(false);
 
             //AddAnchorGuardian();
 

@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using umi3d.common;
 using umi3d.common.interaction;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace umi3d.cdk.interaction
 {
@@ -44,6 +45,35 @@ namespace umi3d.cdk.interaction
                 value.node = nodeI.GameObject;
                 Interactable interactable = value.node.GetOrAddComponent<InteractableContainer>().Interactable = new Interactable(value.environmentId, dto);
                 UMI3DEnvironmentLoader.RegisterEntityInstance(value.environmentId,dto.id, dto, interactable, interactable.Destroy).NotifyLoaded();
+
+                //Check si son root est Canvas_Ingame ce qui veut dire qu'il est en SceenSpace
+                if (nodeI.transform.root.name == "Canvas_Ingame")
+                {
+                    InteractionScreenSpace _ss = nodeI.transform.gameObject.AddComponent<InteractionScreenSpace>();
+
+                    //ajoute un bouton
+                    _ss._button = nodeI.transform.gameObject.AddComponent<Button>();
+                    _ss._go = nodeI.GameObject;
+                    _ss._interactable = interactable;
+                    _ss._value = value;
+
+
+                    //boucle permettant de rechercher tous les parents contenant un Canvas afin d'y ajouter un GraphicRaycaster
+                    //pour permettre l'interactions avec le boutton précédemment creer
+                    //s'arrete lorsque le parent IngameUIManager est trouvé indiquant que l'on est plus sur le parent de la node mais de l'ui Canvas ScreenSpace global
+                    GameObject go = nodeI.transform.parent.gameObject;
+                    for (int i = 0; i < 20; i++)
+                    {
+                        //Debug.Log("Name " + go.name);
+                        if (go.name == "IngameUIManager") { break; }
+                        if (go.TryGetComponent<Canvas>(out Canvas canvas))
+                        {
+                            go.GetOrAddComponent<GraphicRaycaster>();
+                        }
+                        go = go.transform.parent.gameObject;
+                    }
+                    _ss.test();
+                }
             }
             else
                 throw (new Umi3dException($"Entity [{dto.nodeId}] is not a node"));

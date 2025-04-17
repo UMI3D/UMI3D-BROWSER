@@ -14,13 +14,28 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using UnityEngine;
-
 namespace umi3d.common
 {
+    public enum RenderMode
+    {
+        //
+        // Résumé :
+        //     Render at the end of the Scene using a 2D Canvas.
+        ScreenSpaceOverlay,
+        //
+        // Résumé :
+        //     Render using the Camera configured on the Canvas.
+        ScreenSpaceCamera,
+        //
+        // Résumé :
+        //     Render using any Camera in the Scene that can render the layer.
+        WorldSpace
+    }
+
     /// <summary>
     /// DTO describing a Canvas for UI.
     /// </summary>
+    /// 
     [System.Serializable]
     public class UICanvasDto : UIRectDto
     {

@@ -15,25 +15,24 @@ limitations under the License.
 */
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using umi3d.common.interaction;
 using UnityEngine;
 
 namespace umi3d.cdk.interaction
 {
-    public class Projection 
+    public class Interaction 
     {
-        public Selector selector {  get; internal set; }
-        public Controller controller { get; internal set; }
-        public Tool tool { get; internal set; }
-        public Interaction interaction { get; internal set; }
+        /// <summary>
+        /// Environment Id.
+        /// </summary>
+        public readonly ulong environmentId;
 
-        internal Projection(Selector selector, Controller controller, Tool tool, Interaction interaction)
+        public AbstractInteractionDto dto { get; private set; }
+
+        internal Interaction(ulong environmentId, AbstractInteractionDto interactionDto)
         {
-            this.selector = selector;
-            this.controller = controller;
-            this.tool = tool;
-            this.interaction = interaction;
+            this.environmentId = environmentId;
+            this.dto = interactionDto;
         }
     }
 }

@@ -39,10 +39,10 @@ namespace umi3d.cdk.interaction
         /// </summary>
         public readonly string id;
 
-        ISelectorDataDelegate _delegate;
-        public ISelectorDataDelegate @delegate
+        ISelectorDataDelegate _dataDelegate;
+        public ISelectorDataDelegate dataDelegate
         {
-            get => _delegate;
+            get => _dataDelegate;
             set
             {
                 if (value == null)
@@ -50,12 +50,27 @@ namespace umi3d.cdk.interaction
                     UnityEngine.Debug.LogError($"[Selector] Error: you are trying to set a null delegate.");
                     return;
                 }
-                _delegate = value;
+                _dataDelegate = value;
             }
         }
 
-        List<Controller> _controllers = new List<Controller>();
-        ReadOnlyCollection<Controller> controllers => _controllers.AsReadOnly();
+        IClientServerCommunicationSelectorDelegate _clientServerCommunicationSelectorDelegate = new ClientServerCommunicationSelectorDelegate();
+        public IClientServerCommunicationSelectorDelegate clientServerCommunicationSelectorDelegate
+        {
+            get => _clientServerCommunicationSelectorDelegate;
+            set
+            {
+                if (value == null)
+                {
+                    _clientServerCommunicationSelectorDelegate = new ClientServerCommunicationSelectorDelegate();
+                    return;
+                }
+                _clientServerCommunicationSelectorDelegate = value;
+            }
+        }
+
+        List<Controller> _controllers = new();
+        public ReadOnlyCollection<Controller> controllers => _controllers.AsReadOnly();
         public void Add(Controller controller)
         {
             if (controller  == null || _controllers.Contains(controller))
@@ -70,6 +85,12 @@ namespace umi3d.cdk.interaction
             _controllers.Remove(controller);
         }
 
+        List<Tool> _projectedTools = new();
+        public ReadOnlyCollection<Tool> projectedTools => _projectedTools.AsReadOnly();
+
+        List<Projection> _projections = new();
+        public ReadOnlyCollection<Projection> projections => _projections.AsReadOnly();
+
         Dictionary<AbstractInteractionDto, ReadOnlyCollection<Input>> inputsByInteractions = new();
         List<(AbstractInteractionDto interaction, Input input)> associations = new();
         /// <summary>
@@ -78,14 +99,16 @@ namespace umi3d.cdk.interaction
         /// <list type="number">
         /// <item>Sort interactions.</item>
         /// <item>Loop through each interactions.</item>
-        /// <item>For each interaction find the first available <see cref="Controller"/>, and <see cref="Input"/>.</item>
-        /// <item>Project each interaction on its corresponding input and controller.</item>
+        /// <item>For each interactions find the first available <see cref="Controller"/>, and <see cref="Input"/>.</item>
+        /// <item>Project each interactions on its corresponding input and controller.</item>
         /// <item>Project each tool on its corresponding controllers.</item>
         /// </list>
         /// </summary>
         /// <param name="tool"></param>
         public void Select(Tool tool)
         {
+            if (_projectedTools.Count >= dataDelegate.toolCountLimitation) { return; }
+
             ReadOnlyCollection<Input> inputs;
             foreach (AbstractInteractionDto interaction in tool.interactions)
             {
@@ -94,7 +117,7 @@ namespace umi3d.cdk.interaction
                 } 
                 else if (interaction is EventDto eventDto)
                 {
-                    bool found = @delegate.TryGetInputsForEventDto(
+                    bool found = dataDelegate.TryGetInputsForEventDto(
                         out inputs,
                         this, 
                         controllers
@@ -168,16 +191,20 @@ namespace umi3d.cdk.interaction
                 }
             }
 
-
-            @delegate.TryToAssociateInteractionAndInput(
+            dataDelegate.TryToAssociateInteractionAndInput(
                 associations, 
                 new ReadOnlyDictionary<AbstractInteractionDto, ReadOnlyCollection<Input>>(inputsByInteractions)
             );
             inputsByInteractions.Clear();
 
+            if (tool.interactions.Count > associations.Count)
+            {
+                UnityEngine.Debug.LogWarning($"[Selector-{id}] Warning: Not all interactions have been associated to an input.");
+            }
+
             foreach (var association in associations)
             {
-                // Project this interaction from this tool on this input from this controller.
+                // Project this interactions from this tool on this input from this controller.
                 association.input.controller.TryToProject(
                     tool, 
                     association.interaction, 
@@ -236,10 +263,10 @@ namespace umi3d.cdk.interaction
 
                 state = enter,
             };
-            UMI3DClientServer.SendRequest(hoverDto, true);
+            clientServerCommunicationSelectorDelegate.SendRequest(hoverDto, true);
 
             if (!tool.TryCast(out InteractableDto interactableDto)) { return; }
-            Animate(
+            clientServerCommunicationSelectorDelegate.Animate(
                 tool, 
                 enter 
                 ? interactableDto.HoverEnterAnimationId
@@ -263,30 +290,7 @@ namespace umi3d.cdk.interaction
                 position = position.Dto(),
                 direction = direction.Dto(),
             };
-            UMI3DClientServer.SendRequest(hoverDto, false);
-        }
-
-        async void Animate(Tool tool, ulong animationId)
-        {
-            if (animationId == 0) { return; }
-
-            UMI3DEntityInstance entityInstance = UMI3DEnvironmentLoader.Instance.TryGetEntityInstance(tool.environmentId, animationId);
-            UMI3DAbstractAnimation animation = entityInstance?.Object as UMI3DAbstractAnimation;
-
-            await animation.SetUMI3DProperty(
-                new SetUMI3DPropertyData(
-                    tool.environmentId,
-                    new SetEntityPropertyDto()
-                    {
-                        entityId = animationId,
-                        property = UMI3DPropertyKeys.AnimationPlaying,
-                        value = true
-                    },
-                    entityInstance
-                )
-            );
-
-            if (animation != null) animation.Start();
+            clientServerCommunicationSelectorDelegate.SendRequest(hoverDto, false);
         }
     }
 }

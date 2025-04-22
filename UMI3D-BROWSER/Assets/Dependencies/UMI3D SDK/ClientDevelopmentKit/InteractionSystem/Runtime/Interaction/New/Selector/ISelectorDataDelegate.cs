@@ -24,12 +24,19 @@ namespace umi3d.cdk.interaction
 {
     public interface ISelectorDataDelegate 
     {
+        /// <summary>
+        /// How many tools can be projected at the same time on the controllers of this selector.
+        /// </summary>
+        int toolCountLimitation { get; }
+
         bool TryToAssociateInteractionAndInput(List<(AbstractInteractionDto interaction, Input input)> associations, ReadOnlyDictionary<AbstractInteractionDto, ReadOnlyCollection<Input>> inputsByInteractions);
 
         /// <summary>
-        /// Try to find all the available inputs on this controller from the collection of controllers of this selector that match this interaction.
+        /// Try to find all inputs compatible with this interactions.<br/>
+        /// <br/>
+        /// Those inputs should belong to one of the controllers passed as argument.
         /// </summary>
-        /// <param name="inputs"></param>
+        /// <param name="inputs">The list of compatible inputs. Should be filled with compatible inputs at the end of the method.</param>
         /// <param name="selector"></param>
         /// <param name="controllers"></param>
         /// <returns></returns>

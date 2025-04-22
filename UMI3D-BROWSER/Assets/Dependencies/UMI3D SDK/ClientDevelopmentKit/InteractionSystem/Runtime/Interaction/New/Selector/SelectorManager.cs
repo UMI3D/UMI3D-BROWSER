@@ -59,5 +59,17 @@ namespace umi3d.cdk.interaction
             _selectors.Add(selector);
             return true;
         }
+
+        public bool TryToGetSelector(out Selector selector, string id)
+        {
+            selector = _selectors.Find(selector => selector.id == id);
+            if (selector == null)
+            {
+                UnityEngine.Debug.LogWarning($"[SelectorManager] Warning: selector for '{id}' has not been instantiated yet.");
+                return false;
+            }
+
+            return true;
+        }
     }
 }

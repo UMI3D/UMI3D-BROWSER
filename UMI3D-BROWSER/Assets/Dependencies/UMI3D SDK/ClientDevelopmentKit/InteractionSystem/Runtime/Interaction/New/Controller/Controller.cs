@@ -54,7 +54,7 @@ namespace umi3d.cdk.interaction
         /// <summary>
         /// Whether a tool can be projected on this controller.
         /// </summary>
-        public bool isActive { get; private set; }
+        public bool isActive { get; private set; } = true;
         /// <summary>
         /// Set the active status.<br/>
         /// <br/>
@@ -99,14 +99,14 @@ namespace umi3d.cdk.interaction
         internal bool TryToProject(Tool tool, AbstractInteractionDto interaction, Input input, Selector selector) 
         {
             bool contains = _projectedTools.Contains(tool);
-            if (_projectedTools.Count >= @delegate.ToolCountLimitation && !contains)
-            {
-                return false;
-            }
-            else if (!contains)
-            {
-                _projectedTools.Add(tool);
-            }
+            //if (_projectedTools.Count >= @dataDelegate.ToolCountLimitation && !contains)
+            //{
+            //    return false;
+            //}
+            //else if (!contains)
+            //{
+            //    _projectedTools.Add(tool);
+            //}
 
             if (!_projectedInteraction.Contains(interaction))
             {

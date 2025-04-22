@@ -42,7 +42,7 @@ namespace umi3d.cdk.interaction
         Delegates<IControllerDelegate> _delegates = new();
         public Delegates<IControllerDelegate> delegates => _delegates;
 
-        List<Controller> _controllers = new List<Controller>();
+        List<Controller> _controllers = new();
         public ReadOnlyCollection<Controller> controllers => _controllers.AsReadOnly();
 
         public bool TryToInstantiateController(out Controller controller, string id)
@@ -59,13 +59,25 @@ namespace umi3d.cdk.interaction
             return true;
         }
 
+        public bool TryToGetController(out Controller controller, string id)
+        {
+            controller = _controllers.Find(x => x.id == id);
+            if (controller == null)
+            {
+                UnityEngine.Debug.LogWarning($"[ControllerManager] Warning: controller for '{id}' has not been instantiated yet.");
+                return false;
+            }
+
+            return true;
+        }
+
         public bool TryGetInputsForEventDto(
             List<Input> inputs, 
             string controllerId, 
             ReadOnlyCollection<Controller> controllers
         )
         {
-            Controller controller = controllers.First(controller =>
+            Controller controller = controllers.FirstOrDefault(controller =>
             {
                 return controller.id == controllerId && controller.isActive;
             });

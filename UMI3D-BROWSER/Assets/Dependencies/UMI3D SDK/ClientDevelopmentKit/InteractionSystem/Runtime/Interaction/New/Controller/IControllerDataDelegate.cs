@@ -23,16 +23,13 @@ using UnityEngine.InputSystem.Controls;
 namespace umi3d.cdk.interaction
 {
     public interface IControllerDataDelegate 
-    {
+    { 
         /// <summary>
-        /// How many tools can be projected at the same time on this controller.
+        /// Try to find all inputs on this controller that are compatibles with this interactionDto.<br/>
+        /// <br/>
+        /// The input does not need to be available.
         /// </summary>
-        int ToolCountLimitation { get; }
-
-        /// <summary>
-        /// Try to find the available inputs on this controller that match this interactionDto.
-        /// </summary>
-        /// <param name="inputs"></param>
+        /// <param name="inputs">The list of compatible inputs. Should be filled with compatible inputs at the end of the method.</param>
         /// <param name="controller"></param>
         /// <returns></returns>
         bool TryGetInputsForEventDto(List<Input> inputs, Controller controller);

@@ -53,6 +53,29 @@ namespace umi3d.cdk.interaction
             UMI3DEnvironmentLoader.Instance.RegisterEntity(environmentId, dto.id, dto, tool).NotifyLoaded();
             return true;
         }
+        public bool TryToRemoveTool(Tool tool)
+        {
+            if (!_tools.Contains(tool))
+            {
+                return false;
+            }
+
+            UMI3DEnvironmentLoader.Instance.DeleteEntityInstance(tool.environmentId, tool.dto.id);
+            _tools.Remove(tool);
+            return true;
+        }
+        public bool TryToRemoveTool(ulong environmentId, ulong toolId)
+        {
+            Tool tool = _tools.Find(tool => tool.environmentId == environmentId && tool.dto.id == toolId);
+            if (tool == null)
+            {
+                return false;
+            }
+
+            UMI3DEnvironmentLoader.Instance.DeleteEntityInstance(environmentId, toolId);
+            _tools.Remove(tool);
+            return true;
+        }
         public bool TryToFetchTool(out Tool tool, ulong environmentId, ulong dtoId)
         {
             tool = _tools.Find(tool => tool.environmentId == environmentId && tool.dto.id == dtoId);

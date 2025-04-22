@@ -49,16 +49,16 @@ namespace umi3d.browserRuntime.interactions
 
             SelectorManager.@default.delegates.Add(this);
 
-            SelectorManager.@default.serverSelector.@delegate = new ServerSelectorDataDelegate();
+            SelectorManager.@default.serverSelector.dataDelegate = new ServerSelectorDataDelegate();
 
             SelectorManager.@default.TryToInstantiateSelector(out mouseSelector, MOUSE_ID);
-            mouseSelector.@delegate = new MouseSelectorDataDelegate();
+            mouseSelector.dataDelegate = new MouseSelectorDataDelegate();
 
             SelectorManager.@default.TryToInstantiateSelector(out leftVRSelector, LEFT_ID + VR_ID);
-            leftVRSelector.@delegate = new LeftVRSelectorDataDelegate();
+            leftVRSelector.dataDelegate = new LeftVRSelectorDataDelegate();
 
             SelectorManager.@default.TryToInstantiateSelector(out rightVRSelector, RIGHT_ID + VR_ID);
-            rightVRSelector.@delegate = new RightVRSelectorDataDelegate();
+            rightVRSelector.dataDelegate = new RightVRSelectorDataDelegate();
 
             // TODO
             //SelectorManager.@default.TryToInstantiateSelector(out leftHandSelector, LEFT_ID + HAND_ID);
@@ -80,18 +80,18 @@ namespace umi3d.browserRuntime.interactions
             keyboardController.@delegate = new KeyboardControllerDataDelegate();
 
             ControllerManager.@default.TryToInstantiateController(out leftVRController, LEFT_ID + VR_ID);
-            //leftVRController.@delegate = new KeyboardControllerDataDelegate();
+            //leftVRController.@dataDelegate = new KeyboardControllerDataDelegate();
 
             ControllerManager.@default.TryToInstantiateController(out rightVRController, RIGHT_ID + VR_ID);
-            //leftVRController.@delegate = new KeyboardControllerDataDelegate();
+            //leftVRController.@dataDelegate = new KeyboardControllerDataDelegate();
 
 
             // TODO
             //ControllerManager.@default.TryToInstantiateController(out leftHandController, LEFT_ID + HAND_ID);
-            //leftHandController.@delegate = new KeyboardControllerDataDelegate();
+            //leftHandController.@dataDelegate = new KeyboardControllerDataDelegate();
 
             //ControllerManager.@default.TryToInstantiateController(out rightHandController, RIGHT_ID + HAND_ID);
-            //rightHandController.@delegate = new KeyboardControllerDataDelegate();
+            //rightHandController.@dataDelegate = new KeyboardControllerDataDelegate();
 
             mouseSelector.Add(uiDeviceController);
             mouseSelector.Add(mouseController);
@@ -102,12 +102,13 @@ namespace umi3d.browserRuntime.interactions
 
             rightVRSelector.Add(uiDeviceController);
             rightVRSelector.Add(rightVRController);
+            
+            // TODO
+            //leftHandSelector.Add(uiDeviceController);
+            //leftHandSelector.Add(leftHandController);
 
-            leftHandSelector.Add(uiDeviceController);
-            leftHandSelector.Add(leftHandController);
-
-            rightHandSelector.Add(uiDeviceController);
-            rightHandSelector.Add(rightHandController);
+            //rightHandSelector.Add(uiDeviceController);
+            //rightHandSelector.Add(rightHandController);
 
             SelectorManager.@default.serverSelector.Add(uiDeviceController);
             SelectorManager.@default.serverSelector.Add(mouseController);
@@ -157,6 +158,8 @@ namespace umi3d.browserRuntime.interactions
 
     class ServerSelectorDataDelegate : ISelectorDataDelegate
     {
+        public int toolCountLimitation => 1;
+
         public bool TryToAssociateInteractionAndInput(List<(AbstractInteractionDto interaction, Input input)> associations, ReadOnlyDictionary<AbstractInteractionDto, ReadOnlyCollection<Input>> inputsByInteractions)
         {
             throw new System.NotImplementedException();
@@ -285,6 +288,8 @@ namespace umi3d.browserRuntime.interactions
 
     class MouseSelectorDataDelegate : ISelectorDataDelegate
     {
+        public int toolCountLimitation => 1;
+
         /// <summary>
         /// For each interactions find the best possible input.<br/> 
         /// <paramref name="inputsByInteractions"/> is a dictionary of interactions where values are the possible inputs. <br/>
@@ -485,6 +490,8 @@ namespace umi3d.browserRuntime.interactions
 
     class LeftVRSelectorDataDelegate : ISelectorDataDelegate
     {
+        public int toolCountLimitation => 1;
+
         public bool TryToAssociateInteractionAndInput(List<(AbstractInteractionDto interaction, Input input)> associations, ReadOnlyDictionary<AbstractInteractionDto, ReadOnlyCollection<Input>> inputsByInteractions)
         {
             throw new System.NotImplementedException();
@@ -518,6 +525,8 @@ namespace umi3d.browserRuntime.interactions
 
     class RightVRSelectorDataDelegate : ISelectorDataDelegate
     {
+        public int toolCountLimitation => 1;
+
         public bool TryToAssociateInteractionAndInput(List<(AbstractInteractionDto interaction, Input input)> associations, ReadOnlyDictionary<AbstractInteractionDto, ReadOnlyCollection<Input>> inputsByInteractions)
         {
             throw new System.NotImplementedException();
@@ -555,8 +564,6 @@ namespace umi3d.browserRuntime.interactions
 
     class UIControllerDataDelegate : IControllerDataDelegate
     {
-        public int ToolCountLimitation => 1;
-
         public bool TryGetInputForBooleanParameterDto(out Input input, Controller controller)
         {
             throw new NotImplementedException();
@@ -579,8 +586,6 @@ namespace umi3d.browserRuntime.interactions
 
     class MouseControllerDataDelegate: IControllerDataDelegate
     {
-        public int ToolCountLimitation => 1;
-
         public bool TryGetInputForBooleanParameterDto(out Input input, Controller controller)
         {
             throw new NotImplementedException();
@@ -606,8 +611,6 @@ namespace umi3d.browserRuntime.interactions
 
     class KeyboardControllerDataDelegate : IControllerDataDelegate
     {
-        public int ToolCountLimitation => 1;
-
         public bool TryGetInputForBooleanParameterDto(out Input input, Controller controller)
         {
             throw new NotImplementedException();

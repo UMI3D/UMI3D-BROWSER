@@ -38,9 +38,6 @@ namespace umi3d.cdk.interaction
 
         #endregion
 
-        Delegates<ISelectorDelegate> _delegates = new();
-        public Delegates<ISelectorDelegate> delegates => _delegates;
-
         List<Selector> _selectors = new List<Selector>();
         ReadOnlyCollection<Selector> selectors => _selectors.AsReadOnly();
 

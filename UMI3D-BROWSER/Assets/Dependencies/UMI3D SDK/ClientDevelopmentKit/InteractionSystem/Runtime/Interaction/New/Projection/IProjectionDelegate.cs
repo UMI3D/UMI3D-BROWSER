@@ -19,8 +19,9 @@ using UnityEngine;
 
 namespace umi3d.cdk.interaction
 {
-    public interface ISelectorDelegate 
+    public interface IProjectionDelegate 
     {
-        void ToolSelected(Tool tool, Selector selector) { }
+        void OnProjected(Projection projection) { }
+        void OnReleased(Projection projection) { }
     }
 }

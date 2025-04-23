@@ -26,7 +26,7 @@ using Input = umi3d.cdk.interaction.Input;
 
 namespace umi3d.browserRuntime.interactions
 {
-    public class BrowserControllerManager : ISelectorDelegate, IControllerDelegate
+    public class BrowserControllerManager : IControllerDelegate, IProjectionDelegate
     {
         public const string UI_ID = "UI";
         public const string MOUSE_ID = "Mouse";
@@ -46,8 +46,6 @@ namespace umi3d.browserRuntime.interactions
             /*
              * SELECTORS
              */
-
-            SelectorManager.@default.delegates.Add(this);
 
             SelectorManager.@default.serverSelector.dataDelegate = new ServerSelectorDataDelegate();
 
@@ -117,6 +115,8 @@ namespace umi3d.browserRuntime.interactions
             SelectorManager.@default.serverSelector.Add(rightVRController);
             SelectorManager.@default.serverSelector.Add(leftHandController);
             SelectorManager.@default.serverSelector.Add(rightHandController);
+
+            ProjectionManager.@default.delegates.Add(this);
         }
 
         #endregion
@@ -135,20 +135,23 @@ namespace umi3d.browserRuntime.interactions
         Controller leftHandController;
         Controller rightHandController;
 
-        #region ISelectorDelegate
-
-        public void ToolSelected(Tool tool, Selector selector)
-        {
-            
-        }
-
-        #endregion
-
         #region IControllerDelegate
 
         public void OnChangeOfIsActive(bool active, Controller controller)
         {
 
+        }
+
+        #endregion
+
+        #region IProjectionDelegate
+
+        public void OnReleased(Projection projection)
+        {
+            if (projection.input.controller.id == UI_ID)
+            {
+                UIDevice.ReleaseInput(projection.input);
+            }
         }
 
         #endregion
@@ -427,22 +430,7 @@ namespace umi3d.browserRuntime.interactions
                out controller,
               BrowserControllerManager.MOUSE_ID,
               controllers
-           ) // First try to find input from mouse.
-
-           || ControllerManager.@default.TryGetInputForBooleanParameterDto(
-               out input,
-               out controller,
-              BrowserControllerManager.KEYBOARD_ID,
-              controllers
-           ) // then try to find input from keyboard.
-
-           || ControllerManager.@default.TryGetInputForBooleanParameterDto(
-               out input,
-               out controller,
-              BrowserControllerManager.UI_ID,
-              controllers
-           ) // finally try to find input from ui.
-           ;
+           );
         }
 
         public bool TryGetInputsForEventDto(out ReadOnlyCollection<Input> inputs, Selector selector, ReadOnlyCollection<Controller> controllers)
@@ -451,20 +439,20 @@ namespace umi3d.browserRuntime.interactions
 
             ControllerManager.@default.TryGetInputsForEventDto(
                 _inputs,
-               BrowserControllerManager.MOUSE_ID,
-               controllers
+                BrowserControllerManager.MOUSE_ID,
+                controllers
             );
 
             ControllerManager.@default.TryGetInputsForEventDto(
                 _inputs,
-               BrowserControllerManager.KEYBOARD_ID,
-               controllers
+                BrowserControllerManager.KEYBOARD_ID,
+                controllers
             );
 
             ControllerManager.@default.TryGetInputsForEventDto(
                 _inputs,
-               BrowserControllerManager.UI_ID,
-               controllers
+                BrowserControllerManager.UI_ID,
+                controllers
             );
 
             inputs = _inputs.AsReadOnly();

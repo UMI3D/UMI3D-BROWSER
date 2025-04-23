@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils.observation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -34,6 +35,8 @@ namespace umi3d.cdk.interaction
 
         #endregion
 
+        public readonly Delegates<IProjectionDelegate> delegates = new();
+
         List<Projection> _projections = new();
         public ReadOnlyCollection<Projection> projections => _projections.AsReadOnly();
 
@@ -53,11 +56,28 @@ namespace umi3d.cdk.interaction
                 _projections.Add(projection);
             }
 
+            delegates.ForEach(@delegate =>
+            {
+                @delegate.OnProjected(projection);
+                return Flow.Continue;
+            });
+
             return projection;
         }
         internal bool Release(Projection projection)
         {
-            return _projections.Remove(projection);
+            bool result = _projections.Remove(projection);
+
+            if (result)
+            {
+                delegates.ForEach(@delegate =>
+                {
+                    @delegate.OnReleased(projection);
+                    return Flow.Continue;
+                });
+            }
+
+            return result;
         }
     }
 }

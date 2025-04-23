@@ -26,7 +26,7 @@ using UnityEngine.Windows;
 
 namespace umi3d.cdk.interaction
 {
-    public class Selector 
+    public sealed class Selector 
     {
         internal Selector(string id) 
         {
@@ -222,12 +222,6 @@ namespace umi3d.cdk.interaction
             associations.Clear();
 
             _projectedTools.Add(tool);
-
-            SelectorManager.@default.delegates.ForEach(@delegate =>
-            {
-                @delegate.ToolSelected(tool, this);
-                return Flow.Continue;
-            });
         }
 
         List<Projection> _projectionToRelease = new();
@@ -240,6 +234,11 @@ namespace umi3d.cdk.interaction
                 ProjectionManager.@default.Release(projection);
             }
             _projectionToRelease.Clear();
+        }
+
+        public void Switch(Tool toolToRelease, Tool toolToProject)
+        {
+
         }
 
         public void HoverEnter(Tool tool, Collider collider, uint boneId, Transform boneTransform, Vector3 position, Vector3 normal, Vector3 direction)

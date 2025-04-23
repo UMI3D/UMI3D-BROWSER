@@ -31,7 +31,7 @@ namespace umi3d.cdk.interaction
             action.AddBinding(control.path);
         }
 
-        public bool isAvailable { get; private set; } = true;
+        public bool isAvailable { get; internal set; } = true;
 
         public InputAction action { get; private set; }
         public InputControl control { get; private set; }
@@ -49,36 +49,17 @@ namespace umi3d.cdk.interaction
             this.controller = null;
         }
 
-        public Tool projectedTool { get; private set; }
-        public AbstractInteractionDto projectedInteraction { get; private set; }
-        public Selector selector { get; private set; }
-        internal void Associate(Tool tool, AbstractInteractionDto interaction, Selector selector)
-        {
-            if (!isAvailable) { return; }
-            isAvailable = false;
-
-            projectedTool = tool;
-            projectedInteraction = interaction;
-            this.selector = selector;
-        }
-        internal void DissociateFromInteraction()
-        {
-            projectedTool = null;
-            projectedInteraction = null;
-            this.selector = null;
-
-            isAvailable = false;
-        }
-
         public string debugDescription
         {
             get
             {
+                Projection projection = null; // TODO: get projection.
+                
                 string description = "";
 
                 description += $"---- Input ----\n";
                 description += $"{controller?.id ?? "No controller"}, {isAvailable}, {control.path}\n";
-                description += $"{projectedTool?.dto?.name ?? "No tool"}, {projectedInteraction?.name ?? "No interaction"}, {selector?.id ?? "No selector"}\n";
+                description += $"{projection?.tool?.dto?.name ?? "No tool"}, {projection?.interaction?.dto?.name ?? "No interaction"}, {projection?.selector?.id ?? "No selector"}\n";
                 description += "\n";
 
                 return description;

@@ -219,7 +219,7 @@ namespace umi3d.browserRuntime.interactions
         }
         public static void ReleaseInput(Input input)
         {
-
+            _activeInputControls.Remove(input.control);
         }
 
         public static ButtonControl GetButtonPlaceholder()

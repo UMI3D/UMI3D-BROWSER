@@ -36,13 +36,45 @@ public class BrowserControllerManagerTests
         public void OneTimeSetUp()
         {
             // Instantiate BrowserControllerManager.
-            // This will register the mouseSelector, as well as the mouseController, the keyboardController and the UIController.
+            // This will register the selectors, as well as the controllers.
             var _ = BrowserControllerManager.@default;
 
             SelectorManager.@default.TryToGetSelector(out mouseSelector, BrowserControllerManager.MOUSE_ID);
             Assert.NotNull(mouseSelector);
 
             UIDevice.InstantiateNewUIDevice();
+
+            environmentId = 1;
+            UMI3DEnvironmentLoader.DeclareNewEnvironment(environmentId, "NewEnvironment");
+
+            ulong count = 10;
+            for (ulong i =  0; i < count; i++)
+            {
+                InteractionManager.@default.TryToInstantiateInteraction(
+                    out Interaction _, 
+                    environmentId, 
+                    new EventDto()
+                    {
+                        id = 10 + i,
+                        name = $"Event{i}",
+                        hold = false,
+                    }
+                );
+            }
+
+            for (ulong i =  0; i < count; i++)
+            {
+                InteractionManager.@default.TryToInstantiateInteraction(
+                    out Interaction _, 
+                    environmentId, 
+                    new EventDto()
+                    {
+                        id = 10 + count + i,
+                        name = $"Event{count + i}",
+                        hold = true,
+                    }
+                );
+            }
         }
 
         [OneTimeTearDown]
@@ -52,54 +84,23 @@ public class BrowserControllerManagerTests
             {
                 InputSystem.RemoveDevice(UIDevice.allUIDevices[i]);
             }
+
+            for (ulong i = 0; i < 20; i++)
+            {
+                InteractionManager.@default.TryToRemoveInteraction(environmentId, 10 + i);
+            }
         }
 
-        [SetUp]
-        public void SetUp()
+        [TearDown]
+        public void TearDown()
         {
-            environmentId = 1;
-            UMI3DEnvironmentLoader.DeclareNewEnvironment(environmentId, "NewEnvironment");
+            mouseSelector.Deselect(eventsTool);
+            ToolManager.@default.TryToRemoveTool(environmentId, 100);
+        }
 
-            EventDto event1 = new()
-            {
-                id = 10,
-                name = "Event1",
-                hold = false,
-            };
-            InteractionManager.@default.TryToInstantiateInteraction(out Interaction _, environmentId, event1);
-
-            EventDto event2 = new()
-            {
-                id = 11,
-                name = "Event2",
-                hold = false,
-            };
-            InteractionManager.@default.TryToInstantiateInteraction(out Interaction _, environmentId, event2);
-
-            EventDto event3 = new()
-            {
-                id = 12,
-                name = "Event3",
-                hold = false,
-            };
-            InteractionManager.@default.TryToInstantiateInteraction(out Interaction _, environmentId, event3);
-
-            EventDto event4 = new()
-            {
-                id = 13,
-                name = "Event4",
-                hold = true,
-            };
-            InteractionManager.@default.TryToInstantiateInteraction(out Interaction _, environmentId, event4);
-
-            EventDto event5 = new()
-            {
-                id = 14,
-                name = "Event5",
-                hold = false,
-            };
-            InteractionManager.@default.TryToInstantiateInteraction(out Interaction _, environmentId, event5);
-
+        [Test]
+        public void GivenEvents_WhenSelectedWithMouse_ThenProjectedOnMouseAndKeyboard()
+        {
             InteractableDto dto = new()
             {
                 id = 100,
@@ -107,26 +108,154 @@ public class BrowserControllerManagerTests
                 name = "eventsTool",
                 HoverEnterAnimationId = 3,
                 HoverExitAnimationId = 4,
-                interactions = new() { 10, 11, 12, 13, 14 }
+                interactions = new() { 10, 11, 12, 13, 14, 15 }
             };
             ToolManager.@default.TryToInstantiateTool(out eventsTool, environmentId, dto);
-        }
 
-        [TearDown]
-        public void TearDown()
-        {
-            InteractionManager.@default.TryToRemoveInteraction(environmentId, 10);
-            InteractionManager.@default.TryToRemoveInteraction(environmentId, 11);
-            InteractionManager.@default.TryToRemoveInteraction(environmentId, 12);
-            InteractionManager.@default.TryToRemoveInteraction(environmentId, 13);
-            InteractionManager.@default.TryToRemoveInteraction(environmentId, 14);
-            ToolManager.@default.TryToRemoveTool(environmentId, 100);
+            mouseSelector.Select(eventsTool);
+
+            string result = "";
+            foreach (Projection projection in ProjectionManager.@default.projections)
+            {
+                result += $"{projection.debugDescription}";
+                result += "\n";
+            }
+
+            string expectation = "---- Projection ----\n" +
+                "Mouse, Mouse, eventsTool, Event0, leftButton\n\n" +
+                "---- Projection ----\n" +
+                "Mouse, keyboard, eventsTool, Event1, q\n\n" +
+                "---- Projection ----\n" +
+                "Mouse, keyboard, eventsTool, Event2, e\n\n" +
+                "---- Projection ----\n" +
+                "Mouse, keyboard, eventsTool, Event3, r\n\n" +
+                "---- Projection ----\n" +
+                "Mouse, keyboard, eventsTool, Event4, f\n\n" +
+                "---- Projection ----\n" +
+                "Mouse, keyboard, eventsTool, Event5, g\n\n";
+
+            Assert.AreEqual(expectation, result);
         }
 
         [Test]
-        public void TestScriptSimplePasses()
+        public void GivenEventsAndOneHold_WhenSelectedWithMouse_ThenProjectedOnMouseAndKeyboard()
         {
+            InteractableDto dto = new()
+            {
+                id = 100,
+                nodeId = 2,
+                name = "eventsTool",
+                HoverEnterAnimationId = 3,
+                HoverExitAnimationId = 4,
+                interactions = new() { 10, 11, 12, 20, 14, 15 }
+            };
+            ToolManager.@default.TryToInstantiateTool(out eventsTool, environmentId, dto);
+
             mouseSelector.Select(eventsTool);
+
+            string result = "";
+            foreach (Projection projection in ProjectionManager.@default.projections)
+            {
+                result += $"{projection.debugDescription}";
+                result += "\n";
+            }
+
+            string expectation = "---- Projection ----\n" +
+                "Mouse, Mouse, eventsTool, Event10, leftButton\n\n" +
+                "---- Projection ----\n" +
+                "Mouse, keyboard, eventsTool, Event0, q\n\n" +
+                "---- Projection ----\n" +
+                "Mouse, keyboard, eventsTool, Event1, e\n\n" +
+                "---- Projection ----\n" +
+                "Mouse, keyboard, eventsTool, Event2, r\n\n" +
+                "---- Projection ----\n" +
+                "Mouse, keyboard, eventsTool, Event4, f\n\n" +
+                "---- Projection ----\n" +
+                "Mouse, keyboard, eventsTool, Event5, g\n\n";
+
+            Assert.AreEqual(expectation, result);
+        }
+
+        [Test]
+        public void GivenMoreEvents_WhenSelectedWithMouse_ThenProjectedOnKeyboardAndUI()
+        {
+            InteractableDto dto = new()
+            {
+                id = 100,
+                nodeId = 2,
+                name = "eventsTool",
+                HoverEnterAnimationId = 3,
+                HoverExitAnimationId = 4,
+                interactions = new() { 10, 11, 12, 13, 14, 15, 16 }
+            };
+            ToolManager.@default.TryToInstantiateTool(out eventsTool, environmentId, dto);
+
+            mouseSelector.Select(eventsTool);
+
+            string result = "";
+            foreach (Projection projection in ProjectionManager.@default.projections)
+            {
+                result += $"{projection.debugDescription}";
+                result += "\n";
+            }
+
+            string expectation = "---- Projection ----\n" +
+                "Mouse, keyboard, eventsTool, Event0, q\n\n" +
+                "---- Projection ----\n" +
+                "Mouse, keyboard, eventsTool, Event1, e\n\n" +
+                "---- Projection ----\n" +
+                "Mouse, keyboard, eventsTool, Event2, r\n\n" +
+                "---- Projection ----\n" +
+                "Mouse, keyboard, eventsTool, Event3, f\n\n" +
+                "---- Projection ----\n" +
+                "Mouse, keyboard, eventsTool, Event4, g\n\n" +
+                "---- Projection ----\n" +
+                "Mouse, UI, eventsTool, Event5, button2\n\n" +
+                "---- Projection ----\n" +
+                "Mouse, UI, eventsTool, Event6, button3\n\n";
+
+            Assert.AreEqual(expectation, result);
+        }
+
+        [Test]
+        public void GivenMoreEventsAndOneHold_WhenSelectedWithMouse_ThenProjectedOnKeyboardAndUI()
+        {
+            InteractableDto dto = new()
+            {
+                id = 100,
+                nodeId = 2,
+                name = "eventsTool",
+                HoverEnterAnimationId = 3,
+                HoverExitAnimationId = 4,
+                interactions = new() { 10, 11, 12, 20, 14, 15, 16 }
+            };
+            ToolManager.@default.TryToInstantiateTool(out eventsTool, environmentId, dto);
+
+            mouseSelector.Select(eventsTool);
+
+            string result = "";
+            foreach (Projection projection in ProjectionManager.@default.projections)
+            {
+                result += $"{projection.debugDescription}";
+                result += "\n";
+            }
+
+            string expectation = "---- Projection ----\n" +
+                "Mouse, keyboard, eventsTool, Event10, q\n\n" +
+                "---- Projection ----\n" +
+                "Mouse, keyboard, eventsTool, Event0, e\n\n" +
+                "---- Projection ----\n" +
+                "Mouse, keyboard, eventsTool, Event1, r\n\n" +
+                "---- Projection ----\n" +
+                "Mouse, keyboard, eventsTool, Event2, f\n\n" +
+                "---- Projection ----\n" +
+                "Mouse, keyboard, eventsTool, Event4, g\n\n" +
+                "---- Projection ----\n" +
+                "Mouse, UI, eventsTool, Event5, button2\n\n" +
+                "---- Projection ----\n" +
+                "Mouse, UI, eventsTool, Event6, button3\n\n";
+
+            Assert.AreEqual(expectation, result);
         }
     }
 }

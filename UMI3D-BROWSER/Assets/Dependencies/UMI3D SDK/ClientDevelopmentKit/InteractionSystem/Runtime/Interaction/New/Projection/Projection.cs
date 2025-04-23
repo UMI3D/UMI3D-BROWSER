@@ -27,13 +27,26 @@ namespace umi3d.cdk.interaction
         public Controller controller { get; internal set; }
         public Tool tool { get; internal set; }
         public Interaction interaction { get; internal set; }
+        public Input input { get; internal set; }
 
-        internal Projection(Selector selector, Controller controller, Tool tool, Interaction interaction)
+        internal Projection(Selector selector, Controller controller, Tool tool, Interaction interaction, Input input)
         {
             this.selector = selector;
             this.controller = controller;
             this.tool = tool;
             this.interaction = interaction;
+            this.input = input;
+        }
+
+        public string debugDescription
+        {
+            get
+            {
+                string result = "---- Projection ----\n";
+                result += $"{selector?.id ?? "No selector"}, {controller?.id ?? "No controller"}, {tool?.dto?.name ?? "No tool"}, {interaction?.dto?.name ?? "No interaction"}, {input?.control?.name ?? "No input"}\n";
+
+                return result;
+            }
         }
     }
 }

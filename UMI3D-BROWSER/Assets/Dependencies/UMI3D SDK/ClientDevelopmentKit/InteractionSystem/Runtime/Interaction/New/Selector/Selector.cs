@@ -18,6 +18,7 @@ using inetum.unityUtils.observation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using umi3d.common;
 using umi3d.common.interaction;
 using UnityEngine;
@@ -88,9 +89,6 @@ namespace umi3d.cdk.interaction
         List<Tool> _projectedTools = new();
         public ReadOnlyCollection<Tool> projectedTools => _projectedTools.AsReadOnly();
 
-        List<Projection> _projections = new();
-        public ReadOnlyCollection<Projection> projections => _projections.AsReadOnly();
-
         Dictionary<AbstractInteractionDto, ReadOnlyCollection<Input>> inputsByInteractions = new();
         List<(AbstractInteractionDto interaction, Input input)> associations = new();
         /// <summary>
@@ -107,7 +105,11 @@ namespace umi3d.cdk.interaction
         /// <param name="tool"></param>
         public void Select(Tool tool)
         {
-            if (_projectedTools.Count >= dataDelegate.toolCountLimitation) { return; }
+            if (_projectedTools.Count >= dataDelegate.toolCountLimitation) 
+            {
+                UnityEngine.Debug.Log($"[Selector-{id}] Log: Try to select tool: '{tool?.dto?.name ?? "Tool with no name"}' but count limitation prevents it.");
+                return; 
+            }
 
             ReadOnlyCollection<Input> inputs;
             foreach (AbstractInteractionDto interaction in tool.interactions)
@@ -191,7 +193,7 @@ namespace umi3d.cdk.interaction
                 }
             }
 
-            dataDelegate.TryToAssociateInteractionAndInput(
+            dataDelegate.AssociateInteractionAndInput(
                 associations, 
                 new ReadOnlyDictionary<AbstractInteractionDto, ReadOnlyCollection<Input>>(inputsByInteractions)
             );
@@ -204,15 +206,22 @@ namespace umi3d.cdk.interaction
 
             foreach (var association in associations)
             {
-                // Project this interactions from this tool on this input from this controller.
-                association.input.controller.TryToProject(
+                InteractionManager.@default.TryToFetchInteraction(
+                    out Interaction interaction, 
+                    tool.environmentId, 
+                    association.interaction.id
+                );
+                ProjectionManager.@default.Project(
+                    this, 
+                    association.input.controller, 
                     tool, 
-                    association.interaction, 
-                    association.input, 
-                    this
+                    interaction, 
+                    association.input
                 );
             }
-            
+            associations.Clear();
+
+            _projectedTools.Add(tool);
 
             SelectorManager.@default.delegates.ForEach(@delegate =>
             {
@@ -221,9 +230,16 @@ namespace umi3d.cdk.interaction
             });
         }
 
+        List<Projection> _projectionToRelease = new();
         public void Deselect(Tool tool)
         {
-            throw new System.NotImplementedException();
+            _projectedTools.Remove(tool);
+            _projectionToRelease.AddRange(ProjectionManager.@default.projections.Where(projection => projection.tool == tool));
+            foreach (Projection projection in _projectionToRelease)
+            {
+                ProjectionManager.@default.Release(projection);
+            }
+            _projectionToRelease.Clear();
         }
 
         public void HoverEnter(Tool tool, Collider collider, uint boneId, Transform boneTransform, Vector3 position, Vector3 normal, Vector3 direction)

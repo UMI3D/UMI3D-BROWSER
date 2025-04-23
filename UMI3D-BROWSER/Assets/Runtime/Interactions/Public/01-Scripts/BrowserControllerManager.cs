@@ -160,7 +160,7 @@ namespace umi3d.browserRuntime.interactions
     {
         public int toolCountLimitation => 1;
 
-        public bool TryToAssociateInteractionAndInput(List<(AbstractInteractionDto interaction, Input input)> associations, ReadOnlyDictionary<AbstractInteractionDto, ReadOnlyCollection<Input>> inputsByInteractions)
+        public void AssociateInteractionAndInput(List<(AbstractInteractionDto interaction, Input input)> associations, ReadOnlyDictionary<AbstractInteractionDto, ReadOnlyCollection<Input>> inputsByInteractions)
         {
             throw new System.NotImplementedException();
         }
@@ -328,7 +328,7 @@ namespace umi3d.browserRuntime.interactions
         /// <remarks>
         /// <see cref="EventDto"/> is a subclass of <see cref="AbstractInteractionDto"/>. To check if an eventDto is hold: <see cref="EventDto.hold"/>. To check if an input is a UI input: <see cref="Input.controller"/>.id == <see cref="BrowserControllerManager.UI_ID"/>. Interactions are subclasses of <see cref="AbstractInteractionDto"/>, among them <see cref="EventDto"/> and a lot of other classes.
         /// </remarks>
-        public bool TryToAssociateInteractionAndInput(
+        public void AssociateInteractionAndInput(
             List<(AbstractInteractionDto interaction, Input input)> associations, 
             ReadOnlyDictionary<AbstractInteractionDto, ReadOnlyCollection<Input>> inputsByInteractions
         )
@@ -366,73 +366,58 @@ namespace umi3d.browserRuntime.interactions
             }
 
             // Track assigned inputs
-            HashSet<Input> assignedInputs = new();
+            List<(AbstractInteractionDto interaction, Input input)> assignedInputs = new();
 
             // Assign inputs to EventDtos
-            void AssignEventDtos(bool lockLeftClick)
+            void AssignEventDtos()
             {
                 foreach (var eventDto in eventDtos)
                 {
-                    bool hasBeenAssigned = false;
-                    foreach (var input in inputsByInteractions[eventDto])
+                    for (int i = 0; i < inputsByInteractions[eventDto].Count; i++)
                     {
-                        if (assignedInputs.Contains(input))
+                        Input input = inputsByInteractions[eventDto][i];
+
+                        if (assignedInputs.FindIndex(association => association.input == input) >= 0) { continue; }
+                        else if (hasUIInput && input.control == Mouse.current.leftButton) { continue; }
+                        else if (input.controller.id == BrowserControllerManager.UI_ID)
                         {
-                            continue;
+                            hasUIInput = true;
+                            input = UIDevice.GetInputFrom(input.control);
                         }
 
-                        if (hasUIInput && input.control == Mouse.current.leftButton)
-                        {
-                            continue;
-                        }
-
-                        associations.Add((eventDto, input));
-                        assignedInputs.Add(input);
-                        hasBeenAssigned = true;
+                        assignedInputs.Add((eventDto, input));
                         break;
-                    }
-
-                    if (!hasBeenAssigned)
-                    {
-                        // TODO: assigned a ui input.
-                        Input input = UIDevice.GetInputFrom(UIDevice.GetButtonPlaceholder());
-                        associations.Add((eventDto, input));
-                        assignedInputs.Add(input);
-                        hasUIInput = true;
                     }
                 }
             }
 
-            if (hasUIInput)
+            void AssignEventDtosWithUI()
             {
-                AssignEventDtos(lockLeftClick: true);
+                AssignEventDtos();
 
                 // TODO assign input to open or close menu.
             }
+
+            if (hasUIInput) { AssignEventDtosWithUI(); }
             else
             {
-                AssignEventDtos(lockLeftClick: false);
+                AssignEventDtos();
 
                 if (hasUIInput)
                 {
-                    associations.RemoveAll(association => assignedInputs.Contains(association.input));
-
-                    foreach (var input in assignedInputs)
+                    IEnumerable<(AbstractInteractionDto interaction, Input input)> uiAssociations = assignedInputs
+                        .Where(association => association.input.controller.id == BrowserControllerManager.UI_ID);
+                    foreach (var association in uiAssociations)
                     {
-                        if (input.controller.id == BrowserControllerManager.UI_ID)
-                        {
-                            //UIDevice.ReleaseButton(input);
-                        }
+                        UIDevice.ReleaseInput(association.input);
                     }
                     assignedInputs.Clear();
 
-                    AssignEventDtos(lockLeftClick: true);
-
-                    // TODO assign input to open or close menu.
+                    AssignEventDtosWithUI();
                 }
             }
 
-            return true;
+            associations.AddRange(assignedInputs);
         }
 
         public bool TryGetInputForBooleanParameterDto(out Input input, out Controller controller, Selector selector, ReadOnlyCollection<Controller> controllers)
@@ -492,7 +477,7 @@ namespace umi3d.browserRuntime.interactions
     {
         public int toolCountLimitation => 1;
 
-        public bool TryToAssociateInteractionAndInput(List<(AbstractInteractionDto interaction, Input input)> associations, ReadOnlyDictionary<AbstractInteractionDto, ReadOnlyCollection<Input>> inputsByInteractions)
+        public void AssociateInteractionAndInput(List<(AbstractInteractionDto interaction, Input input)> associations, ReadOnlyDictionary<AbstractInteractionDto, ReadOnlyCollection<Input>> inputsByInteractions)
         {
             throw new System.NotImplementedException();
         }
@@ -527,7 +512,7 @@ namespace umi3d.browserRuntime.interactions
     {
         public int toolCountLimitation => 1;
 
-        public bool TryToAssociateInteractionAndInput(List<(AbstractInteractionDto interaction, Input input)> associations, ReadOnlyDictionary<AbstractInteractionDto, ReadOnlyCollection<Input>> inputsByInteractions)
+        public void AssociateInteractionAndInput(List<(AbstractInteractionDto interaction, Input input)> associations, ReadOnlyDictionary<AbstractInteractionDto, ReadOnlyCollection<Input>> inputsByInteractions)
         {
             throw new System.NotImplementedException();
         }

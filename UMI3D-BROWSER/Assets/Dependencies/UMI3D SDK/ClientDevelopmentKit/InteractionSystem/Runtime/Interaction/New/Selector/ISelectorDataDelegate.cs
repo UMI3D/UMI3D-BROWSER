@@ -29,7 +29,7 @@ namespace umi3d.cdk.interaction
         /// </summary>
         int toolCountLimitation { get; }
 
-        bool TryToAssociateInteractionAndInput(List<(AbstractInteractionDto interaction, Input input)> associations, ReadOnlyDictionary<AbstractInteractionDto, ReadOnlyCollection<Input>> inputsByInteractions);
+        void AssociateInteractionAndInput(List<(AbstractInteractionDto interaction, Input input)> associations, ReadOnlyDictionary<AbstractInteractionDto, ReadOnlyCollection<Input>> inputsByInteractions);
 
         /// <summary>
         /// Try to find all inputs compatible with this interactions.<br/>

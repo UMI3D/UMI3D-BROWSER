@@ -89,33 +89,5 @@ namespace umi3d.cdk.interaction
             _inputs.Remove(input);
             return true;
         }
-
-        List<Tool> _projectedTools = new();
-        public ReadOnlyCollection<Tool> projectedTools => _projectedTools.AsReadOnly();
-
-        List<AbstractInteractionDto> _projectedInteraction = new();
-        public ReadOnlyCollection<AbstractInteractionDto> projectedInteraction => _projectedInteraction.AsReadOnly();
-
-        internal bool TryToProject(Tool tool, AbstractInteractionDto interaction, Input input, Selector selector) 
-        {
-            bool contains = _projectedTools.Contains(tool);
-            //if (_projectedTools.Count >= @dataDelegate.ToolCountLimitation && !contains)
-            //{
-            //    return false;
-            //}
-            //else if (!contains)
-            //{
-            //    _projectedTools.Add(tool);
-            //}
-
-            if (!_projectedInteraction.Contains(interaction))
-            {
-                _projectedInteraction.Add(interaction);
-            }
-
-            input.Associate(tool, interaction, selector);
-
-            return true;
-        }
     }
 }

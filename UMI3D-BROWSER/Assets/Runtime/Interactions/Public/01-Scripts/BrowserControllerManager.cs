@@ -47,8 +47,6 @@ namespace umi3d.browserRuntime.interactions
              * SELECTORS
              */
 
-            SelectorManager.@default.serverSelector.dataDelegate = new ServerSelectorDataDelegate();
-
             SelectorManager.@default.TryToInstantiateSelector(out mouseSelector, MOUSE_ID);
             mouseSelector.dataDelegate = new MouseSelectorDataDelegate();
 
@@ -61,6 +59,8 @@ namespace umi3d.browserRuntime.interactions
             // TODO
             //SelectorManager.@default.TryToInstantiateSelector(out leftHandSelector, LEFT_ID + HAND_ID);
             //SelectorManager.@default.TryToInstantiateSelector(out rightHandSelector, RIGHT_ID + HAND_ID);
+
+            SelectorManager.@default.serverSelector = new ServerSelector();
 
             /*
              * CONTROLLERS
@@ -83,13 +83,16 @@ namespace umi3d.browserRuntime.interactions
             ControllerManager.@default.TryToInstantiateController(out rightVRController, RIGHT_ID + VR_ID);
             //leftVRController.@dataDelegate = new KeyboardControllerDataDelegate();
 
-
             // TODO
             //ControllerManager.@default.TryToInstantiateController(out leftHandController, LEFT_ID + HAND_ID);
             //leftHandController.@dataDelegate = new KeyboardControllerDataDelegate();
 
             //ControllerManager.@default.TryToInstantiateController(out rightHandController, RIGHT_ID + HAND_ID);
             //rightHandController.@dataDelegate = new KeyboardControllerDataDelegate();
+            
+            /*
+             * Bind SELECTORS and CONTROLLERS
+             */
 
             mouseSelector.Add(uiDeviceController);
             mouseSelector.Add(mouseController);
@@ -107,14 +110,6 @@ namespace umi3d.browserRuntime.interactions
 
             //rightHandSelector.Add(uiDeviceController);
             //rightHandSelector.Add(rightHandController);
-
-            SelectorManager.@default.serverSelector.Add(uiDeviceController);
-            SelectorManager.@default.serverSelector.Add(mouseController);
-            SelectorManager.@default.serverSelector.Add(keyboardController);
-            SelectorManager.@default.serverSelector.Add(leftVRController);
-            SelectorManager.@default.serverSelector.Add(rightVRController);
-            SelectorManager.@default.serverSelector.Add(leftHandController);
-            SelectorManager.@default.serverSelector.Add(rightHandController);
 
             ProjectionManager.@default.delegates.Add(this);
         }
@@ -157,137 +152,47 @@ namespace umi3d.browserRuntime.interactions
         #endregion
     }
 
-    #region ISelectorDataDelegate
-
-    class ServerSelectorDataDelegate : ISelectorDataDelegate
+    class ServerSelector : ISelector
     {
-        public int toolCountLimitation => 1;
-
-        public void AssociateInteractionAndInput(List<(AbstractInteractionDto interaction, Input input)> associations, ReadOnlyDictionary<AbstractInteractionDto, ReadOnlyCollection<Input>> inputsByInteractions)
+        public void Select(Tool tool)
         {
-            throw new System.NotImplementedException();
+            // TODO
+
+            Selector deselectedSelector = SelectorManager.@default.lastSelectorDeselected;
+            if (deselectedSelector != null && deselectedSelector.canProjectMoreTool)
+            {
+                deselectedSelector.Select(tool);
+                return;
+            }
+
+
         }
 
-        public bool TryGetInputForBooleanParameterDto(out Input input, out Controller controller, Selector selector, ReadOnlyCollection<Controller> controllers)
+        public void Deselect(Tool tool)
         {
-            return false
-#if UMI3D_PC    
+            if (tool.selector == null)
+            {
+                UnityEngine.Debug.LogError($"[ServerSelector] Error: Try to deselect tool by tool's selector is null.");
+                return;
+            }
 
-            || ControllerManager.@default.TryGetInputForBooleanParameterDto(
-                out input,
-                out controller,
-                BrowserControllerManager.MOUSE_ID,
-                controllers
-            ) // First try to find input from mouse.
-
-            || ControllerManager.@default.TryGetInputForBooleanParameterDto(
-                out input,
-                out controller,
-                BrowserControllerManager.KEYBOARD_ID,
-                controllers
-            ) // then try to find input from keyboard.
-
-#elif UMI3D_VR
-
-            || ControllerManager.@default.TryGetInputForBooleanParameterDto(
-                out input,
-                out controller,
-                BrowserControllerManager.LEFT_ID + BrowserControllerManager.VR_ID,
-                controllers
-            ) // First try to find input from left VR controller.
-
-            || ControllerManager.@default.TryGetInputForBooleanParameterDto(
-                out input,
-                out controller,
-                BrowserControllerManager.RIGHT_ID + BrowserControllerManager.VR_ID,
-                controllers
-            ) // then try to find input from right VR controller.
-
-            || ControllerManager.@default.TryGetInputForBooleanParameterDto(
-                out input,
-                out controller,
-                BrowserControllerManager.LEFT_ID + BrowserControllerManager.HAND_ID,
-                controllers
-            ) // First try to find input from left Hand controller.
-
-            || ControllerManager.@default.TryGetInputForBooleanParameterDto(
-                out input,
-                out controller,
-                BrowserControllerManager.RIGHT_ID + BrowserControllerManager.HAND_ID,
-                controllers
-            ) // then try to find input from right Hand controller.
-
-#endif
-            || ControllerManager.@default.TryGetInputForBooleanParameterDto(
-                out input,
-                out controller,
-                BrowserControllerManager.UI_ID,
-                controllers
-            ) // finally try to find input from ui.
-            ;
+            tool.selector.Deselect(tool);
         }
 
-        public bool TryGetInputsForEventDto(out ReadOnlyCollection<Input> inputs, Selector selector, ReadOnlyCollection<Controller> controllers)
+        public void Switch(Tool toolToRelease, Tool toolToProject)
         {
-            //            return false
-            //#if UMI3D_PC    
+            if (toolToRelease.selector == null)
+            {
+                UnityEngine.Debug.LogError($"[ServerSelector] Error: Try to switch tool by tool's selector is null.");
+                return;
+            }
 
-            //            || ControllerManager.@default.TryGetInputForEventDto(
-            //                out input,
-            //                out controller,
-            //                BrowserControllerManager.MOUSE_ID,
-            //                controllers
-            //            ) // First try to find input from mouse.
-
-            //            || ControllerManager.@default.TryGetInputForEventDto(
-            //                out input,
-            //                out controller,
-            //                BrowserControllerManager.KEYBOARD_ID,
-            //                controllers
-            //            ) // then try to find input from keyboard.
-
-            //#elif UMI3D_VR
-
-            //            || ControllerManager.@default.TryGetInputForEventDto(
-            //                out input,
-            //                out controller,
-            //                BrowserControllerManager.LEFT_ID + BrowserControllerManager.VR_ID,
-            //                controllers
-            //            ) // First try to find input from left VR controller.
-
-            //            || ControllerManager.@default.TryGetInputForEventDto(
-            //                out input,
-            //                out controller,
-            //                BrowserControllerManager.RIGHT_ID + BrowserControllerManager.VR_ID,
-            //                controllers
-            //            ) // then try to find input from right VR controller.
-
-            //            || ControllerManager.@default.TryGetInputForEventDto(
-            //                out input,
-            //                out controller,
-            //                BrowserControllerManager.LEFT_ID + BrowserControllerManager.HAND_ID,
-            //                controllers
-            //            ) // First try to find input from left Hand controller.
-
-            //            || ControllerManager.@default.TryGetInputForEventDto(
-            //                out input,
-            //                out controller,
-            //                BrowserControllerManager.RIGHT_ID + BrowserControllerManager.HAND_ID,
-            //                controllers
-            //            ) // then try to find input from right Hand controller.
-
-            //#endif
-            //            || ControllerManager.@default.TryGetInputForEventDto(
-            //                out input,
-            //                out controller,
-            //                BrowserControllerManager.UI_ID,
-            //                controllers
-            //            ) // finally try to find input from ui.
-            //            ;
-
-            throw new System.NotImplementedException();
+            toolToRelease.selector.Switch(toolToRelease, toolToProject);
         }
     }
+
+
+    #region ISelectorDataDelegate
 
     class MouseSelectorDataDelegate : ISelectorDataDelegate
     {

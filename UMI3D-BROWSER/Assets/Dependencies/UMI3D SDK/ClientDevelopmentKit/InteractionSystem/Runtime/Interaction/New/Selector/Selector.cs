@@ -26,7 +26,7 @@ using UnityEngine.Windows;
 
 namespace umi3d.cdk.interaction
 {
-    public sealed class Selector 
+    public sealed class Selector : ISelector
     {
         internal Selector(string id) 
         {
@@ -85,6 +85,8 @@ namespace umi3d.cdk.interaction
         {
             _controllers.Remove(controller);
         }
+
+        public bool canProjectMoreTool => _projectedTools.Count < _dataDelegate.toolCountLimitation;
 
         List<Tool> _projectedTools = new();
         public ReadOnlyCollection<Tool> projectedTools => _projectedTools.AsReadOnly();
@@ -222,18 +224,27 @@ namespace umi3d.cdk.interaction
             associations.Clear();
 
             _projectedTools.Add(tool);
+            tool.selector = this;
+
+            SelectorManager.@default.lastSelectorUsed = this;
+            SelectorManager.@default.lastSelectorSelected = this;
         }
 
         List<Projection> _projectionToRelease = new();
         public void Deselect(Tool tool)
         {
             _projectedTools.Remove(tool);
+            tool.selector = null;
+
             _projectionToRelease.AddRange(ProjectionManager.@default.projections.Where(projection => projection.tool == tool));
             foreach (Projection projection in _projectionToRelease)
             {
                 ProjectionManager.@default.Release(projection);
             }
             _projectionToRelease.Clear();
+
+            SelectorManager.@default.lastSelectorUsed = this;
+            SelectorManager.@default.lastSelectorDeselected = this;
         }
 
         public void Switch(Tool toolToRelease, Tool toolToProject)

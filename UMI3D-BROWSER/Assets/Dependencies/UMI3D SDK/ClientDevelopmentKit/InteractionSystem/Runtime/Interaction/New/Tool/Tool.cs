@@ -80,5 +80,7 @@ namespace umi3d.cdk.interaction
         {
             _hoveredBySelectors.Remove(selector);
         }
+
+        public Selector selector { get; internal set; }
     }
 }

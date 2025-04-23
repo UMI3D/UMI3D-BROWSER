@@ -24,8 +24,6 @@ namespace umi3d.cdk.interaction
 {
     public class SelectorManager 
     {
-        const string SERVER_ID = "Server";
-
         #region Initialize
 
         static Lazy<SelectorManager> _default = new(() => new());
@@ -33,15 +31,18 @@ namespace umi3d.cdk.interaction
 
         SelectorManager()
         {
-            TryToInstantiateSelector(out serverSelector, SERVER_ID);
         }
 
         #endregion
 
+        public ISelector serverSelector;
+
+        public Selector lastSelectorUsed { get; internal set; }
+        public Selector lastSelectorSelected { get; internal set; }
+        public Selector lastSelectorDeselected { get; internal set; }
+
         List<Selector> _selectors = new List<Selector>();
         ReadOnlyCollection<Selector> selectors => _selectors.AsReadOnly();
-
-        public readonly Selector serverSelector;
 
         public bool TryToInstantiateSelector(out Selector selector, string id)
         {

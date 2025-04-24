@@ -39,9 +39,6 @@ namespace umi3d.cdk.interaction
 
         #endregion
 
-        Delegates<IControllerDelegate> _delegates = new();
-        public Delegates<IControllerDelegate> delegates => _delegates;
-
         List<Controller> _controllers = new();
         public ReadOnlyCollection<Controller> controllers => _controllers.AsReadOnly();
 
@@ -69,36 +66,6 @@ namespace umi3d.cdk.interaction
             }
 
             return true;
-        }
-
-        public bool TryGetInputsForEventDto(
-            List<Input> inputs, 
-            string controllerId, 
-            ReadOnlyCollection<Controller> controllers
-        )
-        {
-            Controller controller = controllers.FirstOrDefault(controller =>
-            {
-                return controller.id == controllerId && controller.isActive;
-            });
-
-            return controller?.@delegate.TryGetInputsForEventDto(inputs, controller) ?? false;
-        }
-
-        public bool TryGetInputForBooleanParameterDto(
-            out Input input,
-            out Controller controller,
-            string controllerId,
-            ReadOnlyCollection<Controller> controllers
-        )
-        {
-            controller = controllers.First(controller =>
-            {
-                return controller.id == controllerId && controller.isActive;
-            });
-
-            input = null;
-            return controller?.@delegate.TryGetInputForBooleanParameterDto(out input, controller) ?? false;
         }
     }
 }

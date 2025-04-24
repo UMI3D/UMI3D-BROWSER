@@ -18,7 +18,6 @@ using inetum.unityUtils.observation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using UnityEngine;
 
 namespace umi3d.cdk.interaction
 {

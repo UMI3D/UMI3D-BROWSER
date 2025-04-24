@@ -30,7 +30,7 @@ public class BrowserControllerManagerTests
     {
         ulong environmentId;
         Selector mouseSelector;
-        Tool eventsTool;
+        Tool tool;
 
         [OneTimeSetUp]
         public void OneTimeSetUp()
@@ -75,6 +75,17 @@ public class BrowserControllerManagerTests
                     }
                 );
             }
+
+            InteractionManager.@default.TryToInstantiateInteraction(
+                out Interaction _, 
+                environmentId, 
+                new BooleanParameterDto()
+                {
+                    id = 40,
+                    name = $"Boolean",
+                    value = true
+                }
+            );
         }
 
         [OneTimeTearDown]
@@ -89,12 +100,14 @@ public class BrowserControllerManagerTests
             {
                 InteractionManager.@default.TryToRemoveInteraction(environmentId, 10 + i);
             }
+
+            InteractionManager.@default.TryToRemoveInteraction(environmentId, 40);
         }
 
         [TearDown]
         public void TearDown()
         {
-            mouseSelector.Deselect(eventsTool);
+            mouseSelector.Deselect(tool);
             ToolManager.@default.TryToRemoveTool(environmentId, 100);
         }
 
@@ -110,9 +123,9 @@ public class BrowserControllerManagerTests
                 HoverExitAnimationId = 4,
                 interactions = new() { 10, 11, 12, 13, 14, 15 }
             };
-            ToolManager.@default.TryToInstantiateTool(out eventsTool, environmentId, dto);
+            ToolManager.@default.TryToInstantiateTool(out tool, environmentId, dto);
 
-            mouseSelector.Select(eventsTool);
+            mouseSelector.Select(tool);
 
             string result = "";
             foreach (Projection projection in ProjectionManager.@default.projections)
@@ -121,6 +134,7 @@ public class BrowserControllerManagerTests
                 result += "\n";
             }
 
+            // Selector, Controller, tool's name, interaction's name, control's name
             string expectation = "---- Projection ----\n" +
                 "Mouse, Mouse, eventsTool, Event0, leftButton\n\n" +
                 "---- Projection ----\n" +
@@ -149,9 +163,9 @@ public class BrowserControllerManagerTests
                 HoverExitAnimationId = 4,
                 interactions = new() { 10, 11, 12, 20, 14, 15 }
             };
-            ToolManager.@default.TryToInstantiateTool(out eventsTool, environmentId, dto);
+            ToolManager.@default.TryToInstantiateTool(out tool, environmentId, dto);
 
-            mouseSelector.Select(eventsTool);
+            mouseSelector.Select(tool);
 
             string result = "";
             foreach (Projection projection in ProjectionManager.@default.projections)
@@ -160,6 +174,7 @@ public class BrowserControllerManagerTests
                 result += "\n";
             }
 
+            // Selector, Controller, tool's name, interaction's name, control's name
             string expectation = "---- Projection ----\n" +
                 "Mouse, Mouse, eventsTool, Event10, leftButton\n\n" +
                 "---- Projection ----\n" +
@@ -188,9 +203,9 @@ public class BrowserControllerManagerTests
                 HoverExitAnimationId = 4,
                 interactions = new() { 10, 11, 12, 13, 14, 15, 16 }
             };
-            ToolManager.@default.TryToInstantiateTool(out eventsTool, environmentId, dto);
+            ToolManager.@default.TryToInstantiateTool(out tool, environmentId, dto);
 
-            mouseSelector.Select(eventsTool);
+            mouseSelector.Select(tool);
 
             string result = "";
             foreach (Projection projection in ProjectionManager.@default.projections)
@@ -199,6 +214,7 @@ public class BrowserControllerManagerTests
                 result += "\n";
             }
 
+            // Selector, Controller, tool's name, interaction's name, control's name
             string expectation = "---- Projection ----\n" +
                 "Mouse, keyboard, eventsTool, Event0, q\n\n" +
                 "---- Projection ----\n" +
@@ -229,9 +245,9 @@ public class BrowserControllerManagerTests
                 HoverExitAnimationId = 4,
                 interactions = new() { 10, 11, 12, 20, 14, 15, 16 }
             };
-            ToolManager.@default.TryToInstantiateTool(out eventsTool, environmentId, dto);
+            ToolManager.@default.TryToInstantiateTool(out tool, environmentId, dto);
 
-            mouseSelector.Select(eventsTool);
+            mouseSelector.Select(tool);
 
             string result = "";
             foreach (Projection projection in ProjectionManager.@default.projections)
@@ -240,6 +256,7 @@ public class BrowserControllerManagerTests
                 result += "\n";
             }
 
+            // Selector, Controller, tool's name, interaction's name, control's name
             string expectation = "---- Projection ----\n" +
                 "Mouse, keyboard, eventsTool, Event10, q\n\n" +
                 "---- Projection ----\n" +

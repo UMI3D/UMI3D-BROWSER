@@ -33,17 +33,18 @@ namespace umi3d.cdk.interaction
 
         /// <summary>
         /// Try to find all inputs compatible with this interactions.<br/>
-        /// <br/>
-        /// Those inputs should belong to one of the controllers passed as argument.
         /// </summary>
         /// <param name="inputs">The list of compatible inputs. Should be filled with compatible inputs at the end of the method.</param>
-        /// <param name="selector"></param>
-        /// <param name="controllers"></param>
         /// <returns></returns>
-        bool TryGetInputsForEventDto(out ReadOnlyCollection<Input> inputs, Selector selector, ReadOnlyCollection<Controller> controllers);
-
+        bool TryGetInputsForEventDto(out ReadOnlyCollection<Input> inputs);
         //bool TryGetInputForDrawingInteractionDto(out ButtonControl control);
-        bool TryGetInputForBooleanParameterDto(out Input input, out Controller controller, Selector selector, ReadOnlyCollection<Controller> controllers);
+
+        /// <summary>
+        /// Try to find all inputs compatible with this interactions.<br/>
+        /// </summary>
+        /// <param name="inputs"></param>
+        /// <returns></returns>
+        bool TryGetInputsForBooleanParameterDto(out ReadOnlyCollection<Input> inputs);
 
         //bool TryGetControlForStringParameterDto(out ButtonControl control);
 

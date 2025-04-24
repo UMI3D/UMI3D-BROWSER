@@ -70,22 +70,6 @@ namespace umi3d.cdk.interaction
             }
         }
 
-        List<Controller> _controllers = new();
-        public ReadOnlyCollection<Controller> controllers => _controllers.AsReadOnly();
-        public void Add(Controller controller)
-        {
-            if (controller  == null || _controllers.Contains(controller))
-            {
-                return;
-            }
-
-            _controllers.Add(controller);
-        }
-        public void Remove(Controller controller)
-        {
-            _controllers.Remove(controller);
-        }
-
         public bool canProjectMoreTool => _projectedTools.Count < _dataDelegate.toolCountLimitation;
 
         List<Tool> _projectedTools = new();
@@ -121,11 +105,7 @@ namespace umi3d.cdk.interaction
                 } 
                 else if (interaction is EventDto eventDto)
                 {
-                    bool found = dataDelegate.TryGetInputsForEventDto(
-                        out inputs,
-                        this, 
-                        controllers
-                    );
+                    bool found = dataDelegate.TryGetInputsForEventDto(out inputs);
 
                     if (!found)
                     {

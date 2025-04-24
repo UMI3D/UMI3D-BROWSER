@@ -26,7 +26,7 @@ using Input = umi3d.cdk.interaction.Input;
 
 namespace umi3d.browserRuntime.interactions
 {
-    public class BrowserControllerManager : IControllerDelegate, IProjectionDelegate
+    public class BrowserControllerManager : IProjectionDelegate
     {
         public const string UI_ID = "UI";
         public const string MOUSE_ID = "Mouse";
@@ -66,78 +66,40 @@ namespace umi3d.browserRuntime.interactions
              * CONTROLLERS
              */
 
-            ControllerManager.@default.delegates.Add(this);
-            
             ControllerManager.@default.TryToInstantiateController(out uiDeviceController, UI_ID);
-            uiDeviceController.@delegate = new UIControllerDataDelegate();
 
             ControllerManager.@default.TryToInstantiateController(out mouseController, MOUSE_ID);
-            mouseController.@delegate = new MouseControllerDataDelegate();
 
             ControllerManager.@default.TryToInstantiateController(out keyboardController, KEYBOARD_ID);
-            keyboardController.@delegate = new KeyboardControllerDataDelegate();
 
             ControllerManager.@default.TryToInstantiateController(out leftVRController, LEFT_ID + VR_ID);
-            //leftVRController.@dataDelegate = new KeyboardControllerDataDelegate();
 
             ControllerManager.@default.TryToInstantiateController(out rightVRController, RIGHT_ID + VR_ID);
-            //leftVRController.@dataDelegate = new KeyboardControllerDataDelegate();
 
             // TODO
             //ControllerManager.@default.TryToInstantiateController(out leftHandController, LEFT_ID + HAND_ID);
-            //leftHandController.@dataDelegate = new KeyboardControllerDataDelegate();
 
             //ControllerManager.@default.TryToInstantiateController(out rightHandController, RIGHT_ID + HAND_ID);
-            //rightHandController.@dataDelegate = new KeyboardControllerDataDelegate();
             
-            /*
-             * Bind SELECTORS and CONTROLLERS
-             */
-
-            mouseSelector.Add(uiDeviceController);
-            mouseSelector.Add(mouseController);
-            mouseSelector.Add(keyboardController);
-
-            leftVRSelector.Add(uiDeviceController);
-            leftVRSelector.Add(leftVRController);
-
-            rightVRSelector.Add(uiDeviceController);
-            rightVRSelector.Add(rightVRController);
-            
-            // TODO
-            //leftHandSelector.Add(uiDeviceController);
-            //leftHandSelector.Add(leftHandController);
-
-            //rightHandSelector.Add(uiDeviceController);
-            //rightHandSelector.Add(rightHandController);
 
             ProjectionManager.@default.delegates.Add(this);
         }
 
         #endregion
 
-        Selector mouseSelector;
-        Selector leftVRSelector;
-        Selector rightVRSelector;
-        Selector leftHandSelector;
-        Selector rightHandSelector;
+        public readonly Selector mouseSelector;
+        public readonly Selector leftVRSelector;
+        public readonly Selector rightVRSelector;
+        public readonly Selector leftHandSelector;
+        public readonly Selector rightHandSelector;
 
-        Controller uiDeviceController;
-        Controller mouseController;
-        Controller keyboardController;
-        Controller leftVRController;
-        Controller rightVRController;
-        Controller leftHandController;
-        Controller rightHandController;
-
-        #region IControllerDelegate
-
-        public void OnChangeOfIsActive(bool active, Controller controller)
-        {
-
-        }
-
-        #endregion
+        public readonly Controller uiDeviceController;
+        public readonly Controller mouseController;
+        public readonly Controller keyboardController;
+        public readonly Controller leftVRController;
+        public readonly Controller rightVRController;
+        public readonly Controller leftHandController;
+        public readonly Controller rightHandController;
 
         #region IProjectionDelegate
 
@@ -328,39 +290,66 @@ namespace umi3d.browserRuntime.interactions
             associations.AddRange(assignedInputs);
         }
 
-        public bool TryGetInputForBooleanParameterDto(out Input input, out Controller controller, Selector selector, ReadOnlyCollection<Controller> controllers)
+        List<Input> _booleanParameterDtoInputs = new();
+        public bool TryGetInputsForBooleanParameterDto(out ReadOnlyCollection<Input> inputs)
         {
-            return ControllerManager.@default.TryGetInputForBooleanParameterDto(
-               out input,
-               out controller,
-              BrowserControllerManager.MOUSE_ID,
-              controllers
-           );
+            _booleanParameterDtoInputs.Clear();
+
+            BrowserControllerManager
+                .@default
+                .uiDeviceController
+                .TryToAddInput(_eventDtoInputs, UIDevice.GetButtonPlaceholder(), InputActionType.Button);
+
+            inputs = _booleanParameterDtoInputs.AsReadOnly();
+
+            return inputs.Count > 0;
         }
 
-        public bool TryGetInputsForEventDto(out ReadOnlyCollection<Input> inputs, Selector selector, ReadOnlyCollection<Controller> controllers)
+        List<Input> _eventDtoInputs = new();
+        public bool TryGetInputsForEventDto(out ReadOnlyCollection<Input> inputs)
         {
-            List<Input> _inputs = new();
+            _eventDtoInputs.Clear();
 
-            ControllerManager.@default.TryGetInputsForEventDto(
-                _inputs,
-                BrowserControllerManager.MOUSE_ID,
-                controllers
-            );
+            Mouse mouse = Mouse.current;
+            if (mouse != null)
+            {
+                BrowserControllerManager
+                    .@default
+                    .mouseController
+                    .TryToAddInput(_eventDtoInputs, mouse.leftButton, InputActionType.Button);
+            }
 
-            ControllerManager.@default.TryGetInputsForEventDto(
-                _inputs,
-                BrowserControllerManager.KEYBOARD_ID,
-                controllers
-            );
+            Keyboard keyboard = Keyboard.current;
+            if (keyboard != null)
+            {
+                BrowserControllerManager
+                    .@default
+                    .keyboardController
+                    .TryToAddInput(_eventDtoInputs, keyboard.qKey, InputActionType.Button);
+                BrowserControllerManager
+                    .@default
+                    .keyboardController
+                    .TryToAddInput(_eventDtoInputs, keyboard.eKey, InputActionType.Button);
+                BrowserControllerManager
+                    .@default
+                    .keyboardController
+                    .TryToAddInput(_eventDtoInputs, keyboard.rKey, InputActionType.Button);
+                BrowserControllerManager
+                    .@default
+                    .keyboardController
+                    .TryToAddInput(_eventDtoInputs, keyboard.fKey, InputActionType.Button);
+                BrowserControllerManager
+                    .@default
+                    .keyboardController
+                    .TryToAddInput(_eventDtoInputs, keyboard.gKey, InputActionType.Button);
+            }
 
-            ControllerManager.@default.TryGetInputsForEventDto(
-                _inputs,
-                BrowserControllerManager.UI_ID,
-                controllers
-            );
+            BrowserControllerManager
+                .@default
+                .uiDeviceController
+                .TryToAddInput(_eventDtoInputs, UIDevice.GetButtonPlaceholder(), InputActionType.Button);
 
-            inputs = _inputs.AsReadOnly();
+            inputs = _eventDtoInputs.AsReadOnly();
 
             return inputs.Count > 0;
         }
@@ -375,12 +364,12 @@ namespace umi3d.browserRuntime.interactions
             throw new System.NotImplementedException();
         }
 
-        public bool TryGetInputForBooleanParameterDto(out Input input, out Controller controller, Selector selector, ReadOnlyCollection<Controller> controllers)
+        public bool TryGetInputsForBooleanParameterDto(out ReadOnlyCollection<Input> inputs)
         {
             throw new NotImplementedException();
         }
 
-        public bool TryGetInputsForEventDto(out ReadOnlyCollection<Input> inputs, Selector selector, ReadOnlyCollection<Controller> controllers)
+        public bool TryGetInputsForEventDto(out ReadOnlyCollection<Input> inputs)
         {
             //return ControllerManager.@default.TryGetInputForEventDto(
             //    out input,
@@ -410,12 +399,12 @@ namespace umi3d.browserRuntime.interactions
             throw new System.NotImplementedException();
         }
 
-        public bool TryGetInputForBooleanParameterDto(out Input input, out Controller controller, Selector selector, ReadOnlyCollection<Controller> controllers)
+        public bool TryGetInputsForBooleanParameterDto(out ReadOnlyCollection<Input> inputs)
         {
             throw new NotImplementedException();
         }
 
-        public bool TryGetInputsForEventDto(out ReadOnlyCollection<Input> inputs, Selector selector, ReadOnlyCollection<Controller> controllers)
+        public bool TryGetInputsForEventDto(out ReadOnlyCollection<Input> inputs)
         {
             //return ControllerManager.@default.TryGetInputForEventDto(
             //    out input,
@@ -433,114 +422,6 @@ namespace umi3d.browserRuntime.interactions
             //;
 
             throw new System.NotImplementedException();
-        }
-    }
-
-    #endregion
-
-    #region IControllerDataDelegate
-
-    class UIControllerDataDelegate : IControllerDataDelegate
-    {
-        public bool TryGetInputForBooleanParameterDto(out Input input, Controller controller)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool TryGetInputsForEventDto(List<Input> inputs, Controller controller)
-        {
-            Input input;
-            InputManager.@default.TryGetInput(
-                out input,
-                controller,
-                UIDevice.GetButtonPlaceholder(),
-                InputActionType.Button
-            );
-
-            inputs.Add(input);
-            return true;
-        }
-    }
-
-    class MouseControllerDataDelegate: IControllerDataDelegate
-    {
-        public bool TryGetInputForBooleanParameterDto(out Input input, Controller controller)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool TryGetInputsForEventDto(List<Input> inputs, Controller controller)
-        {
-            Mouse mouse = Mouse.current;
-            if (mouse == null) { return false; }
-
-            Input input;
-            InputManager.@default.TryGetInput(
-                out input, 
-                controller, 
-                mouse.leftButton, 
-                InputActionType.Button
-            );
-
-            inputs.Add(input);
-            return true;
-        }
-    }
-
-    class KeyboardControllerDataDelegate : IControllerDataDelegate
-    {
-        public bool TryGetInputForBooleanParameterDto(out Input input, Controller controller)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool TryGetInputsForEventDto(List<Input> inputs, Controller controller)
-        {
-            Keyboard keyboard = Keyboard.current;
-            if (keyboard == null) { return false; }
-
-            Input input;
-            InputManager.@default.TryGetInput(
-                out input,
-                controller,
-                keyboard.qKey,
-                InputActionType.Button
-            );
-            inputs.Add(input);
-
-            InputManager.@default.TryGetInput(
-                out input,
-                controller,
-                keyboard.eKey,
-                InputActionType.Button
-            );
-            inputs.Add(input);
-
-            InputManager.@default.TryGetInput(
-                out input,
-                controller,
-                keyboard.rKey,
-                InputActionType.Button
-            );
-            inputs.Add(input);
-
-            InputManager.@default.TryGetInput(
-                out input,
-                controller,
-                keyboard.fKey,
-                InputActionType.Button
-            );
-            inputs.Add(input);
-
-            InputManager.@default.TryGetInput(
-                out input,
-                controller,
-                keyboard.gKey,
-                InputActionType.Button
-            );
-            inputs.Add(input);
-
-            return true;
         }
     }
 

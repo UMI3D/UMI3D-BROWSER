@@ -14,11 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using umi3d.common.interaction;
-using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace umi3d.cdk.interaction
 {
@@ -27,21 +25,6 @@ namespace umi3d.cdk.interaction
         internal Controller(string id)
         {
             this.id = id;
-        }
-
-        IControllerDataDelegate _delegate;
-        public IControllerDataDelegate @delegate
-        {
-            get => _delegate;
-            set
-            {
-                if (value == null)
-                {
-                    UnityEngine.Debug.LogError($"[Controller] Error: you are trying to set a null delegate.");
-                    return;
-                }
-                _delegate = value;
-            }
         }
 
         /// <summary>
@@ -64,11 +47,6 @@ namespace umi3d.cdk.interaction
         public void SetActive(bool active)
         {
             this.isActive = active;
-            ControllerManager.@default.delegates.ForEach(@delegate =>
-            {
-                @delegate.OnChangeOfIsActive(active, this);
-                return inetum.unityUtils.observation.Flow.Continue;
-            });
         }
 
         List<Input> _inputs = new List<Input>();
@@ -88,6 +66,24 @@ namespace umi3d.cdk.interaction
             input.DissociateFromController();
             _inputs.Remove(input);
             return true;
+        }
+
+        public bool TryToAddInput(List<Input> inputs, InputControl control, InputActionType actionType)
+        {
+            if (!isActive) { return false; }
+
+            bool result = InputManager.@default.TryGetInput(
+                out Input input,
+                this,
+                control,
+                actionType
+            );
+
+            if (result)
+            {
+                inputs.Add(input);
+            }
+            return result;
         }
     }
 }

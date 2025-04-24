@@ -14,6 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using umi3d.common.interaction;
+using UnityEngine;
+
 namespace umi3d.cdk.interaction
 {
     public class Projection 
@@ -24,6 +27,22 @@ namespace umi3d.cdk.interaction
         public Interaction interaction { get; internal set; }
         public Input input { get; internal set; }
 
+        IClientServerCommunicationSelectorDelegate _clientServerCommunicationSelectorDelegate = new ClientServerCommunicationSelectorDelegate();
+        public IClientServerCommunicationSelectorDelegate clientServerCommunicationSelectorDelegate
+        {
+            get => _clientServerCommunicationSelectorDelegate;
+            set
+            {
+                if (value == null)
+                {
+                    _clientServerCommunicationSelectorDelegate = new ClientServerCommunicationSelectorDelegate();
+                    return;
+                }
+                _clientServerCommunicationSelectorDelegate = value;
+            }
+        }
+
+
         internal Projection(Selector selector, Controller controller, Tool tool, Interaction interaction, Input input)
         {
             this.selector = selector;
@@ -31,6 +50,65 @@ namespace umi3d.cdk.interaction
             this.tool = tool;
             this.interaction = interaction;
             this.input = input;
+        }
+
+        public void SendEventStateChanged(bool value)
+        {
+            IBoneRepresentable bone = selector.boneRepresentable;
+
+            var request = new EventStateChangedDto
+            {
+                active = value,
+
+                environmentId = interaction.environmentId,
+                toolId = tool.dto.id,
+                id = interaction.dto.id,
+                hoveredObjectId = selector.hoveredObjectId,
+
+                boneType = bone.bone,
+                bonePosition = bone.bonePosition.Dto(),
+                boneRotation = new Vector4(bone.boneRotation.x, bone.boneRotation.y, bone.boneRotation.z, bone.boneRotation.w).Dto(),
+            };
+
+            clientServerCommunicationSelectorDelegate.SendRequest(request, true);
+        }
+
+        public void SendEventTriggered()
+        {
+            IBoneRepresentable bone = selector.boneRepresentable;
+
+            var request = new EventTriggeredDto
+            {
+                environmentId = interaction.environmentId,
+                toolId = tool.dto.id,
+                id = interaction.dto.id,
+                hoveredObjectId = selector.hoveredObjectId,
+
+                boneType = bone.bone,
+                bonePosition = bone.bonePosition.Dto(),
+                boneRotation = new Vector4(bone.boneRotation.x, bone.boneRotation.y, bone.boneRotation.z, bone.boneRotation.w).Dto(),
+            };
+
+            clientServerCommunicationSelectorDelegate.SendRequest(request, true);
+        }
+
+        public void SendLinkOpened()
+        {
+            IBoneRepresentable bone = selector.boneRepresentable;
+
+            var request = new LinkOpened
+            {
+                environmentId = interaction.environmentId,
+                toolId = tool.dto.id,
+                id = interaction.dto.id,
+                hoveredObjectId = selector.hoveredObjectId,
+
+                boneType = bone.bone,
+                bonePosition = bone.bonePosition.Dto(),
+                boneRotation = new Vector4(bone.boneRotation.x, bone.boneRotation.y, bone.boneRotation.z, bone.boneRotation.w).Dto(),
+            };
+
+            clientServerCommunicationSelectorDelegate.SendRequest(request, true);
         }
 
         public string debugDescription

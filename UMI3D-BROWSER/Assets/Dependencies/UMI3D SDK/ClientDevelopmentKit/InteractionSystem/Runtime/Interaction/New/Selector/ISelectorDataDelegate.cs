@@ -14,11 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using umi3d.common.interaction;
-using UnityEngine;
 
 namespace umi3d.cdk.interaction
 {
@@ -31,13 +29,13 @@ namespace umi3d.cdk.interaction
 
         void AssociateInteractionAndInput(List<(AbstractInteractionDto interaction, Input input)> associations, ReadOnlyDictionary<AbstractInteractionDto, ReadOnlyCollection<Input>> inputsByInteractions);
 
+        // ----- Button action type -----
         /// <summary>
         /// Try to find all inputs compatible with this interactions.<br/>
         /// </summary>
         /// <param name="inputs">The list of compatible inputs. Should be filled with compatible inputs at the end of the method.</param>
         /// <returns></returns>
         bool TryGetInputsForEventDto(out ReadOnlyCollection<Input> inputs);
-
         /// <summary>
         /// Try to find all inputs compatible with this interactions.<br/>
         /// </summary>
@@ -45,6 +43,7 @@ namespace umi3d.cdk.interaction
         /// <returns></returns>
         bool TryGetInputsForDrawingInteractionDto(out ReadOnlyCollection<Input> inputs);
 
+        // ----- PathThrough bool action type -----
         /// <summary>
         /// Try to find all inputs compatible with this interactions.<br/>
         /// </summary>
@@ -52,13 +51,7 @@ namespace umi3d.cdk.interaction
         /// <returns></returns>
         bool TryGetInputsForBooleanParameterDto(out ReadOnlyCollection<Input> inputs);
 
-        /// <summary>
-        /// Try to find all inputs compatible with this interactions.<br/>
-        /// </summary>
-        /// <param name="inputs"></param>
-        /// <returns></returns>
-        bool TryGetInputsForStringParameterDto(out ReadOnlyCollection<Input> inputs);
-
+        // ----- PathThrough float or int action type -----
         /// <summary>
         /// Try to find all inputs compatible with this interactions.<br/>
         /// </summary>
@@ -72,13 +65,21 @@ namespace umi3d.cdk.interaction
         /// <returns></returns>
         bool TryGetInputsForIntegerParameterDto(out ReadOnlyCollection<Input> inputs);
 
+        // ----- PathThrough axis float or int action type -----
         /// <summary>
         /// Try to find all inputs compatible with this interactions.<br/>
         /// </summary>
         /// <param name="inputs"></param>
         /// <returns></returns>
-        bool TryGetInputsForColorParameterDto(out ReadOnlyCollection<Input> inputs);
+        bool TryGetInputsForFloatRangeParameterDto(out ReadOnlyCollection<Input> inputs);
+        /// <summary>
+        /// Try to find all inputs compatible with this interactions.<br/>
+        /// </summary>
+        /// <param name="inputs"></param>
+        /// <returns></returns>
+        bool TryGetInputsForIntegerRangeParameterDto(out ReadOnlyCollection<Input> inputs);
 
+        // ----- PathThrough vector2, 3 or 4 action type -----
         /// <summary>
         /// Try to find all inputs compatible with this interactions.<br/>
         /// </summary>
@@ -98,25 +99,25 @@ namespace umi3d.cdk.interaction
         /// <returns></returns>
         bool TryGetInputsForVector4ParameterDto(out ReadOnlyCollection<Input> inputs);
 
+        // TO be defined
+        /// <summary>
+        /// Try to find all inputs compatible with this interactions.<br/>
+        /// </summary>
+        /// <param name="inputs"></param>
+        /// <returns></returns>
+        bool TryGetInputsForStringParameterDto(out ReadOnlyCollection<Input> inputs);
+        /// <summary>
+        /// Try to find all inputs compatible with this interactions.<br/>
+        /// </summary>
+        /// <param name="inputs"></param>
+        /// <returns></returns>
+        bool TryGetInputsForColorParameterDto(out ReadOnlyCollection<Input> inputs);
         /// <summary>
         /// Try to find all inputs compatible with this interactions.<br/>
         /// </summary>
         /// <param name="inputs"></param>
         /// <returns></returns>
         bool TryGetInputsForEnumParameterDto(out ReadOnlyCollection<Input> inputs);
-        /// <summary>
-        /// Try to find all inputs compatible with this interactions.<br/>
-        /// </summary>
-        /// <param name="inputs"></param>
-        /// <returns></returns>
-        bool TryGetInputsForFloatRangeParameterDto(out ReadOnlyCollection<Input> inputs);
-        /// <summary>
-        /// Try to find all inputs compatible with this interactions.<br/>
-        /// </summary>
-        /// <param name="inputs"></param>
-        /// <returns></returns>
-        bool TryGetInputsForIntegerRangeParameterDto(out ReadOnlyCollection<Input> inputs);
-
         /// <summary>
         /// Try to find all inputs compatible with this interactions.<br/>
         /// </summary>

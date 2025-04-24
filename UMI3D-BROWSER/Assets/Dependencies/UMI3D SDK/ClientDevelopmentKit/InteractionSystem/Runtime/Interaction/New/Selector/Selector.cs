@@ -51,6 +51,21 @@ namespace umi3d.cdk.interaction
             }
         }
 
+        IBoneRepresentable _boneRepresentable;
+        public IBoneRepresentable boneRepresentable
+        {
+            get => _boneRepresentable;
+            set
+            {
+                if (value == null)
+                {
+                    UnityEngine.Debug.LogError($"[Selector] Error: you are trying to set a null delegate.");
+                    return;
+                }
+                _boneRepresentable = value;
+            }
+        }
+
         IClientServerCommunicationSelectorDelegate _clientServerCommunicationSelectorDelegate = new ClientServerCommunicationSelectorDelegate();
         public IClientServerCommunicationSelectorDelegate clientServerCommunicationSelectorDelegate
         {
@@ -129,13 +144,6 @@ namespace umi3d.cdk.interaction
                     if (!TryToAddInputToDictionary(interaction, found)) { continue; }
                 }
 
-                else if (interaction is StringParameterDto)
-                {
-                    bool found = dataDelegate.TryGetInputsForStringParameterDto(out inputs);
-
-                    if (!TryToAddInputToDictionary(interaction, found)) { continue; }
-                }
-
                 else if (interaction is FloatParameterDto)
                 {
                     bool found = dataDelegate.TryGetInputsForFloatParameterDto(out inputs);
@@ -145,13 +153,6 @@ namespace umi3d.cdk.interaction
                 else if (interaction is IntegerParameterDto)
                 {
                     bool found = dataDelegate.TryGetInputsForIntegerParameterDto(out inputs);
-
-                    if (!TryToAddInputToDictionary(interaction, found)) { continue; }
-                }
-
-                else if (interaction is ColorParameterDto)
-                {
-                    bool found = dataDelegate.TryGetInputsForColorParameterDto(out inputs);
 
                     if (!TryToAddInputToDictionary(interaction, found)) { continue; }
                 }
@@ -175,12 +176,6 @@ namespace umi3d.cdk.interaction
                     if (!TryToAddInputToDictionary(interaction, found)) { continue; }
                 }
 
-                else if (interaction is EnumParameterDto<string>)
-                {
-                    bool found = dataDelegate.TryGetInputsForEnumParameterDto(out inputs);
-
-                    if (!TryToAddInputToDictionary(interaction, found)) { continue; }
-                }
                 else if (interaction is FloatRangeParameterDto)
                 {
                     bool found = dataDelegate.TryGetInputsForFloatRangeParameterDto(out inputs);
@@ -194,6 +189,24 @@ namespace umi3d.cdk.interaction
                     if (!TryToAddInputToDictionary(interaction, found)) { continue; }
                 }
 
+                else if (interaction is StringParameterDto)
+                {
+                    bool found = dataDelegate.TryGetInputsForStringParameterDto(out inputs);
+
+                    if (!TryToAddInputToDictionary(interaction, found)) { continue; }
+                }
+                else if (interaction is ColorParameterDto)
+                {
+                    bool found = dataDelegate.TryGetInputsForColorParameterDto(out inputs);
+
+                    if (!TryToAddInputToDictionary(interaction, found)) { continue; }
+                }
+                else if (interaction is EnumParameterDto<string>)
+                {
+                    bool found = dataDelegate.TryGetInputsForEnumParameterDto(out inputs);
+
+                    if (!TryToAddInputToDictionary(interaction, found)) { continue; }
+                }
                 else if (interaction is UploadFileParameterDto)
                 {
                     bool found = dataDelegate.TryGetInputsForUploadFileParameterDto(out inputs);
@@ -269,6 +282,7 @@ namespace umi3d.cdk.interaction
 
         }
 
+        public ulong hoveredObjectId { get; internal set; }
         public void HoverEnter(Tool tool, Collider collider, uint boneId, Transform boneTransform, Vector3 position, Vector3 normal, Vector3 direction)
         {
             HoverStateChanged(true, tool, collider, boneId, boneTransform, position, normal, direction);
@@ -290,7 +304,7 @@ namespace umi3d.cdk.interaction
                 tool.OnSelectorHoverExit(this);
             }
 
-            ulong hoveredObjectId = UMI3DEnvironmentLoader.GetNodeID(collider);
+            hoveredObjectId = UMI3DEnvironmentLoader.GetNodeID(collider);
             HoverStateChangedDto hoverDto = new HoverStateChangedDto()
             {
                 toolId = tool.dto.id,
@@ -319,7 +333,7 @@ namespace umi3d.cdk.interaction
 
         public void Hover(Tool tool, Collider collider, uint boneId, Transform boneTransform, Vector3 position, Vector3 normal, Vector3 direction)
         {
-            ulong hoveredObjectId = UMI3DEnvironmentLoader.GetNodeID(collider);
+            hoveredObjectId = UMI3DEnvironmentLoader.GetNodeID(collider);
             HoveredDto hoverDto = new HoveredDto()
             {
                 toolId = tool.dto.id,

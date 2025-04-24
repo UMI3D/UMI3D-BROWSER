@@ -18,8 +18,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using umi3d.common.interaction;
-using Unity.VisualScripting.YamlDotNet.Core.Tokens;
-using UnityEngine;
 
 namespace umi3d.cdk.interaction
 {
@@ -60,7 +58,7 @@ namespace umi3d.cdk.interaction
                 return false;
             }
 
-            UMI3DEnvironmentLoader.Instance.DeleteEntityInstance(tool.environmentId, tool.dto.id);
+            _ = UMI3DEnvironmentLoader.Instance.DeleteEntityInstance(tool.environmentId, tool.dto.id);
             _tools.Remove(tool);
             return true;
         }
@@ -72,7 +70,7 @@ namespace umi3d.cdk.interaction
                 return false;
             }
 
-            UMI3DEnvironmentLoader.Instance.DeleteEntityInstance(environmentId, toolId);
+            _ = UMI3DEnvironmentLoader.Instance.DeleteEntityInstance(environmentId, toolId);
             _tools.Remove(tool);
             return true;
         }

@@ -68,6 +68,39 @@ namespace umi3d.cdk.interaction
             return true;
         }
 
+        /// <summary>
+        /// Try to add the input corresponding to <paramref name="control"/> to the list of <paramref name="inputs"/>.<br/>
+        /// <br/>
+        /// Which actionType to choose:
+        /// <list type="bullet">
+        /// <item>
+        /// Value:<br/>
+        /// Action used to read a continuous or single value (e.g., joystick position, trigger pressure).<br/>
+        /// Calls the following phases:<br/>
+        /// - started: When the input starts changing.<br/>
+        /// - performed: On every value update.<br/>
+        /// - canceled: When the input is canceled (e.g., returns to a neutral value).
+        /// </item>
+        /// <item>
+        /// Button:<br/>
+        /// Action triggered by a button press or release (e.g., a key or gamepad button).<br/>
+        /// Calls the following phases:<br/>
+        /// - started: When a button is pressed.<br/>
+        /// - performed: When the button reaches its activation threshold (default: full press).<br/>
+        /// - canceled: When the button is released.
+        /// </item>
+        /// <item>
+        /// PassThrough:<br/>
+        /// Action that directly passes input without state or context management (useful for continuous input or multiple simultaneous inputs, e.g., multiple joystick movements).<br/>
+        /// Only calls the performed phase on every input update.<br/>
+        /// Does not handle started or canceled phases, as there is no state tracking.
+        /// </item>
+        /// </list>
+        /// </summary>
+        /// <param name="inputs"></param>
+        /// <param name="control"></param>
+        /// <param name="actionType"></param>
+        /// <returns></returns>
         public bool TryToAddInput(List<Input> inputs, InputControl control, InputActionType actionType)
         {
             if (!isActive) { return false; }

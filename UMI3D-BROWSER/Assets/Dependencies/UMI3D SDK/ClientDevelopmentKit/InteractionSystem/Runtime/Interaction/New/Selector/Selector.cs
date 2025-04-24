@@ -14,15 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils.observation;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using umi3d.common;
 using umi3d.common.interaction;
 using UnityEngine;
-using UnityEngine.Windows;
 
 namespace umi3d.cdk.interaction
 {
@@ -98,80 +94,121 @@ namespace umi3d.cdk.interaction
             }
 
             ReadOnlyCollection<Input> inputs;
+            bool TryToAddInputToDictionary(AbstractInteractionDto interaction, bool found)
+            {
+                if (!found)
+                {
+                    UnityEngine.Debug.LogWarning($"[Selector-{id}] Warning: no controller or input available for {interaction.GetType()}, {interaction.name}.");
+                    return false;
+                }
+
+                inputsByInteractions.Add(interaction, inputs);
+                return true;
+            }
+
             foreach (AbstractInteractionDto interaction in tool.interactions)
             {
-                if (interaction is DrawingInteractionDto drawingInteractionDto)
+                if (interaction is DrawingInteractionDto)
                 {
+                    bool found = dataDelegate.TryGetInputsForDrawingInteractionDto(out inputs);
+
+                    if (!TryToAddInputToDictionary(interaction, found)) { continue; }
                 } 
-                else if (interaction is EventDto eventDto)
+                else if (interaction is EventDto)
                 {
                     bool found = dataDelegate.TryGetInputsForEventDto(out inputs);
 
-                    if (!found)
-                    {
-                        UnityEngine.Debug.LogWarning($"[Selector-{id}] Warning: no controller or input available for {eventDto.GetType()}, {eventDto.name}.");
-                        continue;
-                    }
-
-                    inputsByInteractions.Add(interaction, inputs);
-                }
-                else if (interaction is BooleanParameterDto booleanParameterDto)
-                {
-
+                    if (!TryToAddInputToDictionary(interaction, found)) { continue; }
                 }
 
-                else if (interaction is StringParameterDto stringParameterDto)
+                // Parameters
+                else if (interaction is BooleanParameterDto)
                 {
+                    bool found = dataDelegate.TryGetInputsForBooleanParameterDto(out inputs);
 
+                    if (!TryToAddInputToDictionary(interaction, found)) { continue; }
                 }
 
-                else if (interaction is FloatParameterDto floatParameterDto)
+                else if (interaction is StringParameterDto)
                 {
+                    bool found = dataDelegate.TryGetInputsForStringParameterDto(out inputs);
 
-                }
-                else if (interaction is IntegerParameterDto integerParameterDto)
-                {
-
+                    if (!TryToAddInputToDictionary(interaction, found)) { continue; }
                 }
 
-                else if (interaction is ColorParameterDto colorParameterDto)
+                else if (interaction is FloatParameterDto)
                 {
+                    bool found = dataDelegate.TryGetInputsForFloatParameterDto(out inputs);
 
+                    if (!TryToAddInputToDictionary(interaction, found)) { continue; }
+                }
+                else if (interaction is IntegerParameterDto)
+                {
+                    bool found = dataDelegate.TryGetInputsForIntegerParameterDto(out inputs);
+
+                    if (!TryToAddInputToDictionary(interaction, found)) { continue; }
                 }
 
-                else if (interaction is Vector2ParameterDto vector2ParameterDto)
+                else if (interaction is ColorParameterDto)
                 {
+                    bool found = dataDelegate.TryGetInputsForColorParameterDto(out inputs);
 
-                }
-                else if (interaction is Vector3ParameterDto vector3ParameterDto)
-                {
-
-                }
-                else if (interaction is Vector4ParameterDto vector4ParameterDto)
-                {
-
+                    if (!TryToAddInputToDictionary(interaction, found)) { continue; }
                 }
 
-                else if (interaction is EnumParameterDto<string> enumParameterDto)
+                else if (interaction is Vector2ParameterDto)
                 {
+                    bool found = dataDelegate.TryGetInputsForVector2ParameterDto(out inputs);
 
+                    if (!TryToAddInputToDictionary(interaction, found)) { continue; }
                 }
-                else if (interaction is FloatRangeParameterDto floatRangeParameterDto)
+                else if (interaction is Vector3ParameterDto)
                 {
+                    bool found = dataDelegate.TryGetInputsForVector3ParameterDto(out inputs);
 
+                    if (!TryToAddInputToDictionary(interaction, found)) { continue; }
                 }
-                else if (interaction is IntegerRangeParameterDto integerRangeParameterDto)
+                else if (interaction is Vector4ParameterDto)
                 {
+                    bool found = dataDelegate.TryGetInputsForVector4ParameterDto(out inputs);
 
+                    if (!TryToAddInputToDictionary(interaction, found)) { continue; }
                 }
 
-                else if (interaction is UploadFileParameterDto uploadFileParameterDto)
+                else if (interaction is EnumParameterDto<string>)
                 {
+                    bool found = dataDelegate.TryGetInputsForEnumParameterDto(out inputs);
 
+                    if (!TryToAddInputToDictionary(interaction, found)) { continue; }
                 }
-                else if (interaction is LocalInfoRequestParameterDto localInfoRequestParameterDto)
+                else if (interaction is FloatRangeParameterDto)
                 {
+                    bool found = dataDelegate.TryGetInputsForFloatRangeParameterDto(out inputs);
 
+                    if (!TryToAddInputToDictionary(interaction, found)) { continue; }
+                }
+                else if (interaction is IntegerRangeParameterDto)
+                {
+                    bool found = dataDelegate.TryGetInputsForIntegerRangeParameterDto(out inputs);
+
+                    if (!TryToAddInputToDictionary(interaction, found)) { continue; }
+                }
+
+                else if (interaction is UploadFileParameterDto)
+                {
+                    bool found = dataDelegate.TryGetInputsForUploadFileParameterDto(out inputs);
+
+                    if (!TryToAddInputToDictionary(interaction, found)) { continue; }
+                }
+                else if (interaction is LocalInfoRequestParameterDto)
+                {
+                    bool found = dataDelegate.TryGetInputsForLocalInfoRequestParameterDto(out inputs);
+
+                    if (!TryToAddInputToDictionary(interaction, found)) { continue; }
+                }
+                else
+                {
+                    UnityEngine.Debug.Log($"[Selector] Error: Unhandled case: {interaction.GetType()}");
                 }
             }
 

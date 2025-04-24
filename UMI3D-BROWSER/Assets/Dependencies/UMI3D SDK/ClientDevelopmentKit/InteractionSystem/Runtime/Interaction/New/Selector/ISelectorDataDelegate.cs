@@ -37,7 +37,13 @@ namespace umi3d.cdk.interaction
         /// <param name="inputs">The list of compatible inputs. Should be filled with compatible inputs at the end of the method.</param>
         /// <returns></returns>
         bool TryGetInputsForEventDto(out ReadOnlyCollection<Input> inputs);
-        //bool TryGetInputForDrawingInteractionDto(out ButtonControl control);
+
+        /// <summary>
+        /// Try to find all inputs compatible with this interactions.<br/>
+        /// </summary>
+        /// <param name="inputs">The list of compatible inputs. Should be filled with compatible inputs at the end of the method.</param>
+        /// <returns></returns>
+        bool TryGetInputsForDrawingInteractionDto(out ReadOnlyCollection<Input> inputs);
 
         /// <summary>
         /// Try to find all inputs compatible with this interactions.<br/>
@@ -46,22 +52,82 @@ namespace umi3d.cdk.interaction
         /// <returns></returns>
         bool TryGetInputsForBooleanParameterDto(out ReadOnlyCollection<Input> inputs);
 
-        //bool TryGetControlForStringParameterDto(out ButtonControl control);
+        /// <summary>
+        /// Try to find all inputs compatible with this interactions.<br/>
+        /// </summary>
+        /// <param name="inputs"></param>
+        /// <returns></returns>
+        bool TryGetInputsForStringParameterDto(out ReadOnlyCollection<Input> inputs);
 
-        //bool TryGetInputForFloatParameterDto(out DoubleControl control);
-        //bool TryGetInputForIntegerParameterDto(out IntegerControl control);
+        /// <summary>
+        /// Try to find all inputs compatible with this interactions.<br/>
+        /// </summary>
+        /// <param name="inputs"></param>
+        /// <returns></returns>
+        bool TryGetInputsForFloatParameterDto(out ReadOnlyCollection<Input> inputs);
+        /// <summary>
+        /// Try to find all inputs compatible with this interactions.<br/>
+        /// </summary>
+        /// <param name="inputs"></param>
+        /// <returns></returns>
+        bool TryGetInputsForIntegerParameterDto(out ReadOnlyCollection<Input> inputs);
 
-        //bool TryGetInputForColorParameterDto(out ButtonControl control);
+        /// <summary>
+        /// Try to find all inputs compatible with this interactions.<br/>
+        /// </summary>
+        /// <param name="inputs"></param>
+        /// <returns></returns>
+        bool TryGetInputsForColorParameterDto(out ReadOnlyCollection<Input> inputs);
 
-        //bool TryGetInputForVector2ParameterDto(out Vector2Control control);
-        //bool TryGetInputForVector3ParameterDto(out Vector3Control control);
-        //bool TryGetInputForVector4ParameterDto(out ButtonControl control);
+        /// <summary>
+        /// Try to find all inputs compatible with this interactions.<br/>
+        /// </summary>
+        /// <param name="inputs"></param>
+        /// <returns></returns>
+        bool TryGetInputsForVector2ParameterDto(out ReadOnlyCollection<Input> inputs);
+        /// <summary>
+        /// Try to find all inputs compatible with this interactions.<br/>
+        /// </summary>
+        /// <param name="inputs"></param>
+        /// <returns></returns>
+        bool TryGetInputsForVector3ParameterDto(out ReadOnlyCollection<Input> inputs);
+        /// <summary>
+        /// Try to find all inputs compatible with this interactions.<br/>
+        /// </summary>
+        /// <param name="inputs"></param>
+        /// <returns></returns>
+        bool TryGetInputsForVector4ParameterDto(out ReadOnlyCollection<Input> inputs);
 
-        //bool TryGetInputForEnumParameterDto(out ButtonControl control);
-        //bool TryGetInputForFloatRangeParameterDto(out ButtonControl control);
-        //bool TryGetInputForIntegerRangeParameterDto(out ButtonControl control);
+        /// <summary>
+        /// Try to find all inputs compatible with this interactions.<br/>
+        /// </summary>
+        /// <param name="inputs"></param>
+        /// <returns></returns>
+        bool TryGetInputsForEnumParameterDto(out ReadOnlyCollection<Input> inputs);
+        /// <summary>
+        /// Try to find all inputs compatible with this interactions.<br/>
+        /// </summary>
+        /// <param name="inputs"></param>
+        /// <returns></returns>
+        bool TryGetInputsForFloatRangeParameterDto(out ReadOnlyCollection<Input> inputs);
+        /// <summary>
+        /// Try to find all inputs compatible with this interactions.<br/>
+        /// </summary>
+        /// <param name="inputs"></param>
+        /// <returns></returns>
+        bool TryGetInputsForIntegerRangeParameterDto(out ReadOnlyCollection<Input> inputs);
 
-        //bool TryGetInputForUploadFileParameterDto(out ButtonControl control);
-        //bool TryGetInputForLocalInfoRequestParameterDto(out ButtonControl control);
+        /// <summary>
+        /// Try to find all inputs compatible with this interactions.<br/>
+        /// </summary>
+        /// <param name="inputs"></param>
+        /// <returns></returns>
+        bool TryGetInputsForUploadFileParameterDto(out ReadOnlyCollection<Input> inputs);
+        /// <summary>
+        /// Try to find all inputs compatible with this interactions.<br/>
+        /// </summary>
+        /// <param name="inputs"></param>
+        /// <returns></returns>
+        bool TryGetInputsForLocalInfoRequestParameterDto(out ReadOnlyCollection<Input> inputs);
     }
 }

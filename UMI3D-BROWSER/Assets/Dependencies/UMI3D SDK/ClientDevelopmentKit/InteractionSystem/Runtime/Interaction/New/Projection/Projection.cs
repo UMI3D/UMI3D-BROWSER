@@ -42,7 +42,6 @@ namespace umi3d.cdk.interaction
             }
         }
 
-
         internal Projection(Selector selector, Controller controller, Tool tool, Interaction interaction, Input input)
         {
             this.selector = selector;
@@ -92,6 +91,74 @@ namespace umi3d.cdk.interaction
             clientServerCommunicationSelectorDelegate.SendRequest(request, true);
         }
 
+        public void SendDrawing(bool drawingEnd)
+        {
+            IBoneRepresentable bone = selector.boneRepresentable;
+
+            var request = new DrawingDto
+            {
+                environmentId = interaction.environmentId,
+                toolId = tool.dto.id,
+                id = interaction.dto.id,
+                hoveredObjectId = selector.hoveredObjectId,
+
+                drawingEnd = drawingEnd,
+                //clientLineId = 0, // TODO
+                //clientDrawingId = 0,
+                //surfaceId = 0,
+                //positions = null,
+
+                boneType = bone.bone,
+                bonePosition = bone.bonePosition.Dto(),
+                boneRotation = new Vector4(bone.boneRotation.x, bone.boneRotation.y, bone.boneRotation.z, bone.boneRotation.w).Dto(),
+            };
+
+            clientServerCommunicationSelectorDelegate.SendRequest(request, true);
+        }
+
+        public void SendParameterSetting(AbstractInteractionDto dto)
+        {
+            IBoneRepresentable bone = selector.boneRepresentable;
+
+            var request = new ParameterSettingRequestDto
+            {
+                environmentId = interaction.environmentId,
+                toolId = tool.dto.id,
+                id = interaction.dto.id,
+                hoveredObjectId = selector.hoveredObjectId,
+
+                parameter = dto,
+
+                boneType = bone.bone,
+                bonePosition = bone.bonePosition.Dto(),
+                boneRotation = new Vector4(bone.boneRotation.x, bone.boneRotation.y, bone.boneRotation.z, bone.boneRotation.w).Dto(),
+            };
+
+            clientServerCommunicationSelectorDelegate.SendRequest(request, true);
+        }
+
+        public void SendUploadFile(UploadFileParameterDto dto, string fileId)
+        {
+            IBoneRepresentable bone = selector.boneRepresentable;
+
+            var request = new UploadFileRequestDto
+            {
+                environmentId = interaction.environmentId,
+                toolId = tool.dto.id,
+                id = interaction.dto.id,
+                hoveredObjectId = selector.hoveredObjectId,
+
+                fileId = fileId,
+                parameter = dto,
+
+                boneType = bone.bone,
+                bonePosition = bone.bonePosition.Dto(),
+                boneRotation = new Vector4(bone.boneRotation.x, bone.boneRotation.y, bone.boneRotation.z, bone.boneRotation.w).Dto(),
+            };
+
+            clientServerCommunicationSelectorDelegate.SendRequest(request, true);
+        }
+
         public void SendLinkOpened()
         {
             IBoneRepresentable bone = selector.boneRepresentable;
@@ -102,6 +169,28 @@ namespace umi3d.cdk.interaction
                 toolId = tool.dto.id,
                 id = interaction.dto.id,
                 hoveredObjectId = selector.hoveredObjectId,
+
+                boneType = bone.bone,
+                bonePosition = bone.bonePosition.Dto(),
+                boneRotation = new Vector4(bone.boneRotation.x, bone.boneRotation.y, bone.boneRotation.z, bone.boneRotation.w).Dto(),
+            };
+
+            clientServerCommunicationSelectorDelegate.SendRequest(request, true);
+        }
+
+        public void SendManipulation()
+        {
+            IBoneRepresentable bone = selector.boneRepresentable;
+
+            var request = new ManipulationRequestDto
+            {
+                environmentId = interaction.environmentId,
+                toolId = tool.dto.id,
+                id = interaction.dto.id,
+                hoveredObjectId = selector.hoveredObjectId,
+
+                //translation = null, // TODO
+                //rotation = null,
 
                 boneType = bone.bone,
                 bonePosition = bone.bonePosition.Dto(),

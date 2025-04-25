@@ -255,6 +255,15 @@ namespace umi3d.cdk.interaction
 
             _projectedTools.Add(tool);
             tool.selector = this;
+            
+            var request = new ToolProjectedDto
+            {
+                environmentId = tool.environmentId,
+                toolId = tool.dto.id,
+
+                boneType = boneRepresentable.bone
+            };
+            clientServerCommunicationSelectorDelegate.SendRequest(request, true);
 
             SelectorManager.@default.lastSelectorUsed = this;
             SelectorManager.@default.lastSelectorSelected = this;
@@ -265,6 +274,15 @@ namespace umi3d.cdk.interaction
         {
             _projectedTools.Remove(tool);
             tool.selector = null;
+
+            var request = new ToolReleasedDto
+            {
+                environmentId = tool.environmentId,
+                toolId = tool.dto.id,
+
+                boneType = boneRepresentable.bone
+            };
+            clientServerCommunicationSelectorDelegate.SendRequest(request, true);
 
             _projectionToRelease.AddRange(ProjectionManager.@default.projections.Where(projection => projection.tool == tool));
             foreach (Projection projection in _projectionToRelease)
@@ -283,36 +301,40 @@ namespace umi3d.cdk.interaction
         }
 
         public ulong hoveredObjectId { get; internal set; }
-        public void HoverEnter(Tool tool, Collider collider, uint boneId, Transform boneTransform, Vector3 position, Vector3 normal, Vector3 direction)
+        public void HoverEnter(Tool tool, Collider collider, Vector3 position, Vector3 normal, Vector3 direction)
         {
-            HoverStateChanged(true, tool, collider, boneId, boneTransform, position, normal, direction);
+            HoverStateChanged(true, tool, collider, position, normal, direction);
         }
 
-        public void HoverExit(Tool tool, Collider collider, uint boneId, Transform boneTransform, Vector3 position, Vector3 normal, Vector3 direction)
+        public void HoverExit(Tool tool, Collider collider, Vector3 position, Vector3 normal, Vector3 direction)
         {
-            HoverStateChanged(false, tool, collider, boneId, boneTransform, position, normal, direction);
+            HoverStateChanged(false, tool, collider, position, normal, direction);
         }
 
-        void HoverStateChanged(bool enter, Tool tool, Collider collider, uint boneId, Transform boneTransform, Vector3 position, Vector3 normal, Vector3 direction)
+        void HoverStateChanged(bool enter, Tool tool, Collider collider, Vector3 position, Vector3 normal, Vector3 direction)
         {
             if (enter)
             {
                 tool.OnSelectorHoverEnter(this);
+                hoveredObjectId = UMI3DEnvironmentLoader.GetNodeID(collider);
             }
             else
             {
                 tool.OnSelectorHoverExit(this);
+                hoveredObjectId = 0;
             }
 
-            hoveredObjectId = UMI3DEnvironmentLoader.GetNodeID(collider);
+
+            IBoneRepresentable bone = boneRepresentable;
+
             HoverStateChangedDto hoverDto = new HoverStateChangedDto()
             {
                 toolId = tool.dto.id,
                 hoveredObjectId = hoveredObjectId,
 
-                boneType = boneId,
-                bonePosition = boneTransform.position.Dto(),
-                boneRotation = new Vector4(boneTransform.rotation.x, boneTransform.rotation.y, boneTransform.rotation.z, boneTransform.rotation.w).Dto(),
+                boneType = bone.bone,
+                bonePosition = bone.bonePosition.Dto(),
+                boneRotation = new Vector4(bone.boneRotation.x, bone.boneRotation.y, bone.boneRotation.z, bone.boneRotation.w).Dto(),
 
                 normal = normal.Dto(),
                 position = position.Dto(),
@@ -331,17 +353,20 @@ namespace umi3d.cdk.interaction
             );
         }
 
-        public void Hover(Tool tool, Collider collider, uint boneId, Transform boneTransform, Vector3 position, Vector3 normal, Vector3 direction)
+        public void Hover(Tool tool, Collider collider, Vector3 position, Vector3 normal, Vector3 direction)
         {
             hoveredObjectId = UMI3DEnvironmentLoader.GetNodeID(collider);
+            
+            IBoneRepresentable bone = boneRepresentable;
+            
             HoveredDto hoverDto = new HoveredDto()
             {
                 toolId = tool.dto.id,
                 hoveredObjectId = hoveredObjectId,
 
-                boneType = boneId,
-                bonePosition = boneTransform.position.Dto(),
-                boneRotation = new Vector4(boneTransform.rotation.x, boneTransform.rotation.y, boneTransform.rotation.z, boneTransform.rotation.w).Dto(),
+                boneType = bone.bone,
+                bonePosition = bone.bonePosition.Dto(),
+                boneRotation = new Vector4(bone.boneRotation.x, bone.boneRotation.y, bone.boneRotation.z, bone.boneRotation.w).Dto(),
 
                 normal = normal.Dto(),
                 position = position.Dto(),

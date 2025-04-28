@@ -15,6 +15,7 @@ limitations under the License.
 */
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using umi3d.browserRuntime.interactions;
@@ -34,6 +35,13 @@ public class BrowserControllerManagerTests
         class ClientServerCommunicationSelectorFake: IClientServerCommunicationSelectorDelegate
         {
             public List<AbstractBrowserRequestDto> requestDtos = new();
+
+            public AbstractBrowserRequestDto Pull()
+            {
+                var request = requestDtos.FirstOrDefault();
+                requestDtos.RemoveAt(0);
+                return request;
+            }
 
             public void SendRequest(AbstractBrowserRequestDto dto, bool reliable)
             {
@@ -168,7 +176,8 @@ public class BrowserControllerManagerTests
 
             mouseSelector.Select(tool);
 
-            var toolProjectedRequest = clientSelector.requestDtos[0] as ToolProjectedDto;
+            // Check that the request tool projected has been send to the server.
+            var toolProjectedRequest = clientSelector.Pull() as ToolProjectedDto;
             var expectedToolProjectedRequest = "{\r\n" +
                 "  \"$type\": \"umi3d.common.interaction.ToolProjectedDto, UMI3D.Common.InteractionSystem\",\r\n" +
                 "  \"toolId\": 100,\r\n" +
@@ -182,14 +191,35 @@ public class BrowserControllerManagerTests
             {
                 result += $"{projection.debugDescription}";
 
-                projection.input.onStarted += context =>
-                {
-                    //UnityEngine.Debug.Log($"Performed: {context.control.name}");
-                };
-
-                projection.input.WriteStructValue(1f);
+                // Check that when the user interact with this input a request is send the server.
+                var inputSystem = projection.input.inputSystem as NewInputSystem;
+                inputSystem.OnStartedForTest(1f);
+                var request = clientSelector.Pull();
+                var expectedRequest = $"{{\r\n" +
+                    $"  \"$type\": \"umi3d.common.interaction.EventTriggeredDto, UMI3D.Common.InteractionSystem\",\r\n" +
+                    $"  \"toolId\": 100,\r\n" +
+                    $"  \"id\": {projection.interaction.dto.id},\r\n" +
+                    $"  \"hoveredObjectId\": 0,\r\n" +
+                    $"  \"boneType\": 0,\r\n" +
+                    $"  \"bonePosition\": {{\r\n" +
+                    $"    \"$type\": \"umi3d.common.Vector3Dto, UMI3D.Common.Core\",\r\n" +
+                    $"    \"X\": 0.0,\r\n" +
+                    $"    \"Y\": 0.0,\r\n" +
+                    $"    \"Z\": 0.0\r\n" +
+                    $"  }},\r\n" +
+                    $"  \"boneRotation\": {{\r\n" +
+                    $"    \"$type\": \"umi3d.common.Vector4Dto, UMI3D.Common.Core\",\r\n" +
+                    $"    \"X\": 0.0,\r\n" +
+                    $"    \"Y\": 0.0,\r\n" +
+                    $"    \"Z\": 0.0,\r\n" +
+                    $"    \"W\": 0.0\r\n" +
+                    $"  }},\r\n" +
+                    $"  \"environmentId\": 1\r\n" +
+                    $"}}";
+                Assert.AreEqual(expectedRequest, request.ToJson());
             }
 
+            // Check all the projections.
             // Selector, Controller, tool's name, interaction's name, control's name
             string expectation = "---- Projection ----\n" +
                 "Mouse, Mouse, eventsTool, Event0, /Mouse/leftButton\n\n" +
@@ -223,12 +253,108 @@ public class BrowserControllerManagerTests
 
             mouseSelector.Select(tool);
 
+            // Check that the request tool projected has been send to the server.
+            var toolProjectedRequest = clientSelector.Pull() as ToolProjectedDto;
+            var expectedToolProjectedRequest = "{\r\n" +
+                "  \"$type\": \"umi3d.common.interaction.ToolProjectedDto, UMI3D.Common.InteractionSystem\",\r\n" +
+                "  \"toolId\": 100,\r\n" +
+                "  \"boneType\": 0,\r\n" +
+                "  \"environmentId\": 1\r\n" +
+                "}";
+            Assert.AreEqual(expectedToolProjectedRequest, toolProjectedRequest.ToJson());
+
             string result = "";
-            foreach (Projection projection in ProjectionManager.@default.projections)
+            for (int i = 0; i < ProjectionManager.@default.projections.Count; i++)
             {
+                Projection projection = ProjectionManager.@default.projections[i];
                 result += $"{projection.debugDescription}";
+
+                // Check that when the user interact with this input a request is send the server.
+                var inputSystem = projection.input.inputSystem as NewInputSystem;
+                inputSystem.OnStartedForTest(1f);
+                var request = clientSelector.Pull();
+
+                string expectedRequest = "";
+                if (i == 0)
+                {
+                    expectedRequest = $"{{\r\n" +
+                        $"  \"$type\": \"umi3d.common.interaction.EventStateChangedDto, UMI3D.Common.InteractionSystem\",\r\n" +
+                        $"  \"active\": true,\r\n" +
+                        $"  \"toolId\": 100,\r\n" +
+                        $"  \"id\": {projection.interaction.dto.id},\r\n" +
+                        $"  \"hoveredObjectId\": 0,\r\n" +
+                        $"  \"boneType\": 0,\r\n" +
+                        $"  \"bonePosition\": {{\r\n" +
+                        $"    \"$type\": \"umi3d.common.Vector3Dto, UMI3D.Common.Core\",\r\n" +
+                        $"    \"X\": 0.0,\r\n" +
+                        $"    \"Y\": 0.0,\r\n" +
+                        $"    \"Z\": 0.0\r\n" +
+                        $"  }},\r\n" +
+                        $"  \"boneRotation\": {{\r\n" +
+                        $"    \"$type\": \"umi3d.common.Vector4Dto, UMI3D.Common.Core\",\r\n" +
+                        $"    \"X\": 0.0,\r\n" +
+                        $"    \"Y\": 0.0,\r\n" +
+                        $"    \"Z\": 0.0,\r\n" +
+                        $"    \"W\": 0.0\r\n" +
+                        $"  }},\r\n" +
+                        $"  \"environmentId\": 1\r\n" +
+                        $"}}";
+                    Assert.AreEqual(expectedRequest, request.ToJson());
+
+                    inputSystem.OnCanceledForTest(0f);
+                    request = clientSelector.Pull();
+                    expectedRequest = $"{{\r\n" +
+                        $"  \"$type\": \"umi3d.common.interaction.EventStateChangedDto, UMI3D.Common.InteractionSystem\",\r\n" +
+                        $"  \"active\": false,\r\n" +
+                        $"  \"toolId\": 100,\r\n" +
+                        $"  \"id\": {projection.interaction.dto.id},\r\n" +
+                        $"  \"hoveredObjectId\": 0,\r\n" +
+                        $"  \"boneType\": 0,\r\n" +
+                        $"  \"bonePosition\": {{\r\n" +
+                        $"    \"$type\": \"umi3d.common.Vector3Dto, UMI3D.Common.Core\",\r\n" +
+                        $"    \"X\": 0.0,\r\n" +
+                        $"    \"Y\": 0.0,\r\n" +
+                        $"    \"Z\": 0.0\r\n" +
+                        $"  }},\r\n" +
+                        $"  \"boneRotation\": {{\r\n" +
+                        $"    \"$type\": \"umi3d.common.Vector4Dto, UMI3D.Common.Core\",\r\n" +
+                        $"    \"X\": 0.0,\r\n" +
+                        $"    \"Y\": 0.0,\r\n" +
+                        $"    \"Z\": 0.0,\r\n" +
+                        $"    \"W\": 0.0\r\n" +
+                        $"  }},\r\n" +
+                        $"  \"environmentId\": 1\r\n" +
+                        $"}}";
+                    Assert.AreEqual(expectedRequest, request.ToJson());
+                }
+                else
+                {
+                    expectedRequest = $"{{\r\n" +
+                        $"  \"$type\": \"umi3d.common.interaction.EventTriggeredDto, UMI3D.Common.InteractionSystem\",\r\n" +
+                        $"  \"toolId\": 100,\r\n" +
+                        $"  \"id\": {projection.interaction.dto.id},\r\n" +
+                        $"  \"hoveredObjectId\": 0,\r\n" +
+                        $"  \"boneType\": 0,\r\n" +
+                        $"  \"bonePosition\": {{\r\n" +
+                        $"    \"$type\": \"umi3d.common.Vector3Dto, UMI3D.Common.Core\",\r\n" +
+                        $"    \"X\": 0.0,\r\n" +
+                        $"    \"Y\": 0.0,\r\n" +
+                        $"    \"Z\": 0.0\r\n" +
+                        $"  }},\r\n" +
+                        $"  \"boneRotation\": {{\r\n" +
+                        $"    \"$type\": \"umi3d.common.Vector4Dto, UMI3D.Common.Core\",\r\n" +
+                        $"    \"X\": 0.0,\r\n" +
+                        $"    \"Y\": 0.0,\r\n" +
+                        $"    \"Z\": 0.0,\r\n" +
+                        $"    \"W\": 0.0\r\n" +
+                        $"  }},\r\n" +
+                        $"  \"environmentId\": 1\r\n" +
+                        $"}}";
+                    Assert.AreEqual(expectedRequest, request.ToJson());
+                }
             }
 
+            // Check all the projections.
             // Selector, Controller, tool's name, interaction's name, control's name
             string expectation = "---- Projection ----\n" +
                 "Mouse, Mouse, eventsTool, Event10, /Mouse/leftButton\n\n" +
@@ -244,16 +370,6 @@ public class BrowserControllerManagerTests
                 "Mouse, keyboard, eventsTool, Event5, /Keyboard/g\n\n";
 
             Assert.AreEqual(expectation, result);
-            
-            var toolProjectedRequest = clientSelector.requestDtos[0] as ToolProjectedDto;
-            var expectedToolProjectedRequest = "{\r\n" +
-                "  \"$type\": \"umi3d.common.interaction.ToolProjectedDto, UMI3D.Common.InteractionSystem\",\r\n" +
-                "  \"toolId\": 100,\r\n" +
-                "  \"boneType\": 0,\r\n" +
-                "  \"environmentId\": 1\r\n" +
-                "}";
-
-            Assert.AreEqual(expectedToolProjectedRequest, toolProjectedRequest.ToJson());
         }
 
         [Test]

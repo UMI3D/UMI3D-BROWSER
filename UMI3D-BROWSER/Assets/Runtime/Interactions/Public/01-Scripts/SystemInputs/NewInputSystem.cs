@@ -79,6 +79,19 @@ namespace umi3d.browserRuntime.interactions
                 InputSystem.QueueEvent(eventPtr);
             }
         }
+
+        public void OnStartedForTest<T>(T value) where T : struct
+        {
+            started?.Invoke(value);
+        }
+        public void OnPerformedForTest<T>(T value) where T : struct
+        {
+            performed?.Invoke(value);
+        }
+        public void OnCanceledForTest<T>(T value) where T : struct
+        {
+            canceled?.Invoke(value);
+        }
     }
 
     public class NewInputSystemManager

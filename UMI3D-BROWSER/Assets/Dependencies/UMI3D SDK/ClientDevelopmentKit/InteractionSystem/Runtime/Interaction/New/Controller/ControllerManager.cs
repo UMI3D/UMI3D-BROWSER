@@ -14,14 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils.observation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.Windows;
 
 namespace umi3d.cdk.interaction
 {

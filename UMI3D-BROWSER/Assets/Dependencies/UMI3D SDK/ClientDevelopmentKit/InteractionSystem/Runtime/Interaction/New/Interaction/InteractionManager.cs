@@ -18,7 +18,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using umi3d.common.interaction;
-using UnityEngine;
 
 namespace umi3d.cdk.interaction
 {
@@ -38,6 +37,7 @@ namespace umi3d.cdk.interaction
 
         List<Interaction> _interactions = new();
         public ReadOnlyCollection<Interaction> interactions => _interactions.AsReadOnly();
+
         public bool TryToInstantiateInteraction(out Interaction interaction, ulong environmentId, AbstractInteractionDto dto)
         {
             interaction = _interactions.Find(interaction => interaction.environmentId == environmentId && interaction.dto.id == dto.id);

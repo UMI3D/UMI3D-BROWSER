@@ -36,7 +36,7 @@ namespace umi3d.cdk.interaction
         #endregion
 
         List<Tool> _tools = new();
-        ReadOnlyCollection<Tool> tools => _tools.AsReadOnly();
+        public ReadOnlyCollection<Tool> tools => _tools.AsReadOnly();
         public bool TryToInstantiateTool(out Tool tool, ulong environmentId, AbstractToolDto dto)
         {
             tool = _tools.Find(tool => tool.environmentId == environmentId && tool.dto.id == dto.id);

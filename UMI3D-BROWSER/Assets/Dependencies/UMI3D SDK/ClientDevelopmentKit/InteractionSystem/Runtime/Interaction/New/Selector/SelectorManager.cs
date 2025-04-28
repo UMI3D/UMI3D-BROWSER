@@ -40,7 +40,7 @@ namespace umi3d.cdk.interaction
         public Selector lastSelectorDeselected { get; internal set; }
 
         List<Selector> _selectors = new List<Selector>();
-        ReadOnlyCollection<Selector> selectors => _selectors.AsReadOnly();
+        public ReadOnlyCollection<Selector> selectors => _selectors.AsReadOnly();
 
         public bool TryToInstantiateSelector(out Selector selector, string id)
         {

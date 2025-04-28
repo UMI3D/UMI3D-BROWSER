@@ -168,6 +168,7 @@ namespace umi3d.cdk.interaction
                         projection.input.onCanceled += obj =>
                         {
                             if (eventDto.hold) { projection.SendEventStateChanged(false); }
+                            projection.Animate(eventDto.releaseAnimationId);
                         };
                     };
 

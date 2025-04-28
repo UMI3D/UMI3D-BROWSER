@@ -37,7 +37,7 @@ namespace umi3d.cdk.interaction
         List<Input> _inputs = new List<Input>();
         public ReadOnlyCollection<Input> inputs => _inputs.AsReadOnly();
 
-        public bool TryInstantiateInput(out Input input, ISystemInput inputSystem)
+        public bool TryInstantiateInput(out Input input, IInputSystem inputSystem)
         {
             input = _inputs.Find(input => input.inputSystem == inputSystem);
 
@@ -53,7 +53,7 @@ namespace umi3d.cdk.interaction
             return true;
         }
 
-        public bool TryGetInput(out Input input, ISystemInput inputSystem)
+        public bool TryGetInput(out Input input, IInputSystem inputSystem)
         {
             input = _inputs.Find(input => input.inputSystem == inputSystem);
 

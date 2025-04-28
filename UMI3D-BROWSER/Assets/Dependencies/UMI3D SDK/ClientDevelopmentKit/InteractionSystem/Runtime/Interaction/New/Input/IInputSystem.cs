@@ -19,7 +19,7 @@ using UnityEngine;
 
 namespace umi3d.cdk.interaction
 {
-    public interface ISystemInput 
+    public interface IInputSystem 
     {
         string id {  get; }
 

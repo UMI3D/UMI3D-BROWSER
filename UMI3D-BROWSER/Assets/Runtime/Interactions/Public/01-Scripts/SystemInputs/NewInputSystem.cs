@@ -24,7 +24,7 @@ using Input = umi3d.cdk.interaction.Input;
 
 namespace umi3d.browserRuntime.interactions
 {
-    public class NewInputSystem : ISystemInput
+    public class NewInputSystem : IInputSystem
     {
         public string id => control.path;
 

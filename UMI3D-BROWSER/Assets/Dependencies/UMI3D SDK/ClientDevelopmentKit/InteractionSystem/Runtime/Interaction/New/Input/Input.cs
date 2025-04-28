@@ -20,7 +20,7 @@ namespace umi3d.cdk.interaction
 {
     public sealed class Input 
     {
-        internal Input(ISystemInput inputSystem)
+        internal Input(IInputSystem inputSystem)
         {
             this.inputSystem = inputSystem;
 
@@ -44,7 +44,7 @@ namespace umi3d.cdk.interaction
             this.controller = null;
         }
 
-        public ISystemInput inputSystem { get; private set; }
+        public IInputSystem inputSystem { get; private set; }
 
         void OnStarted(object obj)
         {

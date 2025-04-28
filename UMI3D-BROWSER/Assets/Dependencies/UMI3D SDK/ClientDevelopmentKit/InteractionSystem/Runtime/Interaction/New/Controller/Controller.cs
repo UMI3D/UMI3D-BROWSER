@@ -100,7 +100,7 @@ namespace umi3d.cdk.interaction
         /// <param name="control"></param>
         /// <param name="actionType"></param>
         /// <returns></returns>
-        public bool TryToAddInput(List<Input> inputs, ISystemInput inputSystem)
+        public bool TryToAddInput(List<Input> inputs, IInputSystem inputSystem)
         {
             if (!isActive) { return false; }
 

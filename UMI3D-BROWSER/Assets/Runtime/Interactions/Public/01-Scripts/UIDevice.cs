@@ -93,8 +93,8 @@ namespace umi3d.browserRuntime.interactions
         #region Input management
 
         static Controller uiController;
-        static List<ISystemInput> _activeInputControls = new();
-        public static Input GetInputFrom(ISystemInput inputSystem)
+        static List<IInputSystem> _activeInputControls = new();
+        public static Input GetInputFrom(IInputSystem inputSystem)
         {
             if (uiController == null)
             {

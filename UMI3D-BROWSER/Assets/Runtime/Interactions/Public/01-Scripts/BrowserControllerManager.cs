@@ -214,7 +214,7 @@ namespace umi3d.browserRuntime.interactions
             // Sort EventDtos by hold property and input order
             eventDtos = eventDtos.OrderByDescending(e => e.hold).ToList();
 
-            bool TryToGetUIInput(out Input input, AbstractInteractionDto interaction, ISystemInput inputSystem)
+            bool TryToGetUIInput(out Input input, AbstractInteractionDto interaction, IInputSystem inputSystem)
             {
                 input = UIDevice.GetInputFrom(inputSystem);
                 if (input == null)

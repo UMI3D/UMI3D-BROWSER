@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5311840473e4d244a2a73d45665e13c, type: 3}
   m_Name: BaseTips
   m_EditorClassIdentifier: 
-  loadingTips:
+  loadingTipsVR:
   - tip: tip_gate
     sprite: {fileID: 21300000, guid: df625b64522b0954fae178c7026b9b3d, type: 3}
   - tip: tip_privateConv
@@ -21,3 +21,14 @@ MonoBehaviour:
     sprite: {fileID: 21300000, guid: b84ccfa2bc3889547966466d7d9b21d4, type: 3}
   - tip: tip_teleport
     sprite: {fileID: 21300000, guid: 8d11bd08303fa9e41b4d136c13790ffd, type: 3}
+  loadingTipsPC:
+  - tip: tip_gate
+    sprite: {fileID: 21300000, guid: aede9e00b75510743a6c4f3fcec6f24f, type: 3}
+  - tip: tip_privateConv
+    sprite: {fileID: 21300000, guid: 7fe3e6fd20037094281f856382c8c049, type: 3}
+  - tip: tip_interact
+    sprite: {fileID: 21300000, guid: 9395612c063b59c4a90d912a2b2be42f, type: 3}
+  - tip: tip_moving
+    sprite: {fileID: 21300000, guid: 6e588182a6d24534e883958edc5a6bef, type: 3}
+  - tip: tip_talk
+    sprite: {fileID: 21300000, guid: 72d620bd4efcfda4fbaef05ceb3137d1, type: 3}

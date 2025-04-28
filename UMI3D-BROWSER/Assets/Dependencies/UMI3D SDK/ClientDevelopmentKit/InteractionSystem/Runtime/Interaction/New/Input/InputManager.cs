@@ -17,8 +17,6 @@ limitations under the License.
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using UnityEngine.InputSystem;
 
 namespace umi3d.cdk.interaction
 {
@@ -37,63 +35,35 @@ namespace umi3d.cdk.interaction
         #endregion
 
         List<Input> _inputs = new List<Input>();
-        ReadOnlyCollection<Input> inputs => _inputs.AsReadOnly();
+        public ReadOnlyCollection<Input> inputs => _inputs.AsReadOnly();
 
-        public Input InstantiateInput(InputControl control, InputActionType actionType)
+        public bool TryInstantiateInput(out Input input, ISystemInput inputSystem)
         {
-            Input input = new(control, actionType);
-            _inputs.Add(input);
+            input = _inputs.Find(input => input.inputSystem == inputSystem);
 
-            return input;
-        }
-
-        /// <summary>
-        /// Try to get the input corresponding to this <paramref name="control"/> for this controller.<br/>
-        /// <br/>
-        /// If no input corresponding to this control is found then create one with this <paramref name="actionType"/>.<br/>
-        /// <br/>
-        /// Which actionType to choose:
-        /// <list type="bullet">
-        /// <item>
-        /// Value:<br/>
-        /// Action used to read a continuous or single value (e.g., joystick position, trigger pressure).<br/>
-        /// Calls the following phases:<br/>
-        /// - started: When the input starts changing.<br/>
-        /// - performed: On every value update.<br/>
-        /// - canceled: When the input is canceled (e.g., returns to a neutral value).
-        /// </item>
-        /// <item>
-        /// Button:<br/>
-        /// Action triggered by a button press or release (e.g., a key or gamepad button).<br/>
-        /// Calls the following phases:<br/>
-        /// - started: When a button is pressed.<br/>
-        /// - performed: When the button reaches its activation threshold (default: full press).<br/>
-        /// - canceled: When the button is released.
-        /// </item>
-        /// <item>
-        /// PassThrough:<br/>
-        /// Action that directly passes input without state or context management (useful for continuous input or multiple simultaneous inputs, e.g., multiple joystick movements).<br/>
-        /// Only calls the performed phase on every input update.<br/>
-        /// Does not handle started or canceled phases, as there is no state tracking.
-        /// </item>
-        /// </list>
-        /// </summary>
-        /// <param name="input"></param>
-        /// <param name="controller"></param>
-        /// <param name="control"></param>
-        /// <param name="actionType"></param>
-        /// <returns></returns>
-        public bool TryGetInput(out Input input, Controller controller, InputControl control, InputActionType actionType)
-        {
-            input = controller.inputs.FirstOrDefault(input => input.control == control);
-            if (input == null)
+            if (input != null)
             {
-                input = InstantiateInput(control, actionType);
-                controller.Add(input);
-                return true;
+                UnityEngine.Debug.LogWarning($"[InputManager] Warning: Cannot instantiate input for '{inputSystem.id}' because this input already exist.");
+                return false;
             }
 
-            return input.isAvailable;
+            input = new(inputSystem);
+            _inputs.Add(input);
+
+            return true;
+        }
+
+        public bool TryGetInput(out Input input, ISystemInput inputSystem)
+        {
+            input = _inputs.Find(input => input.inputSystem == inputSystem);
+
+            if (input == null)
+            {
+                UnityEngine.Debug.Log($"[InputManager] Warning: Input for id: {inputSystem.id} has been instantiated.");
+                return false;
+            }
+
+            return true;
         }
     }
 }

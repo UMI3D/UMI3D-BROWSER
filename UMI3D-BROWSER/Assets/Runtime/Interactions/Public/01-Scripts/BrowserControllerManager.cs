@@ -214,9 +214,9 @@ namespace umi3d.browserRuntime.interactions
             // Sort EventDtos by hold property and input order
             eventDtos = eventDtos.OrderByDescending(e => e.hold).ToList();
 
-            bool TryToGetUIInput(out Input input, AbstractInteractionDto interaction, InputControl placeholder)
+            bool TryToGetUIInput(out Input input, AbstractInteractionDto interaction, ISystemInput inputSystem)
             {
-                input = UIDevice.GetInputFrom(placeholder);
+                input = UIDevice.GetInputFrom(inputSystem);
                 if (input == null)
                 {
                     UnityEngine.Debug.LogError($"[MouseSelectorDataDelegate] Error: no ui input from placeholder for {interaction.GetType()}, {interaction.name}");
@@ -236,7 +236,7 @@ namespace umi3d.browserRuntime.interactions
                     continue;
                 }
 
-                if (!TryToGetUIInput(out Input input, interaction, placeholder.control)) { continue; }
+                if (!TryToGetUIInput(out Input input, interaction, placeholder.inputSystem)) { continue; }
 
                 associations.Add((interaction, input));
                 hasUIInput = true;
@@ -255,10 +255,10 @@ namespace umi3d.browserRuntime.interactions
                         Input input = inputsByInteractions[eventDto][i];
 
                         if (assignedInputs.FindIndex(association => association.input == input) >= 0) { continue; }
-                        else if (hasUIInput && input.control == Mouse.current.leftButton) { continue; }
+                        else if (hasUIInput && input.inputSystem.id == Mouse.current.leftButton.path) { continue; }
                         else if (input.controller.id == BrowserControllerManager.UI_ID)
                         {
-                            if (!TryToGetUIInput(out input, eventDto, input.control)) { continue; }
+                            if (!TryToGetUIInput(out input, eventDto, input.inputSystem)) { continue; }
                             hasUIInput = true;
                         }
 

@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -86,8 +87,6 @@ namespace umi3d.cdk.interaction
         List<Tool> _projectedTools = new();
         public ReadOnlyCollection<Tool> projectedTools => _projectedTools.AsReadOnly();
 
-        Dictionary<AbstractInteractionDto, ReadOnlyCollection<Input>> inputsByInteractions = new();
-        List<(AbstractInteractionDto interaction, Input input)> associations = new();
         /// <summary>
         /// Try to project a tool on controllers.<br/>
         /// <br/>
@@ -108,7 +107,31 @@ namespace umi3d.cdk.interaction
                 return; 
             }
 
+            try
+            {
+                AssociateInteractionToInput(tool.interactions);
+
+                Project(tool);
+            }
+            catch (Exception e)
+            {
+                inputsByInteractions.Clear();
+                associations.Clear();
+                projectionSetupByInteractions.Clear();
+                throw;
+            }
+
+            SelectorManager.@default.lastSelectorUsed = this;
+            SelectorManager.@default.lastSelectorSelected = this;
+        }
+
+        List<(AbstractInteractionDto interaction, Input input)> associations = new();
+        Dictionary<AbstractInteractionDto, Action<Projection>> projectionSetupByInteractions = new();
+        Dictionary<AbstractInteractionDto, ReadOnlyCollection<Input>> inputsByInteractions = new();
+        void AssociateInteractionToInput(ReadOnlyCollection<AbstractInteractionDto> interactions)
+        {
             ReadOnlyCollection<Input> inputs;
+            Action<Projection> projectionSetup = null;
             bool TryToAddInputToDictionary(AbstractInteractionDto interaction, bool found)
             {
                 if (!found)
@@ -117,11 +140,12 @@ namespace umi3d.cdk.interaction
                     return false;
                 }
 
+                projectionSetupByInteractions.Add(interaction, projectionSetup);
                 inputsByInteractions.Add(interaction, inputs);
                 return true;
             }
 
-            foreach (AbstractInteractionDto interaction in tool.interactions)
+            foreach (AbstractInteractionDto interaction in interactions)
             {
                 if (interaction is DrawingInteractionDto)
                 {
@@ -129,9 +153,23 @@ namespace umi3d.cdk.interaction
 
                     if (!TryToAddInputToDictionary(interaction, found)) { continue; }
                 } 
-                else if (interaction is EventDto)
+                else if (interaction is EventDto eventDto)
                 {
                     bool found = dataDelegate.TryGetInputsForEventDto(out inputs);
+
+                    projectionSetup = projection =>
+                    {
+                        projection.input.onStarted += obj =>
+                        {
+                            if (eventDto.hold) { projection.SendEventStateChanged(true); }
+                            else { projection.SendEventTriggered(); }
+                            projection.Animate(eventDto.triggerAnimationId);
+                        };
+                        projection.input.onCanceled += obj =>
+                        {
+                            if (eventDto.hold) { projection.SendEventStateChanged(false); }
+                        };
+                    };
 
                     if (!TryToAddInputToDictionary(interaction, found)) { continue; }
                 }
@@ -231,11 +269,14 @@ namespace umi3d.cdk.interaction
             );
             inputsByInteractions.Clear();
 
-            if (tool.interactions.Count > associations.Count)
+            if (interactions.Count > associations.Count)
             {
                 UnityEngine.Debug.LogWarning($"[Selector-{id}] Warning: Not all interactions have been associated to an input.");
             }
+        }
 
+        void Project(Tool tool)
+        {
             foreach (var association in associations)
             {
                 InteractionManager.@default.TryToFetchInteraction(
@@ -243,15 +284,17 @@ namespace umi3d.cdk.interaction
                     tool.environmentId, 
                     association.interaction.id
                 );
-                ProjectionManager.@default.Project(
+                Projection projection = ProjectionManager.@default.Project(
                     this, 
                     association.input.controller, 
                     tool, 
                     interaction, 
                     association.input
                 );
+                projectionSetupByInteractions[association.interaction](projection);
             }
             associations.Clear();
+            projectionSetupByInteractions.Clear();
 
             _projectedTools.Add(tool);
             tool.selector = this;
@@ -264,9 +307,6 @@ namespace umi3d.cdk.interaction
                 boneType = boneRepresentable.bone
             };
             clientServerCommunicationSelectorDelegate.SendRequest(request, true);
-
-            SelectorManager.@default.lastSelectorUsed = this;
-            SelectorManager.@default.lastSelectorSelected = this;
         }
 
         List<Projection> _projectionToRelease = new();
@@ -346,7 +386,7 @@ namespace umi3d.cdk.interaction
 
             if (!tool.TryCast(out InteractableDto interactableDto)) { return; }
             clientServerCommunicationSelectorDelegate.Animate(
-                tool, 
+                tool.environmentId, 
                 enter 
                 ? interactableDto.HoverEnterAnimationId
                 : interactableDto.HoverExitAnimationId

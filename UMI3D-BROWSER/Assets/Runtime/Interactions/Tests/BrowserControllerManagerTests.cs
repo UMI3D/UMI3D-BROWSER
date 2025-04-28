@@ -15,6 +15,7 @@ limitations under the License.
 */
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using NUnit.Framework;
 using umi3d.browserRuntime.interactions;
 using umi3d.cdk;
@@ -23,6 +24,7 @@ using umi3d.common;
 using umi3d.common.interaction;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.TestTools;
 
 public class BrowserControllerManagerTests
@@ -38,9 +40,9 @@ public class BrowserControllerManagerTests
                 requestDtos.Add(dto);
             }
 
-            public async void Animate(Tool tool, ulong animationId)
+            public async void Animate(ulong environmentId, ulong animationId)
             {
-
+                await Task.CompletedTask;
             }
         }
 
@@ -133,6 +135,8 @@ public class BrowserControllerManagerTests
             }
 
             InteractionManager.@default.TryToRemoveInteraction(environmentId, 40);
+
+            NewInputSystemManager.@default.Clear();
         }
 
         [TearDown]
@@ -141,6 +145,11 @@ public class BrowserControllerManagerTests
             mouseSelector.Deselect(tool);
             ToolManager.@default.TryToRemoveTool(environmentId, 100);
             clientSelector.requestDtos.Clear();
+
+            foreach (var input in InputManager.@default.inputs)
+            {
+                UIDevice.ReleaseInput(input);
+            }
         }
 
         [Test]
@@ -159,29 +168,6 @@ public class BrowserControllerManagerTests
 
             mouseSelector.Select(tool);
 
-            string result = "";
-            foreach (Projection projection in ProjectionManager.@default.projections)
-            {
-                result += $"{projection.debugDescription}";
-                result += "\n";
-            }
-
-            // Selector, Controller, tool's name, interaction's name, control's name
-            string expectation = "---- Projection ----\n" +
-                "Mouse, Mouse, eventsTool, Event0, leftButton\n\n" +
-                "---- Projection ----\n" +
-                "Mouse, keyboard, eventsTool, Event1, q\n\n" +
-                "---- Projection ----\n" +
-                "Mouse, keyboard, eventsTool, Event2, e\n\n" +
-                "---- Projection ----\n" +
-                "Mouse, keyboard, eventsTool, Event3, r\n\n" +
-                "---- Projection ----\n" +
-                "Mouse, keyboard, eventsTool, Event4, f\n\n" +
-                "---- Projection ----\n" +
-                "Mouse, keyboard, eventsTool, Event5, g\n\n";
-
-            Assert.AreEqual(expectation, result);
-
             var toolProjectedRequest = clientSelector.requestDtos[0] as ToolProjectedDto;
             var expectedToolProjectedRequest = "{\r\n" +
                 "  \"$type\": \"umi3d.common.interaction.ToolProjectedDto, UMI3D.Common.InteractionSystem\",\r\n" +
@@ -189,8 +175,36 @@ public class BrowserControllerManagerTests
                 "  \"boneType\": 0,\r\n" +
                 "  \"environmentId\": 1\r\n" +
                 "}";
-
             Assert.AreEqual(expectedToolProjectedRequest, toolProjectedRequest.ToJson());
+
+            string result = "";
+            foreach (Projection projection in ProjectionManager.@default.projections)
+            {
+                result += $"{projection.debugDescription}";
+
+                projection.input.onStarted += context =>
+                {
+                    //UnityEngine.Debug.Log($"Performed: {context.control.name}");
+                };
+
+                projection.input.WriteStructValue(1f);
+            }
+
+            // Selector, Controller, tool's name, interaction's name, control's name
+            string expectation = "---- Projection ----\n" +
+                "Mouse, Mouse, eventsTool, Event0, /Mouse/leftButton\n\n" +
+                "---- Projection ----\n" +
+                "Mouse, keyboard, eventsTool, Event1, /Keyboard/q\n\n" +
+                "---- Projection ----\n" +
+                "Mouse, keyboard, eventsTool, Event2, /Keyboard/e\n\n" +
+                "---- Projection ----\n" +
+                "Mouse, keyboard, eventsTool, Event3, /Keyboard/r\n\n" +
+                "---- Projection ----\n" +
+                "Mouse, keyboard, eventsTool, Event4, /Keyboard/f\n\n" +
+                "---- Projection ----\n" +
+                "Mouse, keyboard, eventsTool, Event5, /Keyboard/g\n\n";
+
+            Assert.AreEqual(expectation, result);
         }
 
         [Test]
@@ -213,22 +227,21 @@ public class BrowserControllerManagerTests
             foreach (Projection projection in ProjectionManager.@default.projections)
             {
                 result += $"{projection.debugDescription}";
-                result += "\n";
             }
 
             // Selector, Controller, tool's name, interaction's name, control's name
             string expectation = "---- Projection ----\n" +
-                "Mouse, Mouse, eventsTool, Event10, leftButton\n\n" +
+                "Mouse, Mouse, eventsTool, Event10, /Mouse/leftButton\n\n" +
                 "---- Projection ----\n" +
-                "Mouse, keyboard, eventsTool, Event0, q\n\n" +
+                "Mouse, keyboard, eventsTool, Event0, /Keyboard/q\n\n" +
                 "---- Projection ----\n" +
-                "Mouse, keyboard, eventsTool, Event1, e\n\n" +
+                "Mouse, keyboard, eventsTool, Event1, /Keyboard/e\n\n" +
                 "---- Projection ----\n" +
-                "Mouse, keyboard, eventsTool, Event2, r\n\n" +
+                "Mouse, keyboard, eventsTool, Event2, /Keyboard/r\n\n" +
                 "---- Projection ----\n" +
-                "Mouse, keyboard, eventsTool, Event4, f\n\n" +
+                "Mouse, keyboard, eventsTool, Event4, /Keyboard/f\n\n" +
                 "---- Projection ----\n" +
-                "Mouse, keyboard, eventsTool, Event5, g\n\n";
+                "Mouse, keyboard, eventsTool, Event5, /Keyboard/g\n\n";
 
             Assert.AreEqual(expectation, result);
             
@@ -263,24 +276,23 @@ public class BrowserControllerManagerTests
             foreach (Projection projection in ProjectionManager.@default.projections)
             {
                 result += $"{projection.debugDescription}";
-                result += "\n";
             }
 
             // Selector, Controller, tool's name, interaction's name, control's name
             string expectation = "---- Projection ----\n" +
-                "Mouse, keyboard, eventsTool, Event0, q\n\n" +
+                "Mouse, keyboard, eventsTool, Event0, /Keyboard/q\n\n" +
                 "---- Projection ----\n" +
-                "Mouse, keyboard, eventsTool, Event1, e\n\n" +
+                "Mouse, keyboard, eventsTool, Event1, /Keyboard/e\n\n" +
                 "---- Projection ----\n" +
-                "Mouse, keyboard, eventsTool, Event2, r\n\n" +
+                "Mouse, keyboard, eventsTool, Event2, /Keyboard/r\n\n" +
                 "---- Projection ----\n" +
-                "Mouse, keyboard, eventsTool, Event3, f\n\n" +
+                "Mouse, keyboard, eventsTool, Event3, /Keyboard/f\n\n" +
                 "---- Projection ----\n" +
-                "Mouse, keyboard, eventsTool, Event4, g\n\n" +
+                "Mouse, keyboard, eventsTool, Event4, /Keyboard/g\n\n" +
                 "---- Projection ----\n" +
-                "Mouse, UI, eventsTool, Event5, button2\n\n" +
+                "Mouse, UI, eventsTool, Event5, /UIDevice0/button2\n\n" +
                 "---- Projection ----\n" +
-                "Mouse, UI, eventsTool, Event6, button3\n\n";
+                "Mouse, UI, eventsTool, Event6, /UIDevice0/button3\n\n";
 
             Assert.AreEqual(expectation, result);
             
@@ -315,24 +327,23 @@ public class BrowserControllerManagerTests
             foreach (Projection projection in ProjectionManager.@default.projections)
             {
                 result += $"{projection.debugDescription}";
-                result += "\n";
             }
 
             // Selector, Controller, tool's name, interaction's name, control's name
             string expectation = "---- Projection ----\n" +
-                "Mouse, keyboard, eventsTool, Event10, q\n\n" +
+                "Mouse, keyboard, eventsTool, Event10, /Keyboard/q\n\n" +
                 "---- Projection ----\n" +
-                "Mouse, keyboard, eventsTool, Event0, e\n\n" +
+                "Mouse, keyboard, eventsTool, Event0, /Keyboard/e\n\n" +
                 "---- Projection ----\n" +
-                "Mouse, keyboard, eventsTool, Event1, r\n\n" +
+                "Mouse, keyboard, eventsTool, Event1, /Keyboard/r\n\n" +
                 "---- Projection ----\n" +
-                "Mouse, keyboard, eventsTool, Event2, f\n\n" +
+                "Mouse, keyboard, eventsTool, Event2, /Keyboard/f\n\n" +
                 "---- Projection ----\n" +
-                "Mouse, keyboard, eventsTool, Event4, g\n\n" +
+                "Mouse, keyboard, eventsTool, Event4, /Keyboard/g\n\n" +
                 "---- Projection ----\n" +
-                "Mouse, UI, eventsTool, Event5, button2\n\n" +
+                "Mouse, UI, eventsTool, Event5, /UIDevice0/button2\n\n" +
                 "---- Projection ----\n" +
-                "Mouse, UI, eventsTool, Event6, button3\n\n";
+                "Mouse, UI, eventsTool, Event6, /UIDevice0/button3\n\n";
 
             Assert.AreEqual(expectation, result);
             
@@ -367,24 +378,23 @@ public class BrowserControllerManagerTests
             foreach (Projection projection in ProjectionManager.@default.projections)
             {
                 result += $"{projection.debugDescription}";
-                result += "\n";
             }
 
             // Selector, Controller, tool's name, interaction's name, control's name
             string expectation = "---- Projection ----\n" +
-                "Mouse, keyboard, eventsTool, Event10, q\n\n" +
+                "Mouse, keyboard, eventsTool, Event10, /Keyboard/q\n\n" +
                 "---- Projection ----\n" +
-                "Mouse, keyboard, eventsTool, Event0, e\n\n" +
+                "Mouse, keyboard, eventsTool, Event0, /Keyboard/e\n\n" +
                 "---- Projection ----\n" +
-                "Mouse, keyboard, eventsTool, Event1, r\n\n" +
+                "Mouse, keyboard, eventsTool, Event1, /Keyboard/r\n\n" +
                 "---- Projection ----\n" +
-                "Mouse, keyboard, eventsTool, Event2, f\n\n" +
+                "Mouse, keyboard, eventsTool, Event2, /Keyboard/f\n\n" +
                 "---- Projection ----\n" +
-                "Mouse, keyboard, eventsTool, Event4, g\n\n" +
+                "Mouse, keyboard, eventsTool, Event4, /Keyboard/g\n\n" +
                 "---- Projection ----\n" +
-                "Mouse, UI, eventsTool, Event5, button2\n\n" +
+                "Mouse, UI, eventsTool, Event5, /UIDevice0/button2\n\n" +
                 "---- Projection ----\n" +
-                "Mouse, UI, eventsTool, Event6, button3\n\n";
+                "Mouse, UI, eventsTool, Event6, /UIDevice0/button3\n\n";
 
             //Assert.AreEqual(expectation, result);
             UnityEngine.Debug.Log($"{result}");

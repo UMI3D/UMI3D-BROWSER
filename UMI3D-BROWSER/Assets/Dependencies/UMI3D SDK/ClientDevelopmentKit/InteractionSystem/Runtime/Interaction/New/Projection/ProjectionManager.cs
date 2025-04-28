@@ -39,7 +39,13 @@ namespace umi3d.cdk.interaction
         List<Projection> _projections = new();
         public ReadOnlyCollection<Projection> projections => _projections.AsReadOnly();
 
-        internal Projection Project(Selector selector, Controller controller, Tool tool, Interaction interaction, Input input)
+        internal Projection Project(
+            Selector selector, 
+            Controller controller, 
+            Tool tool, 
+            Interaction interaction, 
+            Input input
+        )
         {
             Projection projection = _projections.Find(projection => 
                 projection.selector == selector 
@@ -63,12 +69,18 @@ namespace umi3d.cdk.interaction
 
             return projection;
         }
+
+
         internal bool Release(Projection projection)
         {
             bool result = _projections.Remove(projection);
 
             if (result)
             {
+                projection.input.onStarted = null;
+                projection.input.onPerformed = null;
+                projection.input.onCanceled = null;
+
                 delegates.ForEach(@delegate =>
                 {
                     @delegate.OnReleased(projection);

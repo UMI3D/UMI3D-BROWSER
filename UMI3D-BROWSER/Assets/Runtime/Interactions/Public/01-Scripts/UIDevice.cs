@@ -93,29 +93,42 @@ namespace umi3d.browserRuntime.interactions
         #region Input management
 
         static Controller uiController;
-        static List<InputControl> _activeInputControls = new();
-        public static Input GetInputFrom(InputControl placeholder)
+        static List<ISystemInput> _activeInputControls = new();
+        public static Input GetInputFrom(ISystemInput inputSystem)
         {
             if (uiController == null)
             {
-                uiController = ControllerManager.@default.controllers.FirstOrDefault(controller =>
-                {
-                    return controller.id == BrowserControllerManager.UI_ID;
-                });
+                uiController = BrowserControllerManager.@default.uiDeviceController;
             }
 
+            if (inputSystem is NewInputSystem newInputSystem)
+            {
+                return GetInputFrom(newInputSystem);
+            }
+            else
+            {
+                UnityEngine.Debug.LogError($"Error: unhandled case.");
+                return null;
+            }
+        }
+        static Input GetInputFrom(NewInputSystem inputSystem)
+        {
             bool TryToFindInput(out Input input, InputControl control, InputActionType actionType)
             {
-                if (!_activeInputControls.Contains(control))
+                NewInputSystemManager.@default.TryToInstantiateInput(
+                    out NewInputSystem concreteInputSystem, 
+                    control, 
+                    actionType
+                );
+                if (!_activeInputControls.Contains(concreteInputSystem))
                 {
-                    InputManager.@default.TryGetInput(
+                    InputManager.@default.TryInstantiateInput(
                         out input,
-                        uiController,
-                        control,
-                        actionType
+                        concreteInputSystem
                     );
 
-                    _activeInputControls.Add(control);
+                    uiController.Add(input);
+                    _activeInputControls.Add(concreteInputSystem);
                     return true;
                 }
 
@@ -124,11 +137,11 @@ namespace umi3d.browserRuntime.interactions
             }
 
             Input input;
-            Input FindInput(Func<UIDevice, InputControl> getFirstControl, Func<UIDevice, InputControl[]> getControls, InputActionType actionType)
+            Input FindInput(Func<UIDevice, InputControl[]> getControls, InputActionType actionType)
             {
                 foreach (var device in _allUIDevices)
                 {
-                    if (device != first && TryToFindInput(out input, getFirstControl(device), actionType))
+                    if (device != first && TryToFindInput(out input, getControls(device)[0], actionType))
                     {
                         return input;
                     }
@@ -145,7 +158,7 @@ namespace umi3d.browserRuntime.interactions
                 }
 
                 UIDevice newDevice = InstantiateNewUIDevice();
-                if (TryToFindInput(out input, getFirstControl(newDevice), actionType))
+                if (TryToFindInput(out input, getControls(newDevice)[0], actionType))
                 {
                     return input;
                 }
@@ -155,10 +168,10 @@ namespace umi3d.browserRuntime.interactions
                 }
             }
 
+            InputControl placeholder = inputSystem.control;
             if (placeholder == first.button1)
             {
                 return FindInput(
-                    getFirstControl: device => device.button1,
                     getControls: device => device.buttons,
                     InputActionType.Button
                 );
@@ -166,7 +179,6 @@ namespace umi3d.browserRuntime.interactions
             else if (placeholder == first.axis1)
             {
                 return FindInput(
-                     getFirstControl: device => device.axis1,
                      getControls: device => device.axes,
                      InputActionType.Button
                  );
@@ -174,7 +186,6 @@ namespace umi3d.browserRuntime.interactions
             else if (placeholder == first.integer1)
             {
                 return FindInput(
-                     getFirstControl: device => device.integer1,
                      getControls: device => device.integers,
                      InputActionType.PassThrough
                  );
@@ -182,7 +193,6 @@ namespace umi3d.browserRuntime.interactions
             else if (placeholder == first.double1)
             {
                 return FindInput(
-                     getFirstControl: device => device.double1,
                      getControls: device => device.doubles,
                      InputActionType.PassThrough
                  );
@@ -190,7 +200,6 @@ namespace umi3d.browserRuntime.interactions
             else if (placeholder == first.vectorTwo1)
             {
                 return FindInput(
-                     getFirstControl: device => device.vectorTwo1,
                      getControls: device => device.vectorTwos,
                      InputActionType.PassThrough
                  );
@@ -198,7 +207,6 @@ namespace umi3d.browserRuntime.interactions
             else if (placeholder == first.vectorThree1)
             {
                 return FindInput(
-                     getFirstControl: device => device.vectorThree1,
                      getControls: device => device.vectorThrees,
                      InputActionType.PassThrough
                  );
@@ -206,7 +214,6 @@ namespace umi3d.browserRuntime.interactions
             else if (placeholder == first.quaternion1)
             {
                 return FindInput(
-                     getFirstControl: device => device.quaternion1,
                      getControls: device => device.quaternions,
                      InputActionType.PassThrough
                  );
@@ -219,7 +226,7 @@ namespace umi3d.browserRuntime.interactions
         }
         public static void ReleaseInput(Input input)
         {
-            _activeInputControls.Remove(input.control);
+            _activeInputControls.Remove(input.inputSystem);
         }
 
         public static ButtonControl GetButtonPlaceholder()

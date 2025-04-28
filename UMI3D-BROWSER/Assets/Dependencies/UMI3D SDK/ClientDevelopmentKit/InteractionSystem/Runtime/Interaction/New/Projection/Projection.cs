@@ -27,7 +27,7 @@ namespace umi3d.cdk.interaction
         public Interaction interaction { get; internal set; }
         public Input input { get; internal set; }
 
-        IClientServerCommunicationSelectorDelegate _clientServerCommunicationSelectorDelegate = new ClientServerCommunicationSelectorDelegate();
+        IClientServerCommunicationSelectorDelegate _clientServerCommunicationSelectorDelegate;
         public IClientServerCommunicationSelectorDelegate clientServerCommunicationSelectorDelegate
         {
             get => _clientServerCommunicationSelectorDelegate;
@@ -49,6 +49,8 @@ namespace umi3d.cdk.interaction
             this.tool = tool;
             this.interaction = interaction;
             this.input = input;
+
+            clientServerCommunicationSelectorDelegate = selector.clientServerCommunicationSelectorDelegate;
         }
 
         public void SendEventStateChanged(bool value)
@@ -178,7 +180,7 @@ namespace umi3d.cdk.interaction
             clientServerCommunicationSelectorDelegate.SendRequest(request, true);
         }
 
-        public void SendManipulation()
+        public void SendManipulation(Vector3 translation, Vector4 rotation)
         {
             IBoneRepresentable bone = selector.boneRepresentable;
 
@@ -189,8 +191,8 @@ namespace umi3d.cdk.interaction
                 id = interaction.dto.id,
                 hoveredObjectId = selector.hoveredObjectId,
 
-                //translation = null, // TODO
-                //rotation = null,
+                translation = translation.Dto(),
+                rotation = rotation.Dto(),
 
                 boneType = bone.bone,
                 bonePosition = bone.bonePosition.Dto(),
@@ -200,12 +202,20 @@ namespace umi3d.cdk.interaction
             clientServerCommunicationSelectorDelegate.SendRequest(request, true);
         }
 
+        public void Animate(ulong animationId)
+        {
+            clientServerCommunicationSelectorDelegate.Animate(tool.environmentId, animationId);
+        }
+
         public string debugDescription
         {
             get
             {
                 string result = "---- Projection ----\n";
-                result += $"{selector?.id ?? "No selector"}, {controller?.id ?? "No controller"}, {tool?.dto?.name ?? "No tool"}, {interaction?.dto?.name ?? "No interaction"}, {input?.control?.name ?? "No input"}\n";
+                result += $"{selector?.id ?? "No selector"}, {controller?.id ?? "No controller"}, ";
+                result += $"{tool?.dto?.name ?? "No tool"}, {interaction?.dto?.name ?? "No interaction"}, ";
+                result += $"{input?.inputSystem?.id ?? "No input"}\n";
+                result += "\n";
 
                 return result;
             }

@@ -30,16 +30,16 @@ namespace umi3d.cdk.interaction
             UMI3DClientServer.SendRequest(dto, true);
         }
 
-        async void Animate(Tool tool, ulong animationId)
+        async void Animate(ulong environmentId, ulong animationId)
         {
             if (animationId == 0) { return; }
 
-            UMI3DEntityInstance entityInstance = UMI3DEnvironmentLoader.Instance.TryGetEntityInstance(tool.environmentId, animationId);
+            UMI3DEntityInstance entityInstance = UMI3DEnvironmentLoader.Instance.TryGetEntityInstance(environmentId, animationId);
             UMI3DAbstractAnimation animation = entityInstance?.Object as UMI3DAbstractAnimation;
 
             await animation.SetUMI3DProperty(
                 new SetUMI3DPropertyData(
-                    tool.environmentId,
+                    environmentId,
                     new SetEntityPropertyDto()
                     {
                         entityId = animationId,

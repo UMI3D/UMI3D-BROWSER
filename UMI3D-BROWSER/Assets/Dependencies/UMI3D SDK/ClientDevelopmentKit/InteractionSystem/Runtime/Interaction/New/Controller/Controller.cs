@@ -16,7 +16,6 @@ limitations under the License.
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using UnityEngine.InputSystem;
 
 namespace umi3d.cdk.interaction
 {
@@ -101,22 +100,23 @@ namespace umi3d.cdk.interaction
         /// <param name="control"></param>
         /// <param name="actionType"></param>
         /// <returns></returns>
-        public bool TryToAddInput(List<Input> inputs, InputControl control, InputActionType actionType)
+        public bool TryToAddInput(List<Input> inputs, ISystemInput inputSystem)
         {
             if (!isActive) { return false; }
 
-            bool result = InputManager.@default.TryGetInput(
+            InputManager.@default.TryInstantiateInput(
                 out Input input,
-                this,
-                control,
-                actionType
+                inputSystem
             );
 
-            if (result)
+            if (!_inputs.Contains(input) && !Add(input)) { return false; }
+
+            if (!inputs.Contains(input))
             {
                 inputs.Add(input);
             }
-            return result;
+
+            return true;
         }
     }
 }

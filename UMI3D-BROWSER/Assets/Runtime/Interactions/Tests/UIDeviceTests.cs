@@ -44,6 +44,11 @@ public class UIDeviceTests
             {
                 InputSystem.RemoveDevice(UIDevice.allUIDevices[i]);
             }
+
+            foreach (var input in InputManager.@default.inputs)
+            {
+                UIDevice.ReleaseInput(input);
+            }
         }
 
         [Test]
@@ -54,26 +59,22 @@ public class UIDeviceTests
             string result = "";
             for (int i = 0; i < 5; i++)
             {
-                Input input = UIDevice.GetInputFrom(placeHolder);
+                NewInputSystem inputSystem = new(placeHolder, InputActionType.Button);
+                Input input = UIDevice.GetInputFrom(inputSystem);
                 result += input.debugDescription;
             }
 
-            string expected = 
+            string expected =
                 "---- Input ----\n" +
-                "UI, True, /UIDevice0/button2\n" +
-                "No tool, No interaction, No selector\n\n" +
+                "UI, True, /UIDevice0/button2\n\n" +
                 "---- Input ----\n" +
-                "UI, True, /UIDevice0/button3\n" +
-                "No tool, No interaction, No selector\n\n" +
+                "UI, True, /UIDevice0/button3\n\n" +
                 "---- Input ----\n" +
-                "UI, True, /UIDevice0/button4\n" +
-                "No tool, No interaction, No selector\n\n" +
+                "UI, True, /UIDevice0/button4\n\n" +
                 "---- Input ----\n" +
-                "UI, True, /UIDevice0/button5\n" +
-                "No tool, No interaction, No selector\n\n" +
+                "UI, True, /UIDevice0/button5\n\n" +
                 "---- Input ----\n" +
-                "UI, True, /UIDevice1/button1\n" +
-                "No tool, No interaction, No selector\n\n";
+                "UI, True, /UIDevice1/button1\n\n";
 
             Assert.AreEqual(expected, result);
         }
@@ -86,26 +87,22 @@ public class UIDeviceTests
             string result = "";
             for (int i = 0; i < 5; i++)
             {
-                Input input = UIDevice.GetInputFrom(placeHolder);
+                NewInputSystem inputSystem = new(placeHolder, InputActionType.Button);
+                Input input = UIDevice.GetInputFrom(inputSystem);
                 result += input.debugDescription;
             }
 
             string expected =
                 "---- Input ----\n" +
-                "UI, True, /UIDevice0/axis2\n" +
-                "No tool, No interaction, No selector\n\n" +
+                "UI, True, /UIDevice0/axis2\n\n" +
                 "---- Input ----\n" +
-                "UI, True, /UIDevice0/axis3\n" +
-                "No tool, No interaction, No selector\n\n" +
+                "UI, True, /UIDevice0/axis3\n\n" +
                 "---- Input ----\n" +
-                "UI, True, /UIDevice0/axis4\n" +
-                "No tool, No interaction, No selector\n\n" +
+                "UI, True, /UIDevice0/axis4\n\n" +
                 "---- Input ----\n" +
-                "UI, True, /UIDevice0/axis5\n" +
-                "No tool, No interaction, No selector\n\n" +
+                "UI, True, /UIDevice0/axis5\n\n" +
                 "---- Input ----\n" +
-                "UI, True, /UIDevice1/axis1\n" +
-                "No tool, No interaction, No selector\n\n";
+                "UI, True, /UIDevice1/axis1\n\n";
 
             Assert.AreEqual(expected, result);
         }
@@ -118,26 +115,22 @@ public class UIDeviceTests
             string result = "";
             for (int i = 0; i < 5; i++)
             {
-                Input input = UIDevice.GetInputFrom(placeHolder);
+                NewInputSystem inputSystem = new(placeHolder, InputActionType.Button);
+                Input input = UIDevice.GetInputFrom(inputSystem);
                 result += input.debugDescription;
             }
 
             string expected =
                 "---- Input ----\n" +
-                "UI, True, /UIDevice0/integer2\n" +
-                "No tool, No interaction, No selector\n\n" +
+                "UI, True, /UIDevice0/integer2\n\n" +
                 "---- Input ----\n" +
-                "UI, True, /UIDevice0/integer3\n" +
-                "No tool, No interaction, No selector\n\n" +
+                "UI, True, /UIDevice0/integer3\n\n" +
                 "---- Input ----\n" +
-                "UI, True, /UIDevice0/integer4\n" +
-                "No tool, No interaction, No selector\n\n" +
+                "UI, True, /UIDevice0/integer4\n\n" +
                 "---- Input ----\n" +
-                "UI, True, /UIDevice0/integer5\n" +
-                "No tool, No interaction, No selector\n\n" +
+                "UI, True, /UIDevice0/integer5\n\n" +
                 "---- Input ----\n" +
-                "UI, True, /UIDevice1/integer1\n" +
-                "No tool, No interaction, No selector\n\n";
+                "UI, True, /UIDevice1/integer1\n\n";
 
             Assert.AreEqual(expected, result);
         }
@@ -150,26 +143,22 @@ public class UIDeviceTests
             string result = "";
             for (int i = 0; i < 5; i++)
             {
-                Input input = UIDevice.GetInputFrom(placeHolder);
+                NewInputSystem inputSystem = new(placeHolder, InputActionType.Button);
+                Input input = UIDevice.GetInputFrom(inputSystem);
                 result += input.debugDescription;
             }
 
             string expected =
                 "---- Input ----\n" +
-                "UI, True, /UIDevice0/double2\n" +
-                "No tool, No interaction, No selector\n\n" +
+                "UI, True, /UIDevice0/double2\n\n" +
                 "---- Input ----\n" +
-                "UI, True, /UIDevice0/double3\n" +
-                "No tool, No interaction, No selector\n\n" +
+                "UI, True, /UIDevice0/double3\n\n" +
                 "---- Input ----\n" +
-                "UI, True, /UIDevice0/double4\n" +
-                "No tool, No interaction, No selector\n\n" +
+                "UI, True, /UIDevice0/double4\n\n" +
                 "---- Input ----\n" +
-                "UI, True, /UIDevice0/double5\n" +
-                "No tool, No interaction, No selector\n\n" +
+                "UI, True, /UIDevice0/double5\n\n" +
                 "---- Input ----\n" +
-                "UI, True, /UIDevice1/double1\n" +
-                "No tool, No interaction, No selector\n\n";
+                "UI, True, /UIDevice1/double1\n\n";
 
             Assert.AreEqual(expected, result);
         }
@@ -182,26 +171,22 @@ public class UIDeviceTests
             string result = "";
             for (int i = 0; i < 5; i++)
             {
-                Input input = UIDevice.GetInputFrom(placeHolder);
+                NewInputSystem inputSystem = new(placeHolder, InputActionType.Button);
+                Input input = UIDevice.GetInputFrom(inputSystem);
                 result += input.debugDescription;
             }
 
             string expected =
                 "---- Input ----\n" +
-                "UI, True, /UIDevice0/vectorTwo2\n" +
-                "No tool, No interaction, No selector\n\n" +
+                "UI, True, /UIDevice0/vectorTwo2\n\n" +
                 "---- Input ----\n" +
-                "UI, True, /UIDevice0/vectorTwo3\n" +
-                "No tool, No interaction, No selector\n\n" +
+                "UI, True, /UIDevice0/vectorTwo3\n\n" +
                 "---- Input ----\n" +
-                "UI, True, /UIDevice0/vectorTwo4\n" +
-                "No tool, No interaction, No selector\n\n" +
+                "UI, True, /UIDevice0/vectorTwo4\n\n" +
                 "---- Input ----\n" +
-                "UI, True, /UIDevice0/vectorTwo5\n" +
-                "No tool, No interaction, No selector\n\n" +
+                "UI, True, /UIDevice0/vectorTwo5\n\n" +
                 "---- Input ----\n" +
-                "UI, True, /UIDevice1/vectorTwo1\n" +
-                "No tool, No interaction, No selector\n\n";
+                "UI, True, /UIDevice1/vectorTwo1\n\n";
 
             Assert.AreEqual(expected, result);
         }
@@ -214,26 +199,22 @@ public class UIDeviceTests
             string result = "";
             for (int i = 0; i < 5; i++)
             {
-                Input input = UIDevice.GetInputFrom(placeHolder);
+                NewInputSystem inputSystem = new(placeHolder, InputActionType.Button);
+                Input input = UIDevice.GetInputFrom(inputSystem);
                 result += input.debugDescription;
             }
 
             string expected =
                 "---- Input ----\n" +
-                "UI, True, /UIDevice0/vectorThree2\n" +
-                "No tool, No interaction, No selector\n\n" +
+                "UI, True, /UIDevice0/vectorThree2\n\n" +
                 "---- Input ----\n" +
-                "UI, True, /UIDevice0/vectorThree3\n" +
-                "No tool, No interaction, No selector\n\n" +
+                "UI, True, /UIDevice0/vectorThree3\n\n" +
                 "---- Input ----\n" +
-                "UI, True, /UIDevice0/vectorThree4\n" +
-                "No tool, No interaction, No selector\n\n" +
+                "UI, True, /UIDevice0/vectorThree4\n\n" +
                 "---- Input ----\n" +
-                "UI, True, /UIDevice0/vectorThree5\n" +
-                "No tool, No interaction, No selector\n\n" +
+                "UI, True, /UIDevice0/vectorThree5\n\n" +
                 "---- Input ----\n" +
-                "UI, True, /UIDevice1/vectorThree1\n" +
-                "No tool, No interaction, No selector\n\n";
+                "UI, True, /UIDevice1/vectorThree1\n\n";
 
             Assert.AreEqual(expected, result);
         }
@@ -246,26 +227,22 @@ public class UIDeviceTests
             string result = "";
             for (int i = 0; i < 5; i++)
             {
-                Input input = UIDevice.GetInputFrom(placeHolder);
+                NewInputSystem inputSystem = new(placeHolder, InputActionType.Button);
+                Input input = UIDevice.GetInputFrom(inputSystem);
                 result += input.debugDescription;
             }
 
             string expected =
                 "---- Input ----\n" +
-                "UI, True, /UIDevice0/quaternion2\n" +
-                "No tool, No interaction, No selector\n\n" +
+                "UI, True, /UIDevice0/quaternion2\n\n" +
                 "---- Input ----\n" +
-                "UI, True, /UIDevice0/quaternion3\n" +
-                "No tool, No interaction, No selector\n\n" +
+                "UI, True, /UIDevice0/quaternion3\n\n" +
                 "---- Input ----\n" +
-                "UI, True, /UIDevice0/quaternion4\n" +
-                "No tool, No interaction, No selector\n\n" +
+                "UI, True, /UIDevice0/quaternion4\n\n" +
                 "---- Input ----\n" +
-                "UI, True, /UIDevice0/quaternion5\n" +
-                "No tool, No interaction, No selector\n\n" +
+                "UI, True, /UIDevice0/quaternion5\n\n" +
                 "---- Input ----\n" +
-                "UI, True, /UIDevice1/quaternion1\n" +
-                "No tool, No interaction, No selector\n\n";
+                "UI, True, /UIDevice1/quaternion1\n\n";
 
             Assert.AreEqual(expected, result);
         }

@@ -14,24 +14,22 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using UnityEngine.InputSystem;
+using System;
 
 namespace umi3d.cdk.interaction
 {
     public sealed class Input 
     {
-        internal Input(InputControl control, InputActionType actionType)
+        internal Input(ISystemInput inputSystem)
         {
-            this.control = control;
+            this.inputSystem = inputSystem;
 
-            action = new InputAction(control.name, actionType);
-            action.AddBinding(control.path);
+            inputSystem.started += OnStarted;
+            inputSystem.performed += OnPerformed;
+            inputSystem.canceled += OnCanceled;
         }
 
         public bool isAvailable { get; internal set; } = true;
-
-        public InputAction action { get; private set; }
-        public InputControl control { get; private set; }
 
         public Controller controller { get; private set; }
         internal bool Associate(Controller controller)
@@ -46,17 +44,46 @@ namespace umi3d.cdk.interaction
             this.controller = null;
         }
 
+        public ISystemInput inputSystem { get; private set; }
+
+        void OnStarted(object obj)
+        {
+            onStarted?.Invoke(obj);
+        }
+        void OnPerformed(object obj)
+        {
+            onPerformed?.Invoke(obj);
+        }
+        void OnCanceled(object obj)
+        {
+            onCanceled?.Invoke(obj);
+        }
+
+        public Action<object> onStarted;
+        public Action<object> onPerformed;
+        public Action<object> onCanceled;
+
+        public void WriteStructValue<T>(T value) where T : struct
+        {
+            inputSystem.WriteStructValue(value);
+        }
+        public void WriteClassValue<T>(T value) where T : class
+        {
+            inputSystem.WriteClassValue(value);
+        }
+        public T ReadValue<T>()
+        {
+            return inputSystem.ReadValue<T>();
+        }
+
         public string debugDescription
         {
             get
             {
-                Projection projection = null; // TODO: get projection.
-                
                 string description = "";
 
                 description += $"---- Input ----\n";
-                description += $"{controller?.id ?? "No controller"}, {isAvailable}, {control.path}\n";
-                description += $"{projection?.tool?.dto?.name ?? "No tool"}, {projection?.interaction?.dto?.name ?? "No interaction"}, {projection?.selector?.id ?? "No selector"}\n";
+                description += $"{controller?.id ?? "No controller"}, {isAvailable}, {inputSystem.id}\n";
                 description += "\n";
 
                 return description;

@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 
+using GLTFast.Schema;
 using inetum.unityUtils;
 using System;
 using System.Collections;
@@ -49,11 +50,22 @@ namespace umi3d.cdk
             
             if (canvas.transform.gameObject.name == "MainCanvasSS")
             {
-                Debug.Log("MainCanvasSS found");
+                Debug.Log("ScreenSpace found "+ canvas.transform.gameObject.name);
                 GameObject gameObject = GameObject.Find("IngameUIManager");
                 canvas.transform.SetParent(gameObject.transform);
                 canvas.renderMode = (UnityEngine.RenderMode)umi3d.common.RenderMode.ScreenSpaceOverlay;
             }
+            if(canvas.transform.gameObject.name == "PinCanvas")
+            {
+
+                Debug.Log("PinCanvas found " + canvas.transform.gameObject.name);
+                //canvas.transform.SetParent(null);
+                //canvas.transform.SetLocalPositionAndRotation(canvas.transform.parent.parent.localPosition,Quaternion.identity);
+                
+            }
+            
+
+
 
             // overrideSorting property cannot be modified if object is disabled, need to update at each activation.
             ActivationEventListener canvasListener = node.GetOrAddComponent<ActivationEventListener>();

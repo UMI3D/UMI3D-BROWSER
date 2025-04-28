@@ -30,13 +30,14 @@ namespace umi3d.cdk.interaction
         public GameObject _go;
         public ReadUMI3DExtensionData _value;
 
-        [ContextMenu("Test")]
-        public void test()
+        [ContextMenu("AssignListenner ")]
+        public void AssignListenner()
         {
             if(_go.TryGetComponent<InteractableContainer>(out InteractableContainer container))
             {
                 _container = container;
                 _button.onClick.AddListener(SendEvent);
+                Debug.Log("AssignListenner "+ _go.name);
             }
             
         }

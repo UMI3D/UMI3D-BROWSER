@@ -56,8 +56,6 @@ namespace umi3d.cdk.interaction
                     _ss._go = nodeI.GameObject;
                     _ss._interactable = interactable;
                     _ss._value = value;
-
-
                     //boucle permettant de rechercher tous les parents contenant un Canvas afin d'y ajouter un GraphicRaycaster
                     //pour permettre l'interactions avec le boutton précédemment creer
                     //s'arrete lorsque le parent IngameUIManager est trouvé indiquant que l'on est plus sur le parent de la node mais de l'ui Canvas ScreenSpace global
@@ -72,8 +70,22 @@ namespace umi3d.cdk.interaction
                         }
                         go = go.transform.parent.gameObject;
                     }
-                    _ss.test();
+                    _ss.AssignListenner();
                 }
+                if(nodeI.transform.name == "PinImage")
+                {
+                    InteractionScreenSpace _ss = nodeI.transform.gameObject.AddComponent<InteractionScreenSpace>();
+                    nodeI.transform.parent.gameObject.AddComponent<GraphicRaycaster>();
+
+                    //ajoute un bouton
+                    _ss._button = nodeI.transform.gameObject.AddComponent<Button>();
+                    _ss._go = nodeI.GameObject;
+                    _ss._interactable = interactable;
+                    _ss._value = value;
+                    _ss.AssignListenner();
+                    Debug.Log("AssignListenner ");
+                }
+                 
             }
             else
                 throw (new Umi3dException($"Entity [{dto.nodeId}] is not a node"));

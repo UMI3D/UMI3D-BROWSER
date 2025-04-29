@@ -15,7 +15,9 @@ public class Tips : ScriptableObject
         public Sprite Sprite => sprite;
     }
 
-    [SerializeField] private List<Data> loadingTips;
+    [SerializeField] private List<Data> loadingTipsVR;
+    [SerializeField] private List<Data> loadingTipsPC;
 
-    public List<Data> LoadingTips => loadingTips;
+    public List<Data> LoadingTipsVR => loadingTipsVR;
+    public List<Data> LoadingTipsPC => loadingTipsPC;
 }

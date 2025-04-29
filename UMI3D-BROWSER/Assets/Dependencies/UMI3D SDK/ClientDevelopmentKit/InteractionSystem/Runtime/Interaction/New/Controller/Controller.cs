@@ -104,7 +104,7 @@ namespace umi3d.cdk.interaction
         {
             if (!isActive) { return false; }
 
-            InputManager.@default.TryInstantiateInput(
+            InputManager.@default.InstantiateOrGet(
                 out Input input,
                 inputSystem
             );

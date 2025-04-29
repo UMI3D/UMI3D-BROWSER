@@ -74,9 +74,8 @@ public class BrowserControllerManagerTests
         {
             // Instantiate BrowserControllerManager.
             // This will register the selectors, as well as the controllers.
-            var _ = BrowserControllerManager.@default;
+            mouseSelector = BrowserControllerManager.@default.mouseSelector;
 
-            SelectorManager.@default.TryToGetSelector(out mouseSelector, BrowserControllerManager.MOUSE_ID);
             Assert.NotNull(mouseSelector);
             clientSelector = new();
             mouseSelector.clientServerCommunicationSelectorDelegate = clientSelector;
@@ -91,7 +90,7 @@ public class BrowserControllerManagerTests
             ulong count = 10;
             for (ulong i =  0; i < count; i++)
             {
-                InteractionManager.@default.TryToInstantiateInteraction(
+                InteractionManager.@default.InstantiateOrGet(
                     out Interaction _, 
                     environmentId, 
                     new EventDto()
@@ -105,7 +104,7 @@ public class BrowserControllerManagerTests
 
             for (ulong i =  0; i < count; i++)
             {
-                InteractionManager.@default.TryToInstantiateInteraction(
+                InteractionManager.@default.InstantiateOrGet(
                     out Interaction _, 
                     environmentId, 
                     new EventDto()
@@ -117,7 +116,7 @@ public class BrowserControllerManagerTests
                 );
             }
 
-            InteractionManager.@default.TryToInstantiateInteraction(
+            InteractionManager.@default.InstantiateOrGet(
                 out Interaction _, 
                 environmentId, 
                 new BooleanParameterDto()

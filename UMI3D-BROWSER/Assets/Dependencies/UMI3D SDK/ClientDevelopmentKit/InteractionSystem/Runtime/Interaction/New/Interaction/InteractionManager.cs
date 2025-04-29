@@ -38,28 +38,64 @@ namespace umi3d.cdk.interaction
         List<Interaction> _interactions = new();
         public ReadOnlyCollection<Interaction> interactions => _interactions.AsReadOnly();
 
-        public bool TryToInstantiateInteraction(out Interaction interaction, ulong environmentId, AbstractInteractionDto dto)
+        /// <summary>
+        /// Searches for an existing interaction based on the specified environment ID and DTO (Data Transfer Object). 
+        /// If an interaction matching the criteria exists, it is returned. Otherwise, a new interaction is created, 
+        /// added to the internal list, registered in the environment loader, and returned.<br/>
+        /// <br/>
+        /// <example>
+        /// Given an environment ID and a DTO, when calling this method, it will either return an existing interaction 
+        /// or create a new one and register it in the environment loader.<br/>
+        /// <br/>
+        /// <code>
+        /// bool isNew = interactionManager.InstantiateOrGet(out Interaction interaction, 12345UL, dto);
+        /// if (isNew)
+        /// {
+        ///     Console.WriteLine("A new interaction was created and registered.");
+        /// }
+        /// else
+        /// {
+        ///     Console.WriteLine("An existing interaction was returned.");
+        /// }
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <param name="interaction">
+        /// The output parameter that will hold the existing or newly created interaction.
+        /// </param>
+        /// <param name="environmentId">
+        /// The unique identifier of the environment associated with the interaction.
+        /// </param>
+        /// <param name="dto">
+        /// The data transfer object (DTO) containing the interaction's details.
+        /// </param>
+        /// <returns>
+        /// A boolean value indicating whether a new interaction was created (`true`) or an existing interaction was found (`false`).
+        /// </returns>
+        public bool InstantiateOrGet(out Interaction interaction, ulong environmentId, AbstractInteractionDto dto)
         {
             interaction = _interactions.Find(interaction => interaction.environmentId == environmentId && interaction.dto.id == dto.id);
             if (interaction != null)
             {
-                UnityEngine.Debug.LogWarning($"[InteractionManager] Warning: Cannot instantiate interaction for '{environmentId}' and dto's id '{dto.id}' because this interaction already exist.");
+                UnityEngine.Debug.Log($"[InteractionManager] Notice: interaction for id: '{environmentId}' and dto's id: '{dto.id}' already exist.");
                 return false;
             }
 
+            UnityEngine.Debug.Log($"[InteractionManager] Notice: interaction for id: '{environmentId}' and dto's id: '{dto.id}' created.");
             interaction = new(environmentId, dto);
             _interactions.Add(interaction);
             UMI3DEnvironmentLoader.Instance.RegisterEntity(environmentId, dto.id, dto, interaction).NotifyLoaded();
             return true;
         }
+
         public bool TryToRemoveInteraction(Interaction interaction)
         {
             if (!_interactions.Contains(interaction))
             {
                 return false;
             }
- 
-            UMI3DEnvironmentLoader.Instance.DeleteEntityInstance(interaction.environmentId, interaction.dto.id);
+
+            _ = UMI3DEnvironmentLoader.Instance.DeleteEntityInstance(interaction.environmentId, interaction.dto.id);
             _interactions.Remove(interaction);
             return true;
         }
@@ -71,19 +107,8 @@ namespace umi3d.cdk.interaction
                 return false;
             }
 
-            UMI3DEnvironmentLoader.Instance.DeleteEntityInstance(environmentId, interactionId);
+            _ = UMI3DEnvironmentLoader.Instance.DeleteEntityInstance(environmentId, interactionId);
             _interactions.Remove(interaction);
-            return true;
-        }
-        public bool TryToFetchInteraction(out Interaction interaction, ulong environmentId, ulong dtoId)
-        {
-            interaction = _interactions.Find(interaction => interaction.environmentId == environmentId && interaction.dto.id == dtoId);
-            if (interaction == null)
-            {
-                UnityEngine.Debug.LogWarning($"[ToolManager] Warning: Cannot find tool for '{environmentId}' and dto's id '{dtoId}'.");
-                return false;
-            }
-
             return true;
         }
     }

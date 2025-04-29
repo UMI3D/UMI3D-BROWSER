@@ -20,7 +20,7 @@ using System.Collections.ObjectModel;
 
 namespace umi3d.cdk.interaction
 {
-    public class SelectorManager 
+    public sealed class SelectorManager 
     {
         #region Initialize
 
@@ -42,29 +42,48 @@ namespace umi3d.cdk.interaction
         List<Selector> _selectors = new List<Selector>();
         public ReadOnlyCollection<Selector> selectors => _selectors.AsReadOnly();
 
-        public bool TryToInstantiateSelector(out Selector selector, string id)
+        /// <summary>
+        /// Searches for an existing selector by its unique identifier. If a selector with the specified ID exists, 
+        /// it is returned. Otherwise, a new selector is created, added to the internal list, and returned.<br/>
+        /// <br/>
+        /// <example>
+        /// Given a selector ID, when calling this method, it will either return an existing selector 
+        /// or create a new one and add it to the internal list.<br/>
+        /// <br/>
+        /// <code>
+        /// bool isNew = selectorManager.InstantiateOrGet(out Selector selector, "selector_1");
+        /// if (isNew)
+        /// {
+        ///     Console.WriteLine("A new selector was created.");
+        /// }
+        /// else
+        /// {
+        ///     Console.WriteLine("An existing selector was returned.");
+        /// }
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <param name="selector">
+        /// The output parameter that will hold the existing or newly created selector.
+        /// </param>
+        /// <param name="id">
+        /// The unique identifier of the selector to search for or associate with a new selector.
+        /// </param>
+        /// <returns>
+        /// A boolean value indicating whether a new selector was created (`true`) or an existing selector was found (`false`).
+        /// </returns>
+        public bool InstantiateOrGet(out Selector selector, string id)
         {
             selector = _selectors.Find(selector => selector.id == id);
             if (selector != null)
             {
-                UnityEngine.Debug.LogWarning($"[SelectorManager] Warning: Cannot instantiate selector for '{id}' because this selector already exist.");
+                UnityEngine.Debug.Log($"[SelectorManager] Notice: selector for id: '{id}' already exist.");
                 return false;
             }
 
+            UnityEngine.Debug.Log($"[SelectorManager] Notice: selector for id: '{id}' created.");
             selector = new(id);
             _selectors.Add(selector);
-            return true;
-        }
-
-        public bool TryToGetSelector(out Selector selector, string id)
-        {
-            selector = _selectors.Find(selector => selector.id == id);
-            if (selector == null)
-            {
-                UnityEngine.Debug.LogWarning($"[SelectorManager] Warning: selector for '{id}' has not been instantiated yet.");
-                return false;
-            }
-
             return true;
         }
     }

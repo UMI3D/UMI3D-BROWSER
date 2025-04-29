@@ -19,7 +19,7 @@ using UnityEngine;
 
 namespace umi3d.cdk.interaction
 {
-    public class Projection 
+    public sealed class Projection 
     {
         public Selector selector {  get; internal set; }
         public Controller controller { get; internal set; }

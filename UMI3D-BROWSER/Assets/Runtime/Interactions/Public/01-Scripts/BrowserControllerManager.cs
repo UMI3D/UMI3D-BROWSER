@@ -47,13 +47,13 @@ namespace umi3d.browserRuntime.interactions
              * SELECTORS
              */
 
-            SelectorManager.@default.TryToInstantiateSelector(out mouseSelector, MOUSE_ID);
+            SelectorManager.@default.InstantiateOrGet(out mouseSelector, MOUSE_ID);
             mouseSelector.dataDelegate = new MouseSelectorDataDelegate();
 
-            SelectorManager.@default.TryToInstantiateSelector(out leftVRSelector, LEFT_ID + VR_ID);
+            SelectorManager.@default.InstantiateOrGet(out leftVRSelector, LEFT_ID + VR_ID);
             leftVRSelector.dataDelegate = new LeftVRSelectorDataDelegate();
 
-            SelectorManager.@default.TryToInstantiateSelector(out rightVRSelector, RIGHT_ID + VR_ID);
+            SelectorManager.@default.InstantiateOrGet(out rightVRSelector, RIGHT_ID + VR_ID);
             rightVRSelector.dataDelegate = new RightVRSelectorDataDelegate();
 
             // TODO
@@ -66,15 +66,15 @@ namespace umi3d.browserRuntime.interactions
              * CONTROLLERS
              */
 
-            ControllerManager.@default.TryToInstantiateController(out uiDeviceController, UI_ID);
+            ControllerManager.@default.InstantiateOrGet(out uiDeviceController, UI_ID);
 
-            ControllerManager.@default.TryToInstantiateController(out mouseController, MOUSE_ID);
+            ControllerManager.@default.InstantiateOrGet(out mouseController, MOUSE_ID);
 
-            ControllerManager.@default.TryToInstantiateController(out keyboardController, KEYBOARD_ID);
+            ControllerManager.@default.InstantiateOrGet(out keyboardController, KEYBOARD_ID);
 
-            ControllerManager.@default.TryToInstantiateController(out leftVRController, LEFT_ID + VR_ID);
+            ControllerManager.@default.InstantiateOrGet(out leftVRController, LEFT_ID + VR_ID);
 
-            ControllerManager.@default.TryToInstantiateController(out rightVRController, RIGHT_ID + VR_ID);
+            ControllerManager.@default.InstantiateOrGet(out rightVRController, RIGHT_ID + VR_ID);
 
             // TODO
             //ControllerManager.@default.TryToInstantiateController(out leftHandController, LEFT_ID + HAND_ID);

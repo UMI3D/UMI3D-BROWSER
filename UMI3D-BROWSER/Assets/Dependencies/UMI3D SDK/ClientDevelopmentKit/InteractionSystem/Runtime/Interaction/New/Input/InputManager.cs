@@ -37,32 +37,44 @@ namespace umi3d.cdk.interaction
         List<Input> _inputs = new List<Input>();
         public ReadOnlyCollection<Input> inputs => _inputs.AsReadOnly();
 
-        public bool TryInstantiateInput(out Input input, IInputSystem inputSystem)
+        /// <summary>
+        /// Searches for an existing input associated with the specified input system. If it exists, returns the input; 
+        /// otherwise, creates a new input, adds it to the internal list, and returns it.<br/>
+        /// <br/>
+        /// <example>
+        /// Given an input system, when calling this method, it will either return an existing input or create a new one.<br/>
+        /// <br/>
+        /// <code>
+        /// bool isNew = inputManager.InstantiateOrGet(out Input input, inputSystem);
+        /// if (isNew)
+        /// {
+        ///     Console.WriteLine("A new input was created.");
+        /// }
+        /// else
+        /// {
+        ///     Console.WriteLine("An existing input was returned.");
+        /// }
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <param name="input">The output parameter that will hold the existing or newly created input.</param>
+        /// <param name="inputSystem">The input system to search for or associate with a new input.</param>
+        /// <returns>
+        /// A boolean value indicating whether a new input was created (`true`) or an existing input was found (`false`).
+        /// </returns>
+        public bool InstantiateOrGet(out Input input, IInputSystem inputSystem)
         {
             input = _inputs.Find(input => input.inputSystem == inputSystem);
 
             if (input != null)
             {
-                UnityEngine.Debug.LogWarning($"[InputManager] Warning: Cannot instantiate input for '{inputSystem.id}' because this input already exist.");
+                UnityEngine.Debug.Log($"[InputManager] Notice: input for id: '{inputSystem.id}' already exist.");
                 return false;
             }
 
+            UnityEngine.Debug.Log($"[InputManager] Notice: input for id: '{inputSystem.id}' created.");
             input = new(inputSystem);
             _inputs.Add(input);
-
-            return true;
-        }
-
-        public bool TryGetInput(out Input input, IInputSystem inputSystem)
-        {
-            input = _inputs.Find(input => input.inputSystem == inputSystem);
-
-            if (input == null)
-            {
-                UnityEngine.Debug.Log($"[InputManager] Warning: Input for id: {inputSystem.id} has been instantiated.");
-                return false;
-            }
-
             return true;
         }
     }

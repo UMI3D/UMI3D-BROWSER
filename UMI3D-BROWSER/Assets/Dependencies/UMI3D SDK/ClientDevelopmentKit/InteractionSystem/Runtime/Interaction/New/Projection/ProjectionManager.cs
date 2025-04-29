@@ -21,7 +21,7 @@ using System.Collections.ObjectModel;
 
 namespace umi3d.cdk.interaction
 {
-    public class ProjectionManager 
+    public sealed class ProjectionManager 
     {
         #region Initialize
 

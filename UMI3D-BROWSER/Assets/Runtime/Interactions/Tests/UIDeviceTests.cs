@@ -32,7 +32,7 @@ public class UIDeviceTests
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
-            ControllerManager.@default.TryToInstantiateController(out uiDeviceController, BrowserControllerManager.UI_ID);
+            ControllerManager.@default.InstantiateOrGet(out uiDeviceController, BrowserControllerManager.UI_ID);
 
             UIDevice.InstantiateNewUIDevice();
         }

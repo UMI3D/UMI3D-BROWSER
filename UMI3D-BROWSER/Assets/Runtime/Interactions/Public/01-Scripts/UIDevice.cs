@@ -122,7 +122,7 @@ namespace umi3d.browserRuntime.interactions
                 );
                 if (!_activeInputControls.Contains(concreteInputSystem))
                 {
-                    InputManager.@default.TryInstantiateInput(
+                    InputManager.@default.InstantiateOrGet(
                         out input,
                         concreteInputSystem
                     );

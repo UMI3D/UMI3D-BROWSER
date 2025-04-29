@@ -280,10 +280,10 @@ namespace umi3d.cdk.interaction
         {
             foreach (var association in associations)
             {
-                InteractionManager.@default.TryToFetchInteraction(
+                InteractionManager.@default.InstantiateOrGet(
                     out Interaction interaction, 
                     tool.environmentId, 
-                    association.interaction.id
+                    association.interaction
                 );
                 Projection projection = ProjectionManager.@default.Project(
                     this, 
@@ -340,6 +340,8 @@ namespace umi3d.cdk.interaction
         {
 
         }
+
+        #region Hovering
 
         public ulong hoveredObjectId { get; internal set; }
         public void HoverEnter(Tool tool, Collider collider, Vector3 position, Vector3 normal, Vector3 direction)
@@ -415,5 +417,7 @@ namespace umi3d.cdk.interaction
             };
             clientServerCommunicationSelectorDelegate.SendRequest(hoverDto, false);
         }
+
+        #endregion
     }
 }

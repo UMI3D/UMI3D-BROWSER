@@ -37,29 +37,43 @@ namespace umi3d.cdk.interaction
         List<Controller> _controllers = new();
         public ReadOnlyCollection<Controller> controllers => _controllers.AsReadOnly();
 
-        public bool TryToInstantiateController(out Controller controller, string id)
+        /// <summary>
+        /// Searches for an existing controller by its unique identifier. If a controller with the specified ID exists, 
+        /// it is returned. Otherwise, a new controller is created, added to the internal list, and returned.<br/>
+        /// <br/>
+        /// <example>
+        /// Given a controller ID, when calling this method, it will either return an existing controller or create a new one.<br/>
+        /// <br/>
+        /// <code>
+        /// bool isNew = controllerManager.InstantiateOrGet(out Controller controller, "controller_1");
+        /// if (isNew)
+        /// {
+        ///     Console.WriteLine("A new controller was created.");
+        /// }
+        /// else
+        /// {
+        ///     Console.WriteLine("An existing controller was returned.");
+        /// }
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <param name="controller">The output parameter that will hold the existing or newly created controller.</param>
+        /// <param name="id">The unique identifier of the controller to search for or associate with a new controller.</param>
+        /// <returns>
+        /// A boolean value indicating whether a new controller was created (`true`) or an existing controller was found (`false`).
+        /// </returns>
+        public bool InstantiateOrGet(out Controller controller, string id)
         {
             controller = _controllers.Find(x => x.id == id);
             if (controller != null)
             {
-                UnityEngine.Debug.LogWarning($"[ControllerManager] Warning: Cannot instantiate controller for '{id}' because this controller already exist.");
+                UnityEngine.Debug.Log($"[ControllerManager] Notice: controller for id: '{id}' already exist.");
                 return false;
             }
 
+            UnityEngine.Debug.Log($"[ControllerManager] Notice: controller for id: '{id}' created.");
             controller = new(id);
             _controllers.Add(controller);
-            return true;
-        }
-
-        public bool TryToGetController(out Controller controller, string id)
-        {
-            controller = _controllers.Find(x => x.id == id);
-            if (controller == null)
-            {
-                UnityEngine.Debug.LogWarning($"[ControllerManager] Warning: controller for '{id}' has not been instantiated yet.");
-                return false;
-            }
-
             return true;
         }
     }

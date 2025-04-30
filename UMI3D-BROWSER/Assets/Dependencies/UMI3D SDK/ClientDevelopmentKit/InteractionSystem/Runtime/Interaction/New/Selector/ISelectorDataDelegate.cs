@@ -27,7 +27,7 @@ namespace umi3d.cdk.interaction
         /// </summary>
         int toolCountLimitation { get; }
 
-        void AssociateInteractionAndInput(List<(AbstractInteractionDto interaction, Input input)> associations, ReadOnlyDictionary<AbstractInteractionDto, ReadOnlyCollection<Input>> inputsByInteractions);
+        void AssociateInteractionAndInput(List<(Interaction interaction, Input input)> associations, ReadOnlyDictionary<Interaction, ReadOnlyCollection<Input>> inputsByInteractions);
 
         // ----- Button action type -----
         /// <summary>

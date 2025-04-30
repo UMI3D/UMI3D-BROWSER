@@ -109,15 +109,14 @@ namespace umi3d.cdk.interaction
 
             try
             {
-                AssociateInteractionToInput(tool.interactions);
+                AssociateInteractionToInput(tool);
 
                 Project(tool);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 inputsByInteractions.Clear();
                 associations.Clear();
-                projectionSetupByInteractions.Clear();
                 throw;
             }
 
@@ -125,34 +124,45 @@ namespace umi3d.cdk.interaction
             SelectorManager.@default.lastSelectorSelected = this;
         }
 
-        List<(AbstractInteractionDto interaction, Input input)> associations = new();
-        Dictionary<AbstractInteractionDto, Action<Projection>> projectionSetupByInteractions = new();
-        Dictionary<AbstractInteractionDto, ReadOnlyCollection<Input>> inputsByInteractions = new();
-        void AssociateInteractionToInput(ReadOnlyCollection<AbstractInteractionDto> interactions)
+        List<(Interaction interaction, Input input)> associations = new();
+        Dictionary<Interaction, ReadOnlyCollection<Input>> inputsByInteractions = new();
+        void AssociateInteractionToInput(Tool tool)
         {
-            ReadOnlyCollection<Input> inputs;
-            bool TryToAddInputToDictionary(AbstractInteractionDto interaction, bool found, Action<Projection> projectionSetup)
+            ReadOnlyCollection<Input> inputs = null;
+            bool TryToAddInputsToDictionary(Interaction interaction, bool haveInputsBeenFound, Action<Projection> projectionSetup)
             {
-                if (!found)
+                if (!haveInputsBeenFound)
                 {
-                    UnityEngine.Debug.LogWarning($"[Selector-{id}] Warning: no controller or input available for {interaction.GetType()}, {interaction.name}.");
+                    UnityEngine.Debug.LogWarning($"[Selector-{id}] Warning: no controller or input available for {interaction.dto.GetType()}, {interaction.dto.name}.");
                     return false;
                 }
 
-                projectionSetupByInteractions.Add(interaction, projectionSetup);
                 inputsByInteractions.Add(interaction, inputs);
+                interaction.projectionSetup = projectionSetup;
+                inputs = null;
                 return true;
             }
 
-            foreach (AbstractInteractionDto interaction in interactions)
+            foreach (AbstractInteractionDto interactionDto in tool.interactions)
             {
-                switch (interaction)
+                InteractionManager.@default.InstantiateOrGet(
+                    out Interaction interaction, 
+                    tool.environmentId, 
+                    interactionDto
+                );
+                if (interaction == null)
+                {
+                    UnityEngine.Debug.LogError($"[Selector-{id}] Error: cannot get interaction from environment id: {tool.environmentId} and dto: {interactionDto?.GetType()}, {interactionDto?.name}.");
+                    continue;
+                }
+
+                switch (interactionDto)
                 {
                     case DrawingInteractionDto drawing:
-                        TryToAddInputToDictionary(
+                        TryToAddInputsToDictionary(
                             interaction,
 
-                            found: dataDelegate.TryGetInputsFor(out inputs, drawing),
+                            haveInputsBeenFound: dataDelegate.TryGetInputsFor(out inputs, drawing),
 
                             projectionSetup: projection =>
                             {
@@ -162,10 +172,10 @@ namespace umi3d.cdk.interaction
                         break;
 
                     case EventDto eventDto:
-                        TryToAddInputToDictionary(
+                        TryToAddInputsToDictionary(
                             interaction,
 
-                            found: dataDelegate.TryGetInputsFor(out inputs, eventDto),
+                            haveInputsBeenFound: dataDelegate.TryGetInputsFor(out inputs, eventDto),
                            
                             projectionSetup: projection =>
                             {
@@ -186,10 +196,10 @@ namespace umi3d.cdk.interaction
 
                     // Parameters
                     case BooleanParameterDto boolean:
-                        TryToAddInputToDictionary(
+                        TryToAddInputsToDictionary(
                             interaction,
 
-                            found: dataDelegate.TryGetInputsFor(out inputs, boolean),
+                            haveInputsBeenFound: dataDelegate.TryGetInputsFor(out inputs, boolean),
 
                             projectionSetup: projection =>
                             {
@@ -199,10 +209,10 @@ namespace umi3d.cdk.interaction
                         break;
 
                     case FloatParameterDto @float:
-                        TryToAddInputToDictionary(
+                        TryToAddInputsToDictionary(
                             interaction,
 
-                            found: dataDelegate.TryGetInputsFor(out inputs, @float),
+                            haveInputsBeenFound: dataDelegate.TryGetInputsFor(out inputs, @float),
 
                             projectionSetup: projection =>
                             {
@@ -212,10 +222,10 @@ namespace umi3d.cdk.interaction
                         break;
 
                     case IntegerParameterDto integer:
-                        TryToAddInputToDictionary(
+                        TryToAddInputsToDictionary(
                             interaction,
 
-                            found: dataDelegate.TryGetInputsFor(out inputs, integer),
+                            haveInputsBeenFound: dataDelegate.TryGetInputsFor(out inputs, integer),
 
                             projectionSetup: projection =>
                             {
@@ -225,10 +235,10 @@ namespace umi3d.cdk.interaction
                         break;
 
                     case Vector2ParameterDto vector2:
-                        TryToAddInputToDictionary(
+                        TryToAddInputsToDictionary(
                             interaction,
 
-                            found: dataDelegate.TryGetInputsFor(out inputs, vector2),
+                            haveInputsBeenFound: dataDelegate.TryGetInputsFor(out inputs, vector2),
 
                             projectionSetup: projection =>
                             {
@@ -238,10 +248,10 @@ namespace umi3d.cdk.interaction
                         break;
 
                     case Vector3ParameterDto vector3:
-                        TryToAddInputToDictionary(
+                        TryToAddInputsToDictionary(
                             interaction,
 
-                            found: dataDelegate.TryGetInputsFor(out inputs, vector3),
+                            haveInputsBeenFound: dataDelegate.TryGetInputsFor(out inputs, vector3),
 
                             projectionSetup: projection =>
                             {
@@ -251,10 +261,10 @@ namespace umi3d.cdk.interaction
                         break;
 
                     case Vector4ParameterDto vector4:
-                        TryToAddInputToDictionary(
+                        TryToAddInputsToDictionary(
                             interaction,
 
-                            found: dataDelegate.TryGetInputsFor(out inputs, vector4),
+                            haveInputsBeenFound: dataDelegate.TryGetInputsFor(out inputs, vector4),
 
                             projectionSetup: projection =>
                             {
@@ -264,10 +274,10 @@ namespace umi3d.cdk.interaction
                         break;
 
                     case FloatRangeParameterDto floatRange:
-                        TryToAddInputToDictionary(
+                        TryToAddInputsToDictionary(
                             interaction,
 
-                            found: dataDelegate.TryGetInputsFor(out inputs, floatRange),
+                            haveInputsBeenFound: dataDelegate.TryGetInputsFor(out inputs, floatRange),
 
                             projectionSetup: projection =>
                             {
@@ -277,10 +287,10 @@ namespace umi3d.cdk.interaction
                         break;
 
                     case IntegerRangeParameterDto integerRange:
-                        TryToAddInputToDictionary(
+                        TryToAddInputsToDictionary(
                             interaction,
 
-                            found: dataDelegate.TryGetInputsFor(out inputs, integerRange),
+                            haveInputsBeenFound: dataDelegate.TryGetInputsFor(out inputs, integerRange),
 
                             projectionSetup: projection =>
                             {
@@ -290,10 +300,10 @@ namespace umi3d.cdk.interaction
                         break;
 
                     case StringParameterDto @string:
-                        TryToAddInputToDictionary(
+                        TryToAddInputsToDictionary(
                             interaction,
 
-                            found: dataDelegate.TryGetInputsFor(out inputs, @string),
+                            haveInputsBeenFound: dataDelegate.TryGetInputsFor(out inputs, @string),
 
                             projectionSetup: projection =>
                             {
@@ -303,10 +313,10 @@ namespace umi3d.cdk.interaction
                         break;
 
                     case ColorParameterDto color:
-                        TryToAddInputToDictionary(
+                        TryToAddInputsToDictionary(
                             interaction,
 
-                            found: dataDelegate.TryGetInputsFor(out inputs, color),
+                            haveInputsBeenFound: dataDelegate.TryGetInputsFor(out inputs, color),
 
                             projectionSetup: projection =>
                             {
@@ -316,10 +326,10 @@ namespace umi3d.cdk.interaction
                         break;
 
                     case EnumParameterDto<string> @enum:
-                        TryToAddInputToDictionary(
+                        TryToAddInputsToDictionary(
                             interaction,
 
-                            found: dataDelegate.TryGetInputsFor(out inputs, @enum),
+                            haveInputsBeenFound: dataDelegate.TryGetInputsFor(out inputs, @enum),
 
                             projectionSetup: projection =>
                             {
@@ -329,10 +339,10 @@ namespace umi3d.cdk.interaction
                         break;
 
                     case UploadFileParameterDto uploadFile:
-                        TryToAddInputToDictionary(
+                        TryToAddInputsToDictionary(
                             interaction,
 
-                            found: dataDelegate.TryGetInputsFor(out inputs, uploadFile),
+                            haveInputsBeenFound: dataDelegate.TryGetInputsFor(out inputs, uploadFile),
 
                             projectionSetup: projection =>
                             {
@@ -342,10 +352,10 @@ namespace umi3d.cdk.interaction
                         break;
 
                     case LocalInfoRequestParameterDto localInfo:
-                        TryToAddInputToDictionary(
+                        TryToAddInputsToDictionary(
                             interaction,
 
-                            found: dataDelegate.TryGetInputsFor(out inputs, localInfo),
+                            haveInputsBeenFound: dataDelegate.TryGetInputsFor(out inputs, localInfo),
 
                             projectionSetup: projection =>
                             {
@@ -362,11 +372,11 @@ namespace umi3d.cdk.interaction
 
             dataDelegate.AssociateInteractionAndInput(
                 associations, 
-                new ReadOnlyDictionary<AbstractInteractionDto, ReadOnlyCollection<Input>>(inputsByInteractions)
+                new ReadOnlyDictionary<Interaction, ReadOnlyCollection<Input>>(inputsByInteractions)
             );
             inputsByInteractions.Clear();
 
-            if (interactions.Count > associations.Count)
+            if (tool.interactions.Count > associations.Count)
             {
                 UnityEngine.Debug.LogWarning($"[Selector-{id}] Warning: Not all interactions have been associated to an input.");
             }
@@ -376,22 +386,16 @@ namespace umi3d.cdk.interaction
         {
             foreach (var association in associations)
             {
-                InteractionManager.@default.InstantiateOrGet(
-                    out Interaction interaction, 
-                    tool.environmentId, 
-                    association.interaction
-                );
                 Projection projection = ProjectionManager.@default.Project(
                     this, 
                     association.input.controller, 
                     tool, 
-                    interaction, 
+                    association.interaction, 
                     association.input
                 );
-                projectionSetupByInteractions[association.interaction](projection);
+                association.interaction.projectionSetup(projection);
             }
             associations.Clear();
-            projectionSetupByInteractions.Clear();
 
             _projectedTools.Add(tool);
             tool.selector = this;

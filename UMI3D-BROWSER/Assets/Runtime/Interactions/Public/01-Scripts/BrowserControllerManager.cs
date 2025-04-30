@@ -199,20 +199,20 @@ namespace umi3d.browserRuntime.interactions
         /// <see cref="EventDto"/> is a subclass of <see cref="AbstractInteractionDto"/>. To check if an eventDto is hold: <see cref="EventDto.hold"/>. To check if an input is a UI input: <see cref="Input.controller"/>.id == <see cref="BrowserControllerManager.UI_ID"/>. Interactions are subclasses of <see cref="AbstractInteractionDto"/>, among them <see cref="EventDto"/> and a lot of other classes.
         /// </remarks>
         public void AssociateInteractionAndInput(
-            List<(AbstractInteractionDto interaction, Input input)> associations, 
-            ReadOnlyDictionary<AbstractInteractionDto, ReadOnlyCollection<Input>> inputsByInteractions
+            List<(Interaction interaction, Input input)> associations, 
+            ReadOnlyDictionary<Interaction, ReadOnlyCollection<Input>> inputsByInteractions
         )
         {
             // Separate interactions into EventDto and others
-            List<EventDto> eventDtos = new();
-            List<AbstractInteractionDto> otherInteractions = new();
+            List<Interaction> eventDtos = new();
+            List<Interaction> otherInteractions = new();
             foreach (var interaction in inputsByInteractions.Keys)
             {
-                if (interaction is EventDto eventDto) { eventDtos.Add(eventDto); }
+                if (interaction.dto is EventDto) { eventDtos.Add(interaction); }
                 else { otherInteractions.Add(interaction); }
             }
             // Sort EventDtos by hold property and input order
-            eventDtos = eventDtos.OrderByDescending(e => e.hold).ToList();
+            eventDtos = eventDtos.OrderByDescending(e => (e.dto as EventDto).hold).ToList();
 
             bool TryToGetUIInput(out Input input, AbstractInteractionDto interaction, IInputSystem inputSystem)
             {
@@ -232,18 +232,18 @@ namespace umi3d.browserRuntime.interactions
                 Input placeholder = inputsByInteractions[interaction].First();
                 if (placeholder == null)
                 {
-                    UnityEngine.Debug.LogError($"[MouseSelectorDataDelegate] Error: no ui input for {interaction.GetType()}, {interaction.name}");
+                    UnityEngine.Debug.LogError($"[MouseSelectorDataDelegate] Error: no ui input for {interaction.dto.GetType()}, {interaction.dto.name}");
                     continue;
                 }
 
-                if (!TryToGetUIInput(out Input input, interaction, placeholder.inputSystem)) { continue; }
+                if (!TryToGetUIInput(out Input input, interaction.dto, placeholder.inputSystem)) { continue; }
 
                 associations.Add((interaction, input));
                 hasUIInput = true;
             }
 
             // Track assigned inputs
-            List<(AbstractInteractionDto interaction, Input input)> assignedInputs = new();
+            List<(Interaction interaction, Input input)> assignedInputs = new();
 
             // Assign inputs to EventDtos
             void AssignEventDtos()
@@ -258,7 +258,7 @@ namespace umi3d.browserRuntime.interactions
                         else if (hasUIInput && input.inputSystem.id == Mouse.current.leftButton.path) { continue; }
                         else if (input.controller.id == BrowserControllerManager.UI_ID)
                         {
-                            if (!TryToGetUIInput(out input, eventDto, input.inputSystem)) { continue; }
+                            if (!TryToGetUIInput(out input, eventDto.dto, input.inputSystem)) { continue; }
                             hasUIInput = true;
                         }
 
@@ -282,7 +282,7 @@ namespace umi3d.browserRuntime.interactions
 
                 if (hasUIInput)
                 {
-                    IEnumerable<(AbstractInteractionDto interaction, Input input)> uiAssociations = assignedInputs
+                    IEnumerable<(Interaction interaction, Input input)> uiAssociations = assignedInputs
                         .Where(association => association.input.controller.id == BrowserControllerManager.UI_ID);
                     foreach (var association in uiAssociations)
                     {
@@ -435,7 +435,7 @@ namespace umi3d.browserRuntime.interactions
 
         public int toolCountLimitation => 1;
 
-        public void AssociateInteractionAndInput(List<(AbstractInteractionDto interaction, Input input)> associations, ReadOnlyDictionary<AbstractInteractionDto, ReadOnlyCollection<Input>> inputsByInteractions)
+        public void AssociateInteractionAndInput(List<(Interaction interaction, Input input)> associations, ReadOnlyDictionary<Interaction, ReadOnlyCollection<Input>> inputsByInteractions)
         {
             throw new System.NotImplementedException();
         }

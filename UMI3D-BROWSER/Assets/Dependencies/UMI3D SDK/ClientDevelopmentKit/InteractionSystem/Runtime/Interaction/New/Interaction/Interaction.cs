@@ -16,7 +16,6 @@ limitations under the License.
 
 using System;
 using umi3d.common.interaction;
-using UnityEngine;
 
 namespace umi3d.cdk.interaction
 {
@@ -34,5 +33,7 @@ namespace umi3d.cdk.interaction
             this.environmentId = environmentId;
             this.dto = interactionDto;
         }
+
+        internal Action<Projection> projectionSetup;
     }
 }

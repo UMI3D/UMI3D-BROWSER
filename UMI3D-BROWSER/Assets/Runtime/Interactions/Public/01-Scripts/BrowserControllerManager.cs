@@ -445,48 +445,7 @@ namespace umi3d.browserRuntime.interactions
         {
             _eventDtoInputs.Clear();
 
-            Mouse mouse = Mouse.current;
-            if (mouse != null)
-            {
-                BrowserControllerManager
-                    .@default
-                    .mouseController
-                    .TryToAddInput(_eventDtoInputs, mouse.leftButton, InputActionType.Button);
-            }
-
-            Keyboard keyboard = Keyboard.current;
-            if (keyboard != null)
-            {
-                BrowserControllerManager
-                    .@default
-                    .keyboardController
-                    .TryToAddInput(_eventDtoInputs, keyboard.qKey, InputActionType.Button);
-                BrowserControllerManager
-                    .@default
-                    .keyboardController
-                    .TryToAddInput(_eventDtoInputs, keyboard.eKey, InputActionType.Button);
-                BrowserControllerManager
-                    .@default
-                    .keyboardController
-                    .TryToAddInput(_eventDtoInputs, keyboard.rKey, InputActionType.Button);
-                BrowserControllerManager
-                    .@default
-                    .keyboardController
-                    .TryToAddInput(_eventDtoInputs, keyboard.fKey, InputActionType.Button);
-                BrowserControllerManager
-                    .@default
-                    .keyboardController
-                    .TryToAddInput(_eventDtoInputs, keyboard.gKey, InputActionType.Button);
-            }
-
-            BrowserControllerManager
-                .@default
-                .uiDeviceController
-                .TryToAddInput(_eventDtoInputs, UIDevice.GetButtonPlaceholder(), InputActionType.Button);
-
-            inputs = _eventDtoInputs.AsReadOnly();
-
-            return inputs.Count > 0;
+            throw new System.NotImplementedException();
         }
         public bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, DrawingDto interaction)
         {
@@ -499,14 +458,7 @@ namespace umi3d.browserRuntime.interactions
         {
             _booleanParameterDtoInputs.Clear();
 
-            BrowserControllerManager
-                .@default
-                .uiDeviceController
-                .TryToAddInput(_booleanParameterDtoInputs, UIDevice.GetButtonPlaceholder(), InputActionType.Button);
-
-            inputs = _booleanParameterDtoInputs.AsReadOnly();
-
-            return inputs.Count > 0;
+            throw new System.NotImplementedException();
         }
 
         List<Input> _floatParameterDtoInputs = new();

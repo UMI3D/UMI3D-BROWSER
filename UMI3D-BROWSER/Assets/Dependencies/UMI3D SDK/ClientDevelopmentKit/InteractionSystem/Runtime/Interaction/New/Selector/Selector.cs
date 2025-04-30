@@ -203,7 +203,10 @@ namespace umi3d.cdk.interaction
 
                             projectionSetup: projection =>
                             {
-
+                                projection.input.onPerformed += obj =>
+                                {
+                                    projection.SendParameterSetting();
+                                };
                             }
                         );
                         break;
@@ -216,7 +219,10 @@ namespace umi3d.cdk.interaction
 
                             projectionSetup: projection =>
                             {
-
+                                projection.input.onPerformed += obj =>
+                                {
+                                    projection.SendParameterSetting();
+                                };
                             }
                         );
                         break;
@@ -229,7 +235,10 @@ namespace umi3d.cdk.interaction
 
                             projectionSetup: projection =>
                             {
-
+                                projection.input.onPerformed += obj =>
+                                {
+                                    projection.SendParameterSetting();
+                                };
                             }
                         );
                         break;
@@ -242,7 +251,10 @@ namespace umi3d.cdk.interaction
 
                             projectionSetup: projection =>
                             {
-
+                                projection.input.onPerformed += obj =>
+                                {
+                                    projection.SendParameterSetting();
+                                };
                             }
                         );
                         break;
@@ -255,7 +267,10 @@ namespace umi3d.cdk.interaction
 
                             projectionSetup: projection =>
                             {
-
+                                projection.input.onPerformed += obj =>
+                                {
+                                    projection.SendParameterSetting();
+                                };
                             }
                         );
                         break;
@@ -268,7 +283,10 @@ namespace umi3d.cdk.interaction
 
                             projectionSetup: projection =>
                             {
-
+                                projection.input.onPerformed += obj =>
+                                {
+                                    projection.SendParameterSetting();
+                                };
                             }
                         );
                         break;
@@ -281,7 +299,10 @@ namespace umi3d.cdk.interaction
 
                             projectionSetup: projection =>
                             {
-
+                                projection.input.onPerformed += obj =>
+                                {
+                                    projection.SendParameterSetting();
+                                };
                             }
                         );
                         break;
@@ -294,7 +315,10 @@ namespace umi3d.cdk.interaction
 
                             projectionSetup: projection =>
                             {
-
+                                projection.input.onPerformed += obj =>
+                                {
+                                    projection.SendParameterSetting();
+                                };
                             }
                         );
                         break;
@@ -307,7 +331,10 @@ namespace umi3d.cdk.interaction
 
                             projectionSetup: projection =>
                             {
-
+                                projection.input.onPerformed += obj =>
+                                {
+                                    projection.SendParameterSetting();
+                                };
                             }
                         );
                         break;
@@ -320,7 +347,10 @@ namespace umi3d.cdk.interaction
 
                             projectionSetup: projection =>
                             {
-
+                                projection.input.onPerformed += obj =>
+                                {
+                                    projection.SendParameterSetting();
+                                };
                             }
                         );
                         break;
@@ -333,7 +363,10 @@ namespace umi3d.cdk.interaction
 
                             projectionSetup: projection =>
                             {
-
+                                projection.input.onPerformed += obj =>
+                                {
+                                    projection.SendParameterSetting();
+                                };
                             }
                         );
                         break;
@@ -346,7 +379,10 @@ namespace umi3d.cdk.interaction
 
                             projectionSetup: projection =>
                             {
-
+                                projection.input.onPerformed += obj =>
+                                {
+                                    projection.SendUploadFile("TODO");
+                                };
                             }
                         );
                         break;
@@ -359,7 +395,10 @@ namespace umi3d.cdk.interaction
 
                             projectionSetup: projection =>
                             {
-
+                                projection.input.onPerformed += obj =>
+                                {
+                                    projection.SendParameterSetting();
+                                };
                             }
                         );
                         break;

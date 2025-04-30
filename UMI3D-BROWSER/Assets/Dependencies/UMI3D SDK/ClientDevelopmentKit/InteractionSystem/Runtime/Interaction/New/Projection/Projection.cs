@@ -118,7 +118,7 @@ namespace umi3d.cdk.interaction
             clientServerCommunicationSelectorDelegate.SendRequest(request, true);
         }
 
-        public void SendParameterSetting(AbstractInteractionDto dto)
+        public void SendParameterSetting()
         {
             IBoneRepresentable bone = selector.boneRepresentable;
 
@@ -129,7 +129,7 @@ namespace umi3d.cdk.interaction
                 id = interaction.dto.id,
                 hoveredObjectId = selector.hoveredObjectId,
 
-                parameter = dto,
+                parameter = interaction.dto,
 
                 boneType = bone.bone,
                 bonePosition = bone.bonePosition.Dto(),
@@ -139,7 +139,7 @@ namespace umi3d.cdk.interaction
             clientServerCommunicationSelectorDelegate.SendRequest(request, true);
         }
 
-        public void SendUploadFile(UploadFileParameterDto dto, string fileId)
+        public void SendUploadFile(string fileId)
         {
             IBoneRepresentable bone = selector.boneRepresentable;
 
@@ -151,7 +151,7 @@ namespace umi3d.cdk.interaction
                 hoveredObjectId = selector.hoveredObjectId,
 
                 fileId = fileId,
-                parameter = dto,
+                parameter = interaction.dto,
 
                 boneType = bone.bone,
                 bonePosition = bone.bonePosition.Dto(),

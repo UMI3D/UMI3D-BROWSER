@@ -47,7 +47,7 @@ namespace umi3d.cdk.interaction
                 Interactable interactable = container.Interactable = new Interactable(value.environmentId, dto);
                 UMI3DEnvironmentLoader.RegisterEntityInstance(value.environmentId,dto.id, dto, interactable, interactable.Destroy).NotifyLoaded();
 #else
-                ToolManager.@default.TryToInstantiateTool(out Tool tool, value.environmentId, dto);
+                ToolManager.@default.InstantiateOrGet(out Tool tool, value.environmentId, dto);
                 container.tool = tool;
 #endif
             }
@@ -184,7 +184,7 @@ namespace umi3d.cdk.interaction
             bool isSuccess = ToolManager.@default.TryToFetchTool(out Tool tool, environmentId, dto.id);
             if (!isSuccess)
             {
-                ToolManager.@default.TryToInstantiateTool(out tool, environmentId, dto);
+                ToolManager.@default.InstantiateOrGet(out tool, environmentId, dto);
             }
             container.tool = tool;
 #endif

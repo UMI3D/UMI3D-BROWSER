@@ -21,7 +21,7 @@ using umi3d.common.interaction;
 
 namespace umi3d.cdk.interaction
 {
-    public class ToolManager 
+    public sealed class ToolManager 
     {
         #region Initialize
 
@@ -37,20 +37,57 @@ namespace umi3d.cdk.interaction
 
         List<Tool> _tools = new();
         public ReadOnlyCollection<Tool> tools => _tools.AsReadOnly();
-        public bool TryToInstantiateTool(out Tool tool, ulong environmentId, AbstractToolDto dto)
+
+        /// <summary>
+        /// Searches for an existing tool based on the specified environment ID and DTO (Data Transfer Object). 
+        /// If a tool matching the criteria exists, it is returned. Otherwise, a new tool is created, 
+        /// added to the internal list, registered in the environment loader, and returned.<br/>
+        /// <br/>
+        /// <example>
+        /// Given an environment ID and a DTO, when calling this method, it will either return an existing tool 
+        /// or create a new one and register it in the environment loader.<br/>
+        /// <br/>
+        /// <code>
+        /// bool isNew = toolManager.InstantiateOrGet(out Tool tool, 12345UL, dto);
+        /// if (isNew)
+        /// {
+        ///     Console.WriteLine("A new tool was created and registered.");
+        /// }
+        /// else
+        /// {
+        ///     Console.WriteLine("An existing tool was returned.");
+        /// }
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <param name="tool">
+        /// The output parameter that will hold the existing or newly created tool.
+        /// </param>
+        /// <param name="environmentId">
+        /// The unique identifier of the environment associated with the tool.
+        /// </param>
+        /// <param name="dto">
+        /// The data transfer object (DTO) containing the tool's details.
+        /// </param>
+        /// <returns>
+        /// A boolean value indicating whether a new tool was created (`true`) or an existing tool was found (`false`).
+        /// </returns>
+        public bool InstantiateOrGet(out Tool tool, ulong environmentId, AbstractToolDto dto)
         {
             tool = _tools.Find(tool => tool.environmentId == environmentId && tool.dto.id == dto.id);
             if (tool != null)
             {
-                UnityEngine.Debug.LogWarning($"[ToolManager] Warning: Cannot instantiate tool for '{environmentId}' and dto's id '{dto.id}' because this tool already exist.");
+                UnityEngine.Debug.Log($"[ToolManager] Notice: tool for environment id: '{environmentId}' and dto's id '{dto.id}' already exist.");
                 return false;
             }
 
+            UnityEngine.Debug.Log($"[ToolManager] Notice: tool for environment id: '{environmentId}' and dto's id '{dto.id}' created.");
             tool = new(environmentId, dto);
             _tools.Add(tool);
             UMI3DEnvironmentLoader.Instance.RegisterEntity(environmentId, dto.id, dto, tool).NotifyLoaded();
             return true;
         }
+
         public bool TryToRemoveTool(Tool tool)
         {
             if (!_tools.Contains(tool))
@@ -74,6 +111,7 @@ namespace umi3d.cdk.interaction
             _tools.Remove(tool);
             return true;
         }
+
         public bool TryToFetchTool(out Tool tool, ulong environmentId, ulong dtoId)
         {
             tool = _tools.Find(tool => tool.environmentId == environmentId && tool.dto.id == dtoId);

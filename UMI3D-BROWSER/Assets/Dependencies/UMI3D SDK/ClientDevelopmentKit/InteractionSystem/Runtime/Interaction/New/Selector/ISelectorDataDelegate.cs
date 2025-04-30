@@ -34,101 +34,116 @@ namespace umi3d.cdk.interaction
         /// Try to find all inputs compatible with this interactions.<br/>
         /// </summary>
         /// <param name="inputs">The list of compatible inputs. Should be filled with compatible inputs at the end of the method.</param>
+        /// <param name="interaction">The interaction.</param>
         /// <returns></returns>
-        bool TryGetInputsForEventDto(out ReadOnlyCollection<Input> inputs);
+        bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, EventDto interaction);
         /// <summary>
         /// Try to find all inputs compatible with this interactions.<br/>
         /// </summary>
         /// <param name="inputs">The list of compatible inputs. Should be filled with compatible inputs at the end of the method.</param>
+        /// <param name="interaction">The interaction.</param>
         /// <returns></returns>
-        bool TryGetInputsForDrawingInteractionDto(out ReadOnlyCollection<Input> inputs);
+        bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, DrawingDto interaction);
 
         // ----- PathThrough bool action type -----
         /// <summary>
         /// Try to find all inputs compatible with this interactions.<br/>
         /// </summary>
         /// <param name="inputs"></param>
+        /// <param name="interaction"></param>
         /// <returns></returns>
-        bool TryGetInputsForBooleanParameterDto(out ReadOnlyCollection<Input> inputs);
+        bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, BooleanParameterDto interaction);
 
         // ----- PathThrough float or int action type -----
         /// <summary>
         /// Try to find all inputs compatible with this interactions.<br/>
         /// </summary>
         /// <param name="inputs"></param>
+        /// <param name="interaction"></param>
         /// <returns></returns>
-        bool TryGetInputsForFloatParameterDto(out ReadOnlyCollection<Input> inputs);
+        bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, FloatParameterDto interaction);
         /// <summary>
         /// Try to find all inputs compatible with this interactions.<br/>
         /// </summary>
         /// <param name="inputs"></param>
+        /// <param name="interaction"></param>
         /// <returns></returns>
-        bool TryGetInputsForIntegerParameterDto(out ReadOnlyCollection<Input> inputs);
+        bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, IntegerParameterDto interaction);
 
         // ----- PathThrough axis float or int action type -----
         /// <summary>
         /// Try to find all inputs compatible with this interactions.<br/>
         /// </summary>
         /// <param name="inputs"></param>
+        /// <param name="interaction"></param>
         /// <returns></returns>
-        bool TryGetInputsForFloatRangeParameterDto(out ReadOnlyCollection<Input> inputs);
+        bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, FloatRangeParameterDto interaction);
         /// <summary>
         /// Try to find all inputs compatible with this interactions.<br/>
         /// </summary>
         /// <param name="inputs"></param>
+        /// <param name="interaction"></param>
         /// <returns></returns>
-        bool TryGetInputsForIntegerRangeParameterDto(out ReadOnlyCollection<Input> inputs);
+        bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, IntegerRangeParameterDto interaction);
 
         // ----- PathThrough vector2, 3 or 4 action type -----
         /// <summary>
         /// Try to find all inputs compatible with this interactions.<br/>
         /// </summary>
         /// <param name="inputs"></param>
+        /// <param name="interaction"
         /// <returns></returns>
-        bool TryGetInputsForVector2ParameterDto(out ReadOnlyCollection<Input> inputs);
+        bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, Vector2ParameterDto interaction);
         /// <summary>
         /// Try to find all inputs compatible with this interactions.<br/>
         /// </summary>
         /// <param name="inputs"></param>
+        /// <param name="interaction"></param>
         /// <returns></returns>
-        bool TryGetInputsForVector3ParameterDto(out ReadOnlyCollection<Input> inputs);
+        bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, Vector3ParameterDto interaction);
         /// <summary>
         /// Try to find all inputs compatible with this interactions.<br/>
         /// </summary>
         /// <param name="inputs"></param>
+        /// <param name="interaction"></param>
         /// <returns></returns>
-        bool TryGetInputsForVector4ParameterDto(out ReadOnlyCollection<Input> inputs);
+        bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, Vector4ParameterDto interaction);
 
-        // TO be defined
+        // Custom ui input system.
         /// <summary>
         /// Try to find all inputs compatible with this interactions.<br/>
         /// </summary>
         /// <param name="inputs"></param>
+        /// <param name="interaction"></param>
         /// <returns></returns>
-        bool TryGetInputsForStringParameterDto(out ReadOnlyCollection<Input> inputs);
+        bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, StringParameterDto interaction);
         /// <summary>
         /// Try to find all inputs compatible with this interactions.<br/>
         /// </summary>
         /// <param name="inputs"></param>
+        /// <param name="interaction"></param>
         /// <returns></returns>
-        bool TryGetInputsForColorParameterDto(out ReadOnlyCollection<Input> inputs);
+        bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, ColorParameterDto interaction);
         /// <summary>
         /// Try to find all inputs compatible with this interactions.<br/>
         /// </summary>
         /// <param name="inputs"></param>
+        /// <param name="interaction"></param>
         /// <returns></returns>
-        bool TryGetInputsForEnumParameterDto(out ReadOnlyCollection<Input> inputs);
+        bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, EnumParameterDto<string> interaction);
         /// <summary>
         /// Try to find all inputs compatible with this interactions.<br/>
         /// </summary>
         /// <param name="inputs"></param>
+        /// <param name="interaction"></param>
         /// <returns></returns>
-        bool TryGetInputsForUploadFileParameterDto(out ReadOnlyCollection<Input> inputs);
+        bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, UploadFileParameterDto interaction);
         /// <summary>
         /// Try to find all inputs compatible with this interactions.<br/>
         /// </summary>
         /// <param name="inputs"></param>
+        /// <param name="interaction"></param>
         /// <returns></returns>
-        bool TryGetInputsForLocalInfoRequestParameterDto(out ReadOnlyCollection<Input> inputs);
+        bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, LocalInfoRequestParameterDto interaction);
     }
 }

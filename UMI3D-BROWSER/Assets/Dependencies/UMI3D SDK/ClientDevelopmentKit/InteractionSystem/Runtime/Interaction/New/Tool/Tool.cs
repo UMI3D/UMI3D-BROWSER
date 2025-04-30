@@ -22,7 +22,7 @@ using umi3d.common.interaction;
 
 namespace umi3d.cdk.interaction
 {
-    public class Tool 
+    public sealed class Tool 
     {
         /// <summary>
         /// Environment Id.

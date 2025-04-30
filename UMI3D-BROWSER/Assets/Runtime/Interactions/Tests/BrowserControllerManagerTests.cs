@@ -171,7 +171,7 @@ public class BrowserControllerManagerTests
                 HoverExitAnimationId = 4,
                 interactions = new() { 10, 11, 12, 13, 14, 15 }
             };
-            ToolManager.@default.TryToInstantiateTool(out tool, environmentId, dto);
+            ToolManager.@default.InstantiateOrGet(out tool, environmentId, dto);
 
             mouseSelector.Select(tool);
 
@@ -248,7 +248,7 @@ public class BrowserControllerManagerTests
                 HoverExitAnimationId = 4,
                 interactions = new() { 10, 11, 12, 20, 14, 15 }
             };
-            ToolManager.@default.TryToInstantiateTool(out tool, environmentId, dto);
+            ToolManager.@default.InstantiateOrGet(out tool, environmentId, dto);
 
             mouseSelector.Select(tool);
 
@@ -383,7 +383,7 @@ public class BrowserControllerManagerTests
                 HoverExitAnimationId = 4,
                 interactions = new() { 10, 11, 12, 13, 14, 15, 16 }
             };
-            ToolManager.@default.TryToInstantiateTool(out tool, environmentId, dto);
+            ToolManager.@default.InstantiateOrGet(out tool, environmentId, dto);
 
             mouseSelector.Select(tool);
 
@@ -434,7 +434,7 @@ public class BrowserControllerManagerTests
                 HoverExitAnimationId = 4,
                 interactions = new() { 10, 11, 12, 20, 14, 15, 16 }
             };
-            ToolManager.@default.TryToInstantiateTool(out tool, environmentId, dto);
+            ToolManager.@default.InstantiateOrGet(out tool, environmentId, dto);
 
             mouseSelector.Select(tool);
 
@@ -485,7 +485,7 @@ public class BrowserControllerManagerTests
                 HoverExitAnimationId = 4,
                 interactions = new() { 40 } 
             };
-            ToolManager.@default.TryToInstantiateTool(out tool, environmentId, dto);
+            ToolManager.@default.InstantiateOrGet(out tool, environmentId, dto);
 
             mouseSelector.Select(tool);
 

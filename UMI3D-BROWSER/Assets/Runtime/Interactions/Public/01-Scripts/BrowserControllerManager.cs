@@ -51,10 +51,10 @@ namespace umi3d.browserRuntime.interactions
             mouseSelector.dataDelegate = new MouseSelectorDataDelegate();
 
             SelectorManager.@default.InstantiateOrGet(out leftVRSelector, LEFT_ID + VR_ID);
-            leftVRSelector.dataDelegate = new LeftVRSelectorDataDelegate();
+            leftVRSelector.dataDelegate = new VRSelectorDataDelegate() { isRightSelector = false };
 
             SelectorManager.@default.InstantiateOrGet(out rightVRSelector, RIGHT_ID + VR_ID);
-            rightVRSelector.dataDelegate = new RightVRSelectorDataDelegate();
+            rightVRSelector.dataDelegate = new VRSelectorDataDelegate() { isRightSelector = true };
 
             // TODO
             //SelectorManager.@default.TryToInstantiateSelector(out leftHandSelector, LEFT_ID + HAND_ID);
@@ -298,7 +298,7 @@ namespace umi3d.browserRuntime.interactions
         }
 
         List<Input> _eventDtoInputs = new();
-        public bool TryGetInputsForEventDto(out ReadOnlyCollection<Input> inputs)
+        public bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, EventDto interaction)
         {
             _eventDtoInputs.Clear();
 
@@ -345,14 +345,14 @@ namespace umi3d.browserRuntime.interactions
 
             return inputs.Count > 0;
         }
-
-        public bool TryGetInputsForDrawingInteractionDto(out ReadOnlyCollection<Input> inputs)
+        public bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, DrawingDto interaction)
         {
             throw new NotImplementedException();
         }
 
+
         List<Input> _booleanParameterDtoInputs = new();
-        public bool TryGetInputsForBooleanParameterDto(out ReadOnlyCollection<Input> inputs)
+        public bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, BooleanParameterDto interaction)
         {
             _booleanParameterDtoInputs.Clear();
 
@@ -367,7 +367,7 @@ namespace umi3d.browserRuntime.interactions
         }
 
         List<Input> _floatParameterDtoInputs = new();
-        public bool TryGetInputsForFloatParameterDto(out ReadOnlyCollection<Input> inputs)
+        public bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, FloatParameterDto interaction)
         {
             _floatParameterDtoInputs.Clear();
 
@@ -380,65 +380,59 @@ namespace umi3d.browserRuntime.interactions
 
             return inputs.Count > 0;
         }
-
-        public bool TryGetInputsForIntegerParameterDto(out ReadOnlyCollection<Input> inputs)
+        public bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, IntegerParameterDto interaction)
         {
             throw new NotImplementedException();
         }
 
-        public bool TryGetInputsForStringParameterDto(out ReadOnlyCollection<Input> inputs)
+        public bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, FloatRangeParameterDto interaction)
+        {
+            throw new NotImplementedException();
+        }
+        public bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, IntegerRangeParameterDto interaction)
         {
             throw new NotImplementedException();
         }
 
-        public bool TryGetInputsForColorParameterDto(out ReadOnlyCollection<Input> inputs)
+        public bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, Vector2ParameterDto interaction)
+        {
+            throw new NotImplementedException();
+        }
+        public bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, Vector3ParameterDto interaction)
+        {
+            throw new NotImplementedException();
+        }
+        public bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, Vector4ParameterDto interaction)
         {
             throw new NotImplementedException();
         }
 
-        public bool TryGetInputsForVector2ParameterDto(out ReadOnlyCollection<Input> inputs)
+        public bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, EnumParameterDto<string> interaction)
         {
             throw new NotImplementedException();
         }
-
-        public bool TryGetInputsForVector3ParameterDto(out ReadOnlyCollection<Input> inputs)
+        public bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, StringParameterDto interaction)
         {
             throw new NotImplementedException();
         }
-
-        public bool TryGetInputsForVector4ParameterDto(out ReadOnlyCollection<Input> inputs)
+        public bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, ColorParameterDto interaction)
         {
             throw new NotImplementedException();
         }
-
-        public bool TryGetInputsForEnumParameterDto(out ReadOnlyCollection<Input> inputs)
+        public bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, UploadFileParameterDto interaction)
         {
             throw new NotImplementedException();
         }
-
-        public bool TryGetInputsForFloatRangeParameterDto(out ReadOnlyCollection<Input> inputs)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool TryGetInputsForIntegerRangeParameterDto(out ReadOnlyCollection<Input> inputs)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool TryGetInputsForUploadFileParameterDto(out ReadOnlyCollection<Input> inputs)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool TryGetInputsForLocalInfoRequestParameterDto(out ReadOnlyCollection<Input> inputs)
+        public bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, LocalInfoRequestParameterDto interaction)
         {
             throw new NotImplementedException();
         }
     }
 
-    class LeftVRSelectorDataDelegate : ISelectorDataDelegate
+    class VRSelectorDataDelegate : ISelectorDataDelegate
     {
+        public bool isRightSelector;
+
         public int toolCountLimitation => 1;
 
         public void AssociateInteractionAndInput(List<(AbstractInteractionDto interaction, Input input)> associations, ReadOnlyDictionary<AbstractInteractionDto, ReadOnlyCollection<Input>> inputsByInteractions)
@@ -446,192 +440,133 @@ namespace umi3d.browserRuntime.interactions
             throw new System.NotImplementedException();
         }
 
-        public bool TryGetInputsForBooleanParameterDto(out ReadOnlyCollection<Input> inputs)
+        List<Input> _eventDtoInputs = new();
+        public bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, EventDto interaction)
+        {
+            _eventDtoInputs.Clear();
+
+            Mouse mouse = Mouse.current;
+            if (mouse != null)
+            {
+                BrowserControllerManager
+                    .@default
+                    .mouseController
+                    .TryToAddInput(_eventDtoInputs, mouse.leftButton, InputActionType.Button);
+            }
+
+            Keyboard keyboard = Keyboard.current;
+            if (keyboard != null)
+            {
+                BrowserControllerManager
+                    .@default
+                    .keyboardController
+                    .TryToAddInput(_eventDtoInputs, keyboard.qKey, InputActionType.Button);
+                BrowserControllerManager
+                    .@default
+                    .keyboardController
+                    .TryToAddInput(_eventDtoInputs, keyboard.eKey, InputActionType.Button);
+                BrowserControllerManager
+                    .@default
+                    .keyboardController
+                    .TryToAddInput(_eventDtoInputs, keyboard.rKey, InputActionType.Button);
+                BrowserControllerManager
+                    .@default
+                    .keyboardController
+                    .TryToAddInput(_eventDtoInputs, keyboard.fKey, InputActionType.Button);
+                BrowserControllerManager
+                    .@default
+                    .keyboardController
+                    .TryToAddInput(_eventDtoInputs, keyboard.gKey, InputActionType.Button);
+            }
+
+            BrowserControllerManager
+                .@default
+                .uiDeviceController
+                .TryToAddInput(_eventDtoInputs, UIDevice.GetButtonPlaceholder(), InputActionType.Button);
+
+            inputs = _eventDtoInputs.AsReadOnly();
+
+            return inputs.Count > 0;
+        }
+        public bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, DrawingDto interaction)
         {
             throw new NotImplementedException();
         }
 
-        public bool TryGetInputsForColorParameterDto(out ReadOnlyCollection<Input> inputs)
+
+        List<Input> _booleanParameterDtoInputs = new();
+        public bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, BooleanParameterDto interaction)
+        {
+            _booleanParameterDtoInputs.Clear();
+
+            BrowserControllerManager
+                .@default
+                .uiDeviceController
+                .TryToAddInput(_booleanParameterDtoInputs, UIDevice.GetButtonPlaceholder(), InputActionType.Button);
+
+            inputs = _booleanParameterDtoInputs.AsReadOnly();
+
+            return inputs.Count > 0;
+        }
+
+        List<Input> _floatParameterDtoInputs = new();
+        public bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, FloatParameterDto interaction)
+        {
+            _floatParameterDtoInputs.Clear();
+
+            BrowserControllerManager
+                .@default
+                .uiDeviceController
+                .TryToAddInput(_floatParameterDtoInputs, UIDevice.GetDoublePlaceholder(), InputActionType.PassThrough);
+
+            inputs = _floatParameterDtoInputs.AsReadOnly();
+
+            return inputs.Count > 0;
+        }
+        public bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, IntegerParameterDto interaction)
         {
             throw new NotImplementedException();
         }
 
-        public bool TryGetInputsForDrawingInteractionDto(out ReadOnlyCollection<Input> inputs)
+        public bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, FloatRangeParameterDto interaction)
+        {
+            throw new NotImplementedException();
+        }
+        public bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, IntegerRangeParameterDto interaction)
         {
             throw new NotImplementedException();
         }
 
-        public bool TryGetInputsForEnumParameterDto(out ReadOnlyCollection<Input> inputs)
+        public bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, Vector2ParameterDto interaction)
+        {
+            throw new NotImplementedException();
+        }
+        public bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, Vector3ParameterDto interaction)
+        {
+            throw new NotImplementedException();
+        }
+        public bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, Vector4ParameterDto interaction)
         {
             throw new NotImplementedException();
         }
 
-        public bool TryGetInputsForEventDto(out ReadOnlyCollection<Input> inputs)
-        {
-            //return ControllerManager.@default.TryGetInputForEventDto(
-            //    out input,
-            //    out controller,
-            //   BrowserControllerManager.LEFT_ID + BrowserControllerManager.VR_ID,
-            //   controllers
-            //) // First try to find input from left VR controller.
-
-            //|| ControllerManager.@default.TryGetInputForEventDto(
-            //    out input,
-            //    out controller,
-            //   BrowserControllerManager.UI_ID,
-            //   controllers
-            //) // finally try to find input from ui.
-            //;
-
-            throw new System.NotImplementedException();
-        }
-
-        public bool TryGetInputsForFloatParameterDto(out ReadOnlyCollection<Input> inputs)
+        public bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, EnumParameterDto<string> interaction)
         {
             throw new NotImplementedException();
         }
-
-        public bool TryGetInputsForFloatRangeParameterDto(out ReadOnlyCollection<Input> inputs)
+        public bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, StringParameterDto interaction)
         {
             throw new NotImplementedException();
         }
-
-        public bool TryGetInputsForIntegerParameterDto(out ReadOnlyCollection<Input> inputs)
+        public bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, ColorParameterDto interaction)
         {
             throw new NotImplementedException();
         }
-
-        public bool TryGetInputsForIntegerRangeParameterDto(out ReadOnlyCollection<Input> inputs)
+        public bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, UploadFileParameterDto interaction)
         {
             throw new NotImplementedException();
         }
-
-        public bool TryGetInputsForLocalInfoRequestParameterDto(out ReadOnlyCollection<Input> inputs)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool TryGetInputsForStringParameterDto(out ReadOnlyCollection<Input> inputs)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool TryGetInputsForUploadFileParameterDto(out ReadOnlyCollection<Input> inputs)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool TryGetInputsForVector2ParameterDto(out ReadOnlyCollection<Input> inputs)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool TryGetInputsForVector3ParameterDto(out ReadOnlyCollection<Input> inputs)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool TryGetInputsForVector4ParameterDto(out ReadOnlyCollection<Input> inputs)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    class RightVRSelectorDataDelegate : ISelectorDataDelegate
-    {
-        public int toolCountLimitation => 1;
-
-        public void AssociateInteractionAndInput(List<(AbstractInteractionDto interaction, Input input)> associations, ReadOnlyDictionary<AbstractInteractionDto, ReadOnlyCollection<Input>> inputsByInteractions)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public bool TryGetInputsForBooleanParameterDto(out ReadOnlyCollection<Input> inputs)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool TryGetInputsForColorParameterDto(out ReadOnlyCollection<Input> inputs)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool TryGetInputsForDrawingInteractionDto(out ReadOnlyCollection<Input> inputs)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool TryGetInputsForEnumParameterDto(out ReadOnlyCollection<Input> inputs)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool TryGetInputsForEventDto(out ReadOnlyCollection<Input> inputs)
-        {
-            //return ControllerManager.@default.TryGetInputForEventDto(
-            //    out input,
-            //    out controller,
-            //   BrowserControllerManager.RIGHT_ID + BrowserControllerManager.VR_ID,
-            //   controllers
-            //) // First try to find input from right VR controller.
-
-            //|| ControllerManager.@default.TryGetInputForEventDto(
-            //    out input,
-            //    out controller,
-            //   BrowserControllerManager.UI_ID,
-            //   controllers
-            //) // finally try to find input from ui.
-            //;
-
-            throw new System.NotImplementedException();
-        }
-
-        public bool TryGetInputsForFloatParameterDto(out ReadOnlyCollection<Input> inputs)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool TryGetInputsForFloatRangeParameterDto(out ReadOnlyCollection<Input> inputs)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool TryGetInputsForIntegerParameterDto(out ReadOnlyCollection<Input> inputs)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool TryGetInputsForIntegerRangeParameterDto(out ReadOnlyCollection<Input> inputs)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool TryGetInputsForLocalInfoRequestParameterDto(out ReadOnlyCollection<Input> inputs)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool TryGetInputsForStringParameterDto(out ReadOnlyCollection<Input> inputs)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool TryGetInputsForUploadFileParameterDto(out ReadOnlyCollection<Input> inputs)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool TryGetInputsForVector2ParameterDto(out ReadOnlyCollection<Input> inputs)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool TryGetInputsForVector3ParameterDto(out ReadOnlyCollection<Input> inputs)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool TryGetInputsForVector4ParameterDto(out ReadOnlyCollection<Input> inputs)
+        public bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, LocalInfoRequestParameterDto interaction)
         {
             throw new NotImplementedException();
         }

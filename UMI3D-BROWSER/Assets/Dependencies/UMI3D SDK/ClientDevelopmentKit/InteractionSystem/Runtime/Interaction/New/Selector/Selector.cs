@@ -124,25 +124,193 @@ namespace umi3d.cdk.interaction
             SelectorManager.@default.lastSelectorSelected = this;
         }
 
+        void SwitchThroughInteractions(AbstractInteractionDto interactionDto, out bool haveInputsBeenFound, out ReadOnlyCollection<Input> inputs, out Action<Projection> projectionSetup)
+        {
+            switch (interactionDto)
+            {
+                case DrawingInteractionDto drawing:
+                    haveInputsBeenFound = dataDelegate.TryGetInputsFor(out inputs, drawing);
+                    projectionSetup = projection =>
+                    {
+
+                    };
+                    break;
+
+                case EventDto eventDto:
+                    haveInputsBeenFound = dataDelegate.TryGetInputsFor(out inputs, eventDto);
+                    projectionSetup = projection =>
+                    {
+                        projection.input.onStarted += obj =>
+                        {
+                            if (eventDto.hold) { projection.SendEventStateChanged(true); }
+                            else { projection.SendEventTriggered(); }
+                            projection.Animate(eventDto.triggerAnimationId);
+                        };
+                        projection.input.onCanceled += obj =>
+                        {
+                            if (eventDto.hold) { projection.SendEventStateChanged(false); }
+                            projection.Animate(eventDto.releaseAnimationId);
+                        };
+                    };
+                    break;
+
+                // Parameters
+                case BooleanParameterDto boolean:
+                    haveInputsBeenFound = dataDelegate.TryGetInputsFor(out inputs, boolean);
+                    projectionSetup = projection =>
+                    {
+                        projection.input.onPerformed += obj =>
+                        {
+                            projection.SendParameterSetting();
+                        };
+                    };
+                    break;
+
+                case FloatParameterDto @float:
+                    haveInputsBeenFound = dataDelegate.TryGetInputsFor(out inputs, @float);
+                    projectionSetup = projection =>
+                    {
+                        projection.input.onPerformed += obj =>
+                        {
+                            projection.SendParameterSetting();
+                        };
+                    };
+                    break;
+
+                case IntegerParameterDto integer:
+                    haveInputsBeenFound = dataDelegate.TryGetInputsFor(out inputs, integer);
+                    projectionSetup = projection =>
+                    {
+                        projection.input.onPerformed += obj =>
+                        {
+                            projection.SendParameterSetting();
+                        };
+                    };
+                    break;
+
+                case Vector2ParameterDto vector2:
+                    haveInputsBeenFound = dataDelegate.TryGetInputsFor(out inputs, vector2);
+                    projectionSetup = projection =>
+                    {
+                        projection.input.onPerformed += obj =>
+                        {
+                            projection.SendParameterSetting();
+                        };
+                    };
+                    break;
+
+                case Vector3ParameterDto vector3:
+                    haveInputsBeenFound = dataDelegate.TryGetInputsFor(out inputs, vector3);
+                    projectionSetup = projection =>
+                    {
+                        projection.input.onPerformed += obj =>
+                        {
+                            projection.SendParameterSetting();
+                        };
+                    };
+                    break;
+
+                case Vector4ParameterDto vector4:
+                    haveInputsBeenFound = dataDelegate.TryGetInputsFor(out inputs, vector4);
+                    projectionSetup = projection =>
+                    {
+                        projection.input.onPerformed += obj =>
+                        {
+                            projection.SendParameterSetting();
+                        };
+                    };
+                    break;
+
+                case FloatRangeParameterDto floatRange:
+                    haveInputsBeenFound = dataDelegate.TryGetInputsFor(out inputs, floatRange);
+                    projectionSetup = projection =>
+                    {
+                        projection.input.onPerformed += obj =>
+                        {
+                            projection.SendParameterSetting();
+                        };
+                    };
+                    break;
+
+                case IntegerRangeParameterDto integerRange:
+                    haveInputsBeenFound = dataDelegate.TryGetInputsFor(out inputs, integerRange);
+                    projectionSetup = projection =>
+                    {
+                        projection.input.onPerformed += obj =>
+                        {
+                            projection.SendParameterSetting();
+                        };
+                    };
+                    break;
+
+                case StringParameterDto @string:
+                    haveInputsBeenFound = dataDelegate.TryGetInputsFor(out inputs, @string);
+                    projectionSetup = projection =>
+                    {
+                        projection.input.onPerformed += obj =>
+                        {
+                            projection.SendParameterSetting();
+                        };
+                    };
+                    break;
+
+                case ColorParameterDto color:
+                    haveInputsBeenFound = dataDelegate.TryGetInputsFor(out inputs, color);
+                    projectionSetup = projection =>
+                    {
+                        projection.input.onPerformed += obj =>
+                        {
+                            projection.SendParameterSetting();
+                        };
+                    };
+                    break;
+
+                case EnumParameterDto<string> @enum:
+                    haveInputsBeenFound = dataDelegate.TryGetInputsFor(out inputs, @enum);
+                    projectionSetup = projection =>
+                    {
+                        projection.input.onPerformed += obj =>
+                        {
+                            projection.SendParameterSetting();
+                        };
+                    };
+                    break;
+
+                case UploadFileParameterDto uploadFile:
+                    haveInputsBeenFound = dataDelegate.TryGetInputsFor(out inputs, uploadFile);
+                    projectionSetup = projection =>
+                    {
+                        projection.input.onPerformed += obj =>
+                        {
+                            projection.SendUploadFile("TODO");
+                        };
+                    };
+                    break;
+
+                case LocalInfoRequestParameterDto localInfo:
+                    haveInputsBeenFound = dataDelegate.TryGetInputsFor(out inputs, localInfo);
+                    projectionSetup = projection =>
+                    {
+                        projection.input.onPerformed += obj =>
+                        {
+                            projection.SendParameterSetting();
+                        };
+                    };
+                    break;
+
+                default:
+                    UnityEngine.Debug.LogError($"[Selector] Error: Unhandled case: {interactionDto.GetType()}");
+                    haveInputsBeenFound = false;
+                    inputs = null;
+                    projectionSetup = null;
+                    break;
+            }
+        }
+
         List<(Interaction interaction, Input input)> associations = new();
         Dictionary<Interaction, ReadOnlyCollection<Input>> inputsByInteractions = new();
         void AssociateInteractionToInput(Tool tool)
         {
-            ReadOnlyCollection<Input> inputs = null;
-            bool TryToAddInputsToDictionary(Interaction interaction, bool haveInputsBeenFound, Action<Projection> projectionSetup)
-            {
-                if (!haveInputsBeenFound)
-                {
-                    UnityEngine.Debug.LogWarning($"[Selector-{id}] Warning: no controller or input available for {interaction.dto.GetType()}, {interaction.dto.name}.");
-                    return false;
-                }
-
-                inputsByInteractions.Add(interaction, inputs);
-                interaction.projectionSetup = projectionSetup;
-                inputs = null;
-                return true;
-            }
-
             foreach (AbstractInteractionDto interactionDto in tool.interactions)
             {
                 InteractionManager.@default.InstantiateOrGet(
@@ -156,257 +324,25 @@ namespace umi3d.cdk.interaction
                     continue;
                 }
 
-                switch (interactionDto)
+                ReadOnlyCollection<Input> inputs = null;
+                Action<Projection> projectionSetup = null;
+                try
                 {
-                    case DrawingInteractionDto drawing:
-                        TryToAddInputsToDictionary(
-                            interaction,
+                    SwitchThroughInteractions(interactionDto, out bool haveInputsBeenFound, out inputs, out projectionSetup);
 
-                            haveInputsBeenFound: dataDelegate.TryGetInputsFor(out inputs, drawing),
-
-                            projectionSetup: projection =>
-                            {
-
-                            }
-                        );
-                        break;
-
-                    case EventDto eventDto:
-                        TryToAddInputsToDictionary(
-                            interaction,
-
-                            haveInputsBeenFound: dataDelegate.TryGetInputsFor(out inputs, eventDto),
-                           
-                            projectionSetup: projection =>
-                            {
-                                projection.input.onStarted += obj =>
-                                {
-                                    if (eventDto.hold) { projection.SendEventStateChanged(true); }
-                                    else { projection.SendEventTriggered(); }
-                                    projection.Animate(eventDto.triggerAnimationId);
-                                };
-                                projection.input.onCanceled += obj =>
-                                {
-                                    if (eventDto.hold) { projection.SendEventStateChanged(false); }
-                                    projection.Animate(eventDto.releaseAnimationId);
-                                };
-                            }
-                        );
-                        break;
-
-                    // Parameters
-                    case BooleanParameterDto boolean:
-                        TryToAddInputsToDictionary(
-                            interaction,
-
-                            haveInputsBeenFound: dataDelegate.TryGetInputsFor(out inputs, boolean),
-
-                            projectionSetup: projection =>
-                            {
-                                projection.input.onPerformed += obj =>
-                                {
-                                    projection.SendParameterSetting();
-                                };
-                            }
-                        );
-                        break;
-
-                    case FloatParameterDto @float:
-                        TryToAddInputsToDictionary(
-                            interaction,
-
-                            haveInputsBeenFound: dataDelegate.TryGetInputsFor(out inputs, @float),
-
-                            projectionSetup: projection =>
-                            {
-                                projection.input.onPerformed += obj =>
-                                {
-                                    projection.SendParameterSetting();
-                                };
-                            }
-                        );
-                        break;
-
-                    case IntegerParameterDto integer:
-                        TryToAddInputsToDictionary(
-                            interaction,
-
-                            haveInputsBeenFound: dataDelegate.TryGetInputsFor(out inputs, integer),
-
-                            projectionSetup: projection =>
-                            {
-                                projection.input.onPerformed += obj =>
-                                {
-                                    projection.SendParameterSetting();
-                                };
-                            }
-                        );
-                        break;
-
-                    case Vector2ParameterDto vector2:
-                        TryToAddInputsToDictionary(
-                            interaction,
-
-                            haveInputsBeenFound: dataDelegate.TryGetInputsFor(out inputs, vector2),
-
-                            projectionSetup: projection =>
-                            {
-                                projection.input.onPerformed += obj =>
-                                {
-                                    projection.SendParameterSetting();
-                                };
-                            }
-                        );
-                        break;
-
-                    case Vector3ParameterDto vector3:
-                        TryToAddInputsToDictionary(
-                            interaction,
-
-                            haveInputsBeenFound: dataDelegate.TryGetInputsFor(out inputs, vector3),
-
-                            projectionSetup: projection =>
-                            {
-                                projection.input.onPerformed += obj =>
-                                {
-                                    projection.SendParameterSetting();
-                                };
-                            }
-                        );
-                        break;
-
-                    case Vector4ParameterDto vector4:
-                        TryToAddInputsToDictionary(
-                            interaction,
-
-                            haveInputsBeenFound: dataDelegate.TryGetInputsFor(out inputs, vector4),
-
-                            projectionSetup: projection =>
-                            {
-                                projection.input.onPerformed += obj =>
-                                {
-                                    projection.SendParameterSetting();
-                                };
-                            }
-                        );
-                        break;
-
-                    case FloatRangeParameterDto floatRange:
-                        TryToAddInputsToDictionary(
-                            interaction,
-
-                            haveInputsBeenFound: dataDelegate.TryGetInputsFor(out inputs, floatRange),
-
-                            projectionSetup: projection =>
-                            {
-                                projection.input.onPerformed += obj =>
-                                {
-                                    projection.SendParameterSetting();
-                                };
-                            }
-                        );
-                        break;
-
-                    case IntegerRangeParameterDto integerRange:
-                        TryToAddInputsToDictionary(
-                            interaction,
-
-                            haveInputsBeenFound: dataDelegate.TryGetInputsFor(out inputs, integerRange),
-
-                            projectionSetup: projection =>
-                            {
-                                projection.input.onPerformed += obj =>
-                                {
-                                    projection.SendParameterSetting();
-                                };
-                            }
-                        );
-                        break;
-
-                    case StringParameterDto @string:
-                        TryToAddInputsToDictionary(
-                            interaction,
-
-                            haveInputsBeenFound: dataDelegate.TryGetInputsFor(out inputs, @string),
-
-                            projectionSetup: projection =>
-                            {
-                                projection.input.onPerformed += obj =>
-                                {
-                                    projection.SendParameterSetting();
-                                };
-                            }
-                        );
-                        break;
-
-                    case ColorParameterDto color:
-                        TryToAddInputsToDictionary(
-                            interaction,
-
-                            haveInputsBeenFound: dataDelegate.TryGetInputsFor(out inputs, color),
-
-                            projectionSetup: projection =>
-                            {
-                                projection.input.onPerformed += obj =>
-                                {
-                                    projection.SendParameterSetting();
-                                };
-                            }
-                        );
-                        break;
-
-                    case EnumParameterDto<string> @enum:
-                        TryToAddInputsToDictionary(
-                            interaction,
-
-                            haveInputsBeenFound: dataDelegate.TryGetInputsFor(out inputs, @enum),
-
-                            projectionSetup: projection =>
-                            {
-                                projection.input.onPerformed += obj =>
-                                {
-                                    projection.SendParameterSetting();
-                                };
-                            }
-                        );
-                        break;
-
-                    case UploadFileParameterDto uploadFile:
-                        TryToAddInputsToDictionary(
-                            interaction,
-
-                            haveInputsBeenFound: dataDelegate.TryGetInputsFor(out inputs, uploadFile),
-
-                            projectionSetup: projection =>
-                            {
-                                projection.input.onPerformed += obj =>
-                                {
-                                    projection.SendUploadFile("TODO");
-                                };
-                            }
-                        );
-                        break;
-
-                    case LocalInfoRequestParameterDto localInfo:
-                        TryToAddInputsToDictionary(
-                            interaction,
-
-                            haveInputsBeenFound: dataDelegate.TryGetInputsFor(out inputs, localInfo),
-
-                            projectionSetup: projection =>
-                            {
-                                projection.input.onPerformed += obj =>
-                                {
-                                    projection.SendParameterSetting();
-                                };
-                            }
-                        );
-                        break;
-
-                    default:
-                        UnityEngine.Debug.Log($"[Selector] Error: Unhandled case: {interaction.GetType()}");
-                        break;
+                    if (!haveInputsBeenFound)
+                    {
+                        UnityEngine.Debug.LogWarning($"[Selector-{id}] Warning: no controller or input available for {interactionDto.GetType()}, {interactionDto.name}.");
+                        continue;
+                    }
                 }
+                catch (Exception)
+                {
+                    continue;
+                }
+
+                inputsByInteractions.Add(interaction, inputs);
+                interaction.projectionSetup = projectionSetup;
             }
 
             dataDelegate.AssociateInteractionAndInput(

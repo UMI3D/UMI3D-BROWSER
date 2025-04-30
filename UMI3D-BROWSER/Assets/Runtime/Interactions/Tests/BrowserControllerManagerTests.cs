@@ -126,6 +126,138 @@ public class BrowserControllerManagerTests
                     value = true
                 }
             );
+            InteractionManager.@default.InstantiateOrGet(
+                out Interaction _, 
+                environmentId, 
+                new FloatParameterDto()
+                {
+                    id = 41,
+                    name = $"Float",
+                    value = 1.5f
+                }
+            );
+            InteractionManager.@default.InstantiateOrGet(
+                out Interaction _, 
+                environmentId, 
+                new IntegerParameterDto()
+                {
+                    id = 42,
+                    name = $"Integer",
+                    value = 1
+                }
+            );
+            InteractionManager.@default.InstantiateOrGet(
+                out Interaction _, 
+                environmentId, 
+                new Vector2ParameterDto()
+                {
+                    id = 43,
+                    name = $"Vector2",
+                    value = Vector2.one.Dto()
+                }
+            );
+            InteractionManager.@default.InstantiateOrGet(
+                out Interaction _, 
+                environmentId, 
+                new Vector3ParameterDto()
+                {
+                    id = 44,
+                    name = $"Vector3",
+                    value = Vector3.one.Dto()
+                }
+            );
+            InteractionManager.@default.InstantiateOrGet(
+                out Interaction _, 
+                environmentId, 
+                new Vector4ParameterDto()
+                {
+                    id = 45,
+                    name = $"Vector4",
+                    value = Vector4.one.Dto()
+                }
+            );
+            InteractionManager.@default.InstantiateOrGet(
+                out Interaction _, 
+                environmentId, 
+                new FloatRangeParameterDto()
+                {
+                    id = 46,
+                    name = $"FloatRange",
+                    value = 1.5f,
+                    min = 0,
+                    max = 10,
+                    increment = 1.5f
+                }
+            );
+            InteractionManager.@default.InstantiateOrGet(
+                out Interaction _, 
+                environmentId, 
+                new IntegerRangeParameterDto()
+                {
+                    id = 47,
+                    name = $"IntegerRange",
+                    value = 1,
+                    min = 0,
+                    max = 10,
+                    increment = 2
+                }
+            );
+            InteractionManager.@default.InstantiateOrGet(
+                out Interaction _, 
+                environmentId, 
+                new StringParameterDto()
+                {
+                    id = 48,
+                    name = $"String",
+                    value = "Test"
+                }
+            );
+            InteractionManager.@default.InstantiateOrGet(
+                out Interaction _, 
+                environmentId, 
+                new ColorParameterDto()
+                {
+                    id = 49,
+                    name = $"Color",
+                    value = new ColorDto() { A = 1, R = 0.4f, G = 0.5f, B = 0.6f }
+                }
+            );
+            InteractionManager.@default.InstantiateOrGet(
+                out Interaction _, 
+                environmentId, 
+                new EnumParameterDto<string>()
+                {
+                    id = 50,
+                    name = $"EnumString",
+                    value = "Second",
+                    possibleValues = new() { "First", "Second", "Third" }
+                }
+            );
+            InteractionManager.@default.InstantiateOrGet(
+                out Interaction _, 
+                environmentId, 
+                new UploadFileParameterDto()
+                {
+                    id = 51,
+                    name = $"File",
+                    value = null,
+                    authorizedExtensions = new() { "pdf" }
+                }
+            );
+            InteractionManager.@default.InstantiateOrGet(
+                out Interaction _, 
+                environmentId, 
+                new LocalInfoRequestParameterDto()
+                {
+                    id = 52,
+                    name = $"LocalInfor",
+                    value = new LocalInfoRequestParameterValue(true, true),
+                    app_id = "AppId",
+                    key = "Key",
+                    reason = "Reason",
+                    serverName = "ServerName"
+                }
+            );
         }
 
         [OneTimeTearDown]
@@ -387,10 +519,47 @@ public class BrowserControllerManagerTests
 
             mouseSelector.Select(tool);
 
+            // Check that the request tool projected has been send to the server.
+            var toolProjectedRequest = clientSelector.Pull() as ToolProjectedDto;
+            var expectedToolProjectedRequest = "{\r\n" +
+                "  \"$type\": \"umi3d.common.interaction.ToolProjectedDto, UMI3D.Common.InteractionSystem\",\r\n" +
+                "  \"toolId\": 100,\r\n" +
+                "  \"boneType\": 0,\r\n" +
+                "  \"environmentId\": 1\r\n" +
+                "}";
+            Assert.AreEqual(expectedToolProjectedRequest, toolProjectedRequest.ToJson());
+
             string result = "";
             foreach (Projection projection in ProjectionManager.@default.projections)
             {
                 result += $"{projection.debugDescription}";
+
+                // Check that when the user interact with this input a request is send the server.
+                var inputSystem = projection.input.inputSystem as NewInputSystem;
+                inputSystem.OnStartedForTest(1f);
+                var request = clientSelector.Pull();
+                var expectedRequest = $"{{\r\n" +
+                    $"  \"$type\": \"umi3d.common.interaction.EventTriggeredDto, UMI3D.Common.InteractionSystem\",\r\n" +
+                    $"  \"toolId\": 100,\r\n" +
+                    $"  \"id\": {projection.interaction.dto.id},\r\n" +
+                    $"  \"hoveredObjectId\": 0,\r\n" +
+                    $"  \"boneType\": 0,\r\n" +
+                    $"  \"bonePosition\": {{\r\n" +
+                    $"    \"$type\": \"umi3d.common.Vector3Dto, UMI3D.Common.Core\",\r\n" +
+                    $"    \"X\": 0.0,\r\n" +
+                    $"    \"Y\": 0.0,\r\n" +
+                    $"    \"Z\": 0.0\r\n" +
+                    $"  }},\r\n" +
+                    $"  \"boneRotation\": {{\r\n" +
+                    $"    \"$type\": \"umi3d.common.Vector4Dto, UMI3D.Common.Core\",\r\n" +
+                    $"    \"X\": 0.0,\r\n" +
+                    $"    \"Y\": 0.0,\r\n" +
+                    $"    \"Z\": 0.0,\r\n" +
+                    $"    \"W\": 0.0\r\n" +
+                    $"  }},\r\n" +
+                    $"  \"environmentId\": 1\r\n" +
+                    $"}}";
+                Assert.AreEqual(expectedRequest, request.ToJson());
             }
 
             // Selector, Controller, tool's name, interaction's name, control's name
@@ -410,16 +579,6 @@ public class BrowserControllerManagerTests
                 "Mouse, UI, eventsTool, Event6, /UIDevice0/button3\n\n";
 
             Assert.AreEqual(expectation, result);
-            
-            var toolProjectedRequest = clientSelector.requestDtos[0] as ToolProjectedDto;
-            var expectedToolProjectedRequest = "{\r\n" +
-                "  \"$type\": \"umi3d.common.interaction.ToolProjectedDto, UMI3D.Common.InteractionSystem\",\r\n" +
-                "  \"toolId\": 100,\r\n" +
-                "  \"boneType\": 0,\r\n" +
-                "  \"environmentId\": 1\r\n" +
-                "}";
-
-            Assert.AreEqual(expectedToolProjectedRequest, toolProjectedRequest.ToJson());
         }
 
         [Test]
@@ -437,11 +596,106 @@ public class BrowserControllerManagerTests
             ToolManager.@default.InstantiateOrGet(out tool, environmentId, dto);
 
             mouseSelector.Select(tool);
+            
+            var toolProjectedRequest = clientSelector.Pull() as ToolProjectedDto;
+            var expectedToolProjectedRequest = "{\r\n" +
+                "  \"$type\": \"umi3d.common.interaction.ToolProjectedDto, UMI3D.Common.InteractionSystem\",\r\n" +
+                "  \"toolId\": 100,\r\n" +
+                "  \"boneType\": 0,\r\n" +
+                "  \"environmentId\": 1\r\n" +
+                "}";
+
+            Assert.AreEqual(expectedToolProjectedRequest, toolProjectedRequest.ToJson());
 
             string result = "";
-            foreach (Projection projection in ProjectionManager.@default.projections)
+            for (int i = 0; i < ProjectionManager.@default.projections.Count; i++)
             {
+                Projection projection = ProjectionManager.@default.projections[i];
                 result += $"{projection.debugDescription}";
+
+                // Check that when the user interact with this input a request is send the server.
+                var inputSystem = projection.input.inputSystem as NewInputSystem;
+                inputSystem.OnStartedForTest(1f);
+                var request = clientSelector.Pull();
+
+                string expectedRequest = "";
+                if (i == 0)
+                {
+                    expectedRequest = $"{{\r\n" +
+                        $"  \"$type\": \"umi3d.common.interaction.EventStateChangedDto, UMI3D.Common.InteractionSystem\",\r\n" +
+                        $"  \"active\": true,\r\n" +
+                        $"  \"toolId\": 100,\r\n" +
+                        $"  \"id\": {projection.interaction.dto.id},\r\n" +
+                        $"  \"hoveredObjectId\": 0,\r\n" +
+                        $"  \"boneType\": 0,\r\n" +
+                        $"  \"bonePosition\": {{\r\n" +
+                        $"    \"$type\": \"umi3d.common.Vector3Dto, UMI3D.Common.Core\",\r\n" +
+                        $"    \"X\": 0.0,\r\n" +
+                        $"    \"Y\": 0.0,\r\n" +
+                        $"    \"Z\": 0.0\r\n" +
+                        $"  }},\r\n" +
+                        $"  \"boneRotation\": {{\r\n" +
+                        $"    \"$type\": \"umi3d.common.Vector4Dto, UMI3D.Common.Core\",\r\n" +
+                        $"    \"X\": 0.0,\r\n" +
+                        $"    \"Y\": 0.0,\r\n" +
+                        $"    \"Z\": 0.0,\r\n" +
+                        $"    \"W\": 0.0\r\n" +
+                        $"  }},\r\n" +
+                        $"  \"environmentId\": 1\r\n" +
+                        $"}}";
+                    Assert.AreEqual(expectedRequest, request.ToJson());
+
+                    inputSystem.OnCanceledForTest(0f);
+                    request = clientSelector.Pull();
+                    expectedRequest = $"{{\r\n" +
+                        $"  \"$type\": \"umi3d.common.interaction.EventStateChangedDto, UMI3D.Common.InteractionSystem\",\r\n" +
+                        $"  \"active\": false,\r\n" +
+                        $"  \"toolId\": 100,\r\n" +
+                        $"  \"id\": {projection.interaction.dto.id},\r\n" +
+                        $"  \"hoveredObjectId\": 0,\r\n" +
+                        $"  \"boneType\": 0,\r\n" +
+                        $"  \"bonePosition\": {{\r\n" +
+                        $"    \"$type\": \"umi3d.common.Vector3Dto, UMI3D.Common.Core\",\r\n" +
+                        $"    \"X\": 0.0,\r\n" +
+                        $"    \"Y\": 0.0,\r\n" +
+                        $"    \"Z\": 0.0\r\n" +
+                        $"  }},\r\n" +
+                        $"  \"boneRotation\": {{\r\n" +
+                        $"    \"$type\": \"umi3d.common.Vector4Dto, UMI3D.Common.Core\",\r\n" +
+                        $"    \"X\": 0.0,\r\n" +
+                        $"    \"Y\": 0.0,\r\n" +
+                        $"    \"Z\": 0.0,\r\n" +
+                        $"    \"W\": 0.0\r\n" +
+                        $"  }},\r\n" +
+                        $"  \"environmentId\": 1\r\n" +
+                        $"}}";
+                    Assert.AreEqual(expectedRequest, request.ToJson());
+                }
+                else
+                {
+                    expectedRequest = $"{{\r\n" +
+                        $"  \"$type\": \"umi3d.common.interaction.EventTriggeredDto, UMI3D.Common.InteractionSystem\",\r\n" +
+                        $"  \"toolId\": 100,\r\n" +
+                        $"  \"id\": {projection.interaction.dto.id},\r\n" +
+                        $"  \"hoveredObjectId\": 0,\r\n" +
+                        $"  \"boneType\": 0,\r\n" +
+                        $"  \"bonePosition\": {{\r\n" +
+                        $"    \"$type\": \"umi3d.common.Vector3Dto, UMI3D.Common.Core\",\r\n" +
+                        $"    \"X\": 0.0,\r\n" +
+                        $"    \"Y\": 0.0,\r\n" +
+                        $"    \"Z\": 0.0\r\n" +
+                        $"  }},\r\n" +
+                        $"  \"boneRotation\": {{\r\n" +
+                        $"    \"$type\": \"umi3d.common.Vector4Dto, UMI3D.Common.Core\",\r\n" +
+                        $"    \"X\": 0.0,\r\n" +
+                        $"    \"Y\": 0.0,\r\n" +
+                        $"    \"Z\": 0.0,\r\n" +
+                        $"    \"W\": 0.0\r\n" +
+                        $"  }},\r\n" +
+                        $"  \"environmentId\": 1\r\n" +
+                        $"}}";
+                    Assert.AreEqual(expectedRequest, request.ToJson());
+                }
             }
 
             // Selector, Controller, tool's name, interaction's name, control's name
@@ -461,16 +715,6 @@ public class BrowserControllerManagerTests
                 "Mouse, UI, eventsTool, Event6, /UIDevice0/button3\n\n";
 
             Assert.AreEqual(expectation, result);
-            
-            var toolProjectedRequest = clientSelector.requestDtos[0] as ToolProjectedDto;
-            var expectedToolProjectedRequest = "{\r\n" +
-                "  \"$type\": \"umi3d.common.interaction.ToolProjectedDto, UMI3D.Common.InteractionSystem\",\r\n" +
-                "  \"toolId\": 100,\r\n" +
-                "  \"boneType\": 0,\r\n" +
-                "  \"environmentId\": 1\r\n" +
-                "}";
-
-            Assert.AreEqual(expectedToolProjectedRequest, toolProjectedRequest.ToJson());
         }
 
         [Test]
@@ -483,11 +727,21 @@ public class BrowserControllerManagerTests
                 name = "ParametersTool",
                 HoverEnterAnimationId = 3,
                 HoverExitAnimationId = 4,
-                interactions = new() { 40 } 
+                interactions = new() { 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52 } 
             };
             ToolManager.@default.InstantiateOrGet(out tool, environmentId, dto);
 
             mouseSelector.Select(tool);
+            
+            var toolProjectedRequest = clientSelector.Pull() as ToolProjectedDto;
+            var expectedToolProjectedRequest = "{\r\n" +
+                "  \"$type\": \"umi3d.common.interaction.ToolProjectedDto, UMI3D.Common.InteractionSystem\",\r\n" +
+                "  \"toolId\": 100,\r\n" +
+                "  \"boneType\": 0,\r\n" +
+                "  \"environmentId\": 1\r\n" +
+                "}";
+
+            Assert.AreEqual(expectedToolProjectedRequest, toolProjectedRequest.ToJson());
 
             string result = "";
             foreach (Projection projection in ProjectionManager.@default.projections)
@@ -513,16 +767,6 @@ public class BrowserControllerManagerTests
 
             //Assert.AreEqual(expectation, result);
             UnityEngine.Debug.Log($"{result}");
-            
-            var toolProjectedRequest = clientSelector.requestDtos[0] as ToolProjectedDto;
-            var expectedToolProjectedRequest = "{\r\n" +
-                "  \"$type\": \"umi3d.common.interaction.ToolProjectedDto, UMI3D.Common.InteractionSystem\",\r\n" +
-                "  \"toolId\": 100,\r\n" +
-                "  \"boneType\": 0,\r\n" +
-                "  \"environmentId\": 1\r\n" +
-                "}";
-
-            Assert.AreEqual(expectedToolProjectedRequest, toolProjectedRequest.ToJson());
         }
     }
 }

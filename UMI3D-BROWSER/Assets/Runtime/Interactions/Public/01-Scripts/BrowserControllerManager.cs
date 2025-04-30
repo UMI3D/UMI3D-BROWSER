@@ -380,52 +380,85 @@ namespace umi3d.browserRuntime.interactions
 
             return inputs.Count > 0;
         }
+        List<Input> _integerParameterDtoInputs = new();
         public bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, IntegerParameterDto interaction)
         {
-            throw new NotImplementedException();
+            inputs = _integerParameterDtoInputs.AsReadOnly();
+
+            return inputs.Count > 0;
         }
 
+        List<Input> _floatRangeParameterDtoInputs = new();
         public bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, FloatRangeParameterDto interaction)
         {
-            throw new NotImplementedException();
+            inputs = _floatRangeParameterDtoInputs.AsReadOnly();
+
+            return inputs.Count > 0;
         }
+        List<Input> _integerRangeParameterDtoInputs = new();
         public bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, IntegerRangeParameterDto interaction)
         {
-            throw new NotImplementedException();
+            inputs = _integerRangeParameterDtoInputs.AsReadOnly();
+
+            return inputs.Count > 0;
         }
 
+        List<Input> _vector2ParameterDtoInputs = new();
         public bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, Vector2ParameterDto interaction)
         {
-            throw new NotImplementedException();
+            inputs = _vector2ParameterDtoInputs.AsReadOnly();
+
+            return inputs.Count > 0;
         }
+        List<Input> _vector3ParameterDtoInputs = new();
         public bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, Vector3ParameterDto interaction)
         {
-            throw new NotImplementedException();
+            inputs = _vector3ParameterDtoInputs.AsReadOnly();
+
+            return inputs.Count > 0;
         }
+        List<Input> _vector4ParameterDtoInputs = new();
         public bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, Vector4ParameterDto interaction)
         {
-            throw new NotImplementedException();
+            inputs = _vector4ParameterDtoInputs.AsReadOnly();
+
+            return inputs.Count > 0;
         }
 
+        List<Input> _enumStringParameterDtoInputs = new();
         public bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, EnumParameterDto<string> interaction)
         {
-            throw new NotImplementedException();
+            inputs = _enumStringParameterDtoInputs.AsReadOnly();
+
+            return inputs.Count > 0;
         }
+        List<Input> _stringParameterDtoInput = new();
         public bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, StringParameterDto interaction)
         {
-            throw new NotImplementedException();
+            inputs = _stringParameterDtoInput.AsReadOnly();
+
+            return inputs.Count > 0;
         }
+        List<Input> _colorParameterDtoInputs = new();
         public bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, ColorParameterDto interaction)
         {
-            throw new NotImplementedException();
+            inputs = _colorParameterDtoInputs.AsReadOnly();
+
+            return inputs.Count > 0;
         }
+        List<Input> _uploadFileParameterDtoInputs = new();
         public bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, UploadFileParameterDto interaction)
         {
-            throw new NotImplementedException();
+            inputs = _uploadFileParameterDtoInputs.AsReadOnly();
+
+            return inputs.Count > 0;
         }
+        List<Input> _localInfoParameterDtoInputs = new();
         public bool TryGetInputsFor(out ReadOnlyCollection<Input> inputs, LocalInfoRequestParameterDto interaction)
         {
-            throw new NotImplementedException();
+            inputs = _localInfoParameterDtoInputs.AsReadOnly();
+
+            return inputs.Count > 0;
         }
     }
 

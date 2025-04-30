@@ -42,6 +42,13 @@ namespace umi3d.browserRuntime.interactions
             action.canceled += OnCanceled;
         }
 
+        ~NewInputSystem()
+        {
+            action.started -= OnStarted;
+            action.performed -= OnPerformed;
+            action.canceled -= OnCanceled;
+        }
+
         void OnStarted(InputAction.CallbackContext context)
         {
             started?.Invoke(context.ReadValueAsObject());

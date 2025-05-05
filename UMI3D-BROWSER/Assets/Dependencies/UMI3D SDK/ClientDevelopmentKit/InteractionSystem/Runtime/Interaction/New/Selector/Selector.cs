@@ -140,17 +140,19 @@ namespace umi3d.cdk.interaction
                     haveInputsBeenFound = dataDelegate.TryGetInputsFor(out inputs, eventDto);
                     projectionSetup = projection =>
                     {
-                        projection.input.onStarted += obj =>
+                        projection.input.eventInput.started += () =>
                         {
                             if (eventDto.hold) { projection.SendEventStateChanged(true); }
                             else { projection.SendEventTriggered(); }
                             projection.Animate(eventDto.triggerAnimationId);
                         };
-                        projection.input.onCanceled += obj =>
+                        projection.input.eventInput.canceled += () =>
                         {
                             if (eventDto.hold) { projection.SendEventStateChanged(false); }
                             projection.Animate(eventDto.releaseAnimationId);
                         };
+
+                        projection._clear = () => projection.input.eventInput.Clear();
                     };
                     break;
 
@@ -159,10 +161,15 @@ namespace umi3d.cdk.interaction
                     haveInputsBeenFound = dataDelegate.TryGetInputsFor(out inputs, boolean);
                     projectionSetup = projection =>
                     {
-                        projection.input.onPerformed += obj =>
+                        projection.input.booleanParameterInput.performed += value =>
                         {
+                            if (boolean.isDisplayer) { return; }
+
+                            boolean.value = value;
                             projection.SendParameterSetting();
                         };
+
+                        projection._clear = () => projection.input.booleanParameterInput.Clear();
                     };
                     break;
 
@@ -170,10 +177,15 @@ namespace umi3d.cdk.interaction
                     haveInputsBeenFound = dataDelegate.TryGetInputsFor(out inputs, @float);
                     projectionSetup = projection =>
                     {
-                        projection.input.onPerformed += obj =>
+                        projection.input.floatParameterInput.performed += value =>
                         {
+                            if (@float.isDisplayer) { return; }
+
+                            @float.value = value;
                             projection.SendParameterSetting();
                         };
+
+                        projection._clear = () => projection.input.floatParameterInput.Clear();
                     };
                     break;
 
@@ -181,43 +193,15 @@ namespace umi3d.cdk.interaction
                     haveInputsBeenFound = dataDelegate.TryGetInputsFor(out inputs, integer);
                     projectionSetup = projection =>
                     {
-                        projection.input.onPerformed += obj =>
+                        projection.input.intParameterInput.performed += value =>
                         {
-                            projection.SendParameterSetting();
-                        };
-                    };
-                    break;
+                            if (integer.isDisplayer) { return; }
 
-                case Vector2ParameterDto vector2:
-                    haveInputsBeenFound = dataDelegate.TryGetInputsFor(out inputs, vector2);
-                    projectionSetup = projection =>
-                    {
-                        projection.input.onPerformed += obj =>
-                        {
+                            integer.value = value;
                             projection.SendParameterSetting();
                         };
-                    };
-                    break;
 
-                case Vector3ParameterDto vector3:
-                    haveInputsBeenFound = dataDelegate.TryGetInputsFor(out inputs, vector3);
-                    projectionSetup = projection =>
-                    {
-                        projection.input.onPerformed += obj =>
-                        {
-                            projection.SendParameterSetting();
-                        };
-                    };
-                    break;
-
-                case Vector4ParameterDto vector4:
-                    haveInputsBeenFound = dataDelegate.TryGetInputsFor(out inputs, vector4);
-                    projectionSetup = projection =>
-                    {
-                        projection.input.onPerformed += obj =>
-                        {
-                            projection.SendParameterSetting();
-                        };
+                        projection._clear = () => projection.input.intParameterInput.Clear();
                     };
                     break;
 
@@ -225,10 +209,18 @@ namespace umi3d.cdk.interaction
                     haveInputsBeenFound = dataDelegate.TryGetInputsFor(out inputs, floatRange);
                     projectionSetup = projection =>
                     {
-                        projection.input.onPerformed += obj =>
+                        float initialValue = floatRange.value;
+                        projection.input.floatParameterInput.performed += value =>
                         {
+                            if (floatRange.isDisplayer) { return; }
+
+                            value = Mathf.Clamp(value, floatRange.min, floatRange.max);
+                            // TODO: check for increment.
+                            floatRange.value = value;
                             projection.SendParameterSetting();
                         };
+
+                        projection._clear = () => projection.input.floatParameterInput.Clear();
                     };
                     break;
 
@@ -236,10 +228,66 @@ namespace umi3d.cdk.interaction
                     haveInputsBeenFound = dataDelegate.TryGetInputsFor(out inputs, integerRange);
                     projectionSetup = projection =>
                     {
-                        projection.input.onPerformed += obj =>
+                        int initialValue = integerRange.value;
+                        projection.input.intParameterInput.performed += value =>
                         {
+                            if (integerRange.isDisplayer) { return; }
+
+                            value = Mathf.Clamp(value, integerRange.min, integerRange.max);
+                            // TODO: check for increment.
+                            integerRange.value = value;
                             projection.SendParameterSetting();
                         };
+
+                        projection._clear = () => projection.input.intParameterInput.Clear();
+                    };
+                    break;
+
+                case Vector2ParameterDto vector2:
+                    haveInputsBeenFound = dataDelegate.TryGetInputsFor(out inputs, vector2);
+                    projectionSetup = projection =>
+                    {
+                        projection.input.vector2ParameterInput.performed += value =>
+                        {
+                            if (vector2.isDisplayer) { return; }
+
+                            vector2.value = value.Dto();
+                            projection.SendParameterSetting();
+                        };
+
+                        projection._clear = () => projection.input.vector2ParameterInput.Clear();
+                    };
+                    break;
+
+                case Vector3ParameterDto vector3:
+                    haveInputsBeenFound = dataDelegate.TryGetInputsFor(out inputs, vector3);
+                    projectionSetup = projection =>
+                    {
+                        projection.input.vector3ParameterInput.performed += value =>
+                        {
+                            if (vector3.isDisplayer) { return; }
+
+                            vector3.value = value.Dto();
+                            projection.SendParameterSetting();
+                        };
+                        
+                        projection._clear = () => projection.input.vector3ParameterInput.Clear();
+                    };
+                    break;
+
+                case Vector4ParameterDto vector4:
+                    haveInputsBeenFound = dataDelegate.TryGetInputsFor(out inputs, vector4);
+                    projectionSetup = projection =>
+                    {
+                        projection.input.vector4ParameterInput.performed += value =>
+                        {
+                            if (vector4.isDisplayer) { return; }
+
+                            vector4.value = value.Dto();
+                            projection.SendParameterSetting();
+                        };
+                        
+                        projection._clear = () => projection.input.vector4ParameterInput.Clear();
                     };
                     break;
 
@@ -247,21 +295,15 @@ namespace umi3d.cdk.interaction
                     haveInputsBeenFound = dataDelegate.TryGetInputsFor(out inputs, @string);
                     projectionSetup = projection =>
                     {
-                        projection.input.onPerformed += obj =>
+                        projection.input.stringParameterInput.performed += value =>
                         {
-                            projection.SendParameterSetting();
-                        };
-                    };
-                    break;
+                            if (@string.isDisplayer) { return; }
 
-                case ColorParameterDto color:
-                    haveInputsBeenFound = dataDelegate.TryGetInputsFor(out inputs, color);
-                    projectionSetup = projection =>
-                    {
-                        projection.input.onPerformed += obj =>
-                        {
+                            @string.value = value;
                             projection.SendParameterSetting();
                         };
+                        
+                        projection._clear = () => projection.input.stringParameterInput.Clear();
                     };
                     break;
 
@@ -269,21 +311,32 @@ namespace umi3d.cdk.interaction
                     haveInputsBeenFound = dataDelegate.TryGetInputsFor(out inputs, @enum);
                     projectionSetup = projection =>
                     {
-                        projection.input.onPerformed += obj =>
+                        projection.input.stringParameterInput.performed += value =>
                         {
+                            if (@enum.isDisplayer) { return; }
+
+                            if (!@enum.possibleValues.Contains(value)) { return; }
+                            @enum.value = value;
                             projection.SendParameterSetting();
                         };
+                        
+                        projection._clear = () => projection.input.stringParameterInput.Clear();
                     };
                     break;
 
-                case UploadFileParameterDto uploadFile:
-                    haveInputsBeenFound = dataDelegate.TryGetInputsFor(out inputs, uploadFile);
+                case ColorParameterDto color:
+                    haveInputsBeenFound = dataDelegate.TryGetInputsFor(out inputs, color);
                     projectionSetup = projection =>
                     {
-                        projection.input.onPerformed += obj =>
+                        projection.input.colorParameterInput.performed += value =>
                         {
-                            projection.SendUploadFile("TODO");
+                            if (color.isDisplayer) { return; }
+
+                            color.value = new common.ColorDto() { R = value.r, G = value.g, B = value.b, A = value.a };
+                            projection.SendParameterSetting();
                         };
+                        
+                        projection._clear = () => projection.input.colorParameterInput.Clear();
                     };
                     break;
 
@@ -291,10 +344,31 @@ namespace umi3d.cdk.interaction
                     haveInputsBeenFound = dataDelegate.TryGetInputsFor(out inputs, localInfo);
                     projectionSetup = projection =>
                     {
-                        projection.input.onPerformed += obj =>
+                        projection.input.localInfoParameterInput.performed += value =>
                         {
+                            if (localInfo.isDisplayer) { return; }
+
+                            localInfo.value = value;
                             projection.SendParameterSetting();
                         };
+                        
+                        projection._clear = () => projection.input.localInfoParameterInput.Clear();
+                    };
+                    break;
+
+                case UploadFileParameterDto uploadFile:
+                    haveInputsBeenFound = dataDelegate.TryGetInputsFor(out inputs, uploadFile);
+                    projectionSetup = projection =>
+                    {
+                        projection.input.uploadFileParameterInput.performed += obj =>
+                        {
+                            if (uploadFile.isDisplayer) { return; }
+
+                            uploadFile.value = obj.url;
+                            projection.SendUploadFile(obj.id);
+                        };
+                        
+                        projection._clear = () => projection.input.uploadFileParameterInput.Clear();
                     };
                     break;
 

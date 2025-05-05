@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System;
 using umi3d.common.interaction;
 using UnityEngine;
 
@@ -26,6 +27,8 @@ namespace umi3d.cdk.interaction
         public Tool tool { get; internal set; }
         public Interaction interaction { get; internal set; }
         public Input input { get; internal set; }
+
+        internal Action _clear;
 
         IClientServerCommunicationSelectorDelegate _clientServerCommunicationSelectorDelegate;
         public IClientServerCommunicationSelectorDelegate clientServerCommunicationSelectorDelegate
@@ -205,6 +208,18 @@ namespace umi3d.cdk.interaction
         public void Animate(ulong animationId)
         {
             clientServerCommunicationSelectorDelegate.Animate(tool.environmentId, animationId);
+        }
+
+        public void Clear()
+        {
+            try
+            {
+                _clear?.Invoke();
+            }
+            catch (Exception e)
+            {
+                UnityEngine.Debug.LogException(e);
+            }
         }
 
         public string debugDescription

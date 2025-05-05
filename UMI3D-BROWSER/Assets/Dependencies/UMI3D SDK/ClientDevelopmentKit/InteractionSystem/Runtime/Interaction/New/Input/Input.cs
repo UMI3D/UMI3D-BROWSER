@@ -15,6 +15,8 @@ limitations under the License.
 */
 
 using System;
+using umi3d.common.interaction;
+using UnityEngine;
 
 namespace umi3d.cdk.interaction
 {
@@ -23,10 +25,6 @@ namespace umi3d.cdk.interaction
         internal Input(IInputSystem inputSystem)
         {
             this.inputSystem = inputSystem;
-
-            inputSystem.started += OnStarted;
-            inputSystem.performed += OnPerformed;
-            inputSystem.canceled += OnCanceled;
         }
 
         public bool isAvailable { get; internal set; } = true;
@@ -46,34 +44,180 @@ namespace umi3d.cdk.interaction
 
         public IInputSystem inputSystem { get; private set; }
 
-        void OnStarted(object obj)
+        IEventInputSystem _eventInput = new NullObjectEventInput();
+        public IEventInputSystem eventInput
         {
-            onStarted?.Invoke(obj);
-        }
-        void OnPerformed(object obj)
-        {
-            onPerformed?.Invoke(obj);
-        }
-        void OnCanceled(object obj)
-        {
-            onCanceled?.Invoke(obj);
+            get => _eventInput;
+            set
+            {
+                if (value == null)
+                {
+                    _eventInput = new NullObjectEventInput();
+                    return;
+                }
+
+                _eventInput = value;
+            }
         }
 
-        public Action<object> onStarted;
-        public Action<object> onPerformed;
-        public Action<object> onCanceled;
+        IParameterInputSystem<bool> _booleanParameterInput = new NullObjectParameterInput<bool>();
+        public IParameterInputSystem<bool> booleanParameterInput
+        {
+            get => _booleanParameterInput;
+            set
+            {
+                if (value == null)
+                {
+                    _booleanParameterInput = new NullObjectParameterInput<bool>();
+                    return;
+                }
 
-        public void WriteStructValue<T>(T value) where T : struct
-        {
-            inputSystem.WriteStructValue(value);
+                _booleanParameterInput = value;
+            }
         }
-        public void WriteClassValue<T>(T value) where T : class
+
+        IParameterInputSystem<float> _floatParameterInput = new NullObjectParameterInput<float>();
+        public IParameterInputSystem<float> floatParameterInput
         {
-            inputSystem.WriteClassValue(value);
+            get => _floatParameterInput;
+            set
+            {
+                if (value == null)
+                {
+                    _floatParameterInput = new NullObjectParameterInput<float>();
+                    return;
+                }
+
+                _floatParameterInput = value;
+            }
         }
-        public T ReadValue<T>()
+
+        IParameterInputSystem<int> _intParameterInput = new NullObjectParameterInput<int>();
+        public IParameterInputSystem<int> intParameterInput
         {
-            return inputSystem.ReadValue<T>();
+            get => _intParameterInput;
+            set
+            {
+                if (value == null)
+                {
+                    _intParameterInput = new NullObjectParameterInput<int>();
+                    return;
+                }
+
+                _intParameterInput = value;
+            }
+        }
+
+        IParameterInputSystem<Vector2> _vector2ParameterInput = new NullObjectParameterInput<Vector2>();
+        public IParameterInputSystem<Vector2> vector2ParameterInput
+        {
+            get => _vector2ParameterInput;
+            set
+            {
+                if (value == null)
+                {
+                    _vector2ParameterInput = new NullObjectParameterInput<Vector2>();
+                    return;
+                }
+
+                _vector2ParameterInput = value;
+            }
+        }
+
+        IParameterInputSystem<Vector3> _vector3ParameterInput = new NullObjectParameterInput<Vector3>();
+        public IParameterInputSystem<Vector3> vector3ParameterInput
+        {
+            get => _vector3ParameterInput;
+            set
+            {
+                if (value == null)
+                {
+                    _vector3ParameterInput = new NullObjectParameterInput<Vector3>();
+                    return;
+                }
+
+                _vector3ParameterInput = value;
+            }
+        }
+
+        IParameterInputSystem<Vector4> _vector4ParameterInput = new NullObjectParameterInput<Vector4>();
+        public IParameterInputSystem<Vector4> vector4ParameterInput
+        {
+            get => _vector4ParameterInput;
+            set
+            {
+                if (value == null)
+                {
+                    _vector4ParameterInput = new NullObjectParameterInput<Vector4>();
+                    return;
+                }
+
+                _vector4ParameterInput = value;
+            }
+        }
+
+        IParameterInputSystem<string> _stringParameterInput = new NullObjectParameterInput<string>();
+        public IParameterInputSystem<string> stringParameterInput
+        {
+            get => _stringParameterInput;
+            set
+            {
+                if (value == null)
+                {
+                    _stringParameterInput = new NullObjectParameterInput<string>();
+                    return;
+                }
+
+                _stringParameterInput = value;
+            }
+        }
+
+        IParameterInputSystem<Color> _colorParameterInput = new NullObjectParameterInput<Color>();
+        public IParameterInputSystem<Color> colorParameterInput
+        {
+            get => _colorParameterInput;
+            set
+            {
+                if (value == null)
+                {
+                    _colorParameterInput = new NullObjectParameterInput<Color>();
+                    return;
+                }
+
+                _colorParameterInput = value;
+            }
+        }
+
+        IParameterInputSystem<LocalInfoRequestParameterValue> _localInfoParameterInput = new NullObjectParameterInput<LocalInfoRequestParameterValue>();
+        public IParameterInputSystem<LocalInfoRequestParameterValue> localInfoParameterInput
+        {
+            get => _localInfoParameterInput;
+            set
+            {
+                if (value == null)
+                {
+                    _localInfoParameterInput = new NullObjectParameterInput<LocalInfoRequestParameterValue>();
+                    return;
+                }
+
+                _localInfoParameterInput = value;
+            }
+        }
+
+        IUploadFileParameterInputSystem _uploadFileParameterInput = new NullObjectUploadFileParameterInput();
+        public IUploadFileParameterInputSystem uploadFileParameterInput
+        {
+            get => _uploadFileParameterInput;
+            set
+            {
+                if (value == null)
+                {
+                    _uploadFileParameterInput = new NullObjectUploadFileParameterInput();
+                    return;
+                }
+
+                _uploadFileParameterInput = value;
+            }
         }
 
         public string debugDescription

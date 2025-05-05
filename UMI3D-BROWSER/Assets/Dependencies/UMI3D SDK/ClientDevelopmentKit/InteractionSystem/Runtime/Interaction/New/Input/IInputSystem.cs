@@ -14,20 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System;
-
 namespace umi3d.cdk.interaction
 {
     public interface IInputSystem 
     {
         string id {  get; }
-
-        event Action<object> started;
-        event Action<object> performed;
-        event Action<object> canceled;
-
-        void WriteStructValue<T>(T value) where T : struct;
-        void WriteClassValue<T>(T value) where T : class;
-        T ReadValue<T>();
     }
 }

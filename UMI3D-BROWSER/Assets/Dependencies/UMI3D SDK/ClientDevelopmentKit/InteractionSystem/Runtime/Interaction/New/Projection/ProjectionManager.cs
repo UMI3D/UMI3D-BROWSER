@@ -77,9 +77,7 @@ namespace umi3d.cdk.interaction
 
             if (result)
             {
-                projection.input.onStarted = null;
-                projection.input.onPerformed = null;
-                projection.input.onCanceled = null;
+                projection.Clear();
 
                 delegates.ForEach(@delegate =>
                 {

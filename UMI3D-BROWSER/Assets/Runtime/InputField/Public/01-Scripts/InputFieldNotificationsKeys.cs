@@ -65,6 +65,13 @@ namespace umi3d.browserRuntime.ui.inputField
             /// Value is <see cref="bool"/>
             /// </remarks>
             public const string ContentType = "ContentType";
+            /// <summary>
+            /// Is the input a pin (formated "... ...")
+            /// </summary>
+            /// <remarks>
+            /// Value is <see cref="bool"/>
+            /// </remarks>
+            public const string IsPin = "IsPin";
         }
 
         /// <summary>

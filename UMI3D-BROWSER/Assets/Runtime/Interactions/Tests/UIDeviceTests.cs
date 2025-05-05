@@ -22,6 +22,7 @@ using umi3d.browserRuntime.interactions;
 using UnityEngine.InputSystem;
 using Input = umi3d.cdk.interaction.Input;
 using umi3d.cdk.interaction;
+using UnityEngine.InputSystem.Controls;
 
 public class UIDeviceTests
 {
@@ -59,7 +60,7 @@ public class UIDeviceTests
             string result = "";
             for (int i = 0; i < 5; i++)
             {
-                NewInputSystem inputSystem = new(placeHolder, InputActionType.Button);
+                NewInputSystem inputSystem = new ButtonControlInputSystem(placeHolder as ButtonControl);
                 Input input = UIDevice.GetInputFrom(inputSystem);
                 result += input.debugDescription;
             }
@@ -87,7 +88,7 @@ public class UIDeviceTests
             string result = "";
             for (int i = 0; i < 5; i++)
             {
-                NewInputSystem inputSystem = new(placeHolder, InputActionType.Button);
+                NewInputSystem inputSystem = new AxisControlInputSystem(placeHolder as AxisControl);
                 Input input = UIDevice.GetInputFrom(inputSystem);
                 result += input.debugDescription;
             }
@@ -115,7 +116,7 @@ public class UIDeviceTests
             string result = "";
             for (int i = 0; i < 5; i++)
             {
-                NewInputSystem inputSystem = new(placeHolder, InputActionType.Button);
+                NewInputSystem inputSystem = new IntegerControlInputSystem(placeHolder as IntegerControl);
                 Input input = UIDevice.GetInputFrom(inputSystem);
                 result += input.debugDescription;
             }
@@ -143,7 +144,7 @@ public class UIDeviceTests
             string result = "";
             for (int i = 0; i < 5; i++)
             {
-                NewInputSystem inputSystem = new(placeHolder, InputActionType.Button);
+                NewInputSystem inputSystem = new DoubleControlInputSystem(placeHolder as DoubleControl);
                 Input input = UIDevice.GetInputFrom(inputSystem);
                 result += input.debugDescription;
             }
@@ -171,7 +172,7 @@ public class UIDeviceTests
             string result = "";
             for (int i = 0; i < 5; i++)
             {
-                NewInputSystem inputSystem = new(placeHolder, InputActionType.Button);
+                NewInputSystem inputSystem = new Vector2ControlInputSystem(placeHolder as Vector2Control);
                 Input input = UIDevice.GetInputFrom(inputSystem);
                 result += input.debugDescription;
             }
@@ -199,7 +200,7 @@ public class UIDeviceTests
             string result = "";
             for (int i = 0; i < 5; i++)
             {
-                NewInputSystem inputSystem = new(placeHolder, InputActionType.Button);
+                NewInputSystem inputSystem = new Vector3ControlInputSystem(placeHolder as Vector3Control);
                 Input input = UIDevice.GetInputFrom(inputSystem);
                 result += input.debugDescription;
             }
@@ -227,7 +228,7 @@ public class UIDeviceTests
             string result = "";
             for (int i = 0; i < 5; i++)
             {
-                NewInputSystem inputSystem = new(placeHolder, InputActionType.Button);
+                NewInputSystem inputSystem = new QuaternionControlInputSystem(placeHolder as QuaternionControl);
                 Input input = UIDevice.GetInputFrom(inputSystem);
                 result += input.debugDescription;
             }

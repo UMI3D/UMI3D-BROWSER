@@ -323,8 +323,8 @@ public class BrowserControllerManagerTests
                 result += $"{projection.debugDescription}";
 
                 // Check that when the user interact with this input a request is send the server.
-                var inputSystem = projection.input.inputSystem as NewInputSystem;
-                inputSystem.OnStartedForTest(1f);
+                var inputSystem = projection.input.eventInput;
+                inputSystem.PressDown();
                 var request = clientSelector.Pull();
                 var expectedRequest = $"{{\r\n" +
                     $"  \"$type\": \"umi3d.common.interaction.EventTriggeredDto, UMI3D.Common.InteractionSystem\",\r\n" +
@@ -401,8 +401,8 @@ public class BrowserControllerManagerTests
                 result += $"{projection.debugDescription}";
 
                 // Check that when the user interact with this input a request is send the server.
-                var inputSystem = projection.input.inputSystem as NewInputSystem;
-                inputSystem.OnStartedForTest(1f);
+                var inputSystem = projection.input.eventInput;
+                inputSystem.PressDown();
                 var request = clientSelector.Pull();
 
                 string expectedRequest = "";
@@ -432,7 +432,7 @@ public class BrowserControllerManagerTests
                         $"}}";
                     Assert.AreEqual(expectedRequest, request.ToJson());
 
-                    inputSystem.OnCanceledForTest(0f);
+                    inputSystem.PressUp();
                     request = clientSelector.Pull();
                     expectedRequest = $"{{\r\n" +
                         $"  \"$type\": \"umi3d.common.interaction.EventStateChangedDto, UMI3D.Common.InteractionSystem\",\r\n" +
@@ -535,8 +535,8 @@ public class BrowserControllerManagerTests
                 result += $"{projection.debugDescription}";
 
                 // Check that when the user interact with this input a request is send the server.
-                var inputSystem = projection.input.inputSystem as NewInputSystem;
-                inputSystem.OnStartedForTest(1f);
+                var inputSystem = projection.input.eventInput;
+                inputSystem.PressDown();
                 var request = clientSelector.Pull();
                 var expectedRequest = $"{{\r\n" +
                     $"  \"$type\": \"umi3d.common.interaction.EventTriggeredDto, UMI3D.Common.InteractionSystem\",\r\n" +
@@ -614,8 +614,8 @@ public class BrowserControllerManagerTests
                 result += $"{projection.debugDescription}";
 
                 // Check that when the user interact with this input a request is send the server.
-                var inputSystem = projection.input.inputSystem as NewInputSystem;
-                inputSystem.OnStartedForTest(1f);
+                var inputSystem = projection.input.eventInput;
+                inputSystem.PressDown();
                 var request = clientSelector.Pull();
 
                 string expectedRequest = "";
@@ -645,7 +645,7 @@ public class BrowserControllerManagerTests
                         $"}}";
                     Assert.AreEqual(expectedRequest, request.ToJson());
 
-                    inputSystem.OnCanceledForTest(0f);
+                    inputSystem.PressUp();
                     request = clientSelector.Pull();
                     expectedRequest = $"{{\r\n" +
                         $"  \"$type\": \"umi3d.common.interaction.EventStateChangedDto, UMI3D.Common.InteractionSystem\",\r\n" +
@@ -744,10 +744,95 @@ public class BrowserControllerManagerTests
             Assert.AreEqual(expectedToolProjectedRequest, toolProjectedRequest.ToJson());
 
             string result = "";
-            foreach (Projection projection in ProjectionManager.@default.projections)
-            {
-                result += $"{projection.debugDescription}";
-            }
+            Projection projection = null;
+            AbstractBrowserRequestDto request = null;
+            string expectedRequeste = null;
+
+            // Check that when the user interact with this input a request is send the server.
+
+            // Boolean
+            projection = ProjectionManager.@default.projections[0];
+            result += projection.debugDescription;
+            (projection.input.booleanParameterInput).Perform(false);
+            request = clientSelector.Pull();
+            expectedRequeste = "{\r\n" +
+                "  \"$type\": \"umi3d.common.interaction.ParameterSettingRequestDto, UMI3D.Common.InteractionSystem\",\r\n" +
+                "  \"parameter\": {\r\n" +
+                "    \"$type\": \"umi3d.common.interaction.BooleanParameterDto, UMI3D.Common.InteractionSystem\",\r\n" +
+                "    \"value\": false,\r\n" +
+                "    \"privateParameter\": false,\r\n" +
+                "    \"isDisplayer\": false,\r\n" +
+                "    \"tag\": null,\r\n" +
+                "    \"name\": \"Boolean\",\r\n" +
+                "    \"description\": null,\r\n" +
+                "    \"icon2D\": null,\r\n" +
+                "    \"icon3D\": null,\r\n" +
+                "    \"uiLinkId\": 0,\r\n" +
+                "    \"id\": 40\r\n" +
+                "  },\r\n" +
+                "  \"toolId\": 100,\r\n" +
+                "  \"id\": 40,\r\n" +
+                "  \"hoveredObjectId\": 0,\r\n" +
+                "  \"boneType\": 0,\r\n" +
+                "  \"bonePosition\": {\r\n" +
+                "    \"$type\": \"umi3d.common.Vector3Dto, UMI3D.Common.Core\",\r\n" +
+                "    \"X\": 0.0,\r\n" +
+                "    \"Y\": 0.0,\r\n" +
+                "    \"Z\": 0.0\r\n" +
+                "  },\r\n" +
+                "  \"boneRotation\": {\r\n" +
+                "    \"$type\": \"umi3d.common.Vector4Dto, UMI3D.Common.Core\",\r\n" +
+                "    \"X\": 0.0,\r\n" +
+                "    \"Y\": 0.0,\r\n" +
+                "    \"Z\": 0.0,\r\n" +
+                "    \"W\": 0.0\r\n" +
+                "  },\r\n" +
+                "  \"environmentId\": 1\r\n" +
+                "}";
+            Assert.AreEqual(expectedRequeste, request.ToJson());
+
+            // Float
+            projection = ProjectionManager.@default.projections[1];
+            result += projection.debugDescription;
+            (projection.input.floatParameterInput).Perform(2f);
+            request = clientSelector.Pull();
+            expectedRequeste = "{\r\n" +
+                "  \"$type\": \"umi3d.common.interaction.ParameterSettingRequestDto, UMI3D.Common.InteractionSystem\",\r\n" +
+                "  \"parameter\": {\r\n" +
+                "    \"$type\": \"umi3d.common.interaction.FloatParameterDto, UMI3D.Common.InteractionSystem\",\r\n" +
+                "    \"value\": 2,\r\n" +
+                "    \"privateParameter\": false,\r\n" +
+                "    \"isDisplayer\": false,\r\n" +
+                "    \"tag\": null,\r\n" +
+                "    \"name\": \"Float\",\r\n" +
+                "    \"description\": null,\r\n" +
+                "    \"icon2D\": null,\r\n" +
+                "    \"icon3D\": null,\r\n" +
+                "    \"uiLinkId\": 0,\r\n" +
+                "    \"id\": 41\r\n" +
+                "  },\r\n" +
+                "  \"toolId\": 100,\r\n" +
+                "  \"id\": 41,\r\n" +
+                "  \"hoveredObjectId\": 0,\r\n" +
+                "  \"boneType\": 0,\r\n" +
+                "  \"bonePosition\": {\r\n" +
+                "    \"$type\": \"umi3d.common.Vector3Dto, UMI3D.Common.Core\",\r\n" +
+                "    \"X\": 0.0,\r\n" +
+                "    \"Y\": 0.0,\r\n" +
+                "    \"Z\": 0.0\r\n" +
+                "  },\r\n" +
+                "  \"boneRotation\": {\r\n" +
+                "    \"$type\": \"umi3d.common.Vector4Dto, UMI3D.Common.Core\",\r\n" +
+                "    \"X\": 0.0,\r\n" +
+                "    \"Y\": 0.0,\r\n" +
+                "    \"Z\": 0.0,\r\n" +
+                "    \"W\": 0.0\r\n" +
+                "  },\r\n" +
+                "  \"environmentId\": 1\r\n" +
+                "}";
+            Assert.AreEqual(expectedRequeste, request.ToJson());
+            //UnityEngine.Debug.Log($"{request.ToJson()}");
+
 
             // Selector, Controller, tool's name, interaction's name, control's name
             string expectation = "---- Projection ----\n" +

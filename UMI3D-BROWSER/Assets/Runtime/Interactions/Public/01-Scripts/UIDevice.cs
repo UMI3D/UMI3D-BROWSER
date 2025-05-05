@@ -17,7 +17,6 @@ limitations under the License.
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using umi3d.cdk.interaction;
 using UnityEditor;
 using UnityEngine;
@@ -107,21 +106,23 @@ namespace umi3d.browserRuntime.interactions
             }
             else
             {
+                // TODO
                 UnityEngine.Debug.LogError($"Error: unhandled case.");
                 return null;
             }
         }
         static Input GetInputFrom(NewInputSystem inputSystem)
         {
-            bool TryToFindInput(out Input input, InputControl control, InputActionType actionType)
+            bool TryToFindInput(out Input input, InputControl control)
             {
                 NewInputSystemManager.@default.TryToInstantiateInput(
                     out NewInputSystem concreteInputSystem, 
-                    control, 
-                    actionType
+                    control
                 );
                 if (!_activeInputControls.Contains(concreteInputSystem))
                 {
+                    // TODO: improve
+
                     InputManager.@default.InstantiateOrGet(
                         out input,
                         concreteInputSystem
@@ -137,11 +138,11 @@ namespace umi3d.browserRuntime.interactions
             }
 
             Input input;
-            Input FindInput(Func<UIDevice, InputControl[]> getControls, InputActionType actionType)
+            Input FindInput(Func<UIDevice, InputControl[]> getControls)
             {
                 foreach (var device in _allUIDevices)
                 {
-                    if (device != first && TryToFindInput(out input, getControls(device)[0], actionType))
+                    if (device != first && TryToFindInput(out input, getControls(device)[0]))
                     {
                         return input;
                     }
@@ -149,7 +150,7 @@ namespace umi3d.browserRuntime.interactions
                     {
                         for (int i = 1; i < getControls(device).Length; i++)
                         {
-                            if (TryToFindInput(out input, getControls(device)[i], actionType))
+                            if (TryToFindInput(out input, getControls(device)[i]))
                             {
                                 return input;
                             }
@@ -158,7 +159,7 @@ namespace umi3d.browserRuntime.interactions
                 }
 
                 UIDevice newDevice = InstantiateNewUIDevice();
-                if (TryToFindInput(out input, getControls(newDevice)[0], actionType))
+                if (TryToFindInput(out input, getControls(newDevice)[0]))
                 {
                     return input;
                 }
@@ -171,57 +172,35 @@ namespace umi3d.browserRuntime.interactions
             InputControl placeholder = inputSystem.control;
             if (placeholder == first.button1)
             {
-                return FindInput(
-                    getControls: device => device.buttons,
-                    InputActionType.Button
-                );
+                return FindInput(getControls: device => device.buttons);
             }
             else if (placeholder == first.axis1)
             {
-                return FindInput(
-                     getControls: device => device.axes,
-                     InputActionType.Button
-                 );
+                return FindInput(getControls: device => device.axes);
             }
             else if (placeholder == first.integer1)
             {
-                return FindInput(
-                     getControls: device => device.integers,
-                     InputActionType.PassThrough
-                 );
+                return FindInput(getControls: device => device.integers);
             }
             else if (placeholder == first.double1)
             {
-                return FindInput(
-                     getControls: device => device.doubles,
-                     InputActionType.PassThrough
-                 );
+                return FindInput(getControls: device => device.doubles);
             }
             else if (placeholder == first.vectorTwo1)
             {
-                return FindInput(
-                     getControls: device => device.vectorTwos,
-                     InputActionType.PassThrough
-                 );
+                return FindInput(getControls: device => device.vectorTwos);
             }
             else if (placeholder == first.vectorThree1)
             {
-                return FindInput(
-                     getControls: device => device.vectorThrees,
-                     InputActionType.PassThrough
-                 );
+                return FindInput(getControls: device => device.vectorThrees);
             }
             else if (placeholder == first.quaternion1)
             {
-                return FindInput(
-                     getControls: device => device.quaternions,
-                     InputActionType.PassThrough
-                 );
+                return FindInput(getControls: device => device.quaternions);
             }
             else
             {
-                UnityEngine.Debug.Log($"[UIDevice] Error: Unhandled case {placeholder.name}");
-                throw new Exception($"Unhandled case {placeholder.name}");
+                throw new Exception($"[UIDevice] Exception: unhandled case {placeholder.name}");
             }
         }
         public static void ReleaseInput(Input input)

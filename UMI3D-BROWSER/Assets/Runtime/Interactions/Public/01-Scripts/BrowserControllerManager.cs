@@ -105,7 +105,7 @@ namespace umi3d.browserRuntime.interactions
 
         public void OnReleased(Projection projection)
         {
-            if (projection.input.controller.id == UI_ID)
+            if (projection.controller.id == UI_ID)
             {
                 UIDevice.ReleaseInput(projection.input);
             }
@@ -308,7 +308,7 @@ namespace umi3d.browserRuntime.interactions
                 BrowserControllerManager
                     .@default
                     .mouseController
-                    .TryToAddInput(_eventDtoInputs, mouse.leftButton, InputActionType.Button);
+                    .TryToAddInput(_eventDtoInputs, mouse.leftButton);
             }
 
             Keyboard keyboard = Keyboard.current;
@@ -317,29 +317,29 @@ namespace umi3d.browserRuntime.interactions
                 BrowserControllerManager
                     .@default
                     .keyboardController
-                    .TryToAddInput(_eventDtoInputs, keyboard.qKey, InputActionType.Button);
+                    .TryToAddInput(_eventDtoInputs, keyboard.qKey);
                 BrowserControllerManager
                     .@default
                     .keyboardController
-                    .TryToAddInput(_eventDtoInputs, keyboard.eKey, InputActionType.Button);
+                    .TryToAddInput(_eventDtoInputs, keyboard.eKey);
                 BrowserControllerManager
                     .@default
                     .keyboardController
-                    .TryToAddInput(_eventDtoInputs, keyboard.rKey, InputActionType.Button);
+                    .TryToAddInput(_eventDtoInputs, keyboard.rKey);
                 BrowserControllerManager
                     .@default
                     .keyboardController
-                    .TryToAddInput(_eventDtoInputs, keyboard.fKey, InputActionType.Button);
+                    .TryToAddInput(_eventDtoInputs, keyboard.fKey);
                 BrowserControllerManager
                     .@default
                     .keyboardController
-                    .TryToAddInput(_eventDtoInputs, keyboard.gKey, InputActionType.Button);
+                    .TryToAddInput(_eventDtoInputs, keyboard.gKey);
             }
 
             BrowserControllerManager
                 .@default
                 .uiDeviceController
-                .TryToAddInput(_eventDtoInputs, UIDevice.GetButtonPlaceholder(), InputActionType.Button);
+                .TryToAddInput(_eventDtoInputs, UIDevice.GetButtonPlaceholder());
 
             inputs = _eventDtoInputs.AsReadOnly();
 
@@ -359,7 +359,7 @@ namespace umi3d.browserRuntime.interactions
             BrowserControllerManager
                 .@default
                 .uiDeviceController
-                .TryToAddInput(_booleanParameterDtoInputs, UIDevice.GetButtonPlaceholder(), InputActionType.Button);
+                .TryToAddInput(_booleanParameterDtoInputs, UIDevice.GetButtonPlaceholder());
 
             inputs = _booleanParameterDtoInputs.AsReadOnly();
 
@@ -374,7 +374,7 @@ namespace umi3d.browserRuntime.interactions
             BrowserControllerManager
                 .@default
                 .uiDeviceController
-                .TryToAddInput(_floatParameterDtoInputs, UIDevice.GetDoublePlaceholder(), InputActionType.PassThrough);
+                .TryToAddInput(_floatParameterDtoInputs, UIDevice.GetDoublePlaceholder());
 
             inputs = _floatParameterDtoInputs.AsReadOnly();
 
@@ -502,7 +502,7 @@ namespace umi3d.browserRuntime.interactions
             BrowserControllerManager
                 .@default
                 .uiDeviceController
-                .TryToAddInput(_floatParameterDtoInputs, UIDevice.GetDoublePlaceholder(), InputActionType.PassThrough);
+                .TryToAddInput(_floatParameterDtoInputs, UIDevice.GetDoublePlaceholder());
 
             inputs = _floatParameterDtoInputs.AsReadOnly();
 

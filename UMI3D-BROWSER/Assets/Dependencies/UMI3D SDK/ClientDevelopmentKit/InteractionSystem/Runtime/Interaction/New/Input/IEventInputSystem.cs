@@ -18,7 +18,7 @@ using System;
 
 namespace umi3d.cdk.interaction
 {
-    public interface IEventInputSystem 
+    public interface IEventInputSystem : IInputSystem
     {
         event Action started;
         event Action canceled;
@@ -34,6 +34,8 @@ namespace umi3d.cdk.interaction
 
     public struct NullObjectEventInput : IEventInputSystem
     {
+        public string id => nameof(NullObjectEventInput);
+
         public event Action started
         {
             add

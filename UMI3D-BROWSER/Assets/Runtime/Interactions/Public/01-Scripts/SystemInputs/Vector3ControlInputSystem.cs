@@ -15,31 +15,49 @@ limitations under the License.
 */
 
 using System;
+using umi3d.cdk.interaction;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
 
 namespace umi3d.browserRuntime.interactions
 {
-    public class Vector3ControlInputSystem : NewInputSystem
+    public class Vector3ControlInputSystem : NewInputSystem, IParameterInputSystem<Vector3>
     {
         public Vector3ControlInputSystem(Vector3Control control): base(control, InputActionType.PassThrough)
         {
         }
 
+        public event Action<Vector3> performed;
+
+        public void Clear()
+        {
+            performed = null;
+        }
+
+        public void Perform(Vector3 value)
+        {
+            try
+            {
+                performed?.Invoke(value);
+            }
+            catch (Exception e)
+            {
+                UnityEngine.Debug.LogException(e);
+            }
+        }
+
         protected override void OnCanceled(InputAction.CallbackContext context)
         {
-            throw new NotImplementedException();
         }
 
         protected override void OnPerformed(InputAction.CallbackContext context)
         {
-            throw new NotImplementedException();
+            Perform(context.ReadValue<Vector3>());
         }
 
         protected override void OnStarted(InputAction.CallbackContext context)
         {
-            throw new NotImplementedException();
         }
     }
 }

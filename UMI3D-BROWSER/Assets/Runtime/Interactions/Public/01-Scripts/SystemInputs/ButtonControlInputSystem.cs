@@ -21,20 +21,16 @@ using UnityEngine.InputSystem.Controls;
 
 namespace umi3d.browserRuntime.interactions
 {
-    public class ButtonControlInputSystem : NewInputSystem, IEventInputSystem
+    public class ButtonControlInputSystem : NewInputSystem, IEventInputSystem, IParameterInputSystem<bool>
     {
         public ButtonControlInputSystem(ButtonControl button) : base(button, UnityEngine.InputSystem.InputActionType.Button)
         {
         }
 
+        #region IEventInputSystem
+
         public event Action started;
         public event Action canceled;
-
-        public void Clear()
-        {
-            started = null;
-            canceled = null;
-        }
 
         public void PressDown()
         {
@@ -58,6 +54,43 @@ namespace umi3d.browserRuntime.interactions
             {
                 UnityEngine.Debug.LogException(e);
             }
+        }
+
+        void IEventInputSystem.Clear()
+        {
+            started = null;
+            canceled = null;
+        }
+
+        #endregion
+
+        #region IParameterInputSystem<bool>
+
+        public event Action<bool> performed;
+
+        public void Perform(bool value)
+        {
+            try
+            {
+                performed?.Invoke(value);
+            }
+            catch (Exception e)
+            {
+                UnityEngine.Debug.LogException(e);
+            }
+        }
+
+        void IParameterInputSystem<bool>.Clear()
+        {
+            performed = null;
+        }
+
+        #endregion
+
+        public void Clear()
+        {
+            (this as IEventInputSystem).Clear();
+            (this as IParameterInputSystem<bool>).Clear();
         }
 
         protected override void OnStarted(InputAction.CallbackContext context)

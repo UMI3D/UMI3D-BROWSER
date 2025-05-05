@@ -67,6 +67,16 @@ namespace umi3d.cdk.interaction
             return true;
         }
 
+        public bool TryToInstantiateOrGetInput(out Input input, IInputSystem inputSystem, out bool hasBeenInstantiated)
+        {
+            hasBeenInstantiated = InputManager.@default.InstantiateOrGet(
+                out input,
+                inputSystem
+            );
+
+            return _inputs.Contains(input) || Add(input);
+        }
+
         /// <summary>
         /// Try to add the input corresponding to <paramref name="control"/> to the list of <paramref name="inputs"/>.<br/>
         /// <br/>
@@ -104,12 +114,8 @@ namespace umi3d.cdk.interaction
         {
             if (!isActive) { return false; }
 
-            InputManager.@default.InstantiateOrGet(
-                out Input input,
-                inputSystem
-            );
-
-            if (!_inputs.Contains(input) && !Add(input)) { return false; }
+            bool succeeded = TryToInstantiateOrGetInput(out Input input, inputSystem, out _);
+            if (!succeeded) { return false; }
 
             if (!inputs.Contains(input))
             {

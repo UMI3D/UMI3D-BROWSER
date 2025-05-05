@@ -39,7 +39,7 @@ public class BrowserControllerManagerTests
             public AbstractBrowserRequestDto Pull()
             {
                 var request = requestDtos.FirstOrDefault();
-                requestDtos.RemoveAt(0);
+                requestDtos.Remove(request);
                 return request;
             }
 
@@ -800,7 +800,7 @@ public class BrowserControllerManagerTests
                 "  \"$type\": \"umi3d.common.interaction.ParameterSettingRequestDto, UMI3D.Common.InteractionSystem\",\r\n" +
                 "  \"parameter\": {\r\n" +
                 "    \"$type\": \"umi3d.common.interaction.FloatParameterDto, UMI3D.Common.InteractionSystem\",\r\n" +
-                "    \"value\": 2,\r\n" +
+                "    \"value\": 2.0,\r\n" +
                 "    \"privateParameter\": false,\r\n" +
                 "    \"isDisplayer\": false,\r\n" +
                 "    \"tag\": null,\r\n" +

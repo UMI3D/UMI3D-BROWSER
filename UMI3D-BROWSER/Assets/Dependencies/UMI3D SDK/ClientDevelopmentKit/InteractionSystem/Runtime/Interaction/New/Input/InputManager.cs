@@ -62,7 +62,7 @@ namespace umi3d.cdk.interaction
         /// <returns>
         /// A boolean value indicating whether a new input was created (`true`) or an existing input was found (`false`).
         /// </returns>
-        public bool InstantiateOrGet(out Input input, IInputSystem inputSystem)
+        internal bool InstantiateOrGet(out Input input, IInputSystem inputSystem)
         {
             input = _inputs.Find(input => input.inputSystem == inputSystem);
 

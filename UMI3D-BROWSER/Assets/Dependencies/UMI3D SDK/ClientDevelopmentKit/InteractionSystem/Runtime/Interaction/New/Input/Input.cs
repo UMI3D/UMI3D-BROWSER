@@ -14,7 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System;
 using umi3d.common.interaction;
 using UnityEngine;
 
@@ -44,179 +43,102 @@ namespace umi3d.cdk.interaction
 
         public IInputSystem inputSystem { get; private set; }
 
-        IEventInputSystem _eventInput = new NullObjectEventInput();
         public IEventInputSystem eventInput
         {
-            get => _eventInput;
-            set
+            get
             {
-                if (value == null)
-                {
-                    _eventInput = new NullObjectEventInput();
-                    return;
-                }
-
-                _eventInput = value;
+                if (inputSystem is IEventInputSystem eventInput) { return eventInput; }
+                else { return new NullObjectEventInput(); }
             }
         }
 
-        IParameterInputSystem<bool> _booleanParameterInput = new NullObjectParameterInput<bool>();
         public IParameterInputSystem<bool> booleanParameterInput
         {
-            get => _booleanParameterInput;
-            set
+            get
             {
-                if (value == null)
-                {
-                    _booleanParameterInput = new NullObjectParameterInput<bool>();
-                    return;
-                }
-
-                _booleanParameterInput = value;
+                if (inputSystem is IParameterInputSystem<bool> @bool) { return @bool; }
+                else { return new NullObjectParameterInput<bool>(); }
             }
         }
 
-        IParameterInputSystem<float> _floatParameterInput = new NullObjectParameterInput<float>();
         public IParameterInputSystem<float> floatParameterInput
         {
-            get => _floatParameterInput;
-            set
+            get
             {
-                if (value == null)
-                {
-                    _floatParameterInput = new NullObjectParameterInput<float>();
-                    return;
-                }
-
-                _floatParameterInput = value;
+                if (inputSystem is IParameterInputSystem<float> @float) { return @float; }
+                else { return new NullObjectParameterInput<float>(); }
             }
         }
 
-        IParameterInputSystem<int> _intParameterInput = new NullObjectParameterInput<int>();
         public IParameterInputSystem<int> intParameterInput
         {
-            get => _intParameterInput;
-            set
+            get
             {
-                if (value == null)
-                {
-                    _intParameterInput = new NullObjectParameterInput<int>();
-                    return;
-                }
-
-                _intParameterInput = value;
+                if (inputSystem is IParameterInputSystem<int> @int) { return @int; }
+                else { return new NullObjectParameterInput<int>(); }
             }
         }
 
-        IParameterInputSystem<Vector2> _vector2ParameterInput = new NullObjectParameterInput<Vector2>();
         public IParameterInputSystem<Vector2> vector2ParameterInput
         {
-            get => _vector2ParameterInput;
-            set
+            get
             {
-                if (value == null)
-                {
-                    _vector2ParameterInput = new NullObjectParameterInput<Vector2>();
-                    return;
-                }
-
-                _vector2ParameterInput = value;
+                if (inputSystem is IParameterInputSystem<Vector2> vector2) { return vector2; }
+                else { return new NullObjectParameterInput<Vector2>(); }
             }
         }
 
-        IParameterInputSystem<Vector3> _vector3ParameterInput = new NullObjectParameterInput<Vector3>();
         public IParameterInputSystem<Vector3> vector3ParameterInput
         {
-            get => _vector3ParameterInput;
-            set
+            get
             {
-                if (value == null)
-                {
-                    _vector3ParameterInput = new NullObjectParameterInput<Vector3>();
-                    return;
-                }
-
-                _vector3ParameterInput = value;
+                if (inputSystem is IParameterInputSystem<Vector3> vector3) { return vector3; }
+                else { return new NullObjectParameterInput<Vector3>(); }
             }
         }
 
-        IParameterInputSystem<Vector4> _vector4ParameterInput = new NullObjectParameterInput<Vector4>();
         public IParameterInputSystem<Vector4> vector4ParameterInput
         {
-            get => _vector4ParameterInput;
-            set
+            get
             {
-                if (value == null)
-                {
-                    _vector4ParameterInput = new NullObjectParameterInput<Vector4>();
-                    return;
-                }
-
-                _vector4ParameterInput = value;
+                if (inputSystem is IParameterInputSystem<Vector4> vector4) { return vector4; }
+                else { return new NullObjectParameterInput<Vector4>(); }
             }
         }
 
-        IParameterInputSystem<string> _stringParameterInput = new NullObjectParameterInput<string>();
         public IParameterInputSystem<string> stringParameterInput
         {
-            get => _stringParameterInput;
-            set
+            get
             {
-                if (value == null)
-                {
-                    _stringParameterInput = new NullObjectParameterInput<string>();
-                    return;
-                }
-
-                _stringParameterInput = value;
+                if (inputSystem is IParameterInputSystem<string> @string) { return @string; }
+                else { return new NullObjectParameterInput<string>(); }
             }
         }
 
-        IParameterInputSystem<Color> _colorParameterInput = new NullObjectParameterInput<Color>();
         public IParameterInputSystem<Color> colorParameterInput
         {
-            get => _colorParameterInput;
-            set
+            get
             {
-                if (value == null)
-                {
-                    _colorParameterInput = new NullObjectParameterInput<Color>();
-                    return;
-                }
-
-                _colorParameterInput = value;
+                if (inputSystem is IParameterInputSystem<Color> color) { return color; }
+                else { return new NullObjectParameterInput<Color>(); }
             }
         }
 
-        IParameterInputSystem<LocalInfoRequestParameterValue> _localInfoParameterInput = new NullObjectParameterInput<LocalInfoRequestParameterValue>();
         public IParameterInputSystem<LocalInfoRequestParameterValue> localInfoParameterInput
         {
-            get => _localInfoParameterInput;
-            set
+            get
             {
-                if (value == null)
-                {
-                    _localInfoParameterInput = new NullObjectParameterInput<LocalInfoRequestParameterValue>();
-                    return;
-                }
-
-                _localInfoParameterInput = value;
+                if (inputSystem is IParameterInputSystem<LocalInfoRequestParameterValue> localInfo) { return localInfo; }
+                else { return new NullObjectParameterInput<LocalInfoRequestParameterValue>(); }
             }
         }
 
-        IUploadFileParameterInputSystem _uploadFileParameterInput = new NullObjectUploadFileParameterInput();
         public IUploadFileParameterInputSystem uploadFileParameterInput
         {
-            get => _uploadFileParameterInput;
-            set
+            get
             {
-                if (value == null)
-                {
-                    _uploadFileParameterInput = new NullObjectUploadFileParameterInput();
-                    return;
-                }
-
-                _uploadFileParameterInput = value;
+                if (inputSystem is IUploadFileParameterInputSystem uploadFile) { return uploadFile; }
+                else { return new NullObjectUploadFileParameterInput(); }
             }
         }
 

@@ -18,10 +18,8 @@ using System;
 
 namespace umi3d.cdk.interaction
 {
-    public interface IUploadFileParameterInputSystem 
+    public interface IUploadFileParameterInputSystem : IInputSystem
     {
-        string id {  get; }
-
         event Action<(string url, string id)> performed;
 
         void Perform(string url, string id);

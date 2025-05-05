@@ -18,10 +18,8 @@ using System;
 
 namespace umi3d.cdk.interaction
 {
-    public interface IParameterInputSystem<Value>
+    public interface IParameterInputSystem<Value> : IInputSystem
     {
-        string id {  get; }
-
         event Action<Value> performed;
 
         void Perform(Value value);

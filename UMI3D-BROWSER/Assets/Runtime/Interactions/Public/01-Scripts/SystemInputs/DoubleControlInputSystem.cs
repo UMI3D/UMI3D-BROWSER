@@ -15,31 +15,48 @@ limitations under the License.
 */
 
 using System;
-using UnityEngine;
+using umi3d.cdk.interaction;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
 
 namespace umi3d.browserRuntime.interactions
 {
-    public class DoubleControlInputSystem : NewInputSystem
+    public class DoubleControlInputSystem : NewInputSystem, IParameterInputSystem<float>
     {
         public DoubleControlInputSystem(DoubleControl control) : base(control, InputActionType.PassThrough)
         {
         }
 
+        public event Action<float> performed;
+
+        public void Clear()
+        {
+            performed = null;
+        }
+
+        public void Perform(float value)
+        {
+            try
+            {
+                performed?.Invoke(value);
+            }
+            catch (Exception e)
+            {
+                UnityEngine.Debug.LogException(e);
+            }
+        }
+
         protected override void OnCanceled(InputAction.CallbackContext context)
         {
-            throw new NotImplementedException();
         }
 
         protected override void OnPerformed(InputAction.CallbackContext context)
         {
-            throw new NotImplementedException();
+            Perform((float)context.ReadValue<double>());
         }
 
         protected override void OnStarted(InputAction.CallbackContext context)
         {
-            throw new NotImplementedException();
         }
     }
 }

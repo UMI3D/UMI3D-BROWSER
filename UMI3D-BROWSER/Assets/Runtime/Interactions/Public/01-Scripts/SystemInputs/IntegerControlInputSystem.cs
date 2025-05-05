@@ -15,31 +15,48 @@ limitations under the License.
 */
 
 using System;
-using UnityEngine;
+using umi3d.cdk.interaction;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
 
 namespace umi3d.browserRuntime.interactions
 {
-    public class IntegerControlInputSystem : NewInputSystem
+    public class IntegerControlInputSystem : NewInputSystem, IParameterInputSystem<int>
     {
         public IntegerControlInputSystem(IntegerControl control) : base(control, InputActionType.PassThrough)
         {
         }
 
+        public event Action<int> performed;
+
+        public void Clear()
+        {
+            performed = null;
+        }
+
+        public void Perform(int value)
+        {
+            try
+            {
+                performed?.Invoke(value);
+            }
+            catch (Exception e)
+            {
+                UnityEngine.Debug.LogException(e);
+            }
+        }
+
         protected override void OnCanceled(InputAction.CallbackContext context)
         {
-            throw new NotImplementedException();
         }
 
         protected override void OnPerformed(InputAction.CallbackContext context)
         {
-            throw new NotImplementedException();
+            Perform(context.ReadValue<int>());
         }
 
         protected override void OnStarted(InputAction.CallbackContext context)
         {
-            throw new NotImplementedException();
         }
     }
 }

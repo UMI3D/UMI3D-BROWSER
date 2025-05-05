@@ -37,7 +37,8 @@ namespace umi3d.browserRuntime.forms
         public GameObject CreateInputField<T>(InputDto<T> inputDto, Transform parent, common.interaction.form.FormAnswerDto formAnswerDto)
         {
             var style = inputDto.GetStyle();
-            var inputFieldGameObject = _inputFieldFactory.GetOrCreateInputField(parent, false, inputDto.Name, inputDto.Value?.ToString(), inputDto.PlaceHolder?.ToString(), 1, TmpContentTypeFrom(inputDto.TextType));
+            (var contentType, var isPin) = TmpContentTypeFrom(inputDto.TextType);
+            var inputFieldGameObject = _inputFieldFactory.GetOrCreateInputField(parent, false, inputDto.Name, inputDto.Value?.ToString(), inputDto.PlaceHolder?.ToString(), 1, contentType, isPin); 
 
             var formItemModelContainer = inputFieldGameObject.GetComponent<FormItemModelContainer>();
 
@@ -90,24 +91,26 @@ namespace umi3d.browserRuntime.forms
             }
         }
 
-        private static TMP_InputField.ContentType TmpContentTypeFrom(TextType type)
+        private static (TMP_InputField.ContentType, bool) TmpContentTypeFrom(TextType type)
         {
             switch (type)
             {
                 case TextType.Text:
-                    return TMP_InputField.ContentType.Standard;
+                    return (TMP_InputField.ContentType.Standard, false);
                 case TextType.Mail:
-                    return TMP_InputField.ContentType.EmailAddress;
+                    return (TMP_InputField.ContentType.EmailAddress, false);
                 case TextType.Password:
-                    return TMP_InputField.ContentType.Password;
+                    return (TMP_InputField.ContentType.Password, false);
                 case TextType.Phone:
-                    return TMP_InputField.ContentType.IntegerNumber;
+                    return (TMP_InputField.ContentType.IntegerNumber, false);
                 case TextType.URL:
-                    return TMP_InputField.ContentType.Standard;
+                    return (TMP_InputField.ContentType.Standard, false);
                 case TextType.Number:
-                    return TMP_InputField.ContentType.IntegerNumber;
+                    return (TMP_InputField.ContentType.IntegerNumber, false);
+                case TextType.Pin:
+                    return (TMP_InputField.ContentType.IntegerNumber, true);
             }
-            return TMP_InputField.ContentType.Standard;
+            return (TMP_InputField.ContentType.Standard, false);
         }
     }
 }

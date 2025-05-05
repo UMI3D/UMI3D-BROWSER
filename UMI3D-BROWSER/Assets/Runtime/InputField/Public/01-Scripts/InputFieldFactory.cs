@@ -62,7 +62,7 @@ namespace umi3d.browserRuntime.ui.inputField
         /// <param name="nbLine">The number of lines for the input field. Defaults to 1.</param>
         /// <param name="isPrivate">Indicates whethre the input field should be private.</param>
         /// <returns>The created or retrieved input field GameObject.</returns>
-        public GameObject GetOrCreateInputField(Transform parent, bool isMultiline, string label = "", string value = "", string placeholder = "", int nbLine = 1, TMP_InputField.ContentType contentType = TMP_InputField.ContentType.Standard)
+        public GameObject GetOrCreateInputField(Transform parent, bool isMultiline, string label = "", string value = "", string placeholder = "", int nbLine = 1, TMP_InputField.ContentType contentType = TMP_InputField.ContentType.Standard, bool isPin = false)
         {
             if (nbLine < 1) nbLine = 1;
             InputFieldModelContainer inputFieldModelContainer = null;
@@ -83,6 +83,7 @@ namespace umi3d.browserRuntime.ui.inputField
             if (nbLine != 1)
                 inputFieldModelContainer.model.SetNbrLines(isMultiline, nbLine);
             inputFieldModelContainer.model.SetContentType(contentType);
+            inputFieldModelContainer.model.SetIsPin(isPin);
 
             return inputFieldModelContainer.gameObject;
         }

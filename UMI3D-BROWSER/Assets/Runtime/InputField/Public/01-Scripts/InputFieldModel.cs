@@ -34,6 +34,7 @@ namespace umi3d.browserRuntime.ui.inputField
         public TMP_InputField.ContentType ContentType { get; private set; } = TMP_InputField.ContentType.Standard;
         public bool isMultiline { get; private set; } = false;
         public bool passwordVisibility { get; private set; } = false;
+        public bool isPin { get; private set; } = false;
 
         Notifier _setNotifier;
         Notifier _updateNotifier;
@@ -178,6 +179,13 @@ namespace umi3d.browserRuntime.ui.inputField
             ContentType = passwordVisibility ? TMP_InputField.ContentType.Standard : TMP_InputField.ContentType.Password;
             _updateNotifier[InputFieldNotificationsKeys.InputFieldUpdated.ContentType] = ContentType;
             _updateNotifier.Notify();
+        }
+
+        public void SetIsPin(bool value)
+        {
+            isPin = value;
+            _setNotifier[InputFieldNotificationsKeys.InputFieldSet.IsPin] = isPin;
+            _setNotifier.Notify();
         }
     }
 }

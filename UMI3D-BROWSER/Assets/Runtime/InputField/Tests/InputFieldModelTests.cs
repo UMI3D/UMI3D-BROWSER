@@ -234,4 +234,29 @@ public class InputFieldModelTests
             Assert.AreEqual(TMP_InputField.ContentType.Password, _model.ContentType);
         }
     }
+
+    class SetIsPin
+    {
+        InputFieldModel _model;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _model = new InputFieldModel();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            _model = null;
+        }
+
+        [Test]
+        public void GivenTrue_WhenSetIsPin_ThenTrue()
+        {
+            _model.SetIsPin(true);
+
+            Assert.IsTrue(_model.isPin);
+        }
+    }
 }

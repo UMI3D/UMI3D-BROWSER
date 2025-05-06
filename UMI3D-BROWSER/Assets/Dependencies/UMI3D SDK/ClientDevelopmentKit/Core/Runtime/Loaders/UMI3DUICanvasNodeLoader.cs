@@ -46,26 +46,13 @@ namespace umi3d.cdk
             Canvas canvas = node.GetOrAddComponent<Canvas>();
             canvas.overrideSorting = dto.orderInLayer != 0; // having a sorting order different from 0 require to activate overriding
             canvas.sortingOrder = dto.orderInLayer;
-
             
-            if (canvas.transform.gameObject.name == "MainCanvasSS")
+            if (canvas.transform.gameObject.name == "MainCanvasScreenSpace")
             {
-                Debug.Log("ScreenSpace found "+ canvas.transform.gameObject.name);
                 GameObject gameObject = GameObject.Find("IngameUIManager");
                 canvas.transform.SetParent(gameObject.transform);
                 canvas.renderMode = (UnityEngine.RenderMode)umi3d.common.RenderMode.ScreenSpaceOverlay;
             }
-            if(canvas.transform.gameObject.name == "PinCanvas")
-            {
-
-                Debug.Log("PinCanvas found " + canvas.transform.gameObject.name);
-                //canvas.transform.SetParent(null);
-                //canvas.transform.SetLocalPositionAndRotation(canvas.transform.parent.parent.localPosition,Quaternion.identity);
-                
-            }
-            
-
-
 
             // overrideSorting property cannot be modified if object is disabled, need to update at each activation.
             ActivationEventListener canvasListener = node.GetOrAddComponent<ActivationEventListener>();

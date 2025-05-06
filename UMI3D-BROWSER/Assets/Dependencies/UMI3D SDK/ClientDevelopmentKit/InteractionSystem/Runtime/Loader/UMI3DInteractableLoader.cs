@@ -21,6 +21,7 @@ using umi3d.common.interaction;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 namespace umi3d.cdk.interaction
 {
     /// <summary>
@@ -46,46 +47,49 @@ namespace umi3d.cdk.interaction
                 Interactable interactable = value.node.GetOrAddComponent<InteractableContainer>().Interactable = new Interactable(value.environmentId, dto);
                 UMI3DEnvironmentLoader.RegisterEntityInstance(value.environmentId,dto.id, dto, interactable, interactable.Destroy).NotifyLoaded();
 
-                //Check si son root est Canvas_Ingame ce qui veut dire qu'il est en SceenSpace
-                if (nodeI.transform.root.name == "Canvas_Ingame")
+                //Check if his root is a ScreeSpace Canvas then start process the interaction's binding
+                if (nodeI.transform.root.gameObject.TryGetComponent<Canvas>(out Canvas _canvas)) 
                 {
-                    InteractionScreenSpace _ss = nodeI.transform.gameObject.AddComponent<InteractionScreenSpace>();
-
-                    //ajoute un bouton
-                    _ss._button = nodeI.transform.gameObject.AddComponent<Button>();
-                    _ss._go = nodeI.GameObject;
-                    _ss._interactable = interactable;
-                    _ss._value = value;
-                    //boucle permettant de rechercher tous les parents contenant un Canvas afin d'y ajouter un GraphicRaycaster
-                    //pour permettre l'interactions avec le boutton précédemment creer
-                    //s'arrete lorsque le parent IngameUIManager est trouvé indiquant que l'on est plus sur le parent de la node mais de l'ui Canvas ScreenSpace global
-                    GameObject go = nodeI.transform.parent.gameObject;
-                    for (int i = 0; i < 20; i++)
+                    if(_canvas.renderMode == UnityEngine.RenderMode.ScreenSpaceOverlay)
                     {
-                        //Debug.Log("Name " + go.name);
-                        if (go.name == "IngameUIManager") { break; }
-                        if (go.TryGetComponent<Canvas>(out Canvas canvas))
+                        //Create, add Save Values in InteractionScreenSpace for sending Event
+                        InteractionScreenSpace _IntScreenSpace = nodeI.transform.gameObject.AddComponent<InteractionScreenSpace>();
+                        _IntScreenSpace._go = nodeI.GameObject;
+                        _IntScreenSpace._interactable = interactable;
+                        _IntScreenSpace._value = value;
+
+                        //Create and add Unity Button 
+                        _IntScreenSpace._button = nodeI.transform.gameObject.AddComponent<Button>();
+
+                        // Loop to search for all parents containing a Canvas in order to add a GraphicRaycaster 
+                        // to allow interaction with the previously created button 
+                        // stops when the parent IngameUIManager is found indicating that we are no longer on the node's parent but on the global ScreenSpace UI Canvas
+                        GameObject go = nodeI.transform.parent.gameObject;
+                        for (int i = 0; i < 20; i++)
                         {
-                            go.GetOrAddComponent<GraphicRaycaster>();
+                            if (go.name == nodeI.transform.root.name) { break; }
+                            if (go.TryGetComponent<Canvas>(out Canvas canvas))
+                            {
+                                go.GetOrAddComponent<GraphicRaycaster>();
+                            }
+                            go = go.transform.parent.gameObject;
                         }
-                        go = go.transform.parent.gameObject;
+                        _IntScreenSpace.AssignListenner();
                     }
-                    _ss.AssignListenner();
+                    
                 }
-                if(nodeI.transform.name == "PinImage")
+                else if(nodeI.transform.name == "PinImage")
                 {
-                    InteractionScreenSpace _ss = nodeI.transform.gameObject.AddComponent<InteractionScreenSpace>();
+                    InteractionScreenSpace _intScreenSpace = nodeI.transform.gameObject.AddComponent<InteractionScreenSpace>();
                     nodeI.transform.parent.gameObject.AddComponent<GraphicRaycaster>();
 
                     //ajoute un bouton
-                    _ss._button = nodeI.transform.gameObject.AddComponent<Button>();
-                    _ss._go = nodeI.GameObject;
-                    _ss._interactable = interactable;
-                    _ss._value = value;
-                    _ss.AssignListenner();
-                    Debug.Log("AssignListenner ");
+                    _intScreenSpace._button = nodeI.transform.gameObject.AddComponent<Button>();
+                    _intScreenSpace._go = nodeI.GameObject;
+                    _intScreenSpace._interactable = interactable;
+                    _intScreenSpace._value = value;
+                    _intScreenSpace.AssignListenner();
                 }
-                 
             }
             else
                 throw (new Umi3dException($"Entity [{dto.nodeId}] is not a node"));

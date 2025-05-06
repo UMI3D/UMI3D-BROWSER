@@ -64,7 +64,14 @@ namespace umi3d.browserRuntime.ui.inputField
             /// <remarks>
             /// Value is <see cref="bool"/>
             /// </remarks>
-            public const string IsPrivate = "IsPrivate";
+            public const string ContentType = "ContentType";
+            /// <summary>
+            /// Is the input a pin (formated "... ...")
+            /// </summary>
+            /// <remarks>
+            /// Value is <see cref="bool"/>
+            /// </remarks>
+            public const string IsPin = "IsPin";
         }
 
         /// <summary>
@@ -79,6 +86,8 @@ namespace umi3d.browserRuntime.ui.inputField
             /// Value is <see cref="string"/>
             /// </remarks>
             public const string Value = "Value";
+
+            public const string ContentType = "ContentType";
         }
 
         /// <summary>

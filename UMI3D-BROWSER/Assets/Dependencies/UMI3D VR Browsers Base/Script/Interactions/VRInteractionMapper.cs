@@ -42,11 +42,6 @@ namespace umi3dVRBrowsersBase.interactions
 
         #region Data
 
-        /// <summary>
-        /// Get the tool associated to an interaction.
-        /// </summary>
-        private Dictionary<ulong, GlobalTool> interactionsIdToTool = new Dictionary<ulong, GlobalTool>();
-
         public AbstractController lastControllerUsedInMenu;
 
         /// <summary>
@@ -60,11 +55,6 @@ namespace umi3dVRBrowsersBase.interactions
         #endregion
 
         #region Methods
-
-        private void Start()
-        {
-            toolboxMenu = new Menu { Name = "Toolbox" };
-        }
 
         /// <summary>
         /// <inheritdoc/>
@@ -241,7 +231,6 @@ namespace umi3dVRBrowsersBase.interactions
                     {
                         if (SelectTool(environmentId, select, releasable, hoveredObjectId, new RequestedUsingSelector { controller = c }))
                         {
-                            PlayerMenuManager.Instance.Close();
                             lastReason = new RequestedFromMenu();
                             return true;
                         }

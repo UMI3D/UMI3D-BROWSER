@@ -23,7 +23,7 @@ using UnityEngine.Events;
 /// Button menu item.
 /// </summary>
 /// <see cref="BooleanMenuItem"/>
-public partial class ButtonMenuItem : MenuItem
+public partial class ButtonMenuItem : AbstractMenuItem
 {
     /// <summary>
     /// If true: notify when down and up.

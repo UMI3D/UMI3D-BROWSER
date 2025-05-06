@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
+using TMPro;
 using umi3d.browserRuntime.ui.inputField;
 using umi3d.common.interaction;
 using UnityEngine;
@@ -36,7 +37,7 @@ public class InputFieldParameterModelTests
             Assert.AreEqual(_model.model.label, name);
             Assert.AreEqual(_model.model.value, value);
             Assert.AreEqual(_model.model.nbrLine, nbLine);
-            Assert.IsTrue(_model.model.isPrivate);
+            Assert.AreEqual(TMP_InputField.ContentType.Password, _model.model.ContentType);
         }
     }
 

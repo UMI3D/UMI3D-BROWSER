@@ -23,12 +23,6 @@ namespace umi3dBrowsers.linker
         public event Action<VirtualWorldData> OnMediaServerPingSuccess;
         public void MediaServerPingSuccess(VirtualWorldData data) {  OnMediaServerPingSuccess?.Invoke(data);}
 
-        public event Action<ConnectionFormDto> OnParamFormDtoReceived;
-        public void ParamFormDtoReceived(ConnectionFormDto data) {  OnParamFormDtoReceived?.Invoke(data); }
-
-        public event Action<umi3d.common.interaction.form.ConnectionFormDto> OnDivFormDtoReceived;
-        public void DivFormDtoReceived(umi3d.common.interaction.form.ConnectionFormDto data) { OnDivFormDtoReceived?.Invoke(data); }
-
         public event Action<WaitConnectionDto> OnWaitReceived;
         public void WaitReceived(WaitConnectionDto data) { OnWaitReceived?.Invoke(data); }
 

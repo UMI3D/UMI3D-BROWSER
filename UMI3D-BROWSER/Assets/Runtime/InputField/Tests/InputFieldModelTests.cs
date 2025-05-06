@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
+using TMPro;
 using umi3d.browserRuntime.ui.inputField;
 using UnityEngine;
 using UnityEngine.TestTools;
@@ -189,11 +190,73 @@ public class InputFieldModelTests
         }
 
         [Test]
-        public void GivenIsPrivateFalse_WhenSetIsPrivateTrue_ThenIsPrivateTrue()
+        public void GivenIsPassword_WhenSetContent_ThenIsPassword()
         {
-            _model.SetPrivate(true);
+            _model.SetContentType(TMP_InputField.ContentType.Password);
 
-            Assert.IsTrue(_model.isPrivate);
+            Assert.AreEqual(TMP_InputField.ContentType.Password, _model.ContentType);
+        }
+    }
+
+    class SetPasswordVisibility
+    {
+        InputFieldModel _model;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _model = new InputFieldModel();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            _model = null;
+        }
+
+        [Test]
+        public void GivenTrue_WhenSettingPasswordVisibility_ThenPasswordIsRevealed()
+        {
+            _model.SetContentType(TMP_InputField.ContentType.Password);
+            _model.SetPasswordVisibility(true);
+
+            Assert.IsTrue(_model.passwordVisibility);
+            Assert.AreEqual(TMP_InputField.ContentType.Standard, _model.ContentType);
+        }
+
+        [Test]
+        public void GivenFalse_WhenSettingPasswordVisibility_ThenPasswordIsHidden()
+        {
+            _model.SetContentType(TMP_InputField.ContentType.Password);
+            _model.SetPasswordVisibility(false);
+
+            Assert.IsFalse(_model.passwordVisibility);
+            Assert.AreEqual(TMP_InputField.ContentType.Password, _model.ContentType);
+        }
+    }
+
+    class SetIsPin
+    {
+        InputFieldModel _model;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _model = new InputFieldModel();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            _model = null;
+        }
+
+        [Test]
+        public void GivenTrue_WhenSetIsPin_ThenTrue()
+        {
+            _model.SetIsPin(true);
+
+            Assert.IsTrue(_model.isPin);
         }
     }
 }

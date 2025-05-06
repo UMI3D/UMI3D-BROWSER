@@ -61,7 +61,6 @@ namespace umi3d.baseBrowser.parameters
         {
             currentInteraction = null;
             menuItem.UnSubscribe(callback);
-            Menu?.Remove(menuItem);
         }
         public override void Associate(ulong environmentId, common.interaction.AbstractInteractionDto interaction, ulong toolId, ulong hoveredObjectId)
         {
@@ -97,7 +96,6 @@ namespace umi3d.baseBrowser.parameters
 
             menuItem.Subscribe(callback);
             currentInteraction = interaction;
-            Menu?.Add(menuItem);
         }
         public override void Associate(ulong environmentId, common.interaction.ManipulationDto manipulation, common.interaction.DofGroupEnum dofs, ulong toolId, ulong hoveredObjectId)
             => throw new System.Exception("Incompatible interaction");

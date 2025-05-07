@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using System.Collections.Generic;
+using umi3d.common.interaction;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.dropdown
@@ -23,13 +24,40 @@ namespace umi3d.browserRuntime.ui.dropdown
     /// Factory managing a pool of dropdown.
     /// </summary>
 
-    public class DropdownFactory : MonoBehaviour
+    public class DropdownFactory : MonoBehaviour, ISimpleCreateBehaviour, IFormCreateBehaviour, IContextualMenuCreateBehaviour
     {
-        [SerializeField] DropdownModelContainer _dropdownPrefab;
+        [SerializeField] 
+        internal DropdownModelContainer _dropdownPrefab;
 
-        Queue<DropdownModelContainer> _lstDropdownsAvaible = new();
+        internal Queue<DropdownModelContainer> _lstDropdownsAvailable = new();
 
-        public int AvailableDropdownCount => _lstDropdownsAvaible.Count;
+        protected ISimpleCreateBehaviour _simpleCreateBehaviour;
+        protected IFormCreateBehaviour _formCreateBehaviour;
+        protected IContextualMenuCreateBehaviour _contextMenuCreateBehaviour;
+
+        public int AvailableDropdownCount => _lstDropdownsAvailable.Count;
+
+        protected virtual void Awake()
+        {
+            _simpleCreateBehaviour = new NullObjectSimpleCreateBehaviour();
+            _formCreateBehaviour = new NullObjectFromCreateBehaviour();
+            _contextMenuCreateBehaviour = new NullObjectContextualMenuCreateBehaviour();
+        }
+
+        public bool TryToGetOrCreate(out GameObject control, Transform parent, string label, List<string> options, string value)
+        {
+            return _simpleCreateBehaviour.TryToGetOrCreate(out control, parent, label, options, value);
+        }
+
+        public bool TryToGetOrCreate(out GameObject control, Transform parent, EnumParameterDto<string> dto, FormAnswerDto formAnswerDto)
+        {
+            return _formCreateBehaviour.TryToGetOrCreate(out control, parent, dto, formAnswerDto);
+        }
+
+        public bool TryToGetOrCreate(out GameObject control, Transform parent, EnumParameterDto<string> dto)
+        {
+            return _contextMenuCreateBehaviour.TryToGetOrCreate(out control, parent, dto);
+        }
 
         /// <summary>
         /// This method retrieves an available dropdown from the pool or creates a new one if none are available.<br/>
@@ -48,7 +76,7 @@ namespace umi3d.browserRuntime.ui.dropdown
         /// <returns>The created or retrieved dropdown GameObject.</returns>
         public GameObject GetOrCreateDropdown(Transform parent, string label = "", List<string> options = null, string value = "")
         {
-            if (!_lstDropdownsAvaible.TryDequeue(out var dropdownModelContainer))
+            if (!_lstDropdownsAvailable.TryDequeue(out var dropdownModelContainer))
                 dropdownModelContainer = GameObject.Instantiate(_dropdownPrefab);
 
             dropdownModelContainer.gameObject.SetActive(true);
@@ -72,14 +100,14 @@ namespace umi3d.browserRuntime.ui.dropdown
         /// </code>
         /// </example>
         /// </summary>
-        /// <param name="toggleGameObject">The dropdown GameObject to be returned to the pool.</param>
-        public void Return(GameObject toggleGameObject)
+        /// <param name="control">The dropdown GameObject to be returned to the pool.</param>
+        public void Return(GameObject control)
         {
-            var dropdownModelContainer = toggleGameObject.GetComponent<DropdownModelContainer>();
+            var dropdownModelContainer = control.GetComponent<DropdownModelContainer>();
             if (!dropdownModelContainer)
                 return;
 
-            _lstDropdownsAvaible.Enqueue(dropdownModelContainer);
+            _lstDropdownsAvailable.Enqueue(dropdownModelContainer);
 
             dropdownModelContainer.gameObject.SetActive(false);
             dropdownModelContainer.transform.SetParent(transform, false);

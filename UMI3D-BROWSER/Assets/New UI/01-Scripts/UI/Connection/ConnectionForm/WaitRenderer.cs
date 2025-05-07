@@ -23,6 +23,7 @@ using umi3dBrowsers.displayer;
 using umi3dBrowsers.linker;
 using UnityEngine;
 using UnityEngine.Localization;
+using UnityEngine.UI;
 
 namespace umi3dBrowsers.container.formrenderer
 {
@@ -33,7 +34,6 @@ namespace umi3dBrowsers.container.formrenderer
 
         [Header("Roots")]
         [SerializeField] private TabManager tabManager;
-        [SerializeField] private SimpleButton validationButton;
         [SerializeField] private ConnectionServiceLinker connectionServiceLinker;
 
         [SerializeField] private LocalizedString refreshingText;
@@ -83,9 +83,6 @@ namespace umi3dBrowsers.container.formrenderer
 #else
                 UnityEngine.Debug.LogError("Imposible to open a web page with a WebConnectionDto on a non PC device");
 #endif
-
-            validationButton.gameObject.SetActive(false);
-            validationButton.OnClick.RemoveAllListeners();
 
             GameObject container = tabManager.AddNewTabForParamForm(connectionFormDto.name ?? "", false);
 

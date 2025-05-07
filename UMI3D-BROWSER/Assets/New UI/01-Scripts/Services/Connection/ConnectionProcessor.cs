@@ -14,11 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils.observation;
 using System;
 using System.Collections.Generic;
 using System.Security.Policy;
 using System.Threading.Tasks;
 using umi3d;
+using umi3d.browserRuntime.forms;
+using umi3d.browserRuntime.portalsThumbnails;
 using umi3d.cdk;
 using umi3d.cdk.collaboration;
 using umi3d.common;
@@ -62,10 +65,27 @@ namespace umi3dBrowsers.services.connection
             identifier.OnWaitAvailable += HandleWait;
             UMI3DCollaborationEnvironmentLoader.Instance.onEnvironmentLoaded.AddListener(() => connectionServiceLinker.ConnectionSuccess());
 
+            NotificationHub.Default.Subscribe(this,
+                ID.FromType<PortalThumbnailNotificationKeys.TryToConnect>(),
+                (Callback)TryConnectToMediaServer);
             connectionServiceLinker.OnTryToConnect += TryConnectToMediaServer;
             connectionServiceLinker.OnSendFormAnswer += SendFormAnswer;
+            NotificationHub.Default.Subscribe(this,
+                ID.FromType<FormNotificationKeys.SendAnswer>(),
+                (Callback)SendFormAnswer);
             connectionServiceLinker.OnSendDivFormAnswer += SendDivFormAnswer;
             connectionServiceLinker.OnSendWaitAnswer += SendWaitAnswer;
+        }
+
+        private void OnDestroy()
+        {
+            NotificationHub.Default.Unsubscribe(this);
+        }
+
+        private void TryConnectToMediaServer(Notification notification)
+        {
+            if (notification.TryGetInfoT(PortalThumbnailNotificationKeys.TryToConnect.Url, out string url))
+                TryConnectToMediaServer(url);
         }
 
         public async void TryConnectToMediaServer(string url)
@@ -127,13 +147,17 @@ namespace umi3dBrowsers.services.connection
         private void HandleParameters(ConnectionFormDto dto, Action<FormAnswerDto> action)
         {
             _formParamAnswerCallBack = action;
-            connectionServiceLinker.ParamFormDtoReceived(dto);
+            var formNotifier = NotificationHub.Default.GetNotifier(this, ID.FromType<FormNotificationKeys.CreateForm>());
+            formNotifier[FormNotificationKeys.CreateForm.FormDto] = dto;
+            formNotifier.Notify();
         }
 
         private void HandleDivs(umi3d.common.interaction.form.ConnectionFormDto dto, Action<umi3d.common.interaction.form.FormAnswerDto> action)
         {
             _formDivAnswerCallBack = action;
-            connectionServiceLinker.DivFormDtoReceived(dto);
+            var formNotifier = NotificationHub.Default.GetNotifier(this, ID.FromType<FormNotificationKeys.CreateForm>());
+            formNotifier[FormNotificationKeys.CreateForm.FormDto] = dto;
+            formNotifier.Notify();
         }
 
         private void HandleWait(WaitConnectionDto dto, Action action, Action cancel)
@@ -160,6 +184,14 @@ namespace umi3dBrowsers.services.connection
             if (!url.StartsWith("http://") && !url.StartsWith("https://"))
                 return "http://" + url;
             return url;
+        }
+
+        public void SendFormAnswer(Notification notification)
+        {
+            if (notification.TryGetInfoT(FormNotificationKeys.SendAnswer.FormAnswerDto, out umi3d.common.interaction.form.FormAnswerDto formAnswer, false))
+                SendDivFormAnswer(formAnswer);
+            if (notification.TryGetInfoT(FormNotificationKeys.SendAnswer.FormAnswerDto, out FormAnswerDto formParamAnswer, false))
+                SendFormAnswer(formParamAnswer);
         }
 
         public void SendFormAnswer(FormAnswerDto formAnswer)

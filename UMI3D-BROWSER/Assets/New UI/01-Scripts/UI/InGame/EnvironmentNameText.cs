@@ -14,7 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils.observation;
 using TMPro;
+using umi3d.browserRuntime.forms;
 using umi3d.cdk.collaboration;
 using umi3dBrowsers.linker;
 using UnityEngine;
@@ -31,6 +33,9 @@ namespace umi3d.browserRuntime.ui.inGame
         {
             text = GetComponent<TMP_Text>();
 
+            NotificationHub.Default.Subscribe(this,
+                ID.FromType<FormNotificationKeys.Cancel>(),
+                (Callback)OnEnvironmentLeaved);
             connectionToImmersiveLinker.OnLeave += OnEnvironmentLeaved;
             UMI3DEnvironmentClient.EnvironmentJoined.AddListener(OnEnvironmentJoined);
         }

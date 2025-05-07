@@ -1,9 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
+using inetum.unityUtils.observation;
+using umi3d.browserRuntime.forms;
+using umi3d.common.interaction;
 using umi3dBrowsers.linker;
-using umi3dBrowsers.services.connection;
 using UnityEngine;
-using static umi3dBrowsers.MainContainer;
 
 namespace umi3dBrowsers.services.title
 {
@@ -25,23 +24,9 @@ namespace umi3dBrowsers.services.title
                 worldName = virtualWorldData.worldName;
             };
 
-            connectionServiceLinker.OnParamFormDtoReceived += (connectionFormDto) => {
-                if (connectionFormDto?.name == "login")
-                {
-                    SetTitle(TitleType.connectionTitle, "connect_to", worldName);
-                    return;
-                }
-                SetTitle(TitleType.connectionTitle, "connect_to_a", connectionFormDto?.name ?? "");
-            };
-
-            connectionServiceLinker.OnDivFormDtoReceived += (connectionFormDto) => {
-                if (connectionFormDto?.name == "login")
-                {
-                    SetTitle(TitleType.connectionTitle, "connect_to", worldName);
-                    return;
-                }
-                SetTitle(TitleType.connectionTitle, "connect_to_a", connectionFormDto?.name ?? "");
-            };
+            NotificationHub.Default.Subscribe(this,
+                ID.FromType<FormNotificationKeys.CreateForm>(),
+                (Callback)OnCreateForm);
 
             connectionServiceLinker.OnWaitReceived += (connectionFormDto) => {
                 if (connectionFormDto?.name == "login")
@@ -51,6 +36,28 @@ namespace umi3dBrowsers.services.title
                 }
                 SetTitle(TitleType.connectionTitle, "connect_to_a", connectionFormDto?.name ?? "");
             };
+        }
+
+        public void OnCreateForm(Notification notification)
+        {
+            if (notification.TryGetInfoT(FormNotificationKeys.CreateForm.FormDto, out FormDto connectionFormDto, false))
+            {
+                if (connectionFormDto?.name == "login")
+                {
+                    SetTitle(TitleType.connectionTitle, "connect_to", worldName);
+                    return;
+                }
+                SetTitle(TitleType.connectionTitle, "connect_to_a", connectionFormDto?.name ?? "");
+            }
+            if (notification.TryGetInfoT(FormNotificationKeys.CreateForm.FormDto, out umi3d.common.interaction.form.FormDto connectionFormParamDto, false))
+            {
+                if (connectionFormParamDto?.name == "login")
+                {
+                    SetTitle(TitleType.connectionTitle, "connect_to", worldName);
+                    return;
+                }
+                SetTitle(TitleType.connectionTitle, "connect_to_a", connectionFormParamDto?.name ?? "");
+            }
         }
 
         public void SetTitle(TitleType titleType,string prefix, string suffix, bool prefixOverride = false, bool suffixOverride = false)

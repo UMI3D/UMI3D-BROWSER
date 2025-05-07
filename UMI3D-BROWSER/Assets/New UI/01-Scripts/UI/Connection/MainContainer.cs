@@ -19,6 +19,8 @@ using inetum.unityUtils.observation;
 using System;
 using System.Threading.Tasks;
 using TMPro;
+using umi3d.browserRuntime.forms;
+using umi3d.browserRuntime.portalsThumbnails;
 using umi3d.browserRuntime.ui.inGame;
 using umi3d.browserRuntime.ui.popup;
 using umi3d.cdk;
@@ -123,28 +125,11 @@ namespace umi3dBrowsers
                 }
             };
 
-            connectionToImmersiveLinker.OnLeave += () =>
-            {
-                // Reset the set up skeleton to compute the size of the player.
-                connectionToImmersiveLinker.SetSetUpSkeleton(null);
-                new Task(async () =>
-                {
-                    while (connectionToImmersiveLinker.SetUpSkeleton == null)
-                    {
-                        await Task.Yield();
-                    }
-                    connectionToImmersiveLinker.StandUp();
-                }).Start(TaskScheduler.FromCurrentSynchronizationContext());
+            NotificationHub.Default.Subscribe(this,
+                ID.FromType<FormNotificationKeys.Cancel>(),
+                (Callback)OnLeave);
 
-                ShowUI();
-                m_menuNavigationLinker.ShowPanel(m_mainMenuPanel);
-
-                m_enableInGameUiNotifier[InGameNotificationKeys.IsInGameUiActive] = false;
-                m_enableInGameUiNotifier.Notify();
-
-                connectionProcessorService.Disconnect();
-                mainContainerLinker.Loader.ReloadScene();
-            };
+            connectionToImmersiveLinker.OnLeave += OnLeave;
 
             UMI3DEnvironmentLoader.Instance.onEnvironmentLoaded?.AddListener(() => {
                 m_enableInGameUiNotifier[InGameNotificationKeys.IsInGameUiActive] = true;
@@ -160,6 +145,28 @@ namespace umi3dBrowsers
                 m_enableInGameUiNotifier[InGameNotificationKeys.IsInGameUiActive] = true;
                 m_enableInGameUiNotifier.Notify();
             });
+        }
+
+        private void OnLeave()
+        {
+            // Reset the set up skeleton to compute the size of the player.
+            connectionToImmersiveLinker.SetSetUpSkeleton(null);
+            new Task(async () => {
+                while (connectionToImmersiveLinker.SetUpSkeleton == null)
+                {
+                    await Task.Yield();
+                }
+                connectionToImmersiveLinker.StandUp();
+            }).Start(TaskScheduler.FromCurrentSynchronizationContext());
+
+            ShowUI();
+            m_menuNavigationLinker.ShowPanel(m_mainMenuPanel);
+
+            m_enableInGameUiNotifier[InGameNotificationKeys.IsInGameUiActive] = false;
+            m_enableInGameUiNotifier.Notify();
+
+            connectionProcessorService.Disconnect();
+            mainContainerLinker.Loader.ReloadScene();
         }
 
         void TryToQuit()
@@ -183,7 +190,7 @@ namespace umi3dBrowsers
                 this
             );
 
-            connectionServiceLinker.OnTryToConnect -= OnTryToConnect;
+            NotificationHub.Default.Unsubscribe(this);
             connectionServiceLinker.OnConnectionFailure -= OnConnectionFailure;
             UMI3DClientServer.Instance.OnConnectionLost.RemoveListener(OnConnectionLost);
             UMI3DCollaborationClientServer.Instance.OnForceLogoutMessage.RemoveListener(OnForceLogoutMessage);
@@ -201,6 +208,9 @@ namespace umi3dBrowsers
                 ShowUI();
             };
 
+            NotificationHub.Default.Subscribe(this,
+                ID.FromType<PortalThumbnailNotificationKeys.TryToConnect>(),
+                (Callback)OnTryToConnect);
             connectionServiceLinker.OnTryToConnect += OnTryToConnect;
             connectionServiceLinker.OnConnectionFailure += OnConnectionFailure;
             UMI3DClientServer.Instance.OnConnectionLost.AddListener(OnConnectionLost);
@@ -218,14 +228,19 @@ namespace umi3dBrowsers
             m_enableInGameUiNotifier.Notify();
         }
 
+        void OnTryToConnect(Notification notification)
+        {
+            if (notification.TryGetInfoT(PortalThumbnailNotificationKeys.TryToConnect.Url, out string url))
+                OnTryToConnect(url);
+        }
+
         void OnTryToConnect(string url)
         {
-            popupNotifier
-                .enqueue
-                 .SetArguments(("url", url))
-                 .SetTitle(POPUP_TABLE, "ConnectionToAPortal")
-                 .SetDescription(POPUP_TABLE, "ConnectionToAPortal_message")
-                 .Notify();
+            popupNotifier.enqueue
+                .SetArguments(("url", url))
+                .SetTitle(POPUP_TABLE, "ConnectionToAPortal")
+                .SetDescription(POPUP_TABLE, "ConnectionToAPortal_message")
+                .Notify();
         }
 
         void OnConnectionFailure(string message)
@@ -308,7 +323,7 @@ namespace umi3dBrowsers
         {
             void Show()
             {
-                if (parentTransform.gameObject.activeSelf == false)
+                if (!parentTransform.gameObject.activeSelf)
                 {
                     ShowUI();
                     mainContainerLinker.Spawner.RepositionPlayer();
@@ -317,8 +332,9 @@ namespace umi3dBrowsers
                 m_menuNavigationLinker.ShowPanel(m_formPanel);
             };
 
-            connectionServiceLinker.OnParamFormDtoReceived += (connectionFormDto) => Show();
-            connectionServiceLinker.OnDivFormDtoReceived += (connectionFormDto) => Show();
+            NotificationHub.Default.Subscribe(this,
+                ID.FromType<FormNotificationKeys.CreateForm>(),
+                (Callback)Show);
             connectionServiceLinker.OnWaitReceived += (connectionFormDto) => Show();
 
             connectionServiceLinker.OnConnectionSuccess += () => {

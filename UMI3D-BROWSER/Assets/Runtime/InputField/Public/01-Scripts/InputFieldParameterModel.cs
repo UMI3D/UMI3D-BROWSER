@@ -69,7 +69,7 @@ namespace umi3d.browserRuntime.ui.inputField
             model.SetLabel(dto.name);
             model.SetValue(dto.value);
             model.SetNbrLines(newDto.IsMultiLine, dto.NbLine);
-            model.SetPrivate(dto.privateParameter);
+            model.SetContentType(dto.privateParameter ? TMPro.TMP_InputField.ContentType.Password : TMPro.TMP_InputField.ContentType.Standard);
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace umi3d.browserRuntime.ui.inputField
         /// <param name="notification"></param>
         private void ValueUpdated(Notification notification)
         {
-            if (!notification.TryGetInfoT(InputFieldNotificationsKeys.InputFieldUpdated.Value, out string value))
+            if (!notification.TryGetInfoT(InputFieldNotificationsKeys.InputFieldUpdated.Value, out string value, false))
                 return;
 
             if (dto != null)

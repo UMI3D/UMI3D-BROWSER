@@ -42,8 +42,13 @@ namespace umi3dBrowsers.displayer
         private void Awake()
         {
             loadingTipDatas = new List<Tips.Data>();
+#if UMI3D_PC
             foreach (var tip in loadingTip)
-                loadingTipDatas.AddRange(tip.LoadingTips);
+                loadingTipDatas.AddRange(tip.LoadingTipsPC);
+#elif UMI3D_XR
+            foreach (var tip in loadingTip)
+                loadingTipDatas.AddRange(tip.LoadingTipsVR);
+#endif
         }
 
         private void Start()

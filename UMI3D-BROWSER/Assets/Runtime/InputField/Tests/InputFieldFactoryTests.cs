@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
+using TMPro;
 using umi3d.browserRuntime.ui.inputField;
 using UnityEngine;
 using UnityEngine.TestTools;
@@ -48,10 +49,10 @@ public class InputFieldFactoryTests
             string value = "Test Value";
             string placeholder = "Test Placeholder";
             int nbLine = 1;
-            bool isPrivate = true;
+            var contentType = TMP_InputField.ContentType.Password;
 
             // When: Creating the input field
-            GameObject inputField = _inputFieldFactory.GetOrCreateInputField(parent, isMultiline, label, value, placeholder, nbLine, isPrivate);
+            GameObject inputField = _inputFieldFactory.GetOrCreateInputField(parent, isMultiline, label, value, placeholder, nbLine, contentType);
             yield return null;
 
             // Then: The input field is created and set up correctly
@@ -62,7 +63,7 @@ public class InputFieldFactoryTests
             Assert.AreEqual(value, inputFieldModelContainer.model.value);
             Assert.AreEqual(placeholder, inputFieldModelContainer.model.placeholder);
             Assert.AreEqual(1, inputFieldModelContainer.model.nbrLine);
-            Assert.AreEqual(isPrivate, inputFieldModelContainer.model.isPrivate);
+            Assert.AreEqual(contentType, inputFieldModelContainer.model.ContentType);
         }
 
         [UnityTest]

@@ -14,7 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils.observation;
 using System.Collections.Generic;
 
 namespace umi3d.browserRuntime.ui.dropdown
@@ -22,110 +21,133 @@ namespace umi3d.browserRuntime.ui.dropdown
     /// <summary>
     /// Model of a dropdown element
     /// </summary>
-    public class DropdownModel
+    public class DropdownModel : IDropdownModel
     {
+        List<string> _options = new();
+
         public bool isLabelVisible { get; private set; } = false;
         public string label { get; private set; }
         public string value { get; private set; }
-        public List<string> options { get; private set; } = new();
+        public IEnumerator<string> options => _options.GetEnumerator();
 
-        Notifier _setNotifier;
-        Notifier _updateNotifier;
-
-        public DropdownModel()
+        public int IndexOf(string value)
         {
-            _setNotifier = NotificationHub.Default.GetNotifier(this,
-                ID.FromType<DropdownNotificationKeys.DropdownSet>());
-            _setNotifier[DropdownNotificationKeys.DropdownSet.IsLabelVisible] = isLabelVisible;
-            _setNotifier[DropdownNotificationKeys.DropdownSet.Label] = label;
-            _setNotifier[DropdownNotificationKeys.DropdownSet.Value] = value;
-            _setNotifier[DropdownNotificationKeys.DropdownSet.Options] = options;
-
-            _updateNotifier = NotificationHub.Default.GetNotifier(this,
-                ID.FromType<DropdownNotificationKeys.DropdownUpdated>());
+            return _options.IndexOf(value);
         }
 
-        /// <summary>
-        /// Sets the label of the dropdown and updates its visibility status.<br/>
-        /// Send a <see cref="DropdownNotificationKeys.DropdownSet"/> notification.<br/>
-        /// <br/>
-        /// <example>
-        /// Given a new label when setting the label then the label visibility is updated accordingly.
-        /// <code>
-        /// dropdownModel.SetLabel("New Label");
-        /// // isLabelVisible = true
-        /// // label = "New Label"
-        /// </code>
-        /// </example>
-        /// </summary>
-        /// <param name="newLabel">The new label to set.</param>
+        #region IDropdownSubject
+        
+        List<IDropdownLabelObserver> _labelObservers = new();
+
+        public void Subscribe(IDropdownLabelObserver observer)
+        {
+            if (!_labelObservers.Contains(observer)) { return; }
+            _labelObservers.Add(observer);
+        }
+
+        public void Unsubscribe(IDropdownLabelObserver observer)
+        {
+            _labelObservers.Remove(observer);
+        }
+
+        void NotifyLabelObserver()
+        {
+            foreach (var observer in _labelObservers)
+            {
+                try
+                {
+                    observer.UpdateLabel(label, isLabelVisible);
+                }
+                catch (System.Exception e)
+                {
+                    UnityEngine.Debug.LogException(e);
+                }
+            }
+        }
+
+        List<IDropdownValueObserver> _valueObserver = new();
+
+        public void Subscribe(IDropdownValueObserver observer)
+        {
+            if (!_valueObserver.Contains(observer)) { return; }
+            _valueObserver.Add(observer);
+        }
+
+        public void Unsubscribe(IDropdownValueObserver observer)
+        {
+            _valueObserver.Remove(observer);
+        }
+
+        void NotifyValueObserver()
+        {
+            foreach (var observer in _valueObserver)
+            {
+                try
+                {
+                    observer.updateValue(label);
+                }
+                catch (System.Exception e)
+                {
+                    UnityEngine.Debug.LogException(e);
+                }
+            }
+        }
+
+        List<IDropdownOptionsObserver> _optionsObservers = new();
+
+        public void Subscribe(IDropdownOptionsObserver observer)
+        {
+            if (!_optionsObservers.Contains(observer)) { return; }
+            _optionsObservers.Add(observer);
+        }
+
+        public void Unsubscribe(IDropdownOptionsObserver observer)
+        {
+            _optionsObservers.Remove(observer);
+        }
+
+        void NotifyOptionsObserver()
+        {
+            foreach (var observer in _optionsObservers)
+            {
+                try
+                {
+                    observer.updateOptions(_options);
+                }
+                catch (System.Exception e)
+                {
+                    UnityEngine.Debug.LogException(e);
+                }
+            }
+        }
+
+        #endregion
+
         public void SetLabel(string newLabel)
         {
             isLabelVisible = !string.IsNullOrEmpty(newLabel);
             label = newLabel;
-            _setNotifier[DropdownNotificationKeys.DropdownSet.IsLabelVisible] = isLabelVisible;
-            _setNotifier[DropdownNotificationKeys.DropdownSet.Label] = label;
-            _setNotifier.Notify();
+            NotifyLabelObserver();
         }
 
-        /// <summary>
-        /// Sets the value of the dropdown and notifies any listeners about the change.<br/>
-        /// Send a <see cref="DropdownNotificationKeys.DropdownSet"/> notification.<br/>
-        /// <br/>
-        /// <example>
-        /// Given a new value when setting the value then the value is updated and listeners are notified.
-        /// <code>
-        /// dropdownModel.SetValue("New Value");
-        /// // value = "New Value"
-        /// </code>
-        /// </example>
-        /// </summary>
-        /// <param name="newValue">The new value to set.</param>
         public void SetValue(string newValue)
         {
             value = newValue;
-            _setNotifier[DropdownNotificationKeys.DropdownSet.Value] = value;
-            _setNotifier.Notify();
+            NotifyValueObserver();
         }
-
-        /// <summary>
-        /// Updates the value of the dropdown and notifies any listeners about the change.<br/>
-        /// Send a <see cref="DropdownNotificationKeys.DropdownUpdated"/> notification.<br/>
-        /// <br/>
-        /// <example>
-        /// Given a new value when updating the value then the value is updated and listeners are notified.
-        /// <code>
-        /// dropdownModel.UpdateValue("New Value");
-        /// // value = "New Value"
-        /// </code>
-        /// </example>
-        /// </summary>
-        /// <param name="newValue">The new value to update.</param>
-        public void UpdateValue(string newValue)
+        
+        public void SetValue(int index)
         {
-            value = newValue;
-            _updateNotifier[DropdownNotificationKeys.DropdownUpdated.Value] = value;
-            _updateNotifier.Notify();
+            if (index < 0 || index >= _options.Count) { return; }
+
+            value = _options[index];
+            NotifyValueObserver();
         }
 
-        /// <summary>
-        /// Sets the options of the dropdown and notifies any listeners about the change.<br/>
-        /// Send a <see cref="DropdownNotificationKeys.DropdownSet"/> notification.<br/>
-        /// <br/>
-        /// <example>
-        /// Given a new list of options when setting the options then the options are updated and listeners are notified.
-        /// <code>
-        /// dropdownModel.SetOptions(new List&lt;string> { "Option 1", "Option 2" });
-        /// // options = new List&lt;string> { "Option 1", "Option 2" }
-        /// </code>
-        /// </example>
-        /// </summary>
-        /// <param name="newOptions">The new list of options to set.</param>
         public void SetOptions(List<string> newOptions)
         {
-            options = newOptions;
-            _setNotifier[DropdownNotificationKeys.DropdownSet.Options] = options;
-            _setNotifier.Notify();
+            _options = newOptions;
+            NotifyOptionsObserver();
         }
     }
 }

@@ -33,26 +33,27 @@ namespace umi3d.browserRuntime.forms
 
         public GameObject CreateDropdown(EnumParameterDto<string> enumDto, Transform parent, FormAnswerDto formAnswerDto)
         {
-            var dropdownGameObject = _factory.GetOrCreateDropdown(parent, enumDto.name, enumDto.possibleValues, enumDto.value);
+            //var dropdownGameObject = _factory.GetOrCreateDropdown(parent, enumDto.name, enumDto.possibleValues, enumDto.value);
 
-            ParameterSettingRequestDto paramRequestDto = new ParameterSettingRequestDto() { id = enumDto.id };
-            if (formAnswerDto.answers == null)
-                formAnswerDto.answers = new();
-            formAnswerDto.answers.Add(paramRequestDto);
+            //ParameterSettingRequestDto paramRequestDto = new ParameterSettingRequestDto() { id = enumDto.id };
+            //if (formAnswerDto.answers == null)
+            //    formAnswerDto.answers = new();
+            //formAnswerDto.answers.Add(paramRequestDto);
 
-            var inputFieldModelContainer = dropdownGameObject.GetComponent<DropdownModelContainer>();
-            NotificationHub.Default.Subscribe(this,
-                ID.FromType<DropdownNotificationKeys.DropdownUpdated>(),
-                (Callback)UpdateAnswer,
-                new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == inputFieldModelContainer.model));
+            ////var inputFieldModelContainer = dropdownGameObject.GetComponent<DropdownController>();
+            //NotificationHub.Default.Subscribe(this,
+            //    ID.FromType<DropdownNotificationKeys.DropdownUpdated>(),
+            //    (Callback)UpdateAnswer,
+            //    new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == inputFieldModelContainer.model));
 
-            return dropdownGameObject;
+            //return dropdownGameObject;
 
-            void UpdateAnswer(Notification notification)
-            {
-                if (notification.TryGetInfoT(DropdownNotificationKeys.DropdownUpdated.Value, out string value))
-                    paramRequestDto.parameter = value;
-            }
+            //void UpdateAnswer(Notification notification)
+            //{
+            //    if (notification.TryGetInfoT(DropdownNotificationKeys.DropdownUpdated.Value, out string value))
+            //        paramRequestDto.parameter = value;
+            //}
+            throw new System.NotImplementedException();
         }
     }
 }

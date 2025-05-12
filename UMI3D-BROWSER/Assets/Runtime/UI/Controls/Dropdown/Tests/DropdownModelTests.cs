@@ -47,7 +47,7 @@ public class DropdownModelTests
             Assert.IsNull(dropdownModel.label);
             Assert.IsNull(dropdownModel.value);
             Assert.IsNotNull(dropdownModel.options);
-            Assert.IsEmpty(dropdownModel.options);
+            Assert.IsFalse(dropdownModel.options.MoveNext());
         }
     }
 
@@ -62,23 +62,6 @@ public class DropdownModelTests
 
             // When
             dropdownModel.SetValue(newValue);
-
-            // Then
-            Assert.AreEqual(newValue, dropdownModel.value);
-        }
-    }
-
-    public class UpdateValueTests
-    {
-        [Test]
-        public void GivenDropdownModel_WhenUpdateValue_ThenValueIsUpdated()
-        {
-            // Given
-            var dropdownModel = new DropdownModel();
-            var newValue = "New Value";
-
-            // When
-            dropdownModel.UpdateValue(newValue);
 
             // Then
             Assert.AreEqual(newValue, dropdownModel.value);

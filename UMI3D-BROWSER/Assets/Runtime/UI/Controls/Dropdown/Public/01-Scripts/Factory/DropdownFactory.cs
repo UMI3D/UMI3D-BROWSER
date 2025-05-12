@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using System.Collections.Generic;
+using umi3d.cdk.interaction;
 using umi3d.common.interaction;
 using UnityEngine;
 
@@ -23,13 +24,12 @@ namespace umi3d.browserRuntime.ui.dropdown
     /// <summary>
     /// Factory managing a pool of dropdown.
     /// </summary>
-
-    public class DropdownFactory : MonoBehaviour, ISimpleCreateBehaviour, IFormCreateBehaviour, IContextualMenuCreateBehaviour
+    public abstract class DropdownFactory : MonoBehaviour, ISimpleCreateBehaviour, IFormCreateBehaviour, IContextualMenuCreateBehaviour
     {
         [SerializeField] 
-        internal DropdownModelContainer _dropdownPrefab;
+        internal DropdownController _dropdownPrefab;
 
-        internal Queue<DropdownModelContainer> _lstDropdownsAvailable = new();
+        internal Queue<DropdownController> _lstDropdownsAvailable = new();
 
         protected ISimpleCreateBehaviour _simpleCreateBehaviour;
         protected IFormCreateBehaviour _formCreateBehaviour;
@@ -59,35 +59,9 @@ namespace umi3d.browserRuntime.ui.dropdown
             return _contextMenuCreateBehaviour.TryToGetOrCreate(out control, parent, dto);
         }
 
-        /// <summary>
-        /// This method retrieves an available dropdown from the pool or creates a new one if none are available.<br/>
-        /// It then sets the parent, label, options, and value for the dropdown.<br/>
-        /// <br/>
-        /// <example>
-        /// <code>
-        /// var dropdown = dropdownFactory.GetOrCreateDropdown(parentTransform, "TestLabel", new List&lt;string> { "Option1", "Option2" }, "Option1");
-        /// </code>
-        /// </example>
-        /// </summary>
-        /// <param name="parent">The parent transform to which the dropdown will be attached.</param>
-        /// <param name="label">The label to set for the dropdown. Default is an empty string.</param>
-        /// <param name="options">The list of options to set for the dropdown. Default is null.</param>
-        /// <param name="value">The value to set for the dropdown. Default is an empty string.</param>
-        /// <returns>The created or retrieved dropdown GameObject.</returns>
-        public GameObject GetOrCreateDropdown(Transform parent, string label = "", List<string> options = null, string value = "")
+        public bool TryToGetOrCreate(out GameObject control, Transform parent, EnumParameterDto<string> dto, IParameterInputSystem<string> inputSystem)
         {
-            if (!_lstDropdownsAvailable.TryDequeue(out var dropdownModelContainer))
-                dropdownModelContainer = GameObject.Instantiate(_dropdownPrefab);
-
-            dropdownModelContainer.gameObject.SetActive(true);
-            dropdownModelContainer.transform.SetParent(parent, false);
-
-            if (!string.IsNullOrEmpty(label))
-                dropdownModelContainer.model.SetLabel(label);
-            dropdownModelContainer.model.SetOptions(options ?? new List<string>());
-            dropdownModelContainer.model.SetValue(value);
-
-            return dropdownModelContainer.gameObject;
+            return _contextMenuCreateBehaviour.TryToGetOrCreate(out control, parent, dto, inputSystem);
         }
 
         /// <summary>
@@ -103,14 +77,14 @@ namespace umi3d.browserRuntime.ui.dropdown
         /// <param name="control">The dropdown GameObject to be returned to the pool.</param>
         public void Return(GameObject control)
         {
-            var dropdownModelContainer = control.GetComponent<DropdownModelContainer>();
-            if (!dropdownModelContainer)
-                return;
+            var controller = control.GetComponent<DropdownController>();
+            if (!controller) { return; }
 
-            _lstDropdownsAvailable.Enqueue(dropdownModelContainer);
+            _lstDropdownsAvailable.Enqueue(controller);
 
-            dropdownModelContainer.gameObject.SetActive(false);
-            dropdownModelContainer.transform.SetParent(transform, false);
+            controller.gameObject.SetActive(false);
+            controller.transform.SetParent(transform, false);
+            controller.Clear();
         }
     }
 }

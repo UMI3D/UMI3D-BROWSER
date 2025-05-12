@@ -53,7 +53,7 @@ namespace umi3d.browserRuntime.ui.dropdown
             ParameterSettingRequestDto paramRequestDto = new ParameterSettingRequestDto() { id = dto.id };
             formAnswerDto.answers.Add(paramRequestDto);
 
-            var modelContainer = control.GetComponent<DropdownModelContainer>();
+            var modelContainer = control.GetComponent<DropdownController>();
             NotificationHub.Default.Subscribe(this,
                 ID.FromType<DropdownNotificationKeys.DropdownUpdated>(),
                 (Callback)UpdateAnswer,

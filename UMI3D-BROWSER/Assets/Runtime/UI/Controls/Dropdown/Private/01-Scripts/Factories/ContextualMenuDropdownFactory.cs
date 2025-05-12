@@ -16,6 +16,8 @@ limitations under the License.
 
 using inetum.unityUtils.observation;
 using System;
+using umi3d.cdk;
+using umi3d.cdk.interaction;
 using umi3d.common.interaction;
 using UnityEngine;
 
@@ -46,13 +48,43 @@ namespace umi3d.browserRuntime.ui.dropdown
             var succeeded = _dropdownFactory.TryToGetOrCreate(out control, parent, dto.name, dto.possibleValues, dto.value);
             if (!succeeded) { return false; }
 
-            var model = control.GetComponent<DropdownParameterModelContainer>().parameterModel;
-            model.SetDto(dto);
+            var controller = control.GetComponent<DropdownController>();
+
+            controller.submitted += () =>
+            {
+                IDropdownModel model = controller.model;
+                dto.value = model.value;
+                UMI3DClientServer.SendRequest(new ParameterSettingRequestDto() {
+                    id = dto.id,
+                    parameter = dto,
+                }, true);
+            };
 
             // TODO
             //NotificationHub.Default.Subscribe(this,
             //    ID.FromType<ContextualMenuNotificationKeys.Submit>(),
-            //    (Callback)model.Submit);
+            //    (Callback)controller.Submit);
+
+            return true;
+        }
+
+        public bool TryToGetOrCreate(out GameObject control, Transform parent, EnumParameterDto<string> dto, IParameterInputSystem<string> inputSystem)
+        {
+            var succeeded = _dropdownFactory.TryToGetOrCreate(out control, parent, dto.name, dto.possibleValues, dto.value);
+            if (!succeeded) { return false; }
+
+            var controller = control.GetComponent<DropdownController>();
+
+            controller.submitted += () =>
+            {
+                IDropdownModel model = controller.model;
+                inputSystem.Perform(model.value);
+            };
+
+            // TODO
+            //NotificationHub.Default.Subscribe(this,
+            //    ID.FromType<ContextualMenuNotificationKeys.Submit>(),
+            //    (Callback)controller.Submit);
 
             return true;
         }

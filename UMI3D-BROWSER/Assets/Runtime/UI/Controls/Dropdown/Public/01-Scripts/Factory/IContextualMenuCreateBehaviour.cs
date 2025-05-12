@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using System;
+using umi3d.cdk.interaction;
 using umi3d.common.interaction;
 using UnityEngine;
 
@@ -23,11 +24,19 @@ namespace umi3d.browserRuntime.ui.dropdown
     public interface IContextualMenuCreateBehaviour
     {
         bool TryToGetOrCreate(out GameObject control, Transform parent, EnumParameterDto<string> dto);
+        bool TryToGetOrCreate(out GameObject control, Transform parent, EnumParameterDto<string> dto, IParameterInputSystem<string> inputSystem);
     }
 
     public struct NullObjectContextualMenuCreateBehaviour : IContextualMenuCreateBehaviour
     {
         public bool TryToGetOrCreate(out GameObject control, Transform parent, EnumParameterDto<string> dto)
+        {
+            UnityEngine.Debug.LogWarning($"[NullObjectContextualMenuCreateBehaviour] Warning: You are trying to call a nullObject.");
+            control = null;
+            return false;
+        }
+
+        public bool TryToGetOrCreate(out GameObject control, Transform parent, EnumParameterDto<string> dto, IParameterInputSystem<string> inputSystem)
         {
             UnityEngine.Debug.LogWarning($"[NullObjectContextualMenuCreateBehaviour] Warning: You are trying to call a nullObject.");
             control = null;

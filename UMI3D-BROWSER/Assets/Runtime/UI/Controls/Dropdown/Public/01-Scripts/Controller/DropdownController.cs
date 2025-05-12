@@ -14,25 +14,30 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.dropdown
 {
-    /// <summary>
-    /// The container of an <see cref="DropdownModel"/>
-    /// </summary>
-
-    public class DropdownModelContainer : MonoBehaviour
+    public abstract class DropdownController : MonoBehaviour
     {
-        DropdownModel _model;
+        public IDropdownModel model { get; protected set; }
 
-        public DropdownModel model
+        public event Action submitted;
+
+        public void ValueUpdated(int index)
         {
-            get {
-                if (_model == null)
-                    _model = new DropdownModel();
-                return _model;
-            }
+            model.SetValue(index);
+        }
+
+        public void Submit()
+        {
+            submitted?.Invoke();
+        }
+
+        public void Clear()
+        {
+            submitted = null;
         }
     }
 }

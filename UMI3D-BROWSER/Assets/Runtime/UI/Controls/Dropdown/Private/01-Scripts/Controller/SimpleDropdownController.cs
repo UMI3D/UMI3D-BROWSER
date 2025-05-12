@@ -1,5 +1,5 @@
 /*
-Copyright 2019 - 2024 Inetum
+Copyright 2019 - 2025 Inetum
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,28 +14,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.dropdown
 {
-    /// <summary>
-    /// Container of an <see cref="DropdownParameterModel"/>. 
-    /// Used with an <see cref="DropdownModelContainer"/>.
-    /// </summary>
-    [RequireComponent(typeof(DropdownModelContainer))]
-
-    public class DropdownParameterModelContainer : MonoBehaviour
+    public class SimpleDropdownController : DropdownController
     {
-        public DropdownParameterModel parameterModel;
-
-        DropdownModelContainer _modelContainer;
-
-        private void Awake()
+        void Awake()
         {
-            _modelContainer = GetComponent<DropdownModelContainer>();
-
-            parameterModel = new DropdownParameterModel(_modelContainer.model);
+            model = new DropdownModel();
         }
-
     }
 }

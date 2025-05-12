@@ -210,17 +210,27 @@ namespace umi3d.cdk.interaction
                     projectionSetup = projection =>
                     {
                         float initialValue = floatRange.value;
+                        var floatRangeInput = new FloatRangeDecoratorParameterInput(
+                            projection.input.floatParameterInput,
+                            floatRange.value,
+                            floatRange.min,
+                            floatRange.max,
+                            floatRange.increment
+                        );
+                        projection.input.Decorate(floatRangeInput);
                         projection.input.floatParameterInput.performed += value =>
                         {
                             if (floatRange.isDisplayer) { return; }
 
-                            value = Mathf.Clamp(value, floatRange.min, floatRange.max);
-                            // TODO: check for increment.
                             floatRange.value = value;
                             projection.SendParameterSetting();
                         };
 
-                        projection._clear = () => projection.input.floatParameterInput.Clear();
+                        projection._clear = () =>
+                        {
+                            projection.input.floatParameterInput.Clear();
+                            projection.input.UnDecorate<float>();
+                        };
                     };
                     break;
 
@@ -229,17 +239,26 @@ namespace umi3d.cdk.interaction
                     projectionSetup = projection =>
                     {
                         int initialValue = integerRange.value;
+                        var integerRangeInput = new IntegerRangeDecoratorParameterInput(
+                            projection.input.intParameterInput,
+                            integerRange.value,
+                            integerRange.min,
+                            integerRange.max,
+                            integerRange.increment
+                        );
                         projection.input.intParameterInput.performed += value =>
                         {
                             if (integerRange.isDisplayer) { return; }
 
-                            value = Mathf.Clamp(value, integerRange.min, integerRange.max);
-                            // TODO: check for increment.
                             integerRange.value = value;
                             projection.SendParameterSetting();
                         };
 
-                        projection._clear = () => projection.input.intParameterInput.Clear();
+                        projection._clear = () =>
+                        {
+                            projection.input.intParameterInput.Clear();
+                            projection.input.UnDecorate<int>();
+                        };
                     };
                     break;
 

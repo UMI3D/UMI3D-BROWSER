@@ -142,6 +142,19 @@ namespace umi3d.cdk.interaction
             }
         }
 
+        internal void Decorate(IInputSystem decorator)
+        {
+            inputSystem = decorator;
+        }
+
+        internal void UnDecorate<Value>()
+        {
+            if (inputSystem is DecoratorParameterInput<Value> decorator)
+            {
+                inputSystem = decorator.GetRootDecoratedInput();
+            }
+        }
+
         public string debugDescription
         {
             get

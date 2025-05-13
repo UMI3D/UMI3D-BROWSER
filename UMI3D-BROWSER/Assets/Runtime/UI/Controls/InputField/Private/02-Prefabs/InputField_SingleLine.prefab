@@ -148,9 +148,9 @@ GameObject:
   - component: {fileID: 6800025283954303268}
   - component: {fileID: 8425874713018560123}
   - component: {fileID: 8995061242141068329}
+  - component: {fileID: 4051969833790351084}
   - component: {fileID: 4838497727256315894}
   - component: {fileID: 139199254534189446}
-  - component: {fileID: 4051969833790351084}
   m_Layer: 5
   m_Name: InputField
   m_TagString: Untagged
@@ -327,6 +327,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _viewport: {fileID: 0}
+--- !u!114 &4051969833790351084
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 493554409441682764}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da89213bf240a2c49b5403d4762d48e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &4838497727256315894
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -364,18 +376,6 @@ MonoBehaviour:
   enterOrSubmit:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &4051969833790351084
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 493554409441682764}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da89213bf240a2c49b5403d4762d48e4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3038488464041992725
 GameObject:
   m_ObjectHideFlags: 0

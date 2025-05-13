@@ -14,26 +14,35 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System;
 using UnityEngine;
 
-namespace umi3d.browserRuntime.ui.inputField
+namespace umi3d.browserRuntime.ui
 {
-    /// <summary>
-    /// Container of an <see cref="InputFieldParameterModel"/>. 
-    /// Used with an <see cref="InputFieldModelContainer"/>.
-    /// </summary>
-    [RequireComponent(typeof(InputFieldModelContainer))]
-    public class InputFieldParameterModelContainer : MonoBehaviour
+    public class InputFieldController : MonoBehaviour
     {
-        public InputFieldParameterModel parameterModel;
+        public InputFieldModel model { get; protected set; }
 
-        InputFieldModelContainer _modelContainer;
+        public event Action submitted;
 
         private void Awake()
         {
-            _modelContainer = GetComponent<InputFieldModelContainer>();
+            model = new();
+        }
 
-            parameterModel = new InputFieldParameterModel(_modelContainer.model);
+        public void Submit()
+        {
+            submitted?.Invoke();
+        }
+
+        public void Clear()
+        {
+            submitted = null;
+        }
+
+        public void ValueUpdated(string value)
+        {
+            model.SetValue(value);
         }
     }
 }

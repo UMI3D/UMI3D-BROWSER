@@ -14,23 +14,34 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using TMPro;
 using UnityEngine;
 
-namespace umi3d.browserRuntime.ui.inputField
+namespace umi3d.browserRuntime.ui
 {
-    /// <summary>
-    /// The container of an <see cref="InputFieldModel"/>
-    /// </summary>
-    public class InputFieldModelContainer : MonoBehaviour
+    public class InputFieldPlaceholderView : MonoBehaviour, IInputFieldPlaceholderObserver
     {
+        TMP_Text _text;
+
+        InputFieldController _controller;
         InputFieldModel _model;
 
-        public InputFieldModel model { get 
-            { 
-                if (_model == null)
-                    _model = new InputFieldModel();
-                return _model; 
-            } 
+        void Awake()
+        {
+            _text = GetComponent<TMP_Text>();
+            _controller = GetComponentInParent<InputFieldController>();
+            _model = _controller.model;
+            _model.Subscribe(this);
+        }
+
+        void OnDestroy()
+        {
+            _model.Unsubscribe(this);
+        }
+
+        public void UpdatePlaceholder(string placeholder)
+        {
+            _text.text = placeholder;
         }
     }
 }

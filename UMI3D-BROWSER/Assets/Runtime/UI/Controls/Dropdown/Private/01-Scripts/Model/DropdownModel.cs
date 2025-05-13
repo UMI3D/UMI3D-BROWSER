@@ -16,7 +16,7 @@ limitations under the License.
 
 using System.Collections.Generic;
 
-namespace umi3d.browserRuntime.ui.dropdown
+namespace umi3d.browserRuntime.ui
 {
     /// <summary>
     /// Model of a dropdown element
@@ -36,61 +36,39 @@ namespace umi3d.browserRuntime.ui.dropdown
         }
 
         #region IDropdownSubject
-        
-        List<IDropdownLabelObserver> _labelObservers = new();
 
-        public void Subscribe(IDropdownLabelObserver observer)
+        LabelSubject labelSubject = new LabelSubject();
+
+        public void Subscribe(ILabelObserver observer)
         {
-            if (!_labelObservers.Contains(observer)) { return; }
-            _labelObservers.Add(observer);
+            labelSubject.Subscribe(observer);
         }
 
-        public void Unsubscribe(IDropdownLabelObserver observer)
+        public void Unsubscribe(ILabelObserver observer)
         {
-            _labelObservers.Remove(observer);
+            labelSubject.Unsubscribe(observer);
         }
 
         void NotifyLabelObserver()
         {
-            foreach (var observer in _labelObservers)
-            {
-                try
-                {
-                    observer.UpdateLabel(label, isLabelVisible);
-                }
-                catch (System.Exception e)
-                {
-                    UnityEngine.Debug.LogException(e);
-                }
-            }
+            labelSubject.NotifyLabelObserver(label, isLabelVisible);
         }
 
-        List<IDropdownValueObserver> _valueObserver = new();
+        ValueSubject<string> valueSubject = new();
 
-        public void Subscribe(IDropdownValueObserver observer)
+        public void Subscribe(IValueObserver<string> observer)
         {
-            if (!_valueObserver.Contains(observer)) { return; }
-            _valueObserver.Add(observer);
+            valueSubject.Subscribe(observer);
         }
 
-        public void Unsubscribe(IDropdownValueObserver observer)
+        public void Unsubscribe(IValueObserver<string> observer)
         {
-            _valueObserver.Remove(observer);
+            valueSubject.Unsubscribe(observer);
         }
 
         void NotifyValueObserver()
         {
-            foreach (var observer in _valueObserver)
-            {
-                try
-                {
-                    observer.updateValue(label);
-                }
-                catch (System.Exception e)
-                {
-                    UnityEngine.Debug.LogException(e);
-                }
-            }
+            valueSubject.NotifyValueObserver(value);
         }
 
         List<IDropdownOptionsObserver> _optionsObservers = new();

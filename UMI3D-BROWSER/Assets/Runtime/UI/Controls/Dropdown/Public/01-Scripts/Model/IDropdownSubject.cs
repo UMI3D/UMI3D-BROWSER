@@ -14,20 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-namespace umi3d.browserRuntime.ui.dropdown
+namespace umi3d.browserRuntime.ui
 {
-    public interface IDropdownLabelSubject
-    {
-        void Subscribe(IDropdownLabelObserver observer);
-        void Unsubscribe(IDropdownLabelObserver observer);
-    }
-
-    public interface IDropdownValueSubject
-    {
-        void Subscribe(IDropdownValueObserver observer);
-        void Unsubscribe(IDropdownValueObserver observer);
-    }
-
     public interface IDropdownOptionsSubject
     {
         void Subscribe(IDropdownOptionsObserver observer);

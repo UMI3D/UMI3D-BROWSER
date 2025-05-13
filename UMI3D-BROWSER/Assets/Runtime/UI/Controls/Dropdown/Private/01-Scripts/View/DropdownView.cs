@@ -18,10 +18,10 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-namespace umi3d.browserRuntime.ui.dropdown
+namespace umi3d.browserRuntime.ui
 {
     [RequireComponent(typeof(TMP_Dropdown))]
-    public class DropdownView : MonoBehaviour, IDropdownValueObserver, IDropdownOptionsObserver
+    public class DropdownView : MonoBehaviour, IValueObserver<string>, IDropdownOptionsObserver
     {
         TMP_Dropdown _dropdown;
 
@@ -35,7 +35,7 @@ namespace umi3d.browserRuntime.ui.dropdown
 
             _controller = GetComponentInParent<DropdownController>();
             _model = _controller.model;
-            _model.Subscribe((IDropdownValueObserver)this);
+            _model.Subscribe((IValueObserver<string>)this);
             _model.Subscribe((IDropdownOptionsObserver)this);
         }
 
@@ -46,7 +46,7 @@ namespace umi3d.browserRuntime.ui.dropdown
 
         void OnDestroy()
         {
-            _model.Unsubscribe((IDropdownValueObserver)this);
+            _model.Unsubscribe((IValueObserver<string>)this);
             _model.Unsubscribe((IDropdownOptionsObserver)this);
         }
 

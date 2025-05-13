@@ -1,5 +1,5 @@
 /*
-Copyright 2019 - 2024 Inetum
+Copyright 2019 - 2025 Inetum
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,30 +14,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui
 {
-    public abstract class DropdownController : MonoBehaviour
+    public interface IDropdownBuilder 
     {
-        public IDropdownModel model { get; protected set; }
+        DropdownFactory factory { get; }
 
-        public event Action submitted;
-
-        public void ValueUpdated(int index)
-        {
-            model.SetValue(index);
-        }
-
-        public void Submit()
-        {
-            submitted?.Invoke();
-        }
-
-        public void Clear()
-        {
-            submitted = null;
-        }
+        void Build(Transform parent);
+        void BuildLabel();
+        void BuildValue();
+        void BuildOptions();
+        GameObject GetControl();
     }
 }

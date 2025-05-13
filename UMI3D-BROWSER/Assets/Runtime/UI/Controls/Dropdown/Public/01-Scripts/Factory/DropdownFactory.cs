@@ -15,53 +15,33 @@ limitations under the License.
 */
 
 using System.Collections.Generic;
-using umi3d.cdk.interaction;
-using umi3d.common.interaction;
 using UnityEngine;
 
-namespace umi3d.browserRuntime.ui.dropdown
+namespace umi3d.browserRuntime.ui
 {
     /// <summary>
     /// Factory managing a pool of dropdown.
     /// </summary>
-    public abstract class DropdownFactory : MonoBehaviour, ISimpleCreateBehaviour, IFormCreateBehaviour, IContextualMenuCreateBehaviour
+    public class DropdownFactory : MonoBehaviour
     {
         [SerializeField] 
         internal DropdownController _dropdownPrefab;
 
         internal Queue<DropdownController> _lstDropdownsAvailable = new();
 
-        protected ISimpleCreateBehaviour _simpleCreateBehaviour;
-        protected IFormCreateBehaviour _formCreateBehaviour;
-        protected IContextualMenuCreateBehaviour _contextMenuCreateBehaviour;
-
         public int AvailableDropdownCount => _lstDropdownsAvailable.Count;
 
-        protected virtual void Awake()
+        public bool TryToGetOrCreate(out GameObject control, Transform parent)
         {
-            _simpleCreateBehaviour = new NullObjectSimpleCreateBehaviour();
-            _formCreateBehaviour = new NullObjectFromCreateBehaviour();
-            _contextMenuCreateBehaviour = new NullObjectContextualMenuCreateBehaviour();
-        }
+            if (!_lstDropdownsAvailable.TryDequeue(out DropdownController controller))
+            {
+                controller = GameObject.Instantiate(_dropdownPrefab);
+            }
+            control = controller.gameObject;
+            controller.gameObject.SetActive(true);
+            controller.transform.SetParent(parent, false);
 
-        public bool TryToGetOrCreate(out GameObject control, Transform parent, string label, List<string> options, string value)
-        {
-            return _simpleCreateBehaviour.TryToGetOrCreate(out control, parent, label, options, value);
-        }
-
-        public bool TryToGetOrCreate(out GameObject control, Transform parent, EnumParameterDto<string> dto, FormAnswerDto formAnswerDto)
-        {
-            return _formCreateBehaviour.TryToGetOrCreate(out control, parent, dto, formAnswerDto);
-        }
-
-        public bool TryToGetOrCreate(out GameObject control, Transform parent, EnumParameterDto<string> dto)
-        {
-            return _contextMenuCreateBehaviour.TryToGetOrCreate(out control, parent, dto);
-        }
-
-        public bool TryToGetOrCreate(out GameObject control, Transform parent, EnumParameterDto<string> dto, IParameterInputSystem<string> inputSystem)
-        {
-            return _contextMenuCreateBehaviour.TryToGetOrCreate(out control, parent, dto, inputSystem);
+            return true;
         }
 
         /// <summary>

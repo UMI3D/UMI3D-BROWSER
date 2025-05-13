@@ -16,18 +16,8 @@ limitations under the License.
 
 using System.Collections.Generic;
 
-namespace umi3d.browserRuntime.ui.dropdown
+namespace umi3d.browserRuntime.ui
 {
-    public interface IDropdownLabelObserver 
-    {
-        void UpdateLabel(string label, bool isVisible);
-    }
-
-    public interface IDropdownValueObserver
-    {
-        void updateValue(string value);
-    }
-
     public interface IDropdownOptionsObserver
     {
         void updateOptions(List<string> options);

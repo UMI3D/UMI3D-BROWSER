@@ -14,13 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System;
 using System.Collections.Generic;
-using UnityEngine;
 
-namespace umi3d.browserRuntime.ui.dropdown
+namespace umi3d.browserRuntime.ui
 {
-    public interface IDropdownModel : IDropdownLabelSubject, IDropdownValueSubject, IDropdownOptionsSubject
+    public interface IDropdownModel : ILabelSubject, IValueSubject<string>, IDropdownOptionsSubject
     {
         string label { get; }
         string value { get; }

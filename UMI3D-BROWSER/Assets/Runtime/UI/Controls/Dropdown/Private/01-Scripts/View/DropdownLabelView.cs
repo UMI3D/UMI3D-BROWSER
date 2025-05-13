@@ -17,15 +17,15 @@ limitations under the License.
 using TMPro;
 using UnityEngine;
 
-namespace umi3d.browserRuntime.ui.dropdown
+namespace umi3d.browserRuntime.ui
 {
     [RequireComponent(typeof(TMP_Text))]
-    public class DropdownLabelView : MonoBehaviour, IDropdownLabelObserver
+    public class DropdownLabelView : MonoBehaviour, ILabelObserver
     {
         TMP_Text _text;
 
         DropdownController _controller;
-        IDropdownLabelSubject _model;
+        ILabelSubject _model;
 
         void Awake()
         {

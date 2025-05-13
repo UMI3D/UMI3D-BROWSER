@@ -17,7 +17,7 @@ limitations under the License.
 using System;
 using UnityEngine;
 
-namespace umi3d.browserRuntime.ui.dropdown
+namespace umi3d.browserRuntime.ui
 {
     public class SimpleDropdownController : DropdownController
     {

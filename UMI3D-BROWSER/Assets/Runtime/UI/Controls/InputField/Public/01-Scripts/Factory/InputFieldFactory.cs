@@ -17,7 +17,7 @@ limitations under the License.
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace umi3d.browserRuntime.ui.inputField
+namespace umi3d.browserRuntime.ui
 {
     /// <summary>
     /// Factory managing a pool of input field.

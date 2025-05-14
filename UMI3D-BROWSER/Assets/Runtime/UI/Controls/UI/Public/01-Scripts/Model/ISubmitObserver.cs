@@ -1,5 +1,5 @@
 /*
-Copyright 2019 - 2024 Inetum
+Copyright 2019 - 2025 Inetum
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,30 +19,8 @@ using UnityEngine;
 
 namespace umi3d.browserRuntime.ui
 {
-    public class DropdownController : MonoBehaviour
+    public interface ISubmitObserver 
     {
-        public DropdownModel model { get; protected set; }
-
-        public event Action submitted;
-
-        private void Awake()
-        {
-            model = new DropdownModel();
-        }
-
-        public void ValueUpdated(int index)
-        {
-            model.SetValue(index);
-        }
-
-        public void Submit()
-        {
-            submitted?.Invoke();
-        }
-
-        public void Clear()
-        {
-            submitted = null;
-        }
+        void OnSubmit();
     }
 }

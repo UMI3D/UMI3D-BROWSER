@@ -18,7 +18,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace umi3d.browserRuntime.ui.inputField
+namespace umi3d.browserRuntime.ui
 {
     [RequireComponent(typeof(Image))]
     public class InputFieldScrollBarBackground : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler

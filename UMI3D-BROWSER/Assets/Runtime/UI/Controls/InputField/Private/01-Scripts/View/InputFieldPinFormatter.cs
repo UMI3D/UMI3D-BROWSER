@@ -18,7 +18,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 
-namespace umi3d.browserRuntime.ui.inputField
+namespace umi3d.browserRuntime.ui
 {
     [RequireComponent(typeof(TMP_InputField))]
     public class InputFieldPinFormatter : MonoBehaviour, IInputFieldPinObserver

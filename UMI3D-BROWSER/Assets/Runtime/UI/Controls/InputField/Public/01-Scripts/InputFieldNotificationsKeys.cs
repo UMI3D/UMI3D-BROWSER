@@ -19,22 +19,6 @@ namespace umi3d.browserRuntime.ui.inputField
     public class InputFieldNotificationsKeys
     {
         /// <summary>
-        /// Event raised when the input field is changed by the user
-        /// </summary>
-        public class InputFieldUpdated
-        {
-            /// <summary>
-            /// The new value
-            /// </summary>
-            /// <remarks>
-            /// Value is <see cref="string"/>
-            /// </remarks>
-            public const string Value = "Value";
-
-            public const string ContentType = "ContentType";
-        }
-
-        /// <summary>
         /// Event raised when an input field is selected
         /// </summary>
         public class Selected { }

@@ -26,7 +26,7 @@ namespace umi3d.browserRuntime.ui
         TMP_Dropdown _dropdown;
 
         DropdownController _controller;
-        IDropdownModel _model;
+        DropdownModel _model;
 
         private void Awake()
         {

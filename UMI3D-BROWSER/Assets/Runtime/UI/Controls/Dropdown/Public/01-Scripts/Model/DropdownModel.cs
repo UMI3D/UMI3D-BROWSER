@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using inetum.unityUtils;
+using System;
 using System.Collections.Generic;
 
 namespace umi3d.browserRuntime.ui
@@ -22,7 +23,7 @@ namespace umi3d.browserRuntime.ui
     /// <summary>
     /// Model of a dropdown element
     /// </summary>
-    public class DropdownModel : IDropdownModel
+    public class DropdownModel : ILabelSubject, IValueSubject<string>, IDropdownOptionsSubject, ISubmitObserver
     {
         List<string> _options = new();
 
@@ -30,6 +31,7 @@ namespace umi3d.browserRuntime.ui
         public string label { get; private set; }
         public string value { get; private set; }
         public IEnumerator<string> options => _options.GetEnumerator();
+        public event Action submit;
 
         public int IndexOf(string value)
         {
@@ -127,6 +129,16 @@ namespace umi3d.browserRuntime.ui
         {
             _options = newOptions;
             NotifyOptionsObserver();
+        }
+
+        public void OnSubmit()
+        {
+            submit?.Invoke();
+        }
+
+        public void Clear()
+        {
+            submit = null;
         }
 
         public string debugString

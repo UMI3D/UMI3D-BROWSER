@@ -25,7 +25,7 @@ namespace umi3d.browserRuntime.ui
         public DropdownFactory factory {  get; private set; }
 
         GameObject control;
-        IDropdownModel model;
+        DropdownModel model;
 
         string label;
         List<string> options;
@@ -49,6 +49,11 @@ namespace umi3d.browserRuntime.ui
         public void BuildValue()
         {
             model.SetValue(value);
+        }
+
+        public void BuildSubmit(ISubmitSubject subject, Action onSubmit)
+        {
+            throw new NotImplementedException();
         }
 
         public GameObject GetControl()

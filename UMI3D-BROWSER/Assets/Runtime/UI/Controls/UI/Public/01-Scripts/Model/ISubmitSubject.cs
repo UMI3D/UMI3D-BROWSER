@@ -19,11 +19,9 @@ using UnityEngine;
 
 namespace umi3d.browserRuntime.ui
 {
-    public class SimpleDropdownController : DropdownController
+    public interface ISubmitSubject 
     {
-        void Awake()
-        {
-            model = new DropdownModel();
-        }
+        void Subscribe(ISubmitObserver observer);
+        void Unsubscribe(ISubmitObserver observer);
     }
 }

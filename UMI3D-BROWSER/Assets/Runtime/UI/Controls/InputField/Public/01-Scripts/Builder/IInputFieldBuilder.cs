@@ -19,7 +19,7 @@ using UnityEngine;
 
 namespace umi3d.browserRuntime.ui
 {
-    public interface InputFieldBuilder 
+    public interface IInputFieldBuilder 
     {
         InputFieldFactory factory { get; }
 

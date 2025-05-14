@@ -21,7 +21,7 @@ using UnityEngine;
 
 namespace umi3d.browserRuntime.ui
 {
-    public class SimpleInputFieldBuilder : InputFieldBuilder
+    public class SimpleInputFieldBuilder : IInputFieldBuilder
     {
         public InputFieldFactory factory {  get; private set; }
 

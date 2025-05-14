@@ -14,11 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils.observation;
-using System;
 using System.Collections.Generic;
 using TMPro;
-using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.ui
 {

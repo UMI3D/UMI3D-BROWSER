@@ -14,50 +14,35 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils.observation;
 using TMPro;
-using umi3d.browserRuntime.ui.slider;
 using UnityEngine;
 
-namespace umi3d
+namespace umi3d.browserRuntime.ui
 {
     [RequireComponent(typeof(TMP_Text))]
-    public class SliderValueView : MonoBehaviour
+    public class SliderValueView : MonoBehaviour, IValueObserver<float>
     {
         TMP_Text _text;
 
-        SliderModelContainer _modelContainer;
+        SliderController _controller;
+        SliderModel _model;
 
         private void Awake()
         {
             _text = GetComponent<TMP_Text>();
-            _modelContainer = GetComponentInParent<SliderModelContainer>();
-
-            NotificationHub.Default.Subscribe(this,
-                ID.FromType<SliderNotifiactionKeys.SliderSet>(),
-                (Callback)SliderSet,
-                new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == _modelContainer.model));
-            NotificationHub.Default.Subscribe(this,
-                ID.FromType<SliderNotifiactionKeys.SliderUpdated>(),
-                (Callback)SliderUpdated,
-                new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == _modelContainer.model));
+            _controller = GetComponentInParent<SliderController>();
+            _model = _controller.model;
+            _model.Subscribe(this);
         }
 
         private void OnDestroy()
         {
-            NotificationHub.Default.Unsubscribe(this);
+            _model?.Unsubscribe(this);
         }
 
-        private void SliderSet(Notification notification)
+        public void updateValue(float value)
         {
-            if (notification.TryGetInfoT(SliderNotifiactionKeys.SliderSet.Value, out float value))
-                _text.text = value.ToString();
-        }
-
-        private void SliderUpdated(Notification notification)
-        {
-            if (notification.TryGetInfoT(SliderNotifiactionKeys.SliderUpdated.Value, out float value))
-                _text.text = value.ToString();
+            _text.text = value.ToString();
         }
     }
 }

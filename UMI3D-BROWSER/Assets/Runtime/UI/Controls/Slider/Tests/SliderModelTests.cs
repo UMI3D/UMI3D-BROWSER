@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
-using umi3d.browserRuntime.ui.slider;
+using umi3d.browserRuntime.ui;
 using UnityEngine;
 using UnityEngine.TestTools;
 
@@ -120,62 +120,6 @@ public class SliderModelTests
         }
     }
 
-    public class UpdateValue
-    {
-        private SliderModel sliderModel;
-
-        [SetUp]
-        public void SetUp()
-        {
-            sliderModel = new SliderModel();
-        }
-
-        [Test]
-        public void GivenInitialState_WhenUpdatingValueWithinRange_ThenValueIsUpdated()
-        {
-            // Given
-            sliderModel.SetMinValue(0f);
-            sliderModel.SetMaxValue(10f);
-            Assert.AreEqual(0f, sliderModel.value);
-
-            // When
-            sliderModel.UpdateValue(5.5f);
-
-            // Then
-            Assert.AreEqual(5.5f, sliderModel.value);
-        }
-
-        [Test]
-        public void GivenInitialState_WhenUpdatingValueAboveMaxValue_ThenValueIsClampedToMaxValue()
-        {
-            // Given
-            sliderModel.SetMinValue(0f);
-            sliderModel.SetMaxValue(10f);
-            Assert.AreEqual(0f, sliderModel.value);
-
-            // When
-            sliderModel.UpdateValue(15f);
-
-            // Then
-            Assert.AreEqual(10f, sliderModel.value);
-        }
-
-        [Test]
-        public void GivenInitialState_WhenUpdatingValueBelowMinValue_ThenValueIsClampedToMinValue()
-        {
-            // Given
-            sliderModel.SetMinValue(0f);
-            sliderModel.SetMaxValue(10f);
-            Assert.AreEqual(0f, sliderModel.value);
-
-            // When
-            sliderModel.UpdateValue(-5f);
-
-            // Then
-            Assert.AreEqual(0f, sliderModel.value);
-        }
-    }
-
     public class SetMaxValue
     {
         private SliderModel sliderModel;
@@ -207,7 +151,6 @@ public class SliderModelTests
             // Given
             sliderModel.SetMinValue(0f);
             sliderModel.SetMaxValue(10f);
-            sliderModel.UpdateValue(15f);
             Assert.AreEqual(10f, sliderModel.value);
 
             // When
@@ -224,7 +167,6 @@ public class SliderModelTests
             // Given
             sliderModel.SetMinValue(0f);
             sliderModel.SetMaxValue(10f);
-            sliderModel.UpdateValue(5f);
             Assert.AreEqual(5f, sliderModel.value);
 
             // When
@@ -267,7 +209,6 @@ public class SliderModelTests
             // Given
             sliderModel.SetMinValue(0f);
             sliderModel.SetMaxValue(10f);
-            sliderModel.UpdateValue(-5f);
             Assert.AreEqual(0f, sliderModel.value);
 
             // When
@@ -284,7 +225,6 @@ public class SliderModelTests
             // Given
             sliderModel.SetMinValue(0f);
             sliderModel.SetMaxValue(10f);
-            sliderModel.UpdateValue(5f);
             Assert.AreEqual(5f, sliderModel.value);
 
             // When

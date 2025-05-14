@@ -14,12 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils.observation;
+using System.Collections.Generic;
 using UnityEngine;
 
-namespace umi3d.browserRuntime.ui.slider
+namespace umi3d.browserRuntime.ui
 {
-    public class SliderModel
+    public class SliderModel : ILabelSubject, IValueSubject<float>, ISliderRangeSubject, ISliderWholeNumbersSubject
     {
         public bool isLabelVisible { get; private set; } = false;
         public string label { get; private set; }
@@ -28,27 +28,105 @@ namespace umi3d.browserRuntime.ui.slider
         public float minValue { get; private set; }
         public bool isInteger { get; private set; } = false;
 
-        Notifier _setNotifier;
-        Notifier _updateNotifier;
+        #region Subject
 
-        public SliderModel()
+        LabelSubject labelSubject = new();
+
+        public void Subscribe(ILabelObserver observer)
         {
-            _setNotifier = NotificationHub.Default.GetNotifier(this,
-                ID.FromType<SliderNotifiactionKeys.SliderSet>());
-            _setNotifier[SliderNotifiactionKeys.SliderSet.IsLabelVisible] = isLabelVisible;
-            _setNotifier[SliderNotifiactionKeys.SliderSet.Label] = label;
-            _setNotifier[SliderNotifiactionKeys.SliderSet.Value] = value;
-            _setNotifier[SliderNotifiactionKeys.SliderSet.MaxValue] = maxValue;
-            _setNotifier[SliderNotifiactionKeys.SliderSet.MinValue] = minValue;
-            _setNotifier[SliderNotifiactionKeys.SliderSet.IsInteger] = isInteger;
-
-            _updateNotifier = NotificationHub.Default.GetNotifier(this,
-                ID.FromType<SliderNotifiactionKeys.SliderUpdated>());
+            labelSubject.Subscribe(observer);
         }
+
+        public void Unsubscribe(ILabelObserver observer)
+        {
+            labelSubject.Unsubscribe(observer);
+        }
+
+        void NotifyLabelObserver()
+        {
+            labelSubject.NotifyLabelObserver(label, isLabelVisible);
+        }
+
+        ValueSubject<float> valueSubject = new();
+
+        public void Subscribe(IValueObserver<float> observer)
+        {
+            valueSubject.Subscribe(observer);
+        }
+
+        public void Unsubscribe(IValueObserver<float> observer)
+        {
+            valueSubject.Unsubscribe(observer);
+        }
+
+        void NotifyValueObserver()
+        {
+            valueSubject.NotifyValueObserver(value);
+        }
+
+        List<ISliderRangeObserver> _rangeObservers = new();
+
+        public void Subscribe(ISliderRangeObserver observer)
+        {
+            if (!_rangeObservers.Contains(observer))
+            {
+                _rangeObservers.Add(observer);
+            }
+        }
+
+        public void Unsubscribe(ISliderRangeObserver observer)
+        {
+            _rangeObservers.Remove(observer);
+        }
+
+        void NotifyRangeObserver()
+        {
+            foreach (var observer in _rangeObservers)
+            {
+                try
+                {
+                    observer.UpdateRange(minValue, maxValue);
+                }
+                catch (System.Exception e)
+                {
+                    UnityEngine.Debug.LogException(e);
+                }
+            }
+        }
+
+        List<ISliderWholeNumbersObserver> _wholeNumbersObservers = new();
+
+        public void Subscribe(ISliderWholeNumbersObserver observer)
+        {
+            if (!_wholeNumbersObservers.Contains(observer))
+            {
+                _wholeNumbersObservers.Add(observer);
+            }
+        }
+
+        public void Unsubscribe(ISliderWholeNumbersObserver observer)
+        {
+            _wholeNumbersObservers.Remove(observer);
+        }
+
+        void NotifyWholeNumbersObserver()
+        {
+            foreach (var observer in _wholeNumbersObservers)
+            {
+                try
+                {
+                    observer.UpdateWholeNumbers(isInteger);
+                }
+                catch (System.Exception e)
+                {
+                    UnityEngine.Debug.LogException(e);
+                }
+            }
+        }
+        #endregion
 
         /// <summary>
         /// This method sets the label for the slider and updates its visibility status.<br/>
-        /// Send a <see cref="SliderNotifiactionKeys.SliderSet"/> notification.<br/>
         /// <br/>
         /// <example>
         /// Given a new label string, when calling SetLabel, then the label and its visibility status are updated.
@@ -62,14 +140,11 @@ namespace umi3d.browserRuntime.ui.slider
         {
             isLabelVisible = !string.IsNullOrEmpty(newLabel);
             label = newLabel;
-            _setNotifier[SliderNotifiactionKeys.SliderSet.IsLabelVisible] = isLabelVisible;
-            _setNotifier[SliderNotifiactionKeys.SliderSet.Label] = label;
-            _setNotifier.Notify();
+            NotifyLabelObserver();
         }
 
         /// <summary>
         /// This method sets the value for the slider, clamping it within the specified min and max range.<br/>
-        /// Send a <see cref="SliderNotifiactionKeys.SliderSet"/> notification.<br/>
         /// <br/>
         /// <example>
         /// Given a new value, when calling SetValue, then the value is clamped within the min and max range and updated.
@@ -82,32 +157,11 @@ namespace umi3d.browserRuntime.ui.slider
         public void SetValue(float newValue)
         {
             value = Mathf.Clamp(newValue, minValue, maxValue);
-            _setNotifier[SliderNotifiactionKeys.SliderSet.Value] = value;
-            _setNotifier.Notify();
-        }
-
-        /// <summary>
-        /// This method updates the value for the slider, clamping it within the specified min and max range, and notifies observers of the change.<br/>
-        /// Send a <see cref="SliderNotifiactionKeys.SliderUpdated"/> notification.<br/>
-        /// <br/>
-        /// <example>
-        /// Given a new value, when calling UpdateValue, then the value is clamped within the min and max range and updated.
-        /// <code>
-        /// UpdateValue(5.5f);
-        /// </code>
-        /// </example>
-        /// </summary>
-        /// <param name="newValue">The new value to update. It will be clamped within the min and max range.</param>
-        public void UpdateValue(float newValue)
-        {
-            value = Mathf.Clamp(newValue, minValue, maxValue);
-            _updateNotifier[SliderNotifiactionKeys.SliderUpdated.Value] = value;
-            _updateNotifier.Notify();
+            NotifyValueObserver();
         }
 
         /// <summary>
         /// This method sets the maximum value for the slider, clamps the current value within the new range, and notifies observers of the changes.<br/>
-        /// Send a <see cref="SliderNotifiactionKeys.SliderSet"/> notification.<br/>
         /// <br/>
         /// <example>
         /// Given a new maximum value, when calling SetMaxValue, then the maximum value is updated and the current value is clamped within the new range.
@@ -121,14 +175,11 @@ namespace umi3d.browserRuntime.ui.slider
         {
             maxValue = newValue;
             value = Mathf.Clamp(value, minValue, maxValue);
-            _setNotifier[SliderNotifiactionKeys.SliderSet.MaxValue] = maxValue;
-            _setNotifier[SliderNotifiactionKeys.SliderSet.Value] = value;
-            _setNotifier.Notify();
+            NotifyRangeObserver();
         }
 
         /// <summary>
         /// This method sets the minimum value for the slider, clamps the current value within the new range, and notifies observers of the changes.<br/>
-        /// Send a <see cref="SliderNotifiactionKeys.SliderSet"/> notification.<br/>
         /// <br/>
         /// <example>
         /// Given a new minimum value, when calling SetMinValue, then the minimum value is updated and the current value is clamped within the new range.
@@ -142,14 +193,11 @@ namespace umi3d.browserRuntime.ui.slider
         {
             minValue = newValue;
             value = Mathf.Clamp(value, minValue, maxValue);
-            _setNotifier[SliderNotifiactionKeys.SliderSet.MinValue] = minValue;
-            _setNotifier[SliderNotifiactionKeys.SliderSet.Value] = value;
-            _setNotifier.Notify();
+            NotifyRangeObserver();
         }
 
         /// <summary>
         /// This method sets whether the slider represents integer values and notifies observers of the change.<br/>
-        /// Send a <see cref="SliderNotifiactionKeys.SliderSet"/> notification.<br/>
         /// <br/>
         /// <example>
         /// Given a boolean value, when calling SetIsInteger, then the isInteger property is updated and observers are notified.
@@ -162,8 +210,7 @@ namespace umi3d.browserRuntime.ui.slider
         public void SetIsInteger(bool newIsInteger)
         {
             isInteger = newIsInteger;
-            _setNotifier[SliderNotifiactionKeys.SliderSet.IsInteger] = isInteger;
-            _setNotifier.Notify();
+            NotifyWholeNumbersObserver();
         }
     }
 }

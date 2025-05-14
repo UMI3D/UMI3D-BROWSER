@@ -14,48 +14,38 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils.observation;
 using TMPro;
 using UnityEngine;
 
-namespace umi3d.browserRuntime.ui.slider
+namespace umi3d.browserRuntime.ui
 {
     [RequireComponent(typeof(TMP_Text))]
-    public class SliderLabelView : MonoBehaviour
+    public class SliderLabelView : MonoBehaviour, ILabelObserver
     {
         TMP_Text _text;
 
-        SliderModelContainer _modelContainer;
+        SliderController _controller;
+        SliderModel _model;
 
-        private void Awake()
+        void Awake()
         {
             _text = GetComponent<TMP_Text>();
-            _modelContainer = GetComponentInParent<SliderModelContainer>();
-
-            NotificationHub.Default.Subscribe(this,
-                ID.FromType<SliderNotifiactionKeys.SliderSet>(),
-                (Callback)TitleSet,
-                new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == _modelContainer.model));
+            _controller = GetComponentInParent<SliderController>();
+            _model = _controller.model;
+            _model.Subscribe(this);
         }
 
-        private void OnDestroy()
+        void OnDestroy()
         {
-            NotificationHub.Default.Unsubscribe(this);
+            _model.Unsubscribe(this);
         }
 
-        private void TitleSet(Notification notification)
+        public void UpdateLabel(string label, bool isVisible)
         {
-            if (notification.TryGetInfoT(SliderNotifiactionKeys.SliderSet.IsLabelVisible, out bool isActive))
-            {
-                gameObject.SetActive(isActive);
-                if (!isActive)
-                    return;
-            }
+            gameObject.SetActive(isVisible);
+            if (!isVisible) { return; }
 
-            if (notification.TryGetInfoT(SliderNotifiactionKeys.SliderSet.Label, out string newTitle))
-            {
-                _text.text = newTitle;
-            }
+            _text.text = label;
         }
     }
 }

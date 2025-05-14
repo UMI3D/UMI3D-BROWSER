@@ -16,24 +16,20 @@ limitations under the License.
 
 using UnityEngine;
 
-namespace umi3d.browserRuntime.ui.slider
+namespace umi3d.browserRuntime.ui
 {
-    /// <summary>
-    /// Container of an <see cref="SliderIntParameterModel"/>. 
-    /// Used with an <see cref="SliderModelContainer"/>.
-    /// </summary>
-    [RequireComponent(typeof(SliderModelContainer))]
-    public class SliderIntParameterModelContainer : MonoBehaviour
+    public class SliderController : MonoBehaviour
     {
-        public SliderIntParameterModel parameterModel;
-
-        SliderModelContainer _modelContainer;
+        public SliderModel model { get; private set; }
 
         private void Awake()
         {
-            _modelContainer = GetComponent<SliderModelContainer>();
+            model = new SliderModel();
+        }
 
-            parameterModel = new SliderIntParameterModel(_modelContainer.model);
+        public void ValueUpdated(float value)
+        {
+            model.SetValue(value);
         }
     }
 }

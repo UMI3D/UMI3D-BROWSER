@@ -14,70 +14,62 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils;
-using inetum.unityUtils.observation;
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace umi3d.browserRuntime.ui.slider
+namespace umi3d.browserRuntime.ui
 {
     [RequireComponent(typeof(Slider)), ExecuteInEditMode]
-    public class SliderView : MonoBehaviour
+    public class SliderView : MonoBehaviour, IValueObserver<float>, ISliderRangeObserver, ISliderWholeNumbersObserver
     {
         Slider _slider;
 
-        SliderModelContainer _modelContainer;
+        SliderController _controller;
+        SliderModel _model;
 
-        private void Awake()
+        void Awake()
         {
             _slider = GetComponent<Slider>();
-            _modelContainer = GetComponentInParent<SliderModelContainer>();
-
             _slider.onValueChanged.AddListener(OnValueChanged);
 
-            NotificationHub.Default.Subscribe(this,
-                ID.FromType<SliderNotifiactionKeys.SliderSet>(),
-                (Callback)SliderSet,
-                new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == _modelContainer.model));
+            _controller = GetComponentInParent<SliderController>();
+            _model = _controller.model;
+            _model.Subscribe(this as IValueObserver<float>);
+            _model.Subscribe(this as ISliderRangeObserver);
+            _model.Subscribe(this as ISliderWholeNumbersObserver);
         }
 
-        private void OnEnable()
+        void OnEnable()
         {
             _slider.Select();
         }
 
-        private void OnDestroy()
+        void OnDestroy()
         {
-            NotificationHub.Default.Unsubscribe(this);
+            _model.Unsubscribe(this as IValueObserver<float>);
+            _model.Unsubscribe(this as ISliderRangeObserver);
+            _model.Unsubscribe(this as ISliderWholeNumbersObserver);
         }
 
-        private void OnValueChanged(float newValue)
+        void OnValueChanged(float newValue)
         {
-            _modelContainer.model.UpdateValue(newValue);
+            _controller.ValueUpdated(newValue);
         }
 
-        private void SliderSet(Notification notification)
+        public void updateValue(float value)
         {
-            if (notification.TryGetInfoT(SliderNotifiactionKeys.SliderSet.MaxValue, out float maxValue))
-            {
-                _slider.maxValue = maxValue;
-            }
+            _slider.SetValueWithoutNotify(value);
+        }
 
-            if (notification.TryGetInfoT(SliderNotifiactionKeys.SliderSet.MinValue, out float minValue))
-            {
-                _slider.minValue = minValue;
-            }
+        public void UpdateRange(float min, float max)
+        {
+            _slider.minValue = min;
+            _slider.maxValue = max;
+        }
 
-            if (notification.TryGetInfoT(SliderNotifiactionKeys.SliderSet.Value, out float value))
-            {
-                _slider.value = value;
-            }
-
-            if (notification.TryGetInfoT(SliderNotifiactionKeys.SliderSet.IsInteger, out bool isInterger))
-            {
-                _slider.wholeNumbers = isInterger;
-            }
+        public void UpdateWholeNumbers(bool wholeNumbers)
+        {
+            _slider.wholeNumbers = wholeNumbers;
         }
     }
 }

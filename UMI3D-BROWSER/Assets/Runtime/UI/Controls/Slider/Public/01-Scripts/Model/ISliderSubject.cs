@@ -1,5 +1,5 @@
 /*
-Copyright 2019 - 2024 Inetum
+Copyright 2019 - 2025 Inetum
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,24 +14,20 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System;
 using UnityEngine;
 
-namespace umi3d.browserRuntime.ui.slider
+namespace umi3d.browserRuntime.ui
 {
-    /// <summary>
-    /// The container of an <see cref="SliderModel"/>
-    /// </summary>
-    public class SliderModelContainer : MonoBehaviour
+    public interface ISliderRangeSubject 
     {
-        SliderModel _model;
+        void Subscribe(ISliderRangeObserver observer);
+        void Unsubscribe(ISliderRangeObserver observer);
+    }
 
-        public SliderModel model
-        {
-            get {
-                if (_model == null)
-                    _model = new SliderModel();
-                return _model;
-            }
-        }
+    public interface ISliderWholeNumbersSubject
+    {
+        void Subscribe(ISliderWholeNumbersObserver observer);
+        void Unsubscribe(ISliderWholeNumbersObserver observer);
     }
 }

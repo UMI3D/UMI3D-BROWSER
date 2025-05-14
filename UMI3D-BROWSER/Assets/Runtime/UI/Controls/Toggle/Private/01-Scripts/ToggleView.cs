@@ -14,16 +14,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils.observation;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace umi3d.browserRuntime.ui.toggle
+namespace umi3d.browserRuntime.ui
 {
     [RequireComponent(typeof(Slider))]
-    public class ToggleView : MonoBehaviour, IPointerClickHandler
+    public class ToggleView : MonoBehaviour, IPointerClickHandler, IValueObserver<bool>
     {
         [Header("Animation")]
         [SerializeField] private float _animationDuration = 0.5f;
@@ -40,57 +39,51 @@ namespace umi3d.browserRuntime.ui.toggle
         [SerializeField] private Color _handleColorOff = Color.black;
         [SerializeField] private Color _handleColorOn = Color.white;
 
-        private ToggleModelContainer _modelContainer;
+        Slider _slider;
+        Coroutine _animationSliderCoroutine;
 
-        private Slider _slider;
-        private Coroutine _animationSliderCoroutine;
+        ToggleController _controller;
+        ToggleModel _model;
 
-        private void Awake()
-        {
-            _modelContainer = GetComponentInParent<ToggleModelContainer>();
-
-            SetUpSliderComponents();
-
-            NotificationHub.Default.Subscribe(this,
-                ID.FromType<ToggleNotificationKeys.ToggleSet>(),
-                (Callback)ToggleSet,
-                new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == _modelContainer.model));
-        }
-
-        private void OnEnable()
-        {
-            _slider.Select();
-        }
-
-        private void SetUpSliderComponents()
+        void Awake()
         {
             _slider = GetComponent<Slider>();
-
-            if (_slider == null)
-                Debug.Log("No Slider Found !", this);
+            Debug.Assert(_slider, "No Slider Found!", this);
 
             _slider.interactable = false;
             var sliderColors = _slider.colors;
             sliderColors.disabledColor = Color.white;
             _slider.colors = sliderColors;
             _slider.transition = Selectable.Transition.None;
+
+            _controller = GetComponentInParent<ToggleController>();
+            _model = _controller.model;
+            _model.Subscribe(this);
+        }
+
+        void OnEnable()
+        {
+            _slider.Select();
+        }
+
+        void OnDestroy()
+        {
+            _model.Unsubscribe(this);
+        }
+
+        public void updateValue(bool value)
+        {
+            Play_SliderGoTo(value ? 1 : 0);
         }
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            _modelContainer.model.ToggleValue();
-            Play_SliderGoTo(_modelContainer.model.value ? 1 : 0);
-        }
-
-        private void ToggleSet(Notification notification)
-        {
-            if (!notification.TryGetInfoT(ToggleNotificationKeys.ToggleSet.Value, out bool newValue))
-                return;
-
+            bool newValue = !_model.value;
+            _controller.ValueUpdated(newValue);
             Play_SliderGoTo(newValue ? 1 : 0);
         }
 
-        private void Play_SliderGoTo(float newSliderValue)
+        void Play_SliderGoTo(float newSliderValue)
         {
             if (_animationSliderCoroutine != null)
                 StopCoroutine(_animationSliderCoroutine);
@@ -101,7 +94,7 @@ namespace umi3d.browserRuntime.ui.toggle
                 _slider.value = newSliderValue;
         }
 
-        private IEnumerator SliderGoTo(float newSliderValue)
+        IEnumerator SliderGoTo(float newSliderValue)
         {
             float startValue = _slider.value;
             float time = 0;
@@ -120,7 +113,7 @@ namespace umi3d.browserRuntime.ui.toggle
             _slider.value = newSliderValue;
         }
 
-        private void ChangeColors(float sliderValue)
+        void ChangeColors(float sliderValue)
         {
             if (_backgroundImage)
                 _backgroundImage.color = Color.Lerp(_backgroundColorOff, _backgroundColorOn, sliderValue);

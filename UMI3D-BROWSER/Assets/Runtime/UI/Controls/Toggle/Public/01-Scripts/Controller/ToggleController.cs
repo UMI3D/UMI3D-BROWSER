@@ -18,22 +18,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace umi3d.browserRuntime.ui.toggle
+namespace umi3d.browserRuntime.ui
 {
-    /// <summary>
-    /// The container of an <see cref="ToggleModel"/>
-    /// </summary>
-    public class ToggleModelContainer : MonoBehaviour
+    public class ToggleController : MonoBehaviour
     {
-        ToggleModel _model;
+        public ToggleModel model { get; private set; }
 
-        public ToggleModel model
+        void Awake()
         {
-            get {
-                if (_model == null)
-                    _model = new ToggleModel();
-                return _model;
-            }
+            model = new();
+        }
+
+        public void ValueUpdated(bool value)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

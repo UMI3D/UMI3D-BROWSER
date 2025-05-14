@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
-using umi3d.browserRuntime.ui.toggle;
+using umi3d.browserRuntime.ui;
 using UnityEngine;
 using UnityEngine.TestTools;
 
@@ -98,45 +98,6 @@ public class ToggleModelTests
 
             // Then
             Assert.IsFalse(_toggleModel.value);
-        }
-    }
-
-    public class ToggleValueTests
-    {
-        private ToggleModel _toggleModel;
-
-        [SetUp]
-        public void SetUp()
-        {
-            _toggleModel = new ToggleModel();
-        }
-
-        [Test]
-        public void GivenValueIsTrue_WhenTogglingValue_ThenValueIsFalse()
-        {
-            // Given
-            _toggleModel.SetValue(true);
-            Assert.IsTrue(_toggleModel.value);
-
-            // When
-            _toggleModel.ToggleValue();
-
-            // Then
-            Assert.IsFalse(_toggleModel.value);
-        }
-
-        [Test]
-        public void GivenValueIsFalse_WhenTogglingValue_ThenValueIsTrue()
-        {
-            // Given
-            _toggleModel.SetValue(false);
-            Assert.IsFalse(_toggleModel.value);
-
-            // When
-            _toggleModel.ToggleValue();
-
-            // Then
-            Assert.IsTrue(_toggleModel.value);
         }
     }
 }

@@ -14,48 +14,38 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils.observation;
 using TMPro;
 using UnityEngine;
 
-namespace umi3d.browserRuntime.ui.toggle
+namespace umi3d.browserRuntime.ui
 {
     [RequireComponent(typeof(TMP_Text))]
-    public class ToggleLabelView : MonoBehaviour
+    public class ToggleLabelView : MonoBehaviour, ILabelObserver
     {
         TMP_Text _text;
 
-        ToggleModelContainer _modelContainer;
+        ToggleController _controller;
+        ToggleModel _model;
 
-        private void Awake()
+        void Awake()
         {
             _text = GetComponent<TMP_Text>();
-            _modelContainer = GetComponentInParent<ToggleModelContainer>();
-
-            NotificationHub.Default.Subscribe(this,
-                ID.FromType<ToggleNotificationKeys.ToggleSet>(), 
-                (Callback)TitleSet,
-                new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == _modelContainer.model));
+            _controller = GetComponentInParent<ToggleController>();
+            _model = _controller.model;
+            _model.Subscribe(this);
         }
 
-        private void OnDestroy()
+        void OnDestroy()
         {
-            NotificationHub.Default.Unsubscribe(this);
+            _model.Unsubscribe(this);
         }
 
-        private void TitleSet(Notification notification)
+        public void UpdateLabel(string label, bool isVisible)
         {
-            if (notification.TryGetInfoT(ToggleNotificationKeys.ToggleSet.IsLabelVisible, out bool isActive))
-            {
-                gameObject.SetActive(isActive);
-                if (!isActive)
-                    return;
-            }
+            gameObject.SetActive(isVisible);
+            if (!isVisible) { return; }
 
-            if (notification.TryGetInfoT(ToggleNotificationKeys.ToggleSet.Label, out string newTitle))
-            {
-                _text.text = newTitle;
-            }
+            _text.text = label;
         }
     }
 }

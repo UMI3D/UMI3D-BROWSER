@@ -14,38 +14,57 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils.observation;
-
-namespace umi3d.browserRuntime.ui.toggle
+namespace umi3d.browserRuntime.ui
 {
     /// <summary>
     /// Model of a toggle element
     /// </summary>
-
-    public class ToggleModel 
+    public class ToggleModel : ILabelSubject, IValueSubject<bool>
     {
         public bool isLabelVisible { get; private set; } = false;
         public string label { get; private set; }
         public bool value { get; private set; }
 
-        Notifier _setNotifier;
-        Notifier _updateNotifier;
+        #region ISubject
 
-        public ToggleModel()
+        LabelSubject _labelSubject = new();
+
+        public void Subscribe(ILabelObserver observer)
         {
-            _setNotifier = NotificationHub.Default.GetNotifier(this,
-                ID.FromType<ToggleNotificationKeys.ToggleSet>());
-            _setNotifier[ToggleNotificationKeys.ToggleSet.IsLabelVisible] = isLabelVisible;
-            _setNotifier[ToggleNotificationKeys.ToggleSet.Label] = label;
-            _setNotifier[ToggleNotificationKeys.ToggleSet.Value] = value;
-
-            _updateNotifier = NotificationHub.Default.GetNotifier(this,
-                ID.FromType<ToggleNotificationKeys.ToggleUpdated>());
+            _labelSubject.Subscribe(observer);
         }
+
+        public void Unsubscribe(ILabelObserver observer)
+        {
+            _labelSubject.Unsubscribe(observer);
+        }
+
+        void NotifyLabelObserver()
+        {
+            _labelSubject.NotifyLabelObserver(label, isLabelVisible);
+        }
+
+        ValueSubject<bool> _valueSubject = new();
+
+        public void Subscribe(IValueObserver<bool> observer)
+        {
+            _valueSubject.Subscribe(observer);
+        }
+
+        public void Unsubscribe(IValueObserver<bool> observer)
+        {
+            _valueSubject.Unsubscribe(observer);
+        }
+
+        void NotifyValueObserver()
+        {
+            _valueSubject.NotifyValueObserver(value);
+        }
+
+        #endregion
 
         /// <summary>
         /// Sets the label to the specified value and updates the visibility status.<br/>
-        /// Send a <see cref="ToggleNotificationKeys.ToggleSet"/> notification.<br/>
         /// <br/>
         /// <example>
         /// Given a new label string, when setting the label, then the visibility status and label value are updated accordingly.
@@ -61,14 +80,11 @@ namespace umi3d.browserRuntime.ui.toggle
         {
             isLabelVisible = !string.IsNullOrEmpty(newLabel);
             label = newLabel;
-            _setNotifier[ToggleNotificationKeys.ToggleSet.IsLabelVisible] = isLabelVisible;
-            _setNotifier[ToggleNotificationKeys.ToggleSet.Label] = label;
-            _setNotifier.Notify();
+            NotifyLabelObserver();
         }
 
         /// <summary>
         /// Sets the value to the specified boolean value and notifies any observers.<br/>
-        /// Send a <see cref="ToggleNotificationKeys.ToggleSet"/> notification.<br/>
         /// <br/>
         /// <example>
         /// Given a new boolean value, when setting the value, then the value is updated and observers are notified.
@@ -82,28 +98,7 @@ namespace umi3d.browserRuntime.ui.toggle
         public void SetValue(bool newValue)
         {
             value = newValue;
-            _setNotifier[ToggleNotificationKeys.ToggleSet.Value] = value;
-            _setNotifier.Notify();
-        }
-
-        /// <summary>
-        /// Toggles the current boolean value and notifies any observers.<br/>
-        /// Send a <see cref="ToggleNotificationKeys.ToggleUpdated"/> notification.<br/>
-        /// <br/>
-        /// <example>
-        /// Given the current value, when toggling the value, then the value is inverted and observers are notified.
-        /// <code>
-        /// _toggleModel.ToggleValue();
-        /// // if value was true, it becomes false
-        /// // if value was false, it becomes true
-        /// </code>
-        /// </example>
-        /// </summary>
-        public void ToggleValue()
-        {
-            value = !value;
-            _updateNotifier[ToggleNotificationKeys.ToggleUpdated.Value] = value;
-            _updateNotifier.Notify();
+            NotifyValueObserver();
         }
     }
 }

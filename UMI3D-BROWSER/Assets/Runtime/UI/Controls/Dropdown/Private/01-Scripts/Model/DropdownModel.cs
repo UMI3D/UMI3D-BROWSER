@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils;
 using System.Collections.Generic;
 
 namespace umi3d.browserRuntime.ui
@@ -126,6 +127,18 @@ namespace umi3d.browserRuntime.ui
         {
             _options = newOptions;
             NotifyOptionsObserver();
+        }
+
+        public string debugString
+        {
+            get
+            {
+                string result = "---- DropdownModel ----\n";
+
+                result += $"{isLabelVisible}, {label}, {value}, {_options.ToString<string>()}";
+
+                return result;
+            }
         }
     }
 }

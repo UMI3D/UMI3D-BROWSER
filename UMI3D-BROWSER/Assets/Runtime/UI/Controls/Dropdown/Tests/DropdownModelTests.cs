@@ -81,7 +81,11 @@ public class DropdownModelTests
             dropdownModel.SetOptions(newValue);
 
             // Then
-            Assert.AreEqual(newValue, dropdownModel.options);
+            string expectation = 
+                "---- DropdownModel ----\n" +
+                "False, , , [New Value;New Value 1]";
+
+            Assert.AreEqual(expectation, dropdownModel.debugString);
         }
     }
 }

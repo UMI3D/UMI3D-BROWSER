@@ -151,7 +151,8 @@ public class SliderModelTests
             // Given
             sliderModel.SetMinValue(0f);
             sliderModel.SetMaxValue(10f);
-            Assert.AreEqual(10f, sliderModel.value);
+            sliderModel.SetValue(8f);
+            Assert.AreEqual(8f, sliderModel.value);
 
             // When
             sliderModel.SetMaxValue(5f);
@@ -167,6 +168,7 @@ public class SliderModelTests
             // Given
             sliderModel.SetMinValue(0f);
             sliderModel.SetMaxValue(10f);
+            sliderModel.SetValue(5f);
             Assert.AreEqual(5f, sliderModel.value);
 
             // When
@@ -225,6 +227,7 @@ public class SliderModelTests
             // Given
             sliderModel.SetMinValue(0f);
             sliderModel.SetMaxValue(10f);
+            sliderModel.SetValue(5f);
             Assert.AreEqual(5f, sliderModel.value);
 
             // When

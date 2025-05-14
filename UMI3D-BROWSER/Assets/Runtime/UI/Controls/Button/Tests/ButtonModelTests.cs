@@ -41,7 +41,7 @@ public class ButtonModelTests
 
             model.SetLabel(null);
 
-            Assert.AreEqual(string.Empty, model.Label);
+            Assert.Null(model.Label);
         }
     }
 

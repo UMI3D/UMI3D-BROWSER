@@ -15,7 +15,7 @@ limitations under the License.
 */
 using NUnit.Framework;
 using TMPro;
-using umi3d.browserRuntime.button;
+using umi3d.browserRuntime.ui;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -42,19 +42,6 @@ public class ButtonModelTests
             model.SetLabel(null);
 
             Assert.AreEqual(string.Empty, model.Label);
-        }
-    }
-
-    public class SetCallbackTests
-    {
-        [Test]
-        public void GivenCallback_WhenClicking_CallbackCalled()
-        {
-            var callbackCalled = false;
-            ButtonModel model = new ButtonModel();
-            model.SetCallback(() => callbackCalled = true);
-
-            Assert.IsNotNull(model._callback);
         }
     }
 

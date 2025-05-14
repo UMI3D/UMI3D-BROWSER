@@ -14,47 +14,47 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils.observation;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace umi3d.browserRuntime.button
+namespace umi3d.browserRuntime.ui
 {
     [RequireComponent(typeof(Button)), ExecuteInEditMode]
-    internal class ButtonView : MonoBehaviour
+    internal class ButtonView : MonoBehaviour, IButtonImageObserver
     {
-        ButtonModelContainer _modelContainer;
         Button _button;
+
+        ButtonController _controller;
+        ButtonModel _model;
 
         void Awake()
         {
-            _modelContainer= GetComponent<ButtonModelContainer>();
             _button = GetComponent<Button>();
+            _button.onClick.AddListener(OnClick);
 
-            _button.onClick.AddListener(_modelContainer.Model.Click);
-
-            NotificationHub.Default.Subscribe(this,
-                ID.FromType<ButtonNotificationKeys.ButtonSet>(),
-                (Callback)ButtonSet,
-                new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == _modelContainer.Model));
+            _controller= GetComponent<ButtonController>();
+            _model = _controller.model;
+            _model.Subscribe(this as IButtonImageObserver);
         }
 
         void OnDestroy()
         {
-            NotificationHub.Default.Unsubscribe(this);
-            _button.onClick.RemoveListener(_modelContainer.Model.Click);
+            _button.onClick.RemoveListener(OnClick);
+            _model?.Unsubscribe(this as IButtonImageObserver);
         }
 
-        void ButtonSet(Notification notification)
+        public void UpdateImage(Sprite sprite, ColorBlock colorBlock)
         {
-            if (notification.TryGetInfoT(ButtonNotificationKeys.ButtonSet.Sprite, out Sprite sprite, false))
-                _button.image.sprite = sprite;
-            if (notification.TryGetInfoT(ButtonNotificationKeys.ButtonSet.ColorBlock, out ColorBlock colorBlock, false))
-            {
-                colorBlock.colorMultiplier = _button.colors.colorMultiplier;
-                colorBlock.fadeDuration = _button.colors.fadeDuration;
-                _button.colors = colorBlock;
-            }
+            _button.image.sprite = sprite;
+
+            colorBlock.colorMultiplier = _button.colors.colorMultiplier;
+            colorBlock.fadeDuration = _button.colors.fadeDuration;
+            _button.colors = colorBlock;
+        }
+
+        void OnClick()
+        {
+            _controller.OnClick();
         }
     }
 }

@@ -14,16 +14,22 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-namespace umi3d.browserRuntime.button
-{
-    public class ButtonNotificationKeys 
-    {
-        public class ButtonSet
-        {
-            public static readonly string Label = "Label";
+using UnityEngine;
 
-            public static readonly string Sprite = "Sprite";
-            public static readonly string ColorBlock = "ColorBlock";
+namespace umi3d.browserRuntime.ui
+{
+    public class ButtonController : MonoBehaviour
+    {
+        public ButtonModel model { get; private set; }
+
+        private void Awake()
+        {
+            model = new ButtonModel(); 
+        }
+
+        public void OnClick()
+        {
+            model.Click();
         }
     }
 }

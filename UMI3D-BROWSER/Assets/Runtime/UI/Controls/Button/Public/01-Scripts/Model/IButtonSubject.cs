@@ -14,20 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System;
 using UnityEngine;
 
-namespace umi3d.browserRuntime.button
+namespace umi3d.browserRuntime.ui
 {
-    public class ButtonModelContainer : MonoBehaviour
+    public interface IButtonImageSubject 
     {
-        ButtonModel _model;
-
-        public ButtonModel Model { 
-            get {
-                if (_model == null)
-                    _model = new ButtonModel();
-                return _model;
-            } 
-        }
+        void Subscribe(IButtonImageObserver observer);
+        void Unsubscribe(IButtonImageObserver observer);
     }
 }

@@ -14,47 +14,41 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
-namespace umi3d.browserRuntime.button
+namespace umi3d.browserRuntime.ui
 {
     public class ButtonFactory : MonoBehaviour
     {
-        [SerializeField] internal ButtonModelContainer _buttonPrefab;
+        [SerializeField] internal ButtonController _buttonPrefab;
 
-        internal Queue<ButtonModelContainer> _pool = new();
+        internal Queue<ButtonController> _pool = new();
 
-        public GameObject GetOrCreateButton(Transform parent, string label = "", Sprite image = null, ColorBlock? colors = null, Action callback = null)
+        public bool TryToGetOrCreate(out GameObject control, out ButtonModel model, Transform parent)
         {
-            ButtonModelContainer button;
-            if (!_pool.TryDequeue(out button))
-                button = Instantiate(_buttonPrefab);
+            if (!_pool.TryDequeue(out ButtonController controller))
+            {
+                controller = Instantiate(_buttonPrefab);
+            }
+            controller.transform.SetParent(parent, false);
+            control = controller.gameObject;
+            model = controller.model;
 
-            button.gameObject.SetActive(true);
-            button.transform.SetParent(parent, false);
-
-            button.Model.SetLabel(label);
-            button.Model.SetCallback(callback);
-            button.Model.SetImage(colors, image);
-
-            return button.gameObject;
+            return true;
         }
 
         public void ReturnButton(GameObject gameObject)
         {
             if (!gameObject)
                 return;
-            var modelContainer = gameObject.GetComponent<ButtonModelContainer>();
+            var modelContainer = gameObject.GetComponent<ButtonController>();
             if (!modelContainer)
                 return;
 
             modelContainer.gameObject.SetActive(false);
             modelContainer.transform.SetParent(transform, false);
-            modelContainer.Model.SetCallback(null);
+            modelContainer.model.SetCallback(null);
 
             _pool.Enqueue(modelContainer);
         }

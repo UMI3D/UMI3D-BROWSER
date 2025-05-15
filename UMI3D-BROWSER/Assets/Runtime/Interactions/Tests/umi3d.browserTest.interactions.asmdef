@@ -1,0 +1,32 @@
+{
+    "name": "umi3d.browserTest.interactions",
+    "rootNamespace": "",
+    "references": [
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner",
+        "Unity.InputSystem",
+        "inetum.unityUtils",
+        "UMI3D.CDK.Core",
+        "UMI3D.Common.Core",
+        "UMI3D.Common.InteractionSystem",
+        "UMI3D.CDK.InteractionSystem",
+        "umi3d.browserRuntime.interactions"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll",
+        "Newtonsoft.Json.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS",
+        "UMI3D_NEW_LABEL"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

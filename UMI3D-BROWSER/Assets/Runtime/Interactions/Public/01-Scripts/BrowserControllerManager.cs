@@ -44,25 +44,6 @@ namespace umi3d.browserRuntime.interactions
         BrowserControllerManager()
         {
             /*
-             * SELECTORS
-             */
-
-            SelectorManager.@default.InstantiateOrGet(out mouseSelector, MOUSE_ID);
-            mouseSelector.dataDelegate = new MouseSelectorDataDelegate();
-
-            SelectorManager.@default.InstantiateOrGet(out leftVRSelector, LEFT_ID + VR_ID);
-            leftVRSelector.dataDelegate = new VRSelectorDataDelegate() { isRightSelector = false };
-
-            SelectorManager.@default.InstantiateOrGet(out rightVRSelector, RIGHT_ID + VR_ID);
-            rightVRSelector.dataDelegate = new VRSelectorDataDelegate() { isRightSelector = true };
-
-            // TODO
-            //SelectorManager.@default.TryToInstantiateSelector(out leftHandSelector, LEFT_ID + HAND_ID);
-            //SelectorManager.@default.TryToInstantiateSelector(out rightHandSelector, RIGHT_ID + HAND_ID);
-
-            SelectorManager.@default.serverSelector = new ServerSelector();
-
-            /*
              * CONTROLLERS
              */
 
@@ -81,6 +62,25 @@ namespace umi3d.browserRuntime.interactions
 
             //ControllerManager.@default.TryToInstantiateController(out rightHandController, RIGHT_ID + HAND_ID);
             
+            /*
+             * SELECTORS
+             */
+
+            SelectorManager.@default.InstantiateOrGet(out mouseSelector, MOUSE_ID);
+            mouseSelector.dataDelegate = new MouseSelectorDataDelegate(mouseController, keyboardController, uiDeviceController);
+
+            SelectorManager.@default.InstantiateOrGet(out leftVRSelector, LEFT_ID + VR_ID);
+            leftVRSelector.dataDelegate = new VRSelectorDataDelegate() { isRightSelector = false };
+
+            SelectorManager.@default.InstantiateOrGet(out rightVRSelector, RIGHT_ID + VR_ID);
+            rightVRSelector.dataDelegate = new VRSelectorDataDelegate() { isRightSelector = true };
+
+            // TODO
+            //SelectorManager.@default.TryToInstantiateSelector(out leftHandSelector, LEFT_ID + HAND_ID);
+            //SelectorManager.@default.TryToInstantiateSelector(out rightHandSelector, RIGHT_ID + HAND_ID);
+
+            SelectorManager.@default.serverSelector = new ServerSelector();
+
 
             ProjectionManager.@default.delegates.Add(this);
         }
@@ -158,7 +158,18 @@ namespace umi3d.browserRuntime.interactions
 
     class MouseSelectorDataDelegate : ISelectorDataDelegate
     {
+        Controller mouseController;
+        Controller keyboardController;
+        Controller uiDeviceController;
+
         public int toolCountLimitation => 1;
+
+        public MouseSelectorDataDelegate(Controller mouseController, Controller keyboardController, Controller uiDeviceController)
+        {
+            this.mouseController = mouseController;
+            this.keyboardController = keyboardController;
+            this.uiDeviceController = uiDeviceController;
+        }
 
         /// <summary>
         /// For each interactions find the best possible input.<br/> 
@@ -305,41 +316,20 @@ namespace umi3d.browserRuntime.interactions
             Mouse mouse = Mouse.current;
             if (mouse != null)
             {
-                BrowserControllerManager
-                    .@default
-                    .mouseController
-                    .TryToAddInput(_eventDtoInputs, mouse.leftButton);
+                mouseController.TryToAddInput(_eventDtoInputs, mouse.leftButton);
             }
 
             Keyboard keyboard = Keyboard.current;
             if (keyboard != null)
             {
-                BrowserControllerManager
-                    .@default
-                    .keyboardController
-                    .TryToAddInput(_eventDtoInputs, keyboard.qKey);
-                BrowserControllerManager
-                    .@default
-                    .keyboardController
-                    .TryToAddInput(_eventDtoInputs, keyboard.eKey);
-                BrowserControllerManager
-                    .@default
-                    .keyboardController
-                    .TryToAddInput(_eventDtoInputs, keyboard.rKey);
-                BrowserControllerManager
-                    .@default
-                    .keyboardController
-                    .TryToAddInput(_eventDtoInputs, keyboard.fKey);
-                BrowserControllerManager
-                    .@default
-                    .keyboardController
-                    .TryToAddInput(_eventDtoInputs, keyboard.gKey);
+                keyboardController.TryToAddInput(_eventDtoInputs, keyboard.qKey);
+                keyboardController.TryToAddInput(_eventDtoInputs, keyboard.eKey);
+                keyboardController.TryToAddInput(_eventDtoInputs, keyboard.rKey);
+                keyboardController.TryToAddInput(_eventDtoInputs, keyboard.fKey);
+                keyboardController.TryToAddInput(_eventDtoInputs, keyboard.gKey);
             }
 
-            BrowserControllerManager
-                .@default
-                .uiDeviceController
-                .TryToAddInput(_eventDtoInputs, UIDevice.GetButtonPlaceholder());
+            uiDeviceController.TryToAddInput(_eventDtoInputs, UIDevice.GetButtonPlaceholder());
 
             inputs = _eventDtoInputs.AsReadOnly();
 
@@ -356,10 +346,7 @@ namespace umi3d.browserRuntime.interactions
         {
             _booleanParameterDtoInputs.Clear();
 
-            BrowserControllerManager
-                .@default
-                .uiDeviceController
-                .TryToAddInput(_booleanParameterDtoInputs, UIDevice.GetButtonPlaceholder());
+            uiDeviceController.TryToAddInput(_booleanParameterDtoInputs, UIDevice.GetButtonPlaceholder());
 
             inputs = _booleanParameterDtoInputs.AsReadOnly();
 
@@ -371,10 +358,7 @@ namespace umi3d.browserRuntime.interactions
         {
             _floatParameterDtoInputs.Clear();
 
-            BrowserControllerManager
-                .@default
-                .uiDeviceController
-                .TryToAddInput(_floatParameterDtoInputs, UIDevice.GetDoublePlaceholder());
+            uiDeviceController.TryToAddInput(_floatParameterDtoInputs, UIDevice.GetDoublePlaceholder());
 
             inputs = _floatParameterDtoInputs.AsReadOnly();
 

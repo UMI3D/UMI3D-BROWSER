@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui
@@ -25,6 +26,8 @@ namespace umi3d.browserRuntime.ui
         void Build(Transform parent);
         void BuildLabel();
         void BuildValue();
+        void BuildSubmit(ISubmitSubject subject, Action onSubmit);
         GameObject GetControl();
+        void Clear(ISubmitSubject subject);
     }
 }

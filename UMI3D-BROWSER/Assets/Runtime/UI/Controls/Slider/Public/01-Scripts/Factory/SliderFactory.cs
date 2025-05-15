@@ -61,6 +61,7 @@ namespace umi3d.browserRuntime.ui
 
             controller.gameObject.SetActive(false);
             controller.transform.SetParent(transform, false);
+            controller.Clear();
         }
     }
 }

@@ -15,6 +15,8 @@ limitations under the License.
 */
 
 using System;
+using umi3d.cdk.interaction;
+using umi3d.common.interaction;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.contextualMenu
@@ -22,5 +24,10 @@ namespace umi3d.browserRuntime.ui.contextualMenu
     public interface IContextualMenuActivationObserver 
     {
         void UpdateActivation(bool isActive);
+    }
+
+    public interface IContextualMenuDisplayParameterObserver
+    {
+        void Display(AbstractParameterDto parameter, Projection projection);
     }
 }

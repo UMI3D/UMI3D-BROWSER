@@ -23,8 +23,6 @@ namespace umi3d.browserRuntime.ui
     {
         public DropdownModel model { get; protected set; }
 
-        public event Action submitted;
-
         private void Awake()
         {
             model = new DropdownModel();
@@ -35,14 +33,9 @@ namespace umi3d.browserRuntime.ui
             model.SetValue(index);
         }
 
-        public void Submit()
-        {
-            submitted?.Invoke();
-        }
-
         public void Clear()
         {
-            submitted = null;
+            model.Clear();
         }
     }
 }

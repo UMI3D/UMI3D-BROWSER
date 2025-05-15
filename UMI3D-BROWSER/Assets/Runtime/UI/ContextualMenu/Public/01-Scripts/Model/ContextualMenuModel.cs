@@ -16,35 +16,35 @@ limitations under the License.
 
 using inetum.unityUtils.observation;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using umi3d.browserRuntime.notificationKeys;
 using umi3d.browserRuntime.ui.tablet;
+using umi3d.cdk.interaction;
 using umi3d.common.interaction;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.contextualMenu
 {
-    public class ContextualMenuModel : IContextualMenuActivationSubject, ISubmitSubject
+    public class ContextualMenuModel : IContextualMenuActivationSubject, IContextualMenuDisplayParameterSubject, ISubmitSubject
     {
         public bool isActive { get; private set; } = false;
+        public ReadOnlyCollection<AbstractParameterDto> parameters => _parameters.AsReadOnly();
 
-        Notifier _addParameterNotifier;
+        List<AbstractParameterDto> _parameters = new();
 
         public ContextualMenuModel()
         {
-            _addParameterNotifier = NotificationHub.Default.GetNotifier(this,
-                ID.FromType<ContextualMenuNotificationKeys.AddParameter>());
+            NotificationHub.Default.Subscribe(
+                this,
+                ID.FromType<InteractionNotificationKeys.ParameterInputFound>(),
+                (Callback)ParameterInputFound
+            );
+            NotificationHub.Default.Subscribe(
+                this,
+                ID.FromType<InteractionNotificationKeys.ToolReleased>(),
+                (Callback)ToolReleased
+            );
 
-            NotificationHub.Default.Subscribe(this,
-                ID.FromType<InteractionNotificationKeys.DisplayParameters>(), 
-                (Callback)DisplayParameters);
-
-            NotificationHub.Default.Subscribe(this,
-                ID.FromType<ContextualMenuNotificationKeys.Open>(), 
-                (Callback)Display);
-
-            NotificationHub.Default.Subscribe(this,
-                ID.FromType<ContextualMenuNotificationKeys.Close>(), 
-                (Callback)Hide);
             NotificationHub.Default.Subscribe(this,
                 ID.FromType<TabletNotificationKeys.Opened>(),
                 (Callback)Hide);
@@ -112,43 +112,85 @@ namespace umi3d.browserRuntime.ui.contextualMenu
             }
         }
 
+        List<IContextualMenuDisplayParameterObserver> _displayParameterObservers = new();
+
+        public void Subscribe(IContextualMenuDisplayParameterObserver observer)
+        {
+            if (!_displayParameterObservers.Contains(observer))
+            {
+                _displayParameterObservers.Add(observer);
+            }
+        }
+
+        public void Unsubscribe(IContextualMenuDisplayParameterObserver observer)
+        {
+            _displayParameterObservers.Remove(observer);
+        }
+
+        void NotifyDisplayParameterObserver(AbstractParameterDto dto, Projection projection)
+        {
+            foreach (var observer in _displayParameterObservers)
+            {
+                try
+                {
+                    observer.Display(dto, projection);
+                }
+                catch (System.Exception e)
+                {
+                    UnityEngine.Debug.LogException(e);
+                }
+            }
+        }
+
         #endregion
 
-        void DisplayParameters(Notification notification)
+        void ParameterInputFound(Notification notification)
         {
-            if (!notification.TryGetInfoT(InteractionNotificationKeys.DisplayParameters.parameters, out List<AbstractParameterDto> parameters))
-                return;
-
-            if (isActive || parameters.Count <= 0)
-                return;
-            isActive = true;
-
-            var paramtersTemp = new List<AbstractParameterDto>(parameters);
-            paramtersTemp.Reverse(); // Reverse to show element above in front (layout in the object is set to reverse too)
-
-            foreach (var param in paramtersTemp)
+            if (!notification.TryGetInfoT(InteractionNotificationKeys.ParameterInputFound.parameterDto, out AbstractParameterDto dto))
             {
-                _addParameterNotifier[ContextualMenuNotificationKeys.AddParameter.Parameter] = param;
-                _addParameterNotifier.Notify();
+                return;
             }
 
-            NotificationHub.Default.Notify(this, ID.FromType<ContextualMenuNotificationKeys.Open>());
+            _parameters.Add(dto);
+        }
+        void ToolReleased(Notification notification)
+        {
+            _parameters.Clear();
+            if (isActive)
+            {
+                SetActive(false);
+            }
+        }
+
+        public void DisplayParameters()
+        {
+            var reversedParameters = new List<AbstractParameterDto>(_parameters);
+            reversedParameters.Reverse(); // Reverse to show element above in front (layout in the object is set to reverse too)
+
+            foreach (var param in reversedParameters)
+            {
+                NotifyDisplayParameterObserver(param, null);
+            }
         }
 
         public void SetActive(bool active)
         {
             isActive = active;
             NotifyActivationObserver();
+
+            if (isActive)
+            {
+                NotificationHub.Default.Notify(this, ID.FromType<ContextualMenuNotificationKeys.Open>());
+            }
+            else
+            {
+                NotificationHub.Default.Notify(this, ID.FromType<ContextualMenuNotificationKeys.Close>());
+            }
         }
 
         void Hide(Notification notification)
         {
             SetActive(false);
-        }
-
-        void Display(Notification notification)
-        {
-            SetActive(true);
         }
 
         public void Submit()

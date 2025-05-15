@@ -24,4 +24,10 @@ namespace umi3d.browserRuntime.ui.contextualMenu
         void Subscribe(IContextualMenuActivationObserver observer);
         void Unsubscribe(IContextualMenuActivationObserver observer);
     }
+
+    public interface IContextualMenuDisplayParameterSubject
+    {
+        void Subscribe(IContextualMenuDisplayParameterObserver observer);
+        void Unsubscribe(IContextualMenuDisplayParameterObserver observer);
+    }
 }

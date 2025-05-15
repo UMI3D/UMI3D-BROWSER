@@ -23,26 +23,21 @@ namespace umi3d.browserRuntime.ui
     {
         public InputFieldModel model { get; protected set; }
 
-        public event Action submitted;
+        public bool isMultiline => model.isMultiline;
 
         private void Awake()
         {
             model = new();
         }
 
-        public void Submit()
+        public void ValueUpdated(string value)
         {
-            submitted?.Invoke();
+            model.SetValue(value);
         }
 
         public void Clear()
         {
-            submitted = null;
-        }
-
-        public void ValueUpdated(string value)
-        {
-            model.SetValue(value);
+            model.Clear();
         }
     }
 }

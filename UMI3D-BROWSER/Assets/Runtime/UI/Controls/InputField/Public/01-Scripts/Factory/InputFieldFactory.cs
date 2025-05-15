@@ -78,17 +78,17 @@ namespace umi3d.browserRuntime.ui
         /// <param name="control">The input field GameObject to be returned to the pool.</param>
         public void Return(GameObject control)
         {
-            var inputFieldModelContainer = control.GetComponent<InputFieldController>();
-            if (!inputFieldModelContainer)
-                return;
+            var controller = control.GetComponent<InputFieldController>();
+            if (!controller) { return; }
 
-            if (inputFieldModelContainer.model.isMultiline)
-                _lstInputFieldsMultiAvailable.Enqueue(inputFieldModelContainer);
+            if (controller.isMultiline)
+                _lstInputFieldsMultiAvailable.Enqueue(controller);
             else
-                _lstInputFieldsSingleAvailable.Enqueue(inputFieldModelContainer);
+                _lstInputFieldsSingleAvailable.Enqueue(controller);
 
-            inputFieldModelContainer.gameObject.SetActive(false);
-            inputFieldModelContainer.transform.SetParent(transform, false);
+            controller.gameObject.SetActive(false);
+            controller.transform.SetParent(transform, false);
+            controller.Clear();
         }
     }
 }

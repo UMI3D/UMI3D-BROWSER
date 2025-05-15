@@ -15,7 +15,6 @@ limitations under the License.
 */
 
 using System;
-using umi3d.cdk.interaction;
 using umi3d.common.interaction;
 using UnityEngine;
 
@@ -28,8 +27,13 @@ namespace umi3d.browserRuntime.ui.contextualMenu
         GameObject control;
         SliderModel model;
 
-        Projection projection;
         AbstractRangeParameterDto<T> dto;
+
+        public ContextualMenuSliderBuilder(SliderFactory factory, AbstractRangeParameterDto<T> dto)
+        {
+            this.factory = factory;
+            this.dto = dto;
+        }
 
         public void Build(Transform parent)
         {
@@ -69,10 +73,23 @@ namespace umi3d.browserRuntime.ui.contextualMenu
             }
         }
 
+        public void BuildSubmit(ISubmitSubject subject, Action onSubmit)
+        {
+            subject.Subscribe(model);
+            model.submit += onSubmit;
+        }
+
         public GameObject GetControl()
         {
             control.SetActive(true);
             return control;
+        }
+
+        public void Clear(ISubmitSubject subject)
+        {
+            subject.Unsubscribe(model);
+            factory.Return(control);
+            control = null;
         }
     }
 }

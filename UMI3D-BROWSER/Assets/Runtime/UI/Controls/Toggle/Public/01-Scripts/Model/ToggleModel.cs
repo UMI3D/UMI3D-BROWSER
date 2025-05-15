@@ -14,16 +14,19 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System;
+
 namespace umi3d.browserRuntime.ui
 {
     /// <summary>
     /// Model of a toggle element
     /// </summary>
-    public class ToggleModel : ILabelSubject, IValueSubject<bool>
+    public class ToggleModel : ILabelSubject, IValueSubject<bool>, ISubmitObserver
     {
         public bool isLabelVisible { get; private set; } = false;
         public string label { get; private set; }
         public bool value { get; private set; }
+        public event Action submit;
 
         #region ISubject
 
@@ -99,6 +102,16 @@ namespace umi3d.browserRuntime.ui
         {
             value = newValue;
             NotifyValueObserver();
+        }
+
+        public void OnSubmit()
+        {
+            submit?.Invoke();
+        }
+
+        public void Clear()
+        {
+            submit = null;
         }
     }
 }

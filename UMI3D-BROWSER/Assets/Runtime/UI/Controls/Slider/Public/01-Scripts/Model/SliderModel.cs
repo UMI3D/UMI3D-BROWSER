@@ -14,12 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui
 {
-    public class SliderModel : ILabelSubject, IValueSubject<float>, ISliderRangeSubject, ISliderWholeNumbersSubject
+    public class SliderModel : ILabelSubject, IValueSubject<float>, ISliderRangeSubject, ISliderWholeNumbersSubject, ISubmitObserver
     {
         public bool isLabelVisible { get; private set; } = false;
         public string label { get; private set; }
@@ -27,6 +28,7 @@ namespace umi3d.browserRuntime.ui
         public float maxValue { get; private set; }
         public float minValue { get; private set; }
         public bool isInteger { get; private set; } = false;
+        public event Action submit;
 
         #region Subject
 
@@ -212,6 +214,16 @@ namespace umi3d.browserRuntime.ui
         {
             isInteger = newIsInteger;
             NotifyWholeNumbersObserver();
+        }
+
+        public void OnSubmit()
+        {
+            submit?.Invoke();
+        }
+
+        public void Clear()
+        {
+            submit = null;
         }
     }
 }

@@ -27,6 +27,12 @@ namespace umi3d.browserRuntime.ui.contextualMenu
             model = new ContextualMenuModel();
         }
 
+        public void OpenInputPressed()
+        {
+            model.SetActive(true);
+            model.DisplayParameters();
+        }
+
         public void ActivationUpdated(bool isActive)
         {
             model.SetActive(isActive);

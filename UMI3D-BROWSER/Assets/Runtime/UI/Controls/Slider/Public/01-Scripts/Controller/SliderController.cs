@@ -31,5 +31,10 @@ namespace umi3d.browserRuntime.ui
         {
             model.SetValue(value);
         }
+
+        public void Clear()
+        {
+            model.Clear();
+        }
     }
 }

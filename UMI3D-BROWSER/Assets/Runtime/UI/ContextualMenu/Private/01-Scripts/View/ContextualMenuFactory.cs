@@ -15,32 +15,32 @@ limitations under the License.
 */
 
 using inetum.unityUtils.observation;
-using NUnit.Framework;
 using System.Collections.Generic;
 using umi3d.cdk;
+using umi3d.cdk.interaction;
 using umi3d.common.interaction;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.contextualMenu
 {
-    internal class ContextualMenuFactory : MonoBehaviour
+    internal class ContextualMenuFactory : MonoBehaviour, IContextualMenuActivationObserver, IContextualMenuDisplayParameterObserver
     {
         [SerializeField] Transform _content;
-
-        DropdownFactory _dropdownFactory;
-        List<GameObject> _dropdowns = new();
-
-        SliderFactory _sliderFactory;
-        List<GameObject> _sliders = new();
 
         ButtonFactory _buttonFactory;
         List<GameObject> _buttons = new();
 
+        DropdownFactory _dropdownFactory;
+        List<IDropdownBuilder> _dropdownBuilders = new();
+
+        SliderFactory _sliderFactory;
+        List<ISliderBuilder> _sliderBuilders = new();
+
         ToggleFactory _toggleFactory;
-        List<GameObject> _toggles = new();
+        List<IToggleBuilder> _toggleBuilders = new();
 
         InputFieldFactory _inputFieldFactory;
-        List<GameObject> _inputFields = new();
+        List<IInputFieldBuilder> _inputFieldBuilders = new();
 
         ContextualMenuController _controller;
         ContextualMenuModel _model;
@@ -55,10 +55,6 @@ namespace umi3d.browserRuntime.ui.contextualMenu
 
             _controller = GetComponentInParent<ContextualMenuController>();
             _model = _controller.model;
-
-            NotificationHub.Default.Subscribe(this,
-                ID.FromType<ContextualMenuNotificationKeys.AddParameter>(), 
-                (Callback)AddParameter);
         }
 
         private void OnDestroy()
@@ -66,81 +62,128 @@ namespace umi3d.browserRuntime.ui.contextualMenu
             NotificationHub.Default.Unsubscribe(this);
         }
 
-        public void AddParameter(Notification notification)
+        public void Display(AbstractParameterDto parameter, Projection projection)
         {
-            if (!notification.TryGetInfoT(ContextualMenuNotificationKeys.AddParameter.Parameter, out AbstractParameterDto parameter))
-                return;
+            void SendParameterRequest()
+            {
+                UMI3DClientServer.SendRequest(new ParameterSettingRequestDto()
+                {
+                    id = parameter.id,
+                    parameter = parameter,
+                }, true);
+            }
+
+            void BuildSlider(ISliderBuilder builder)
+            {
+                builder.Build(_content);
+                builder.BuildLabel();
+                builder.BuildRange();
+                builder.BuildValue();
+                builder.BuildSubmit(_model, () =>
+                {
+                    SendParameterRequest();
+                });
+                builder.GetControl();
+                _sliderBuilders.Add(builder);
+            }
 
             switch (parameter)
             {
                 case StringParameterDto stringParameter:
                     {
-                        LegacyContextualMenuInputFieldBuilder builder = new(_inputFieldFactory, stringParameter);
+                        ContextualMenuInputFieldBuilder builder = new(_inputFieldFactory, stringParameter);
                         builder.Build(_content);
                         builder.BuildLabel();
                         builder.BuildPlaceholder();
                         builder.BuildValue();
                         builder.BuildLine();
                         builder.BuildContentType();
-                        // TODO: Build Submit
-                        _inputFields.Add(builder.GetControl());
+                        builder.BuildSubmit(_model, () =>
+                        {
+                            SendParameterRequest();
+                        });
+                        builder.GetControl();
+                        _inputFieldBuilders.Add(builder);
                         break;
                     }
 
                 case BooleanParameterDto booleanParameter:
                     {
-                        LegacyContextualMenuToggleBuilder builder = new(_toggleFactory, booleanParameter);
+                        ContextualMenuToggleBuilder builder = new(_toggleFactory, booleanParameter);
                         builder.Build(_content);
                         builder.BuildLabel();
                         builder.BuildValue();
-                        // TODO: Build Submit
-                        _toggles.Add(builder.GetControl());
+                        builder.BuildSubmit(_model, () =>
+                        {
+                            SendParameterRequest();
+                        });
+                        builder.GetControl();
+                        _toggleBuilders.Add(builder);
                         break;
                     }
 
                 case FloatRangeParameterDto floatRangeParameter:
                     {
-                        LegacyContextualMenuSliderBuilder<float> builder = new(_sliderFactory, floatRangeParameter);
-                        builder.Build(_content);
-                        builder.BuildLabel();
-                        builder.BuildRange();
-                        builder.BuildValue();
-                        // TODO: Build Submit
-                        _sliders.Add(builder.GetControl());
+                        ContextualMenuSliderBuilder<float> builder = new(_sliderFactory, floatRangeParameter);
+                        BuildSlider(builder);
                         break;
                     }
 
                 case IntegerRangeParameterDto intRangeParameter:
                     {
-                        LegacyContextualMenuSliderBuilder<int> builder = new(_sliderFactory, intRangeParameter);
-                        builder.Build(_content);
-                        builder.BuildLabel();
-                        builder.BuildRange();
-                        builder.BuildValue();
-                        // TODO: Build Submit
-                        _sliders.Add(builder.GetControl());
+                        ContextualMenuSliderBuilder<int> builder = new(_sliderFactory, intRangeParameter);
+                        BuildSlider(builder);
                         break;
                     }
 
                 case EnumParameterDto<string> stringEnumParameter:
                     {
-                        LegacyContextualMenuDropdownBuilder builder = new(_dropdownFactory, stringEnumParameter);
+                        ContextualMenuDropdownBuilder builder = new(_dropdownFactory, stringEnumParameter);
                         builder.Build(_content);
                         builder.BuildLabel();
                         builder.BuildOptions();
                         builder.BuildValue();
                         builder.BuildSubmit(_model, () =>
                         {
-                            UMI3DClientServer.SendRequest(new ParameterSettingRequestDto()
-                            {
-                                id = parameter.id,
-                                parameter = parameter,
-                            }, true);
+                            SendParameterRequest();
                         });
-                        _dropdowns.Add(builder.GetControl());
+                        builder.GetControl();
+                        _dropdownBuilders.Add(builder);
                         break;
                     }
             }
+        }
+
+        public void UpdateActivation(bool isActive)
+        {
+            if (!isActive) { Clear(); }
+        }
+
+        void Clear()
+        {
+            foreach (var dropdownBuilder in _dropdownBuilders)
+            {
+                dropdownBuilder.Clear(_model);
+            }
+            _dropdownBuilders.Clear();
+
+            foreach (var inputFieldBuilder in _inputFieldBuilders)
+            {
+                inputFieldBuilder.Clear(_model);
+            }
+            _inputFieldBuilders.Clear();
+
+            foreach (var sliderBuilder in _sliderBuilders)
+            {
+                sliderBuilder.Clear(_model);
+            }
+            _sliderBuilders.Clear();
+
+            foreach(var toggleBuilder in _toggleBuilders)
+            {
+                toggleBuilder.Clear(_model);
+            }
+            _toggleBuilders.Clear();
         }
     }
 }

@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System;
 using System.Collections.Generic;
 using TMPro;
 
@@ -22,7 +23,7 @@ namespace umi3d.browserRuntime.ui
     /// <summary>
     /// Model of an input field element
     /// </summary>
-    public class InputFieldModel : ILabelSubject, IValueSubject<string>, IInputFieldPinSubject, IInputFieldContentTypeSubject, IInputFieldNbLineSubject, IInputFieldPlaceholderSubject, IInputFieldPasswordSubject
+    public class InputFieldModel : ILabelSubject, IValueSubject<string>, IInputFieldPinSubject, IInputFieldContentTypeSubject, IInputFieldNbLineSubject, IInputFieldPlaceholderSubject, IInputFieldPasswordSubject, ISubmitObserver
     {
         public bool isLabelVisible { get; private set; } = false;
         public string label { get; private set; }
@@ -33,6 +34,7 @@ namespace umi3d.browserRuntime.ui
         public TMP_InputField.ContentType contentType { get; private set; } = TMP_InputField.ContentType.Standard;
         public bool passwordVisibility { get; private set; } = false;
         public bool isPin { get; private set; } = false;
+        public event Action submit;
 
         #region ISubject
 
@@ -324,6 +326,16 @@ namespace umi3d.browserRuntime.ui
         {
             isPin = value;
             NotifyPinObserver();
+        }
+
+        public void OnSubmit()
+        {
+            submit?.Invoke();
+        }
+
+        public void Clear()
+        {
+            submit = null;
         }
     }
 }

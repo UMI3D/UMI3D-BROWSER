@@ -15,8 +15,6 @@ limitations under the License.
 */
 
 using System;
-using umi3d.browserRuntime.ui.inputField;
-using umi3d.cdk.interaction;
 using umi3d.common.interaction;
 using UnityEngine;
 
@@ -29,14 +27,12 @@ namespace umi3d.browserRuntime.ui.contextualMenu
         GameObject control;
         InputFieldModel model;
 
-        Projection projection;
         StringParameterDto dto;
 
-        public ContextualMenuInputFieldBuilder(InputFieldFactory factory, Projection projection)
+        public ContextualMenuInputFieldBuilder(InputFieldFactory factory, StringParameterDto dto)
         {
             this.factory = factory;
-            this.projection = projection;
-            this.dto = projection.interaction.dto as StringParameterDto;
+            this.dto = dto;
         }
 
         public void Build(Transform parent)
@@ -85,10 +81,23 @@ namespace umi3d.browserRuntime.ui.contextualMenu
             }
         }
 
+        public void BuildSubmit(ISubmitSubject subject, Action onSubmit)
+        {
+            subject.Subscribe(model);
+            model.submit += onSubmit;
+        }
+
         public GameObject GetControl()
         {
             control.SetActive(true);
             return control;
+        }
+
+        public void Clear(ISubmitSubject subject)
+        {
+            subject.Unsubscribe(model);
+            factory.Return(control);
+            control = null;
         }
     }
 }

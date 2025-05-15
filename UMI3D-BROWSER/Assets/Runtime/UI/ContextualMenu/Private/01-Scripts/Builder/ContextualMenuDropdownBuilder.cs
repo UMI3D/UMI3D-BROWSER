@@ -15,7 +15,6 @@ limitations under the License.
 */
 
 using System;
-using umi3d.cdk.interaction;
 using umi3d.common.interaction;
 using UnityEngine;
 
@@ -28,8 +27,13 @@ namespace umi3d.browserRuntime.ui.contextualMenu
         GameObject control;
         DropdownModel model;
 
-        Projection projection;
         EnumParameterDto<string> dto;
+
+        public ContextualMenuDropdownBuilder(DropdownFactory factory, EnumParameterDto<string> dto)
+        {
+            this.factory = factory;
+            this.dto = dto;
+        }
 
         public void Build(Transform parent)
         {
@@ -53,12 +57,21 @@ namespace umi3d.browserRuntime.ui.contextualMenu
 
         public void BuildSubmit(ISubmitSubject subject, Action onSubmit)
         {
-            throw new NotImplementedException();
+            subject.Subscribe(model);
+            model.submit += onSubmit;
         }
 
         public GameObject GetControl()
         {
-            throw new NotImplementedException();
+            control.SetActive(true);
+            return control;
+        }
+
+        public void Clear(ISubmitSubject subject)
+        {
+            subject.Unsubscribe(model);
+            factory.Return(control);
+            control = null;
         }
     }
 }

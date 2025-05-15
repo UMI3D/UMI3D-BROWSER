@@ -1,0 +1,34 @@
+{
+    "name": "PC_inputActions",
+    "maps": [
+        {
+            "name": "Mouse",
+            "id": "dd2d40d9-1b22-40a3-9763-47444fd7d760",
+            "actions": [
+                {
+                    "name": "Activate",
+                    "type": "Button",
+                    "id": "6bb97ab7-3aac-4216-8359-2568ef3efe97",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "7fa83465-7118-4826-a8d9-571cef8ecbe2",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Activate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

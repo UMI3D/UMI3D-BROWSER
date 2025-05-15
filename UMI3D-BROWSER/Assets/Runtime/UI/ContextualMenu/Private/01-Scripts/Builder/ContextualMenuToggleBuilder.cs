@@ -29,6 +29,12 @@ namespace umi3d.browserRuntime.ui.contextualMenu
 
         BooleanParameterDto dto;
 
+        public ContextualMenuToggleBuilder(ToggleFactory factory, BooleanParameterDto dto)
+        {
+            this.factory = factory;
+            this.dto = dto;
+        }
+
         public void Build(Transform parent)
         {
             factory.TryToGetOrCreate(out control, out model, parent);
@@ -48,6 +54,19 @@ namespace umi3d.browserRuntime.ui.contextualMenu
         {
             control.SetActive(true);
             return control;
+        }
+
+        public void BuildSubmit(ISubmitSubject subject, Action onSubmit)
+        {
+            subject.Subscribe(model);
+            model.submit += onSubmit;
+        }
+
+        public void Clear(ISubmitSubject subject)
+        {
+            subject.Unsubscribe(model);
+            factory.Return(control);
+            control = null;
         }
     }
 }

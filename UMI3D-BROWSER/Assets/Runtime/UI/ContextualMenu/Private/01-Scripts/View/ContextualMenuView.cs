@@ -34,14 +34,14 @@ namespace umi3d.browserRuntime.ui.contextualMenu
             _canvas = GetComponentInParent<Canvas>();
 
             _controller = GetComponentInParent<ContextualMenuController>();
-            _model = _controller.model;
-            _model.Subscribe(this);
 
             InteractableHoverStateListener.delegates.Add(this);
         }
 
         void Start()
         {
+            _model = _controller.model;
+            _model.Subscribe(this);
             _controller.ActivationUpdated(false);
         }
 

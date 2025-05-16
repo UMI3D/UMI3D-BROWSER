@@ -17,7 +17,6 @@ limitations under the License.
 using inetum.unityUtils.observation;
 using umi3d.browserRuntime.forms;
 using umi3d.common.interaction.form;
-using umi3dBrowsers.container;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.formMenu
@@ -121,8 +120,8 @@ namespace umi3d.browserRuntime.ui.formMenu
 
                 case ButtonDto buttonDto:
                     {
-                        //await _buttonFactory.CreateButton(buttonDto, container.Transform, _formAnswerDto, SendAnswer);
                         FormButtonBuilder builder = new(_buttonFactory, buttonDto);
+                        builder.Build(container.Transform);
                         builder.BuildLabel();
                         builder.BuildImage();
                         builder.BuildCallback(() =>
@@ -187,26 +186,25 @@ namespace umi3d.browserRuntime.ui.formMenu
             SendAnswer();
         }
 
-        internal static T ReplaceContainerWithPrefab<T>(Container conatiner, T prefab) where T : MonoBehaviour
+        internal static T ReplaceContainerWithPrefab<T>(Container container, T prefab) where T : MonoBehaviour
         {
             var newObject = Instantiate(prefab);
-            newObject.transform.SetParent(conatiner.Transform.parent, false);
-            foreach (Transform child in conatiner.Transform)
+            newObject.transform.SetParent(container.Transform.parent, false);
+            foreach (Transform child in container.Transform)
                 child.SetParent(newObject.transform, false);
 
 #if UNITY_EDITOR
-            DestroyImmediate(conatiner.Transform.gameObject);
+            DestroyImmediate(container.Transform.gameObject);
 #else
             Destroy(conatiner.Transform.gameObject);
 #endif
-            conatiner.Transform = newObject.transform;
+            container.Transform = newObject.transform;
 
             return newObject;
         }
 
         public override void DisplayLegacyForm(common.interaction.ConnectionFormDto legacyFormDto)
         {
-            throw new System.NotSupportedException();
         }
 
         protected override void ResetFormAnser()

@@ -32,6 +32,7 @@ namespace umi3d.browserRuntime.ui
             _text = GetComponent<TMP_Text>();
             _controller = GetComponentInParent<InputFieldController>();
             _model = _controller.model;
+            _model.Subscribe(this);
         }
 
         void OnDestroy()

@@ -45,7 +45,6 @@ namespace umi3d.browserRuntime.ui.contextualMenu
             {
                 factory.TryToGetOrCreateSingleLine(out control, out model, parent);
             }
-            control.transform.SetParent(parent, false);
         }
 
         public void BuildContentType()
@@ -56,10 +55,7 @@ namespace umi3d.browserRuntime.ui.contextualMenu
 
         public void BuildLabel()
         {
-            if (!string.IsNullOrEmpty(dto.name))
-            {
-                model.SetLabel(dto.name);
-            }
+            model.SetLabel(dto.name);
         }
 
         public void BuildLine()
@@ -75,16 +71,22 @@ namespace umi3d.browserRuntime.ui.contextualMenu
 
         public void BuildValue()
         {
-            if (!string.IsNullOrEmpty(dto.value))
-            {
-                model.SetValue(dto.value);
-            }
+            model.SetValue(dto.value);
+        }
+
+        public void BuildValueChange(Action<string> action)
+        {
+            model.valueChanged += action;
         }
 
         public void BuildSubmit(ISubmitSubject subject, Action onSubmit)
         {
             subject.Subscribe(model);
-            model.submit += onSubmit;
+            model.submit += () =>
+            {
+                dto.value = model.value;
+                onSubmit();
+            };
         }
 
         public GameObject GetControl()

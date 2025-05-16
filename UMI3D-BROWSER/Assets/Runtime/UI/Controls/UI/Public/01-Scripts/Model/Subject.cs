@@ -24,7 +24,7 @@ namespace umi3d.browserRuntime.ui
 
         public void Subscribe(ILabelObserver observer)
         {
-            if (!_labelObservers.Contains(observer)) { return; }
+            if (_labelObservers.Contains(observer)) { return; }
             _labelObservers.Add(observer);
         }
 
@@ -55,7 +55,7 @@ namespace umi3d.browserRuntime.ui
 
         public void Subscribe(IValueObserver<T> observer)
         {
-            if (!_valueObserver.Contains(observer)) { return; }
+            if (_valueObserver.Contains(observer)) { return; }
             _valueObserver.Add(observer);
         }
 

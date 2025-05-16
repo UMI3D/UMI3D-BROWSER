@@ -28,6 +28,7 @@ namespace umi3d.browserRuntime.ui
         public float maxValue { get; private set; }
         public float minValue { get; private set; }
         public bool isInteger { get; private set; } = false;
+        public event Action<float> valueChanged;
         public event Action submit;
 
         #region Subject
@@ -161,6 +162,7 @@ namespace umi3d.browserRuntime.ui
         {
             value = Mathf.Clamp(newValue, minValue, maxValue);
             NotifyValueObserver();
+            valueChanged?.Invoke(value);
         }
 
         /// <summary>
@@ -224,6 +226,7 @@ namespace umi3d.browserRuntime.ui
         public void Clear()
         {
             submit = null;
+            valueChanged = null;
         }
     }
 }

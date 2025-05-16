@@ -29,7 +29,7 @@ namespace umi3d.browserRuntime.ui
 
         public void ValueUpdated(bool value)
         {
-            throw new System.NotImplementedException();
+            model.SetValue(value);
         }
 
         public void Clear()

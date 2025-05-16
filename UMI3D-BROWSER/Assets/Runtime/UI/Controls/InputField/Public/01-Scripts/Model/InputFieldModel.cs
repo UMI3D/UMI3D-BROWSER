@@ -34,6 +34,7 @@ namespace umi3d.browserRuntime.ui
         public TMP_InputField.ContentType contentType { get; private set; } = TMP_InputField.ContentType.Standard;
         public bool passwordVisibility { get; private set; } = false;
         public bool isPin { get; private set; } = false;
+        public event Action<string> valueChanged;
         public event Action submit;
 
         #region ISubject
@@ -224,7 +225,6 @@ namespace umi3d.browserRuntime.ui
 
         #endregion
 
-
         /// <summary>
         /// Sets the label and updates its visibility status.<br/>
         /// <br/>
@@ -260,6 +260,7 @@ namespace umi3d.browserRuntime.ui
         {
             value = newValue;
             NotifyValueObserver();
+            valueChanged?.Invoke(newValue);
         }
 
         /// /// <summary>
@@ -296,7 +297,6 @@ namespace umi3d.browserRuntime.ui
             nbrLine = isMultiline ? newNbrLine : 1;
             NotifyNbLineObserver();
         }
-
 
         /// /// <summary>
         /// This method sets if the input field need to be shown with "*****" and notifies the change.<br/>
@@ -336,6 +336,7 @@ namespace umi3d.browserRuntime.ui
         public void Clear()
         {
             submit = null;
+            valueChanged = null;
         }
     }
 }

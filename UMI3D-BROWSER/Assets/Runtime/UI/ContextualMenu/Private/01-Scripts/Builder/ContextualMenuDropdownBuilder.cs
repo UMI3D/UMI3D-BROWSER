@@ -37,7 +37,7 @@ namespace umi3d.browserRuntime.ui.contextualMenu
 
         public void Build(Transform parent)
         {
-            factory.TryToGetOrCreate(out control, parent);
+            factory.TryToGetOrCreate(out control, out model, parent);
         }
 
         public void BuildLabel()
@@ -55,10 +55,19 @@ namespace umi3d.browserRuntime.ui.contextualMenu
             model.SetValue(dto.value);
         }
 
+        public void BuildValueChanged(Action<string> action)
+        {
+            model.valueChanged += action;
+        }
+
         public void BuildSubmit(ISubmitSubject subject, Action onSubmit)
         {
             subject.Subscribe(model);
-            model.submit += onSubmit;
+            model.submit += () =>
+            {
+                dto.value = model.value;
+                onSubmit();
+            };
         }
 
         public GameObject GetControl()

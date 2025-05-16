@@ -44,7 +44,6 @@ namespace umi3d.browserRuntime.forms
             }
             parameterSettingRequestDto = new ParameterSettingRequestDto() { id = dto.id, parameter = dto.value };
             formAnswerDto.answers.Add(parameterSettingRequestDto);
-            model.valueChanged += value => parameterSettingRequestDto.parameter = value;
         }
 
         public void Build(Transform parent)
@@ -57,7 +56,8 @@ namespace umi3d.browserRuntime.forms
             {
                 factory.TryToGetOrCreateSingleLine(out control, out model, parent);
             }
-            control.transform.SetParent(parent, false);
+
+            model.valueChanged += value => parameterSettingRequestDto.parameter = value;
         }
 
         public void BuildContentType()

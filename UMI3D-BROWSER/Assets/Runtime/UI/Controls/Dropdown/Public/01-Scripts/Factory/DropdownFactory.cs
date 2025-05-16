@@ -31,15 +31,16 @@ namespace umi3d.browserRuntime.ui
 
         public int AvailableDropdownCount => _lstDropdownsAvailable.Count;
 
-        public bool TryToGetOrCreate(out GameObject control, Transform parent)
+        public bool TryToGetOrCreate(out GameObject control, out DropdownModel model, Transform parent)
         {
             if (!_lstDropdownsAvailable.TryDequeue(out DropdownController controller))
             {
                 controller = GameObject.Instantiate(_dropdownPrefab);
             }
-            control = controller.gameObject;
             controller.gameObject.SetActive(true);
             controller.transform.SetParent(parent, false);
+            control = controller.gameObject;
+            model = controller.model;
 
             return true;
         }

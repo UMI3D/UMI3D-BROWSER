@@ -20,14 +20,14 @@ using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.contextualMenu
 {
-    public class ContextualMenuSliderBuilder<T> : ISliderBuilder where T : IComparable
+    public abstract class ContextualMenuSliderBuilder<T> : ISliderBuilder where T : IComparable
     {
         public SliderFactory factory { get; private set; }
 
-        GameObject control;
-        SliderModel model;
+        protected GameObject control;
+        protected SliderModel model;
 
-        AbstractRangeParameterDto<T> dto;
+        protected AbstractRangeParameterDto<T> dto;
 
         public ContextualMenuSliderBuilder(SliderFactory factory, AbstractRangeParameterDto<T> dto)
         {
@@ -73,11 +73,7 @@ namespace umi3d.browserRuntime.ui.contextualMenu
             }
         }
 
-        public void BuildSubmit(ISubmitSubject subject, Action onSubmit)
-        {
-            subject.Subscribe(model);
-            model.submit += onSubmit;
-        }
+        public abstract void BuildSubmit(ISubmitSubject subject, Action onSubmit);
 
         public GameObject GetControl()
         {
@@ -90,6 +86,40 @@ namespace umi3d.browserRuntime.ui.contextualMenu
             subject.Unsubscribe(model);
             factory.Return(control);
             control = null;
+        }
+    }
+
+    public class ContextualMenuFloatSliderBuilder : ContextualMenuSliderBuilder<float>
+    {
+        public ContextualMenuFloatSliderBuilder(SliderFactory factory, AbstractRangeParameterDto<float> dto) : base(factory, dto)
+        {
+        }
+
+        public override void BuildSubmit(ISubmitSubject subject, Action onSubmit)
+        {
+            subject.Subscribe(model);
+            model.submit += () =>
+            {
+                dto.value = model.value;
+                onSubmit();
+            };
+        }
+    }
+
+    public class ContextualMenuIntSliderBuilder : ContextualMenuSliderBuilder<int>
+    {
+        public ContextualMenuIntSliderBuilder(SliderFactory factory, AbstractRangeParameterDto<int> dto) : base(factory, dto)
+        {
+        }
+
+        public override void BuildSubmit(ISubmitSubject subject, Action onSubmit)
+        {
+            subject.Subscribe(model);
+            model.submit += () =>
+            {
+                dto.value = (int)model.value;
+                onSubmit();
+            };
         }
     }
 }

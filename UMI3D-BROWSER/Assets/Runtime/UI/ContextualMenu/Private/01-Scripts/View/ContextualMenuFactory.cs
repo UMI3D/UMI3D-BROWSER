@@ -45,7 +45,7 @@ namespace umi3d.browserRuntime.ui.contextualMenu
         ContextualMenuController _controller;
         ContextualMenuModel _model;
 
-        private void Awake()
+        void Awake()
         {
             _dropdownFactory = GetComponent<DropdownFactory>();
             _sliderFactory = GetComponent<SliderFactory>();
@@ -54,12 +54,20 @@ namespace umi3d.browserRuntime.ui.contextualMenu
             _inputFieldFactory = GetComponent<InputFieldFactory>();
 
             _controller = GetComponentInParent<ContextualMenuController>();
-            _model = _controller.model;
         }
 
-        private void OnDestroy()
+        void Start()
+        {
+            _model = _controller.model;
+            _model.Subscribe(this as IContextualMenuActivationObserver);
+            _model.Subscribe(this as IContextualMenuDisplayParameterObserver);
+        }
+
+        void OnDestroy()
         {
             NotificationHub.Default.Unsubscribe(this);
+            _model.Unsubscribe(this as IContextualMenuActivationObserver);
+            _model.Unsubscribe(this as IContextualMenuDisplayParameterObserver);
         }
 
         public void Display(AbstractParameterDto parameter, Projection projection)
@@ -69,7 +77,7 @@ namespace umi3d.browserRuntime.ui.contextualMenu
                 UMI3DClientServer.SendRequest(new ParameterSettingRequestDto()
                 {
                     id = parameter.id,
-                    parameter = parameter,
+                    parameter = parameter
                 }, true);
             }
 
@@ -124,14 +132,14 @@ namespace umi3d.browserRuntime.ui.contextualMenu
 
                 case FloatRangeParameterDto floatRangeParameter:
                     {
-                        ContextualMenuSliderBuilder<float> builder = new(_sliderFactory, floatRangeParameter);
+                        ContextualMenuFloatSliderBuilder builder = new(_sliderFactory, floatRangeParameter);
                         BuildSlider(builder);
                         break;
                     }
 
                 case IntegerRangeParameterDto intRangeParameter:
                     {
-                        ContextualMenuSliderBuilder<int> builder = new(_sliderFactory, intRangeParameter);
+                        ContextualMenuIntSliderBuilder builder = new(_sliderFactory, intRangeParameter);
                         BuildSlider(builder);
                         break;
                     }

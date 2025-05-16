@@ -26,6 +26,8 @@ namespace umi3d.browserRuntime.ui
         void Build(Transform parent);
         void BuildLabel();
         void BuildImage();
+        void BuildCallback(Action callback);
         GameObject GetControl();
+        void Clear();
     }
 }

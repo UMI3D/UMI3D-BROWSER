@@ -31,6 +31,7 @@ namespace umi3d.browserRuntime.ui.formMenu
 
         protected override void Awake()
         {
+            base.Awake();
             _submitButton.onClick.AddListener(SendAnswer);
         }
 
@@ -41,7 +42,6 @@ namespace umi3d.browserRuntime.ui.formMenu
 
         public override void DisplayForm(common.interaction.form.FormDto formDto)
         {
-            throw new System.NotSupportedException();
         }
 
         public override void DisplayLegacyForm(ConnectionFormDto legacyFormDto)

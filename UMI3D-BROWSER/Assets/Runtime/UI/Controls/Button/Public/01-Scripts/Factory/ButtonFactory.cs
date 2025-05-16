@@ -38,7 +38,7 @@ namespace umi3d.browserRuntime.ui
             return true;
         }
 
-        public void ReturnButton(GameObject gameObject)
+        public void Return(GameObject gameObject)
         {
             if (!gameObject)
                 return;

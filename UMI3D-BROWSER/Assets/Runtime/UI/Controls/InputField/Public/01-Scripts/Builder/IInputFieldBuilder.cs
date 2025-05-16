@@ -29,6 +29,7 @@ namespace umi3d.browserRuntime.ui
         void BuildPlaceholder();
         void BuildLine();
         void BuildContentType();
+        void BuildValueChange(Action<string> action);
         void BuildSubmit(ISubmitSubject subject, Action onSubmit);
         GameObject GetControl();
         void Clear(ISubmitSubject subject);

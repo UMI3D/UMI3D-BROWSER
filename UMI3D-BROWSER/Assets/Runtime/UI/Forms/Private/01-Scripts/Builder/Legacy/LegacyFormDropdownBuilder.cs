@@ -40,12 +40,12 @@ namespace umi3d.browserRuntime.forms
 
             requestDto = new() { id = dto.id, parameter = dto.value };
             answerDto.answers.Add(requestDto);
-            model.valueChanged += value => requestDto.parameter = value;
         }
 
         public void Build(Transform parent)
         {
-            factory.TryToGetOrCreate(out control, parent);
+            factory.TryToGetOrCreate(out control, out model, parent);
+            model.valueChanged += value => requestDto.parameter = value;
         }
 
         public void BuildLabel()

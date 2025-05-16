@@ -59,7 +59,11 @@ namespace umi3d.browserRuntime.ui.contextualMenu
         public void BuildSubmit(ISubmitSubject subject, Action onSubmit)
         {
             subject.Subscribe(model);
-            model.submit += onSubmit;
+            model.submit += () =>
+            {
+                dto.value = model.value;
+                onSubmit();
+            };
         }
 
         public void Clear(ISubmitSubject subject)

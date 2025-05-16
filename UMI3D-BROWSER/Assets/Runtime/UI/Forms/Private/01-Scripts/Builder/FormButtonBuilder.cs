@@ -73,7 +73,7 @@ namespace umi3d.browserRuntime.forms
 
         public void BuildLabel()
         {
-            model.SetLabel(dto.label);
+            model.SetLabel(dto.Text);
         }
 
         public GameObject GetControl()

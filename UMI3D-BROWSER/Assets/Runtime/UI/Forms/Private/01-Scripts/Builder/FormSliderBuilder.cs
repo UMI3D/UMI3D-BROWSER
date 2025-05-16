@@ -40,12 +40,13 @@ namespace umi3d.browserRuntime.forms
 
             answerDto = new InputAnswerDto() { inputId = dto.guid, value = dto.Value };
             formAnswerDto.inputs.Add(answerDto);
-            model.valueChanged += value => answerDto.value = value;
         }
 
         public void Build(Transform parent)
         {
             factory.TryToGetOrCreate(out control, out model, parent);
+
+            model.valueChanged += value => answerDto.value = value;
         }
 
         public void BuildStyle()

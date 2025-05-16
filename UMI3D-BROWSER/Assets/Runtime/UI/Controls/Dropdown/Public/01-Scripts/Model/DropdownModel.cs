@@ -31,6 +31,7 @@ namespace umi3d.browserRuntime.ui
         public string label { get; private set; }
         public string value { get; private set; }
         public IEnumerator<string> options => _options.GetEnumerator();
+        public event Action<string> valueChanged;
         public event Action submit;
 
         public int IndexOf(string value)
@@ -115,14 +116,14 @@ namespace umi3d.browserRuntime.ui
         {
             value = newValue;
             NotifyValueObserver();
+            valueChanged?.Invoke(value);
         }
         
         public void SetValue(int index)
         {
             if (index < 0 || index >= _options.Count) { return; }
 
-            value = _options[index];
-            NotifyValueObserver();
+            SetValue(_options[index]);
         }
 
         public void SetOptions(List<string> newOptions)
@@ -139,6 +140,7 @@ namespace umi3d.browserRuntime.ui
         public void Clear()
         {
             submit = null;
+            valueChanged = null;
         }
 
         public string debugString

@@ -53,8 +53,11 @@ namespace umi3d.browserRuntime.ui.formMenu
 
         protected virtual void Awake()
         {
+            _sendAnswerNotifier = NotificationHub.Default.GetNotifier(this, ID.FromType<FormNotificationKeys.SendAnswer>());
+
             _controller = GetComponentInParent<FormMenuController>();
             _model = _controller.model;
+            _model.Subscribe(this);
         }
 
         public abstract void DisplayForm(common.interaction.form.FormDto formDto);

@@ -14,7 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils.observation;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -24,22 +23,24 @@ namespace umi3d.browserRuntime.ui.contextualMenu
     {
         [SerializeField] InputActionReference _openInputAction;
 
-        Notifier displayParameterNotifier;
-
         ContextualMenuController _controller;
         ContextualMenuModel _model;
 
         void Awake()
         {
             _openInputAction.action.started += OnClick;
+            _openInputAction.action.Enable();
 
             _controller = GetComponentInParent<ContextualMenuController>();
+        }
+
+        void Start()
+        {
             _model = _controller.model;
         }
 
         void OnDestroy()
         {
-            NotificationHub.Default.Unsubscribe(this);
             _openInputAction.action.started -= OnClick;
         }
 

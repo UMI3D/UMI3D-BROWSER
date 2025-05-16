@@ -196,7 +196,7 @@ namespace umi3d.browserRuntime.ui.formMenu
 #if UNITY_EDITOR
             DestroyImmediate(container.Transform.gameObject);
 #else
-            Destroy(conatiner.Transform.gameObject);
+            Destroy(container.Transform.gameObject);
 #endif
             container.Transform = newObject.transform;
 

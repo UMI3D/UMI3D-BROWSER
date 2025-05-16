@@ -28,7 +28,6 @@ namespace umi3d.browserRuntime.cursor
     public struct CursorData
     {
         public bool ForceProjection, ForceProjectionReleasable;
-        public ButtonMenuItem ForceProjectionReleasableButton;
 
         public Interactable LastProjected, OldHovered, CurrentHovered;
         public ulong LastHoveredId, CurrentHoveredId;

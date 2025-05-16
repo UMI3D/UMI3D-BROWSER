@@ -15,7 +15,6 @@ limitations under the License.
 */
 
 using inetum.unityUtils.observation;
-using umi3d.baseBrowser.inputs.interactions;
 using umi3d.browserRuntime.ui.inGame;
 using UnityEngine;
 
@@ -28,18 +27,18 @@ namespace umi3d.browserRuntime.shortcuts
 
         private void OnEnable()
         {
-            KeyboardShortcut.AddDownListener(ShortcutEnum.MuteUnmuteGeneralVolume, ToggleDeafen);
+            //KeyboardShortcut.AddDownListener(ShortcutEnum.MuteUnmuteGeneralVolume, ToggleDeafen);
         }
 
         private void OnDisable()
         {
-            KeyboardShortcut.RemoveDownListener(ShortcutEnum.MuteUnmuteGeneralVolume, ToggleDeafen);
+            //KeyboardShortcut.RemoveDownListener(ShortcutEnum.MuteUnmuteGeneralVolume, ToggleDeafen);
         }
 
         private void ToggleDeafen()
         {
-            if (KeyboardShortcut.IsEditingTextField)
-                return;
+            //if (KeyboardShortcut.IsEditingTextField)
+            //    return;
 
             if (AudioListener.volume > 0)
                 m_BaseVolume = AudioListener.volume;

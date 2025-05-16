@@ -19,15 +19,10 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEditor.UIElements;
 using System.Collections.Generic;
-using umi3d.cdk;
-using umi3d.cdk.interaction;
 using umi3d.cdk.userCapture;
 using umi3dVRBrowsersBase.connection;
 using umi3d.cdk.collaboration;
-using umi3dVRBrowsersBase.interactions.input;
 using umi3dVRBrowsersBase.navigation;
-using umi3dVRBrowsersBase.interactions;
-using umi3dVRBrowsersBase.interactions.selection.selector;
 
 namespace umi3dBrowsers.editor
 {
@@ -172,10 +167,6 @@ namespace umi3dBrowsers.editor
             if (player.GetComponentInChildren<Camera>() == null)
                 errors.Add("Prefab without camera.");
 
-            //Check InteractionMapper
-            if (player.GetComponentInChildren<InteractionMapper>() == null)
-                errors.Add("Not mandatory on this prefab but make sur you have an InteractionMapper in your scene.");
-
             //Check User Tracking
             if (player.GetComponentInChildren<PersonalSkeleton>() == null)
                 errors.Add("Prefab without PersonalSkeleton.");
@@ -192,32 +183,9 @@ namespace umi3dBrowsers.editor
             if (player.GetComponentInChildren<MicrophoneListener>() == null)
                 errors.Add("Prefab without MicrophoneListener.");
 
-            //Check Controllers.
-            int nbControllers = player.GetComponentsInChildren<AbstractController>().Length;
-            if (nbControllers != 2)
-                errors.Add("Prefab with " + nbControllers + "AbstractController, generally 2 are required for VR players.");
-
-            //Check Boolean Input
-            if (player.GetComponentsInChildren<BooleanInput>().Length == 0)
-                errors.Add("Warning : Prefab without any BooleanInput");
-
-            //Check ManipulationInput
-            if (player.GetComponentsInChildren<ManipulationInput>().Length == 0)
-                errors.Add("Warning : Prefab without any ManipulationInput");
-
-            //Check selectors
-            if (player.GetComponentsInChildren<InteractableVRSelector>().Length == 0)
-                errors.Add("Prefab without any InteractableVRSelector, you can add UMI3D VR Browser Base/Prefab/ControllerSelectors as a children of each of you controller");
-            if (player.GetComponentsInChildren<ElementVRSelector>().Length == 0)
-                errors.Add("Prefab without any ElementVRSelector, you can add UMI3D VR Browser Base/Prefab/ControllerSelectors as a children of each of you controller");
-
             //Check TeleportationArc
             if (player.GetComponentsInChildren<TeleportArc>().Length == 0)
                 errors.Add("Warning : Prefab without TeleportArc");
-
-            //Check AbstractControllerInputManager
-            if (player.GetComponentsInChildren<AbstractControllerInputManager>().Length == 0)
-                errors.Add("Warning : Prefab without AbstractControllerInputManager");
 
             if (errors.Count == 0)
             {

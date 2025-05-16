@@ -20,7 +20,6 @@ using System.Collections.Generic;
 using System.Linq;
 using umi3dBrowsers.linker;
 using umi3dVRBrowsersBase.connection;
-using umi3dVRBrowsersBase.interactions;
 using umi3dVRBrowsersBase.ui.playerMenu;
 using UnityEngine;
 using umi3d.browserRuntime.ui.settings;
@@ -32,6 +31,15 @@ namespace umi3dBrowsers.player
     /// </summary>
     public class WatchMenu : MonoBehaviour
     {
+        /// <summary>
+        /// Lists all type of controllers.
+        /// </summary>
+        public enum ControllerType
+        {
+            LeftHandController,
+            RightHandController
+        }
+
         #region Static Fields and Methods
 
         /// <summary>

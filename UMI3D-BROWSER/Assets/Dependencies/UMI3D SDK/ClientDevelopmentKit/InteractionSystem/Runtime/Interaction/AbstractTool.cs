@@ -133,14 +133,5 @@ namespace umi3d.cdk.interaction
         /// Abstract DTO associated to the tool.
         /// </summary>
         protected abstract AbstractToolDto abstractDto { get; set; }
-
-        /// <summary>
-        /// Safely destroy a tool.
-        /// </summary>
-        public virtual void Destroy()
-        {
-            if (InteractionMapper.Instance.IsToolSelected(environmentId,id))
-                InteractionMapper.Instance.ReleaseTool(environmentId,id, new RequestedByEnvironment());
-        }
     }
 }

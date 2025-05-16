@@ -15,7 +15,6 @@ limitations under the License.
 */
 
 using inetum.unityUtils.observation;
-using umi3d.baseBrowser.inputs.interactions;
 using umi3d.browserRuntime.notificationKeys;
 using umi3d.common.interaction;
 using UnityEngine;
@@ -48,29 +47,23 @@ namespace umi3d.browserRuntime.ui.inGame.interactionMapping
 
             cursorImage = GetComponent<Image>();
 
-            KeyboardInteraction.Mapped += ShowHover;
-            KeyboardInteraction.Unmapped += ShowNormal;
         }
 
         private void OnDestroy()
         {
             NotificationHub.Default.Unsubscribe(this);
 
-            KeyboardInteraction.Mapped -= ShowHover;
-            KeyboardInteraction.Unmapped -= ShowNormal;
         }
 
         private void ShowNormal()
         {
             cursorImage.sprite = cursorIcon;
         }
-        private void ShowNormal(KeyboardInteraction interaction, string key) => ShowNormal();
 
         private void ShowHover()
         {
             cursorImage.sprite = cursorHoverIcon;
         }
-        private void ShowHover(KeyboardInteraction interaction, string arg2, InputAction action) => ShowHover();
         private void ShowHover(AbstractParameterDto dto) => ShowHover();
 
         void ParameterInputFound(Notification notification)

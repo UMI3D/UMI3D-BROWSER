@@ -16,7 +16,6 @@ limitations under the License.
 
 using inetum.unityUtils.observation;
 using umi3d.browserRuntime.cursor;
-using umi3d.baseBrowser.inputs.interactions;
 using umi3d.browserRuntime.ui.inGame;
 using UnityEngine;
 using static umi3d.browserRuntime.cursor.BaseCursor;
@@ -34,7 +33,7 @@ namespace umi3dBrowsers.ingame_ui
 
         private void Awake()
         {
-            KeyboardShortcut.AddDownListener(ShortcutEnum.DisplayHideGameMenu, ToggleInGamePanel);
+            //KeyboardShortcut.AddDownListener(ShortcutEnum.DisplayHideGameMenu, ToggleInGamePanel);
             NotificationHub.Default.Subscribe(
                 this, 
                 InGameNotificationKeys.EnableInGameUi, 
@@ -51,20 +50,20 @@ namespace umi3dBrowsers.ingame_ui
 
         private void OnEnable()
         {
-            KeyboardShortcut.AddUpListener(ShortcutEnum.FreeCursor, FreeCursor);
+            //KeyboardShortcut.AddUpListener(ShortcutEnum.FreeCursor, FreeCursor);
             BaseCursor.SetMovement(this, CursorMovement.Center);
         }
 
         private void OnDisable()
         {
-            KeyboardShortcut.RemoveUpListener(ShortcutEnum.FreeCursor, FreeCursor);
+            //KeyboardShortcut.RemoveUpListener(ShortcutEnum.FreeCursor, FreeCursor);
             BaseCursor.UnSetMovement(this);
         }
 
         private void FreeCursor()
         {
-            if (KeyboardShortcut.IsEditingTextField)
-                return;
+            //if (KeyboardShortcut.IsEditingTextField)
+            //    return;
             if (TabletPanel.gameObject.activeSelf)
                 return;
 
@@ -76,8 +75,8 @@ namespace umi3dBrowsers.ingame_ui
 
         private void ToggleInGamePanel()
         {
-            if (KeyboardShortcut.IsEditingTextField)
-                return;
+            //if (KeyboardShortcut.IsEditingTextField)
+            //    return;
             if (!gameObject.activeSelf)
                 return;
 

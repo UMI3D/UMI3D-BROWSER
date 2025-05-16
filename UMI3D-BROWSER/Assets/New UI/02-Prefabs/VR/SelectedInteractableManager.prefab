@@ -85,7 +85,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8164837608679103447}
-  - component: {fileID: 5573358414277931648}
   - component: {fileID: 4890790413744350468}
   - component: {fileID: 8461261380031821687}
   m_Layer: 6
@@ -111,27 +110,6 @@ Transform:
   - {fileID: 1616407458311111035}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5573358414277931648
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1834894647987025986}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 882590ab39e4e70469148514cc0b920a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  simLinker: {fileID: 11400000, guid: 636ad0567f208434fa27befdcdf924a3, type: 2}
-  label: {fileID: 5719204163332315376}
-  background: {fileID: 3760862446414344143}
-  collider: {fileID: 784524391424608913}
-  minDistance: 2
-  maxDistance: 6
-  minScale: 0.15
-  maxScale: 0.5
-  events: []
 --- !u!114 &4890790413744350468
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -146,7 +124,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   addRemoveWhenActivationChange: 1
   variables:
-  - {fileID: 5573358414277931648}
+  - {fileID: 0}
 --- !u!114 &8461261380031821687
 MonoBehaviour:
   m_ObjectHideFlags: 0

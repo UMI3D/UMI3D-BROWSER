@@ -14,7 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 using System;
-using umi3d.baseBrowser.inputs.interactions;
 using umi3d.baseBrowser.Navigation;
 using UnityEngine;
 

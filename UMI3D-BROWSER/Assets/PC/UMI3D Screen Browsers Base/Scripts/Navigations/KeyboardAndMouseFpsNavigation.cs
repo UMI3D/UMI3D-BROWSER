@@ -14,7 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 using System;
-using umi3d.baseBrowser.inputs.interactions;
 using UnityEngine;
 
 namespace umi3d.baseBrowser.Navigation
@@ -31,8 +30,8 @@ namespace umi3d.baseBrowser.Navigation
                 Input.GetAxis("Mouse X")
             );
 
-            data.WantToLookAround = KeyboardNavigation.IsPressed(NavigationEnum.FreeView);
-            data.WantToLookAroundInDrawMode = KeyboardNavigation.IsPressed(NavigationEnum.FreeViewInDrawMode);
+            //data.WantToLookAround = KeyboardNavigation.IsPressed(NavigationEnum.FreeView);
+            //data.WantToLookAroundInDrawMode = KeyboardNavigation.IsPressed(NavigationEnum.FreeViewInDrawMode);
         }
 
         public void HandleUserInput()
@@ -41,28 +40,28 @@ namespace umi3d.baseBrowser.Navigation
             Func<float> xAxis = () =>
             {
                 float result = 0f;
-                if (KeyboardNavigation.IsPressed(NavigationEnum.Right))
-                {
-                    result += 1f;
-                }
-                if (KeyboardNavigation.IsPressed(NavigationEnum.Left))
-                {
-                    result += -1f;
-                }
+                //if (KeyboardNavigation.IsPressed(NavigationEnum.Right))
+                //{
+                //    result += 1f;
+                //}
+                //if (KeyboardNavigation.IsPressed(NavigationEnum.Left))
+                //{
+                //    result += -1f;
+                //}
                 return result;
             };
 
             Func<float> zAxis = () =>
             {
                 float result = 0f;
-                if (KeyboardNavigation.IsPressed(NavigationEnum.Forward)) 
-                {
-                    result += 1f;
-                }
-                if (KeyboardNavigation.IsPressed(NavigationEnum.Backward))
-                {
-                    result += -1f;
-                }
+                //if (KeyboardNavigation.IsPressed(NavigationEnum.Forward)) 
+                //{
+                //    result += 1f;
+                //}
+                //if (KeyboardNavigation.IsPressed(NavigationEnum.Backward))
+                //{
+                //    result += -1f;
+                //}
                 return result;
             };
 
@@ -72,9 +71,9 @@ namespace umi3d.baseBrowser.Navigation
                 zAxis()
             );
 
-            data.WantToJump = KeyboardNavigation.IsPressed(NavigationEnum.Jump);
-            data.WantToCrouch = KeyboardNavigation.IsPressed(NavigationEnum.Crouch);
-            data.WantToSprint = KeyboardNavigation.IsPressed(NavigationEnum.sprint);
+            //data.WantToJump = KeyboardNavigation.IsPressed(NavigationEnum.Jump);
+            //data.WantToCrouch = KeyboardNavigation.IsPressed(NavigationEnum.Crouch);
+            //data.WantToSprint = KeyboardNavigation.IsPressed(NavigationEnum.sprint);
 
         }
     }

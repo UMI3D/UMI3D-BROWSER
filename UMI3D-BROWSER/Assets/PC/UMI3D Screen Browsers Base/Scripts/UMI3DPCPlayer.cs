@@ -14,11 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using BrowserDesktop;
 using inetum.unityUtils.observation;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using umi3d.baseBrowser.Navigation;
 using umi3d.browserRuntime.navigation;
+using umi3d.cdk.collaboration;
 using umi3d.cdk.collaboration.userCapture;
 using umi3d.cdk.navigation;
 using umi3d.cdk.notification;
@@ -123,6 +126,47 @@ namespace umi3d.baseBrowser
             colliderDelegate?.DrawGizmos();
         }
 
+        public void ChangeViewOmniscient(OmniscientViewDto dto)
+        {
+            //positions
+            collisionManager.playerTransform.position = new Vector3(collisionManager.playerTransform.position.x,
+                collisionManager.playerTransform.position.y + dto.distance,
+                collisionManager.playerTransform.position.z);
+            cameraManager.playerTransform.position = collisionManager.playerTransform.position;
+            colliderDelegate.playerTransform.position = collisionManager.playerTransform.position;
+            movementManager.playerTransform.position = collisionManager.playerTransform.position;
+            navigationDelegate.playerTransform.position = collisionManager.playerTransform.position;
+
+            //camera Angle limits
+            fpsData.maxXCameraAngle = new Vector2(dto.cameraXAngle.X, dto.cameraXAngle.Y);
+
+            //Camera base Rotation
+            Quaternion quaternion = new Quaternion();
+            Vector3 euler = quaternion.eulerAngles;
+            cameraManager.viewpointPivot.SetPositionAndRotation(
+                cameraManager.viewpointPivot.transform.position,
+                Quaternion.Euler(
+                    45,
+                    cameraManager.viewpointPivot.rotation.eulerAngles.y,
+                    cameraManager.viewpointPivot.rotation.eulerAngles.z
+                ));
+
+            navigationDelegate.cameraTransform = cameraManager.viewpointPivot;
+
+            //physics and collisions
+            fpsData.flyingSpeed = dto.flyingSpeed;
+
+            fpsData.navigationMode = E_NavigationMode.Omniscient;
+        }
+        public void ChangeViewImmersive(ImmersiveViewDto dto)
+        {
+            //camera
+            fpsData.maxXCameraAngle = new Vector2(dto.cameraXAngle.X, dto.cameraXAngle.Y);
+
+            fpsData.navigationMode = E_NavigationMode.Default;
+            Debug.Log("navigationMode " + fpsData.navigationMode);
+        }
+
         [ContextMenu(itemName:"Func Change View")]
         void TestViewMode()
         {
@@ -157,7 +201,7 @@ namespace umi3d.baseBrowser
                     nearPlane = newView.nearPlane,
                     farPlane = newView.farPlane,
                 };
-                Notification notif = new Notification("", this, new Dictionary<string, object>() { { UMI3DClientNotificatonKeys.Info.CameraProperties, cam } });
+                Notification notif = new Notification("", this, new Dictionary<string, object>() { { UMI3DClientNotificatonKeys.Info.CameraProperties, newView } });
                 cameraManager.CameraPropertiesReception(notif);
                 //Camera base Rotation
                 Quaternion test = new Quaternion();
@@ -195,6 +239,8 @@ namespace umi3d.baseBrowser
                     nearPlane = newView.nearPlane,
                     farPlane = newView.farPlane,
                 };
+
+
                 Notification notif = new Notification("", this, new Dictionary<string, object>() { { UMI3DClientNotificatonKeys.Info.CameraProperties, cam } });
                 cameraManager.CameraPropertiesReception(notif);
                 

@@ -19,6 +19,10 @@ using umi3d.baseBrowser.Navigation;
 using umi3d.cdk.notification;
 using umi3d.common;
 using UnityEngine;
+using umi3d.baseBrowser;
+using Unity.VisualScripting;
+using Unity.VisualScripting.FullSerializer;
+using System.Data;
 
 public sealed class UMI3DCameraManager
 {
@@ -127,23 +131,46 @@ public sealed class UMI3DCameraManager
 
     public void CameraPropertiesReception(Notification notification)
     {
-        if (!notification.TryGetInfoT(UMI3DClientNotificatonKeys.Info.CameraProperties, out AbstractCameraPropertiesDto dto))
-            return;
         Camera cam = Camera.main;
 
-        if (dto is PerspectiveCameraPropertiesDto)
+        if (notification.TryGetInfoT(UMI3DClientNotificatonKeys.Info.CameraProperties, out AbstractCameraPropertiesDto dto))
         {
-            cam.orthographic = false;
-            cam.fieldOfView = (dto as PerspectiveCameraPropertiesDto).fieldOfView;
-        }
-        else
-        {
-            cam.orthographic = true;
-            cam.orthographicSize = (dto as OrthographicCameraPropertiesDto).size;
+            if (dto is PerspectiveCameraPropertiesDto)
+            {
+                cam.orthographic = false;
+                cam.fieldOfView = (dto as PerspectiveCameraPropertiesDto).fieldOfView;
+            }
+            else if (dto is OrthographicCameraPropertiesDto)
+            {
+                cam.orthographic = true;
+                cam.orthographicSize = (dto as OrthographicCameraPropertiesDto).size;
+            }
+            cam.transform.localPosition = dto.localPosition.Struct();
+            cam.nearClipPlane = dto.nearPlane;
+            cam.farClipPlane = dto.farPlane;
+            return;
         }
 
-        cam.transform.localPosition = dto.localPosition.Struct();
-        cam.nearClipPlane = dto.nearPlane;
-        cam.farClipPlane = dto.farPlane;
+        if (notification.TryGetInfoT(UMI3DClientNotificatonKeys.Info.CameraProperties, out AbstractViewModeDto dtoParentView))
+        {
+            cam.orthographic = false;
+            cam.fieldOfView = dtoParentView.fieldOfView;
+            cam.nearClipPlane = dtoParentView.nearPlane;
+            cam.farClipPlane = dtoParentView.farPlane;
+            UMI3DPCPlayer player = UnityEngine.Object.FindObjectOfType<UMI3DPCPlayer>();
+
+            if (notification.TryGetInfoT(UMI3DClientNotificatonKeys.Info.CameraProperties, out OmniscientViewDto dtoOmni))
+            {
+                cam.transform.localPosition = dtoOmni.localPosition.Struct();
+                Debug.Log("CameraPropertiesReception OmniscientViewDto");
+                player.ChangeViewOmniscient(dtoOmni);
+            }
+            if (notification.TryGetInfoT(UMI3DClientNotificatonKeys.Info.CameraProperties, out ImmersiveViewDto dtoImmer))
+            {
+                cam.transform.localPosition = new Vector3(0, 0.198f, 0.1243f);
+                Debug.Log("CameraPropertiesReception ImmersiveViewDto");
+                player.ChangeViewImmersive(dtoImmer);
+            }
+        }
     }
 }

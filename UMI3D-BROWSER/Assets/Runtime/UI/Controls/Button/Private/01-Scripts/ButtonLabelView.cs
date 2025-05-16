@@ -14,38 +14,39 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils.observation;
 using TMPro;
 using UnityEngine;
 
-namespace umi3d.browserRuntime.button
+namespace umi3d.browserRuntime.ui
 {
     [RequireComponent(typeof(TMP_Text)), ExecuteInEditMode]
-    internal class ButtonLabelView : MonoBehaviour
+    internal class ButtonLabelView : MonoBehaviour, ILabelObserver
     {
-        ButtonModelContainer _modelContainer;
         TMP_Text _text;
+
+        ButtonController _controller;
+        ButtonModel _model;
 
         void Awake()
         {
-            _modelContainer = GetComponentInParent<ButtonModelContainer>();
             _text = GetComponent<TMP_Text>();
 
-            NotificationHub.Default.Subscribe(this,
-                ID.FromType<ButtonNotificationKeys.ButtonSet>(),
-                (Callback)ButtonSet,
-                new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == _modelContainer.Model));
+            _controller = GetComponentInParent<ButtonController>();
+            _model = _controller.model;
+            _model.Subscribe(this);
         }
 
         void OnDestroy()
         {
-            NotificationHub.Default.Unsubscribe(this);
+            _model.Unsubscribe(this);
         }
 
-        void ButtonSet(Notification notification)
+        public void UpdateLabel(string label, bool isVisible)
         {
-            if (notification.TryGetInfoT(ButtonNotificationKeys.ButtonSet.Label, out string label, false))
-                _text.text = label;
+            gameObject.SetActive(isVisible);
+            if (!isVisible) { return; }
+
+            _text.text = label;
         }
     }
 }

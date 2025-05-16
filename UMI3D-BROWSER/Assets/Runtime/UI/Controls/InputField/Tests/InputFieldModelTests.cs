@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
 using TMPro;
-using umi3d.browserRuntime.ui.inputField;
+using umi3d.browserRuntime.ui;
 using UnityEngine;
 using UnityEngine.TestTools;
 
@@ -89,34 +89,6 @@ public class InputFieldModelTests
         }
     }
 
-    class UpdateValueTests
-    {
-        InputFieldModel _model;
-
-        [SetUp]
-        public void SetUp()
-        {
-            _model = new InputFieldModel();
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            _model = null;
-        }
-
-        [Test]
-        public void GivenValueNull_WhenSetValue_ThenValue()
-        {
-            Assert.IsNull(_model.value);
-
-            string value = "Test Value";
-            _model.UpdateValue(value);
-
-            Assert.AreEqual(_model.value, value);
-        }
-    }
-
     class SetPlaceholderTests
     {
         InputFieldModel _model;
@@ -194,7 +166,7 @@ public class InputFieldModelTests
         {
             _model.SetContentType(TMP_InputField.ContentType.Password);
 
-            Assert.AreEqual(TMP_InputField.ContentType.Password, _model.ContentType);
+            Assert.AreEqual(TMP_InputField.ContentType.Password, _model.contentType);
         }
     }
 
@@ -221,7 +193,7 @@ public class InputFieldModelTests
             _model.SetPasswordVisibility(true);
 
             Assert.IsTrue(_model.passwordVisibility);
-            Assert.AreEqual(TMP_InputField.ContentType.Standard, _model.ContentType);
+            Assert.AreEqual(TMP_InputField.ContentType.Standard, _model.contentType);
         }
 
         [Test]
@@ -231,7 +203,7 @@ public class InputFieldModelTests
             _model.SetPasswordVisibility(false);
 
             Assert.IsFalse(_model.passwordVisibility);
-            Assert.AreEqual(TMP_InputField.ContentType.Password, _model.ContentType);
+            Assert.AreEqual(TMP_InputField.ContentType.Password, _model.contentType);
         }
     }
 

@@ -30,15 +30,12 @@ using UnityEngine.XR.Interaction.Toolkit.Samples.StarterAssets;
 
 namespace umi3d.browserRuntime.player
 {
-    public class UMI3DVRPlayer : MonoBehaviour
+    public class UMI3DVRPlayer : UMI3DPlayer
     {
         public umi3d.debug.UMI3DLogger logger;
 
-        public GameObject personalSkeletonContainer;
         public XROrigin xrOrigin;
 
-        [HideInInspector] public Camera mainCamera;
-        [HideInInspector] public Camera uiCamera;
         [HideInInspector] public LocomotionSystem locomotionSystem;
         [HideInInspector] public TeleportationProvider teleportationProvider;
         [HideInInspector] public DynamicMoveProvider dynamicMoveProvider;

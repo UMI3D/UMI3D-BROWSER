@@ -14,106 +14,108 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System.Collections.Generic;
-using umi3d.baseBrowser.Navigation;
-using umi3d.cdk.collaboration.userCapture;
-using umi3d.cdk.navigation;
+using umi3d.browserRuntime.pc;
 using UnityEngine;
 
-namespace umi3d.baseBrowser
+namespace umi3d.browserRuntime.player.pc
 {
-    public class UMI3DPCPlayer : MonoBehaviour
+    public class UMI3DPCPlayer : UMI3DPlayer
     {
-        public BaseFPSData fpsData;
-        public Transform personalSkeletonContainer;
-        public Transform playerTransform;
-        public Transform skeleton;
+        //public BaseFPSData fpsData;
 
         [Header("Camera")]
         public Transform viewpointPivot;
         public Transform neckPivot;
         public Transform head;
 
-        [Header("Player Collision Debugger")]
-        public UMI3DCollisionManager.CollisionDebugger.E_Collision collisionToDebug;
+        //[Header("Player Collision Debugger")]
+        //public UMI3DCollisionManager.CollisionDebugger.E_Collision collisionToDebug;
 
-        [HideInInspector] public UMI3DNavigation navigation = new();
+        //[HideInInspector] public UMI3DNavigation navigation = new();
 
-        UMI3DCollisionManager collisionManager;
-        UMI3DCameraManager cameraManager;
-        UMI3DMovementManager movementManager;
-        PCNavigationDelegate navigationDelegate;
-        UMI3DPlayerCapsuleColliderDelegate colliderDelegate;
+        //UMI3DCollisionManager collisionManager;
+        //UMI3DCameraManager cameraManager;
+        //UMI3DMovementManager movementManager;
+        //PCNavigationDelegate navigationDelegate;
+        //UMI3DPlayerCapsuleColliderDelegate colliderDelegate;
 
         void Awake()
         {
-            KeyboardAndMouseFpsNavigation concreteFPSNavigation = new KeyboardAndMouseFpsNavigation()
-            {
-                data = fpsData,
-            };
+//            KeyboardAndMouseFpsNavigation concreteFPSNavigation = new KeyboardAndMouseFpsNavigation()
+//            {
+//                data = fpsData,
+//            };
 
-            colliderDelegate = new()
-            {
-                playerTransform = playerTransform,
-                data = fpsData
-            };
-            colliderDelegate.Init();
-            collisionManager = new()
-            {
-                data = fpsData,
-                playerTransform = playerTransform,
-                colliderDelegate = colliderDelegate,
-                collisionDebugger = () => new() { collision = collisionToDebug}
-            };
-            cameraManager = new()
-            {
-                data = fpsData,
-                playerTransform = playerTransform,
-                viewpointPivot = viewpointPivot,
-                neckPivot = neckPivot,
-                head = head,
-                concreteFPSNavigation = concreteFPSNavigation
-            };
-            movementManager = new()
-            {
-                data = fpsData,
-                playerTransform = playerTransform,
-                skeleton = skeleton,
-                collisionManager = collisionManager,
-                concreteFPSNavigation = concreteFPSNavigation
-            };
-            navigationDelegate = new()
-            {
-                data = fpsData,
-                playerTransform = playerTransform,
-                personalSkeletonContainer = personalSkeletonContainer,
-                cameraTransform = viewpointPivot.GetChild(0),
-                collisionManager = collisionManager,
-            };
-            navigation.Init(navigationDelegate);
+//            colliderDelegate = new()
+//            {
+//                playerTransform = personalSkeletonContainer.transform,
+//                data = fpsData
+//            };
+//            colliderDelegate.Init();
+//            collisionManager = new()
+//            {
+//                data = fpsData,
+//                playerTransform = personalSkeletonContainer.transform,
+//                colliderDelegate = colliderDelegate,
+//                collisionDebugger = () => new() { collision = collisionToDebug}
+//            };
+//            cameraManager = new()
+//            {
+//                data = fpsData,
+//                playerTransform = personalSkeletonContainer.transform,
+//                viewpointPivot = viewpointPivot,
+//                neckPivot = neckPivot,
+//                head = head,
+//                concreteFPSNavigation = concreteFPSNavigation
+//            };
+//            movementManager = new()
+//            {
+//                data = fpsData,
+//                playerTransform = personalSkeletonContainer.transform,
+//                skeleton = personalSkeleton.transform,
+//                collisionManager = collisionManager,
+//                concreteFPSNavigation = concreteFPSNavigation
+//            };
+//            navigationDelegate = new()
+//            {
+//                data = fpsData,
+//                playerTransform = personalSkeletonContainer.transform,
+//                personalSkeletonContainer = personalSkeletonContainer.transform,
+//                cameraTransform = viewpointPivot.GetChild(0),
+//                collisionManager = collisionManager,
+//            };
+//            navigation.Init(navigationDelegate);
 
-            // SKELETON SERVICE
-            CollaborationSkeletonsManager.Instance.navigation = navigationDelegate; //also use to init manager via Instance call
+//            // SKELETON SERVICE
+//            CollaborationSkeletonsManager.Instance.navigation = navigationDelegate; //also use to init manager via Instance call
 
-#if !UNITY_EDITOR
-            fpsData.navigationMode = E_NavigationMode.Default;
-#endif
+//#if !UNITY_EDITOR
+//            fpsData.navigationMode = E_NavigationMode.Default;
+//#endif
+        }
+
+        void Start()
+        {
+            mainCamera = Camera.main;
+            cameraOffset = mainCamera.transform.parent.gameObject;
+
+            UMI3DPCManager.@default.player = this;
         }
 
         private void Update()
         {
-            cameraManager.HandleView();
+            //cameraManager.HandleView();
 
-            if (!navigationDelegate.isActive)
-                return; 
+            //if (!navigationDelegate.isActive)
+            //    return; 
 
-            colliderDelegate.ComputeCollider();
-            movementManager.ComputeMovement();
+            //colliderDelegate.ComputeCollider();
+            //movementManager.ComputeMovement();
         }
 
         private void OnDrawGizmosSelected()
         {
-            colliderDelegate?.DrawGizmos();
+            //colliderDelegate?.DrawGizmos();
         }
     }
 }

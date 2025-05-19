@@ -38,16 +38,16 @@ public sealed class UMI3DMovementManager
         data.playerTranslationSpeed = Vector3.zero;
         data.playerTranslation = Vector3.zero;
         collisionManager.ComputeGround();
-        if (
-                (BaseCursor.Movement == BaseCursor.CursorMovement.Free
-                || BaseCursor.Movement == BaseCursor.CursorMovement.FreeHidden)
-            )
-        {
-            ComputeVerticalSpeed();
-            ComputeHorizontalAndVerticalTranslation();
-            UpdatePlayerPosition();
-            return;
-        }
+        //if (
+        //        (BaseCursor.Movement == BaseCursor.CursorMovement.Free
+        //        || BaseCursor.Movement == BaseCursor.CursorMovement.FreeHidden)
+        //    )
+        //{
+        //    ComputeVerticalSpeed();
+        //    ComputeHorizontalAndVerticalTranslation();
+        //    UpdatePlayerPosition();
+        //    return;
+        //}
 
         ComputeHorizontalSpeed();
         ComputeVerticalSpeed();

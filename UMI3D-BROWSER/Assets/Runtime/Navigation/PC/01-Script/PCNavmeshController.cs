@@ -13,35 +13,25 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
+using umi3d.browserRuntime.navigation;
 using umi3d.cdk;
-using umi3dVRBrowsersBase.navigation;
 using UnityEngine;
 
-namespace umi3d.browserRuntime.navigation.xr
+namespace umi3d.baseBrowser.navigation.pc
 {
+
     /// <summary>
-    /// This class handles the generation of the navemesh.
+    /// This class handles the navigation possibility. It is based on Unity navmesh.
     /// </summary>
-    public class NavmeshManager : NavmeshController
+    public class PCNavmeshController : NavmeshController
     {
         protected override void AddNavmeshArea(GameObject nodeGameObject)
         {
-            if (nodeGameObject.GetComponent<TeleportArea>() == null)
-            {
-                nodeGameObject.AddComponent<TeleportArea>();
-            }
-
             nodeGameObject.layer = ToLayer(navmeshLayer);
         }
 
         protected override void RemoveNavmeshArea(UMI3DNodeInstance node)
         {
-            if (node.GameObject.TryGetComponent(out TeleportArea tpArea))
-            {
-                GameObject.Destroy(tpArea);
-            }
-
             SetLayer(node, defaultLayer);
         }
 
@@ -49,11 +39,17 @@ namespace umi3d.browserRuntime.navigation.xr
         {
             if (node.IsPartOfNavmesh) { return; }
 
-            RemoveNavmeshArea(node);
+            SetLayer(node, node.IsTraversable ? defaultLayer : obstacleLayer);
         }
 
         protected override void SwitchHierarchyToObstacleLayer(GameObject go)
         {
+            go.layer = obstacleLayer;
+
+            foreach (Transform t in go.transform)
+            {
+                SwitchHierarchyToObstacleLayer(t.gameObject);
+            }
         }
     }
 }

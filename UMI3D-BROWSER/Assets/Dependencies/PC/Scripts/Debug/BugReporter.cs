@@ -78,7 +78,7 @@ public class BugReporter : SingleBehaviour<BugReporter>
         //umi3d.baseBrowser.connection.BaseConnectionMenu.Instance.document.rootVisualElement.Add(popUp);
         popUp.BringToFront();
 
-        BaseCursor.SetMovement(this, BaseCursor.CursorMovement.Free);
+        //BaseCursor.SetMovement(this, BaseCursor.CursorMovement.Free);
     }
 
     public void ClosePopUp(bool generateReport)
@@ -92,7 +92,7 @@ public class BugReporter : SingleBehaviour<BugReporter>
         reproStepsInput.SetValueWithoutNotify(string.Empty);
         titleInput.SetValueWithoutNotify(string.Empty);
 
-        BaseCursor.SetMovement(this, BaseCursor.CursorMovement.Center);
+        //BaseCursor.SetMovement(this, BaseCursor.CursorMovement.Center);
     }
 
     private void GenerateBugReport(string name, string title, string reproSteps)

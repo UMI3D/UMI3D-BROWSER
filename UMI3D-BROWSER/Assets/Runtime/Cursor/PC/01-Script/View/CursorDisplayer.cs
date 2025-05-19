@@ -14,14 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils.observation;
-using umi3d.browserRuntime.notificationKeys;
-using umi3d.common.interaction;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-namespace umi3d.browserRuntime.ui.inGame.interactionMapping
+namespace umi3d.browserRuntime.cursor
 {
     [RequireComponent(typeof(Image))]
     public class CursorDisplayer : MonoBehaviour
@@ -33,17 +29,17 @@ namespace umi3d.browserRuntime.ui.inGame.interactionMapping
 
         private void Awake()
         {
-            NotificationHub.Default.Subscribe(
-                this,
-                ID.FromType<InteractionNotificationKeys.ParameterInputFound>(),
-                (Callback)ParameterInputFound
-            );
+            //NotificationHub.Default.Subscribe(
+            //    this,
+            //    ID.FromType<InteractionNotificationKeys.ParameterInputFound>(),
+            //    (Callback)ParameterInputFound
+            //);
 
-            NotificationHub.Default.Subscribe(
-                this,
-                ID.FromType<InteractionNotificationKeys.ToolReleased>(),
-                (Callback)ToolReleased
-            );
+            //NotificationHub.Default.Subscribe(
+            //    this,
+            //    ID.FromType<InteractionNotificationKeys.ToolReleased>(),
+            //    (Callback)ToolReleased
+            //);
 
             cursorImage = GetComponent<Image>();
 
@@ -51,7 +47,7 @@ namespace umi3d.browserRuntime.ui.inGame.interactionMapping
 
         private void OnDestroy()
         {
-            NotificationHub.Default.Unsubscribe(this);
+            //NotificationHub.Default.Unsubscribe(this);
 
         }
 
@@ -64,17 +60,17 @@ namespace umi3d.browserRuntime.ui.inGame.interactionMapping
         {
             cursorImage.sprite = cursorHoverIcon;
         }
-        private void ShowHover(AbstractParameterDto dto) => ShowHover();
+        //private void ShowHover(AbstractParameterDto dto) => ShowHover();
 
-        void ParameterInputFound(Notification notification)
-        {
-            if (!notification.TryGetInfoT(InteractionNotificationKeys.ParameterInputFound.parameterDto, out AbstractParameterDto dto))
-            {
-                return;
-            }
+        //void ParameterInputFound(Notification notification)
+        //{
+        //    if (!notification.TryGetInfoT(InteractionNotificationKeys.ParameterInputFound.parameterDto, out AbstractParameterDto dto))
+        //    {
+        //        return;
+        //    }
 
-            ShowHover(dto);
-        }
+        //    ShowHover(dto);
+        //}
 
         void ToolReleased()
         {

@@ -37,12 +37,12 @@ namespace umi3d.browserRuntime.shortcuts
             if (internalVisibilityState)
             {
                 NotificationHub.Default.Notify(this, UiNotificationKeys.Show);
-                BaseCursor.UnSetMovement(this);
+                //BaseCursor.UnSetMovement(this);
             } else
             {
-                var cursorMode = BaseCursor.Movement;
+                //var cursorMode = BaseCursor.Movement;
                 NotificationHub.Default.Notify(this, UiNotificationKeys.Hide);
-                BaseCursor.SetMovement(this, cursorMode);
+                //BaseCursor.SetMovement(this, cursorMode);
             }
         }
     }

@@ -40,7 +40,7 @@ namespace umi3dBrowsers.ingame_ui
                 (Callback)SetActive
             );
 
-            BaseCursor.SetMovement(this, CursorMovement.Free);
+            //BaseCursor.SetMovement(this, CursorMovement.Free);
         }
 
         private void Start()
@@ -51,13 +51,13 @@ namespace umi3dBrowsers.ingame_ui
         private void OnEnable()
         {
             //KeyboardShortcut.AddUpListener(ShortcutEnum.FreeCursor, FreeCursor);
-            BaseCursor.SetMovement(this, CursorMovement.Center);
+            //BaseCursor.SetMovement(this, CursorMovement.Center);
         }
 
         private void OnDisable()
         {
             //KeyboardShortcut.RemoveUpListener(ShortcutEnum.FreeCursor, FreeCursor);
-            BaseCursor.UnSetMovement(this);
+            //BaseCursor.UnSetMovement(this);
         }
 
         private void FreeCursor()
@@ -67,10 +67,10 @@ namespace umi3dBrowsers.ingame_ui
             if (TabletPanel.gameObject.activeSelf)
                 return;
 
-            if (BaseCursor.Movement == CursorMovement.Center)
-                BaseCursor.SetMovement(this, CursorMovement.Free);
-            else
-                BaseCursor.SetMovement(this, CursorMovement.Center);
+            //if (BaseCursor.Movement == CursorMovement.Center)
+            //    BaseCursor.SetMovement(this, CursorMovement.Free);
+            //else
+            //    BaseCursor.SetMovement(this, CursorMovement.Center);
         }
 
         private void ToggleInGamePanel()

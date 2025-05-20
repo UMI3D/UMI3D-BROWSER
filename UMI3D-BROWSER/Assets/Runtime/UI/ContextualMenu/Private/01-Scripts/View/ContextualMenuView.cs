@@ -19,7 +19,7 @@ using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.contextualMenu
 {
-    internal class ContextualMenuView : MonoBehaviour, IInteractableHoverStateDelegate, IContextualMenuActivationObserver
+    public class ContextualMenuView : MonoBehaviour, IInteractableHoverStateDelegate, IContextualMenuActivationObserver
     {
         [SerializeField] float _offset = 10.0f;
 
@@ -71,7 +71,10 @@ namespace umi3d.browserRuntime.ui.contextualMenu
                 _canvas.transform.LookAt(_interactablePosition);
             }
 #endif
-            gameObject.SetActive(isActive);
+            for (int i = 0; i < transform.childCount; i++)
+            {
+                transform.GetChild(i).gameObject.SetActive(isActive);
+            }
         }
     }
 }

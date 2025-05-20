@@ -30,13 +30,14 @@ namespace umi3d.browserRuntime.ui.contextualMenu
         {
             _openInputAction.action.started += OnClick;
             _openInputAction.action.Enable();
-
-            _controller = GetComponentInParent<ContextualMenuController>();
         }
 
         void Start()
         {
+            _controller = GetComponentInParent<ContextualMenuController>();
             _model = _controller.model;
+            Debug.Assert(_controller != null, "Controller null");
+            Debug.Assert(_model != null, "model null");
         }
 
         void OnDestroy()

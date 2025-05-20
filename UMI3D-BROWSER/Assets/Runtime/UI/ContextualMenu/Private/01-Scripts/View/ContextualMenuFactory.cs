@@ -23,7 +23,7 @@ using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.contextualMenu
 {
-    internal class ContextualMenuFactory : MonoBehaviour, IContextualMenuActivationObserver, IContextualMenuDisplayParameterObserver
+    public class ContextualMenuFactory : MonoBehaviour, IContextualMenuActivationObserver, IContextualMenuDisplayParameterObserver
     {
         [SerializeField] Transform _content;
 

@@ -47,6 +47,9 @@ namespace umi3d.baseBrowser
         [Header("Player Collision Debugger")]
         public UMI3DCollisionManager.CollisionDebugger.E_Collision collisionToDebug;
 
+        [Header("Player Omniscient View")]
+        public Vector3 previousPosition;
+
         [HideInInspector] public UMI3DNavigation navigation = new();
 
         UMI3DCollisionManager collisionManager;
@@ -129,6 +132,8 @@ namespace umi3d.baseBrowser
         public void ChangeViewOmniscient(OmniscientViewDto dto)
         {
             //positions
+            previousPosition = collisionManager.playerTransform.position;
+
             collisionManager.playerTransform.position = new Vector3(collisionManager.playerTransform.position.x,
                 collisionManager.playerTransform.position.y + dto.distance,
                 collisionManager.playerTransform.position.z);
@@ -153,8 +158,9 @@ namespace umi3d.baseBrowser
 
             navigationDelegate.cameraTransform = cameraManager.viewpointPivot;
 
-            //physics and collisions
+            //Navigation physics and collisions
             fpsData.flyingSpeed = dto.flyingSpeed;
+
 
             fpsData.navigationMode = E_NavigationMode.Omniscient;
         }
@@ -163,89 +169,16 @@ namespace umi3d.baseBrowser
             //camera
             fpsData.maxXCameraAngle = new Vector2(dto.cameraXAngle.X, dto.cameraXAngle.Y);
 
+            //positions
+            collisionManager.playerTransform.position = previousPosition;
+            cameraManager.playerTransform.position = collisionManager.playerTransform.position;
+            colliderDelegate.playerTransform.position = collisionManager.playerTransform.position;
+            movementManager.playerTransform.position = collisionManager.playerTransform.position;
+            navigationDelegate.playerTransform.position = collisionManager.playerTransform.position;
+
+            previousPosition = Vector3.zero;
+
             fpsData.navigationMode = E_NavigationMode.Default;
-            Debug.Log("navigationMode " + fpsData.navigationMode);
-        }
-
-        [ContextMenu(itemName:"Func Change View")]
-        void TestViewMode()
-        {
-            if(fpsData.navigationMode == E_NavigationMode.Default)
-            {
-                //define Dto and his values
-                OmniscientViewDto newView = new OmniscientViewDto();
-                newView.distance = 10;
-                newView.flyingSpeed = 25;
-                newView.cameraXAngle = new Vector2Dto(){ X = 0, Y = 90 };
-                newView.fieldOfView = 50;
-                newView.nearPlane = 3;
-                newView.farPlane = 1000;
-
-                //positions
-                collisionManager.playerTransform.position = new Vector3(collisionManager.playerTransform.position.x, 
-                    collisionManager.playerTransform.position.y+ newView.distance,
-                    collisionManager.playerTransform.position.z);
-                cameraManager.playerTransform.position = collisionManager.playerTransform.position;
-                colliderDelegate.playerTransform.position = collisionManager.playerTransform.position;
-                movementManager.playerTransform.position = collisionManager.playerTransform.position;
-                navigationDelegate.playerTransform.position = collisionManager.playerTransform.position;
-                
-
-                //camera Angle limits
-                fpsData.maxXCameraAngle = new Vector2 (newView.cameraXAngle.X, newView.cameraXAngle.Y);
-                //camera FOV, position, nearPlane and FarPlane
-                PerspectiveCameraPropertiesDto cam = new PerspectiveCameraPropertiesDto()
-                {
-                    fieldOfView = newView.fieldOfView,
-                    localPosition = new Vector3Dto() {X = 0, Y = 0.198f, Z = 0.1243f },
-                    nearPlane = newView.nearPlane,
-                    farPlane = newView.farPlane,
-                };
-                Notification notif = new Notification("", this, new Dictionary<string, object>() { { UMI3DClientNotificatonKeys.Info.CameraProperties, newView } });
-                cameraManager.CameraPropertiesReception(notif);
-                //Camera base Rotation
-                Quaternion test = new Quaternion();
-                Vector3 quaternion = test.eulerAngles;
-                cameraManager.viewpointPivot.SetPositionAndRotation(
-                    cameraManager.viewpointPivot.transform.position,
-                    Quaternion.Euler(
-                        45,
-                        cameraManager.viewpointPivot.rotation.eulerAngles.y,
-                        cameraManager.viewpointPivot.rotation.eulerAngles.z
-                    )
-                );
-                navigationDelegate.cameraTransform = cameraManager.viewpointPivot;
-                
-                //physics and collisions
-                fpsData.flyingSpeed = newView.flyingSpeed;
-
-                fpsData.navigationMode = E_NavigationMode.Omniscient;
-            }
-            else
-            {
-                //define Dto and his values
-                ImmersiveViewDto newView = new ImmersiveViewDto();
-                newView.nearPlane = 0.17f;
-                newView.farPlane = 150000;
-                newView.fieldOfView = 60;
-                newView.cameraXAngle = new Vector2Dto() { X = -90, Y = 90 };
-
-                //camera
-                fpsData.maxXCameraAngle = new Vector2(newView.cameraXAngle.X, newView.cameraXAngle.Y);
-                PerspectiveCameraPropertiesDto cam = new PerspectiveCameraPropertiesDto()
-                {
-                    fieldOfView = newView.fieldOfView,
-                    localPosition = new Vector3Dto() { X = 0, Y = 0.198f, Z = 0.1243f },
-                    nearPlane = newView.nearPlane,
-                    farPlane = newView.farPlane,
-                };
-
-
-                Notification notif = new Notification("", this, new Dictionary<string, object>() { { UMI3DClientNotificatonKeys.Info.CameraProperties, cam } });
-                cameraManager.CameraPropertiesReception(notif);
-                
-                fpsData.navigationMode = E_NavigationMode.Default;
-            }
         }
     }
 }

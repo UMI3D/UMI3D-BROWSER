@@ -253,7 +253,6 @@ namespace umi3d.cdk
                     Vector2Dto omniscientXAngle = UMI3DSerializer.Read<Vector2Dto>(container);
                     float omniscientDistance = UMI3DSerializer.Read<float>(container);
                     float omniscienFlyingSpeed = UMI3DSerializer.Read<float>(container);
-                    Debug.Log("PerformOperation " + omniscientLocalPos + " |" + omniscientNear + " |" + omniscientFar + " |" + omniscientFOV + " |" + omniscientXAngle + " |" + omniscientDistance + " |" + omniscienFlyingSpeed);
                     info[UMI3DClientNotificatonKeys.Info.CameraProperties] = new OmniscientViewDto() { localPosition = omniscientLocalPos, nearPlane = omniscientNear, farPlane = omniscientFar, fieldOfView = omniscientFOV, cameraXAngle = omniscientXAngle, distance = omniscientDistance, flyingSpeed = omniscienFlyingSpeed };
                     NotificationHub.Default.Notify(this, UMI3DClientNotificatonKeys.CameraPropertiesNotification, info);
                     break;

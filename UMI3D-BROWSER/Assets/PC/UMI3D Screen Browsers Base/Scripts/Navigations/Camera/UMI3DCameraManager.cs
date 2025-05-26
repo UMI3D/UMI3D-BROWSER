@@ -133,7 +133,7 @@ public sealed class UMI3DCameraManager
     {
         Camera cam = Camera.main;
 
-        if (notification.TryGetInfoT(UMI3DClientNotificatonKeys.Info.CameraProperties, out AbstractCameraPropertiesDto dto))
+        if (notification.TryGetInfoT(UMI3DClientNotificatonKeys.Info.CameraProperties, out AbstractCameraPropertiesDto dto, false))
         {
             if (dto is PerspectiveCameraPropertiesDto)
             {
@@ -150,25 +150,24 @@ public sealed class UMI3DCameraManager
             cam.farClipPlane = dto.farPlane;
             return;
         }
-
-        if (notification.TryGetInfoT(UMI3DClientNotificatonKeys.Info.CameraProperties, out AbstractViewModeDto dtoParentView))
+        else if (notification.TryGetInfoT(UMI3DClientNotificatonKeys.Info.CameraProperties, out AbstractViewModeDto dtoParentView, false))
         {
-            cam.orthographic = false;
-            cam.fieldOfView = dtoParentView.fieldOfView;
-            cam.nearClipPlane = dtoParentView.nearPlane;
-            cam.farClipPlane = dtoParentView.farPlane;
             UMI3DPCPlayer player = UnityEngine.Object.FindObjectOfType<UMI3DPCPlayer>();
 
-            if (notification.TryGetInfoT(UMI3DClientNotificatonKeys.Info.CameraProperties, out OmniscientViewDto dtoOmni))
+            if (notification.TryGetInfoT(UMI3DClientNotificatonKeys.Info.CameraProperties, out OmniscientViewDto dtoOmni, false) && player.fpsData.navigationMode != E_NavigationMode.Omniscient)
             {
-                cam.transform.localPosition = dtoOmni.localPosition.Struct();
-                Debug.Log("CameraPropertiesReception OmniscientViewDto");
+                cam.orthographic = false;
+                cam.fieldOfView = dtoParentView.fieldOfView;
+                cam.nearClipPlane = dtoParentView.nearPlane;
+                cam.farClipPlane = dtoParentView.farPlane;
                 player.ChangeViewOmniscient(dtoOmni);
             }
-            if (notification.TryGetInfoT(UMI3DClientNotificatonKeys.Info.CameraProperties, out ImmersiveViewDto dtoImmer))
+            else if (notification.TryGetInfoT(UMI3DClientNotificatonKeys.Info.CameraProperties, out ImmersiveViewDto dtoImmer, false) && player.fpsData.navigationMode != E_NavigationMode.Default)
             {
-                cam.transform.localPosition = new Vector3(0, 0.198f, 0.1243f);
-                Debug.Log("CameraPropertiesReception ImmersiveViewDto");
+                cam.orthographic = false;
+                cam.fieldOfView = dtoParentView.fieldOfView;
+                cam.nearClipPlane = dtoParentView.nearPlane;
+                cam.farClipPlane = dtoParentView.farPlane;
                 player.ChangeViewImmersive(dtoImmer);
             }
         }

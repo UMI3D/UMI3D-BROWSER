@@ -38,4 +38,41 @@ namespace umi3d.common
         /// </summary>
         public ulong actionId { get; set; }
     }
+
+    public class FileUploadProgressStatusRequestDto : AbstractBrowserRequestDto
+    {
+
+        public ulong requestId { get; set; }
+
+        /// <summary>
+        /// Entities to load id.
+        /// </summary>
+        public float progress { get; set; }
+
+        /// <summary>
+        /// Name of the file on the user os.
+        /// </summary>
+        public string fileName { get; set; }
+
+        /// <summary>
+        /// Human readable status of the upload
+        /// </summary>
+        public string status { get; set; }
+
+        /// <summary>
+        /// Size of the file uploaded in byte
+        /// </summary>
+        public int fileSize { get; set; }
+
+        /// <summary>
+        /// State if the upload is ether failed or succeeded.
+        /// </summary>
+        /// 
+        public bool completed { get; set; }
+        /// <summary>
+        /// State, when completed is true, if the upload failed or succeeded.
+        /// </summary>
+        public bool succeeded { get; set; }
+
+    }
 }

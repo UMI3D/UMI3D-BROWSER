@@ -340,7 +340,7 @@ namespace umi3d.common.collaboration
                     result = default(T);
                     readable = false;
                     return true;
-   
+
                 default:
                     result = default(T);
                     readable = false;
@@ -494,6 +494,18 @@ namespace umi3d.common.collaboration
                     bytable = UMI3DSerializer.Write(UMI3DOperationKeys.UserActionRequest)
                         + UMI3DSerializer.Write(userActionRequest.actionId);
                     return true;
+
+                case FileUploadProgressStatusRequestDto uploadRequest:
+                    bytable = UMI3DSerializer.Write(UMI3DOperationKeys.UploadFileToUrlStatusRequest)
+                        + UMI3DSerializer.Write(uploadRequest.requestId)
+                        + UMI3DSerializer.Write(uploadRequest.progress)
+                        + UMI3DSerializer.Write(uploadRequest.fileName)
+                        + UMI3DSerializer.Write(uploadRequest.fileSize)
+                        + UMI3DSerializer.Write(uploadRequest.status)
+                        + UMI3DSerializer.Write(uploadRequest.succeeded)
+                        + UMI3DSerializer.Write(uploadRequest.completed);
+                    return true;
+
                 default:
                     if (typeof(T) == typeof(ResourceDto))
                     {

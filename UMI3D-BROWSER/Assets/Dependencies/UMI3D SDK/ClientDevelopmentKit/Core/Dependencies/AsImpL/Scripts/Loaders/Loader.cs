@@ -247,7 +247,6 @@ namespace AsImpL
             OnLoaded(loadedModels[absolutePath], absolutePath);
         }
 
-
         /// <summary>
         /// Parse the model to get a list of the paths of all used textures
         /// </summary>
@@ -609,6 +608,10 @@ namespace AsImpL
             return tex;
         }
 
+        protected void NotifyModelError(string error)
+        {
+            ModelError?.Invoke(error);
+        }
 
         protected struct BuildStats
         {
@@ -616,7 +619,6 @@ namespace AsImpL
             public float materialsTime;
             public float objectsTime;
         }
-
 
         protected struct Stats
         {

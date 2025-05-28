@@ -23,6 +23,7 @@ using UnityEngine;
 namespace GLTFast.Editor {
     
     using Loading;
+    using UnityEngine.Networking;
 
     class EditorDownloadProvider : IDownloadProvider {
 
@@ -65,7 +66,8 @@ namespace GLTFast.Editor {
                 error = $"Cannot find resource at path {path}";
             }
         }
-        
+        public UnityWebRequest request => null;
+
         public object Current => null;
         public bool MoveNext() { return false; }
         public void Reset() {}

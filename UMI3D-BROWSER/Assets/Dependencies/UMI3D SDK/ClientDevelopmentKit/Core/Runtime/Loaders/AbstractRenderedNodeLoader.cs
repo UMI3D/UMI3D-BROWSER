@@ -240,11 +240,9 @@ namespace umi3d.cdk
                     }
                     break;
                 case UMI3DPropertyKeys.InteractableIndicatorDisplay:
-                    //TODO:ROMAIN
                     extension.indicatorDisplay = (bool)data.property.value;
                     break;
                 case UMI3DPropertyKeys.InteractableIndicatorDelta:
-                    //TODO:ROMAIN
                     extension.indicatorDelta = (Vector3Dto)data.property.value;
                     break;
                 default:
@@ -441,11 +439,9 @@ namespace umi3d.cdk
                     }
                     break;
                 case UMI3DPropertyKeys.InteractableIndicatorDisplay:
-                    //TODO:ROMAIN
                     extension.indicatorDisplay = UMI3DSerializer.Read<bool>(data.container);
                     break;
                 case UMI3DPropertyKeys.InteractableIndicatorDelta:
-                    //TODO:ROMAIN
                     extension.indicatorDelta = UMI3DSerializer.Read<Vector3Dto>(data.container);
                     break;
                 default:

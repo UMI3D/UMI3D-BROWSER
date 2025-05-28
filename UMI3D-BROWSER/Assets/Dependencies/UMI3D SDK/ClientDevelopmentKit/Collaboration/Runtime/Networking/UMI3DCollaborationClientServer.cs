@@ -22,8 +22,6 @@ using System.Threading.Tasks;
 using umi3d.common;
 using umi3d.common.collaboration.dto.networking;
 using umi3d.common.collaboration.dto.signaling;
-using umi3d.common.userCapture;
-using UnityEngine;
 using UnityEngine.Events;
 
 namespace umi3d.cdk.collaboration
@@ -274,7 +272,7 @@ namespace umi3d.cdk.collaboration
             if (await environmentClient.Logout())
                 success?.Invoke();
             else
-                failled?.Invoke("Failled to Logout");
+                failled?.Invoke("Failed to Logout");
             environmentClient = null;
             Instance.OnLeavingEnvironment.Invoke();
         }

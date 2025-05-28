@@ -546,6 +546,7 @@ namespace umi3d.common.collaboration
                 true when typeof(T) == typeof(SpeedDto) => true,
                 true when typeof(T) == typeof(UserActionDto) => true,
                 true when typeof(T) == typeof(UserActionRequestDto) => true,
+                true when typeof(T) == typeof(FileUploadProgressStatusRequestDto) => true,
                 _ => null
             };
         }

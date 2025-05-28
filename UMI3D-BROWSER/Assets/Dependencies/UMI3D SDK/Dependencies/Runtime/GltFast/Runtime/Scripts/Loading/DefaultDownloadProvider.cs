@@ -77,6 +77,8 @@ namespace GLTFast.Loading {
         /// </summary>
         protected UnityWebRequestAsyncOperation m_AsyncOperation;
 
+        public UnityWebRequest request => m_Request;
+
         /// <summary>
         /// Empty constructor
         /// </summary>

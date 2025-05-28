@@ -17,6 +17,7 @@ using System;
 using System.Collections;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace GLTFast.Loading {
 
@@ -70,6 +71,8 @@ namespace GLTFast.Loading {
         /// No value if determining the glTF type was not possible or failed. 
         /// </summary>
         bool? isBinary { get; }
+
+        UnityWebRequest request { get; }
     }
 
     /// <summary>

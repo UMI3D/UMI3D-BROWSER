@@ -59,6 +59,7 @@ namespace umi3d.cdk.collaboration
         /// </summary>
         public override bool AuthorizationInHeader => connectingWorldControllerClient == null ? base.AuthorizationInHeader : false;
         protected override EnvironmentConnectionDto connectionDto => environmentClient?.connectionDto;
+
         public override UMI3DVersion.Version version => environmentClient?.version;
 
         public static Func<MultiProgress> EnvironmentProgress = null;
@@ -391,10 +392,10 @@ namespace umi3d.cdk.collaboration
 
 
         /// <inheritdoc/>
-        protected override async Task<byte[]> _GetFile(string url, bool useParameterInsteadOfHeader, Progress progress = null)
+        protected override async Task<byte[]> _GetFile(string url, Progress progress = null)
         {
             UMI3DLogger.Log($"GetFile {url}", scope);
-            return await (connectingWorldControllerClient?.GetFile(url, useParameterInsteadOfHeader, progress) ?? environmentClient?.GetFile(url, useParameterInsteadOfHeader, progress) ?? Task.FromResult<byte[]>(null));
+            return await (connectingWorldControllerClient?.GetFile(url, progress) ?? environmentClient?.GetFile(url, progress) ?? Task.FromResult<byte[]>(null));
         }
 
         /// <inheritdoc/>

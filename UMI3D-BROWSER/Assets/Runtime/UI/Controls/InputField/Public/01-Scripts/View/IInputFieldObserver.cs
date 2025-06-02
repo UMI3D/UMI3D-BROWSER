@@ -41,6 +41,7 @@ namespace umi3d.browserRuntime.ui
 
     public interface IInputFieldPasswordObserver
     {
-        void UpdatePassword(bool isVisible); 
+        void UpdatePasswordVisibility(bool isVisible); 
+        void ShowButton();
     }
 }

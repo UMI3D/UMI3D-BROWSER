@@ -13,20 +13,20 @@ MonoBehaviour:
   m_Name: BaseTips
   m_EditorClassIdentifier: 
   loadingTipsVR:
-  - tip: tip_gate
+  - tip: tip_gate_vr
     sprite: {fileID: 21300000, guid: df625b64522b0954fae178c7026b9b3d, type: 3}
   - tip: tip_privateConv
     sprite: {fileID: 21300000, guid: 33bf5a42b4cc42e49a2ba7011d4d592a, type: 3}
-  - tip: tip_interact
+  - tip: tip_interact_vr
     sprite: {fileID: 21300000, guid: b84ccfa2bc3889547966466d7d9b21d4, type: 3}
   - tip: tip_teleport
     sprite: {fileID: 21300000, guid: 8d11bd08303fa9e41b4d136c13790ffd, type: 3}
   loadingTipsPC:
-  - tip: tip_gate
+  - tip: tip_gate_pc
     sprite: {fileID: 21300000, guid: aede9e00b75510743a6c4f3fcec6f24f, type: 3}
   - tip: tip_privateConv
     sprite: {fileID: 21300000, guid: 7fe3e6fd20037094281f856382c8c049, type: 3}
-  - tip: tip_interact
+  - tip: tip_interact_pc
     sprite: {fileID: 21300000, guid: 9395612c063b59c4a90d912a2b2be42f, type: 3}
   - tip: tip_moving
     sprite: {fileID: 21300000, guid: 6e588182a6d24534e883958edc5a6bef, type: 3}

@@ -34,7 +34,9 @@ namespace umi3dBrowsers.ingame_ui
 
         private void Awake()
         {
-            KeyboardShortcut.AddDownListener(ShortcutEnum.DisplayHideGameMenu, ToggleInGamePanel);
+            if (TabletPanel)
+                KeyboardShortcut.AddDownListener(ShortcutEnum.DisplayHideGameMenu, ToggleInGamePanel);
+
             NotificationHub.Default.Subscribe(
                 this, 
                 InGameNotificationKeys.EnableInGameUi, 
@@ -65,7 +67,7 @@ namespace umi3dBrowsers.ingame_ui
         {
             if (KeyboardShortcut.IsEditingTextField)
                 return;
-            if (TabletPanel.gameObject.activeSelf)
+            if (TabletPanel && TabletPanel.gameObject.activeSelf)
                 return;
 
             if (BaseCursor.Movement == CursorMovement.Center)

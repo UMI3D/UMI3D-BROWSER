@@ -51,21 +51,25 @@ namespace umi3d.browserRuntime.ui
 
         void OnValueChanged(string newValue)
         {
-            newValue = newValue.Replace(" ", "");
+            if (newValue.Length > 7)
+                newValue = newValue.Substring(0, 7);
 
-            if (newValue.Length > 6)
-                newValue = newValue.Substring(0, 6);
+            _inputField.SetTextWithoutNotify(newValue);
+
+            StartCoroutine(Format(newValue));
+        }
+
+        IEnumerator Format(string newValue)
+        {
+            yield return new WaitForEndOfFrame();
+            
+            newValue = newValue.Replace(" ", "");
 
             if (newValue.Length > 3)
                 newValue = newValue.Insert(3, " ");
 
-            _inputField.text = newValue;
-            StartCoroutine(SetCaretPosition());
-        }
+            _inputField.SetTextWithoutNotify(newValue);
 
-        IEnumerator SetCaretPosition()
-        {
-            yield return new WaitForEndOfFrame();
             _inputField.MoveToEndOfLine(false, false);
         }
     }

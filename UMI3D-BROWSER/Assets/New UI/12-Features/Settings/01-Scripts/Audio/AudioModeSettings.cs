@@ -59,6 +59,7 @@ namespace umi3d.browserRuntime.ui.settings
             {
                 MicrophoneListener.Instance.SetCurrentMicrophoneMode(mode);
             }
+            MicrophoneListener.Instance.SetCurrentMicrophoneMode(mode);
             audioSettings.model.mode = mode;
 
             notifier[SettingsNotificationKeys.MicrophoneModeChanged.Mode] = mode;

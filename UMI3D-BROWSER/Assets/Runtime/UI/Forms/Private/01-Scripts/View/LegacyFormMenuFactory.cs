@@ -124,7 +124,7 @@ namespace umi3d.browserRuntime.ui.formMenu
 
         protected override void ResetFormAnser()
         {
-            _formAnswerDto = null;
+            _formAnswerDto = new FormAnswerDto();
         }
     }
 }

@@ -50,6 +50,9 @@ namespace umi3d.browserRuntime.ui.formMenu
 
             if (_content.childCount > 0) { Clear(); }
 
+            Debug.Assert(_formAnswerDto != null, "_formAnswerDto is null");
+            Debug.Assert(legacyFormDto != null, "legacyFormDto is null");
+
             _formAnswerDto.id = legacyFormDto.id;
 
             if (legacyFormDto.fields != null)

@@ -110,7 +110,7 @@ namespace umi3d.common
             {
                 this.errorbody = webRequest?.downloadHandler?.text;
             }
-            catch(NotSupportedException e)
+            catch (NotSupportedException e)
             {
                 this.errorbody = e.Message;
             }

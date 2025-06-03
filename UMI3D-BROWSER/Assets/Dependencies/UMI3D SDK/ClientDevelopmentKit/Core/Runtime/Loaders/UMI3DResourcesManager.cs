@@ -765,7 +765,7 @@ namespace umi3d.cdk
             {
                 return await loader.UrlToObject(url, extension, authorization, pathIfObjectInBundle);
             }
-            catch(Umi3dNetworkingException networkingException) when (networkingException.isRedirection)
+            catch (Umi3dNetworkingException networkingException) when (networkingException.isRedirection)
             {
                 url = networkingException.url;
                 authorization = string.Empty;

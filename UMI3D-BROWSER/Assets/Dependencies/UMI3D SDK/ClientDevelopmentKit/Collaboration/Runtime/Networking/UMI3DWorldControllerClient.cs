@@ -144,7 +144,7 @@ namespace umi3d.cdk.collaboration
                                 isCancel = isCancel,
                             };
 
-                            if(!isCancel)
+                            if (!isCancel)
                                 return await Connect(_answer);
 
                             await EnvironmentHttpClient.Connect(_answer, media.url);

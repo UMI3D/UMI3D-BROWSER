@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+using Mumble;
 using System;
 using umi3d.baseBrowser.inputs.interactions;
 using umi3d.cdk;
@@ -203,14 +204,12 @@ namespace umi3d.browserRuntime.ui.settings
         public void InitShortcut()
         {
 #if UMI3D_PC
-            KeyboardShortcut.AddDownListener(ShortcutEnum.PushToTalk, () =>
-            {
-                Set(true);
+            KeyboardShortcut.AddDownListener(ShortcutEnum.PushToTalk, () => {
+                MicrophoneListener.Instance.pushToTalkInputDown = true;
             });
 
-            KeyboardShortcut.AddUpListener(ShortcutEnum.PushToTalk, () =>
-            {
-                Set(false);
+            KeyboardShortcut.AddUpListener(ShortcutEnum.PushToTalk, () => {
+                MicrophoneListener.Instance.pushToTalkInputDown = false;
             });
 #endif
         }

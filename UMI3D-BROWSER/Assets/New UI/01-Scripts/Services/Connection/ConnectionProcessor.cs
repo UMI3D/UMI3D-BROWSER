@@ -21,6 +21,7 @@ using System.Security.Policy;
 using System.Threading.Tasks;
 using umi3d;
 using umi3d.browserRuntime.forms;
+using umi3d.browserRuntime.pc;
 using umi3d.browserRuntime.portalsThumbnails;
 using umi3d.cdk;
 using umi3d.cdk.collaboration;
@@ -117,6 +118,10 @@ namespace umi3dBrowsers.services.connection
                 {
                     connectionServiceLinker.ConnectionFailure(message);
                 });
+#if UMI3D_PC
+                //UMI3DCollaborationClientServer.environmentClient.ForgeClient
+                //UMI3DPCManager
+#endif
             }
             else
             {

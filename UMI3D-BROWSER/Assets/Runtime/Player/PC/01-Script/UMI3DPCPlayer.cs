@@ -25,8 +25,8 @@ namespace umi3d.browserRuntime.player.pc
 
         [Header("Camera")]
         public Transform viewpointPivot;
-        public Transform neckPivot;
         public Transform head;
+        public Transform neckPivot;
 
         //[Header("Player Collision Debugger")]
         //public UMI3DCollisionManager.CollisionDebugger.E_Collision collisionToDebug;
@@ -34,7 +34,6 @@ namespace umi3d.browserRuntime.player.pc
         //[HideInInspector] public UMI3DNavigation navigation = new();
 
         //UMI3DCollisionManager collisionManager;
-        //UMI3DCameraManager cameraManager;
         //UMI3DMovementManager movementManager;
         //PCNavigationDelegate navigationDelegate;
         //UMI3DPlayerCapsuleColliderDelegate colliderDelegate;
@@ -58,15 +57,6 @@ namespace umi3d.browserRuntime.player.pc
 //                playerTransform = personalSkeletonContainer.transform,
 //                colliderDelegate = colliderDelegate,
 //                collisionDebugger = () => new() { collision = collisionToDebug}
-//            };
-//            cameraManager = new()
-//            {
-//                data = fpsData,
-//                playerTransform = personalSkeletonContainer.transform,
-//                viewpointPivot = viewpointPivot,
-//                neckPivot = neckPivot,
-//                head = head,
-//                concreteFPSNavigation = concreteFPSNavigation
 //            };
 //            movementManager = new()
 //            {
@@ -100,12 +90,13 @@ namespace umi3d.browserRuntime.player.pc
             cameraOffset = mainCamera.transform.parent.gameObject;
 
             UMI3DPCManager.@default.player = this;
+            UMI3DPCManager.@default.viewpointPivot = viewpointPivot;
+            UMI3DPCManager.@default.head = head;
+            UMI3DPCManager.@default.neckPivot = neckPivot;
         }
 
         private void Update()
         {
-            //cameraManager.HandleView();
-
             //if (!navigationDelegate.isActive)
             //    return; 
 

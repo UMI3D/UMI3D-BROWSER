@@ -40,7 +40,7 @@ namespace umi3d.browserRuntime.player
         [HideInInspector] public TeleportationProvider teleportationProvider;
         [HideInInspector] public DynamicMoveProvider dynamicMoveProvider;
 
-        [HideInInspector] public UMI3DNavigation navigation = new();
+        [HideInInspector] public cdk.navigation.UMI3DNavigation navigation = new();
         [HideInInspector] public UMI3DSnapTurnProvider snapTurn;
         [HideInInspector] public UMI3DTeleportationProvider umi3dTeleportationProvider;
 

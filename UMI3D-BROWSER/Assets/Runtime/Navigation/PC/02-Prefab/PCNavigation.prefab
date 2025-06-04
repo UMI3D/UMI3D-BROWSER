@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4530986876459282791}
   - component: {fileID: 7318127113155176766}
+  - component: {fileID: 756066197983192875}
   m_Layer: 0
   m_Name: PCNavigation
   m_TagString: Untagged
@@ -53,4 +54,24 @@ MonoBehaviour:
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 4096
-  invisibleMaterial: {fileID: 0}
+--- !u!114 &756066197983192875
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6251478827214737660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cca399ba42b79f2458511845d621dc2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  angularViewSpeed: {x: 5, y: 5}
+  maxCameraAngle: {x: 90, y: 90}
+  maxHeadXAngle: {x: -60, y: 70}
+  maxNeckXAngle: 50
+  mouseDelta: {fileID: 4004130148739979518, guid: 41c744953f28103429a48be9cd45be1c,
+    type: 3}
+  lookAroundAction: {fileID: -7984924482320056164, guid: 41c744953f28103429a48be9cd45be1c,
+    type: 3}
+  cameraMode: 0

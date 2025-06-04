@@ -28,13 +28,6 @@ namespace umi3d.mobileBrowser.Controller
 
         public void HandleUserCamera()
         {
-            // Camera movement
-            Debug.Assert(CameraDirection != null, "CameraDirection must not be null.");
-            Vector2 joystickInput = CameraDirection?.Invoke() ?? Vector2.zero;
-            data.cameraRotation = new Vector2(
-                -1 * joystickInput.y,
-                joystickInput.x
-            );
         }
 
         public void HandleUserInput()

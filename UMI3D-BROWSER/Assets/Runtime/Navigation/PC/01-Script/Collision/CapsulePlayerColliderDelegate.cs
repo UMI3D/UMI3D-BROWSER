@@ -14,9 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using umi3d.baseBrowser.Navigation;
 using UnityEngine;
 
 /// <summary>
@@ -27,14 +24,9 @@ using UnityEngine;
 /// <item>The radius of the spheres.</item>
 /// </list>
 /// </summary>
-public class UMI3DPlayerCapsuleColliderDelegate : IPlayerColliderDelegate
+public class CapsulePlayerColliderDelegate : IPlayerColliderDelegate
 {
-    #region Dependencies
-
     public Transform playerTransform;
-    public BaseFPSData data;
-
-    #endregion
 
     [Serializable]
     public struct CapsuleCollider
@@ -90,12 +82,12 @@ public class UMI3DPlayerCapsuleColliderDelegate : IPlayerColliderDelegate
     Vector3 projection;
 #endif
 
-    public void Init()
+    public CapsulePlayerColliderDelegate(Vector3 topSphereCenter, float maxStepHeight, float stepEpsilon, float radius)
     {
         capsule = new(
-            data.topSphereCenter,
-            data.maxStepHeight + data.stepEpsilon,
-            data.capsuleRadius
+            topSphereCenter,
+            maxStepHeight + stepEpsilon,
+            radius
         );
     }
 

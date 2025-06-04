@@ -1,5 +1,5 @@
 /*
-Copyright 2019 - 2024 Inetum
+Copyright 2019 - 2025 Inetum
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -13,20 +13,33 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum E_CursorMode
+namespace umi3d.browserRuntime.navigation
 {
-    /// <summary>
-    /// The cursor is visible. The mouse is hidden.<br/>
-    /// The cursor is locked.
-    /// </summary>
-    NavigationLocked,
-    /// <summary>
-    /// The cursor is hidden. The mouse is visible.<br/>
-    /// The mouse is free.
-    /// </summary>
-    MouseFree
+    public class UMI3DNavigation : MonoBehaviour
+    {
+        void Awake()
+        {
+        }
+
+        void OnEnable()
+        {
+        }
+
+        void OnDisable()
+        {
+        }
+
+        void OnDestroy()
+        {
+        }
+
+        void Update()
+        {
+        }
+    }
 }

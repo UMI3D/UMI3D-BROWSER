@@ -23,28 +23,6 @@ namespace umi3d.baseBrowser.Navigation
         [Header("View (Camera, Head, Neck)")]
         [Tooltip("Camera mode")]
         public E_CameraMode cameraMode = E_CameraMode.Navigation;
-        [Tooltip("Cursor mode")]
-        public E_CursorMode cursorMode = E_CursorMode.NavigationLocked;
-        [Tooltip("Max rotation angle for the head around x axis (down to up).")]
-        public Vector2 maxXHeadAngle = new Vector2(-60f, 70f);
-        [Tooltip("Max rotation angle for the viewpoint(camera) around the x axis (down to up)")]
-        public float maxXCameraAngle = 90f;
-        [Tooltip("Max rotation angle for the viewpoint(camera)/head around the y axis (left to right)")]
-        public float maxYCameraAngle = 90f;
-        [Tooltip("Max rotation angle for the neck.")]
-        public float maxNeckAngle = 50f;
-        [Tooltip("Angular speed of the viewpoint(camera) (up/down, left/right)")]
-        public Vector2 AngularViewSpeed = new Vector2(5f, 5f);
-        /// <summary>
-        /// Rotation of the camera according to x and y axis.
-        /// 
-        /// <list type="bullet">
-        /// <item>x: Down to up (positive: up)</item>
-        /// <item>y: Left to right (positive: right)</item>
-        /// </list>
-        /// </summary>
-        [HideInInspector]
-        public Vector2 cameraRotation;
 
         [Header("Walk")]
         [Tooltip("speed when moving forward (normal, squatting, running)")]

@@ -24,14 +24,6 @@ namespace umi3d.baseBrowser.Navigation
 
         public void HandleUserCamera()
         {
-            // Camera movement
-            data.cameraRotation = new Vector2(
-                -1 * Input.GetAxis("Mouse Y"),
-                Input.GetAxis("Mouse X")
-            );
-
-            //data.WantToLookAround = KeyboardNavigation.IsPressed(NavigationEnum.FreeView);
-            //data.WantToLookAroundInDrawMode = KeyboardNavigation.IsPressed(NavigationEnum.FreeViewInDrawMode);
         }
 
         public void HandleUserInput()

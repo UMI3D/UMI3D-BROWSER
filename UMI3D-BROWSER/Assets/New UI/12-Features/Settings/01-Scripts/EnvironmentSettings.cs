@@ -15,10 +15,8 @@ limitations under the License.
 */
 using Mumble;
 using System;
-using umi3d.baseBrowser.inputs.interactions;
 using umi3d.cdk;
 using umi3d.cdk.collaboration;
-using umi3d.cdk.userCapture;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.settings
@@ -87,12 +85,12 @@ namespace umi3d.browserRuntime.ui.settings
         public void Update()
         {
 #if UMI3D_PC
-            if (KeyboardShortcut.WasPressedThisFrame(ShortcutEnum.MuteUnmuteGeneralVolume))
-                Toggle();
-            if (KeyboardShortcut.WasPressedThisFrame(ShortcutEnum.IncreaseVolume))
-                IncreaseVolume();
-            if (KeyboardShortcut.WasPressedThisFrame(ShortcutEnum.DecreaseVolume))
-                DecreaseVolume();
+            //if (KeyboardShortcut.WasPressedThisFrame(ShortcutEnum.MuteUnmuteGeneralVolume))
+            //    Toggle();
+            //if (KeyboardShortcut.WasPressedThisFrame(ShortcutEnum.IncreaseVolume))
+            //    IncreaseVolume();
+            //if (KeyboardShortcut.WasPressedThisFrame(ShortcutEnum.DecreaseVolume))
+            //    DecreaseVolume();
 #endif
         }
 
@@ -204,13 +202,13 @@ namespace umi3d.browserRuntime.ui.settings
         public void InitShortcut()
         {
 #if UMI3D_PC
-            KeyboardShortcut.AddDownListener(ShortcutEnum.PushToTalk, () => {
-                MicrophoneListener.Instance.pushToTalkInputDown = true;
-            });
+            //KeyboardShortcut.AddDownListener(ShortcutEnum.PushToTalk, () => {
+            //    MicrophoneListener.Instance.pushToTalkInputDown = true;
+            //});
 
-            KeyboardShortcut.AddUpListener(ShortcutEnum.PushToTalk, () => {
-                MicrophoneListener.Instance.pushToTalkInputDown = false;
-            });
+            //KeyboardShortcut.AddUpListener(ShortcutEnum.PushToTalk, () => {
+            //    MicrophoneListener.Instance.pushToTalkInputDown = false;
+            //});
 #endif
         }
 
@@ -232,8 +230,8 @@ namespace umi3d.browserRuntime.ui.settings
         public void Update()
         {
 #if UMI3D_PC
-            if (KeyboardShortcut.WasPressedThisFrame(ShortcutEnum.MuteUnmuteMic))
-                Toggle();
+            //if (KeyboardShortcut.WasPressedThisFrame(ShortcutEnum.MuteUnmuteMic))
+                //Toggle();
 #endif
         }
     }

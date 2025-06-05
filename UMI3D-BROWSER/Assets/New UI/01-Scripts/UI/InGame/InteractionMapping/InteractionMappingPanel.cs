@@ -19,7 +19,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
-using umi3d.baseBrowser.inputs.interactions;
 using umi3d.browserRuntime.notificationKeys;
 using umi3d.common.interaction;
 using UnityEngine;
@@ -54,29 +53,23 @@ namespace umi3d.browserRuntime.ui.inGame.interactionMapping
                 (Callback)ToolReleased
             );
 
-            KeyboardInteraction.Mapped += Show;
-            KeyboardInteraction.Unmapped += Hide;
-
             _rows = new();
 
-            Show(null, "", null);
+            Show(/*null,*/ "", null);
             Hide();
         }
 
         private void OnDestroy()
         {
             NotificationHub.Default.Unsubscribe(this);
-
-            KeyboardInteraction.Mapped -= Show;
-            KeyboardInteraction.Unmapped -= Hide;
         }
 
-        private void Show(KeyboardInteraction interaction, string name, InputAction action)
+        private void Show(/*KeyboardInteraction interaction,*/ string name, InputAction action)
         {
             name ??= ""; // Ensure non null value
 
             gameObject.SetActive(true);
-            interactionText.text = interaction?.name;
+            //interactionText.text = interaction?.name;
 
             if (_rows.ContainsKey(name))
                 AddInteraction(action, _rows[name]);
@@ -130,20 +123,20 @@ namespace umi3d.browserRuntime.ui.inGame.interactionMapping
             _rows.Add(name, interactionMappingDisplayer);
         }
 
-        private void Hide(KeyboardInteraction interaction, string key)
-        {
-            key ??= "";
+        //private void Hide(KeyboardInteraction interaction, string key)
+        //{
+        //    key ??= "";
             
-            if (_rows.ContainsKey(key))
-            {
-                var row = _rows[key];
-                _rows.Remove(key);
-                DestroyImmediate(row.gameObject);
-            }
+        //    if (_rows.ContainsKey(key))
+        //    {
+        //        var row = _rows[key];
+        //        _rows.Remove(key);
+        //        DestroyImmediate(row.gameObject);
+        //    }
 
-            if(_rows.Count == 0)
-                gameObject.SetActive(false);
-        }
+        //    if(_rows.Count == 0)
+        //        gameObject.SetActive(false);
+        //}
 
         private void Hide()
         {

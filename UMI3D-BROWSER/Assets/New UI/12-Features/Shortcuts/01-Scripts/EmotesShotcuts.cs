@@ -15,7 +15,6 @@ limitations under the License.
 */
 
 using inetum.unityUtils.observation;
-using umi3d.baseBrowser.inputs.interactions;
 using umi3d.browserRuntime.ui.inGame.emote;
 using UnityEngine;
 
@@ -36,22 +35,15 @@ namespace umi3d.browserRuntime.shortcuts
 
         private void OnEnable()
         {
-            KeyboardEmote.AddDownListener(0, Play0);
-            KeyboardEmote.AddDownListener(1, Play1);
-            KeyboardEmote.AddDownListener(2, Play2);
-        }
-
-        private void OnDisable()
-        {
-            KeyboardEmote.RemoveDownListener(0, Play0);
-            KeyboardEmote.RemoveDownListener(1, Play1);
-            KeyboardEmote.RemoveDownListener(2, Play2);
+            //KeyboardEmote.AddDownListener(0, Play0);
+            //KeyboardEmote.AddDownListener(1, Play1);
+            //KeyboardEmote.AddDownListener(2, Play2);
         }
 
         private void Play(int index)
         {
-            if (KeyboardEmote.IsEditingTextField)
-                return;
+            //if (KeyboardEmote.IsEditingTextField)
+            //    return;
             playEmoteNotifier[EmoteNotificationKeys.Play.Id] = index;
             playEmoteNotifier.Notify();
         }

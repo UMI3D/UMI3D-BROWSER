@@ -143,11 +143,10 @@ namespace umi3d.cdk.interaction
         }
 
         /// <inheritdoc/>
-        public override void Destroy()
+        public void Destroy()
         {
             foreach (InteractableContainer container in InteractableContainer.containers.Where(c => c.Interactable == this))
                 GameObject.Destroy(container);
-            base.Destroy();
         }
     }
 }

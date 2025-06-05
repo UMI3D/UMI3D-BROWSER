@@ -15,7 +15,6 @@ limitations under the License.
 */
 
 using inetum.unityUtils.observation;
-using umi3d.baseBrowser.inputs.interactions;
 using umi3d.browserRuntime.ui.inGame;
 using umi3d.cdk.collaboration;
 using UnityEngine;
@@ -26,18 +25,13 @@ namespace umi3d.browserRuntime.shortcuts
     {
         private void OnEnable()
         {
-            KeyboardShortcut.AddDownListener(ShortcutEnum.MuteUnmuteMic, ToggleMute);
-        }
-
-        private void OnDisable()
-        {
-            KeyboardShortcut.RemoveDownListener(ShortcutEnum.MuteUnmuteMic, ToggleMute);
+            //KeyboardShortcut.AddDownListener(ShortcutEnum.MuteUnmuteMic, ToggleMute);
         }
 
         private void ToggleMute()
         {
-            if (KeyboardShortcut.IsEditingTextField)
-                return;
+            //if (KeyboardShortcut.IsEditingTextField)
+            //    return;
             MicrophoneListener.mute = !MicrophoneListener.mute;
             NotificationHub.Default.Notify(this, InGameNotificationKeys.MuteChanged);
         }

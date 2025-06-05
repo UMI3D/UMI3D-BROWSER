@@ -15,7 +15,6 @@ limitations under the License.
 */
 
 using inetum.unityUtils.observation;
-using umi3d.baseBrowser.inputs.interactions;
 using umi3d.browserRuntime.ui.tablet;
 using UnityEngine;
 
@@ -33,13 +32,9 @@ namespace umi3d.browserRuntime.shortcuts
 
         private void OnEnable()
         {
-            KeyboardShortcut.AddDownListener(ShortcutEnum.DisplayHideUsersList, OpenUserList);
+            //KeyboardShortcut.AddDownListener(ShortcutEnum.DisplayHideUsersList, OpenUserList);
         }
 
-        private void OnDisable()
-        {
-            KeyboardShortcut.RemoveDownListener(ShortcutEnum.DisplayHideUsersList, OpenUserList);
-        }
         private void OnDestroy()
         {
             NotificationHub.Default.Unsubscribe(this);
@@ -47,8 +42,8 @@ namespace umi3d.browserRuntime.shortcuts
 
         private void OpenUserList()
         {
-            if (KeyboardShortcut.IsEditingTextField)
-                return;
+            //if (KeyboardShortcut.IsEditingTextField)
+            //    return;
             NotificationHub.Default.Notify(this, ID.FromType<TabletNotificationKeys.Open>());
             _openSocialNotifier.Notify();
         }

@@ -15,7 +15,6 @@ limitations under the License.
 */
 
 using TMPro;
-using umi3d.baseBrowser.inputs.interactions;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.shortcuts
@@ -41,12 +40,12 @@ namespace umi3d.browserRuntime.shortcuts
 
         private void OnSelect(string arg0)
         {
-            BaseKeyInteraction.IsEditingTextField = true;
+            //BaseKeyInteraction.IsEditingTextField = true;
         }
 
         private void OnDeselect(string arg0)
         {
-            BaseKeyInteraction.IsEditingTextField = false;
+            //BaseKeyInteraction.IsEditingTextField = false;
         }
     }
 }

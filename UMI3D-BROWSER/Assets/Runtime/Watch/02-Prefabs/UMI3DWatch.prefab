@@ -146,8 +146,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4295227943023414392}
-  - component: {fileID: 5568576492717404146}
-  - component: {fileID: 3720939912550422418}
   m_Layer: 0
   m_Name: Off
   m_TagString: Untagged
@@ -170,71 +168,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6685764554807904997}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5568576492717404146
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1633088553482086577}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe9fde35e7343fa41835b984ddcd1526, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onClicked:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4596074450098545359}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: Toggle
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 9163697144705021823}
-        m_TargetAssemblyTypeName: umi3d.browserRuntime.ui.watch.EmoteButton, Assembly-CSharp
-        m_MethodName: ToggleEmote
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-  btnRenderer: {fileID: 7442448215250295499}
-  defaultMaterial: {fileID: 2100000, guid: 582958374c34e5246a461a9a5764dfc0, type: 2}
-  hoverMaterial: {fileID: 2100000, guid: affbae8b8f3b5134ca43b85c44541ec6, type: 2}
-  pressedMaterial: {fileID: 2100000, guid: 582958374c34e5246a461a9a5764dfc0, type: 2}
-  selectMaterial: {fileID: 2100000, guid: affbae8b8f3b5134ca43b85c44541ec6, type: 2}
---- !u!65 &3720939912550422418
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1633088553482086577}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.017138062, y: 0.0061300863, z: 0.015925959}
-  m_Center: {x: 0, y: 0.009008283, z: 0.018101737}
 --- !u!1 &2019144608842939721
 GameObject:
   m_ObjectHideFlags: 0
@@ -244,7 +177,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6556019377273615067}
-  - component: {fileID: 3774519844644640800}
   - component: {fileID: 4215764866816002411}
   m_Layer: 0
   m_Name: On
@@ -268,50 +200,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6133382506304626512}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3774519844644640800
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2019144608842939721}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe9fde35e7343fa41835b984ddcd1526, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onClicked:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2958775891511230729}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: Toggle
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 2255530990686773851}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: ToggleSettingsMenuDisplay
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  btnRenderer: {fileID: 6802854056894624149}
-  defaultMaterial: {fileID: 2100000, guid: 3ee5d208523f02644b1a958b11abc70b, type: 2}
-  hoverMaterial: {fileID: 2100000, guid: 465183361eee29048ac82696a4103466, type: 2}
-  pressedMaterial: {fileID: 2100000, guid: 3ee5d208523f02644b1a958b11abc70b, type: 2}
-  selectMaterial: {fileID: 2100000, guid: 465183361eee29048ac82696a4103466, type: 2}
 --- !u!65 &4215764866816002411
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -342,7 +230,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6029868188193845569}
-  - component: {fileID: 6684724561791756782}
   - component: {fileID: 5263069502642109151}
   m_Layer: 0
   m_Name: On
@@ -366,50 +253,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2082532694081352092}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6684724561791756782
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2158104469024744740}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe9fde35e7343fa41835b984ddcd1526, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onClicked:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4666212244968387827}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: Toggle
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 2255530990686773851}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: SetSoundStatus
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  btnRenderer: {fileID: 332268544639943892}
-  defaultMaterial: {fileID: 2100000, guid: 31c8ac4d80cd17f478c223fecc786d73, type: 2}
-  hoverMaterial: {fileID: 2100000, guid: 3d42e3ad53dd6714399c9c945061f96f, type: 2}
-  pressedMaterial: {fileID: 2100000, guid: 1b1bbc6abb258274685a4fcbd5d2fec8, type: 2}
-  selectMaterial: {fileID: 2100000, guid: 3d42e3ad53dd6714399c9c945061f96f, type: 2}
 --- !u!65 &5263069502642109151
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -529,7 +372,6 @@ GameObject:
   - component: {fileID: 5416187913380596159}
   - component: {fileID: 8389296938848192677}
   - component: {fileID: 8874528259797746871}
-  - component: {fileID: 8794078878588618022}
   - component: {fileID: 1933059243291849381}
   m_Layer: 0
   m_Name: LeaveBtn
@@ -603,38 +445,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &8794078878588618022
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2531251272130981688}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe9fde35e7343fa41835b984ddcd1526, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onClicked:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2255530990686773851}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: Leave
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  btnRenderer: {fileID: 8874528259797746871}
-  defaultMaterial: {fileID: 2100000, guid: 31c8ac4d80cd17f478c223fecc786d73, type: 2}
-  hoverMaterial: {fileID: 2100000, guid: 3d42e3ad53dd6714399c9c945061f96f, type: 2}
-  pressedMaterial: {fileID: 2100000, guid: 1b1bbc6abb258274685a4fcbd5d2fec8, type: 2}
-  selectMaterial: {fileID: 2100000, guid: 3d42e3ad53dd6714399c9c945061f96f, type: 2}
 --- !u!65 &1933059243291849381
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -823,7 +633,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1705923188516197343}
-  - component: {fileID: 1354161098487148148}
   - component: {fileID: 5386166037707997462}
   m_Layer: 0
   m_Name: Off
@@ -847,50 +656,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6133382506304626512}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1354161098487148148
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4628563971993695144}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe9fde35e7343fa41835b984ddcd1526, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onClicked:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2958775891511230729}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: Toggle
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 2255530990686773851}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: ToggleSettingsMenuDisplay
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-  btnRenderer: {fileID: 6802854056894624149}
-  defaultMaterial: {fileID: 2100000, guid: 582958374c34e5246a461a9a5764dfc0, type: 2}
-  hoverMaterial: {fileID: 2100000, guid: affbae8b8f3b5134ca43b85c44541ec6, type: 2}
-  pressedMaterial: {fileID: 2100000, guid: 582958374c34e5246a461a9a5764dfc0, type: 2}
-  selectMaterial: {fileID: 2100000, guid: affbae8b8f3b5134ca43b85c44541ec6, type: 2}
 --- !u!65 &5386166037707997462
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -921,7 +686,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4572516035154892410}
-  - component: {fileID: 6279762337343762487}
   - component: {fileID: 7355975556563122933}
   m_Layer: 0
   m_Name: Off
@@ -945,52 +709,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2006477999460298878}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6279762337343762487
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5161333465143881303}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe9fde35e7343fa41835b984ddcd1526, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onClicked:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 7238765030899111737}
-        m_TargetAssemblyTypeName: umi3dVRBrowsersBase.ui.playerMenu.OnOffButton,
-          Assembly-CSharp
-        m_MethodName: Toggle
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 777429268360564809}
-        m_TargetAssemblyTypeName: umi3d.browserRuntime.ui.tablet.TabletOpenToggle,
-          Assembly-CSharp
-        m_MethodName: ToggleOpenTablet
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-  btnRenderer: {fileID: 2636623888607972313}
-  defaultMaterial: {fileID: 2100000, guid: 582958374c34e5246a461a9a5764dfc0, type: 2}
-  hoverMaterial: {fileID: 2100000, guid: affbae8b8f3b5134ca43b85c44541ec6, type: 2}
-  pressedMaterial: {fileID: 2100000, guid: 582958374c34e5246a461a9a5764dfc0, type: 2}
-  selectMaterial: {fileID: 2100000, guid: affbae8b8f3b5134ca43b85c44541ec6, type: 2}
 --- !u!65 &7355975556563122933
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1021,7 +739,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4334797421006851887}
-  - component: {fileID: 3000171137668145980}
   - component: {fileID: 9219892160509340671}
   m_Layer: 0
   m_Name: On
@@ -1045,50 +762,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 142110215304052025}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3000171137668145980
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5443161912483009442}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe9fde35e7343fa41835b984ddcd1526, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onClicked:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 7499773618963038296}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: Toggle
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 2255530990686773851}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: SetMicStatus
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  btnRenderer: {fileID: 4804633592538447589}
-  defaultMaterial: {fileID: 2100000, guid: 31c8ac4d80cd17f478c223fecc786d73, type: 2}
-  hoverMaterial: {fileID: 2100000, guid: 3d42e3ad53dd6714399c9c945061f96f, type: 2}
-  pressedMaterial: {fileID: 2100000, guid: 1b1bbc6abb258274685a4fcbd5d2fec8, type: 2}
-  selectMaterial: {fileID: 2100000, guid: 3d42e3ad53dd6714399c9c945061f96f, type: 2}
 --- !u!65 &9219892160509340671
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1457,7 +1130,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2819514431003992459}
-  - component: {fileID: 236354713450181177}
   - component: {fileID: 4165100740429186695}
   m_Layer: 0
   m_Name: Off
@@ -1481,50 +1153,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 142110215304052025}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &236354713450181177
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6970797965153922872}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe9fde35e7343fa41835b984ddcd1526, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onClicked:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 7499773618963038296}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: Toggle
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 2255530990686773851}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: SetMicStatus
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-  btnRenderer: {fileID: 4804633592538447589}
-  defaultMaterial: {fileID: 2100000, guid: 3bffc8b72c4fd3c4a96f0af5987a0d0a, type: 2}
-  hoverMaterial: {fileID: 2100000, guid: fdaef01a6a5809e48909b2021253b387, type: 2}
-  pressedMaterial: {fileID: 2100000, guid: c49678ea7bc89994583856694ffd1795, type: 2}
-  selectMaterial: {fileID: 2100000, guid: fdaef01a6a5809e48909b2021253b387, type: 2}
 --- !u!65 &4165100740429186695
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1586,7 +1214,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4107718596059372564}
-  - component: {fileID: 8870577727163010130}
   - component: {fileID: 2452786840341798081}
   m_Layer: 0
   m_Name: Off
@@ -1610,50 +1237,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2082532694081352092}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8870577727163010130
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7530603313949573489}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe9fde35e7343fa41835b984ddcd1526, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onClicked:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4666212244968387827}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: Toggle
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 2255530990686773851}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: SetSoundStatus
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-  btnRenderer: {fileID: 332268544639943892}
-  defaultMaterial: {fileID: 2100000, guid: 3bffc8b72c4fd3c4a96f0af5987a0d0a, type: 2}
-  hoverMaterial: {fileID: 2100000, guid: fdaef01a6a5809e48909b2021253b387, type: 2}
-  pressedMaterial: {fileID: 2100000, guid: c49678ea7bc89994583856694ffd1795, type: 2}
-  selectMaterial: {fileID: 2100000, guid: fdaef01a6a5809e48909b2021253b387, type: 2}
 --- !u!65 &2452786840341798081
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1684,7 +1267,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7039285373691990574}
-  - component: {fileID: 7696184497812340190}
   - component: {fileID: 2894497559669028856}
   m_Layer: 0
   m_Name: On
@@ -1708,52 +1290,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2006477999460298878}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7696184497812340190
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8570038226992242343}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe9fde35e7343fa41835b984ddcd1526, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onClicked:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 7238765030899111737}
-        m_TargetAssemblyTypeName: umi3dVRBrowsersBase.ui.playerMenu.OnOffButton,
-          Assembly-CSharp
-        m_MethodName: Toggle
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 777429268360564809}
-        m_TargetAssemblyTypeName: umi3d.browserRuntime.ui.tablet.TabletOpenToggle,
-          Assembly-CSharp
-        m_MethodName: ToggleOpenTablet
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  btnRenderer: {fileID: 2636623888607972313}
-  defaultMaterial: {fileID: 2100000, guid: 3ee5d208523f02644b1a958b11abc70b, type: 2}
-  hoverMaterial: {fileID: 2100000, guid: 465183361eee29048ac82696a4103466, type: 2}
-  pressedMaterial: {fileID: 2100000, guid: 3ee5d208523f02644b1a958b11abc70b, type: 2}
-  selectMaterial: {fileID: 2100000, guid: 465183361eee29048ac82696a4103466, type: 2}
 --- !u!65 &2894497559669028856
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1784,8 +1320,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3245168981626878955}
-  - component: {fileID: 4500952355597154391}
-  - component: {fileID: 1966010513936583853}
   m_Layer: 0
   m_Name: On
   m_TagString: Untagged
@@ -1808,71 +1342,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6685764554807904997}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4500952355597154391
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8628936321968920566}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe9fde35e7343fa41835b984ddcd1526, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onClicked:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4596074450098545359}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: Toggle
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 9163697144705021823}
-        m_TargetAssemblyTypeName: umi3d.browserRuntime.ui.watch.EmoteButton, Assembly-CSharp
-        m_MethodName: ToggleEmote
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  btnRenderer: {fileID: 7442448215250295499}
-  defaultMaterial: {fileID: 2100000, guid: 3ee5d208523f02644b1a958b11abc70b, type: 2}
-  hoverMaterial: {fileID: 2100000, guid: 465183361eee29048ac82696a4103466, type: 2}
-  pressedMaterial: {fileID: 2100000, guid: 3ee5d208523f02644b1a958b11abc70b, type: 2}
-  selectMaterial: {fileID: 2100000, guid: 465183361eee29048ac82696a4103466, type: 2}
---- !u!65 &1966010513936583853
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8628936321968920566}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.017138062, y: 0.0061300863, z: 0.015925959}
-  m_Center: {x: 0, y: 0.009008283, z: 0.018101737}
 --- !u!1001 &8112609365820107809
 PrefabInstance:
   m_ObjectHideFlags: 0

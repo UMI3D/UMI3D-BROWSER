@@ -495,7 +495,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2604065977960135774}
-  - component: {fileID: 1593391899626787692}
   m_Layer: 0
   m_Name: --- UMI3D ---
   m_TagString: Untagged
@@ -522,21 +521,3 @@ Transform:
   - {fileID: 1189217369833024380}
   m_Father: {fileID: 1287485733009535937}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1593391899626787692
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6350215280590461904}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2fe20277887dc7a4aa18370ce4b758ed, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  objects:
-    pcRef:
-    - {fileID: 6251478827214737660, guid: 7b936bb5796803745a5864a81c8fbbc3, type: 3}
-    - {fileID: 2746432798067607616, guid: 5b5307c3cb7fdcd4bad7407c933e453c, type: 3}
-    xrRef:
-    - {fileID: 7693327603949451190, guid: 67550a19e548a4843afbac54c3011007, type: 3}

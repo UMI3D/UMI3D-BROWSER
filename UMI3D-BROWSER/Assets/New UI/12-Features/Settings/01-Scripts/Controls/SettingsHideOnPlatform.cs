@@ -1,12 +1,9 @@
 /*
 Copyright 2019 - 2025 Inetum
-
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
-
     http://www.apache.org/licenses/LICENSE-2.0
-
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,33 +12,24 @@ limitations under the License.
 */
 
 using UnityEngine;
-using UnityEngine.UI;
 
-namespace umi3d.browserRuntime.ui.contextualMenu
+namespace umi3d.browserRuntime.ui.settings
 {
-    [RequireComponent(typeof(Button))]
-    public class ContextualMenuSubmitButton : MonoBehaviour
+    public class SettingsHideOnPlatform : MonoBehaviour
     {
-        Button _button;
-
-        ContextualMenuController _controller;
+        [SerializeField] bool hideOnPC = false;
+        [SerializeField] bool hideOnXR = false;
 
         private void Awake()
         {
-            _button = GetComponent<Button>();
-            _button.onClick.AddListener(OnClick);
-
-            _controller = GetComponentInParent<ContextualMenuController>();
-        }
-
-        private void OnDestroy()
-        {
-            _button.onClick.RemoveListener(OnClick);
-        }
-
-        void OnClick()
-        {
-            _controller.SubmitButtonClicked();
+#if UMI3D_XR
+            if (hideOnXR)
+                gameObject.SetActive(false);
+#endif
+#if UMI3D_PC
+            if (hideOnPC)
+                gameObject.SetActive(false);
+#endif
         }
     }
 }

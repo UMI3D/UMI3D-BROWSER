@@ -131,6 +131,19 @@ namespace umi3d.browserRuntime.ui
                     UnityEngine.Debug.LogException(e);
                 }
             }
+
+            foreach (var observer in _passworldObserver)
+            {
+                try
+                {
+                    if (contentType == TMP_InputField.ContentType.Password)
+                        observer.ShowButton();
+                }
+                catch (System.Exception e)
+                {
+                    UnityEngine.Debug.LogException(e);
+                }
+            }
         }
 
         List<IInputFieldNbLineObserver> _nbLineObserver = new();
@@ -214,7 +227,7 @@ namespace umi3d.browserRuntime.ui
             {
                 try
                 {
-                    observer.UpdatePassword(passwordVisibility);
+                    observer.UpdatePasswordVisibility(passwordVisibility);
                 }
                 catch (System.Exception e)
                 {

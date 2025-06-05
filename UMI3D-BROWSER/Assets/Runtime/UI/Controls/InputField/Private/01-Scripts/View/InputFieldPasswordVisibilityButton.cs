@@ -42,11 +42,6 @@ namespace umi3d.browserRuntime.ui
             gameObject.SetActive(false);
         }
 
-        void OnDisable()
-        {
-            gameObject.SetActive(false);
-        }
-
         void OnDestroy()
         {
             _button.onClick.RemoveListener(OnClick);
@@ -59,7 +54,13 @@ namespace umi3d.browserRuntime.ui
             ((Image)_button.targetGraphic).sprite = _controller.model.passwordVisibility ? _passwordVisible : _passwordHidden;
         }
 
-        public void UpdatePassword(bool isVisible)
+        public void UpdatePasswordVisibility(bool isVisible)
+        {
+            _controller.model.SetContentType(isVisible ? TMPro.TMP_InputField.ContentType.Standard 
+                                                       : TMPro.TMP_InputField.ContentType.Password);
+        }
+
+        public void ShowButton()
         {
             gameObject.SetActive(true);
         }

@@ -16,6 +16,7 @@ limitations under the License.
 
 using inetum.unityUtils.observation;
 using umi3d.browserRuntime.cursor;
+using umi3d.baseBrowser.inputs.interactions;
 using umi3d.browserRuntime.ui.inGame;
 using UnityEngine;
 using static umi3d.browserRuntime.cursor.BaseCursor;
@@ -33,14 +34,16 @@ namespace umi3dBrowsers.ingame_ui
 
         private void Awake()
         {
-            //KeyboardShortcut.AddDownListener(ShortcutEnum.DisplayHideGameMenu, ToggleInGamePanel);
+            if (TabletPanel)
+                KeyboardShortcut.AddDownListener(ShortcutEnum.DisplayHideGameMenu, ToggleInGamePanel);
+
             NotificationHub.Default.Subscribe(
                 this, 
                 InGameNotificationKeys.EnableInGameUi, 
                 (Callback)SetActive
             );
 
-            //BaseCursor.SetMovement(this, CursorMovement.Free);
+            BaseCursor.SetMovement(this, CursorMovement.Free);
         }
 
         private void Start()
@@ -50,33 +53,33 @@ namespace umi3dBrowsers.ingame_ui
 
         private void OnEnable()
         {
-            //KeyboardShortcut.AddUpListener(ShortcutEnum.FreeCursor, FreeCursor);
-            //BaseCursor.SetMovement(this, CursorMovement.Center);
+            KeyboardShortcut.AddUpListener(ShortcutEnum.FreeCursor, FreeCursor);
+            BaseCursor.SetMovement(this, CursorMovement.Center);
         }
 
         private void OnDisable()
         {
-            //KeyboardShortcut.RemoveUpListener(ShortcutEnum.FreeCursor, FreeCursor);
-            //BaseCursor.UnSetMovement(this);
+            KeyboardShortcut.RemoveUpListener(ShortcutEnum.FreeCursor, FreeCursor);
+            BaseCursor.UnSetMovement(this);
         }
 
         private void FreeCursor()
         {
-            //if (KeyboardShortcut.IsEditingTextField)
-            //    return;
-            if (TabletPanel.gameObject.activeSelf)
+            if (KeyboardShortcut.IsEditingTextField)
+                return;
+            if (TabletPanel && TabletPanel.gameObject.activeSelf)
                 return;
 
-            //if (BaseCursor.Movement == CursorMovement.Center)
-            //    BaseCursor.SetMovement(this, CursorMovement.Free);
-            //else
-            //    BaseCursor.SetMovement(this, CursorMovement.Center);
+            if (BaseCursor.Movement == CursorMovement.Center)
+                BaseCursor.SetMovement(this, CursorMovement.Free);
+            else
+                BaseCursor.SetMovement(this, CursorMovement.Center);
         }
 
         private void ToggleInGamePanel()
         {
-            //if (KeyboardShortcut.IsEditingTextField)
-            //    return;
+            if (KeyboardShortcut.IsEditingTextField)
+                return;
             if (!gameObject.activeSelf)
                 return;
 

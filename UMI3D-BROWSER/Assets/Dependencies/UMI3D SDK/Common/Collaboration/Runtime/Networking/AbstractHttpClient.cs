@@ -463,7 +463,7 @@ namespace umi3d.common.collaboration
         {
             UMI3DLogger.Log($"Send GetMedia", scope | DebugScope.Connection);
 
-            using (UnityWebRequest uwr = await _GetRequest(null, null, url, (e) => shouldTryAgain?.Invoke(e) ?? DefaultShouldTryAgain(e)))
+            using (UnityWebRequest uwr = await _GetRequest(null, null, url, (e) => shouldTryAgain?.Invoke(e) ?? DefaultShouldTryAgain(e), false))
             {
                 UMI3DLogger.Log($"Received GetMedia", scope | DebugScope.Connection);
                 if (uwr?.downloadHandler.data == null) return null;
@@ -535,19 +535,16 @@ namespace umi3d.common.collaboration
         /// <param name="callback">Action to be call when the request succeed.</param>
         /// <param name="onError">Action to be call when the request fail.</param>
         /// <param name="useParameterInsteadOfHeader">If true, sets authorization via parameters instead of header</param>
-        public async Task<byte[]> SendGetPrivate(string url, bool useParameterInsteadOfHeader, Func<RequestFailedArgument, bool> shouldTryAgain = null, Progress progress = null)
+        public async Task<byte[]> SendGetPrivate(string url, Func<RequestFailedArgument, bool> shouldTryAgain = null, Progress progress = null)
         {
             UMI3DLogger.Log($"Send GetPrivate {url}", scope | DebugScope.Connection);
 
-            if (useParameterInsteadOfHeader)
-            {
-                url = SendGetPrivate(url);
-            }
             int i = 0;
+
             while (i < 10)
             {
                 i++;
-                using (UnityWebRequest uwr = await _GetRequest(this, _HeaderToken, url, (e) => shouldTryAgain?.Invoke(e) ?? DefaultShouldTryAgain(e), !useParameterInsteadOfHeader, null, 0, progress))
+                using (UnityWebRequest uwr = await _GetRequest(this, _HeaderToken, url, (e) => shouldTryAgain?.Invoke(e) ?? DefaultShouldTryAgain(e), true, null, 0, progress))
                 {
                     UMI3DLogger.Log($"Received GetPrivate {url}\n{uwr?.responseCode}\n{uwr?.url}", scope | DebugScope.Connection);
                     if (uwr?.responseCode != 204)
@@ -556,12 +553,8 @@ namespace umi3d.common.collaboration
                     await UMI3DAsyncManager.Delay(1000);
                 }
             }
-            return null;
-        }
 
-        public virtual string SendGetPrivate(string url)
-        {
-            return url;
+            return null;
         }
 
         #endregion
@@ -682,7 +675,7 @@ namespace umi3d.common.collaboration
         /// <param name="bytes"></param>
         /// <param name="shouldTryAgain"></param>
         /// <returns></returns>
-        public async Task SendPostFileToURL(string url, string fileName, byte[] bytes, List<(string, string)> headers, Func<RequestFailedArgument, bool> shouldTryAgain = null)
+        public async Task SendPostFileToURL(string url, string fileName, byte[] bytes, List<(string, string)> headers, Func<RequestFailedArgument, bool> shouldTryAgain = null, Progress progress = null)
         {
             List<IMultipartFormSection> formData = new List<IMultipartFormSection>();
             var mime = MimeTypeMapper.GetMimeType(fileName);
@@ -695,7 +688,7 @@ namespace umi3d.common.collaboration
             if (!headers.Any(c => c.Item1 == UMI3DNetworkingKeys.contentHeader))
                 headers.Add((UMI3DNetworkingKeys.contentHeader, fileName));
 
-            UnityWebRequest uwr = await _PostFormRequest(this, null, url, boundary, formData, (e) => shouldTryAgain?.Invoke(e) ?? DefaultShouldTryAgain(e), false, headers);
+            UnityWebRequest uwr = await _PostFormRequest(this, null, url, boundary, formData, (e) => shouldTryAgain?.Invoke(e) ?? DefaultShouldTryAgain(e), false, headers, progress: progress);
             uwr.Dispose();
         }
 
@@ -772,16 +765,18 @@ namespace umi3d.common.collaboration
 
         #region utils
         /// <summary>
-        /// Ienumerator to send GET request.
+        /// IEnumerator to send GET request.
         /// </summary>
         /// <param name="url">Url to send the request at.</param>
         /// <param name="callback">Action to be call when the request succeed.</param>
         /// <param name="onError">Action to be call when the request fail.</param>
         /// <returns></returns>
-        protected static async Task<UnityWebRequest> _GetRequest(AbstractHttpClient<T> instance, string HeaderToken, string url, Func<RequestFailedArgument, bool> ShouldTryAgain, bool UseCredential = false, List<(string, string)> headers = null, int tryCount = 0, Progress progress = null)
+        protected static async Task<UnityWebRequest> _GetRequest(AbstractHttpClient<T> instance, string HeaderToken, string url, Func<RequestFailedArgument, bool> ShouldTryAgain, bool useCredential, List<(string, string)> headers = null, int tryCount = 0, Progress progress = null)
         {
             var www = UnityWebRequest.Get(url);
-            if (UseCredential) www.SetRequestHeader(UMI3DNetworkingKeys.Authorization, HeaderToken);
+            www.redirectLimit = 0;
+
+            if (useCredential) www.SetRequestHeader(UMI3DNetworkingKeys.Authorization, HeaderToken);
             if (headers != null)
             {
                 foreach ((string, string) item in headers)
@@ -829,16 +824,21 @@ namespace umi3d.common.collaboration
 
             progress?.SetStatus(currentStateMessage);
 
-#if UNITY_2020_1_OR_NEWER
             if (www.result > UnityWebRequest.Result.Success)
-#else
-            if (www.isNetworkError || www.isHttpError)
-#endif
             {
-                return
-                    await (instance?.Sub__GetRequest(www, date, HeaderToken, url, ShouldTryAgain, UseCredential, headers, tryCount)
-                    ?? throw new Umi3dNetworkingException(www, "Failed to get "));
+                Dictionary<string, string> responseHeaders = www.GetResponseHeaders();
 
+                if (responseHeaders != null && responseHeaders.TryGetValue("Location", out string redirection))
+                {
+                    www.Dispose();
+                    redirection = redirection.Replace(" ", "%20");
+                    return  await _GetRequest(instance, HeaderToken, redirection, ShouldTryAgain, false, headers, tryCount);
+                }
+                else
+                {
+                    return await (instance?.Sub__GetRequest(www, date, HeaderToken, url, ShouldTryAgain, useCredential, headers, tryCount)
+                        ?? throw new Umi3dNetworkingException(www, "Failed to get "));
+                }
             }
 
             return www;
@@ -895,8 +895,12 @@ namespace umi3d.common.collaboration
             throw new Umi3dNetworkingException(www, " Failed to post\n" + www.downloadHandler.text);
         }
 
-        protected static async Task<UnityWebRequest> _PostFormRequest(AbstractHttpClient<T> instance, string HeaderToken, string url, byte[] boundary, List<IMultipartFormSection> multipartFormSections, Func<RequestFailedArgument, bool> ShouldTryAgain, bool UseCredential = false, List<(string, string)> headers = null, int tryCount = 0)
+        protected static async Task<UnityWebRequest> _PostFormRequest(AbstractHttpClient<T> instance, string HeaderToken, string url, byte[] boundary, List<IMultipartFormSection> multipartFormSections, Func<RequestFailedArgument, bool> ShouldTryAgain, bool UseCredential = false, List<(string, string)> headers = null, int tryCount = 0, Progress progress = null)
         {
+            progress?.SetTotal(1f);
+            progress?.SetCompleted(0f);
+            progress?.SetStatus("Uploading File");
+
             UnityWebRequest www = CreatePostRequest(url, multipartFormSections, boundary, true);
             if (UseCredential) www.SetRequestHeader(UMI3DNetworkingKeys.Authorization, HeaderToken);
             if (headers != null)
@@ -910,7 +914,10 @@ namespace umi3d.common.collaboration
 
             UnityWebRequestAsyncOperation operation = www.SendWebRequest();
             while (!operation.isDone)
+            {
+                progress?.SetCompleted(operation.progress);
                 await UMI3DAsyncManager.Yield();
+            }
 
 #if UNITY_2020_1_OR_NEWER
             if (www.result > UnityWebRequest.Result.Success)
@@ -923,6 +930,7 @@ namespace umi3d.common.collaboration
                     ?? throw new Umi3dNetworkingException(www, "Failed to post "));
 
             }
+            progress?.SetAsCompleted();
             return www;
         }
 

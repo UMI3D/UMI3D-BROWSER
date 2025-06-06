@@ -26,7 +26,7 @@ public sealed class UMI3DMovementManager
     public Transform skeleton;
     public UMI3DCollisionManager collisionManager;
     public BaseFPSData data;
-    public IConcreteFPSNavigation concreteFPSNavigation;
+    //public IConcreteFPSNavigation concreteFPSNavigation;
 
     #endregion
 
@@ -157,7 +157,7 @@ public sealed class UMI3DMovementManager
         }
         else
         {
-            concreteFPSNavigation.HandleUserInput();
+            //concreteFPSNavigation.HandleUserInput();
         }
 
         if (data.playerTranslationSpeed == Vector3.zero)

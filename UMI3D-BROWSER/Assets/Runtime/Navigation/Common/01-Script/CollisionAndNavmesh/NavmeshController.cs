@@ -40,7 +40,10 @@ namespace umi3d.browserRuntime.navigation
         {
             UMI3DEnvironmentLoader.Instance.onNodePartOfNavmeshSet += SetPartOfNavmesh;
             UMI3DEnvironmentLoader.Instance.onNodeTraversableSet += SetTraversable;
-            UMI3DCollaborationClientServer.Instance.OnLeaving.AddListener(Reset);
+            if (UMI3DCollaborationClientServer.Exists)
+            {
+                UMI3DCollaborationClientServer.Instance.OnLeaving.AddListener(Reset);
+            }
 
             VolumePrimitiveManager.SubscribeToPrimitiveCreation(OnPrimitiveCreated, false);
             VolumePrimitiveManager.SubscribeToPrimitiveDelete(OnPrimitiveDeleted);

@@ -31,61 +31,77 @@ namespace umi3d.browserRuntime.navigation.pc
 
         bool isInitialized = false;
 
-        async void Awake()
+        async void Start()
         {
+            UMI3DPCManager.@default.camera = this;
+
             while (!IsUMI3DPCManagerInitialized())
             {
                 await Task.Yield();
             }
+            UnityEngine.Debug.Log($"[PCCamera] Notice: UMI3DPCManager is initialized.");
 
             try
             {
-                Initialize();
+                movement = new PCCameraMovement(this, mouseDelta, lookAroundAction)
+                {
+                    personalSkeletonContainer = UMI3DPCManager.@default.player.personalSkeletonContainer,
+                    viewpointPivot = UMI3DPCManager.@default.viewpointPivot,
+                    neckPivot = UMI3DPCManager.@default.neckPivot,
+                    head = UMI3DPCManager.@default.head
+                };
+                properties = new PCCameraProperties();
             }
             catch (Exception e)
             {
                 UnityEngine.Debug.LogException(e);
+                return;
             }
+
+            isInitialized = true;
+            UnityEngine.Debug.Log($"[PCCamera] Notice: PCCamera is initialized.");
         }
 
         bool IsUMI3DPCManagerInitialized()
         {
-            return UMI3DPCManager.@default.cursorModel != null 
-                && UMI3DPCManager.@default.player != null 
-                && UMI3DPCManager.@default.player.personalSkeletonContainer != null
-                && UMI3DPCManager.@default.viewpointPivot != null
-                && UMI3DPCManager.@default.neckPivot != null
-                && UMI3DPCManager.@default.head != null;
+            bool isInitialized = true;
+
+            if (UMI3DPCManager.@default.player == null)
+            {
+                UnityEngine.Debug.Log($"[PCCamera] Notice: Waiting for player to be set.");
+                isInitialized = false;
+            }
+            
+            if (UMI3DPCManager.@default.player?.personalSkeletonContainer == null)
+            {
+                UnityEngine.Debug.Log($"[PCCamera] Notice: Waiting for personalSkeletonContainer to be set.");
+                isInitialized = false;
+            }
+
+            if (UMI3DPCManager.@default.viewpointPivot == null)
+            {
+                UnityEngine.Debug.Log($"[PCCamera] Notice: Waiting for viewpointPivot to be set.");
+                isInitialized = false;
+            }
+
+            if (UMI3DPCManager.@default.neckPivot == null)
+            {
+                UnityEngine.Debug.Log($"[PCCamera] Notice: Waiting for neckPivot to be set.");
+                isInitialized = false;
+            }
+
+            if (UMI3DPCManager.@default.head == null)
+            {
+                UnityEngine.Debug.Log($"[PCCamera] Notice: Waiting for head to be set.");
+                isInitialized = false;
+            }
+
+            return isInitialized;
         }
 
         protected override bool IsInitialized()
         {
-            return IsUMI3DPCManagerInitialized() && isInitialized;
-        }
-
-        void Initialize()
-        {
-            movement = new PCCameraMovement(this, mouseDelta, lookAroundAction)
-            {
-                angularViewSpeed = angularViewSpeed,
-                maxCameraAngle = maxCameraAngle,
-                maxHeadXAngle = maxHeadXAngle,
-                maxNeckXAngle = maxNeckXAngle,
-
-                cursorModel = UMI3DPCManager.@default.cursorModel,
-                personalSkeletonContainer = UMI3DPCManager.@default.player.personalSkeletonContainer,
-                viewpointPivot = UMI3DPCManager.@default.viewpointPivot,
-                neckPivot = UMI3DPCManager.@default.neckPivot,
-                head = UMI3DPCManager.@default.head
-            };
-            properties = new PCCameraProperties();
-
-            isInitialized = true;
-        }
-
-        private void Start()
-        {
-            UMI3DPCManager.@default.camera = this;
+            return isInitialized;
         }
     }
 }

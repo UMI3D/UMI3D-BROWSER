@@ -35,11 +35,9 @@ namespace umi3d.browserRuntime.navigation
         {
             if (!movement.CanCameraMove()) { return; }
 
-            Vector2 rotation = movement.GetCameraRotation();
-            Vector2 angularSpeed = rotation * movement.angularViewSpeed;
-
-            movement.GetHorizontalRotationAxis(angularSpeed);
-            movement.MoveBody();
+            movement.ComputeRotationInput(angularViewSpeed);
+            movement.ComputeCameraAndBodyRotation(maxCameraAngle, maxHeadXAngle, maxNeckXAngle);
+            movement.MoveCameraAndBody();
         }
 
         void Update()

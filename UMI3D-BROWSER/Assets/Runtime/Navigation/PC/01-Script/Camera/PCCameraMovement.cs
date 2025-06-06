@@ -14,7 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using umi3d.browserRuntime.cursor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -25,7 +24,6 @@ namespace umi3d.browserRuntime.navigation.pc
         public InputActionReference mouseDelta;
         public InputActionReference lookAroundAction;
 
-        internal CursorModel cursorModel;
         internal GameObject personalSkeletonContainer;
         internal Transform viewpointPivot;
         internal Transform neckPivot;
@@ -33,7 +31,7 @@ namespace umi3d.browserRuntime.navigation.pc
 
         UMI3DPCCamera umi3dCamera;
 
-        Vector2 cameraRotation = Vector2.zero;
+        Vector2 rotationInput = Vector2.zero;
         Vector2 viewpointRotation = Vector2.zero;
         Vector2 headRotation = Vector2.zero;
         Vector2 neckRotation = Vector2.zero;
@@ -46,7 +44,6 @@ namespace umi3d.browserRuntime.navigation.pc
             this.lookAroundAction = lookAroundAction;
 
             mouseDelta.action.Enable();
-            mouseDelta.action.performed += MouseDeltaPerformed;
             lookAroundAction.action.Enable();
             lookAroundAction.action.started += LookAroundStarted;
             lookAroundAction.action.canceled += LookAroundCanceled;
@@ -68,31 +65,22 @@ namespace umi3d.browserRuntime.navigation.pc
             }
         }
 
-        void MouseDeltaPerformed(InputAction.CallbackContext context)
-        {
-            Vector2 delta = context.ReadValue<Vector2>();
-
-            cameraRotation += delta;
-        }
-
         public override bool CanCameraMove()
         {
-            return cursorModel.lockMode == CursorLockMode.Locked;
+            return umi3dCamera.cameraMode != E_CameraMode.Locked;
         }
 
-        public override Vector2 GetCameraRotation()
+        public override void ComputeRotationInput(Vector2 angularSpeed)
         {
-            Vector2 _result = cameraRotation;
-            cameraRotation = Vector2.zero;
-
-            return _result;
+            Vector2 delta = mouseDelta.action.ReadValue<Vector2>();
+            rotationInput = new Vector2(-delta.y, delta.x) * angularSpeed * Time.deltaTime;
         }
 
-        public override void GetHorizontalRotationAxis(Vector2 angularSpeed)
+        public override void ComputeCameraAndBodyRotation(Vector2 maxCameraAngle, Vector2 maxHeadXAngle, float maxNeckXAngle)
         {
             // Vertical Axis.
             float viewpointXRotation = Mathf.Clamp(
-                (viewpointPivot.localRotation.eulerAngles.NormalizeAngle() + ((Vector3)angularSpeed).NormalizeAngle()).x,
+                (viewpointPivot.localRotation.eulerAngles.NormalizeAngle() + ((Vector3)rotationInput).NormalizeAngle()).x,
                 -maxCameraAngle.x,
                 maxCameraAngle.x
             );
@@ -109,12 +97,12 @@ namespace umi3d.browserRuntime.navigation.pc
 
                 case E_CameraMode.Navigation:
                     viewpointYRotation = 0f;
-                    personalSkeletonContainerYRotation = (viewpointPivot.rotation.eulerAngles.NormalizeAngle() + ((Vector3)angularSpeed).NormalizeAngle()).y;
+                    personalSkeletonContainerYRotation = (viewpointPivot.rotation.eulerAngles.NormalizeAngle() + ((Vector3)rotationInput).NormalizeAngle()).y;
                     break;
 
                 case E_CameraMode.NeckMovement:
                     viewpointYRotation = Mathf.Clamp(
-                        (viewpointPivot.localRotation.eulerAngles.NormalizeAngle() + ((Vector3)angularSpeed).NormalizeAngle()).y,
+                        (viewpointPivot.localRotation.eulerAngles.NormalizeAngle() + ((Vector3)rotationInput).NormalizeAngle()).y,
                         -maxCameraAngle.y,
                         maxCameraAngle.y
                     );
@@ -122,7 +110,7 @@ namespace umi3d.browserRuntime.navigation.pc
                     break;
                     
                 case E_CameraMode.Free:
-                    viewpointYRotation = (viewpointPivot.localRotation.eulerAngles.NormalizeAngle() + ((Vector3)angularSpeed).NormalizeAngle()).y;
+                    viewpointYRotation = (viewpointPivot.localRotation.eulerAngles.NormalizeAngle() + ((Vector3)rotationInput).NormalizeAngle()).y;
                     personalSkeletonContainerYRotation = 0f;
                     break;
 
@@ -145,7 +133,7 @@ namespace umi3d.browserRuntime.navigation.pc
             personalSkeletonContainerRotation = new Vector2(0f, personalSkeletonContainerYRotation);
         }
 
-        public override void MoveBody()
+        public override void MoveCameraAndBody()
         {
             viewpointPivot.localRotation = Quaternion.Euler(viewpointRotation);
             head.localRotation = Quaternion.Euler(headRotation);

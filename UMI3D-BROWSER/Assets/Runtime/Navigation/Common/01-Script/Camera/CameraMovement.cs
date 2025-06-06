@@ -21,14 +21,9 @@ namespace umi3d.browserRuntime.navigation
 {
     public abstract class CameraMovement 
     {
-        public Vector2 angularViewSpeed = Vector2.one * 5f;
-        public Vector2 maxCameraAngle = Vector2.one * 90f;
-        public Vector2 maxHeadXAngle = new(-60f, 70f);
-        public float maxNeckXAngle = 50f;
-
         public abstract bool CanCameraMove();
-        public abstract Vector2 GetCameraRotation();
-        public abstract void GetHorizontalRotationAxis(Vector2 angularSpeed);
-        public abstract void MoveBody();
+        public abstract void ComputeRotationInput(Vector2 angularSpeed);
+        public abstract void ComputeCameraAndBodyRotation(Vector2 maxCameraAngle, Vector2 maxHeadXAngle, float maxNeckXAngle);
+        public abstract void MoveCameraAndBody();
     }
 }

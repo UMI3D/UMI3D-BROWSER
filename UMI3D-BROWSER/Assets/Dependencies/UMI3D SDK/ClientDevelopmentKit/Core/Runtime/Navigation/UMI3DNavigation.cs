@@ -30,10 +30,6 @@ namespace umi3d.cdk.navigation
         /// Current navigation system.
         /// </summary>
         public static INavigationDelegate currentNav = null;
-        /// <summary>
-        /// Different available navigation system.
-        /// </summary>
-        public static List<INavigationDelegate> navigations = new();
 
         public delegate void OnEmbarkVehicleDelegate(ulong vehicleId);
 
@@ -41,9 +37,7 @@ namespace umi3d.cdk.navigation
 
         public void Init(params INavigationDelegate[] navigationDelegates)
         {
-            navigations = new();
-            navigations.AddRange(navigationDelegates);
-            currentNav = navigations.FirstOrDefault();
+            currentNav = navigationDelegates[0];
             currentNav.Activate();
         }
 

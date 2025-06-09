@@ -39,6 +39,12 @@ namespace umi3d.browserRuntime.ui
             _model.Subscribe((IDropdownOptionsObserver)this);
         }
 
+        private void Start()
+        {
+            updateOptions(_model.options);
+            _dropdown.RefreshShownValue();
+        }
+
         private void OnEnable()
         {
             _dropdown.Select();
@@ -62,11 +68,16 @@ namespace umi3d.browserRuntime.ui
 
         public void updateOptions(List<string> options)
         {
+            updateOptions(options.GetEnumerator());
+        }
+
+        void updateOptions(IEnumerator<string> options)
+        {
             _dropdown.ClearOptions();
-            foreach (var option in options)
+            while (options.MoveNext())
             {
-                _dropdown.options.Add(new TMP_Dropdown.OptionData(option));
-            }        
+                _dropdown.options.Add(new TMP_Dropdown.OptionData(options.Current));
+            }
         }
     }
 }

@@ -39,12 +39,15 @@ namespace umi3d.browserRuntime.pc
         public CursorModel cursorModel { get; set; }
 
         public UMI3DPlayer player { get; set; }
+        public Transform personalSkeletonContainer { get; set; }
+        public Transform personalSkeleton {  get; set; }
         public Transform viewpointPivot { get; set; }
         public Transform neckPivot { get; set; }
         public Transform head { get; set; }
 
-        public UMI3DCamera camera { get; set; }
+        public UMI3DCamera umi3dCamera { get; set; }
+        public Camera camera { get; set; }
 
-        public umi3d.cdk.navigation.UMI3DNavigation navigation { get; set; }
+        public cdk.navigation.UMI3DNavigation navigation { get; set; }
     }
 }

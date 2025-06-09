@@ -14,32 +14,20 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System.Collections;
-using System.Collections.Generic;
+using System;
+using umi3d.common;
 using UnityEngine;
 
-namespace umi3d.browserRuntime.navigation
+namespace umi3d.cdk.navigation
 {
-    public class UMI3DNavigation : MonoBehaviour
+    public abstract class FrameController 
     {
-        void Awake()
-        {
-        }
+        protected UMI3DNodeInstance globalFrame;
 
-        void OnEnable()
-        {
-        }
-
-        void OnDisable()
-        {
-        }
-
-        void OnDestroy()
-        {
-        }
-
-        void Update()
-        {
-        }
+        /// <summary>
+        /// Apply FrameRequestDto request from server.
+        /// </summary>
+        /// <param name="data"></param>
+        public abstract void UpdateFrame(ulong environmentId, FrameRequestDto data);
     }
 }

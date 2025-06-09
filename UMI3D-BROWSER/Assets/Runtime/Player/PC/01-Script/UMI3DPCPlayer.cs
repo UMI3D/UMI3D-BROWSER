@@ -90,6 +90,8 @@ namespace umi3d.browserRuntime.player.pc
             cameraOffset = mainCamera.transform.parent.gameObject;
 
             UMI3DPCManager.@default.player = this;
+            UMI3DPCManager.@default.personalSkeletonContainer = personalSkeletonContainer.transform;
+            UMI3DPCManager.@default.personalSkeleton = personalSkeleton.transform;
             UMI3DPCManager.@default.viewpointPivot = viewpointPivot;
             UMI3DPCManager.@default.head = head;
             UMI3DPCManager.@default.neckPivot = neckPivot;

@@ -22,7 +22,7 @@ using UnityEngine.InputSystem;
 
 namespace umi3d.browserRuntime.navigation.pc
 {
-    public class UMI3DPCCamera : UMI3DCamera
+    public class PCUMI3DCamera : UMI3DCamera
     {
         public InputActionReference mouseDelta;
         public InputActionReference lookAroundAction;
@@ -33,7 +33,8 @@ namespace umi3d.browserRuntime.navigation.pc
 
         async void Start()
         {
-            UMI3DPCManager.@default.camera = this;
+            UMI3DPCManager.@default.umi3dCamera = this;
+            UMI3DPCManager.@default.camera = Camera.main;
 
             while (!IsUMI3DPCManagerInitialized())
             {

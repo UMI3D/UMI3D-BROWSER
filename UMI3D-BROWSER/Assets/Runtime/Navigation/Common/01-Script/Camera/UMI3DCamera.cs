@@ -22,16 +22,16 @@ namespace umi3d.browserRuntime.navigation
     public abstract class UMI3DCamera : MonoBehaviour
     {
         protected CameraMovement movement;
-        public Vector2 angularViewSpeed = Vector2.one * 5f;
-        public Vector2 maxCameraAngle = Vector2.one * 90f;
-        public Vector2 maxHeadXAngle = new(-60f, 70f);
-        public float maxNeckXAngle = 50f;
+        [SerializeField] protected Vector2 angularViewSpeed = Vector2.one * 20f;
+        [SerializeField] protected Vector2 maxCameraAngle = Vector2.one * 90f;
+        [SerializeField] protected Vector2 maxHeadXAngle = new(-60f, 70f);
+        [SerializeField] protected float maxNeckXAngle = 50f;
         
         protected CameraProperties properties;
 
         protected abstract bool IsInitialized();
 
-        public void HandleView()
+        void HandleView()
         {
             if (!movement.CanCameraMove()) { return; }
 

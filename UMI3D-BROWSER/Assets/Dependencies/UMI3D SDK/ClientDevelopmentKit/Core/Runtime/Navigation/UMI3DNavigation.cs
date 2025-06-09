@@ -14,76 +14,102 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using umi3d.common;
+using UnityEngine;
 
 namespace umi3d.cdk.navigation
 {
     /// <summary>
     /// Navigation manager for user displacement in the environment. 
     /// </summary>
-    public sealed class UMI3DNavigation
+    public abstract class UMI3DNavigation : MonoBehaviour
     {
         /// <summary>
         /// Current navigation system.
         /// </summary>
-        public static INavigationDelegate currentNav = null;
+        public static UMI3DNavigation currentNav = null;
 
-        public delegate void OnEmbarkVehicleDelegate(ulong vehicleId);
+        protected FrameController frameController;
+        protected ContinuousMovement continuousMovement;
 
-        public static event OnEmbarkVehicleDelegate onUpdateFrameDelegate;
+        /// <summary>
+        /// Disable this navigation system.
+        /// </summary>
+        public abstract void Disable();
 
-        public void Init(params INavigationDelegate[] navigationDelegates)
-        {
-            currentNav = navigationDelegates[0];
-            currentNav.Activate();
-        }
+        /// <summary>
+        /// Activate this navigation system.
+        /// </summary>
+        public abstract void Activate();
+
 
         public static void SetFrame(ulong environmentId, FrameRequestDto frameRequest)
         {
             UnityEngine.Debug.LogError("Need to handle rescaling");
-            if (currentNav != null)
+
+            currentNav.UpdateFrame(environmentId, frameRequest);
+
+            var fConfirmation = new FrameConfirmationDto()
             {
-                onUpdateFrameDelegate?.Invoke(frameRequest.FrameId);
-
-                currentNav.UpdateFrame(environmentId, frameRequest);
-
-                var fConfirmation = new FrameConfirmationDto()
-                {
-                    userId = UMI3DClientServer.Instance.GetUserId()
-                };
-
-                UMI3DClientServer.SendRequest(fConfirmation, true);
-            }
+                userId = UMI3DClientServer.Instance.GetUserId()
+            };
+            UMI3DClientServer.SendRequest(fConfirmation, true);
         }
 
         /// <summary>
-        /// Move the user acording to a <see cref="NavigateDto"/>.
+        /// Apply FrameRequestDto request from server.
+        /// </summary>
+        /// <param name="data"></param>
+        protected abstract void UpdateFrame(ulong environmentId, FrameRequestDto data);
+
+
+        /// <summary>
+        /// Move the user according to a <see cref="NavigateDto"/>.
         /// </summary>
         /// <param name="dto"></param>
-        public static IEnumerator Navigate(ulong environmentId, NavigateDto dto)
+        public static void Navigate(ulong environmentId, NavigateDto dto)
         {
-            if (currentNav == null)
-            {
-                yield break;
-            }
-
             switch (dto)
             {
                 case ViewpointTeleportDto viewpointTeleportDto:
                     currentNav.ViewpointTeleport(environmentId, viewpointTeleportDto);
                     break;
+
                 case TeleportDto teleportDto:
                     currentNav.Teleport(environmentId, teleportDto);
                     break;
+
                 default:
-                    currentNav.Navigate(environmentId, dto);
+                    currentNav.MoveContinuously(environmentId, dto);
                     break;
             }
-
-            yield break;
         }
+
+        /// <summary>
+        /// Apply continuous navigation request from server.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <seealso cref="Teleport(TeleportDto)"/>
+        protected abstract void MoveContinuously(ulong environmentId, NavigateDto data);
+
+        /// <summary>
+        /// Apply teleport request from server.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <seealso cref="Navigate(NavigateDto)"/>
+        protected abstract void Teleport(ulong environmentId, TeleportDto data);
+
+        /// <summary>
+        /// Apply viewpoint teleport request from server.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <seealso cref="Navigate(NavigateDto)"/>
+        protected abstract void ViewpointTeleport(ulong environmentId, ViewpointTeleportDto data);
+
+        /// <summary>
+        /// Get data on current movements of the user.
+        /// </summary>
+        /// <returns></returns>
+        public abstract NavigationData GetNavigationData();
     }
 }

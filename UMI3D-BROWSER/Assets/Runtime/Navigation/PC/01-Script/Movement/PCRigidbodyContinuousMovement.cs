@@ -15,11 +15,17 @@ limitations under the License.
 */
 
 using System;
+using umi3d.cdk.navigation;
+using umi3d.common;
 using UnityEngine;
 
-namespace umi3d.browserRuntime.navigation
+namespace umi3d.browserRuntime.navigation.pc
 {
-    public abstract class CollisionController : MonoBehaviour
+    public class PCRigidbodyContinuousMovement : ContinuousMovement
     {
+        public override void MoveContinuously(ulong environmentId, NavigateDto data)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

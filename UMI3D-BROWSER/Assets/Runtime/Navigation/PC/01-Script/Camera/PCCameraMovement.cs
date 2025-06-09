@@ -29,7 +29,7 @@ namespace umi3d.browserRuntime.navigation.pc
         internal Transform neckPivot;
         internal Transform head;
 
-        UMI3DPCCamera umi3dCamera;
+        PCUMI3DCamera umi3dCamera;
 
         Vector2 rotationInput = Vector2.zero;
         Vector2 viewpointRotation = Vector2.zero;
@@ -37,7 +37,7 @@ namespace umi3d.browserRuntime.navigation.pc
         Vector2 neckRotation = Vector2.zero;
         Vector2 personalSkeletonContainerRotation = Vector2.zero;
 
-        public PCCameraMovement(UMI3DPCCamera umi3dCamera, InputActionReference mouseDelta, InputActionReference lookAroundAction)
+        public PCCameraMovement(PCUMI3DCamera umi3dCamera, InputActionReference mouseDelta, InputActionReference lookAroundAction)
         {
             this.umi3dCamera = umi3dCamera;
             this.mouseDelta = mouseDelta;

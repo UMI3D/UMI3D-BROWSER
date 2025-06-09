@@ -24,7 +24,6 @@ public sealed class UMI3DMovementManager
 
     public Transform playerTransform;
     public Transform skeleton;
-    public UMI3DCollisionManager collisionManager;
     public BaseFPSData data;
     //public IConcreteFPSNavigation concreteFPSNavigation;
 
@@ -37,7 +36,6 @@ public sealed class UMI3DMovementManager
     {
         data.playerTranslationSpeed = Vector3.zero;
         data.playerTranslation = Vector3.zero;
-        collisionManager.ComputeGround();
         //if (
         //        (BaseCursor.Movement == BaseCursor.CursorMovement.Free
         //        || BaseCursor.Movement == BaseCursor.CursorMovement.FreeHidden)
@@ -199,27 +197,27 @@ public sealed class UMI3DMovementManager
             return;
         }
 
-        data.IsCrouching = data.WantToCrouch || !collisionManager.CanStandUp();
-        if (collisionManager.IsGrounded)
-        {
-            if (data.WantToJump && collisionManager.CanJump())
-            {
-                data.IsJumping = true;
-                data.verticalVelocity = data.MaxJumpVelocity;
-            }
-            else
-            {
-                data.IsJumping = false;
-                data.verticalVelocity = 0f;
-            }
-        }
-        else
-        {
-            if (collisionManager.IsAboveGround)
-            {
-                data.verticalVelocity += data.GravityVelocity;
-            }
-        }
+        //data.IsCrouching = data.WantToCrouch || !collisionManager.CanStandUp();
+        //if (collisionManager.IsGrounded)
+        //{
+        //    if (data.WantToJump && collisionManager.CanJump())
+        //    {
+        //        data.IsJumping = true;
+        //        data.verticalVelocity = data.MaxJumpVelocity;
+        //    }
+        //    else
+        //    {
+        //        data.IsJumping = false;
+        //        data.verticalVelocity = 0f;
+        //    }
+        //}
+        //else
+        //{
+        //    if (collisionManager.IsAboveGround)
+        //    {
+        //        data.verticalVelocity += data.GravityVelocity;
+        //    }
+        //}
 
         data.playerTranslationSpeed.y = data.verticalVelocity;
     }
@@ -237,12 +235,12 @@ public sealed class UMI3DMovementManager
         data.playerTranslation = playerTransform.rotation * data.playerTranslation;
 
         // Get a direction and distance relative to the player that is possible (avoid collision).
-        data.playerTranslation = collisionManager.GetPossibleTranslation(data.playerTranslation);
-        if (data.playerTranslation.y == 0 && collisionManager.IsBelowGround)
-        {
-            float delta = playerTransform.position.y - data.groundYAxis;
-            data.playerTranslation.y = Mathf.Lerp(0, -delta, 0.4f);
-        }
+        //data.playerTranslation = collisionManager.GetPossibleTranslation(data.playerTranslation);
+        //if (data.playerTranslation.y == 0 && collisionManager.IsBelowGround)
+        //{
+        //    float delta = playerTransform.position.y - data.groundYAxis;
+        //    data.playerTranslation.y = Mathf.Lerp(0, -delta, 0.4f);
+        //}
     }
 
     void UpdatePlayerPosition()

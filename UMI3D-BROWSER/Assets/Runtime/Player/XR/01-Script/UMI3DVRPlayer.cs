@@ -40,7 +40,6 @@ namespace umi3d.browserRuntime.player
         [HideInInspector] public TeleportationProvider teleportationProvider;
         [HideInInspector] public DynamicMoveProvider dynamicMoveProvider;
 
-        [HideInInspector] public cdk.navigation.UMI3DNavigation navigation = new();
         [HideInInspector] public UMI3DSnapTurnProvider snapTurn;
         [HideInInspector] public UMI3DTeleportationProvider umi3dTeleportationProvider;
 
@@ -72,10 +71,6 @@ namespace umi3d.browserRuntime.player
                 xrOrigin.transform,
                 personalSkeletonContainer.transform
             );
-            navigation.Init(navigationDelegate);
-
-            // SKELETON SERVICE
-            CollaborationSkeletonsManager.Instance.navigation = navigationDelegate; //also use to init manager via Instance call
 
             linker = Linker.Get<UMI3DVRPlayer>(nameof(UMI3DVRPlayer));
         }

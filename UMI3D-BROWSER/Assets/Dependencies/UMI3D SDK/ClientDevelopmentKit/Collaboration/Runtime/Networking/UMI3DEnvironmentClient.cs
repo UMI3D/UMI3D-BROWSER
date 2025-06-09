@@ -637,7 +637,7 @@ namespace umi3d.cdk.collaboration
             await (UMI3DEnvironmentLoader.Instance.Load(environment, LoadProgress));
             UpdateProgress.AddComplete();
             UMI3DLogger.Log($"Load ended, Teleport and set status to active", scope | DebugScope.Connection);
-            UMI3DNavigation.currentNav.Teleport(UMI3DGlobalID.EnvironmentId, new TeleportDto() { position = enter.userPosition, rotation = enter.userRotation });
+            UMI3DNavigation.Navigate(UMI3DGlobalID.EnvironmentId, new TeleportDto() { position = enter.userPosition, rotation = enter.userRotation });
             EnvironmentLoaded.Invoke();
             UserDto.answerDto.status = statusToBeSet;
             UMI3DCollaborationClientServer.transactionPending = await HttpClient.SendPostUpdateIdentity(UserDto.answerDto, null);

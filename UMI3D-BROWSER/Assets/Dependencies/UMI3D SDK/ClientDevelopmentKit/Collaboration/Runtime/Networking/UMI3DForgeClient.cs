@@ -518,7 +518,7 @@ namespace umi3d.cdk.collaboration
                 case NavigateDto navigate:
                     MainThreadManager.Run(() =>
                     {
-                        StartCoroutine(UMI3DNavigation.Navigate(UMI3DGlobalID.EnvironmentId, navigate));
+                        UMI3DNavigation.Navigate(UMI3DGlobalID.EnvironmentId, navigate);
                     });
 
                     break;
@@ -616,7 +616,7 @@ namespace umi3d.cdk.collaboration
                         var nav = new NavigateDto() { position = pos };
                         MainThreadManager.Run(() =>
                         {
-                            StartCoroutine(UMI3DNavigation.Navigate(UMI3DGlobalID.EnvironmentId, nav));
+                            UMI3DNavigation.Navigate(UMI3DGlobalID.EnvironmentId, nav);
                         });
                     }
                     break;
@@ -627,7 +627,7 @@ namespace umi3d.cdk.collaboration
                         var nav = new TeleportDto() { position = pos, rotation = rot };
                         MainThreadManager.Run(() =>
                         {
-                            StartCoroutine(UMI3DNavigation.Navigate(UMI3DGlobalID.EnvironmentId, nav));
+                            UMI3DNavigation.Navigate(UMI3DGlobalID.EnvironmentId, nav);
 
                         });
                     }
@@ -639,7 +639,7 @@ namespace umi3d.cdk.collaboration
                         var nav = new ViewpointTeleportDto() { position = pos, rotation = rot };
                         MainThreadManager.Run(() =>
                         {
-                            StartCoroutine(UMI3DNavigation.Navigate(UMI3DGlobalID.EnvironmentId, nav));
+                            UMI3DNavigation.Navigate(UMI3DGlobalID.EnvironmentId, nav);
 
                         });
                     }

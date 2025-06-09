@@ -24,7 +24,7 @@ using UnityEngine;
 
 namespace umi3d.browserRuntime.navigation
 {
-    public sealed class VRNavigationDelegate : INavigationDelegate
+    public sealed class VRNavigationDelegate  
     {
         umi3d.debug.UMI3DLogger logger = new();
 

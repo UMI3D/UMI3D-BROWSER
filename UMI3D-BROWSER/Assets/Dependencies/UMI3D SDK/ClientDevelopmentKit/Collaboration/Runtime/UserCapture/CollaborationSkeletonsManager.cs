@@ -46,7 +46,7 @@ namespace umi3d.cdk.collaboration.userCapture
 
         #region Fields
 
-        public INavigationDelegate navigation;
+        public UMI3DNavigation navigation;
 
         /// <inheritdoc/>
         public virtual IReadOnlyDictionary<(ulong, ulong), ISkeleton> Skeletons => skeletons;

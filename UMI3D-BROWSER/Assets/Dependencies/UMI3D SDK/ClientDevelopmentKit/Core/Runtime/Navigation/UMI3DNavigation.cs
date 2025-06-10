@@ -24,6 +24,9 @@ namespace umi3d.cdk.navigation
     /// </summary>
     public abstract class UMI3DNavigation : MonoBehaviour
     {
+        [SerializeField] Vector2 speed = Vector2.one * 5;
+        [SerializeField] float runCoef = 2;
+
         /// <summary>
         /// Current navigation system.
         /// </summary>
@@ -31,6 +34,15 @@ namespace umi3d.cdk.navigation
 
         protected FrameController frameController;
         protected ContinuousMovement continuousMovement;
+
+        protected void HandleContinuousMovement()
+        {
+            if (!continuousMovement.CanMove()) { return; }
+
+            continuousMovement.HandleInput(speed, runCoef);
+
+            continuousMovement.Move();
+        }
 
         /// <summary>
         /// Disable this navigation system.

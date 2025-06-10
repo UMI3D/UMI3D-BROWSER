@@ -22,11 +22,17 @@ namespace umi3d.cdk.navigation
 {
     public abstract class ContinuousMovement 
     {
+        public abstract bool CanMove();
+
+        public abstract void HandleInput(Vector2 speed, float runCoef);
+
         /// <summary>
         /// Apply continuous navigation request from server.
         /// </summary>
         /// <param name="data"></param>
         /// <seealso cref="Teleport(TeleportDto)"/>
-        public abstract void MoveContinuously(ulong environmentId, NavigateDto data);
+        public abstract void Move(ulong environmentId, NavigateDto data);
+
+        public abstract void Move();
     }
 }

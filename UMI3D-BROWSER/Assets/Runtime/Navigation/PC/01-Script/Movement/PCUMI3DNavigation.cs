@@ -22,12 +22,18 @@ using umi3d.cdk.collaboration.userCapture;
 using umi3d.cdk.navigation;
 using umi3d.common;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace umi3d.browserRuntime.navigation.pc
 {
     public class PCUMI3DNavigation : UMI3DNavigation
     {
+        [SerializeField] InputActionReference movementInputAction;
+        [SerializeField] InputActionReference runInputAction;
+        [SerializeField] InputActionReference jumpInputAction;
+        
         public bool isActivate { get; private set; } = false;
+        bool isInitialized = false;
 
         PCUMI3DCamera umi3dCamera;
         Transform personalSkeletonContainer;
@@ -38,7 +44,10 @@ namespace umi3d.browserRuntime.navigation.pc
             currentNav = this;
             umi3dCamera = GetComponent<PCUMI3DCamera>();
 
-            CollaborationSkeletonsManager.Instance.navigation = this;
+            if (UMI3DClientServer.Exists)
+            {
+                CollaborationSkeletonsManager.Instance.navigation = this;
+            }
 
             while (UMI3DPCManager.@default.personalSkeletonContainer == null)
             {
@@ -52,17 +61,21 @@ namespace umi3d.browserRuntime.navigation.pc
                 UnityEngine.Debug.Log($"[PCUMI3DNavigation] Notice: Wait for camera to be set.");
                 await Task.Yield();
             }
-            cameraTransform = UMI3DPCManager.@default .camera.transform;
+            cameraTransform = UMI3DPCManager.@default.camera.transform;
 
             frameController = new CommonFrameController(personalSkeletonContainer);
-            continuousMovement = new PCRigidbodyContinuousMovement();
+
+            Rigidbody rigidbody = FindObjectOfType<Rigidbody>();
+            continuousMovement = new PCRigidbodyContinuousMovement(movementInputAction, rigidbody, personalSkeletonContainer, runInputAction, jumpInputAction);
+
+            isInitialized = true;
         }
 
-        void Update()
+        void FixedUpdate()
         {
-            if (!isActivate) { return; }
+            if (!isInitialized) { return; }
 
-
+            HandleContinuousMovement();
         }
 
         public override void Activate()

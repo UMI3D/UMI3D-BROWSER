@@ -60,8 +60,6 @@ namespace umi3d.browserRuntime.forms
                 colors.pressedColor = style.HoverColor.Value;
             }
 
-            model.SetImage(colors, await dto.GetSprite());
-
             var formItemController = control.GetComponent<FormItemModelContainer>();
             FormItemModel formItemModel = formItemController.Model;
 
@@ -69,6 +67,8 @@ namespace umi3d.browserRuntime.forms
             formItemModel.SetSize(style.Size);
             formItemModel.SetAnchor(style.AnchorMin, style.AnchorMax, style.Pivot);
             formItemModel.SetTextStyle(style.FontSize, style.FontColor, style.FontStyles, style.FontAlignmentOptions);
+
+            model.SetImage(colors, await dto.GetSprite());
         }
 
         public void BuildLabel()

@@ -15,11 +15,11 @@ MonoBehaviour:
   cameraMode: 2
   cursorMode: 0
   maxXHeadAngle: {x: -60, y: 70}
-  maxXCameraAngle: {x: -60, y: 70}
+  maxXCameraAngle: {x: 0, y: 20}
   maxYCameraAngle: 90
   maxNeckAngle: 50
   AngularViewSpeed: {x: 5, y: 5}
-  cameraRotation: {x: 0, y: 0}
+  cameraRotation: {x: -0, y: 0}
   forwardSpeed: {x: 3, y: 1, z: 10}
   _lateralSpeed: {x: 1.5, y: 1, z: 7}
   backwardSpeed: {x: 3, y: 1, z: 10}
@@ -39,8 +39,8 @@ MonoBehaviour:
   maxSlopeAngle: 45
   maxStepHeight: 0.2
   stepEpsilon: 0.05
-  groundYAxis: 0
-  previousGroundYAxis: 0
+  groundYAxis: -2.8900366
+  previousGroundYAxis: -2.8900366
   WantToJump: 0
   IsJumping: 0
   WantToCrouch: 0
@@ -48,9 +48,9 @@ MonoBehaviour:
   WantToSprint: 0
   IsSprinting: 0
   WantToLookAround: 0
-  WantToLookAroundInDrawMode: 0
-  navigationMode: 0
+  WantToLookAroundInDrawMode: 1
+  navigationMode: 4
   verticalVelocity: 0
   playerTranslationSpeed: {x: 0, y: 0, z: 0}
   playerTranslation: {x: 0, y: 0, z: 0}
-  flyingSpeed: 5
+  flyingSpeed: 20

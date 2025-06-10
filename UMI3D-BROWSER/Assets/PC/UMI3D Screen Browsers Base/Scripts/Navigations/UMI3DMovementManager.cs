@@ -17,6 +17,8 @@ using System;
 using umi3d.browserRuntime.cursor;
 using umi3d.baseBrowser.Navigation;
 using UnityEngine;
+using umi3d.cdk.navigation;
+using Unity.VisualScripting;
 
 public sealed class UMI3DMovementManager
 {
@@ -252,6 +254,16 @@ public sealed class UMI3DMovementManager
     {
         playerWillMoveDelegate?.Invoke(data.playerTranslation);
         playerTransform.position += data.playerTranslation;
+        if (data.navigationMode == E_NavigationMode.Omniscient)
+        {
+            float clampedX = Mathf.Clamp(playerTransform.position.x, (-UMI3DNavigation.Bounds.size.X)/2 + UMI3DNavigation.Bounds.center.X,
+                (UMI3DNavigation.Bounds.size.X)/2 + UMI3DNavigation.Bounds.center.X);
+            float clampedY = Mathf.Clamp(playerTransform.position.y, (-UMI3DNavigation.Bounds.size.Y)/2 + UMI3DNavigation.Bounds.center.Y, 
+                (UMI3DNavigation.Bounds.size.Y)/2 + UMI3DNavigation.Bounds.center.Y);
+            float clampedZ = Mathf.Clamp(playerTransform.position.z, (-UMI3DNavigation.Bounds.size.Z)/2 + UMI3DNavigation.Bounds.center.Z, 
+                (UMI3DNavigation.Bounds.size.Z)/2 + UMI3DNavigation.Bounds.center.Z);
+            playerTransform.position = new Vector3(clampedX, clampedY, clampedZ); 
+        }
         UpdateSkeletonHeight();
         playerMovedDelegate?.Invoke(data.playerTranslation);
     }

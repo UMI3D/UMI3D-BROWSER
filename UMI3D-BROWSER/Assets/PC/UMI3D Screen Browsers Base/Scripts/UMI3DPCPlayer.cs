@@ -25,6 +25,7 @@ using umi3d.cdk.collaboration;
 using umi3d.cdk.collaboration.userCapture;
 using umi3d.cdk.navigation;
 using umi3d.cdk.notification;
+using umi3d.cdk.volumes;
 using umi3d.common;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -48,7 +49,8 @@ namespace umi3d.baseBrowser
         public UMI3DCollisionManager.CollisionDebugger.E_Collision collisionToDebug;
 
         [Header("Player Omniscient View")]
-        public Vector3 previousPosition;
+        public Vector3 previousPosition = Vector3.zero;
+        public GameObject omniscientBounds = null;
 
         [HideInInspector] public UMI3DNavigation navigation = new();
 
@@ -108,6 +110,9 @@ namespace umi3d.baseBrowser
             // SKELETON SERVICE
             CollaborationSkeletonsManager.Instance.navigation = navigationDelegate; //also use to init manager via Instance call
 
+            UMI3DNavigation.OnChangeView += ListennerNavigationChange;
+
+
 #if !UNITY_EDITOR
             fpsData.navigationMode = E_NavigationMode.Default;
 #endif
@@ -116,6 +121,7 @@ namespace umi3d.baseBrowser
         private void Update()
         {
             cameraManager.HandleView();
+
 
             if (!navigationDelegate.isActive)
                 return; 
@@ -134,6 +140,7 @@ namespace umi3d.baseBrowser
             //positions
             previousPosition = collisionManager.playerTransform.position;
 
+            previousPosition = Vector3.zero;
             collisionManager.playerTransform.position = new Vector3(collisionManager.playerTransform.position.x,
                 collisionManager.playerTransform.position.y + dto.distance,
                 collisionManager.playerTransform.position.z);
@@ -161,7 +168,6 @@ namespace umi3d.baseBrowser
             //Navigation physics and collisions
             fpsData.flyingSpeed = dto.flyingSpeed;
 
-
             fpsData.navigationMode = E_NavigationMode.Omniscient;
         }
         public void ChangeViewImmersive(ImmersiveViewDto dto)
@@ -179,6 +185,10 @@ namespace umi3d.baseBrowser
             previousPosition = Vector3.zero;
 
             fpsData.navigationMode = E_NavigationMode.Default;
+        }
+        private void ListennerNavigationChange()
+        {
+            cameraManager.ChangeViewOmniscient(UMI3DNavigation.dto, this);
         }
     }
 }

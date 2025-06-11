@@ -31,7 +31,7 @@ namespace umi3d.cdk.navigation
 
         public abstract void HandleGroundCollision(float rideHeight, float rideSpringStrength, float rideSpringDamper, RaycastHit rayHit);
 
-        public abstract void HandleJump(float jumpPeak, float jumpForce, bool didHit, bool isGrounded);
+        public abstract void HandleJump(float jumpForce, bool isGrounded);
 
         /// <summary>
         /// Apply continuous navigation request from server.

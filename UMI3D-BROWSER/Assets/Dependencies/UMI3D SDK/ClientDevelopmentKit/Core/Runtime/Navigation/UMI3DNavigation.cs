@@ -32,7 +32,6 @@ namespace umi3d.cdk.navigation
         [SerializeField] float rideSpringStrength = 100.0f; // Spring stiffness
         [SerializeField] float rideSpringDamper = 10.0f; // Spring damping
         [Space]
-        [SerializeField] float jumpPeak = 2.3f; // Maximum height of the jump
         [SerializeField] float jumpForce = 30.0f; // Force applied during the jump
 
         /// <summary>
@@ -52,7 +51,7 @@ namespace umi3d.cdk.navigation
             {
                 continuousMovement.HandleGroundCollision(rideHeight, rideSpringStrength, rideSpringDamper, rayHit);
             }
-            continuousMovement.HandleJump(jumpPeak, jumpForce, didHit, continuousMovement.IsGrounded(rideHeight));
+            continuousMovement.HandleJump(jumpForce, continuousMovement.IsGrounded(rideHeight));
 
             continuousMovement.HandleInput(speed, runCoef);
             continuousMovement.Move();

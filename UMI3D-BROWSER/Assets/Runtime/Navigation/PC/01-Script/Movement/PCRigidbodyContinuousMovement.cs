@@ -117,6 +117,8 @@ namespace umi3d.browserRuntime.navigation.pc
 
         public override void HandleGroundCollision(float rideHeight, float rideSpringStrength, float rideSpringDamper, RaycastHit rayHit)
         {
+            if (isJumping) { return; }
+
             // Get the current velocity of the Rigidbody
             Vector3 vel = rigidbody.velocity;
 
@@ -135,19 +137,13 @@ namespace umi3d.browserRuntime.navigation.pc
             rigidbody.AddForce(rayDir * springForce);
         }
 
-        bool canJump = true;
-        public override void HandleJump(float jumpPeak, float jumpForce, bool didHit, bool isGrounded)
+        public override void HandleJump(float jumpForce, bool isGrounded)
         {
-            if (wantJumping && !isJumping && isGrounded)
+            if (isGrounded && !isJumping && wantJumping)
             {
                 StartJump(jumpForce);
-                UnityEngine.Debug.Log($"start : {groundPosition.y} && {personalSkeletonContainer.position.y}");
             }
-            else if (wantJumping && isJumping && personalSkeletonContainer.position.y <= groundPosition.y + jumpPeak) 
-            {
-                ContinueJump(jumpForce);
-            }
-            else
+            else if (isGrounded && isJumping )
             {
                 StopJump();
             }
@@ -155,17 +151,13 @@ namespace umi3d.browserRuntime.navigation.pc
 
         void StartJump(float jumpForce)
         {
+            rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.VelocityChange);
             isJumping = true;
-        }
-
-        void ContinueJump(float jumpForce)
-        {
-            rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            //rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Acceleration);
         }
 
         void StopJump()
         {
+            rigidbody.velocity = Vector3.zero;
             isJumping = false;
         }
 

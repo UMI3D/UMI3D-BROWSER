@@ -88,6 +88,38 @@ namespace umi3d.browserRuntime.navigation.pc
             globalMovement = personalSkeletonContainer.TransformDirection(localMovement);
         }
 
+        public override void HandleGroundCollision(float RideHeight, float RideSpringStrength, float RideSpringDamper)
+        {
+            Vector3 DownDir = Vector3.down;
+
+            bool _rayDidHit = UnityEngine.Physics.Raycast(
+                personalSkeletonContainer.position, // Starting position of the rayn
+                personalSkeletonContainer.TransformDirection(DownDir), // Direction of the ray
+                out RaycastHit _rayHit, // Result of the Raycast
+                RideHeight + 1.0f // Maximum distance of the Raycast
+            );
+
+            if (_rayDidHit)
+            {
+                // Get the current velocity of the Rigidbody
+                Vector3 vel = rigidbody.velocity;
+
+                // Direction of the ray (downward, transformed into local space)
+                Vector3 rayDir = personalSkeletonContainer.TransformDirection(DownDir);
+
+                // Calculate the velocity component in the direction of the ray
+                float rayDirVel = Vector3.Dot(rayDir, vel);
+
+                // Calculate the spring compression (distance between the player and the ground)
+                float x = _rayHit.distance - RideHeight;
+
+                // Calculate the spring force
+                float springForce = (x * RideSpringStrength) - (rayDirVel * RideSpringDamper);
+
+                rigidbody.AddForce(rayDir * springForce);
+            }
+        }
+
         public override void Move(ulong environmentId, NavigateDto data)
         {
             throw new NotImplementedException();

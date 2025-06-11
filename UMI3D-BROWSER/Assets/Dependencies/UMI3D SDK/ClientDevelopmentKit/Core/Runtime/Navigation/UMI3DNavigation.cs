@@ -24,8 +24,12 @@ namespace umi3d.cdk.navigation
     /// </summary>
     public abstract class UMI3DNavigation : MonoBehaviour
     {
+        [Header("Continuous Movement")]
         [SerializeField] Vector2 speed = Vector2.one * 5;
         [SerializeField] float runCoef = 2;
+        [SerializeField] float RideHeight = 1.0f; // Target height above the ground
+        [SerializeField] float RideSpringStrength = 100.0f; // Spring stiffness
+        [SerializeField] float RideSpringDamper = 10.0f; // Spring damping
 
         /// <summary>
         /// Current navigation system.
@@ -39,6 +43,7 @@ namespace umi3d.cdk.navigation
         {
             if (!continuousMovement.CanMove()) { return; }
 
+            continuousMovement.HandleGroundCollision(RideHeight, RideSpringStrength, RideSpringDamper);
             continuousMovement.HandleInput(speed, runCoef);
 
             continuousMovement.Move();

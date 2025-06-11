@@ -26,6 +26,8 @@ namespace umi3d.cdk.navigation
 
         public abstract void HandleInput(Vector2 speed, float runCoef);
 
+        public abstract void HandleGroundCollision(float RideHeight, float RideSpringStrength, float RideSpringDamper);
+
         /// <summary>
         /// Apply continuous navigation request from server.
         /// </summary>

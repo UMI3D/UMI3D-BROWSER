@@ -44,6 +44,7 @@ namespace umi3d.browserRuntime.navigation.pc
         {
             currentNav = this;
             umi3dCamera = GetComponent<PCUMI3DCamera>();
+            Debug.Assert(umi3dCamera != null, "PCUMI3DCamera not found");
 
             if (UMI3DClientServer.Exists)
             {
@@ -68,6 +69,7 @@ namespace umi3d.browserRuntime.navigation.pc
 
             Rigidbody rigidbody = FindObjectOfType<Rigidbody>();
             continuousMovement = new PCRigidbodyContinuousMovement(movementInputAction, rigidbody, personalSkeletonContainer, runInputAction, jumpInputAction);
+            teleportationMovement = new PCRigidbodyTeleportationMovement(personalSkeletonContainer, cameraTransform);
 
             isInitialized = true;
             UnityEngine.Debug.Log($"[PCUMI3DNavigation] Notice: is initialized");
@@ -100,43 +102,7 @@ namespace umi3d.browserRuntime.navigation.pc
         protected override void MoveContinuously(ulong environmentId, NavigateDto data)
         {
             UnityEngine.Debug.Log($"[PCUMI3DNavigation] Error: NotImp - MoveContinuously. For now teleport.");
-            //continuousMovement.MoveContinuously(environmentId, data);
             Teleport(environmentId, new TeleportDto() { position = data.position, rotation = personalSkeletonContainer.localRotation.Dto() });
-        }
-
-        protected override void Teleport(ulong environmentId, TeleportDto data)
-        {
-            personalSkeletonContainer.localPosition = data.position.Struct();
-            personalSkeletonContainer.localRotation = data.rotation.Quaternion();
-        }
-
-        protected override void ViewpointTeleport(ulong environmentId, ViewpointTeleportDto data)
-        {
-            // Rotation
-            personalSkeletonContainer.rotation = data.rotation.Quaternion();
-            cameraTransform.parent.localRotation = Quaternion.identity;
-            float angle = Vector3.SignedAngle(
-                personalSkeletonContainer.forward,
-                Vector3.ProjectOnPlane(
-                    cameraTransform.forward,
-                    Vector3.up
-                ),
-                Vector3.up
-            );
-            personalSkeletonContainer.Rotate(0, -angle, 0);
-
-            // Position
-            personalSkeletonContainer.position = data.position.Struct();
-            if (cameraTransform != null)
-            {
-                Vector3 translation = personalSkeletonContainer.position - cameraTransform.position;
-                personalSkeletonContainer.Translate(translation, Space.World);
-            }
-        }
-
-        protected override void UpdateFrame(ulong environmentId, FrameRequestDto data)
-        {
-            frameController.UpdateFrame(environmentId, data);
         }
     }
 }

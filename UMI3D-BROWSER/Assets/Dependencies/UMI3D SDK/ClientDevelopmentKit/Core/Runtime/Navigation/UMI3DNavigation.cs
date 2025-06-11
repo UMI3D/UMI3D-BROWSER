@@ -41,6 +41,7 @@ namespace umi3d.cdk.navigation
 
         protected FrameController frameController;
         protected ContinuousMovement continuousMovement;
+        protected TeleportationMovement teleportationMovement;
 
         protected void HandleContinuousMovement()
         {
@@ -85,7 +86,10 @@ namespace umi3d.cdk.navigation
         /// Apply FrameRequestDto request from server.
         /// </summary>
         /// <param name="data"></param>
-        protected abstract void UpdateFrame(ulong environmentId, FrameRequestDto data);
+        protected virtual void UpdateFrame(ulong environmentId, FrameRequestDto data)
+        {
+            frameController.UpdateFrame(environmentId, data);
+        }
 
 
         /// <summary>
@@ -115,21 +119,30 @@ namespace umi3d.cdk.navigation
         /// </summary>
         /// <param name="data"></param>
         /// <seealso cref="Teleport(TeleportDto)"/>
-        protected abstract void MoveContinuously(ulong environmentId, NavigateDto data);
+        protected virtual void MoveContinuously(ulong environmentId, NavigateDto data)
+        {
+            continuousMovement.Move(environmentId, data);
+        }
 
         /// <summary>
         /// Apply teleport request from server.
         /// </summary>
         /// <param name="data"></param>
         /// <seealso cref="Navigate(NavigateDto)"/>
-        protected abstract void Teleport(ulong environmentId, TeleportDto data);
+        protected virtual void Teleport(ulong environmentId, TeleportDto data)
+        {
+            teleportationMovement.Teleport(environmentId, data);
+        }
 
         /// <summary>
         /// Apply viewpoint teleport request from server.
         /// </summary>
         /// <param name="data"></param>
         /// <seealso cref="Navigate(NavigateDto)"/>
-        protected abstract void ViewpointTeleport(ulong environmentId, ViewpointTeleportDto data);
+        protected virtual void ViewpointTeleport(ulong environmentId, ViewpointTeleportDto data)
+        {
+            teleportationMovement.ViewpointTeleport(environmentId, data);
+        }
 
         /// <summary>
         /// Get data on current movements of the user.

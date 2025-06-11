@@ -32,6 +32,9 @@ namespace umi3d.browserRuntime.navigation.pc
 
         Vector3 globalMovement;
         bool isRunning = false;
+
+        Vector3 groundPosition;
+        bool wantJumping = false;
         bool isJumping = false;
 
         public PCRigidbodyContinuousMovement(InputActionReference movementInputAction, Rigidbody rigidbody, Transform personalSkeletonContainer, InputActionReference runInputAction, InputActionReference jumpInputAction)
@@ -43,8 +46,8 @@ namespace umi3d.browserRuntime.navigation.pc
             runInputAction.action.started += RunStarted;
             runInputAction.action.canceled += RunCanceled;
             jumpInputAction.action.Enable();
-            jumpInputAction.action.started += JumpStarted; ;
-            jumpInputAction.action.canceled += JumpCanceled; ;
+            jumpInputAction.action.started += JumpStarted;
+            jumpInputAction.action.canceled += JumpCanceled;
 
             this.rigidbody = rigidbody;
             this.personalSkeletonContainer = personalSkeletonContainer;
@@ -62,12 +65,12 @@ namespace umi3d.browserRuntime.navigation.pc
 
         void JumpStarted(InputAction.CallbackContext obj)
         {
-            isJumping = true;
+            wantJumping = true;
         }
 
         void JumpCanceled(InputAction.CallbackContext obj)
         {
-            isJumping = false;
+            wantJumping = false;
         }
 
         public override bool CanMove()
@@ -88,36 +91,82 @@ namespace umi3d.browserRuntime.navigation.pc
             globalMovement = personalSkeletonContainer.TransformDirection(localMovement);
         }
 
-        public override void HandleGroundCollision(float RideHeight, float RideSpringStrength, float RideSpringDamper)
+        Vector3 DownDir = Vector3.down;
+        public override bool CheckForGroundHit(float RideHeight, out RaycastHit rayHit)
         {
-            Vector3 DownDir = Vector3.down;
-
-            bool _rayDidHit = UnityEngine.Physics.Raycast(
+            bool didHit = UnityEngine.Physics.Raycast(
                 personalSkeletonContainer.position, // Starting position of the rayn
                 personalSkeletonContainer.TransformDirection(DownDir), // Direction of the ray
-                out RaycastHit _rayHit, // Result of the Raycast
+                out rayHit, // Result of the Raycast
                 RideHeight + 1.0f // Maximum distance of the Raycast
             );
 
-            if (_rayDidHit)
+            if (didHit)
             {
-                // Get the current velocity of the Rigidbody
-                Vector3 vel = rigidbody.velocity;
-
-                // Direction of the ray (downward, transformed into local space)
-                Vector3 rayDir = personalSkeletonContainer.TransformDirection(DownDir);
-
-                // Calculate the velocity component in the direction of the ray
-                float rayDirVel = Vector3.Dot(rayDir, vel);
-
-                // Calculate the spring compression (distance between the player and the ground)
-                float x = _rayHit.distance - RideHeight;
-
-                // Calculate the spring force
-                float springForce = (x * RideSpringStrength) - (rayDirVel * RideSpringDamper);
-
-                rigidbody.AddForce(rayDir * springForce);
+                groundPosition = rayHit.point;
             }
+
+            return didHit;
+        }
+
+        public override bool IsGrounded(float rideHeight)
+        {
+            return personalSkeletonContainer.position.y > groundPosition.y + rideHeight - 0.2f
+                && personalSkeletonContainer.position.y < groundPosition.y + rideHeight;
+        }
+
+        public override void HandleGroundCollision(float rideHeight, float rideSpringStrength, float rideSpringDamper, RaycastHit rayHit)
+        {
+            // Get the current velocity of the Rigidbody
+            Vector3 vel = rigidbody.velocity;
+
+            // Direction of the ray (downward, transformed into local space)
+            Vector3 rayDir = personalSkeletonContainer.TransformDirection(DownDir);
+
+            // Calculate the velocity component in the direction of the ray
+            float rayDirVel = Vector3.Dot(rayDir, vel);
+
+            // Calculate the spring compression (distance between the player and the ground)
+            float x = rayHit.distance - rideHeight;
+
+            // Calculate the spring force
+            float springForce = (x * rideSpringStrength) - (rayDirVel * rideSpringDamper);
+
+            rigidbody.AddForce(rayDir * springForce);
+        }
+
+        bool canJump = true;
+        public override void HandleJump(float jumpPeak, float jumpForce, bool didHit, bool isGrounded)
+        {
+            if (wantJumping && !isJumping && isGrounded)
+            {
+                StartJump(jumpForce);
+                UnityEngine.Debug.Log($"start : {groundPosition.y} && {personalSkeletonContainer.position.y}");
+            }
+            else if (wantJumping && isJumping && personalSkeletonContainer.position.y <= groundPosition.y + jumpPeak) 
+            {
+                ContinueJump(jumpForce);
+            }
+            else
+            {
+                StopJump();
+            }
+        }
+
+        void StartJump(float jumpForce)
+        {
+            isJumping = true;
+        }
+
+        void ContinueJump(float jumpForce)
+        {
+            rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            //rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Acceleration);
+        }
+
+        void StopJump()
+        {
+            isJumping = false;
         }
 
         public override void Move(ulong environmentId, NavigateDto data)

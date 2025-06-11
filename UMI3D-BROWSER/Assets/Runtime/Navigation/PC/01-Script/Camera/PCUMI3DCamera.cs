@@ -40,7 +40,6 @@ namespace umi3d.browserRuntime.navigation.pc
             {
                 await Task.Yield();
             }
-            UnityEngine.Debug.Log($"[PCCamera] Notice: UMI3DPCManager is initialized.");
 
             try
             {
@@ -60,7 +59,7 @@ namespace umi3d.browserRuntime.navigation.pc
             }
 
             isInitialized = true;
-            UnityEngine.Debug.Log($"[PCCamera] Notice: PCCamera is initialized.");
+            UnityEngine.Debug.Log($"[PCCamera] Notice: is initialized.");
         }
 
         bool IsUMI3DPCManagerInitialized()

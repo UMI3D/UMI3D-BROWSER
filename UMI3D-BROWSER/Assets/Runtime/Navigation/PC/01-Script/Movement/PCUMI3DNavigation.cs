@@ -28,6 +28,7 @@ namespace umi3d.browserRuntime.navigation.pc
 {
     public class PCUMI3DNavigation : UMI3DNavigation
     {
+        [Space]
         [SerializeField] InputActionReference movementInputAction;
         [SerializeField] InputActionReference runInputAction;
         [SerializeField] InputActionReference jumpInputAction;
@@ -69,6 +70,7 @@ namespace umi3d.browserRuntime.navigation.pc
             continuousMovement = new PCRigidbodyContinuousMovement(movementInputAction, rigidbody, personalSkeletonContainer, runInputAction, jumpInputAction);
 
             isInitialized = true;
+            UnityEngine.Debug.Log($"[PCUMI3DNavigation] Notice: is initialized");
         }
 
         void FixedUpdate()

@@ -90,9 +90,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: {x: 5, y: 5}
   runCoef: 2
-  RideHeight: 1.5
-  RideSpringStrength: 100
-  RideSpringDamper: 10
+  rideHeight: 1.5
+  rideSpringStrength: 100
+  rideSpringDamper: 10
+  jumpPeak: 2.3
+  jumpForce: 5
   movementInputAction: {fileID: 8142408690567276721, guid: 41c744953f28103429a48be9cd45be1c,
     type: 3}
   runInputAction: {fileID: -8774784181836974619, guid: 41c744953f28103429a48be9cd45be1c,

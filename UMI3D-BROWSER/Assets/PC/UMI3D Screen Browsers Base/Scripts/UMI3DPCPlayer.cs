@@ -140,7 +140,6 @@ namespace umi3d.baseBrowser
             //positions
             previousPosition = collisionManager.playerTransform.position;
 
-            previousPosition = Vector3.zero;
             collisionManager.playerTransform.position = new Vector3(collisionManager.playerTransform.position.x,
                 collisionManager.playerTransform.position.y + dto.distance,
                 collisionManager.playerTransform.position.z);

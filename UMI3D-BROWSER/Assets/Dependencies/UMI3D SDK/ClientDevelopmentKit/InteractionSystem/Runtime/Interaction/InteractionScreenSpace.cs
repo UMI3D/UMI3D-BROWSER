@@ -37,15 +37,15 @@ namespace umi3d.cdk.interaction
             {
                 _container = container;
                 _button.onClick.AddListener(SendEvent);
-                Debug.Log("AssignListenner "+ _go.name);
             }
             
         }
+
         public void SendEvent()
         {
             foreach (var item in _container.Interactable.interactionsLoaded)
             {
-                if(item is EventDto _eventDto)
+                if (item is EventDto _eventDto)
                 {
                     var eventdto = new common.interaction.EventTriggeredDto
                     {
@@ -58,7 +58,6 @@ namespace umi3d.cdk.interaction
                         environmentId = _value.environmentId
                     };
                     cdk.UMI3DClientServer.SendRequest(eventdto, true);
-                    Debug.Log("Send Event");
                     break;
                 }
             }

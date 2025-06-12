@@ -166,7 +166,6 @@ public sealed class UMI3DCameraManager
     }
     public void ChangeViewOmniscient(OmniscientViewDto dto, UMI3DPCPlayer player)
     {
-        Debug.Log("ChangeViewOmniscient");
         cam.orthographic = false;
         cam.fieldOfView = dto.fieldOfView;
         cam.nearClipPlane = dto.nearPlane;

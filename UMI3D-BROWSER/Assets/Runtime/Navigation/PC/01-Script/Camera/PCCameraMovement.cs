@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using umi3d.cdk.navigation;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -65,18 +66,18 @@ namespace umi3d.browserRuntime.navigation.pc
             }
         }
 
-        public override bool CanCameraMove()
+        public override bool CanMove()
         {
             return umi3dCamera.cameraMode != E_CameraMode.Locked;
         }
 
-        public override void ComputeRotationInput(Vector2 angularSpeed)
+        public override void HandleInput(Vector2 angularSpeed)
         {
             Vector2 delta = mouseDelta.action.ReadValue<Vector2>();
             rotationInput = new Vector2(-delta.y, delta.x) * angularSpeed * Time.deltaTime;
         }
 
-        public override void ComputeCameraAndBodyRotation(Vector2 maxCameraAngle, Vector2 maxHeadXAngle, float maxNeckXAngle)
+        public override void Move(Vector2 maxCameraAngle, Vector2 maxHeadXAngle, float maxNeckXAngle)
         {
             // Vertical Axis.
             float viewpointXRotation = Mathf.Clamp(
@@ -131,10 +132,7 @@ namespace umi3d.browserRuntime.navigation.pc
                 viewpointYRotation / 2
             );
             personalSkeletonContainerRotation = new Vector2(0f, personalSkeletonContainerYRotation);
-        }
 
-        public override void MoveCameraAndBody()
-        {
             viewpointPivot.localRotation = Quaternion.Euler(viewpointRotation);
             head.localRotation = Quaternion.Euler(headRotation);
             neckPivot.localRotation = Quaternion.Euler(neckRotation);

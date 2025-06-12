@@ -20,14 +20,20 @@ using UnityEngine;
 
 namespace umi3d.cdk.navigation
 {
-    public abstract class FrameController 
+    public abstract class TeleportationMovement 
     {
-        protected UMI3DNodeInstance globalFrame;
-
         /// <summary>
-        /// Apply FrameRequestDto request from server.
+        /// Apply teleport request from server.
         /// </summary>
         /// <param name="data"></param>
-        public abstract void UpdateFrame(ulong environmentId, FrameRequestDto data);
+        /// <seealso cref="Navigate(NavigateDto)"/>
+        public abstract void Move(ulong environmentId, TeleportDto data);
+
+        /// <summary>
+        /// Apply viewpoint teleport request from server.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <seealso cref="Navigate(NavigateDto)"/>
+        public abstract void Move(ulong environmentId, ViewpointTeleportDto data);
     }
 }

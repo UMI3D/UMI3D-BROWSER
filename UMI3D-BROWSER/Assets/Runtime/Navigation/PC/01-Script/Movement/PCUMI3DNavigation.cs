@@ -36,15 +36,16 @@ namespace umi3d.browserRuntime.navigation.pc
         public bool isActivate { get; private set; } = false;
         bool isInitialized = false;
 
-        PCUMI3DCamera umi3dCamera;
+        UMI3DCamera umi3dCamera;
         Transform personalSkeletonContainer;
         Transform cameraTransform;
+        Rigidbody rigidbody;
 
         async void Start()
         {
             currentNav = this;
-            umi3dCamera = GetComponent<PCUMI3DCamera>();
-            Debug.Assert(umi3dCamera != null, "PCUMI3DCamera not found");
+            umi3dCamera = FindObjectOfType<UMI3DCamera>();
+            Debug.Assert(umi3dCamera != null, "UMI3DCamera not found");
 
             if (UMI3DClientServer.Exists)
             {
@@ -65,11 +66,10 @@ namespace umi3d.browserRuntime.navigation.pc
             }
             cameraTransform = UMI3DPCManager.@default.camera.transform;
 
-            frameController = new CommonFrameController(personalSkeletonContainer);
-
-            Rigidbody rigidbody = FindObjectOfType<Rigidbody>();
+            rigidbody = FindObjectOfType<Rigidbody>();
             continuousMovement = new PCRigidbodyContinuousMovement(movementInputAction, rigidbody, personalSkeletonContainer, runInputAction, jumpInputAction);
             teleportationMovement = new PCRigidbodyTeleportationMovement(personalSkeletonContainer, cameraTransform);
+            frameController = new FrameController(personalSkeletonContainer);
 
             isInitialized = true;
             UnityEngine.Debug.Log($"[PCUMI3DNavigation] Notice: is initialized");
@@ -96,7 +96,13 @@ namespace umi3d.browserRuntime.navigation.pc
 
         public override NavigationData GetNavigationData()
         {
-            throw new NotImplementedException();
+            return new NavigationData()
+            {
+                crouching = false,
+                grounded = continuousMovement.IsGrounded(rideHeight),
+                jumping = continuousMovement.IsJumping,
+                speed = rigidbody.velocity.Dto()
+            };
         }
 
         protected override void MoveContinuously(ulong environmentId, NavigateDto data)

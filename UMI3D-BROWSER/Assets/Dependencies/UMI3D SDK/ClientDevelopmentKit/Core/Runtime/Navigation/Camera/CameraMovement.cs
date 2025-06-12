@@ -17,13 +17,12 @@ limitations under the License.
 using System;
 using UnityEngine;
 
-namespace umi3d.browserRuntime.navigation
+namespace umi3d.cdk.navigation
 {
     public abstract class CameraMovement 
     {
-        public abstract bool CanCameraMove();
-        public abstract void ComputeRotationInput(Vector2 angularSpeed);
-        public abstract void ComputeCameraAndBodyRotation(Vector2 maxCameraAngle, Vector2 maxHeadXAngle, float maxNeckXAngle);
-        public abstract void MoveCameraAndBody();
+        public abstract bool CanMove();
+        public abstract void HandleInput(Vector2 angularSpeed);
+        public abstract void Move(Vector2 maxCameraAngle, Vector2 maxHeadXAngle, float maxNeckXAngle);
     }
 }

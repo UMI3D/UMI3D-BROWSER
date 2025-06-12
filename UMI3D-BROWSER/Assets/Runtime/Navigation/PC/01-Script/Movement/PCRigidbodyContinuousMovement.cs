@@ -37,6 +37,8 @@ namespace umi3d.browserRuntime.navigation.pc
         bool wantJumping = false;
         bool isJumping = false;
 
+        public override bool IsJumping => isJumping;
+
         public PCRigidbodyContinuousMovement(InputActionReference movementInputAction, Rigidbody rigidbody, Transform personalSkeletonContainer, InputActionReference runInputAction, InputActionReference jumpInputAction)
         {
             this.movementInputAction = movementInputAction;

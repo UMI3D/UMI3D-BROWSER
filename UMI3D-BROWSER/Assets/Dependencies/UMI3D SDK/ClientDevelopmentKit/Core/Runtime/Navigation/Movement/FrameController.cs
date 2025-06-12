@@ -15,23 +15,26 @@ limitations under the License.
 */
 
 using System;
-using umi3d.cdk;
-using umi3d.cdk.navigation;
 using umi3d.common;
 using UnityEngine;
 
-namespace umi3d.browserRuntime.navigation
+namespace umi3d.cdk.navigation
 {
-    public class CommonFrameController : FrameController
+    public class FrameController 
     {
-        Transform personalSkeletonContainer;
+        protected UMI3DNodeInstance globalFrame;
+        protected Transform personalSkeletonContainer;
 
-        public CommonFrameController(Transform personalSkeletonContainer)
+        public FrameController(Transform personalSkeletonContainer)
         {
             this.personalSkeletonContainer = personalSkeletonContainer;
         }
 
-        public override void UpdateFrame(ulong environmentId, FrameRequestDto data)
+        /// <summary>
+        /// Apply FrameRequestDto request from server.
+        /// </summary>
+        /// <param name="data"></param>
+        public virtual void UpdateFrame(ulong environmentId, FrameRequestDto data)
         {
             if (data.FrameId == 0)
             {
@@ -56,7 +59,7 @@ namespace umi3d.browserRuntime.navigation
             }
         }
 
-        void SetParentToScene()
+        public void SetParentToScene()
         {
             personalSkeletonContainer.SetParent(
                 UMI3DLoadingHandler.Instance.transform,

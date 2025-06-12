@@ -24,11 +24,13 @@ namespace umi3d.cdk.navigation
     /// </summary>
     public abstract class UMI3DNavigation : MonoBehaviour
     {
+        public E_NavigationMode mode;
+
         [Header("Continuous Movement")]
         [SerializeField] Vector2 speed = Vector2.one * 5;
         [SerializeField] float runCoef = 2;
         [Space]
-        [SerializeField] float rideHeight = 1.5f; // Target height above the ground
+        [SerializeField] protected float rideHeight = 1.5f; // Target height above the ground
         [SerializeField] float rideSpringStrength = 100.0f; // Spring stiffness
         [SerializeField] float rideSpringDamper = 10.0f; // Spring damping
         [Space]
@@ -131,7 +133,7 @@ namespace umi3d.cdk.navigation
         /// <seealso cref="Navigate(NavigateDto)"/>
         protected virtual void Teleport(ulong environmentId, TeleportDto data)
         {
-            teleportationMovement.Teleport(environmentId, data);
+            teleportationMovement.Move(environmentId, data);
         }
 
         /// <summary>
@@ -141,7 +143,7 @@ namespace umi3d.cdk.navigation
         /// <seealso cref="Navigate(NavigateDto)"/>
         protected virtual void ViewpointTeleport(ulong environmentId, ViewpointTeleportDto data)
         {
-            teleportationMovement.ViewpointTeleport(environmentId, data);
+            teleportationMovement.Move(environmentId, data);
         }
 
         /// <summary>

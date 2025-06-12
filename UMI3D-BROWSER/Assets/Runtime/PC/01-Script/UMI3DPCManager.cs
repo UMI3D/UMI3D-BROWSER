@@ -16,7 +16,7 @@ limitations under the License.
 
 using System;
 using umi3d.browserRuntime.cursor;
-using umi3d.browserRuntime.navigation;
+using umi3d.cdk.navigation;
 using umi3d.browserRuntime.player;
 using UnityEngine;
 

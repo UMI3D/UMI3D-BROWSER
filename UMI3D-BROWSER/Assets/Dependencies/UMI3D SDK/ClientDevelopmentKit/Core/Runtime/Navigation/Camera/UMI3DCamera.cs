@@ -17,27 +17,30 @@ limitations under the License.
 using System;
 using UnityEngine;
 
-namespace umi3d.browserRuntime.navigation
+namespace umi3d.cdk.navigation
 {
     public abstract class UMI3DCamera : MonoBehaviour
     {
-        protected CameraMovement movement;
-        [SerializeField] protected Vector2 angularViewSpeed = Vector2.one * 20f;
+        public E_CameraMode cameraMode;
+        [Space]
+        [SerializeField] protected float horizontalSensibility = 20f;
+        [SerializeField] protected float verticalSensibility = 20f;
+        [Space]
         [SerializeField] protected Vector2 maxCameraAngle = Vector2.one * 90f;
         [SerializeField] protected Vector2 maxHeadXAngle = new(-60f, 70f);
         [SerializeField] protected float maxNeckXAngle = 50f;
         
+        protected CameraMovement movement;
         protected CameraProperties properties;
 
         protected abstract bool IsInitialized();
 
         void HandleView()
         {
-            if (!movement.CanCameraMove()) { return; }
+            if (!movement.CanMove()) { return; }
 
-            movement.ComputeRotationInput(angularViewSpeed);
-            movement.ComputeCameraAndBodyRotation(maxCameraAngle, maxHeadXAngle, maxNeckXAngle);
-            movement.MoveCameraAndBody();
+            movement.HandleInput(new Vector2(verticalSensibility, horizontalSensibility));
+            movement.Move(maxCameraAngle, maxHeadXAngle, maxNeckXAngle);
         }
 
         void Update()

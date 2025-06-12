@@ -14,26 +14,24 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using inetum.unityUtils.observation;
 using System;
-using umi3d.common;
+using umi3d.cdk.notification;
 using UnityEngine;
 
 namespace umi3d.cdk.navigation
 {
-    public abstract class TeleportationMovement 
+    public abstract class CameraProperties 
     {
-        /// <summary>
-        /// Apply teleport request from server.
-        /// </summary>
-        /// <param name="data"></param>
-        /// <seealso cref="Navigate(NavigateDto)"/>
-        public abstract void Teleport(ulong environmentId, TeleportDto data);
+        public CameraProperties()
+        {
+            NotificationHub.Default.Subscribe(
+                this,
+                UMI3DClientNotificatonKeys.CameraPropertiesNotification,
+                (Callback)CameraPropertiesReception
+            );
+        }
 
-        /// <summary>
-        /// Apply viewpoint teleport request from server.
-        /// </summary>
-        /// <param name="data"></param>
-        /// <seealso cref="Navigate(NavigateDto)"/>
-        public abstract void ViewpointTeleport(ulong environmentId, ViewpointTeleportDto data);
+        protected abstract void CameraPropertiesReception(Notification notification);
     }
 }

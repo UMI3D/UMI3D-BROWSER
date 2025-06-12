@@ -17,6 +17,7 @@ limitations under the License.
 using System;
 using System.Threading.Tasks;
 using umi3d.browserRuntime.pc;
+using umi3d.cdk.navigation;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -24,10 +25,9 @@ namespace umi3d.browserRuntime.navigation.pc
 {
     public class PCUMI3DCamera : UMI3DCamera
     {
+        [Space]
         public InputActionReference mouseDelta;
         public InputActionReference lookAroundAction;
-
-        public E_CameraMode cameraMode;
 
         bool isInitialized = false;
 

@@ -32,13 +32,13 @@ namespace umi3d.browserRuntime.navigation.pc
             this.cameraTransform = cameraTransform;
         }
 
-        public override void Teleport(ulong environmentId, TeleportDto data)
+        public override void Move(ulong environmentId, TeleportDto data)
         {
             personalSkeletonContainer.localPosition = data.position.Struct();
             personalSkeletonContainer.localRotation = data.rotation.Quaternion();
         }
 
-        public override void ViewpointTeleport(ulong environmentId, ViewpointTeleportDto data)
+        public override void Move(ulong environmentId, ViewpointTeleportDto data)
         {
             // Rotation
             personalSkeletonContainer.rotation = data.rotation.Quaternion();

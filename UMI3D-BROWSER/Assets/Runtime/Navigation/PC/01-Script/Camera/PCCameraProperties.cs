@@ -16,6 +16,7 @@ limitations under the License.
 
 using inetum.unityUtils.observation;
 using System;
+using umi3d.cdk.navigation;
 using umi3d.cdk.notification;
 using umi3d.common;
 using UnityEngine;

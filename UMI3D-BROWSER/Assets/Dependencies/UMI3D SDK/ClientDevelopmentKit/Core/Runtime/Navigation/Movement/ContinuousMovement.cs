@@ -22,6 +22,8 @@ namespace umi3d.cdk.navigation
 {
     public abstract class ContinuousMovement 
     {
+        public abstract bool IsJumping { get; }
+
         public abstract bool CanMove();
 
         public abstract void HandleInput(Vector2 speed, float runCoef);

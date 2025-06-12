@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+using umi3d.cdk.navigation;
 using UnityEngine;
 
 namespace umi3d.baseBrowser.Navigation
@@ -98,8 +99,6 @@ namespace umi3d.baseBrowser.Navigation
         public bool WantToLookAroundInDrawMode;
 
         [Header("Movement")]
-        [Tooltip("Navigation mode")]
-        public E_NavigationMode navigationMode = E_NavigationMode.Default;
         /// <summary>
         /// The vertical velocity of the player.<br/><br/>
         /// 

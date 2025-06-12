@@ -93,9 +93,6 @@ namespace umi3d.baseBrowser.Controller
         protected int m_navigationDirect = 0;
         protected AutoProjectOnHover reason = new AutoProjectOnHover();
 
-        public static event System.Action<ulong> HoverEnter;
-        public static event System.Action<ulong> HoverUpdate;
-        public static event System.Action<ulong> HoverExit;
         public static bool CanProcess = false;
 
         Notifier parameterInputFoundNotifier;
@@ -478,7 +475,10 @@ namespace umi3d.baseBrowser.Controller
             }
 
             if (mouseData.CurrentHovered != mouseData.OldHovered)
-                OldHoverExitAndCurrentHoverEnter();
+            {
+                OldHoverExit();
+                CurrentHoverEnter();
+            }
             else
             {
                 if ((mouseData.LastHoveredId != 0)
@@ -494,11 +494,6 @@ namespace umi3d.baseBrowser.Controller
                 var v = new Vector4(hoverBoneTransform.rotation.x, hoverBoneTransform.rotation.y, hoverBoneTransform.rotation.z, hoverBoneTransform.rotation.w);
                 mouseData.CurrentHovered.Hovered(hoverBoneType, hoverBoneTransform.position, v, mouseData.CurrentHoveredId, mouseData.Position, mouseData.Normal, mouseData.Direction, mouseData.collider);
             }
-        }
-        private void OldHoverExitAndCurrentHoverEnter()
-        {
-            OldHoverExit();
-            CurrentHoverEnter();
         }
         private async void OldHoverExit()
         {
@@ -528,7 +523,6 @@ namespace umi3d.baseBrowser.Controller
                         )
                     );
 
-                HoverExit.Invoke(lastHoverId);
                 if (anim != null) anim.Start();
             }
             mouseData.OldHovered = null;
@@ -538,10 +532,17 @@ namespace umi3d.baseBrowser.Controller
         {
             if (mouseData.CurrentHovered == null) return;
 
-            ulong currentHoverId = mouseData.CurrentHoveredId;
-            var v = new Vector4(hoverBoneTransform.rotation.x, hoverBoneTransform.rotation.y, hoverBoneTransform.rotation.z, hoverBoneTransform.rotation.w);
             mouseData.CurrentHovered
-                .HoverEnter(hoverBoneType, hoverBoneTransform.position, v, currentHoverId, mouseData.Position, mouseData.Normal, mouseData.Direction, mouseData.collider);
+                .HoverEnter(
+                hoverBoneType, 
+                hoverBoneTransform.position,
+                new Vector4(hoverBoneTransform.rotation.x, hoverBoneTransform.rotation.y, hoverBoneTransform.rotation.z, hoverBoneTransform.rotation.w), 
+                mouseData.CurrentHoveredId, 
+                mouseData.Position, 
+                mouseData.Normal, 
+                mouseData.Direction, 
+                mouseData.collider
+            );
 
             ulong hoverEnterAnimationId = mouseData.CurrentHovered.dto.HoverEnterAnimationId;
             if (hoverEnterAnimationId != 0)
@@ -561,7 +562,6 @@ namespace umi3d.baseBrowser.Controller
                         )
                     );
 
-                HoverEnter.Invoke(currentHoverId);
                 if (anim != null) anim.Start();
             }
         }

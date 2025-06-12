@@ -19,13 +19,11 @@ using System.Threading.Tasks;
 using umi3d.common;
 using umi3d.common.interaction;
 using UnityEngine;
-using UnityEngine.UI;
-
 
 namespace umi3d.cdk.interaction
 {
     /// <summary>
-    /// Helper class that manages the loading of <see cref="Interactable"/> entities.
+    /// Helper class that manages the loading of <see cref="InteractableDto"/> entities.
     /// </summary>
     public class UMI3DInteractableLoader : UMI3DAbstractToolLoader
     {
@@ -37,59 +35,21 @@ namespace umi3d.cdk.interaction
 
         public override async Task ReadUMI3DExtension(ReadUMI3DExtensionData value)
         {
-            var dto = value.dto as InteractableDto;
+            InteractableDto dto = value.dto as InteractableDto;
 
-            var e = await UMI3DEnvironmentLoader.WaitForAnEntityToBeLoaded(value.environmentId, dto.nodeId,value.tokens);
+            UMI3DEntityInstance e = await UMI3DEnvironmentLoader.WaitForAnEntityToBeLoaded(value.environmentId, dto.nodeId,value.tokens);
 
             if (e is UMI3DNodeInstance nodeI)
             {
                 value.node = nodeI.GameObject;
-                Interactable interactable = value.node.GetOrAddComponent<InteractableContainer>().Interactable = new Interactable(value.environmentId, dto);
+                InteractableContainer container = value.node.GetOrAddComponent<InteractableContainer>();
+#if !UMI3D_NEW_LABEL
+                Interactable interactable = container.Interactable = new Interactable(value.environmentId, dto);
                 UMI3DEnvironmentLoader.RegisterEntityInstance(value.environmentId,dto.id, dto, interactable, interactable.Destroy).NotifyLoaded();
-
-                //Check if his root is a ScreeSpace Canvas then start process the interaction's binding
-                if (nodeI.transform.root.gameObject.TryGetComponent<Canvas>(out Canvas _canvas)) 
-                {
-                    if(_canvas.renderMode == UnityEngine.RenderMode.ScreenSpaceOverlay)
-                    {
-                        //Create, add Save Values in InteractionScreenSpace for sending Event
-                        InteractionScreenSpace _IntScreenSpace = nodeI.transform.gameObject.AddComponent<InteractionScreenSpace>();
-                        _IntScreenSpace._go = nodeI.GameObject;
-                        _IntScreenSpace._interactable = interactable;
-                        _IntScreenSpace._value = value;
-
-                        //Create and add Unity Button 
-                        _IntScreenSpace._button = nodeI.transform.gameObject.AddComponent<Button>();
-
-                        // Loop to search for all parents containing a Canvas in order to add a GraphicRaycaster 
-                        // to allow interaction with the previously created button 
-                        // stops when the parent IngameUIManager is found indicating that we are no longer on the node's parent but on the global ScreenSpace UI Canvas
-                        GameObject go = nodeI.transform.parent.gameObject;
-                        for (int i = 0; i < 20; i++)
-                        {
-                            if (go.name == nodeI.transform.root.name) { break; }
-                            if (go.TryGetComponent<Canvas>(out Canvas canvas))
-                            {
-                                go.GetOrAddComponent<GraphicRaycaster>();
-                            }
-                            go = go.transform.parent.gameObject;
-                        }
-                        _IntScreenSpace.AssignListenner();
-                    }
-                    
-                }
-                else if(nodeI.transform.name == "PinImage")
-                {
-                    InteractionScreenSpace _intScreenSpace = nodeI.transform.gameObject.AddComponent<InteractionScreenSpace>();
-                    nodeI.transform.parent.gameObject.AddComponent<GraphicRaycaster>();
-
-                    //ajoute un bouton
-                    _intScreenSpace._button = nodeI.transform.gameObject.AddComponent<Button>();
-                    _intScreenSpace._go = nodeI.GameObject;
-                    _intScreenSpace._interactable = interactable;
-                    _intScreenSpace._value = value;
-                    _intScreenSpace.AssignListenner();
-                }
+#else
+                ToolManager.@default.InstantiateOrGet(out Tool tool, value.environmentId, dto);
+                container.tool = tool;
+#endif
             }
             else
                 throw (new Umi3dException($"Entity [{dto.nodeId}] is not a node"));
@@ -214,10 +174,20 @@ namespace umi3d.cdk.interaction
         private static void setInteractableOnNode(ulong environmentId, InteractableDto dto)
         {
             UMI3DNodeInstance node = UMI3DEnvironmentLoader.GetNode(environmentId, dto.nodeId);
+
+            InteractableContainer container = node.GameObject.GetOrAddComponent<InteractableContainer>();
+#if !UMI3D_NEW_LABEL
             var interactable = UMI3DEnvironmentLoader.GetEntity(environmentId, dto.id)?.Object as Interactable;
-            if (interactable == null)
-                interactable = new Interactable(environmentId, dto);
-            node.GameObject.GetOrAddComponent<InteractableContainer>().Interactable = interactable;
+            if (interactable == null) interactable = new Interactable(environmentId, dto);
+            container.Interactable = interactable;
+#else
+            bool isSuccess = ToolManager.@default.TryToFetchTool(out Tool tool, environmentId, dto.id);
+            if (!isSuccess)
+            {
+                ToolManager.@default.InstantiateOrGet(out tool, environmentId, dto);
+            }
+            container.tool = tool;
+#endif
         }
     }
 }

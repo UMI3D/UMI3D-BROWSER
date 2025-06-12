@@ -33,7 +33,7 @@ namespace umi3d.desktopBrowser.Controller
 
         public override (Vector3, ulong)? GetDrawingWorldPoint(DrawingInteractionDto drawing, List<UMI3DNodeInstance> nodes, AbstractUMI3DInput input)
         {
-            var screenPos = Input.mousePosition;
+            var screenPos = UnityEngine.Input.mousePosition;
             if (nodes != null && nodes.Count > 0)
             {
                 Ray ray = Camera.main.ScreenPointToRay(screenPos);

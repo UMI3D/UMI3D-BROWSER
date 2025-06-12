@@ -345,7 +345,6 @@ MonoBehaviour:
   WaitPrefab: {fileID: 6974842994351736208, guid: 1cdadf4cb2b03674da9f679ed650c014,
     type: 3}
   tabManager: {fileID: 14408332605357792}
-  validationButton: {fileID: 0}
   connectionServiceLinker: {fileID: 11400000, guid: 24604fe66de00534e9fe94635a6279cf,
     type: 2}
   refreshingText:
@@ -378,6 +377,11 @@ PrefabInstance:
     m_TransformParent: {fileID: 1089521771867605554}
     m_Modifications:
     - target: {fileID: 280658337270747000, guid: f3e20be1abdade648b542fff45478ec9,
+        type: 3}
+      propertyPath: _submitButton
+      value: 
+      objectReference: {fileID: 5879189346872194583}
+    - target: {fileID: 1591699640751820964, guid: f3e20be1abdade648b542fff45478ec9,
         type: 3}
       propertyPath: _submitButton
       value: 

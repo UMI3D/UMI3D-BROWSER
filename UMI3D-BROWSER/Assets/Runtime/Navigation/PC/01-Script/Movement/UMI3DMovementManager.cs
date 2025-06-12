@@ -31,24 +31,6 @@ public sealed class UMI3DMovementManager
     public event Action<Vector3> playerWillMoveDelegate;
     public event Action<Vector3> playerMovedDelegate;
 
-    public void ComputeMovement()
-    {
-        data.playerTranslationSpeed = Vector3.zero;
-        data.playerTranslation = Vector3.zero;
-
-        UpdatePlayerPosition();
-
-        Func<bool> isNearDestination 
-            = () => Vector3.Distance(
-                playerTransform.position,
-                data.continuousDestination.Value
-            ) < .5f;
-        if (data.continuousDestination.HasValue && isNearDestination())
-        {
-            data.continuousDestination = null;
-        }
-    }
-
     /// <summary>
     /// Update the skeleton position to reflect the crouching or standing up position.
     /// </summary>
@@ -65,14 +47,5 @@ public sealed class UMI3DMovementManager
             ),
             0
         );
-    }
-
-
-    void UpdatePlayerPosition()
-    {
-        playerWillMoveDelegate?.Invoke(data.playerTranslation);
-        playerTransform.position += data.playerTranslation;
-        UpdateSkeletonHeight();
-        playerMovedDelegate?.Invoke(data.playerTranslation);
     }
 }

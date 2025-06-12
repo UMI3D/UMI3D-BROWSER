@@ -21,124 +21,14 @@ namespace umi3d.baseBrowser.Navigation
     [CreateAssetMenu(fileName = "FPSData", menuName = "UMI3D/FPS Data", order = 1)]
     public class BaseFPSData : ScriptableObject
     {
-        [Header("View (Camera, Head, Neck)")]
-        [Tooltip("Camera mode")]
-        public E_CameraMode cameraMode = E_CameraMode.Navigation;
-
-        [Header("Walk")]
-        [Tooltip("speed when moving forward (normal, squatting, running)")]
-        public Vector3 forwardSpeed = new(3f, 1f, 10f);
-        [Tooltip("speed when moving sideway (normal, squatting, running)")]
-        public Vector3 lateralSpeed = new(1.5f, 1f, 7f);
-        [Tooltip("speed when moving backward (normal, squatting, running)")]
-        public Vector3 backwardSpeed = new(3f, 1f, 10f);
-       
-        [Header("Vertical Movement")]
-        [Tooltip("gravity force")]
-        public float gravity = -9.807f;
-        [Tooltip("Max jump altitude relative to the player when long pressing jump action")]
-        public float maxJumpAltitude = 1f;
-        /// <summary>
-        /// Velocity resulting of the jump force.
-        /// </summary>
-        public float MaxJumpVelocity => Mathf.Sqrt(2 * Mathf.Abs(gravity) * maxJumpAltitude);
-        /// <summary>
-        /// Velocity resulting of the gravity.
-        /// </summary>
-        public float GravityVelocity => gravity * Time.deltaTime;
-
         [Header("Crouch")]
         [Tooltip("player height while crouching")]
         public float crouchYAxis = -.35f;
         [Tooltip("Time to switch between standing up and crouching (both ways)")]
         public float crouchSpeed = 0.2f;
 
-        [Header("Collision")]
-        [Tooltip("Layers for obstacles.")]
-        public LayerMask obstacleLayer;
-        [Tooltip("Layers for navmesh.")]
-        public LayerMask navmeshLayer;
-        [Tooltip("Center of the top sphere that compose the capsule collider.")]
-        public Vector3 topSphereCenter = new(0f, 1.5f, 0f);
-        [Tooltip("Radius of the spheres that compose the capsule collider.")]
-        public float capsuleRadius = .3f;
-        [Tooltip("Max altitude relative to the player to check ground.")]
-        public float maxAltitudeToCheckGround = 50f;
-        [Tooltip("Maximum angle for slope.")]
-        public float maxSlopeAngle = 45f;
-        [Tooltip("Maximum height for step.")]
-        public float maxStepHeight = .2f;
-        public float stepEpsilon = 0.05f;
-        /// <summary>
-        /// Current ground altitude (world space).
-        /// </summary>
-        [HideInInspector]
-        public float groundYAxis = 0f;
-        /// <summary>
-        /// Previous ground altitude (world space).
-        /// </summary>
-        [HideInInspector]
-        public float previousGroundYAxis = 0f;
-
         [Header("Input")]
-        [Tooltip("Whether or not the player want to jump.")]
-        public bool WantToJump;
-        [Tooltip("Whether or not the player is jumping.")]
-        public bool IsJumping;
-        [Tooltip("Whether or not the player want to crouch.")]
-        public bool WantToCrouch;
         [Tooltip("Whether or not the player is crouching.")]
         public bool IsCrouching;
-        [Tooltip("Whether or not the player want to Sprint.")]
-        public bool WantToSprint;
-        [Tooltip("Whether or not the player is Sprinting.")]
-        public bool IsSprinting;
-        [Tooltip("Whether or not the player want to look around.")]
-        public bool WantToLookAround;
-        [Tooltip("Whether or not the player want to look around.")]
-        public bool WantToLookAroundInDrawMode;
-
-        [Header("Movement")]
-        /// <summary>
-        /// The vertical velocity of the player.<br/><br/>
-        /// 
-        /// This value is not necessary reset each frame.
-        /// </summary>
-        [HideInInspector]
-        public float verticalVelocity;
-        /// <summary>
-        /// Translation speed of the player.
-        /// 
-        /// <list type="bullet">
-        /// <item>x: Left to right (positive: right)</item>
-        /// <item>y: Down to up (positive: up)</item>
-        /// <item>z: back to front (positive: front)</item>
-        /// </list>
-        /// </summary>
-        [HideInInspector]
-        public Vector3 playerTranslationSpeed;
-        /// <summary>
-        /// Translation of the player.<br/>
-        /// To be add to the player transform position to move the player.
-        /// 
-        /// <list type="bullet">
-        /// <item>x: Left to right (positive: right)</item>
-        /// <item>y: Down to up (positive: up)</item>
-        /// <item>z: back to front (positive: front)</item>
-        /// </list>
-        /// </summary>
-        [HideInInspector]
-        public Vector3 playerTranslation;
-        /// <summary>
-        /// Destination for continuous navigation.<br/>
-        /// If the value is null then there is no server navigation.<br/>
-        /// If the value is not null then a navigation asked by the server is performing.
-        /// </summary>
-        [HideInInspector]
-        public Vector3? continuousDestination;
-
-        [Header("Debug")]
-        [Tooltip("Speed when moving in every direction while flying")]
-        public float flyingSpeed = 5f;
     }
 }

@@ -51,10 +51,10 @@ MonoBehaviour:
     m_Bits: 1
   navmeshLayer:
     serializedVersion: 2
-    m_Bits: 1024
+    m_Bits: 5120
   obstacleLayer:
     serializedVersion: 2
-    m_Bits: 4096
+    m_Bits: 8192
 --- !u!114 &756066197983192875
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -67,7 +67,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1881805caa17ca641a5a86d2120e901a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  angularViewSpeed: {x: 20, y: 20}
+  cameraMode: 0
+  horizontalSensibility: 20
+  verticalSensibility: 20
   maxCameraAngle: {x: 90, y: 90}
   maxHeadXAngle: {x: -60, y: 70}
   maxNeckXAngle: 50
@@ -75,7 +77,6 @@ MonoBehaviour:
     type: 3}
   lookAroundAction: {fileID: -7984924482320056164, guid: 41c744953f28103429a48be9cd45be1c,
     type: 3}
-  cameraMode: 0
 --- !u!114 &6788187428264467306
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -88,12 +89,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d21c047f172d58f4a915c942c1671106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mode: 0
   speed: {x: 5, y: 5}
   runCoef: 2
   rideHeight: 1.5
   rideSpringStrength: 100
   rideSpringDamper: 10
-  jumpPeak: 2.3
   jumpForce: 5
   movementInputAction: {fileID: 8142408690567276721, guid: 41c744953f28103429a48be9cd45be1c,
     type: 3}

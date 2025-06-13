@@ -14,11 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 using System;
-using umi3d.browserRuntime.cursor;
 using umi3d.baseBrowser.Navigation;
-using UnityEngine;
+using umi3d.browserRuntime.cursor;
 using umi3d.cdk.navigation;
-using Unity.VisualScripting;
+using UnityEngine;
 
 public sealed class UMI3DMovementManager
 {

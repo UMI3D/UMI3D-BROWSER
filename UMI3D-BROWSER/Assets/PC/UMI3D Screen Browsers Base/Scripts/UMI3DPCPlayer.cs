@@ -14,22 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using BrowserDesktop;
 using inetum.unityUtils.observation;
-using System;
-using System.Collections.Generic;
-using System.Data;
 using umi3d.baseBrowser.Navigation;
-using umi3d.browserRuntime.navigation;
 using umi3d.cdk.collaboration;
 using umi3d.cdk.collaboration.userCapture;
 using umi3d.cdk.navigation;
 using umi3d.cdk.notification;
-using umi3d.cdk.volumes;
 using umi3d.common;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.XR.ARFoundation;
 
 namespace umi3d.baseBrowser
 {

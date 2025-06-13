@@ -319,7 +319,7 @@ namespace umi3d.cdk
             if (line == null) return;
 
             MeshCollider meshCollider = node.GameObject?.AddComponent<MeshCollider>();
-            node.colliders.Add(meshCollider);
+            node.Add(meshCollider);
             UpdateModelCollider(node, line, meshCollider);
 
             meshCollider.convex = dto.convex;

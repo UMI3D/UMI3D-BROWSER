@@ -47,7 +47,7 @@ namespace umi3d.browserRuntime.navigation.xr
 
         protected override void SetTraversable(UMI3DNodeInstance node)
         {
-            if (node.IsPartOfNavmesh) { return; }
+            if (node.isNavmesh) { return; }
 
             RemoveNavmeshArea(node);
         }

@@ -44,32 +44,11 @@ namespace umi3d.cdk.navigation
         protected FrameController frameController;
         protected ContinuousMovement continuousMovement;
         protected TeleportationMovement teleportationMovement;
+        protected UMI3DCamera umi3dCamera;
 
-        protected void HandleContinuousMovement()
-        {
-            if (!continuousMovement.CanMove()) { return; }
+        public bool isActivated { get; protected set; } = false;
 
-            bool didHit = continuousMovement.CheckForGroundHit(rideHeight, out RaycastHit rayHit);
-            if (didHit)
-            {
-                continuousMovement.HandleGroundCollision(rideHeight, rideSpringStrength, rideSpringDamper, rayHit);
-            }
-            continuousMovement.HandleJump(jumpForce, continuousMovement.IsGrounded(rideHeight));
-
-            continuousMovement.HandleInput(speed, runCoef);
-            continuousMovement.Move();
-        }
-
-        /// <summary>
-        /// Disable this navigation system.
-        /// </summary>
-        public abstract void Disable();
-
-        /// <summary>
-        /// Activate this navigation system.
-        /// </summary>
-        public abstract void Activate();
-
+        public abstract bool IsInitialized();
 
         public static void SetFrame(ulong environmentId, FrameRequestDto frameRequest)
         {
@@ -93,6 +72,39 @@ namespace umi3d.cdk.navigation
             frameController.UpdateFrame(environmentId, data);
         }
 
+
+        /// <summary>
+        /// Activate this navigation system.
+        /// </summary>
+        public virtual void Activate()
+        {
+            isActivated = true;
+            umi3dCamera.cameraMode = E_CameraMode.Navigation;
+        }
+
+        /// <summary>
+        /// Disable this navigation system.
+        /// </summary>
+        public virtual void Disable()
+        {
+            isActivated = false;
+            umi3dCamera.cameraMode = E_CameraMode.Free;
+        }
+
+        protected void HandleContinuousMovement()
+        {
+            if (!continuousMovement.CanMove()) { return; }
+
+            bool didHit = continuousMovement.CheckForGroundHit(rideHeight, out RaycastHit rayHit);
+            if (didHit)
+            {
+                continuousMovement.HandleGroundCollision(rideHeight, rideSpringStrength, rideSpringDamper, rayHit);
+            }
+            continuousMovement.HandleJump(jumpForce, continuousMovement.IsGrounded(rideHeight));
+
+            continuousMovement.HandleInput(speed, runCoef);
+            continuousMovement.Move();
+        }
 
         /// <summary>
         /// Move the user according to a <see cref="NavigateDto"/>.

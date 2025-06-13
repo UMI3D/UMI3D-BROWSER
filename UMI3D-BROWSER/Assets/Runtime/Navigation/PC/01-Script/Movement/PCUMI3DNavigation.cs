@@ -33,38 +33,25 @@ namespace umi3d.browserRuntime.navigation.pc
         [SerializeField] InputActionReference runInputAction;
         [SerializeField] InputActionReference jumpInputAction;
         
-        public bool isActivate { get; private set; } = false;
-        bool isInitialized = false;
-
-        UMI3DCamera umi3dCamera;
         Transform personalSkeletonContainer;
-        Transform cameraTransform;
-        Rigidbody rigidbody;
+        new Rigidbody rigidbody;
 
         async void Start()
         {
             currentNav = this;
-            umi3dCamera = FindObjectOfType<UMI3DCamera>();
-            Debug.Assert(umi3dCamera != null, "UMI3DCamera not found");
+
+            while (!IsManagerInitialized())
+            {
+                await Task.Yield();
+            }
 
             if (UMI3DClientServer.Exists)
             {
                 CollaborationSkeletonsManager.Instance.navigation = this;
             }
 
-            while (UMI3DPCManager.@default.personalSkeletonContainer == null)
-            {
-                UnityEngine.Debug.Log($"[PCUMI3DNavigation] Notice: Wait for personalSkeletonContainer to be set.");
-                await Task.Yield();
-            }
             personalSkeletonContainer = UMI3DPCManager.@default.personalSkeletonContainer;
-
-            while (UMI3DPCManager.@default.camera == null)
-            {
-                UnityEngine.Debug.Log($"[PCUMI3DNavigation] Notice: Wait for camera to be set.");
-                await Task.Yield();
-            }
-            cameraTransform = UMI3DPCManager.@default.camera.transform;
+            Transform cameraTransform = UMI3DPCManager.@default.camera.transform;
 
             rigidbody = FindObjectOfType<Rigidbody>();
             continuousMovement = new PCRigidbodyContinuousMovement(movementInputAction, rigidbody, personalSkeletonContainer, runInputAction, jumpInputAction);
@@ -77,21 +64,31 @@ namespace umi3d.browserRuntime.navigation.pc
 
         void FixedUpdate()
         {
-            if (!isInitialized) { return; }
+            if (!IsInitialized()) { return; }
 
             HandleContinuousMovement();
         }
 
-        public override void Activate()
-        {
-            isActivate = true;
-            umi3dCamera.cameraMode = E_CameraMode.Navigation;
-        }
+        bool isInitialized = false;
+        public override bool IsInitialized() => isInitialized;
 
-        public override void Disable()
+        bool IsManagerInitialized()
         {
-            isActivate = false;
-            umi3dCamera.cameraMode = E_CameraMode.Free;
+            bool isInitialized = true;
+
+            if (UMI3DPCManager.@default.personalSkeletonContainer == null)
+            {
+                UnityEngine.Debug.Log($"[PCUMI3DNavigation] Notice: Wait for personalSkeletonContainer to be set.");
+                isInitialized = false;
+            }
+
+            if (UMI3DPCManager.@default.camera == null)
+            {
+                UnityEngine.Debug.Log($"[PCUMI3DNavigation] Notice: Wait for camera to be set.");
+                isInitialized = false;
+            }
+
+            return isInitialized;
         }
 
         public override NavigationData GetNavigationData()

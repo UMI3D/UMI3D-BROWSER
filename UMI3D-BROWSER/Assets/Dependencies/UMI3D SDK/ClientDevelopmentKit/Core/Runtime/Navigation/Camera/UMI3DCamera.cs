@@ -33,21 +33,16 @@ namespace umi3d.cdk.navigation
         protected CameraMovement movement;
         protected CameraProperties properties;
 
+        public new Camera camera { get; protected set; }
+
         protected abstract bool IsInitialized();
 
-        void HandleView()
+        protected void HandleView()
         {
             if (!movement.CanMove()) { return; }
 
             movement.HandleInput(new Vector2(verticalSensibility, horizontalSensibility));
             movement.Move(maxCameraAngle, maxHeadXAngle, maxNeckXAngle);
-        }
-
-        void Update()
-        {
-            if (!IsInitialized()) { return; }
-
-            HandleView();
         }
     }
 }

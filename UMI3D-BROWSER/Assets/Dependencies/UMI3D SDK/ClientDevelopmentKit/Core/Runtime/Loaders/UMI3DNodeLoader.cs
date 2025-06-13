@@ -238,8 +238,10 @@ namespace umi3d.cdk
                             dto.colliderDto = new ColliderDto();
                         dto.colliderDto.convex = (bool)data.property.value;
 
-                        foreach (Collider item in node.colliders)
+                        IEnumerator<Collider> colliderEnumerator = node.GetColliderEnumerator();
+                        while (colliderEnumerator.MoveNext())
                         {
+                            Collider item = colliderEnumerator.Current;
                             if (item is MeshCollider)
                                 (item as MeshCollider).convex = dto.colliderDto.convex = (bool)data.property.value;
                         }
@@ -465,8 +467,10 @@ namespace umi3d.cdk
                             dto.colliderDto = new ColliderDto();
                         dto.colliderDto.convex = UMI3DSerializer.Read<bool>(data.container);
 
-                        foreach (Collider item in node.colliders)
+                        IEnumerator<Collider> colliderEnumerator = node.GetColliderEnumerator();
+                        while (colliderEnumerator.MoveNext())
                         {
+                            Collider item = colliderEnumerator.Current;
                             if (item is MeshCollider)
                                 (item as MeshCollider).convex = dto.colliderDto.convex;
                         }
@@ -660,11 +664,12 @@ namespace umi3d.cdk
         {
             if (nodeInstance != null)
             {
-                foreach (Collider item in nodeInstance.colliders)
+                IEnumerator<Collider> colliderEnumerator = nodeInstance.GetColliderEnumerator();
+                while (colliderEnumerator.MoveNext()) 
                 {
-                    GameObject.Destroy(item);
+                    GameObject.Destroy(colliderEnumerator.Current);
                 }
-                nodeInstance.colliders.RemoveAll((x) => true);
+                nodeInstance.ClearColliders();
             }
         }
 
@@ -694,7 +699,7 @@ namespace umi3d.cdk
                                 mesh.convex = false;
                                 SetCustomCollider(id, go, dto.customMeshCollider);
                                 if (nodeInstance != null)
-                                    nodeInstance.colliders.Add(mesh);
+                                    nodeInstance.Add(mesh);
                                 else
                                     UMI3DLogger.LogWarning("This object has no UMI3DNodeInstance yet. Collider is not registered", scope);
                             }
@@ -719,7 +724,7 @@ namespace umi3d.cdk
                     bc.center = dto.colliderCenter.Struct();
                     bc.size = dto.colliderBoxSize.Struct();
                     if (nodeInstance != null)
-                        nodeInstance.colliders.Add(bc);
+                        nodeInstance.Add(bc);
                     else
                         UMI3DLogger.LogWarning("This object has no UMI3DNodeInstance yet. Collider is not registered", scope);
                     break;
@@ -728,7 +733,7 @@ namespace umi3d.cdk
                     sc.center = dto.colliderCenter.Struct();
                     sc.radius = dto.colliderRadius;
                     if (nodeInstance != null)
-                        nodeInstance.colliders.Add(sc);
+                        nodeInstance.Add(sc);
                     else
                         UMI3DLogger.LogWarning("This object has no UMI3DNodeInstance yet. Collider is not registered", scope);
                     break;
@@ -739,7 +744,7 @@ namespace umi3d.cdk
                     cc.height = dto.colliderHeight;
                     cc.direction = (int)dto.colliderDirection;
                     if (nodeInstance != null)
-                        nodeInstance.colliders.Add(cc);
+                        nodeInstance.Add(cc);
                     else
                         UMI3DLogger.LogWarning("This object has no UMI3DNodeInstance yet. Collider is not registered", scope);
                     break;
@@ -766,7 +771,7 @@ namespace umi3d.cdk
                         mc.sharedMesh = mesh.sharedMesh;
                         mc.convex = dto.convex;
                         if (nodeInstance != null)
-                            nodeInstance.colliders.Add(mc);
+                            nodeInstance.Add(mc);
                         else
                             UMI3DLogger.LogWarning("This object has no UMI3DNodeInstance yet. Collider is not registered", scope);
                     }
@@ -786,7 +791,7 @@ namespace umi3d.cdk
                     mc.sharedMesh = mesh.sharedMesh;
                     mc.convex = dto.convex;
                     if (nodeInstance != null)
-                        nodeInstance.colliders.Add(mc);
+                        nodeInstance.Add(mc);
                     else
                         UMI3DLogger.LogWarning("This object has no UMI3DNodeInstance yet. Collider is not registered", scope);
                 }

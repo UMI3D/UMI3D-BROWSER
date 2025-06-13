@@ -37,9 +37,9 @@ namespace umi3d.baseBrowser.navigation.pc
 
         protected override void SetTraversable(UMI3DNodeInstance node)
         {
-            if (node.IsPartOfNavmesh) { return; }
+            if (node.isNavmesh) { return; }
 
-            SetLayer(node, node.IsTraversable ? defaultLayer : obstacleLayer);
+            SetLayer(node, node.isTraversable ? defaultLayer : obstacleLayer);
         }
 
         protected override void SwitchHierarchyToObstacleLayer(GameObject go)

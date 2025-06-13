@@ -112,8 +112,8 @@ namespace umi3d.cdk
 
                         UpdateLightmapReferences(entity.EnvironmentId, rootDto.id, renderers, o as GameObject);
 
-                        nodeInstance.IsTraversable = subDto.isTraversable;
-                        nodeInstance.IsPartOfNavmesh = subDto.isPartOfNavmesh;
+                        nodeInstance.isTraversable = subDto.isTraversable;
+                        nodeInstance.isNavmesh = subDto.isPartOfNavmesh;
                         nodeInstance.IsBlockingInteraction = subDto.isBlockingInteraction;
 
                         int? shapeCount = nodeInstance.GameObject.GetComponentInChildren<SkinnedMeshRenderer>()?.sharedMesh?.blendShapeCount;
@@ -248,10 +248,10 @@ namespace umi3d.cdk
                         break;
 
                     case UMI3DPropertyKeys.IsPartOfNavmesh:
-                        (data.entity as UMI3DNodeInstance).IsPartOfNavmesh = (bool)data.property.value;
+                        (data.entity as UMI3DNodeInstance).isNavmesh = (bool)data.property.value;
                         return true;
                     case UMI3DPropertyKeys.IsTraversable:
-                        (data.entity as UMI3DNodeInstance).IsTraversable = (bool)data.property.value;
+                        (data.entity as UMI3DNodeInstance).isTraversable = (bool)data.property.value;
                         return true;
                     case UMI3DPropertyKeys.IsBlockingInteraction:
                         (data.entity as UMI3DNodeInstance).IsBlockingInteraction = (bool)data.property.value;
@@ -295,11 +295,11 @@ namespace umi3d.cdk
                         break;
 
                     case UMI3DPropertyKeys.IsPartOfNavmesh:
-                        (data.entity as UMI3DNodeInstance).IsPartOfNavmesh = UMI3DSerializer.Read<bool>(data.container);
+                        (data.entity as UMI3DNodeInstance).isNavmesh = UMI3DSerializer.Read<bool>(data.container);
                         return true;
 
                     case UMI3DPropertyKeys.IsTraversable:
-                        (data.entity as UMI3DNodeInstance).IsTraversable = UMI3DSerializer.Read<bool>(data.container);
+                        (data.entity as UMI3DNodeInstance).isTraversable = UMI3DSerializer.Read<bool>(data.container);
                         return true;
 
                     case UMI3DPropertyKeys.IsBlockingInteraction:

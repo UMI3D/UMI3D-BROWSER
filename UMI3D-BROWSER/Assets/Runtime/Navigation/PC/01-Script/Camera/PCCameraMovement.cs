@@ -25,7 +25,7 @@ namespace umi3d.browserRuntime.navigation.pc
         public InputActionReference mouseDelta;
         public InputActionReference lookAroundAction;
 
-        internal GameObject personalSkeletonContainer;
+        internal Transform personalSkeletonContainer;
         internal Transform viewpointPivot;
         internal Transform neckPivot;
         internal Transform head;
@@ -33,10 +33,6 @@ namespace umi3d.browserRuntime.navigation.pc
         PCUMI3DCamera umi3dCamera;
 
         Vector2 rotationInput = Vector2.zero;
-        Vector2 viewpointRotation = Vector2.zero;
-        Vector2 headRotation = Vector2.zero;
-        Vector2 neckRotation = Vector2.zero;
-        Vector2 personalSkeletonContainerRotation = Vector2.zero;
 
         public PCCameraMovement(PCUMI3DCamera umi3dCamera, InputActionReference mouseDelta, InputActionReference lookAroundAction)
         {
@@ -122,16 +118,16 @@ namespace umi3d.browserRuntime.navigation.pc
             }
 
             // Rotations
-            viewpointRotation = new Vector2(viewpointXRotation, viewpointYRotation);
-            headRotation = new Vector2(
+            Vector2 viewpointRotation = new Vector2(viewpointXRotation, viewpointYRotation);
+            Vector2 headRotation = new Vector2(
                 Mathf.Clamp(viewpointXRotation, maxHeadXAngle.x, maxHeadXAngle.y) / 2,
                 viewpointYRotation / 2
             );
-            neckRotation = new Vector2(
+            Vector2 neckRotation = new Vector2(
                 Mathf.Clamp(viewpointXRotation, -maxNeckXAngle, maxNeckXAngle) / 2,
                 viewpointYRotation / 2
             );
-            personalSkeletonContainerRotation = new Vector2(0f, personalSkeletonContainerYRotation);
+            Vector2 personalSkeletonContainerRotation = new Vector2(0f, personalSkeletonContainerYRotation);
 
             viewpointPivot.localRotation = Quaternion.Euler(viewpointRotation);
             head.localRotation = Quaternion.Euler(headRotation);
@@ -139,7 +135,7 @@ namespace umi3d.browserRuntime.navigation.pc
 
             if (umi3dCamera.cameraMode == E_CameraMode.Navigation)
             {
-                personalSkeletonContainer.transform.rotation = Quaternion.Euler(personalSkeletonContainerRotation); 
+                personalSkeletonContainer.rotation = Quaternion.Euler(personalSkeletonContainerRotation); 
             }
         }
     }

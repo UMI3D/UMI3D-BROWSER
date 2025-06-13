@@ -29,14 +29,14 @@ namespace umi3d.browserRuntime.navigation.pc
         public InputActionReference mouseDelta;
         public InputActionReference lookAroundAction;
 
-        bool isInitialized = false;
-
         async void Start()
         {
+            camera = Camera.main;
+
             UMI3DPCManager.@default.umi3dCamera = this;
             UMI3DPCManager.@default.camera = Camera.main;
 
-            while (!IsUMI3DPCManagerInitialized())
+            while (!IsManagerInitialized())
             {
                 await Task.Yield();
             }
@@ -45,7 +45,7 @@ namespace umi3d.browserRuntime.navigation.pc
             {
                 movement = new PCCameraMovement(this, mouseDelta, lookAroundAction)
                 {
-                    personalSkeletonContainer = UMI3DPCManager.@default.player.personalSkeletonContainer,
+                    personalSkeletonContainer = UMI3DPCManager.@default.player.personalSkeletonContainer.transform,
                     viewpointPivot = UMI3DPCManager.@default.viewpointPivot,
                     neckPivot = UMI3DPCManager.@default.neckPivot,
                     head = UMI3DPCManager.@default.head
@@ -62,46 +62,52 @@ namespace umi3d.browserRuntime.navigation.pc
             UnityEngine.Debug.Log($"[PCCamera] Notice: is initialized.");
         }
 
-        bool IsUMI3DPCManagerInitialized()
+        void Update()
+        {
+            if (!IsInitialized()) { return; }
+
+            HandleView();
+        }
+
+        bool IsManagerInitialized()
         {
             bool isInitialized = true;
 
             if (UMI3DPCManager.@default.player == null)
             {
-                UnityEngine.Debug.Log($"[PCCamera] Notice: Waiting for player to be set.");
+                UnityEngine.Debug.Log($"[PCUMI3DCamera] Notice: Waiting for player to be set.");
                 isInitialized = false;
             }
             
-            if (UMI3DPCManager.@default.player?.personalSkeletonContainer == null)
+            if (UMI3DPCManager.@default.personalSkeletonContainer == null)
             {
-                UnityEngine.Debug.Log($"[PCCamera] Notice: Waiting for personalSkeletonContainer to be set.");
+                UnityEngine.Debug.Log($"[PCUMI3DCamera] Notice: Waiting for personalSkeletonContainer to be set.");
                 isInitialized = false;
             }
 
             if (UMI3DPCManager.@default.viewpointPivot == null)
             {
-                UnityEngine.Debug.Log($"[PCCamera] Notice: Waiting for viewpointPivot to be set.");
+                UnityEngine.Debug.Log($"[PCUMI3DCamera] Notice: Waiting for viewpointPivot to be set.");
                 isInitialized = false;
             }
 
             if (UMI3DPCManager.@default.neckPivot == null)
             {
-                UnityEngine.Debug.Log($"[PCCamera] Notice: Waiting for neckPivot to be set.");
+                UnityEngine.Debug.Log($"[PCUMI3DCamera] Notice: Waiting for neckPivot to be set.");
                 isInitialized = false;
             }
 
             if (UMI3DPCManager.@default.head == null)
             {
-                UnityEngine.Debug.Log($"[PCCamera] Notice: Waiting for head to be set.");
+                UnityEngine.Debug.Log($"[PCUMI3DCamera] Notice: Waiting for head to be set.");
                 isInitialized = false;
             }
 
             return isInitialized;
         }
 
-        protected override bool IsInitialized()
-        {
-            return isInitialized;
-        }
+
+        bool isInitialized = false;
+        protected override bool IsInitialized() => isInitialized;
     }
 }

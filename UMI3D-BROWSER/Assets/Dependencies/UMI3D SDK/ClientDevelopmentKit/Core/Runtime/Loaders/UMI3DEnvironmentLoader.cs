@@ -33,7 +33,7 @@ namespace umi3d.cdk
     /// <summary>
     /// Loader for <see cref="UMI3DEnvironmentDto"/>.
     /// </summary>
-    public class UMI3DEnvironmentLoader : inetum.unityUtils.Singleton<UMI3DEnvironmentLoader>, IEnvironmentManager, ILoadingManager, INavMeshManager
+    public class UMI3DEnvironmentLoader : inetum.unityUtils.Singleton<UMI3DEnvironmentLoader>, IEnvironmentManager, ILoadingManager 
     {
         private const DebugScope scope = DebugScope.CDK | DebugScope.Core | DebugScope.Loading;
 
@@ -1093,31 +1093,6 @@ namespace umi3d.cdk
 
         public delegate void NodeModifiedDelegate(UMI3DNodeInstance node);
         public delegate void NodeModifiedWithParamDelegate(UMI3DNodeInstance node, GameObject gameObject);
-
-        public event NodeModifiedDelegate onNodePartOfNavmeshSet;
-
-        /// <summary>
-        /// Notify browser that a <see cref="UMI3DNodeInstance"/> has changed its part of navmesh status.
-        /// </summary>
-        /// <param name="node"></param>
-        /// <param name="isPartOfNavmesh"></param>
-        public void SetNodePartOfNavmesh(UMI3DNodeInstance node)
-        {
-            onNodePartOfNavmeshSet?.Invoke(node);
-        }
-
-        public event NodeModifiedDelegate onNodeTraversableSet;
-
-        /// <summary>
-        /// Notify browser that a <see cref="UMI3DNodeInstance"/> has changed its traversable status.
-        /// </summary>
-        /// <param name="node"></param>
-        /// <param name="isTraversable"></param>
-        public void SetNodeTraversable(UMI3DNodeInstance node)
-        {
-            onNodeTraversableSet?.Invoke(node);
-        }
-
 
         public event NodeModifiedDelegate onNodeBlockingInteractionSet;
         /// <summary>

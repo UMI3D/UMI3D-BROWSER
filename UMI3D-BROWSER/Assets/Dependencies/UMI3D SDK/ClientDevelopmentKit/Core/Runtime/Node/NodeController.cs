@@ -1,5 +1,5 @@
-﻿/*
-Copyright 2019 - 2023 Inetum
+/*
+Copyright 2019 - 2025 Inetum
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,12 +14,32 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-namespace umi3d.cdk
-{
-    public interface INavMeshManager
-    {
-        void SetNodePartOfNavmesh(UMI3DNodeInstance node);
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-        void SetNodeTraversable(UMI3DNodeInstance node);
+namespace umi3d
+{
+    public class NodeController : MonoBehaviour
+    {
+        void Awake()
+        {
+        }
+
+        void OnEnable()
+        {
+        }
+
+        void OnDisable()
+        {
+        }
+
+        void OnDestroy()
+        {
+        }
+
+        void Update()
+        {
+        }
     }
 }

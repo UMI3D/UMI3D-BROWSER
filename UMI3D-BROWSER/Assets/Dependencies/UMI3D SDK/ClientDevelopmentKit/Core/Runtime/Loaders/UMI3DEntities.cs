@@ -228,7 +228,7 @@ namespace umi3d.cdk
         /// </summary>
         /// <param name="collider">collider.</param>
         /// <returns></returns>
-        public ulong GetNodeID(Collider collider) { return entities.Where(k => k.Value is UMI3DNodeInstance).FirstOrDefault(k => (k.Value as UMI3DNodeInstance).colliders.Any(c => c == collider)).Key; }
+        public ulong GetNodeID(Collider collider) { return entities.Where(k => k.Value is UMI3DNodeInstance).FirstOrDefault(k => (k.Value as UMI3DNodeInstance).Any(c => c == collider)).Key; }
 
         /// <summary>
         /// Get node id associated to <paramref name="t"/>.

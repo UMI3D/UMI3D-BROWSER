@@ -15,11 +15,13 @@ limitations under the License.
 */
 
 using System.Collections;
+using inetum.unityUtils.observation;
 using System.Collections.Generic;
 using umi3d.cdk;
 using umi3d.cdk.collaboration;
 using umi3d.cdk.volumes;
 using UnityEngine;
+using umi3d.cdk.navigation;
 
 namespace umi3d.browserRuntime.navigation
 {
@@ -38,8 +40,11 @@ namespace umi3d.browserRuntime.navigation
 
         void Start()
         {
-            UMI3DEnvironmentLoader.Instance.onNodePartOfNavmeshSet += SetPartOfNavmesh;
-            UMI3DEnvironmentLoader.Instance.onNodeTraversableSet += SetTraversable;
+            NotificationHub.Default.Subscribe(
+                this, 
+                ID.FromType<CollisionNotificationKeys.NodeCollisionModeChanged>(), 
+                (Callback)Reset
+            );
             if (UMI3DCollaborationClientServer.Exists)
             {
                 UMI3DCollaborationClientServer.Instance.OnLeaving.AddListener(Reset);
@@ -51,14 +56,6 @@ namespace umi3d.browserRuntime.navigation
 
         void OnDestroy()
         {
-            if (UMI3DEnvironmentLoader.Exists)
-            {
-                UMI3DEnvironmentLoader.Instance.onNodePartOfNavmeshSet -= SetPartOfNavmesh;
-            }
-            if (UMI3DEnvironmentLoader.Exists)
-            {
-                UMI3DEnvironmentLoader.Instance.onNodeTraversableSet -= SetTraversable;
-            }
             if (UMI3DCollaborationClientServer.Exists)
             {
                 UMI3DCollaborationClientServer.Instance.OnLeaving.RemoveListener(Reset);
@@ -79,7 +76,7 @@ namespace umi3d.browserRuntime.navigation
 
         void SetPartOfNavmesh(UMI3DNodeInstance node)
         {
-            if (node.IsPartOfNavmesh)
+            if (node.isNavmesh)
             {
                 if (node.GameObject.GetComponent<Collider>() != null)
                 {
@@ -98,7 +95,7 @@ namespace umi3d.browserRuntime.navigation
                     }
                 }
             }
-            else if (node.IsTraversable)
+            else if (node.isTraversable)
             {
                 SetTraversable(node);
             } else

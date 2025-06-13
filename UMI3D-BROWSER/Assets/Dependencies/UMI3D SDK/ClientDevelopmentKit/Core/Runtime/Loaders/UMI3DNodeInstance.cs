@@ -16,6 +16,7 @@ limitations under the License.
 
 using System;
 using System.Collections.Generic;
+using umi3d.cdk.navigation;
 using umi3d.common;
 using UnityEngine;
 using UnityEngine.Events;
@@ -31,45 +32,36 @@ namespace umi3d.cdk
         private GameObject gameObject;
         public virtual Transform transform => GameObject.transform;
 
-        private bool isPartOfNavmesh = false;
 
         public GameObject mainInstance;
-        /// <summary>
-        /// Is this node part of the navmesh ?
-        /// </summary>
-        public bool IsPartOfNavmesh
+
+
+
+
+
+        NodeCollisionController collisionController;
+
+        public bool isNavmesh
         {
-            get => isPartOfNavmesh;
-
-            set
-            {
-                if (isPartOfNavmesh != value)
-                {
-                    isPartOfNavmesh = value;
-                    UMI3DEnvironmentLoader.Instance.SetNodePartOfNavmesh(this);
-                }
-            }
-        }
-
-
-        private bool isTraversable = true;
-
-        /// <summary>
-        /// Is this node traversable ?
-        /// </summary>
-        public bool IsTraversable
+            get => collisionController.isNavmesh;
+            set => collisionController.isNavmesh = value;
+        } 
+        public bool isTraversable
         {
-            get => isTraversable;
+            get => collisionController.isTraversable;
+            set => collisionController.isTraversable = value;
+        } 
 
-            set
-            {
-                if (isTraversable != value)
-                {
-                    isTraversable = value;
-                    UMI3DEnvironmentLoader.Instance.SetNodeTraversable(this);
-                }
-            }
-        }
+        public bool Any(Func<Collider, bool> predicate) => collisionController.Any(predicate);
+
+        public IEnumerator<Collider> GetColliderEnumerator() => collisionController.GetEnumerator();
+
+        public void Add(Collider collider) => collisionController.Add(collider);
+
+        public void ClearColliders() => collisionController.Clear();
+
+
+
 
         private bool isBlockingInteraction = false;
 
@@ -116,18 +108,6 @@ namespace umi3d.cdk
                 return _renderers;
             }
             set => _renderers = value;
-        }
-
-        private List<Collider> _colliders;
-        public List<Collider> colliders
-        {
-            get
-            {
-                if (_colliders == null)
-                    _colliders = new List<Collider>();
-                return _colliders;
-            }
-            set => _colliders = value;
         }
 
         public PrefabLightmapData prefabLightmapData;

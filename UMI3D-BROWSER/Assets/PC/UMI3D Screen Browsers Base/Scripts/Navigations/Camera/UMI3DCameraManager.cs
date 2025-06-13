@@ -35,6 +35,10 @@ public sealed class UMI3DCameraManager
 
     public BaseFPSData data;
 
+    private const float ZOOM_MIN = 15f;
+    private const float ZOOM_MAX = 110f;
+    private const float ZOOM_SPEED = 30f;
+
     #endregion
 
     public UMI3DCameraManager()
@@ -70,6 +74,13 @@ public sealed class UMI3DCameraManager
         }
 
         Vector2 angularSpeed = data.cameraRotation * data.AngularViewSpeed;
+
+
+        if (data.navigationMode == E_NavigationMode.Omniscient)
+        {
+            ComputeOmniscientZoom();
+            angularSpeed = data.cameraRotation * ((data.AngularViewSpeed * cam.fieldOfView) /100);
+        }
 
         // ------ Horizontal movement ------
         float viewpointYAxis = 0f;
@@ -158,6 +169,19 @@ public sealed class UMI3DCameraManager
             {
                 player.ImmersiveView(dtoImmer);
             }
+        }
+    }
+
+    public void ComputeOmniscientZoom()
+    {
+        float scrollInput = Input.GetAxis("Mouse ScrollWheel");
+        if (scrollInput != 0f)
+        {
+            // Modifier le champ de vision (Field of View) de la caméra
+            cam.fieldOfView -= scrollInput * ZOOM_SPEED;
+
+            // Limiter le zoom entre minZoom et maxZoom
+            cam.fieldOfView = Mathf.Clamp(cam.fieldOfView, ZOOM_MIN, ZOOM_MAX);
         }
     }
 }

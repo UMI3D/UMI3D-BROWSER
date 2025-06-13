@@ -233,19 +233,25 @@ public sealed class UMI3DMovementManager
         // Get a world desire direction and distance.
         data.playerTranslation = data.playerTranslationSpeed * Time.deltaTime;
 
-        // Don't add too much gravity
-        if ((data.playerTranslation.y != 0) && playerTransform.transform.position.y + data.playerTranslation.y < data.groundYAxis)
-            data.playerTranslation.y = data.groundYAxis - playerTransform.transform.position.y;
-
+        if (data.navigationMode != E_NavigationMode.Omniscient)
+        {
+            // Don't add too much gravity
+            if ((data.playerTranslation.y != 0) && playerTransform.transform.position.y + data.playerTranslation.y < data.groundYAxis)
+                data.playerTranslation.y = data.groundYAxis - playerTransform.transform.position.y;
+        }
         // Get a desire direction and distance relative to the player rotation.
         data.playerTranslation = playerTransform.rotation * data.playerTranslation;
 
         // Get a direction and distance relative to the player that is possible (avoid collision).
         data.playerTranslation = collisionManager.GetPossibleTranslation(data.playerTranslation);
-        if (data.playerTranslation.y == 0 && collisionManager.IsBelowGround)
+        
+        if (data.navigationMode != E_NavigationMode.Omniscient)
         {
-            float delta = playerTransform.position.y - data.groundYAxis;
-            data.playerTranslation.y = Mathf.Lerp(0, -delta, 0.4f);
+            if (data.playerTranslation.y == 0 && collisionManager.IsBelowGround)
+            {
+                float delta = playerTransform.position.y - data.groundYAxis;
+                data.playerTranslation.y = Mathf.Lerp(0, -delta, 0.4f);
+            }
         }
     }
 

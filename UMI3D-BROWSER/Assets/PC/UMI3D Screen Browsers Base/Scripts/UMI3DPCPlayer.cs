@@ -62,6 +62,8 @@ namespace umi3d.baseBrowser
 
         void Awake()
         {
+
+
             KeyboardAndMouseFpsNavigation concreteFPSNavigation = new KeyboardAndMouseFpsNavigation()
             {
                 data = fpsData,
@@ -80,6 +82,7 @@ namespace umi3d.baseBrowser
                 colliderDelegate = colliderDelegate,
                 collisionDebugger = () => new() { collision = collisionToDebug}
             };
+
             cameraManager = new()
             {
                 data = fpsData,
@@ -89,6 +92,7 @@ namespace umi3d.baseBrowser
                 head = head,
                 concreteFPSNavigation = concreteFPSNavigation
             };
+
             movementManager = new()
             {
                 data = fpsData,
@@ -110,18 +114,26 @@ namespace umi3d.baseBrowser
             // SKELETON SERVICE
             CollaborationSkeletonsManager.Instance.navigation = navigationDelegate; //also use to init manager via Instance call
 
+            //Listenner invoked when the ViewMode change
+            NotificationHub.Default.Subscribe(
+                this,
+                UMI3DClientNotificatonKeys.CameraPropertiesNotification,
+                (Callback)cameraManager.CameraPropertiesReception);
+            UMI3DCollaborationClientServer.Instance.OnLeaving.AddListener(OnUserDeconnected);
             UMI3DNavigation.OnChangeView += ListennerNavigationChange;
+        }
 
-
-#if !UNITY_EDITOR
-            fpsData.navigationMode = E_NavigationMode.Default;
-#endif
+        private void OnDestroy()
+        {
+            NotificationHub.Default.Unsubscribe(
+                this,
+                UMI3DClientNotificatonKeys.CameraPropertiesNotification
+            );
         }
 
         private void Update()
         {
             cameraManager.HandleView();
-
 
             if (!navigationDelegate.isActive)
                 return; 
@@ -135,8 +147,21 @@ namespace umi3d.baseBrowser
             colliderDelegate?.DrawGizmos();
         }
 
-        public void ChangeViewOmniscient(OmniscientViewDto dto)
+        public void OnUserDeconnected()
         {
+            UMI3DNavigation.OnChangeView -= ListennerNavigationChange;
+            fpsData.navigationMode = E_NavigationMode.Default;
+            fpsData.maxXCameraAngle = new Vector2(-60, 70);
+        }
+
+        public void OmniscientView(OmniscientViewDto dto)
+        {
+            //Camera
+            cameraManager.cam.orthographic = false;
+            cameraManager.cam.fieldOfView = dto.fieldOfView;
+            cameraManager.cam.nearClipPlane = dto.nearPlane;
+            cameraManager.cam.farClipPlane = dto.farPlane;
+
             //positions
             previousPosition = collisionManager.playerTransform.position;
 
@@ -169,9 +194,13 @@ namespace umi3d.baseBrowser
 
             fpsData.navigationMode = E_NavigationMode.Omniscient;
         }
-        public void ChangeViewImmersive(ImmersiveViewDto dto)
+        public void ImmersiveView(ImmersiveViewDto dto)
         {
             //camera
+            cameraManager.cam.orthographic = false;
+            cameraManager.cam.fieldOfView = dto.fieldOfView;
+            cameraManager.cam.nearClipPlane = dto.nearPlane;
+            cameraManager.cam.farClipPlane = dto.farPlane;
             fpsData.maxXCameraAngle = new Vector2(dto.cameraXAngle.X, dto.cameraXAngle.Y);
 
             //positions
@@ -185,9 +214,10 @@ namespace umi3d.baseBrowser
 
             fpsData.navigationMode = E_NavigationMode.Default;
         }
+
         private void ListennerNavigationChange()
         {
-            cameraManager.ChangeViewOmniscient(UMI3DNavigation.dto, this);
+            OmniscientView(UMI3DNavigation.dto);
         }
     }
 }

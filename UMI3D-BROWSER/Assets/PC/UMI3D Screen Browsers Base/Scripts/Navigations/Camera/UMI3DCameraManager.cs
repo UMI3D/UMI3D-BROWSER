@@ -34,7 +34,7 @@ public sealed class UMI3DCameraManager
     public Transform head;
     public IConcreteFPSNavigation concreteFPSNavigation;
 
-    Camera cam = Camera.main;
+    public Camera cam = Camera.main;
 
     public BaseFPSData data;
 
@@ -42,11 +42,7 @@ public sealed class UMI3DCameraManager
 
     public UMI3DCameraManager()
     {
-        NotificationHub.Default.Subscribe(
-            this, 
-            UMI3DClientNotificatonKeys.CameraPropertiesNotification,
-            (Callback)CameraPropertiesReception
-        );
+
     }
 
     public void HandleView()
@@ -133,6 +129,9 @@ public sealed class UMI3DCameraManager
 
     public void CameraPropertiesReception(Notification notification)
     {
+        cam = Camera.main;
+        Debug.Assert(cam != null, "[test]camera = null");
+
         if (notification.TryGetInfoT(UMI3DClientNotificatonKeys.Info.CameraProperties, out AbstractCameraPropertiesDto dto, false))
         {
             if (dto is PerspectiveCameraPropertiesDto)
@@ -156,29 +155,12 @@ public sealed class UMI3DCameraManager
 
             if (notification.TryGetInfoT(UMI3DClientNotificatonKeys.Info.CameraProperties, out OmniscientViewDto dtoOmni, false) && player.fpsData.navigationMode != E_NavigationMode.Omniscient)
             {
-                ChangeViewOmniscient(dtoOmni, player);
+                player.OmniscientView(dtoOmni);
             }
             else if (notification.TryGetInfoT(UMI3DClientNotificatonKeys.Info.CameraProperties, out ImmersiveViewDto dtoImmer, false) && player.fpsData.navigationMode != E_NavigationMode.Default)
             {
-                ChangeViewImmersive(dtoImmer, player);
+                player.ImmersiveView(dtoImmer);
             }
         }
-    }
-    public void ChangeViewOmniscient(OmniscientViewDto dto, UMI3DPCPlayer player)
-    {
-        cam.orthographic = false;
-        cam.fieldOfView = dto.fieldOfView;
-        cam.nearClipPlane = dto.nearPlane;
-        cam.farClipPlane = dto.farPlane;
-        player.ChangeViewOmniscient(dto);
-    }
-
-    public void ChangeViewImmersive(ImmersiveViewDto dto, UMI3DPCPlayer player)
-    {
-        cam.orthographic = false;
-        cam.fieldOfView = dto.fieldOfView;
-        cam.nearClipPlane = dto.nearPlane;
-        cam.farClipPlane = dto.farPlane;
-        player.ChangeViewImmersive(dto);
     }
 }

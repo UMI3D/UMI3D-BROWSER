@@ -14,15 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 using inetum.unityUtils.observation;
-using umi3d.browserRuntime.cursor;
+using umi3d.baseBrowser;
 using umi3d.baseBrowser.Navigation;
+using umi3d.browserRuntime.cursor;
 using umi3d.cdk.notification;
 using umi3d.common;
 using UnityEngine;
-using umi3d.baseBrowser;
-using Unity.VisualScripting;
-using Unity.VisualScripting.FullSerializer;
-using System.Data;
 
 public sealed class UMI3DCameraManager
 {

@@ -1,4 +1,4 @@
-﻿/*
+/*
 Copyright 2019 - 2021 Inetum
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,11 +16,19 @@ limitations under the License.
 
 namespace umi3d.common
 {
-    [System.Obsolete]
-    public enum NavigationType
+    /// <summary>
+    /// Operation DTO to change view mode to Omniscient on the camera.
+    /// </summary>
+    public class OmniscientViewDto : AbstractViewModeDto
     {
-        Walk,
-        Orbitation,
-        Fly
+        /// <summary>
+        /// The distance of the camera.
+        /// </summary>
+        public float distance { get; set; }
+        /// <summary>
+        /// The movement speed of forward, backward and lateral movements.
+        /// </summary>
+        public float flyingSpeed { get; set; }
+
     }
 }

@@ -14,8 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 using System;
-using umi3d.browserRuntime.cursor;
 using umi3d.baseBrowser.Navigation;
+using umi3d.browserRuntime.cursor;
+using umi3d.cdk.navigation;
 using UnityEngine;
 
 public sealed class UMI3DMovementManager
@@ -178,6 +179,9 @@ public sealed class UMI3DMovementManager
             case E_NavigationMode.Teleportation:
                 Teleport();
                 break;
+            case E_NavigationMode.Omniscient:
+                Fly();
+                break;
             case E_NavigationMode.Debug:
                 Fly();
                 break;
@@ -193,7 +197,7 @@ public sealed class UMI3DMovementManager
             return;
         }
 
-        if (data.navigationMode == E_NavigationMode.Debug)
+        if (data.navigationMode == E_NavigationMode.Debug || data.navigationMode == E_NavigationMode.Omniscient)
         {
             data.playerTranslationSpeed.y = data.flyingSpeed * ((data.WantToCrouch ? -1 : 0) + (data.WantToJump ? 1 : 0));
             return;
@@ -249,6 +253,16 @@ public sealed class UMI3DMovementManager
     {
         playerWillMoveDelegate?.Invoke(data.playerTranslation);
         playerTransform.position += data.playerTranslation;
+        if (data.navigationMode == E_NavigationMode.Omniscient)
+        {
+            float clampedX = Mathf.Clamp(playerTransform.position.x, (-UMI3DNavigation.Bounds.size.X)/2 + UMI3DNavigation.Bounds.center.X,
+                (UMI3DNavigation.Bounds.size.X)/2 + UMI3DNavigation.Bounds.center.X);
+            float clampedY = Mathf.Clamp(playerTransform.position.y, (-UMI3DNavigation.Bounds.size.Y)/2 + UMI3DNavigation.Bounds.center.Y, 
+                (UMI3DNavigation.Bounds.size.Y)/2 + UMI3DNavigation.Bounds.center.Y);
+            float clampedZ = Mathf.Clamp(playerTransform.position.z, (-UMI3DNavigation.Bounds.size.Z)/2 + UMI3DNavigation.Bounds.center.Z, 
+                (UMI3DNavigation.Bounds.size.Z)/2 + UMI3DNavigation.Bounds.center.Z);
+            playerTransform.position = new Vector3(clampedX, clampedY, clampedZ); 
+        }
         UpdateSkeletonHeight();
         playerMovedDelegate?.Invoke(data.playerTranslation);
     }

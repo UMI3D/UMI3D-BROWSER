@@ -16,9 +16,26 @@ limitations under the License.
 
 namespace umi3d.common
 {
+    public enum RenderMode
+    {
+        //
+        // Résumé :
+        //     Render at the end of the Scene using a 2D Canvas.
+        ScreenSpaceOverlay,
+        //
+        // Résumé :
+        //     Render using the Camera configured on the Canvas.
+        ScreenSpaceCamera,
+        //
+        // Résumé :
+        //     Render using any Camera in the Scene that can render the layer.
+        WorldSpace
+    }
+
     /// <summary>
     /// DTO describing a Canvas for UI.
     /// </summary>
+    /// 
     [System.Serializable]
     public class UICanvasDto : UIRectDto
     {
@@ -37,5 +54,10 @@ namespace umi3d.common
         /// Order of the canvas in the rendering of the layer.
         /// </summary>
         public int orderInLayer { get; set; }
+
+        /// <summary>
+        /// Render mode of the canvas.
+        /// </summary>
+        public RenderMode renderMode { get; set; }
     }
 }

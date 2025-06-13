@@ -14,8 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 using inetum.unityUtils.observation;
-using umi3d.browserRuntime.cursor;
+using umi3d.baseBrowser;
 using umi3d.baseBrowser.Navigation;
+using umi3d.browserRuntime.cursor;
 using umi3d.cdk.notification;
 using umi3d.common;
 using UnityEngine;
@@ -30,17 +31,15 @@ public sealed class UMI3DCameraManager
     public Transform head;
     public IConcreteFPSNavigation concreteFPSNavigation;
 
+    public Camera cam = Camera.main;
+
     public BaseFPSData data;
 
     #endregion
 
     public UMI3DCameraManager()
     {
-        NotificationHub.Default.Subscribe(
-            this, 
-            UMI3DClientNotificatonKeys.CameraPropertiesNotification,
-            (Callback)CameraPropertiesReception
-        );
+
     }
 
     public void HandleView()
@@ -104,8 +103,8 @@ public sealed class UMI3DCameraManager
         // Restrict up and down viewpoint movement.
         float viewpointXAxis = Mathf.Clamp(
             (viewpointPivot.localRotation.eulerAngles.NormalizeAngle() + ((Vector3)angularSpeed).NormalizeAngle()).x, 
-            -data.maxXCameraAngle, 
-            data.maxXCameraAngle
+            data.maxXCameraAngle.x, 
+            data.maxXCameraAngle.y
         );
 
         viewpointPivot.localRotation = Quaternion.Euler(viewpointXAxis, viewpointYAxis, 0f);
@@ -125,26 +124,40 @@ public sealed class UMI3DCameraManager
         neckPivot.localRotation = Quaternion.Euler(neckAngle);
     }
 
-    void CameraPropertiesReception(Notification notification)
+    public void CameraPropertiesReception(Notification notification)
     {
-        if (!notification.TryGetInfoT(UMI3DClientNotificatonKeys.Info.CameraProperties, out AbstractCameraPropertiesDto dto))
+        cam = Camera.main;
+        Debug.Assert(cam != null, "[test]camera = null");
+
+        if (notification.TryGetInfoT(UMI3DClientNotificatonKeys.Info.CameraProperties, out AbstractCameraPropertiesDto dto, false))
+        {
+            if (dto is PerspectiveCameraPropertiesDto)
+            {
+                cam.orthographic = false;
+                cam.fieldOfView = (dto as PerspectiveCameraPropertiesDto).fieldOfView;
+            }
+            else if (dto is OrthographicCameraPropertiesDto)
+            {
+                cam.orthographic = true;
+                cam.orthographicSize = (dto as OrthographicCameraPropertiesDto).size;
+            }
+            cam.transform.localPosition = dto.localPosition.Struct();
+            cam.nearClipPlane = dto.nearPlane;
+            cam.farClipPlane = dto.farPlane;
             return;
-
-        Camera cam = Camera.main;
-
-        if (dto is PerspectiveCameraPropertiesDto)
-        {
-            cam.orthographic = false;
-            cam.fieldOfView = (dto as PerspectiveCameraPropertiesDto).fieldOfView;
         }
-        else
+        else if (notification.TryGetInfoT(UMI3DClientNotificatonKeys.Info.CameraProperties, out AbstractViewModeDto dtoParentView, false))
         {
-            cam.orthographic = true;
-            cam.orthographicSize = (dto as OrthographicCameraPropertiesDto).size;
-        }
+            UMI3DPCPlayer player = UnityEngine.Object.FindObjectOfType<UMI3DPCPlayer>();
 
-        cam.transform.localPosition = dto.localPosition.Struct();
-        cam.nearClipPlane = dto.nearPlane;
-        cam.farClipPlane = dto.farPlane;
+            if (notification.TryGetInfoT(UMI3DClientNotificatonKeys.Info.CameraProperties, out OmniscientViewDto dtoOmni, false) && player.fpsData.navigationMode != E_NavigationMode.Omniscient)
+            {
+                player.OmniscientView(dtoOmni);
+            }
+            else if (notification.TryGetInfoT(UMI3DClientNotificatonKeys.Info.CameraProperties, out ImmersiveViewDto dtoImmer, false) && player.fpsData.navigationMode != E_NavigationMode.Default)
+            {
+                player.ImmersiveView(dtoImmer);
+            }
+        }
     }
 }

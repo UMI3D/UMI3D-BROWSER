@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.ui
@@ -51,7 +52,8 @@ namespace umi3d.browserRuntime.ui
         void OnClick()
         {
             _controller.model.SetPasswordVisibility(!_controller.model.passwordVisibility);
-            ((Image)_button.targetGraphic).sprite = _controller.model.passwordVisibility ? _passwordVisible : _passwordHidden;
+            ((Image)_button.targetGraphic).sprite = _controller.model.passwordVisibility ? _passwordHidden : _passwordVisible;
+            EventSystem.current.SetSelectedGameObject(null);
         }
 
         public void UpdatePasswordVisibility(bool isVisible)

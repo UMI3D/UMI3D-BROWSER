@@ -42,8 +42,6 @@ namespace umi3d.baseBrowser
 
         [Header("Player Omniscient View")]
         public Vector3 previousPosition = Vector3.zero;
-        public GameObject omniscientBounds = null;
-
         [HideInInspector] public UMI3DNavigation navigation = new();
 
         UMI3DCollisionManager collisionManager;

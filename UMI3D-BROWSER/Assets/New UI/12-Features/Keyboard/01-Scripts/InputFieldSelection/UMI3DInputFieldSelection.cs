@@ -136,14 +136,14 @@ namespace umi3d.browserRuntime.ui.keyboard
             float prefixWidth = textTMP.GetTextSize(prefix).x;
 
             // Get the offset due to alignment settings.
-            float alignOffset = inputField.GetAlignmentOffset();
-
+            float marginLeft = inputField.textComponent.margin.x;
             Vector2 position = selectionRT.anchoredPosition;
-            selectionRT.anchoredPosition = new(prefixWidth + alignOffset, position.y);
+            float adjustedPositionX = prefixWidth + marginLeft * 2;
+            selectionRT.anchoredPosition = new Vector2(adjustedPositionX, position.y);
 
             // Set size.
-            string selection = GetRenderSubstring(startPosition, endPosition - startPosition);
-            float selectionWidth = textTMP.GetTextSize(selection).x;
+            string selectionText = GetRenderSubstring(startPosition, endPosition - startPosition);
+            float selectionWidth = textTMP.GetPreferredValues(selectionText).x - marginLeft;
             selectionRT.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, selectionWidth);
 
             ShowSelection();
@@ -162,7 +162,7 @@ namespace umi3d.browserRuntime.ui.keyboard
 
             // Get the width of the portion of the text before the position of the caret.
             string prefix = GetRenderSubstring(0, stringPosition);
-            float prefixWidth = textTMP.GetTextSize(prefix).x;
+            float prefixWidth = textTMP.GetTextSize(prefix).x + textTMP.margin.x * 2;
 
             // Get the offset due to alignment settings.
             float alignOffset = inputField.GetAlignmentOffset();
@@ -211,9 +211,7 @@ namespace umi3d.browserRuntime.ui.keyboard
             }
             else
             {
-                Vector2 localPosition = textAreaRT.PointerRelativeToUI(eventData, RectTransformExtensions.Pivot.TopLeft);
-                int caretPosition = PointerPositionToCaretPosition(localPosition);
-
+                int caretPosition = TMP_TextUtilities.FindNearestCharacter(inputField.textComponent, eventData.position, Camera.main, false);
                 Deselect(caretPosition);
             }
         }
@@ -226,26 +224,6 @@ namespace umi3d.browserRuntime.ui.keyboard
         void HideSelection()
         {
             selection.enabled = false;
-        }
-
-        int PointerPositionToCaretPosition(Vector2 position)
-        {
-            int _position = 0;
-            float globalWidth = 0f;
-
-            while (_position + 1 <= inputField.text.Length)
-            {
-                string letter = inputField.text.Substring(_position, 1);
-                float letterWidth = textTMP.GetPreferredValues(letter).x;
-                if (position.x < globalWidth + letterWidth / 2f)
-                {
-                    return _position;
-                }
-                globalWidth += letterWidth;
-                _position++;
-            }
-
-            return _position;
         }
 
         /// <summary>

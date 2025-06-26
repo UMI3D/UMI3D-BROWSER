@@ -52,8 +52,6 @@ namespace umi3dBrowsers.services.connection
         private Action<bool> _shouldDownloadLibrariesCallBack;
         private Action _cancelConnectionCallBack;
 
-        private List<string> _compatibleFormVersion = new List<string>() { "1", "2.0", "2.1" };
-
         [Header("Linkers")]
         [SerializeField] private ConnectionServiceLinker connectionServiceLinker;
 

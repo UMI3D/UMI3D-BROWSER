@@ -15,10 +15,8 @@ limitations under the License.
 */
 
 using umi3d.common.interaction;
-using Unity.VisualScripting.YamlDotNet.Core.Tokens;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.XR;
 
 namespace umi3d.cdk.interaction
 {

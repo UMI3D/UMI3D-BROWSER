@@ -8,6 +8,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 139199254534189446, guid: 79e3f2b7e4e173d4c8077d7a8847a554,
+        type: 3}
+      propertyPath: waitForSubmit
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 324623852445150228, guid: 79e3f2b7e4e173d4c8077d7a8847a554,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -326,7 +331,7 @@ PrefabInstance:
     - target: {fileID: 7806848899565289408, guid: 79e3f2b7e4e173d4c8077d7a8847a554,
         type: 3}
       propertyPath: m_Name
-      value: Form_InputField_SingleLine Variant
+      value: Form_InputField_SingleLine
       objectReference: {fileID: 0}
     - target: {fileID: 8425874713018560123, guid: 79e3f2b7e4e173d4c8077d7a8847a554,
         type: 3}
@@ -342,6 +347,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_GlobalPointSize
       value: 21
+      objectReference: {fileID: 0}
+    - target: {fileID: 8644845555676665760, guid: 79e3f2b7e4e173d4c8077d7a8847a554,
+        type: 3}
+      propertyPath: m_text
+      value: "\u200B"
       objectReference: {fileID: 0}
     - target: {fileID: 8644845555676665760, guid: 79e3f2b7e4e173d4c8077d7a8847a554,
         type: 3}

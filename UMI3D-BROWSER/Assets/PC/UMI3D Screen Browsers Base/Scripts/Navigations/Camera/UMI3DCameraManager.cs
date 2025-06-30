@@ -35,9 +35,8 @@ public sealed class UMI3DCameraManager
 
     public BaseFPSData data;
 
-    private const float ZOOM_MIN = 15f;
-    private const float ZOOM_MAX = 110f;
-    private const float ZOOM_SPEED = 30f;
+    public Vector2 zoomMinMax;
+    public float zoomSpeed;
 
     #endregion
 
@@ -178,10 +177,10 @@ public sealed class UMI3DCameraManager
         if (scrollInput != 0f)
         {
             // Modifier le champ de vision (Field of View) de la caméra
-            cam.fieldOfView -= scrollInput * ZOOM_SPEED;
+            cam.fieldOfView -= scrollInput * zoomSpeed;
 
             // Limiter le zoom entre minZoom et maxZoom
-            cam.fieldOfView = Mathf.Clamp(cam.fieldOfView, ZOOM_MIN, ZOOM_MAX);
+            cam.fieldOfView = Mathf.Clamp(cam.fieldOfView, zoomMinMax.x, zoomMinMax.y);
         }
     }
 }

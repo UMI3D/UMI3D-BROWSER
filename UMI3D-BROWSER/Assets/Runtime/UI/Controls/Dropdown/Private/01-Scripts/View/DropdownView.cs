@@ -25,13 +25,24 @@ namespace umi3d.browserRuntime.ui
     {
         TMP_Dropdown _dropdown;
 
+        [Header("Dropdown height")]
+        [SerializeField] int _maxCharactersPerLine = 27;
+        RectTransform _rectTransform;
+        float _initialHeight;
+        [SerializeField] RectTransform _templateItemRectTransform;
+        float _templateItemInitialHeight;
+
         DropdownController _controller;
         DropdownModel _model;
 
-        private void Awake()
+        void Awake()
         {
             _dropdown = GetComponent<TMP_Dropdown>();
             _dropdown.onValueChanged.AddListener(OnValueChanged);
+
+            _rectTransform = GetComponent<RectTransform>();
+            _initialHeight = _rectTransform.sizeDelta.y;
+            _templateItemInitialHeight = _templateItemRectTransform.sizeDelta.y;
 
             _controller = GetComponentInParent<DropdownController>();
             _model = _controller.model;
@@ -39,13 +50,13 @@ namespace umi3d.browserRuntime.ui
             _model.Subscribe((IDropdownOptionsObserver)this);
         }
 
-        private void Start()
+        void Start()
         {
             updateOptions(_model.options);
             _dropdown.RefreshShownValue();
         }
 
-        private void OnEnable()
+        void OnEnable()
         {
             _dropdown.Select();
         }
@@ -64,6 +75,13 @@ namespace umi3d.browserRuntime.ui
         public void updateValue(string value)
         {
             _dropdown.value = _model.IndexOf(value);
+
+            // Update the height of the dropdown if the label has to display more than one line.
+            if (string.IsNullOrEmpty(value)) { return; }
+            _rectTransform.sizeDelta = new Vector2(
+                _rectTransform.sizeDelta.x, 
+                _initialHeight * (value.Length / _maxCharactersPerLine + 1)
+            );
         }
 
         public void updateOptions(List<string> options)
@@ -74,10 +92,23 @@ namespace umi3d.browserRuntime.ui
         void updateOptions(IEnumerator<string> options)
         {
             _dropdown.ClearOptions();
+
+            // Update the height of the dropdown if the label has to display more than one line.
+            int numberOfCharacters = 0;
             while (options.MoveNext())
             {
                 _dropdown.options.Add(new TMP_Dropdown.OptionData(options.Current));
+
+                if (options.Current.Length > numberOfCharacters)
+                {
+                    numberOfCharacters = options.Current.Length;
+                }
             }
+
+            _templateItemRectTransform.sizeDelta = new Vector2(
+                _templateItemRectTransform.sizeDelta.x, 
+                _initialHeight * (numberOfCharacters / _maxCharactersPerLine + 1)
+            );
         }
     }
 }

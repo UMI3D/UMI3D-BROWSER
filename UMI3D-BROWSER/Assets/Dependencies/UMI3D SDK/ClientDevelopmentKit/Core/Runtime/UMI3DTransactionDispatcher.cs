@@ -255,7 +255,7 @@ namespace umi3d.cdk
                     float omniscienFlyingSpeed = UMI3DSerializer.Read<float>(container);
                     Vector2Dto omniscientZoomLimit = UMI3DSerializer.Read<Vector2Dto>(container);
                     float omniscienZoomSpeed = UMI3DSerializer.Read<float>(container);
-                    info[UMI3DClientNotificatonKeys.Info.CameraProperties] = new OmniscientViewDto() { localPosition = omniscientLocalPos, nearPlane = omniscientNear, farPlane = omniscientFar, fieldOfView = omniscientFOV, cameraXAngle = omniscientXAngle, distance = omniscientDistance, flyingSpeed = omniscienFlyingSpeed, zoom_Min_Max = omniscientZoomLimit, zoomSpeed = omniscienZoomSpeed };
+                    info[UMI3DClientNotificatonKeys.Info.CameraProperties] = new OmniscientViewDto() { localPosition = omniscientLocalPos, nearPlane = omniscientNear, farPlane = omniscientFar, fieldOfView = omniscientFOV, cameraXAngle = omniscientXAngle, distance = omniscientDistance, flyingSpeed = omniscienFlyingSpeed, zoomLimit = omniscientZoomLimit, zoomSpeed = omniscienZoomSpeed };
                     NotificationHub.Default.Notify(this, UMI3DClientNotificatonKeys.CameraPropertiesNotification, info);
                     break;
 

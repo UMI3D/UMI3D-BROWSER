@@ -152,7 +152,7 @@ namespace umi3d.baseBrowser
             cameraManager.cam.nearClipPlane = dto.nearPlane;
             cameraManager.cam.farClipPlane = dto.farPlane;
 
-            cameraManager.zoomMinMax = dto.zoom_Min_Max.Struct();
+            cameraManager.zoomMinMax = dto.zoomLimit.Struct();
             cameraManager.zoomSpeed = dto.zoomSpeed;
 
             //positions

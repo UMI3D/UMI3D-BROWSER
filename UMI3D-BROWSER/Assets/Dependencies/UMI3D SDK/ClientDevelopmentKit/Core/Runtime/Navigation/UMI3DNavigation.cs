@@ -112,7 +112,7 @@ namespace umi3d.cdk.navigation
                 dto.fieldOfView = enter.userFOV;
                 dto.flyingSpeed = enter.userFlyingSpeed;
                 dto.zoomSpeed = enter.userZoomSpeed;
-                dto.zoom_Min_Max = enter.userZoomLimit;
+                dto.zoomLimit = enter.userZoomLimit;
                 OnChangeView?.Invoke();
             }
         }

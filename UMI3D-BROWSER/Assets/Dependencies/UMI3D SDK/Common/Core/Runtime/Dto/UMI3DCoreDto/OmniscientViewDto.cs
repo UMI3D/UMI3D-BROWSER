@@ -32,7 +32,7 @@ namespace umi3d.common
         /// <summary>
         /// The limit of the camera zoom
         /// </summary>
-        public Vector2Dto zoom_Min_Max { get; set; }
+        public Vector2Dto zoomLimit { get; set; }
         /// <summary>
         /// The speed of the Zoom
         /// </summary>

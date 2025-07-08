@@ -74,6 +74,7 @@ namespace umi3dBrowsers
         [SerializeField] private MenuNavigationLinker m_menuNavigationLinker;
         [SerializeField] private PanelData m_mainMenuPanel;
         [SerializeField] private PanelData m_formPanel;
+        [SerializeField] private PanelData m_loadingPanel;
 
         private Notifier m_enableInGameUiNotifier;
 
@@ -128,6 +129,9 @@ namespace umi3dBrowsers
             NotificationHub.Default.Subscribe(this,
                 ID.FromType<FormNotificationKeys.Cancel>(),
                 (Callback)OnLeave);
+            NotificationHub.Default.Subscribe(this,
+                ID.FromType<FormNotificationKeys.SendAnswer>(),
+                (Callback)OnFormAnswer);
 
             connectionToImmersiveLinker.OnLeave += OnLeave;
 
@@ -167,6 +171,14 @@ namespace umi3dBrowsers
 
             connectionProcessorService.Disconnect();
             mainContainerLinker.Loader.ReloadScene();
+        }
+
+        private void OnFormAnswer(Notification notification)
+        {
+            if (!notification.TryGetInfoT(FormNotificationKeys.SendAnswer.FormAnswerDto, out umi3d.common.interaction.FormAnswerDto formAnswer, false))
+                return;
+
+            m_menuNavigationLinker.ShowPanel(m_loadingPanel);
         }
 
         void TryToQuit()

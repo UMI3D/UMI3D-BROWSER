@@ -108,6 +108,19 @@ namespace umi3d.browserRuntime.ui.keyboard
                     if (closeOnSubmit)
                     {
                         deselectionNotifier.Notify();
+                    } 
+                    else
+                    {
+                        Dictionary<string, object> info = new()
+                        {
+                            { KeyboardNotificationKeys.Info.TextFieldTextUpdate, TextFieldTextUpdate.AddCharacters },
+                            { KeyboardNotificationKeys.Info.Characters, '\n' }
+                        };
+                        NotificationHub.Default.Notify(
+                            this,
+                            KeyboardNotificationKeys.AddOrRemoveCharacters,
+                            info
+                        );
                     }
 
                     enterOrSubmit.Invoke();

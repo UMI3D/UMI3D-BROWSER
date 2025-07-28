@@ -21,7 +21,7 @@ using UnityEngine.EventSystems;
 
 namespace umi3d.browserRuntime.ui
 {
-    public class PointerDownBehaviour : PointerBehaviour, IPointerDownHandler, IPointerUpHandler
+    public class PointerDownBehaviour : PointerBehaviour, IPointerDownHandler
     {
         /// <summary>
         /// Notification key for whether this is a long press or not.<br/>
@@ -92,6 +92,7 @@ namespace umi3d.browserRuntime.ui
                 time += Time.deltaTime;
             }
 
+            Debug.Log("Start long press");
             isLongPress = isLongPress.HasValue ? isLongPress.Value : true;
 
             // After the 'timeOut' is reached a 'pointerClick' event is raised.

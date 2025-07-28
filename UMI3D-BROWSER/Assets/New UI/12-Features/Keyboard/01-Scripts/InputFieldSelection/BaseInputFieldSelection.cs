@@ -51,7 +51,7 @@ namespace umi3d.browserRuntime.ui.keyboard
         /// <summary>
         /// Is text selected.
         /// </summary>
-        public bool isTextSelected => startPosition < endPosition;
+        public bool isTextSelected => startPosition != endPosition;
 
         /// <summary>
         /// Start position of the selection.

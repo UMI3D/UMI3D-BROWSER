@@ -43,6 +43,10 @@ namespace umi3d.browserRuntime.ui.inputField
             _inputField.onDeselect.AddListener(OnDeselect);
 
             _controller = GetComponentInParent<InputFieldController>();
+        }
+
+        void Start()
+        {
             _model = _controller.model;
             _model.Subscribe(this as IValueObserver<string>);
             _model.Subscribe(this as IInputFieldContentTypeObserver);

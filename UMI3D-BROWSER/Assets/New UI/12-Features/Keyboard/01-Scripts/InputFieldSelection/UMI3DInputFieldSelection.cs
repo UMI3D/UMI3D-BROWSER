@@ -16,11 +16,13 @@ limitations under the License.
 
 using inetum.unityUtils.observation;
 using inetum.unityUtils.ui;
+using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 namespace umi3d.browserRuntime.ui.keyboard
 {
@@ -51,6 +53,7 @@ namespace umi3d.browserRuntime.ui.keyboard
         /// The blinking caret coroutine.
         /// </summary>
         Coroutine caretCoroutine;
+        private bool LongPress;
 
         public override int startPosition { get; set; }
 
@@ -102,12 +105,16 @@ namespace umi3d.browserRuntime.ui.keyboard
             base.OnEnable();
             inputField.interactable = false;
             pointerDown.pointerClicked += OnPointerDown;
+            pointerDown.pointerUp += OnPointerUp;
+            pointerDown.pointerMoved += OnPointerMoved;
         }
 
         public override void OnDisable()
         {
             base.OnDisable();
             pointerDown.pointerClicked -= OnPointerDown;
+            pointerDown.pointerUp -= OnPointerUp;
+            pointerDown.pointerMoved -= OnPointerMoved;
         }
 
         public override void Focus()
@@ -130,9 +137,12 @@ namespace umi3d.browserRuntime.ui.keyboard
                 return;
             }
 
+            var startPos = Mathf.Min(startPosition, endPosition);
+            var endPos = Mathf.Max(startPosition, endPosition);
+
             // Set position.
             // Get the width of the portion of the text before the selection.
-            string prefix = GetRenderSubstring(0, startPosition);
+            string prefix = GetRenderSubstring(0, startPos);
             float prefixWidth = textTMP.GetTextSize(prefix).x;
 
             // Get the offset due to alignment settings.
@@ -142,7 +152,7 @@ namespace umi3d.browserRuntime.ui.keyboard
             selectionRT.anchoredPosition = new(prefixWidth + alignOffset, position.y);
 
             // Set size.
-            string selection = GetRenderSubstring(startPosition, endPosition - startPosition);
+            string selection = GetRenderSubstring(startPos, endPos - startPos);
             float selectionWidth = textTMP.GetTextSize(selection).x;
             selectionRT.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, selectionWidth);
 
@@ -198,6 +208,20 @@ namespace umi3d.browserRuntime.ui.keyboard
             if (!notification.TryGetInfoT(PointerDownBehaviour.NKIsImmediate, out bool isImmediate))
             {
                 return;
+            }
+
+            if (!notification.TryGetInfoT(PointerDownBehaviour.NKIsLongPress, out bool isLongPress))
+            {
+                return;
+            }
+
+            if (isLongPress)
+            {
+                LongPress = true;
+                var caretPosition = TMP_TextUtilities.FindNearestCharacter(inputField.textComponent, eventData.position, Camera.main, false);
+                startPosition = caretPosition;
+                endPosition = caretPosition;
+                UpdateSelection();
             }
 
             if (!isImmediate)
@@ -299,6 +323,21 @@ namespace umi3d.browserRuntime.ui.keyboard
             caret.enabled = false;
             caretCoroutine = null;
             yield break;
+        }
+
+        private void OnPointerUp(PointerEventData data)
+        {
+            LongPress = false;
+        }
+
+        private void OnPointerMoved(PointerEventData data)
+        {
+            if (!LongPress)
+                return;
+
+            endPosition = TMP_TextUtilities.FindNearestCharacter(inputField.textComponent, data.position, Camera.main, false);
+            
+            UpdateSelection();
         }
     }
 }

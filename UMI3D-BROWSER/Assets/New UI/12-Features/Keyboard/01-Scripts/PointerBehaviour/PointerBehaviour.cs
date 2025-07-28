@@ -22,7 +22,7 @@ using UnityEngine.EventSystems;
 
 namespace umi3d.browserRuntime.ui
 {
-    public class PointerBehaviour : MonoBehaviour, IPointerExitHandler
+    public class PointerBehaviour : MonoBehaviour, IPointerExitHandler, IPointerUpHandler, IPointerMoveHandler
     {
         /// <summary>
         /// Notification key for the pointer event.<br/>
@@ -46,6 +46,8 @@ namespace umi3d.browserRuntime.ui
         /// Event raised when the pointer is down if this is <see cref="PointerDownBehaviour"/> or up if this is <see cref="PointerUpBehaviour"/>.
         /// </summary>
         public event Action<Notification> pointerClicked;
+        public event Action<PointerEventData> pointerMoved;
+        public event Action<PointerEventData> pointerUp;
         /// <summary>
         /// Event raised when the pointer is down if this is <see cref="PointerDownBehaviour"/> or up if this is <see cref="PointerUpBehaviour"/>.
         /// </summary>
@@ -88,6 +90,16 @@ namespace umi3d.browserRuntime.ui
                 StopCoroutine(coroutine);
                 coroutine = null;
             }
+        }
+
+        void IPointerUpHandler.OnPointerUp(PointerEventData eventData)
+        {
+            pointerUp?.Invoke(eventData);
+        }
+
+        void IPointerMoveHandler.OnPointerMove(PointerEventData eventData)
+        {
+            pointerMoved?.Invoke(eventData);
         }
     }
 }

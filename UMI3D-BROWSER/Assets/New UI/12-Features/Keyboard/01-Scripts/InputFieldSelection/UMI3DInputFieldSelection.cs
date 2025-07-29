@@ -16,13 +16,12 @@ limitations under the License.
 
 using inetum.unityUtils.observation;
 using inetum.unityUtils.ui;
-using System;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using UnityEngine.UIElements;
 
 namespace umi3d.browserRuntime.ui.keyboard
 {
@@ -93,9 +92,9 @@ namespace umi3d.browserRuntime.ui.keyboard
             selection.transform.SetAsFirstSibling();
             selection.color = selectionColor;
 
-            selectionRT.anchorMin = Vector2.zero;
+            selectionRT.anchorMin = new(0, 1);
             selectionRT.anchorMax = new(0, 1);
-            selectionRT.pivot = new(0f, 0.5f);
+            selectionRT.pivot = new(0f, 1f);
             selectionRT.offsetMin = new(selectionRT.offsetMin.x, 0f);
             selectionRT.offsetMax = new(selectionRT.offsetMax.x, 0f);
         }
@@ -129,8 +128,15 @@ namespace umi3d.browserRuntime.ui.keyboard
             StopCaretBLinking();
         }
 
+        private List<RectTransform> _selectionsBox = new();
+
         public override void UpdateSelection()
         {
+            foreach (var selectionBox in _selectionsBox)
+            {
+                selectionBox.gameObject.SetActive(false);
+            }
+
             if (!isTextSelected)
             {
                 HideSelection();
@@ -140,23 +146,45 @@ namespace umi3d.browserRuntime.ui.keyboard
             var startPos = Mathf.Min(startPosition, endPosition);
             var endPos = Mathf.Max(startPosition, endPosition);
 
-            // Set position.
-            // Get the width of the portion of the text before the selection.
-            string prefix = GetRenderSubstring(0, startPos);
-            float prefixWidth = textTMP.GetTextSize(prefix).x;
+            var textInfo = inputField.textComponent.textInfo;
+            int startCharLine = textInfo.characterInfo[startPos].lineNumber;
+            int endCharLine = textInfo.characterInfo[endPos].lineNumber;
 
-            // Get the offset due to alignment settings.
-            float alignOffset = inputField.GetAlignmentOffset();
 
-            Vector2 position = selectionRT.anchoredPosition;
-            selectionRT.anchoredPosition = new(prefixWidth + alignOffset, position.y);
+            for (int i = startCharLine; i <= endCharLine; i++)
+            {
+                RectTransform selectionBox;
+                if (i >= _selectionsBox.Count)
+                {
+                    selectionBox = GameObject.Instantiate(selectionRT, selectionRT.parent);
+                    _selectionsBox.Add(selectionBox);
+                }
+                else
+                {
+                    selectionBox = _selectionsBox[i];
+                }
 
-            // Set size.
-            string selection = GetRenderSubstring(startPos, endPos - startPos);
-            float selectionWidth = textTMP.GetTextSize(selection).x;
-            selectionRT.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, selectionWidth);
+                int lineStartCharIndex = textInfo.lineInfo[i].firstCharacterIndex;
+                int lineEndCharIndex = textInfo.lineInfo[i].lastCharacterIndex;
 
-            ShowSelection();
+                if (i == startCharLine)
+                {
+                    lineStartCharIndex = startPos;
+                }
+                if (i == endCharLine)
+                {
+                    lineEndCharIndex = endPos;
+                }
+
+                var size = inputField.textComponent.GetTextSize(inputField.text.Substring(lineStartCharIndex, lineEndCharIndex - lineStartCharIndex));
+
+                var posX = lineStartCharIndex - textInfo.lineInfo[i].firstCharacterIndex <= 0 ? 0 : inputField.textComponent.GetTextSize(inputField.text.Substring(textInfo.lineInfo[i].firstCharacterIndex, lineStartCharIndex - textInfo.lineInfo[i].firstCharacterIndex)).x;
+                var posY = -i * inputField.textComponent.GetTextSize("0").y;
+                selectionBox.anchoredPosition = new Vector2(posX, posY);
+                selectionBox.sizeDelta = size;
+
+                selectionBox.gameObject.SetActive(true);
+            }
         }
 
         /// <summary>
@@ -249,7 +277,7 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         void HideSelection()
         {
-            selection.enabled = false;
+            //selection.enabled = false;
         }
 
         int PointerPositionToCaretPosition(Vector2 position)

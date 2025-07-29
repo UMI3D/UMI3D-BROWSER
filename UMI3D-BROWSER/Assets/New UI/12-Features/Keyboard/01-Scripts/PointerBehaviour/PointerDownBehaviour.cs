@@ -92,7 +92,6 @@ namespace umi3d.browserRuntime.ui
                 time += Time.deltaTime;
             }
 
-            Debug.Log("Start long press");
             isLongPress = isLongPress.HasValue ? isLongPress.Value : true;
 
             // After the 'timeOut' is reached a 'pointerClick' event is raised.

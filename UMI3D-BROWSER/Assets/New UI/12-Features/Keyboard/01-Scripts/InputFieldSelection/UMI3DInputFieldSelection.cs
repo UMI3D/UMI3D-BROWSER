@@ -18,6 +18,7 @@ using inetum.unityUtils.observation;
 using inetum.unityUtils.ui;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -38,9 +39,6 @@ namespace umi3d.browserRuntime.ui.keyboard
         int caretWidth => inputField.caretWidth;
         float caretBlinkRate => inputField.caretBlinkRate;
         Color caretColor => inputField.caretColor;
-
-        RectTransform selectionRT;
-        RawImage selection;
 
         Color selectionColor => inputField.selectionColor;
 
@@ -77,26 +75,11 @@ namespace umi3d.browserRuntime.ui.keyboard
             caret.transform.SetAsFirstSibling();
             caret.color = caretColor;
 
-            caretRT.anchorMin = Vector2.zero;
+            caretRT.anchorMin = new(0, 1);
             caretRT.anchorMax = new(0, 1);
-            caretRT.pivot = new(0f, 0.5f);
-            caretRT.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, caretWidth);
-            caretRT.offsetMin = new(caretRT.offsetMin.x, 0f);
-            caretRT.offsetMax = new(caretRT.offsetMax.x, 0f);
-
-
-            GameObject selectionGO = new("MobileSelection");
-            selection = selectionGO.AddComponent<RawImage>();
-            selectionRT = selectionGO.GetComponent<RectTransform>();
-            selection.transform.SetParent(textAreaRT, false);
-            selection.transform.SetAsFirstSibling();
-            selection.color = selectionColor;
-
-            selectionRT.anchorMin = new(0, 1);
-            selectionRT.anchorMax = new(0, 1);
-            selectionRT.pivot = new(0f, 1f);
-            selectionRT.offsetMin = new(selectionRT.offsetMin.x, 0f);
-            selectionRT.offsetMax = new(selectionRT.offsetMax.x, 0f);
+            caretRT.pivot = new(0f, 1f);
+            Debug.Log(inputField.textComponent.fontSize);
+            caretRT.sizeDelta = new Vector2(caretWidth, inputField.textComponent.fontSize);
         }
 
         public override void OnEnable()
@@ -132,16 +115,7 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         public override void UpdateSelection()
         {
-            foreach (var selectionBox in _selectionsBox)
-            {
-                selectionBox.gameObject.SetActive(false);
-            }
-
-            if (!isTextSelected)
-            {
-                HideSelection();
-                return;
-            }
+            HideSelection();
 
             var startPos = Mathf.Min(startPosition, endPosition);
             var endPos = Mathf.Max(startPosition, endPosition);
@@ -156,8 +130,19 @@ namespace umi3d.browserRuntime.ui.keyboard
                 RectTransform selectionBox;
                 if (i >= _selectionsBox.Count)
                 {
-                    selectionBox = GameObject.Instantiate(selectionRT, selectionRT.parent);
-                    _selectionsBox.Add(selectionBox);
+                    GameObject selectionGO = new("MobileSelection");
+                    var selection = selectionGO.AddComponent<RawImage>();
+                    var selectionRT = selectionGO.GetComponent<RectTransform>();
+                    selection.transform.SetParent(textAreaRT, false);
+                    selection.transform.SetAsFirstSibling();
+                    selection.color = selectionColor;
+
+                    selectionRT.anchorMin = new(0, 1);
+                    selectionRT.anchorMax = new(0, 1);
+                    selectionRT.pivot = new(0f, 1f);
+
+                    _selectionsBox.Add(selectionRT);
+                    selectionBox = selectionRT;
                 }
                 else
                 {
@@ -199,14 +184,14 @@ namespace umi3d.browserRuntime.ui.keyboard
             }
 
             // Get the width of the portion of the text before the position of the caret.
-            string prefix = GetRenderSubstring(0, stringPosition);
+
+            int lineIndex = inputField.textComponent.textInfo.characterInfo[stringPosition].lineNumber;
+            int lineStartCharIndex = inputField.textComponent.textInfo.lineInfo[lineIndex].firstCharacterIndex;
+
+            string prefix = GetRenderSubstring(lineStartCharIndex, stringPosition - lineStartCharIndex);
             float prefixWidth = textTMP.GetTextSize(prefix).x;
 
-            // Get the offset due to alignment settings.
-            float alignOffset = inputField.GetAlignmentOffset();
-
-            Vector2 position = caretRT.anchoredPosition;
-            caretRT.anchoredPosition = new(prefixWidth + alignOffset, position.y);
+            caretRT.anchoredPosition = new(prefixWidth, -lineIndex * inputField.textComponent.GetTextSize("0").y);
 
             StartCaretBlinking();
         }
@@ -263,21 +248,18 @@ namespace umi3d.browserRuntime.ui.keyboard
             }
             else
             {
-                Vector2 localPosition = textAreaRT.PointerRelativeToUI(eventData, RectTransformExtensions.Pivot.TopLeft);
-                int caretPosition = PointerPositionToCaretPosition(localPosition);
+                var caretPosition = TMP_TextUtilities.FindNearestCharacter(inputField.textComponent, eventData.position, Camera.main, false);
 
                 Deselect(caretPosition);
             }
         }
 
-        void ShowSelection()
-        {
-            selection.enabled = true;
-        }
-
         void HideSelection()
         {
-            //selection.enabled = false;
+            foreach (var selectionBox in _selectionsBox)
+            {
+                selectionBox.gameObject.SetActive(false);
+            }
         }
 
         int PointerPositionToCaretPosition(Vector2 position)

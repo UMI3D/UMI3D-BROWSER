@@ -54,7 +54,7 @@ namespace umi3d.browserRuntime.ui
         public event Action pointerClickedSimple;
 
         public bool isSimpleClick = true;
-        public float timeOut = .5f;
+        public float timeOut = .1f;
 
         protected PointerEventData eventData;
         protected int numberOfClick = 0;
@@ -95,6 +95,12 @@ namespace umi3d.browserRuntime.ui
         void IPointerUpHandler.OnPointerUp(PointerEventData eventData)
         {
             pointerUp?.Invoke(eventData);
+
+            if (coroutine != null)
+            {
+                StopCoroutine(coroutine);
+                coroutine = null;
+            }
         }
 
         void IPointerMoveHandler.OnPointerMove(PointerEventData eventData)

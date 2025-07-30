@@ -130,19 +130,8 @@ namespace umi3d.browserRuntime.ui.keyboard
                 RectTransform selectionBox;
                 if (i >= _selectionsBox.Count)
                 {
-                    GameObject selectionGO = new("MobileSelection");
-                    var selection = selectionGO.AddComponent<RawImage>();
-                    var selectionRT = selectionGO.GetComponent<RectTransform>();
-                    selection.transform.SetParent(textAreaRT, false);
-                    selection.transform.SetAsFirstSibling();
-                    selection.color = selectionColor;
-
-                    selectionRT.anchorMin = new(0, 1);
-                    selectionRT.anchorMax = new(0, 1);
-                    selectionRT.pivot = new(0f, 1f);
-
-                    _selectionsBox.Add(selectionRT);
-                    selectionBox = selectionRT;
+                    selectionBox = CreateSelectionBox();
+                    _selectionsBox.Add(selectionBox);
                 }
                 else
                 {
@@ -161,15 +150,30 @@ namespace umi3d.browserRuntime.ui.keyboard
                     lineEndCharIndex = endPos;
                 }
 
-                var size = inputField.textComponent.GetTextSize(inputField.text.Substring(lineStartCharIndex, lineEndCharIndex - lineStartCharIndex));
+                var size = inputField.textComponent.GetTextSize(inputField.text.Substring(lineStartCharIndex, lineEndCharIndex - lineStartCharIndex)); // FIXME : Break with margin top and bottom
 
-                var posX = lineStartCharIndex - textInfo.lineInfo[i].firstCharacterIndex <= 0 ? 0 : inputField.textComponent.GetTextSize(inputField.text.Substring(textInfo.lineInfo[i].firstCharacterIndex, lineStartCharIndex - textInfo.lineInfo[i].firstCharacterIndex)).x;
-                var posY = -i * inputField.textComponent.GetTextSize("0").y;
-                selectionBox.anchoredPosition = new Vector2(posX, posY);
+                float positionX = GetHorizontalPosition(lineStartCharIndex);
+                float positionY = GetVerticalPosition(lineStartCharIndex);
+                selectionBox.anchoredPosition = new Vector2(positionX, positionY);
                 selectionBox.sizeDelta = size;
 
                 selectionBox.gameObject.SetActive(true);
             }
+        }
+
+        private RectTransform CreateSelectionBox()
+        {
+            GameObject selectionGO = new("MobileSelection");
+            var selection = selectionGO.AddComponent<RawImage>();
+            var selectionRT = selectionGO.GetComponent<RectTransform>();
+            selection.transform.SetParent(textAreaRT, false);
+            selection.transform.SetAsFirstSibling();
+            selection.color = selectionColor;
+
+            selectionRT.anchorMin = new(0, 1);
+            selectionRT.anchorMax = new(0, 1);
+            selectionRT.pivot = new(0f, 1f);
+            return selectionRT;
         }
 
         /// <summary>
@@ -183,21 +187,30 @@ namespace umi3d.browserRuntime.ui.keyboard
                 return;
             }
 
-            int lineIndex = inputField.textComponent.textInfo.characterInfo[stringPosition].lineNumber;
+            float positionX = GetHorizontalPosition(stringPosition);
+            float positionY = GetVerticalPosition(stringPosition);
+            caretRT.anchoredPosition = new(positionX, positionY);
+
+            StartCaretBlinking();
+        }
+
+        private float GetHorizontalPosition(int charIndex)
+        {
+            int lineIndex = inputField.textComponent.textInfo.characterInfo[charIndex].lineNumber;
             int lineStartCharIndex = inputField.textComponent.textInfo.lineInfo[lineIndex].firstCharacterIndex;
 
-            string prefix = GetRenderSubstring(lineStartCharIndex, stringPosition - lineStartCharIndex);
-            float prefixWidth = textTMP.GetTextSize(prefix).x;
+            string textBefore = charIndex - lineStartCharIndex <= 0 ? "" : GetRenderSubstring(lineStartCharIndex, charIndex - lineStartCharIndex);
+            float textBeforeWidth = textTMP.GetTextSize(textBefore).x;
 
-            float positionX = prefixWidth + inputField.GetAlignmentOffset();
+            float positionX = textBeforeWidth + inputField.GetAlignmentOffset();
 
             switch (inputField.textComponent.horizontalAlignment)
             {
                 case HorizontalAlignmentOptions.Left:
-                    positionX += inputField.textComponent.margin.x * 2;
+                    positionX += inputField.textComponent.margin.x * 2; // FIXME : Break with margin right
                     break;
                 case HorizontalAlignmentOptions.Center:
-                    positionX += inputField.textComponent.margin.x;
+                    positionX += inputField.textComponent.margin.x; // FIXME : Break with margin right
                     break;
                 case HorizontalAlignmentOptions.Right:
                     positionX -= inputField.textComponent.margin.z;
@@ -209,11 +222,17 @@ namespace umi3d.browserRuntime.ui.keyboard
                     break;
             }
 
+            return positionX;
+        }
+
+        private float GetVerticalPosition(int charIndex)
+        {
+            int lineIndex = inputField.textComponent.textInfo.characterInfo[charIndex].lineNumber;
+
             float lineHeight = inputField.textComponent.GetTextSize("0").y;
             float totalHeight = inputField.textViewport.rect.height;
             float positionY = -lineIndex * lineHeight;
 
-            // Ajustement vertical selon l'alignement
             switch (inputField.textComponent.verticalAlignment)
             {
                 case VerticalAlignmentOptions.Top:
@@ -234,10 +253,7 @@ namespace umi3d.browserRuntime.ui.keyboard
                     break;
             }
 
-
-            caretRT.anchoredPosition = new(positionX, positionY);
-
-            StartCaretBlinking();
+            return positionY;
         }
 
         string GetRenderSubstring(int startIndex, int length)

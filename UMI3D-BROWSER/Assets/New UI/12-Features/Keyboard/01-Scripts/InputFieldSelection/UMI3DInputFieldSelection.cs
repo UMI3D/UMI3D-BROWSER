@@ -183,15 +183,59 @@ namespace umi3d.browserRuntime.ui.keyboard
                 return;
             }
 
-            // Get the width of the portion of the text before the position of the caret.
-
             int lineIndex = inputField.textComponent.textInfo.characterInfo[stringPosition].lineNumber;
             int lineStartCharIndex = inputField.textComponent.textInfo.lineInfo[lineIndex].firstCharacterIndex;
 
             string prefix = GetRenderSubstring(lineStartCharIndex, stringPosition - lineStartCharIndex);
             float prefixWidth = textTMP.GetTextSize(prefix).x;
 
-            caretRT.anchoredPosition = new(prefixWidth, -lineIndex * inputField.textComponent.GetTextSize("0").y);
+            float positionX = prefixWidth + inputField.GetAlignmentOffset();
+
+            switch (inputField.textComponent.horizontalAlignment)
+            {
+                case HorizontalAlignmentOptions.Left:
+                    positionX += inputField.textComponent.margin.x * 2;
+                    break;
+                case HorizontalAlignmentOptions.Center:
+                    positionX += inputField.textComponent.margin.x;
+                    break;
+                case HorizontalAlignmentOptions.Right:
+                    positionX -= inputField.textComponent.margin.z;
+                    break;
+                case HorizontalAlignmentOptions.Justified:
+                case HorizontalAlignmentOptions.Geometry:
+                case HorizontalAlignmentOptions.Flush:
+                    Debug.Log("Justified, Geometry, Flush are not implemented");
+                    break;
+            }
+
+            float lineHeight = inputField.textComponent.GetTextSize("0").y;
+            float totalHeight = inputField.textViewport.rect.height;
+            float positionY = -lineIndex * lineHeight;
+
+            // Ajustement vertical selon l'alignement
+            switch (inputField.textComponent.verticalAlignment)
+            {
+                case VerticalAlignmentOptions.Top:
+                    positionY -= inputField.textComponent.margin.y;
+                    break;
+                case VerticalAlignmentOptions.Middle:
+                    float middleOffset = (totalHeight - (inputField.textComponent.textInfo.lineCount * lineHeight)) / 2;
+                    positionY -= middleOffset + inputField.textComponent.margin.y;
+                    break;
+                case VerticalAlignmentOptions.Bottom:
+                    float bottomOffset = totalHeight - (inputField.textComponent.textInfo.lineCount * lineHeight);
+                    positionY -= bottomOffset + inputField.textComponent.margin.y;
+                    break;
+                case VerticalAlignmentOptions.Capline:
+                case VerticalAlignmentOptions.Baseline:
+                case VerticalAlignmentOptions.Geometry:
+                    Debug.Log("Capline, Baseline, Geometry are not implemented");
+                    break;
+            }
+
+
+            caretRT.anchoredPosition = new(positionX, positionY);
 
             StartCaretBlinking();
         }

@@ -36,7 +36,7 @@ namespace umi3d.browserRuntime.ui.keyboard
         public UnityEvent enterOrSubmit = new();
 
         TMPro.TMP_InputField inputField;
-        UMI3DInputFieldSelection selection;
+        public UMI3DInputFieldSelection Selection { get; private set; }
         Notifier deselectionNotifier;
 
 #if UMI3D_XR
@@ -44,10 +44,10 @@ namespace umi3d.browserRuntime.ui.keyboard
         {
             inputField = GetComponent<TMPro.TMP_InputField>();
 
-            selection = new(this);
-            selection.Blur();
-            selection.allowTextModification = !waitForSubmit;
-            selection.allowSelection = !waitForSubmit;
+            Selection = new(this);
+            Selection.Blur();
+            Selection.allowTextModification = !waitForSubmit;
+            Selection.allowSelection = !waitForSubmit;
 
             deselectionNotifier = NotificationHub.Default.GetNotifier(
                 this,
@@ -63,19 +63,19 @@ namespace umi3d.browserRuntime.ui.keyboard
                 (Callback)AddOrRemoveCharacters
             );
 
-            selection.OnEnable();
+            Selection.OnEnable();
         }
 
         void OnDisable()
         {
             NotificationHub.Default.Unsubscribe(this, KeyboardNotificationKeys.AddOrRemoveCharacters);
 
-            selection.OnDisable();
+            Selection.OnDisable();
         }
 
         void AddOrRemoveCharacters(Notification notification)
         {
-            if (!selection.isActive)
+            if (!Selection.isActive)
             {
                 return;
             }
@@ -150,28 +150,28 @@ namespace umi3d.browserRuntime.ui.keyboard
 
             string text = inputField.text;
 
-            if (!selection.isTextSelected)
+            if (!Selection.isTextSelected)
             {
-                int caretPosition = selection.stringPosition;
+                int caretPosition = Selection.stringPosition;
 
                 inputField.text = text.Insert(caretPosition, characters);
-                selection.DeselectWithoutNotify(caretPosition + characters.Length);
+                Selection.DeselectWithoutNotify(caretPosition + characters.Length);
             }
             else
             {
-                int start = selection.startPosition;
-                int end = selection.endPosition;
+                var start = Mathf.Min(Selection.startPosition, Selection.endPosition);
+                var end = Mathf.Max(Selection.startPosition, Selection.endPosition);
 
                 text = text.Remove(start, end - start);
                 text = text.Insert(start, characters);
                 inputField.text = text;
-                selection.DeselectWithoutNotify(start + 1);
+                Selection.DeselectWithoutNotify(start + 1);
             }
         }
 
         void RemoveCharacters(Notification notification)
         {
-            if (selection.stringPosition == 0 && !selection.isTextSelected)
+            if (Selection.stringPosition == 0 && !Selection.isTextSelected)
             {
                 return;
             }
@@ -187,27 +187,27 @@ namespace umi3d.browserRuntime.ui.keyboard
             // In phase 0: delete only one character or the selected text.
             if (deletionPhase == 0)
             {
-                if (!selection.isTextSelected)
+                if (!Selection.isTextSelected)
                 {
-                    int caretPosition = selection.stringPosition;
+                    int caretPosition = Selection.stringPosition;
 
                     inputField.text = text.Remove(caretPosition - 1, 1);
-                    selection.DeselectWithoutNotify(caretPosition - 1);
+                    Selection.DeselectWithoutNotify(caretPosition - 1);
                 }
                 else
                 {
-                    int start = selection.startPosition;
-                    int end = selection.endPosition;
+                    var start = Mathf.Min(Selection.startPosition, Selection.endPosition);
+                    var end = Mathf.Max(Selection.startPosition, Selection.endPosition);
 
                     text = text.Remove(start, end - start);
-                    selection.DeselectWithoutNotify(start);
+                    Selection.DeselectWithoutNotify(start);
                     inputField.text = text;
                 }
             }
             // In phase 1: delete world by world.
             else if (deletionPhase == 1)
             {
-                int caretPosition = selection.stringPosition;
+                int caretPosition = Selection.stringPosition;
 
                 // The part that will be partially deleted.
                 string left = text.Substring(0, caretPosition);
@@ -219,7 +219,7 @@ namespace umi3d.browserRuntime.ui.keyboard
                 if (trimmedLeft.Length < left.Length)
                 {
                     inputField.text = trimmedLeft + right;
-                    selection.DeselectWithoutNotify(trimmedLeft.Length);
+                    Selection.DeselectWithoutNotify(trimmedLeft.Length);
                     return;
                 }
 
@@ -229,12 +229,12 @@ namespace umi3d.browserRuntime.ui.keyboard
                 if (lastIdxOfSpace == -1)
                 {
                     inputField.text = right;
-                    selection.DeselectWithoutNotify(0);
+                    Selection.DeselectWithoutNotify(0);
                 }
                 else
                 {
                     inputField.text = left.Substring(0, lastIdxOfSpace + 1) + right;
-                    selection.DeselectWithoutNotify(lastIdxOfSpace + 1);
+                    Selection.DeselectWithoutNotify(lastIdxOfSpace + 1);
                 }
             }
             else

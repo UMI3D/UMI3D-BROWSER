@@ -18,7 +18,6 @@ using inetum.unityUtils.observation;
 using inetum.unityUtils.ui;
 using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -58,6 +57,10 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         public override int stringPosition { get; set; }
 
+        public IInputFieldSelectionIndicator StartIndicator { get; set; }
+
+        public IInputFieldSelectionIndicator EndIndicator { get; set; }
+
         public UMI3DInputFieldSelection(MonoBehaviour context) : base(context)
         {
             inputField = context.GetComponentInChildren<TMP_InputField>();
@@ -78,7 +81,6 @@ namespace umi3d.browserRuntime.ui.keyboard
             caretRT.anchorMin = new(0, 1);
             caretRT.anchorMax = new(0, 1);
             caretRT.pivot = new(0f, 1f);
-            Debug.Log(inputField.textComponent.fontSize);
             caretRT.sizeDelta = new Vector2(caretWidth, inputField.textComponent.fontSize);
         }
 
@@ -116,6 +118,7 @@ namespace umi3d.browserRuntime.ui.keyboard
         public override void UpdateSelection()
         {
             HideSelection();
+            if (!isTextSelected) return;
 
             var startPos = Mathf.Min(startPosition, endPosition);
             var endPos = Mathf.Max(startPosition, endPosition);
@@ -159,6 +162,9 @@ namespace umi3d.browserRuntime.ui.keyboard
 
                 selectionBox.gameObject.SetActive(true);
             }
+
+            StartIndicator?.ShowAt(new Vector2(GetHorizontalPosition(startPos), GetVerticalPosition(startPos)));
+            EndIndicator?.ShowAt(new Vector2(GetHorizontalPosition(endPos), GetVerticalPosition(endPos) - inputField.textComponent.GetTextSize("0").y));
         }
 
         private RectTransform CreateSelectionBox()
@@ -291,10 +297,6 @@ namespace umi3d.browserRuntime.ui.keyboard
             if (isLongPress)
             {
                 LongPress = true;
-                var caretPosition = TMP_TextUtilities.FindNearestCharacter(inputField.textComponent, eventData.position, Camera.main, false);
-                startPosition = caretPosition;
-                endPosition = caretPosition;
-                UpdateSelection();
             }
 
             if (!isImmediate)
@@ -320,6 +322,9 @@ namespace umi3d.browserRuntime.ui.keyboard
             {
                 selectionBox.gameObject.SetActive(false);
             }
+
+            StartIndicator?.Hide();
+            EndIndicator?.Hide();
         }
 
         int PointerPositionToCaretPosition(Vector2 position)

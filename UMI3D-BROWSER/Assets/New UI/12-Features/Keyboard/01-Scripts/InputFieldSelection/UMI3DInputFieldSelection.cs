@@ -57,9 +57,28 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         public override int stringPosition { get; set; }
 
-        public IInputFieldSelectionIndicator StartIndicator { get; set; }
+        private IInputFieldSelectionIndicator _startIndicator;
+        public IInputFieldSelectionIndicator StartIndicator { 
+            get => _startIndicator; 
+            set {
+                if (_startIndicator != null)
+                    _startIndicator.OnMove -= OnStartIndicatorMove;
+                _startIndicator = value;
+                _startIndicator.OnMove += OnStartIndicatorMove;
+            } 
+        }
 
-        public IInputFieldSelectionIndicator EndIndicator { get; set; }
+        private IInputFieldSelectionIndicator _endIndicator;
+        public IInputFieldSelectionIndicator EndIndicator
+        {
+            get => _endIndicator;
+            set {
+                if (_endIndicator != null)
+                    _endIndicator.OnMove -= OnEndIndicatorMove;
+                _endIndicator = value;
+                _endIndicator.OnMove += OnEndIndicatorMove;
+            }
+        }
 
         public UMI3DInputFieldSelection(MonoBehaviour context) : base(context)
         {
@@ -412,6 +431,20 @@ namespace umi3d.browserRuntime.ui.keyboard
 
             endPosition = TMP_TextUtilities.FindNearestCharacter(inputField.textComponent, data.position, Camera.main, false);
             
+            UpdateSelection();
+        }
+
+        private void OnStartIndicatorMove(Vector2 position)
+        {
+            startPosition = TMP_TextUtilities.FindNearestCharacter(inputField.textComponent, position - new Vector2(0, inputField.textComponent.fontSize), Camera.main, false);
+            startPosition = Mathf.Min(startPosition, endPosition);
+            UpdateSelection();
+        }
+
+        private void OnEndIndicatorMove(Vector2 position)
+        {
+            endPosition = TMP_TextUtilities.FindNearestCharacter(inputField.textComponent, position + new Vector2(0, inputField.textComponent.fontSize), Camera.main, false);
+            endPosition = Mathf.Max(startPosition, endPosition);
             UpdateSelection();
         }
     }

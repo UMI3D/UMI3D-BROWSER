@@ -14,12 +14,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.keyboard
 {
     public interface IInputFieldSelectionIndicator 
     {
+        Action<Vector2> OnMove { get; set; }
+
         void ShowAt(Vector2 anchoredPosition);
         void Hide();
     }

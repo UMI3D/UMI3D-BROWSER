@@ -14,16 +14,21 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.EventSystems;
 
 namespace umi3d.browserRuntime.ui.keyboard
 {
-    public class InputFieldSelectionIndicator : MonoBehaviour, IInputFieldSelectionIndicator
+    public class InputFieldSelectionIndicator : MonoBehaviour, IInputFieldSelectionIndicator, IDragHandler, IPointerDownHandler
     {
         [SerializeField] bool _isStart = true;
 
         RectTransform _rectTransform;
+        bool _isMouseDown = false;
+
+        public Action<Vector2> OnMove { get; set; }
 
         void Awake()
         {
@@ -54,6 +59,16 @@ namespace umi3d.browserRuntime.ui.keyboard
         public void Hide()
         {
             gameObject.SetActive(false);
+        }
+
+        public void OnDrag(PointerEventData eventData)
+        {
+            OnMove?.Invoke(eventData.position);
+        }
+
+        public void OnPointerDown(PointerEventData eventData)
+        {
+            // Just to capture the click
         }
     }
 }

@@ -14,13 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils.observation;
 using inetum.unityUtils.math;
+using inetum.unityUtils.observation;
 using System.Collections;
 using System.Collections.Generic;
 using umi3d.browserRuntime.NotificationKeys;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.XR.Interaction.Toolkit;
 
 namespace umi3d.browserRuntime.navigation
 {
@@ -29,8 +30,10 @@ namespace umi3d.browserRuntime.navigation
         [Header("Controller Actions")]
         [Tooltip("The reference to the action of snap turning the XR Origin with this controller.")]
         [SerializeField] InputActionReference leftHandSnapTurn;
+        [SerializeField] XRRayInteractor leftIndicator;
         [Tooltip("The reference to the action of snap turning the XR Origin with this controller.")]
         [SerializeField] InputActionReference rightHandSnapTurn;
+        [SerializeField] XRRayInteractor rightIndicator;
 
         [Header("Settings")]
         [Tooltip("The amount of degree that locomotion turn.")]
@@ -54,18 +57,34 @@ namespace umi3d.browserRuntime.navigation
 
         void OnEnable()
         {
-            leftHandSnapTurn.action.performed += SnapTurn;
-            rightHandSnapTurn.action.performed += SnapTurn;
+            leftHandSnapTurn.action.performed += SnapTurn_Left;
+            rightHandSnapTurn.action.performed += SnapTurn_Right;
         }
 
         void OnDisable()
         {
-            leftHandSnapTurn.action.performed -= SnapTurn;
-            rightHandSnapTurn.action.performed -= SnapTurn;
+            leftHandSnapTurn.action.performed -= SnapTurn_Left;
+            rightHandSnapTurn.action.performed -= SnapTurn_Right;
         }
 
-        void SnapTurn(InputAction.CallbackContext context)
+        void SnapTurn_Left(InputAction.CallbackContext context)
         {
+            if (leftIndicator.IsOverUIGameObject())
+                return;
+
+            if (coroutine != null)
+            {
+                return;
+            }
+
+            coroutine = StartCoroutine(SnapTurnCoroutine());
+        }
+
+        void SnapTurn_Right(InputAction.CallbackContext context)
+        {
+            if (rightIndicator.IsOverUIGameObject())
+                return;
+
             if (coroutine != null)
             {
                 return;

@@ -21,6 +21,7 @@ using umi3d.browserRuntime.NotificationKeys;
 using umi3d.browserRuntime.xr;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.XR.Interaction.Toolkit;
 
 namespace umi3dVRBrowsersBase.navigation
 {
@@ -78,6 +79,8 @@ namespace umi3dVRBrowsersBase.navigation
         ControllerType controllerType;
         Dictionary<string, System.Object> info = new();
 
+        [SerializeField] XRRayInteractor indicator;
+
         #endregion
 
         #region Methods
@@ -110,6 +113,9 @@ namespace umi3dVRBrowsersBase.navigation
 
         void Teleport(Notification notification)
         {
+            if (indicator.IsOverUIGameObject())
+                return;
+
             if (notification.Publisher is TeleportArc)
             {
                 // If this trigger this notification then return.

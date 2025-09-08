@@ -70,7 +70,16 @@ namespace umi3d.browserRuntime.navigation
         void SnapTurn_Left(InputAction.CallbackContext context)
         {
             if (leftIndicator.IsOverUIGameObject())
+            {
+                Dictionary<string, object> uiInfo = new Dictionary<string, object>();
+                uiInfo[ActionNotifictionKeys.UiJoystic.Vector] = Vector2.left;
+                NotificationHub.Default.Notify(
+                    this,
+                    ID.FromType<ActionNotifictionKeys.UiJoystic>(),
+                    uiInfo
+                );
                 return;
+            }
 
             if (coroutine != null)
             {
@@ -83,7 +92,16 @@ namespace umi3d.browserRuntime.navigation
         void SnapTurn_Right(InputAction.CallbackContext context)
         {
             if (rightIndicator.IsOverUIGameObject())
+            {
+                Dictionary<string, object> uiInfo = new Dictionary<string, object>();
+                uiInfo[ActionNotifictionKeys.UiJoystic.Vector] = Vector2.right;
+                NotificationHub.Default.Notify(
+                    this,
+                    ID.FromType<ActionNotifictionKeys.UiJoystic>(),
+                    uiInfo
+                );
                 return;
+            }
 
             if (coroutine != null)
             {

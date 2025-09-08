@@ -114,7 +114,16 @@ namespace umi3dVRBrowsersBase.navigation
         void Teleport(Notification notification)
         {
             if (indicator.IsOverUIGameObject())
+            {
+                Dictionary<string, object> uiInfo = new Dictionary<string, object>();
+                uiInfo[ActionNotifictionKeys.UiJoystic.Vector] = Vector2.up;
+                NotificationHub.Default.Notify(
+                    this,
+                    ID.FromType<ActionNotifictionKeys.UiJoystic>(),
+                    uiInfo
+                );
                 return;
+            }
 
             if (notification.Publisher is TeleportArc)
             {

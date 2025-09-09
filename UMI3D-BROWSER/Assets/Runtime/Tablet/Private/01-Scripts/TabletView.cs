@@ -35,6 +35,10 @@ namespace umi3d.browserRuntime.ui.tablet
                 ID.FromType<TabletNotificationKeys.Toggle>(),
                 (Callback)Toggle
             );
+        }
+
+        private void Start()
+        {
             gameObject.SetActive(false);
         }
 

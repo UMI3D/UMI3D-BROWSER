@@ -49,6 +49,8 @@ namespace umi3d.browserRuntime.navigation
 
         Dictionary<string, System.Object> info = new();
 
+        [SerializeField] LayerMask uiLayerMask;
+
         void Awake()
         {
             actionMovementTiming = new();
@@ -57,61 +59,36 @@ namespace umi3d.browserRuntime.navigation
 
         void OnEnable()
         {
-            leftHandSnapTurn.action.performed += SnapTurn_Left;
-            rightHandSnapTurn.action.performed += SnapTurn_Right;
+            leftHandSnapTurn.action.performed += Left_SnapTurn;
+            rightHandSnapTurn.action.performed += Right_SnapTurn;
         }
 
         void OnDisable()
         {
-            leftHandSnapTurn.action.performed -= SnapTurn_Left;
-            rightHandSnapTurn.action.performed -= SnapTurn_Right;
+            leftHandSnapTurn.action.performed -= Left_SnapTurn;
+            rightHandSnapTurn.action.performed -= Right_SnapTurn;
         }
 
-        void SnapTurn_Left(InputAction.CallbackContext context)
+        void Left_SnapTurn(InputAction.CallbackContext context)
         {
-            if (leftIndicator.IsOverUIGameObject())
-            {
-                Dictionary<string, object> uiInfo = new Dictionary<string, object>();
-                uiInfo[ActionNotifictionKeys.UiJoystic.Vector] = Vector2.left;
-                NotificationHub.Default.Notify(
-                    this,
-                    ID.FromType<ActionNotifictionKeys.UiJoystic>(),
-                    uiInfo
-                );
-                return;
-            }
-
             if (coroutine != null)
             {
                 return;
             }
 
-            coroutine = StartCoroutine(SnapTurnCoroutine());
+            coroutine = StartCoroutine(SnapTurnCoroutine(false));
         }
-
-        void SnapTurn_Right(InputAction.CallbackContext context)
+        void Right_SnapTurn(InputAction.CallbackContext context)
         {
-            if (rightIndicator.IsOverUIGameObject())
-            {
-                Dictionary<string, object> uiInfo = new Dictionary<string, object>();
-                uiInfo[ActionNotifictionKeys.UiJoystic.Vector] = Vector2.right;
-                NotificationHub.Default.Notify(
-                    this,
-                    ID.FromType<ActionNotifictionKeys.UiJoystic>(),
-                    uiInfo
-                );
-                return;
-            }
-
             if (coroutine != null)
             {
                 return;
             }
 
-            coroutine = StartCoroutine(SnapTurnCoroutine());
+            coroutine = StartCoroutine(SnapTurnCoroutine(true));
         }
 
-        IEnumerator SnapTurnCoroutine()
+        IEnumerator SnapTurnCoroutine(bool isRight)
         {
             if (!IsRotating(out float angle))
             {
@@ -119,7 +96,29 @@ namespace umi3d.browserRuntime.navigation
                 yield break;
             }
 
-            info[LocomotionNotificationKeys.Info.Direction] = RotationDirection(angle);
+            var direction = RotationDirection(angle);
+
+            if (rightIndicator.IsOverUIGameObject() || leftIndicator.IsOverUIGameObject())
+            {
+                var ob = isRight ? rightIndicator.rayEndTransform.gameObject : leftIndicator.rayEndTransform.gameObject;
+                Dictionary<string, object> uiInfo = new Dictionary<string, object>();
+                if (direction == 0)
+                    uiInfo[ActionNotifictionKeys.UiJoystic.Vector] = Vector2.down;
+                else if (direction == 1)
+                    uiInfo[ActionNotifictionKeys.UiJoystic.Vector] = Vector2.left;
+                else if (direction == 2)
+                    uiInfo[ActionNotifictionKeys.UiJoystic.Vector] = Vector2.right;
+                uiInfo[ActionNotifictionKeys.UiJoystic.Object] = ob;
+                NotificationHub.Default.Notify(
+                        this,
+                        ID.FromType<ActionNotifictionKeys.UiJoystic>(),
+                        uiInfo
+                    );
+                coroutine = null;
+                yield break;
+            }
+
+            info[LocomotionNotificationKeys.Info.Direction] = direction;
             info[LocomotionNotificationKeys.Info.TurnAmount] = turnAmount;
             NotificationHub.Default.Notify(
                 this,

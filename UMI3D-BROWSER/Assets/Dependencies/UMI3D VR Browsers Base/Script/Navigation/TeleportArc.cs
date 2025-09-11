@@ -113,18 +113,6 @@ namespace umi3dVRBrowsersBase.navigation
 
         void Teleport(Notification notification)
         {
-            if (indicator.IsOverUIGameObject())
-            {
-                Dictionary<string, object> uiInfo = new Dictionary<string, object>();
-                uiInfo[ActionNotifictionKeys.UiJoystic.Vector] = Vector2.up;
-                NotificationHub.Default.Notify(
-                    this,
-                    ID.FromType<ActionNotifictionKeys.UiJoystic>(),
-                    uiInfo
-                );
-                return;
-            }
-
             if (notification.Publisher is TeleportArc)
             {
                 // If this trigger this notification then return.
@@ -144,6 +132,22 @@ namespace umi3dVRBrowsersBase.navigation
             if (controller != controllerType.controller)
             {
                 // This controller is not the target of the notification.
+                return;
+            }
+
+            if (indicator.IsOverUIGameObject())
+            {
+                if (phase == InputActionPhase.Performed)
+                {
+                    Debug.Log("UP");
+                    Dictionary<string, object> uiInfo = new Dictionary<string, object>();
+                    uiInfo[ActionNotifictionKeys.UiJoystic.Vector] = Vector2.up;
+                    NotificationHub.Default.Notify(
+                        this,
+                        ID.FromType<ActionNotifictionKeys.UiJoystic>(),
+                        uiInfo
+                    );
+                }
                 return;
             }
 

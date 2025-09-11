@@ -14,14 +14,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-namespace umi3d.browserRuntime.NotificationKeys
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace umi3d
 {
-    public class ActionNotifictionKeys
+    public class VRScrollViewAction : MonoBehaviour
     {
-        public class UiJoystic
+        ScrollRect _scrollview;
+
+        void Awake()
         {
-            public const string Vector = "Vector";
-            public const string Object = "Object";
+            _scrollview = GetComponent<ScrollRect>();
         }
     }
 }

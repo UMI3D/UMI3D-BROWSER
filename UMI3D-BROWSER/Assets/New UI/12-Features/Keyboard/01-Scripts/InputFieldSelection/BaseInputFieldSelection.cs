@@ -16,11 +16,12 @@ limitations under the License.
 
 using inetum.unityUtils.observation;
 using TMPro;
+using umi3d.browserRuntime.NotificationKeys;
 using UnityEngine;
 
 namespace umi3d.browserRuntime.ui.keyboard
 {
-    public abstract class BaseInputFieldSelection 
+    public abstract class BaseInputFieldSelection
     {
         /// <summary>
         /// Whether this selection is the keyboard preview bar.
@@ -68,7 +69,7 @@ namespace umi3d.browserRuntime.ui.keyboard
         /// </summary>
         public abstract int stringPosition { get; set; }
 
-        public BaseInputFieldSelection(MonoBehaviour context) 
+        public BaseInputFieldSelection(MonoBehaviour context)
         {
             this.context = context;
 
@@ -76,6 +77,25 @@ namespace umi3d.browserRuntime.ui.keyboard
                 this,
                 ID.FromType<KeyboardNotificationKeys.TextFieldSelected>()
             );
+            NotificationHub.Default.Subscribe(this, ID.FromType<ActionNotifictionKeys.UiJoystic>(), (Callback)UiJoystic);
+        }
+
+        void UiJoystic(Notification notification)
+        {
+            if (!notification.TryGetInfoT(ActionNotifictionKeys.UiJoystic.Object, out GameObject go, false))
+                return;
+            if (!notification.TryGetInfoT(ActionNotifictionKeys.UiJoystic.Vector, out Vector2 vector, false))
+                return;
+
+            // Verify that the action is on the correct element
+            if (go != inputField.gameObject && !go.transform.IsChildOf(inputField.transform))
+                return;
+
+            // Left and Right caret movement
+            Deselect(startPosition + (int)vector.x);
+
+            // Up and Down caret movement
+
         }
 
         public virtual void OnEnable()

@@ -100,7 +100,6 @@ namespace umi3d.browserRuntime.navigation
 
             if (rightIndicator.IsOverUIGameObject() || leftIndicator.IsOverUIGameObject())
             {
-                var ob = isRight ? rightIndicator.rayEndTransform.gameObject : leftIndicator.rayEndTransform.gameObject;
                 Dictionary<string, object> uiInfo = new Dictionary<string, object>();
                 if (direction == 0)
                     uiInfo[ActionNotifictionKeys.UiJoystic.Vector] = Vector2.down;
@@ -108,7 +107,7 @@ namespace umi3d.browserRuntime.navigation
                     uiInfo[ActionNotifictionKeys.UiJoystic.Vector] = Vector2.left;
                 else if (direction == 2)
                     uiInfo[ActionNotifictionKeys.UiJoystic.Vector] = Vector2.right;
-                uiInfo[ActionNotifictionKeys.UiJoystic.Object] = ob;
+                uiInfo[ActionNotifictionKeys.UiJoystic.Object] = isRight ? rightIndicator.rayEndTransform.gameObject : leftIndicator.rayEndTransform.gameObject;
                 NotificationHub.Default.Notify(
                         this,
                         ID.FromType<ActionNotifictionKeys.UiJoystic>(),

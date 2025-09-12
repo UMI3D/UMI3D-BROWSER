@@ -137,11 +137,11 @@ namespace umi3dVRBrowsersBase.navigation
 
             if (indicator.IsOverUIGameObject())
             {
-                if (phase == InputActionPhase.Performed)
+                if (phase == InputActionPhase.Started)
                 {
-                    Debug.Log("UP");
                     Dictionary<string, object> uiInfo = new Dictionary<string, object>();
                     uiInfo[ActionNotifictionKeys.UiJoystic.Vector] = Vector2.up;
+                    uiInfo[ActionNotifictionKeys.UiJoystic.Object] = indicator.rayEndTransform.gameObject;
                     NotificationHub.Default.Notify(
                         this,
                         ID.FromType<ActionNotifictionKeys.UiJoystic>(),

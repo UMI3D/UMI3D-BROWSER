@@ -91,11 +91,34 @@ namespace umi3d.browserRuntime.ui.keyboard
             if (go != inputField.gameObject && !go.transform.IsChildOf(inputField.transform))
                 return;
 
+            Debug.Log($"UI Joystic : {vector}");
             // Left and Right caret movement
             Deselect(startPosition + (int)vector.x);
 
             // Up and Down caret movement
+            Deselect(GetStringPositionVertically(-(int)vector.y));
+        }
 
+        private int GetStringPositionVertically(int movement)
+        {
+            TMP_TextInfo textInfo = inputField.textComponent.textInfo;
+            float xPos = textInfo.characterInfo[startPosition].origin;
+            int newLine = textInfo.characterInfo[startPosition].lineNumber + movement;
+            newLine = Mathf.Clamp(newLine, 0, textInfo.lineCount - 1);
+            int closestChar = textInfo.lineInfo[newLine].firstCharacterIndex;
+            float closestDist = Mathf.Abs(textInfo.characterInfo[closestChar].origin - xPos);
+
+            for (int i = textInfo.lineInfo[newLine].firstCharacterIndex; i <= textInfo.lineInfo[newLine].lastCharacterIndex; i++)
+            {
+                float currentDist = Mathf.Abs(textInfo.characterInfo[i].origin - xPos);
+                if (currentDist < closestDist)
+                {
+                    closestDist = currentDist;
+                    closestChar = i;
+                }
+            }
+
+            return closestChar;
         }
 
         public virtual void OnEnable()

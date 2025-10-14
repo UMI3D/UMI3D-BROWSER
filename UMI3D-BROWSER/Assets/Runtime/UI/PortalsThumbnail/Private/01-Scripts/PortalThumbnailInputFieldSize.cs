@@ -15,31 +15,36 @@ limitations under the License.
 */
 
 using inetum.unityUtils.observation;
+using TMPro;
+using umi3d.browserRuntime.thumbnails;
 using UnityEngine;
-using UnityEngine.UI;
 
-namespace umi3d.browserRuntime.thumbnails
+namespace umi3d
 {
-    [RequireComponent(typeof(GridLayoutGroup)), ExecuteInEditMode]
-    internal class ThumbnailModeView : MonoBehaviour
+    public class PortalThumbnailInputFieldSize : MonoBehaviour
     {
-        private GridLayoutGroup _group;
+        [SerializeField] private float _maxSize;
+        [SerializeField] private float _offset;
+
+        private TMP_InputField _inputField;
         private ThumbnailListModelContainer _modelContainer;
 
         private void Awake()
         {
-            _group = GetComponent<GridLayoutGroup>();
+            _inputField = GetComponent<TMP_InputField>();
             _modelContainer = GetComponentInParent<ThumbnailListModelContainer>();
+        }
+
+        void Start()
+        {
+            UpdateSize();
 
             NotificationHub.Default.Subscribe(this,
                 ID.FromType<ThumbnailNotificationKeys.ChangeMode>(),
                 (Callback)ChangeMode,
                 new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == _modelContainer.Model));
-        }
 
-        private void OnDestroy()
-        {
-            NotificationHub.Default.Unsubscribe(this);
+            _inputField.onValueChanged.AddListener(OnValueChanged);
         }
 
         private void ChangeMode(Notification notification)
@@ -47,13 +52,26 @@ namespace umi3d.browserRuntime.thumbnails
             if (!notification.TryGetInfoT(ThumbnailNotificationKeys.ChangeMode.Mode, out ThumbnailMode mode))
                 return;
 
-            var viewSize = ((RectTransform)transform.parent.parent).sizeDelta;
-            var width = (viewSize.x - (mode.Spacing * (mode.NbrColumn - 1))) / mode.NbrColumn;
-            var height = (viewSize.y - (mode.Spacing * (mode.NbrRow - 1))) / mode.NbrRow;
+            var viewSize = ((RectTransform)transform.parent.parent.parent.parent.parent).sizeDelta;
+            _maxSize = (viewSize.x - (mode.Spacing * (mode.NbrColumn - 1))) / mode.NbrColumn - 47;
+            Debug.Log(_maxSize);
 
-            _group.cellSize = new Vector2(width, height);
-            _group.spacing = new Vector2(mode.Spacing, mode.Spacing);
-            _group.constraintCount = mode.NbrRow;
+            UpdateSize();
+        }
+
+        private void OnValueChanged(string newValue)
+        {
+            UpdateSize();
+        }
+
+        [ContextMenu("Update Size")]
+        private void UpdateSize()
+        {
+            var preferredWidth = _inputField.preferredWidth + _offset;
+            var correctWidth = Mathf.Min(preferredWidth, _maxSize);
+
+            var inputFieldRectTransform = _inputField.transform as RectTransform;
+            inputFieldRectTransform.sizeDelta = new Vector2(correctWidth, inputFieldRectTransform.sizeDelta.y);
         }
     }
 }

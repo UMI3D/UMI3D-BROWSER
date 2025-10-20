@@ -14,16 +14,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using CSCore;
+using CSCore.SoundIn;
 using Mumble;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using umi3d.common;
 using UnityEngine;
 using UnityEngine.Profiling;
-using CSCore.SoundIn;
-using CSCore;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace umi3d.cdk.collaboration
 {
@@ -112,8 +112,7 @@ namespace umi3d.cdk.collaboration
         public bool UseAudioEnhancement
         {
             get => useAudioEnhancement;
-            set
-            {
+            set {
                 useAudioEnhancement = value;
 
                 foreach (IMicrophoneFilter filter in filters)
@@ -167,8 +166,7 @@ namespace umi3d.cdk.collaboration
             {
 #if UNITY_STANDALONE_WIN || UNITY_STANDALONE_OSX
 
-                var settings = new AudioProcessingWebRTCWrapper.AudioProcessingSettings()
-                {
+                var settings = new AudioProcessingWebRTCWrapper.AudioProcessingSettings() {
                     sampleRate = currentMicSampleRate,
                     nbChannels = 1,
                     useNoiseReduction = true,
@@ -191,11 +189,9 @@ namespace umi3d.cdk.collaboration
         {
             try
             {
-                await Task.Run(() =>
-                {
+                await Task.Run(() => {
                     waveIn?.Dispose();
-                    waveIn = new WaveIn(new WaveFormat(this.currentMicSampleRate, 16, numberOfChannel))
-                    {
+                    waveIn = new WaveIn(new WaveFormat(this.currentMicSampleRate, 16, numberOfChannel)) {
                         Device = WaveInDevice.EnumerateDevices().ElementAt(MicNumberToUse),
                         Latency = 100 // Delay, to be sure echo samples are recorded before mic samples
                     };
@@ -453,6 +449,9 @@ namespace umi3d.cdk.collaboration
             }
             else
             {
+                if (!needToRecord)
+                    StartRecording();
+                /*
                 if (!_mumbleClient.IsSelfMuted())
                 {
                     StartRecording();
@@ -460,7 +459,7 @@ namespace umi3d.cdk.collaboration
                 else if (needToRecord)
                 {
                     StopRecording();
-                }
+                }*/
             }
 
             if (needToRecord && shouldSendAudioToServer)

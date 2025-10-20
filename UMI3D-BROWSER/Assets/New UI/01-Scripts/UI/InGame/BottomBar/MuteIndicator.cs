@@ -21,20 +21,20 @@ namespace umi3d.browserRuntime.ui.inGame.bottomBar
 {
     public class MuteIndicator : MonoBehaviour
     {
-        [SerializeField] private float threashold = 1;
+        [SerializeField] private float threshold = 1;
         [SerializeField] private float cooldown = 2;
 
         private float timer = 0;
 
         private void Awake()
         {
-            MicrophoneListener.Instance.threshold = threashold;
+            MicrophoneListener.Instance.threshold = threshold;
             MicrophoneListener.Instance.Subscribe(value => {
                 if (MicrophoneListener.mute && value)
                 {
-                    if ( !gameObject.activeSelf)
+                    if (!gameObject.activeSelf)
                         gameObject.SetActive(true);
-                    timer = 2;
+                    timer = cooldown;
                 }
             });
             gameObject.SetActive(false);

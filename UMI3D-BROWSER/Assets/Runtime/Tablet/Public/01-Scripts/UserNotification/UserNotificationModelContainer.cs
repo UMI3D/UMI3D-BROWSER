@@ -22,11 +22,17 @@ namespace umi3d.browserRuntime.ui.tablet.userNotification
     {
         UserNotificationModel _model;
 
-        public UserNotificationModel Model { get {
-                if (_model == null)
-                    _model = new UserNotificationModel();
+        public UserNotificationModel Model
+        {
+            get {
+                _model ??= new UserNotificationModel();
                 return _model;
-            } 
+            }
+        }
+
+        private void Awake()
+        {
+            _model ??= new UserNotificationModel();
         }
     }
 }

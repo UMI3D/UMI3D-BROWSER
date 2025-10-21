@@ -24,11 +24,11 @@ namespace umi3d.browserRuntime.ui.tablet.userNotification
         [SerializeField] private UserNotificationLoader _notificationLoader;
 
         UserNotificationListModel _model;
-        public UserNotificationListModel Model { 
-            get {
-                _model ??= new UserNotificationListModel(_notificationLoader);
-                return _model;
-            } 
+        public UserNotificationListModel Model => _model;
+
+        private void Awake()
+        {
+            _model = new UserNotificationListModel(_notificationLoader);
         }
     }
 }

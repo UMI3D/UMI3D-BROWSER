@@ -31,15 +31,20 @@ namespace umi3d.browserRuntime.ui.tablet.userNotification
             _text = GetComponent<TMP_Text>();
             _modelContainer = GetComponentInParent<UserNotificationModelContainer>();
 
-            NotificationHub.Default.Subscribe(this, 
+            NotificationHub.Default.Subscribe(this,
                 ID.FromType<UserNotificationNotificationKeys.UserNotificationSet>(),
                 (Callback)UserNotifiactionSet,
                 new FilterByCondition(FilterType.AcceptOnly, publisher => publisher == _modelContainer.Model));
         }
 
+        private void Start()
+        {
+            _text.text = _modelContainer.Model.Description;
+        }
+
         void UserNotifiactionSet(Notification notification)
         {
-            if (notification.TryGetInfoT(UserNotificationNotificationKeys.UserNotificationSet.Description, out string description)) 
+            if (notification.TryGetInfoT(UserNotificationNotificationKeys.UserNotificationSet.Description, out string description))
             {
                 _text.text = description;
             }

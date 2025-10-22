@@ -15,16 +15,22 @@ limitations under the License.
 */
 
 using umi3d.cdk.collaboration;
-using umi3dBrowsers.displayer;
 using UnityEngine;
 
-namespace umi3d
+namespace umi3d.browserRuntime.ui
 {
-    public class MumbleNotification : MonoBehaviour
+    public class MumbleIndicatorController : MonoBehaviour
     {
-        [SerializeField] UserNotificationLoader _userNotificationLoader;
+        MumbleIndicatorModel _model;
 
-        void Awake()
+        public MumbleIndicatorModel Model => _model;
+
+        private void Awake()
+        {
+            _model = new MumbleIndicatorModel();
+        }
+
+        private void Start()
         {
             MicrophoneListener.Instance.OnChanelUpdate += OnChanelUpdate;
             MicrophoneListener.Instance.OnConnectionClose += OnConnectionClose;
@@ -36,18 +42,14 @@ namespace umi3d
             MicrophoneListener.Instance.OnConnectionClose -= OnConnectionClose;
         }
 
-        private void OnChanelUpdate(string chanel)
+        private void OnChanelUpdate(string obj)
         {
-            var notification = new common.NotificationDto();
-            notification.title = "Joined channel audio : " + chanel;
-            _userNotificationLoader.Notify(notification);
+            _model.SetIsConnected(true);
         }
 
         private void OnConnectionClose()
         {
-            var notification = new common.NotificationDto();
-            notification.title = "Closing channel audio.";
-            _userNotificationLoader.Notify(notification);
+            _model.SetIsConnected(false);
         }
     }
 }

@@ -14,25 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using UnityEngine;
-
-namespace umi3d.browserRuntime.ui.tablet.userNotification
+namespace umi3d.browserRuntime.ui
 {
-    public class UserNotificationModelContainer : MonoBehaviour
+    public interface IMumbleIndicatorConnectedObserver
     {
-        UserNotificationModel _model;
-
-        public UserNotificationModel Model
-        {
-            get {
-                _model ??= new UserNotificationModel();
-                return _model;
-            }
-        }
-
-        private void Awake()
-        {
-            _model ??= new UserNotificationModel();
-        }
+        void UpdateConnected(bool isConnected);
     }
 }

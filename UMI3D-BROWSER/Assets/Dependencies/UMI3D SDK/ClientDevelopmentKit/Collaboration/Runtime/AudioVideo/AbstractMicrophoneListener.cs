@@ -102,8 +102,11 @@ namespace umi3d.cdk.collaboration
         public static MumbleEvent OnMumbleStatusUpdate = new MumbleEvent();
         EventUpdater<MumbleStatus> OnMumbleStatusUpdateUpdater;
 
-        List<Action<float[]>> subscribedPCM = new ();
+        List<Action<float[]>> subscribedPCM = new();
         List<Action<bool>> subscribedIsSpeaking = new();
+
+        public Action<string> OnChanelUpdate;
+        public Action OnConnectionClose;
 
         protected class Identity
         {
@@ -146,8 +149,7 @@ namespace umi3d.cdk.collaboration
         public MumbleStatus mumbleStatus
         {
             get => _mumbleStatus;
-            private set
-            {
+            private set {
                 _mumbleStatus = value;
                 OnMumbleStatusUpdateUpdater.SetValue(value);
             }
@@ -155,8 +157,7 @@ namespace umi3d.cdk.collaboration
         public MicrophoneStatus microphoneStatus
         {
             get => _microphoneStatus;
-            private set
-            {
+            private set {
                 _microphoneStatus = value;
                 OnMicrophoneStatusUpdateUpdater.SetValue(value);
             }
@@ -189,8 +190,7 @@ namespace umi3d.cdk.collaboration
 
         public bool saturated
         {
-            get => _saturated; private set
-            {
+            get => _saturated; private set {
                 _saturated = value;
                 OnSaturatedUpdater.SetValue(value);
             }
@@ -204,14 +204,12 @@ namespace umi3d.cdk.collaboration
 
         static public bool mute
         {
-            get
-            {
+            get {
                 if (Exists)
                     return Instance._mute;
                 return false;
             }
-            set
-            {
+            set {
                 if (Exists)
                     Instance._mute = value;
             }
@@ -232,14 +230,12 @@ namespace umi3d.cdk.collaboration
 
         static public bool canUnmute
         {
-            get
-            {
+            get {
                 if (Exists)
                     return Instance._canUnmute;
                 return false;
             }
-            set
-            {
+            set {
                 if (Exists)
                     Instance._canUnmute = value;
             }
@@ -249,8 +245,7 @@ namespace umi3d.cdk.collaboration
 
         static public bool forceMute
         {
-            set
-            {
+            set {
                 if (Exists)
                     instance.ForceMute(value);
             }
@@ -259,8 +254,7 @@ namespace umi3d.cdk.collaboration
         public bool useLocalLoopback
         {
             get => debuggingVariables?.UseLocalLoopback ?? false;
-            set
-            {
+            set {
                 if (debuggingVariables != null)
                     debuggingVariables.UseLocalLoopback = value;
                 mumbleClient?.SetSelfMute(!value && isMute);
@@ -269,25 +263,22 @@ namespace umi3d.cdk.collaboration
 
         public float minAmplitudeToSend
         {
-            get => mumbleMic?.MinAmplitude ?? 0; set
-            {
+            get => mumbleMic?.MinAmplitude ?? 0; set {
                 if (mumbleMic != null && value >= 0f && value <= 1f)
                     mumbleMic.MinAmplitude = value;
             }
         }
         public float voiceStopingDelaySeconds
         {
-            get => mumbleMic?.VoiceHoldSeconds ?? 0; set
-            {
+            get => mumbleMic?.VoiceHoldSeconds ?? 0; set {
                 if (mumbleMic != null && value >= 0f)
                     mumbleMic.VoiceHoldSeconds = value;
             }
         }
         public bool pushToTalkInputDown
         {
-            get => mumbleMic?.PushToTalkInputDown ?? false; 
-            set
-            {
+            get => mumbleMic?.PushToTalkInputDown ?? false;
+            set {
                 if (mumbleMic != null)
                     mumbleMic.PushToTalkInputDown = value;
             }
@@ -361,8 +352,7 @@ namespace umi3d.cdk.collaboration
             SetMicrophone();
             gameObject.GetOrAddComponent<EventProcessor>();
 
-            debuggingVariables = new DebugValues()
-            {
+            debuggingVariables = new DebugValues() {
                 EnableEditorIOGraph = false,
                 UseLocalLoopback = false,
                 UseRandomUsername = false,
@@ -404,16 +394,16 @@ namespace umi3d.cdk.collaboration
                             await Delay(6000);
                         break;
                     case MumbleStatus.Connected:
+                    {
+                        if (pendingChannel != null)
                         {
-                            if (pendingChannel != null)
-                            {
-                                if (!await UpdateChanel())
-                                    await Delay(3000);
-                            }
-                            if (microphoneStatus == MicrophoneStatus.NoMicrophone)
-                                StartMicrophone();
+                            if (!await UpdateChanel())
+                                await Delay(3000);
                         }
-                        break;
+                        if (microphoneStatus == MicrophoneStatus.NoMicrophone)
+                            StartMicrophone();
+                    }
+                    break;
                 }
                 await Delay(millisecondsHeartBeat);
             }
@@ -458,6 +448,7 @@ namespace umi3d.cdk.collaboration
 
                 channel = pendingChannel;
                 pendingChannel = null;
+                OnChanelUpdate?.Invoke(channel);
 
                 await Delay(300);
                 UMI3DUser user = UMI3DCollaborationEnvironmentLoader.Instance.GetClientUser();
@@ -491,6 +482,7 @@ namespace umi3d.cdk.collaboration
             {
                 LogError("client should be null");
                 mumbleClient.Close();
+                OnConnectionClose?.Invoke();
                 mumbleClient = null;
             }
 
@@ -500,7 +492,8 @@ namespace umi3d.cdk.collaboration
 
             mumbleClient.ConnectionError.AddListener(Failed);
 
-            while (!(mumbleClient?.ReadyToConnect ?? true) && await YieldConnected()) { }
+            while (!(mumbleClient?.ReadyToConnect ?? true) && await YieldConnected())
+            { }
             if (mumbleClient == null || mumbleStatus != MumbleStatus.Connecting)
             {
                 mumbleStatus = MumbleStatus.NotConnected;
@@ -521,7 +514,8 @@ namespace umi3d.cdk.collaboration
 
             lastPing = -1;
 
-            while (lastPing == -1 && await YieldConnected()) { }
+            while (lastPing == -1 && await YieldConnected())
+            { }
             if (mumbleStatus != MumbleStatus.Connecting)
             {
                 mumbleStatus = MumbleStatus.NotConnected;
@@ -545,6 +539,7 @@ namespace umi3d.cdk.collaboration
                 mumbleClient.OnDisconnected -= OnDisconnected;
                 mumbleClient.OnPingReceived -= OnPingReceived;
                 mumbleClient.Close();
+                OnConnectionClose?.Invoke();
                 mumbleClient = null;
                 mumbleStatus = MumbleStatus.NotConnected;
             }
@@ -634,7 +629,8 @@ namespace umi3d.cdk.collaboration
                     mumbleMic.OnMicDisconnect -= OnMicDisconnected;
                     mumbleMic.OnMicData -= DebugSample;
                 }
-                catch { };
+                catch { }
+                ;
                 microphoneStatus = MicrophoneStatus.NoMicrophone;
             }
         }
@@ -782,6 +778,7 @@ namespace umi3d.cdk.collaboration
                 mumbleClient.OnDisconnected -= OnDisconnected;
                 mumbleClient.OnPingReceived -= OnPingReceived;
                 mumbleClient.Close();
+                OnConnectionClose?.Invoke();
                 mumbleClient = null;
             }
             mumbleStatus = MumbleStatus.NotConnected;
@@ -849,7 +846,7 @@ namespace umi3d.cdk.collaboration
 
         private void DebugSample(PcmArray array)
         {
-            if(subscribedIsSpeaking.Count > 0)
+            if (subscribedIsSpeaking.Count > 0)
             {
                 var total = 0f;
                 foreach (var v in array.Pcm)

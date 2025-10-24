@@ -15,11 +15,8 @@ limitations under the License.
 */
 
 using inetum.unityUtils.observation;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using static umi3d.browserRuntime.thumbnails.ThumbnailNotificationKeys;
 
 namespace umi3d.browserRuntime.thumbnails
 {

@@ -26,20 +26,25 @@ namespace umi3d.browserRuntime.ui.tablet.userNotification
         public List<UserNotificationModelContainer> UserNotifications { get; private set; } = new();
 
         public Action<NotificationDto> AddNotification;
-        
+
         UserNotificationLoader _notificationLoader;
 
         public UserNotificationListModel(UserNotificationLoader notificationLoader)
         {
             _notificationLoader = notificationLoader;
             if (_notificationLoader)
-                _notificationLoader.Notification2DReceived += AddNotification;
+                _notificationLoader.Notification2DReceived += OnNotificationReceived;
         }
 
         ~UserNotificationListModel()
         {
             if (_notificationLoader)
-                _notificationLoader.Notification2DReceived -= AddNotification;
+                _notificationLoader.Notification2DReceived -= OnNotificationReceived;
+        }
+
+        private void OnNotificationReceived(NotificationDto dto)
+        {
+            AddNotification?.Invoke(dto);
         }
     }
 }

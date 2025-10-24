@@ -87,6 +87,13 @@ namespace umi3d.browserRuntime.ui.settings
 
         void OnDestroy()
         {
+#if UMI3D_PC
+            if (!platform.HasFlag(EPlatform.PC))
+                return;
+#elif UMI3D_XR
+            if (!platform.HasFlag(EPlatform.XR))
+                return;
+#endif
             NotificationHub.Default.Unsubscribe(this);
         }
 

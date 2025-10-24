@@ -13,9 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.Events;
 
 namespace umi3d.baseBrowser.inputs.interactions
@@ -25,10 +23,10 @@ namespace umi3d.baseBrowser.inputs.interactions
         MuteUnmuteMic, PushToTalk,
         MuteUnmuteGeneralVolume, DecreaseVolume, IncreaseVolume,
         Cancel, Submit,
-        DisplayHideGameMenu, 
-        DisplayHideContextualMenu, 
-        DisplayHideNotifications, 
-        DisplayHideUsersList, 
+        DisplayHideGameMenu,
+        DisplayHideContextualMenu,
+        DisplayHideNotifications,
+        DisplayHideUsersList,
         DisplayHideEmoteWindow,
         FreeCursor,
         SwitchNextManipulation,
@@ -52,7 +50,8 @@ namespace umi3d.baseBrowser.inputs.interactions
                 UnityEngine.Debug.LogError($"No key shortcut found for {shortcut.ToString()}");
                 return false;
             }
-            else if (!_key.CanProces()) return false;
+            else if (!_key.CanProces())
+                return false;
 
             return _key.m_isDown;
         }
@@ -66,7 +65,8 @@ namespace umi3d.baseBrowser.inputs.interactions
                 UnityEngine.Debug.LogError($"No key shortcut found for {shortcut.ToString()}");
                 return false;
             }
-            else if (!_key.CanProces()) return false;
+            else if (!_key.CanProces())
+                return false;
 
             return _key.Key.WasPressedThisFrame();
         }
@@ -88,7 +88,6 @@ namespace umi3d.baseBrowser.inputs.interactions
             var _key = S_Shortcuts.Find(key => key.Shortcut == shortcut);
             if (_key == null)
             {
-                UnityEngine.Debug.LogError($"No key shortcut found for {shortcut.ToString()}");
                 return;
             }
 
@@ -112,7 +111,6 @@ namespace umi3d.baseBrowser.inputs.interactions
             var _key = S_Shortcuts.Find(key => key.Shortcut == shortcut);
             if (_key == null)
             {
-                UnityEngine.Debug.LogError($"No key shortcut found for {shortcut.ToString()}");
                 return;
             }
 

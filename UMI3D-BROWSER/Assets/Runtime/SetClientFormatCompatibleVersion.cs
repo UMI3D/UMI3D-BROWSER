@@ -11,7 +11,7 @@ public class SetClientFormatCompatibleVersion : MonoBehaviour
     void Start()
     {
 #if UMI3D_PC
-        formCompatibleVersions = new() { Versions.version1, Versions.version2, Versions.version2_1, Versions.windows};
+        formCompatibleVersions = new() { Versions.version1, Versions.version2, Versions.version2_1, Versions.version2_2, Versions.windows };
 #else
         formCompatibleVersions = new() { Versions.version1, Versions.version2, Versions.version2_1, Versions.vr };
 #endif

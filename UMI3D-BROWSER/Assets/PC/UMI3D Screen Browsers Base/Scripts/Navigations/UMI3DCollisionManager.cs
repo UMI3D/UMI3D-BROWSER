@@ -112,7 +112,7 @@ public sealed class UMI3DCollisionManager
     /// <returns></returns>
     public Vector3 GetPossibleTranslation(Vector3 desiredTranslation)
     {
-        if (data.navigationMode == E_NavigationMode.Debug)
+        if (data.navigationMode == E_NavigationMode.Debug || data.navigationMode == E_NavigationMode.Omniscient)
         {
             return desiredTranslation;
         }

@@ -40,10 +40,6 @@ namespace umi3d.browserRuntime.shortcuts
         {
             KeyboardShortcut.RemoveDownListener(ShortcutEnum.DisplayHideUsersList, OpenUserList);
         }
-        private void OnDestroy()
-        {
-            NotificationHub.Default.Unsubscribe(this);
-        }
 
         private void OpenUserList()
         {

@@ -28,7 +28,7 @@ namespace umi3d.baseBrowser.Navigation
         [Tooltip("Max rotation angle for the head around x axis (down to up).")]
         public Vector2 maxXHeadAngle = new Vector2(-60f, 70f);
         [Tooltip("Max rotation angle for the viewpoint(camera) around the x axis (down to up)")]
-        public float maxXCameraAngle = 90f;
+        public Vector2 maxXCameraAngle = new Vector2(-60f, 70f);
         [Tooltip("Max rotation angle for the viewpoint(camera)/head around the y axis (left to right)")]
         public float maxYCameraAngle = 90f;
         [Tooltip("Max rotation angle for the neck.")]
@@ -50,10 +50,24 @@ namespace umi3d.baseBrowser.Navigation
         [Tooltip("speed when moving forward (normal, squatting, running)")]
         public Vector3 forwardSpeed = new(3f, 1f, 10f);
         [Tooltip("speed when moving sideway (normal, squatting, running)")]
-        public Vector3 lateralSpeed = new(1.5f, 1f, 7f);
+        [SerializeField] Vector3 _lateralSpeed = new(1.5f, 1f, 7f);
+        public Vector3 lateralSpeed
+        {
+            get
+            {
+                if (navigationMode == E_NavigationMode.Omniscient)
+                {
+                    return forwardSpeed;
+                }
+                else
+                {
+                    return _lateralSpeed;
+                }
+            }
+        }
         [Tooltip("speed when moving backward (normal, squatting, running)")]
         public Vector3 backwardSpeed = new(3f, 1f, 10f);
-       
+
         [Header("Vertical Movement")]
         [Tooltip("gravity force")]
         public float gravity = -9.807f;
@@ -66,7 +80,21 @@ namespace umi3d.baseBrowser.Navigation
         /// <summary>
         /// Velocity resulting of the gravity.
         /// </summary>
-        public float GravityVelocity => gravity * Time.deltaTime;
+        public float GravityVelocity
+        {
+            get
+            {
+                if (navigationMode == E_NavigationMode.Omniscient)
+                {
+                    return 0;
+                }
+                else
+                {
+                    return gravity * Time.deltaTime;
+                }
+            }
+        }
+
 
         [Header("Crouch")]
         [Tooltip("player height while crouching")]
@@ -76,9 +104,38 @@ namespace umi3d.baseBrowser.Navigation
 
         [Header("Collision")]
         [Tooltip("Layers for obstacles.")]
-        public LayerMask obstacleLayer;
+        [SerializeField] LayerMask _obstacleLayer;
+        public LayerMask obstacleLayer
+        {
+            get
+            {
+                if (navigationMode == E_NavigationMode.Omniscient)
+                {
+                    return 0;
+                }
+                else
+                {
+                    return _obstacleLayer;
+                }
+            }
+        }
         [Tooltip("Layers for navmesh.")]
-        public LayerMask navmeshLayer;
+        [SerializeField] LayerMask _navmeshLayer;
+        public LayerMask navmeshLayer
+        {
+            get
+            {
+                if (navigationMode == E_NavigationMode.Omniscient)
+                {
+                    return 0;
+                }
+                else
+                {
+                    return _navmeshLayer;
+                }
+            }
+        }
+
         [Tooltip("Center of the top sphere that compose the capsule collider.")]
         public Vector3 topSphereCenter = new(0f, 1.5f, 0f);
         [Tooltip("Radius of the spheres that compose the capsule collider.")]

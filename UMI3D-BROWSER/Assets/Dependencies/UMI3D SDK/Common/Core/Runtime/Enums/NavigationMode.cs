@@ -16,11 +16,9 @@ limitations under the License.
 
 namespace umi3d.common
 {
-    [System.Obsolete]
-    public enum NavigationType
+    public enum NavigationMode
     {
-        Walk,
-        Orbitation,
-        Fly
+        Default,
+        Omniscient
     }
 }

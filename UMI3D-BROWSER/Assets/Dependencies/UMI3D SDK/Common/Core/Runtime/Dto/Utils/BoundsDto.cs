@@ -1,5 +1,5 @@
 /*
-Copyright 2019 - 2024 Inetum
+Copyright 2019 - 2025 Inetum
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -13,30 +13,24 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
-public enum E_NavigationMode
+using System;
+
+namespace umi3d.common
 {
     /// <summary>
-    /// The default mode for the platform.
+    /// Serializable implementation of a Bound.
     /// </summary>
-    Default, 
-    /// <summary>
-    /// Moving like a PC FPS
-    /// </summary>
-    Continuous,
-    /// <summary>
-    /// Moving like a VR FPS
-    /// </summary>
-    Teleportation,
-    /// <summary>
-    /// No collision, can fly.
-    /// </summary>
-    Debug,
-    /// <summary>
-    /// BoundingBox collision, can fly.
-    /// </summary>
-    Omniscient
+    [Serializable]
+    public class BoundsDto : UMI3DDto
+    {
+        public Vector3Dto size { get; set; } = Vector3Dto.one;
+        public Vector3Dto center { get; set; } = Vector3Dto.zero;
+
+        /// <inheritdoc/>
+        public override string ToString()
+        {
+            return $"[size {size}, center {center}]";
+        }
+    }
 }

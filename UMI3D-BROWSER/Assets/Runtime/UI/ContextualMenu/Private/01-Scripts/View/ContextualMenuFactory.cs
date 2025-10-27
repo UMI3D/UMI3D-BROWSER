@@ -14,7 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using inetum.unityUtils.observation;
 using System.Collections.Generic;
 using umi3d.cdk;
 using umi3d.cdk.interaction;
@@ -65,7 +64,6 @@ namespace umi3d.browserRuntime.ui.contextualMenu
 
         void OnDestroy()
         {
-            NotificationHub.Default.Unsubscribe(this);
             _model.Unsubscribe(this as IContextualMenuActivationObserver);
             _model.Unsubscribe(this as IContextualMenuDisplayParameterObserver);
         }
@@ -74,8 +72,7 @@ namespace umi3d.browserRuntime.ui.contextualMenu
         {
             void SendParameterRequest()
             {
-                UMI3DClientServer.SendRequest(new ParameterSettingRequestDto()
-                {
+                UMI3DClientServer.SendRequest(new ParameterSettingRequestDto() {
                     id = parameter.id,
                     parameter = parameter
                 }, true);
@@ -87,8 +84,7 @@ namespace umi3d.browserRuntime.ui.contextualMenu
                 builder.BuildLabel();
                 builder.BuildRange();
                 builder.BuildValue();
-                builder.BuildSubmit(_model, () =>
-                {
+                builder.BuildSubmit(_model, () => {
                     SendParameterRequest();
                 });
                 builder.GetControl();
@@ -98,73 +94,71 @@ namespace umi3d.browserRuntime.ui.contextualMenu
             switch (parameter)
             {
                 case StringParameterDto stringParameter:
-                    {
-                        ContextualMenuInputFieldBuilder builder = new(_inputFieldFactory, stringParameter);
-                        builder.Build(_content);
-                        builder.BuildLabel();
-                        builder.BuildPlaceholder();
-                        builder.BuildValue();
-                        builder.BuildLine();
-                        builder.BuildContentType();
-                        builder.BuildSubmit(_model, () =>
-                        {
-                            SendParameterRequest();
-                        });
-                        builder.GetControl();
-                        _inputFieldBuilders.Add(builder);
-                        break;
-                    }
+                {
+                    ContextualMenuInputFieldBuilder builder = new(_inputFieldFactory, stringParameter);
+                    builder.Build(_content);
+                    builder.BuildLabel();
+                    builder.BuildPlaceholder();
+                    builder.BuildValue();
+                    builder.BuildLine();
+                    builder.BuildContentType();
+                    builder.BuildSubmit(_model, () => {
+                        SendParameterRequest();
+                    });
+                    builder.GetControl();
+                    _inputFieldBuilders.Add(builder);
+                    break;
+                }
 
                 case BooleanParameterDto booleanParameter:
-                    {
-                        ContextualMenuToggleBuilder builder = new(_toggleFactory, booleanParameter);
-                        builder.Build(_content);
-                        builder.BuildLabel();
-                        builder.BuildValue();
-                        builder.BuildSubmit(_model, () =>
-                        {
-                            SendParameterRequest();
-                        });
-                        builder.GetControl();
-                        _toggleBuilders.Add(builder);
-                        break;
-                    }
+                {
+                    ContextualMenuToggleBuilder builder = new(_toggleFactory, booleanParameter);
+                    builder.Build(_content);
+                    builder.BuildLabel();
+                    builder.BuildValue();
+                    builder.BuildSubmit(_model, () => {
+                        SendParameterRequest();
+                    });
+                    builder.GetControl();
+                    _toggleBuilders.Add(builder);
+                    break;
+                }
 
                 case FloatRangeParameterDto floatRangeParameter:
-                    {
-                        ContextualMenuFloatSliderBuilder builder = new(_sliderFactory, floatRangeParameter);
-                        BuildSlider(builder);
-                        break;
-                    }
+                {
+                    ContextualMenuFloatSliderBuilder builder = new(_sliderFactory, floatRangeParameter);
+                    BuildSlider(builder);
+                    break;
+                }
 
                 case IntegerRangeParameterDto intRangeParameter:
-                    {
-                        ContextualMenuIntSliderBuilder builder = new(_sliderFactory, intRangeParameter);
-                        BuildSlider(builder);
-                        break;
-                    }
+                {
+                    ContextualMenuIntSliderBuilder builder = new(_sliderFactory, intRangeParameter);
+                    BuildSlider(builder);
+                    break;
+                }
 
                 case EnumParameterDto<string> stringEnumParameter:
-                    {
-                        ContextualMenuDropdownBuilder builder = new(_dropdownFactory, stringEnumParameter);
-                        builder.Build(_content);
-                        builder.BuildLabel();
-                        builder.BuildOptions();
-                        builder.BuildValue();
-                        builder.BuildSubmit(_model, () =>
-                        {
-                            SendParameterRequest();
-                        });
-                        builder.GetControl();
-                        _dropdownBuilders.Add(builder);
-                        break;
-                    }
+                {
+                    ContextualMenuDropdownBuilder builder = new(_dropdownFactory, stringEnumParameter);
+                    builder.Build(_content);
+                    builder.BuildLabel();
+                    builder.BuildOptions();
+                    builder.BuildValue();
+                    builder.BuildSubmit(_model, () => {
+                        SendParameterRequest();
+                    });
+                    builder.GetControl();
+                    _dropdownBuilders.Add(builder);
+                    break;
+                }
             }
         }
 
         public void UpdateActivation(bool isActive)
         {
-            if (!isActive) { Clear(); }
+            if (!isActive)
+            { Clear(); }
         }
 
         void Clear()
@@ -187,7 +181,7 @@ namespace umi3d.browserRuntime.ui.contextualMenu
             }
             _sliderBuilders.Clear();
 
-            foreach(var toggleBuilder in _toggleBuilders)
+            foreach (var toggleBuilder in _toggleBuilders)
             {
                 toggleBuilder.Clear(_model);
             }

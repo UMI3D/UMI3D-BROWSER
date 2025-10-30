@@ -40,13 +40,11 @@ namespace umi3d.browserRuntime.ui.keyboard
         /// <summary>
         /// Is text selected.
         /// </summary>
-        public bool isTextSelected 
+        public bool isTextSelected
         {
-            get
-            {
+            get {
 #if UNITY_EDITOR
-                return selectionType switch
-                {
+                return selectionType switch {
                     SelectionType.Desktop => tmpInputFieldSelection.isTextSelected,
                     SelectionType.Mobile => umi3dInputFieldSelection.isTextSelected
                 };
@@ -61,11 +59,9 @@ namespace umi3d.browserRuntime.ui.keyboard
         /// </summary>
         public int startPosition
         {
-            get
-            {
+            get {
 #if UNITY_EDITOR
-                return selectionType switch
-                {
+                return selectionType switch {
                     SelectionType.Desktop => tmpInputFieldSelection.startPosition,
                     SelectionType.Mobile => umi3dInputFieldSelection.startPosition
                 };
@@ -73,8 +69,7 @@ namespace umi3d.browserRuntime.ui.keyboard
                 return previewBarSelection.startPosition;
 #endif
             }
-            private set
-            {
+            private set {
 #if UNITY_EDITOR
                 switch (selectionType)
                 {
@@ -98,11 +93,9 @@ namespace umi3d.browserRuntime.ui.keyboard
         /// </summary>
         public int endPosition
         {
-            get
-            {
+            get {
 #if UNITY_EDITOR
-                return selectionType switch
-                {
+                return selectionType switch {
                     SelectionType.Desktop => tmpInputFieldSelection.endPosition,
                     SelectionType.Mobile => umi3dInputFieldSelection.endPosition
                 };
@@ -110,8 +103,7 @@ namespace umi3d.browserRuntime.ui.keyboard
                 return previewBarSelection.endPosition;
 #endif
             }
-            private set
-            {
+            private set {
 #if UNITY_EDITOR
                 switch (selectionType)
                 {
@@ -135,11 +127,9 @@ namespace umi3d.browserRuntime.ui.keyboard
         /// </summary>
         public int stringPosition
         {
-            get
-            {
+            get {
 #if UNITY_EDITOR
-                return selectionType switch
-                {
+                return selectionType switch {
                     SelectionType.Desktop => tmpInputFieldSelection.stringPosition,
                     SelectionType.Mobile => umi3dInputFieldSelection.stringPosition
                 };
@@ -147,8 +137,7 @@ namespace umi3d.browserRuntime.ui.keyboard
                 return previewBarSelection.stringPosition;
 #endif
             }
-            private set
-            {
+            private set {
 #if UNITY_EDITOR
                 switch (selectionType)
                 {
@@ -176,7 +165,7 @@ namespace umi3d.browserRuntime.ui.keyboard
             tmpInputFieldSelection.isPreviewBar = true;
             tmpInputFieldSelection.allowTextModification = true;
             tmpInputFieldSelection.allowSelection = true;
-            umi3dInputFieldSelection = new(this);
+            umi3dInputFieldSelection = new(this, null);
             umi3dInputFieldSelection.isPreviewBar = true;
             umi3dInputFieldSelection.allowTextModification = true;
             umi3dInputFieldSelection.allowSelection = true;
@@ -186,7 +175,7 @@ namespace umi3d.browserRuntime.ui.keyboard
             previewBarSelection.allowTextModification = true;
             previewBarSelection.allowSelection = true;
 #else
-            previewBarSelection = new UMI3DInputFieldSelection(this);
+            previewBarSelection = new UMI3DInputFieldSelection(this, null);
             previewBarSelection.isPreviewBar = true;
             previewBarSelection.allowTextModification = true;
             previewBarSelection.allowSelection = true;

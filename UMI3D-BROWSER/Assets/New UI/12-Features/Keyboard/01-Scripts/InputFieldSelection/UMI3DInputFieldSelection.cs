@@ -58,14 +58,15 @@ namespace umi3d.browserRuntime.ui.keyboard
         public override int stringPosition { get; set; }
 
         private IInputFieldSelectionIndicator _startIndicator;
-        public IInputFieldSelectionIndicator StartIndicator { 
-            get => _startIndicator; 
+        public IInputFieldSelectionIndicator StartIndicator
+        {
+            get => _startIndicator;
             set {
                 if (_startIndicator != null)
                     _startIndicator.OnMove -= OnStartIndicatorMove;
                 _startIndicator = value;
                 _startIndicator.OnMove += OnStartIndicatorMove;
-            } 
+            }
         }
 
         private IInputFieldSelectionIndicator _endIndicator;
@@ -80,8 +81,11 @@ namespace umi3d.browserRuntime.ui.keyboard
             }
         }
 
-        public UMI3DInputFieldSelection(MonoBehaviour context) : base(context)
+        private ScrollRect _scrollRect;
+
+        public UMI3DInputFieldSelection(MonoBehaviour context, ScrollRect scrollRect) : base(context)
         {
+            _scrollRect = scrollRect;
             inputField = context.GetComponentInChildren<TMP_InputField>();
 
             pointerDown = context.gameObject.AddComponent<PointerDownBehaviour>();
@@ -101,6 +105,47 @@ namespace umi3d.browserRuntime.ui.keyboard
             caretRT.anchorMax = new(0, 1);
             caretRT.pivot = new(0f, 1f);
             caretRT.sizeDelta = new Vector2(caretWidth, inputField.textComponent.fontSize);
+        }
+
+        private void AdjustScrollPosition()
+        {
+            if (!_scrollRect)
+                return;
+
+            var caretPosition = startPosition;
+            var textInfo = inputField.textComponent.textInfo;
+
+            if (caretPosition > 0 && caretPosition <= textInfo.characterCount)
+            {
+
+                var textRectTransform = inputField.textComponent.rectTransform;
+                var inputFieldRectTransform = ((RectTransform)inputField.transform);
+                var textAreaRectTransform = ((RectTransform)inputFieldRectTransform.GetChild(0));
+                var distance = inputFieldRectTransform.rect.height - _scrollRect.viewport.rect.height;
+
+                // Get char positions
+                var charInfo = textInfo.characterInfo[caretPosition - 1];
+                var bottomLeft = charInfo.bottomLeft;
+                var topLeft = charInfo.topLeft;
+
+                // Calculate correction
+                var correction = 0.0f;
+
+                var worldPosTop = textRectTransform.TransformPoint(topLeft);
+                var relativePosTop = _scrollRect.viewport.InverseTransformPoint(worldPosTop);
+                var textOffsetTop = textAreaRectTransform.offsetMax.y;
+                if (relativePosTop.y > 0)
+                    correction = (relativePosTop.y - textOffsetTop) / distance;
+
+                var worldPosBottom = textRectTransform.TransformPoint(bottomLeft);
+                var relativePosBottom = _scrollRect.viewport.InverseTransformPoint(worldPosBottom);
+                var textOffsetBottom = textAreaRectTransform.offsetMin.y;
+                if (relativePosBottom.y < -_scrollRect.viewport.rect.height)
+                    correction = (relativePosBottom.y + _scrollRect.viewport.rect.height - textOffsetBottom) / distance;
+
+                // Apply correction
+                _scrollRect.verticalScrollbar.value += correction;
+            }
         }
 
         public override void OnEnable()
@@ -137,7 +182,8 @@ namespace umi3d.browserRuntime.ui.keyboard
         public override void UpdateSelection()
         {
             HideSelection();
-            if (!isTextSelected) return;
+            if (!isTextSelected)
+                return;
 
             var startPos = Mathf.Min(startPosition, endPosition);
             var endPos = Mathf.Max(startPosition, endPosition);
@@ -172,7 +218,7 @@ namespace umi3d.browserRuntime.ui.keyboard
                     lineEndCharIndex = endPos;
                 }
 
-                var size = inputField.textComponent.GetTextSize(inputField.text.Substring(lineStartCharIndex, lineEndCharIndex - lineStartCharIndex)); // FIXME : Break with margin top and bottom
+                var size = inputField.textComponent.GetTextSize(inputField.text.Substring(lineStartCharIndex, lineEndCharIndex - lineStartCharIndex)); // FIXME : Break with margin textOffsetTop and textOffsetBottom
 
                 float positionX = GetHorizontalPosition(lineStartCharIndex);
                 float positionY = GetVerticalPosition(lineStartCharIndex);
@@ -217,6 +263,7 @@ namespace umi3d.browserRuntime.ui.keyboard
             caretRT.anchoredPosition = new(positionX, positionY);
 
             StartCaretBlinking();
+            AdjustScrollPosition();
         }
 
         private float GetHorizontalPosition(int charIndex)
@@ -430,7 +477,7 @@ namespace umi3d.browserRuntime.ui.keyboard
                 return;
 
             endPosition = TMP_TextUtilities.FindNearestCharacter(inputField.textComponent, data.position, Camera.main, false);
-            
+
             UpdateSelection();
         }
 

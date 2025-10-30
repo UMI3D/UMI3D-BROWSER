@@ -15,11 +15,10 @@ limitations under the License.
 */
 
 using inetum.unityUtils.observation;
-using System.Collections;
 using System.Collections.Generic;
-using umi3d.browserRuntime.NotificationKeys;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 namespace umi3d.browserRuntime.ui.keyboard
 {
@@ -39,12 +38,14 @@ namespace umi3d.browserRuntime.ui.keyboard
         public UMI3DInputFieldSelection Selection { get; private set; }
         Notifier deselectionNotifier;
 
+        [SerializeField] ScrollRect _scrollRect;
+
 #if UMI3D_XR
         void Awake()
         {
             inputField = GetComponent<TMPro.TMP_InputField>();
 
-            Selection = new(this);
+            Selection = new(this, _scrollRect);
             Selection.Blur();
             Selection.allowTextModification = !waitForSubmit;
             Selection.allowSelection = !waitForSubmit;
@@ -108,7 +109,7 @@ namespace umi3d.browserRuntime.ui.keyboard
                     if (closeOnSubmit)
                     {
                         deselectionNotifier.Notify();
-                    } 
+                    }
                     else
                     {
                         Dictionary<string, object> info = new()

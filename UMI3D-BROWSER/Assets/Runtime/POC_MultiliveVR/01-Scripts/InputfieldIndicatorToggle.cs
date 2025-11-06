@@ -37,6 +37,7 @@ namespace umi3d
         private void Awake()
         {
             _slider.onValueChanged.AddListener(OnValueChanged);
+            _slider.value = 0.0f;
         }
 
         private void OnValueChanged(float value)
@@ -45,14 +46,16 @@ namespace umi3d
             {
                 var sprite = value >= 0.5f ? _leftSpriteBar : _leftSpriteBubble;
                 indicator.sprite = sprite;
-                indicator.rectTransform.pivot = sprite.pivot;
+                Vector2 normalizedPivot = new Vector2(sprite.pivot.x / sprite.rect.width, sprite.pivot.y / sprite.rect.height);
+                indicator.rectTransform.pivot = normalizedPivot;
             }
 
             foreach (Image indicator in _rightIndicators)
             {
                 var sprite = value >= 0.5f ? _rightSpriteBar : _rightSpriteBubble;
                 indicator.sprite = sprite;
-                indicator.rectTransform.pivot = sprite.pivot;
+                Vector2 normalizedPivot = new Vector2(sprite.pivot.x / sprite.rect.width, sprite.pivot.y / sprite.rect.height);
+                indicator.rectTransform.pivot = normalizedPivot;
             }
         }
     }

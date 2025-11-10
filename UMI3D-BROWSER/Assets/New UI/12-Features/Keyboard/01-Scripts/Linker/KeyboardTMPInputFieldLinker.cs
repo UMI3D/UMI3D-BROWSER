@@ -39,13 +39,14 @@ namespace umi3d.browserRuntime.ui.keyboard
         Notifier deselectionNotifier;
 
         [SerializeField] ScrollRect _scrollRect;
+        [SerializeField] bool _verticalScroll;
 
 #if UMI3D_XR
         void Awake()
         {
             inputField = GetComponent<TMPro.TMP_InputField>();
 
-            Selection = new(this, _scrollRect);
+            Selection = new(this, _scrollRect, _verticalScroll);
             Selection.Blur();
             Selection.allowTextModification = !waitForSubmit;
             Selection.allowSelection = !waitForSubmit;

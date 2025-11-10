@@ -18,6 +18,7 @@ using inetum.unityUtils.observation;
 using inetum.unityUtils.ui;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -83,8 +84,11 @@ namespace umi3d.browserRuntime.ui.keyboard
 
         private ScrollRect _scrollRect;
 
-        public UMI3DInputFieldSelection(MonoBehaviour context, ScrollRect scrollRect) : base(context)
+        bool _hasVerticalScroll = false;
+
+        public UMI3DInputFieldSelection(MonoBehaviour context, ScrollRect scrollRect, bool hasVerticalScroll) : base(context)
         {
+            _hasVerticalScroll = hasVerticalScroll;
             _scrollRect = scrollRect;
             inputField = context.GetComponentInChildren<TMP_InputField>();
 
@@ -105,6 +109,7 @@ namespace umi3d.browserRuntime.ui.keyboard
             caretRT.anchorMax = new(0, 1);
             caretRT.pivot = new(0f, 1f);
             caretRT.sizeDelta = new Vector2(caretWidth, inputField.textComponent.fontSize);
+            _hasVerticalScroll = hasVerticalScroll;
         }
 
         private void AdjustScrollPosition()
@@ -469,12 +474,38 @@ namespace umi3d.browserRuntime.ui.keyboard
         private void OnPointerUp(PointerEventData data)
         {
             LongPress = false;
+            _wasOnlyVerticalPointerMovement = true;
         }
+
+        bool _wasOnlyVerticalPointerMovement = true;
+        float _verticalMovementThreshold = 50f;
 
         private void OnPointerMoved(PointerEventData data)
         {
             if (!LongPress)
                 return;
+            
+            Vector2 delta = data.delta;
+            float angleInDegrees = Mathf.Atan2(delta.y, delta.x) * Mathf.Rad2Deg;
+            Debug.Log($"Angle {angleInDegrees} Delta {delta}");
+            if (_hasVerticalScroll && _wasOnlyVerticalPointerMovement)
+            {
+                if (Mathf.Abs(angleInDegrees) > 90 - _verticalMovementThreshold && Mathf.Abs(angleInDegrees) < 90 + _verticalMovementThreshold)
+                {
+                    var inputFieldRectTransform = ((RectTransform)inputField.transform);
+
+                    // Calculate correction
+                    var correction = -delta.y / inputFieldRectTransform.sizeDelta.y;
+
+                    // Apply correction
+                    _scrollRect.verticalScrollbar.value += correction;
+
+                    return;
+                } else
+                {
+                    _wasOnlyVerticalPointerMovement = false;
+                }
+            }
 
             endPosition = TMP_TextUtilities.FindNearestCharacter(inputField.textComponent, data.position, Camera.main, false);
 

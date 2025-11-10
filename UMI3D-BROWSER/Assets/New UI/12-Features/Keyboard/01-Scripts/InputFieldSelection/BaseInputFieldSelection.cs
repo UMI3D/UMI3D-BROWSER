@@ -80,7 +80,7 @@ namespace umi3d.browserRuntime.ui.keyboard
             NotificationHub.Default.Subscribe(this, ID.FromType<ActionNotifictionKeys.UiJoystic>(), (Callback)UiJoystic);
         }
 
-        void UiJoystic(Notification notification)
+        protected virtual void UiJoystic(Notification notification)
         {
             if (!notification.TryGetInfoT(ActionNotifictionKeys.UiJoystic.Object, out GameObject go, false))
                 return;
@@ -91,19 +91,18 @@ namespace umi3d.browserRuntime.ui.keyboard
             if (go != inputField.gameObject && !go.transform.IsChildOf(inputField.transform))
                 return;
 
-            Debug.Log($"UI Joystic : {vector}");
             // Left and Right caret movement
             Deselect(startPosition + (int)vector.x);
 
             // Up and Down caret movement
-            Deselect(GetStringPositionVertically(-(int)vector.y));
+            Deselect(GetStringPositionVertically(startPosition , -(int)vector.y));
         }
 
-        private int GetStringPositionVertically(int movement)
+        protected int  GetStringPositionVertically(int basePosition, int movement)
         {
             TMP_TextInfo textInfo = inputField.textComponent.textInfo;
-            float xPos = textInfo.characterInfo[startPosition].origin;
-            int newLine = textInfo.characterInfo[startPosition].lineNumber + movement;
+            float xPos = textInfo.characterInfo[basePosition].origin;
+            int newLine = textInfo.characterInfo[basePosition].lineNumber + movement;
             newLine = Mathf.Clamp(newLine, 0, textInfo.lineCount - 1);
             int closestChar = textInfo.lineInfo[newLine].firstCharacterIndex;
             float closestDist = Mathf.Abs(textInfo.characterInfo[closestChar].origin - xPos);

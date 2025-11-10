@@ -165,7 +165,7 @@ namespace umi3d.browserRuntime.ui.keyboard
             tmpInputFieldSelection.isPreviewBar = true;
             tmpInputFieldSelection.allowTextModification = true;
             tmpInputFieldSelection.allowSelection = true;
-            umi3dInputFieldSelection = new(this, null, false);
+            umi3dInputFieldSelection = new(this, null, false, true, false);
             umi3dInputFieldSelection.isPreviewBar = true;
             umi3dInputFieldSelection.allowTextModification = true;
             umi3dInputFieldSelection.allowSelection = true;
@@ -175,7 +175,7 @@ namespace umi3d.browserRuntime.ui.keyboard
             previewBarSelection.allowTextModification = true;
             previewBarSelection.allowSelection = true;
 #else
-            previewBarSelection = new UMI3DInputFieldSelection(this, null, false);
+            previewBarSelection = new UMI3DInputFieldSelection(this, null, false, true, false);
             previewBarSelection.isPreviewBar = true;
             previewBarSelection.allowTextModification = true;
             previewBarSelection.allowSelection = true;

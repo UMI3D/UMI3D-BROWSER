@@ -20,6 +20,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using TMPro;
+using umi3d.browserRuntime.NotificationKeys;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -85,10 +86,11 @@ namespace umi3d.browserRuntime.ui.keyboard
         private ScrollRect _scrollRect;
 
         bool _hasVerticalScroll = false;
+        bool _canSelectonTrigger = false;
+        bool _joysticSelection = false;
 
-        public UMI3DInputFieldSelection(MonoBehaviour context, ScrollRect scrollRect, bool hasVerticalScroll) : base(context)
+        public UMI3DInputFieldSelection(MonoBehaviour context, ScrollRect scrollRect, bool hasVerticalScroll, bool canSelectonTrigger, bool joysticSelection) : base(context)
         {
-            _hasVerticalScroll = hasVerticalScroll;
             _scrollRect = scrollRect;
             inputField = context.GetComponentInChildren<TMP_InputField>();
 
@@ -110,6 +112,8 @@ namespace umi3d.browserRuntime.ui.keyboard
             caretRT.pivot = new(0f, 1f);
             caretRT.sizeDelta = new Vector2(caretWidth, inputField.textComponent.fontSize);
             _hasVerticalScroll = hasVerticalScroll;
+            _canSelectonTrigger = canSelectonTrigger;
+            _joysticSelection = joysticSelection;
         }
 
         private void AdjustScrollPosition()
@@ -487,7 +491,7 @@ namespace umi3d.browserRuntime.ui.keyboard
             
             Vector2 delta = data.delta;
             float angleInDegrees = Mathf.Atan2(delta.y, delta.x) * Mathf.Rad2Deg;
-            Debug.Log($"Angle {angleInDegrees} Delta {delta}");
+
             if (_hasVerticalScroll && _wasOnlyVerticalPointerMovement)
             {
                 if (Mathf.Abs(angleInDegrees) > 90 - _verticalMovementThreshold && Mathf.Abs(angleInDegrees) < 90 + _verticalMovementThreshold)
@@ -501,11 +505,14 @@ namespace umi3d.browserRuntime.ui.keyboard
                     _scrollRect.verticalScrollbar.value += correction;
 
                     return;
-                } else
-                {
-                    _wasOnlyVerticalPointerMovement = false;
                 }
+                if (_canSelectonTrigger)
+                    _wasOnlyVerticalPointerMovement = false;
+                
             }
+
+            if (!_canSelectonTrigger)
+                return;
 
             endPosition = TMP_TextUtilities.FindNearestCharacter(inputField.textComponent, data.position, Camera.main, false);
 
@@ -524,6 +531,32 @@ namespace umi3d.browserRuntime.ui.keyboard
             endPosition = TMP_TextUtilities.FindNearestCharacter(inputField.textComponent, position + new Vector2(0, inputField.textComponent.fontSize), Camera.main, false);
             endPosition = Mathf.Max(startPosition, endPosition);
             UpdateSelection();
+        }
+
+        protected override void UiJoystic(Notification notification)
+        {
+            if (!notification.TryGetInfoT(ActionNotifictionKeys.UiJoystic.Object, out GameObject go, false))
+                return;
+            if (!notification.TryGetInfoT(ActionNotifictionKeys.UiJoystic.Vector, out Vector2 vector, false))
+                return;
+
+            // Verify that the action is on the correct element
+            if (go != inputField.gameObject && !go.transform.IsChildOf(inputField.transform))
+                return;
+
+            if (LongPress && _joysticSelection)
+            {
+                endPosition += (int)vector.x;
+                endPosition = GetStringPositionVertically(endPosition, -(int)vector.y);
+                UpdateSelection();
+            } else
+            {
+                // Left and Right caret movement
+                Deselect(startPosition + (int)vector.x);
+
+                // Up and Down caret movement
+                Deselect(GetStringPositionVertically(startPosition, -(int)vector.y));
+            }
         }
     }
 }

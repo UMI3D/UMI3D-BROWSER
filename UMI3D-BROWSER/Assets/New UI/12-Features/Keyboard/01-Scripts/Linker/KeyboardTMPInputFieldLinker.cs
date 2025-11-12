@@ -42,13 +42,14 @@ namespace umi3d.browserRuntime.ui.keyboard
         [SerializeField] bool _verticalScroll = false;
         [SerializeField] bool _canSelectonTrigger = true;
         [SerializeField] bool _joysticSelection = false;
+        [SerializeField] bool _joysticScrollOnly = false;
 
 #if UMI3D_XR
         void Awake()
         {
             inputField = GetComponent<TMPro.TMP_InputField>();
 
-            Selection = new(this, _scrollRect, _verticalScroll, _canSelectonTrigger, _joysticSelection);
+            Selection = new(this, _scrollRect, _verticalScroll, _canSelectonTrigger, _joysticSelection, _joysticScrollOnly);
             Selection.Blur();
             Selection.allowTextModification = !waitForSubmit;
             Selection.allowSelection = !waitForSubmit;

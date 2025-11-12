@@ -88,8 +88,9 @@ namespace umi3d.browserRuntime.ui.keyboard
         bool _hasVerticalScroll = false;
         bool _canSelectonTrigger = false;
         bool _joysticSelection = false;
+        bool _joysticScrollOnly = false;
 
-        public UMI3DInputFieldSelection(MonoBehaviour context, ScrollRect scrollRect, bool hasVerticalScroll, bool canSelectonTrigger, bool joysticSelection) : base(context)
+        public UMI3DInputFieldSelection(MonoBehaviour context, ScrollRect scrollRect, bool hasVerticalScroll, bool canSelectonTrigger, bool joysticSelection, bool joysticScrollOnly) : base(context)
         {
             _scrollRect = scrollRect;
             inputField = context.GetComponentInChildren<TMP_InputField>();
@@ -114,6 +115,7 @@ namespace umi3d.browserRuntime.ui.keyboard
             _hasVerticalScroll = hasVerticalScroll;
             _canSelectonTrigger = canSelectonTrigger;
             _joysticSelection = joysticSelection;
+            _joysticScrollOnly = joysticScrollOnly;
         }
 
         private void AdjustScrollPosition()
@@ -543,6 +545,14 @@ namespace umi3d.browserRuntime.ui.keyboard
             // Verify that the action is on the correct element
             if (go != inputField.gameObject && !go.transform.IsChildOf(inputField.transform))
                 return;
+            
+            if (_joysticScrollOnly)
+            {
+                var inputFieldRectTransform = ((RectTransform)inputField.transform);
+                var distance = inputFieldRectTransform.rect.height - _scrollRect.viewport.rect.height;
+                _scrollRect.verticalScrollbar.value += 12 / distance * Mathf.Sign(vector.y);
+                return;
+            }
 
             if (LongPress && _joysticSelection)
             {

@@ -16,20 +16,21 @@ limitations under the License.
 
 using TMPro;
 using UnityEngine;
+using UnityEngine.Localization.Components;
 
 namespace umi3d.browserRuntime.ui
 {
-    [RequireComponent(typeof(TMP_Text)), ExecuteInEditMode]
+    [RequireComponent(typeof(LocalizeStringEvent)), ExecuteInEditMode]
     internal class ButtonLabelView : MonoBehaviour, ILabelObserver
     {
-        TMP_Text _text;
+        LocalizeStringEvent _text;
 
         ButtonController _controller;
         ButtonModel _model;
 
         void Awake()
         {
-            _text = GetComponent<TMP_Text>();
+            _text = GetComponent<LocalizeStringEvent>();
 
             _controller = GetComponentInParent<ButtonController>();
             _model = _controller.model;
@@ -46,7 +47,7 @@ namespace umi3d.browserRuntime.ui
             gameObject.SetActive(isVisible);
             if (!isVisible) { return; }
 
-            _text.text = label;
+            _text.SetEntry(label);
         }
     }
 }

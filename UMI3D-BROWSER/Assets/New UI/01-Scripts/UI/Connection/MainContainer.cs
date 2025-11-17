@@ -146,7 +146,7 @@ namespace umi3dBrowsers
             });
 
             UMI3DCollaborationClientServer.Instance.OnRedirectionAborted?.AddListener(() => {
-                m_enableInGameUiNotifier[InGameNotificationKeys.IsInGameUiActive] = true;
+                m_enableInGameUiNotifier[InGameNotificationKeys.IsInGameUiActive] = false;
                 m_enableInGameUiNotifier.Notify();
             });
         }
@@ -261,12 +261,15 @@ namespace umi3dBrowsers
                 .enqueue
                 .SetType(PopupType.Error)
                 .SetArguments(
-                    ("errorTitle", "Error."),
+                    ("errorTitle", "Error"),
                     ("errorMessage", message)
                 )
                 .SetTitle(POPUP_TABLE, "ErrorPortalConnectionFailure")
                 .SetDescription(POPUP_TABLE, "Error_message")
-                .SetButtons((POPUP_TABLE, "Error_buttonClose"))
+                .SetButtons((POPUP_TABLE, "Error_buttonMenu"))
+                .SetButtonsAction(index => {
+                    connectionToImmersiveLinker.Leave();
+                })
                 .Notify();
         }
 

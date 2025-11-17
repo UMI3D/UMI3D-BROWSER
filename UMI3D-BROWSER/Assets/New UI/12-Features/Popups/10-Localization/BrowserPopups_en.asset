@@ -131,10 +131,23 @@ MonoBehaviour:
     m_Localized: Delete
     m_Metadata:
       m_Items: []
+  - m_Id: 133348000077606912
+    m_Localized: Menu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 133350882571087872
+    m_Localized: Not enough disk place to download needed librairies for this world.
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:
     - rid: 3204614926223802371
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_Entries: 007022ff03010000007022bec70500000070a2f2622d0000007062fc382e0000
+        m_Entries: 
+        m_SharedEntries:
+        - id: 1116676976640
+        - id: 6355446558720
+        - id: 49903000776704
+        - id: 50822287355904

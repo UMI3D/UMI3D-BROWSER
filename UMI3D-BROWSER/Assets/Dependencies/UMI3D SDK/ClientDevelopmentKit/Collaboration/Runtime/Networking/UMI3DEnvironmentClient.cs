@@ -22,6 +22,7 @@ using System.Threading.Tasks;
 using umi3d.cdk.navigation;
 using umi3d.cdk.userCapture;
 using umi3d.cdk.userCapture.pose;
+using umi3d.cdk.utils.exceptions;
 using umi3d.common;
 using umi3d.common.collaboration.dto.networking;
 using umi3d.common.collaboration.dto.signaling;
@@ -515,6 +516,11 @@ namespace umi3d.cdk.collaboration
                         {
                             await UMI3DResourcesManager.DownloadLibraries(LibrariesDto.libraries, worldControllerClient.name, libraryProgress);
                             librariesUpdated = true;
+                        }
+                        catch (UMI3DNotEnoughSpaceException e)
+                        {
+                            Debug.LogError("Not enough place to dowload libraries!");
+                            Ok = false;
                         }
                         catch (Exception e)
                         {
